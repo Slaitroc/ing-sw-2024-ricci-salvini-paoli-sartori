@@ -1,0 +1,1 @@
+# ing-sw-2024-ricci-salvini-paoli-sartori
