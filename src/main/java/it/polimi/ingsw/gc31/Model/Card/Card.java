@@ -19,6 +19,9 @@ public abstract class Card{
         if (side) side = false;
         else side = true;
     }
+    public int getScore() {
+        return 0;
+    }
     public boolean getSide() {
         return side;
     }
