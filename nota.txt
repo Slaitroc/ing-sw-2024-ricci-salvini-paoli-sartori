@@ -1,1 +1,21 @@
-ciao
+DOMANDA 1
+Quale versione di MVC è quella consigliata?
+
+Versione 1:
+    Le modifiche del client sulla vista chiamano metodi del controller che interagiscono con il Model
+    Il cambiamento del Model tramite Observer Observable aggiorna la vista
+
+Versione 2:
+    Le modifiche del client sulla vista chiamano metodi del controller che interagiscono con il Model
+    Le modifiche del model vengono ripassate al controller che a sua volta le passa alla vista
+
+Versione 3:
+    Le modifiche del client sulla vista chiamano metodi del controller che interagiscono con il Model
+    La vista ha un riferimento a model per chiamare i getter e aggiornare i valori
+
+
+
+DOMANDA 2
+La lista di osservatori va solo nel GameModel oppure in ogni campo che vogliamo venga controllato.
+Il fatto che cambial'oggetto GameModel per aggiornare correttamente la vista?
+È più costoso magari controllare che qualcosa sia variato all'interno dell'intero oggetto che farlo localmente per i singoli attributi...
