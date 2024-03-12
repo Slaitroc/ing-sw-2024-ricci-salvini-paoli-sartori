@@ -12,7 +12,7 @@ public class Client extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Client.class.getResource("Views/start-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 800, 400);
+        Scene scene = new Scene(fxmlLoader.load(), 643, 374);
         stage.getIcons().add(new Image(Client.class.getResourceAsStream("AppIcons/icon.png")));
         stage.setTitle("CODEX Naturalis-30L Version");
         stage.setScene(scene);

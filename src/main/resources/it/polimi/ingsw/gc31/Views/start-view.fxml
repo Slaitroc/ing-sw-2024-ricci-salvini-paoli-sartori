@@ -32,16 +32,20 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<?import javafx.scene.control.Button?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
@@ -92,11 +96,26 @@
     </MenuBar>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
+            <ImageView fitHeight="374.0" fitWidth="643.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../Images/bg-black1.jpg" />
+               </image>
+               <effect>
+                  <ColorAdjust brightness="-0.64" contrast="-0.1" hue="-0.31" />
+               </effect>
+            </ImageView>
             <Pane layoutX="3.0" layoutY="1.0" prefHeight="373.0" prefWidth="640.0">
                <children>
-                  <Label layoutX="163.0" layoutY="136.0" prefHeight="21.0" prefWidth="151.0" text="Type your nickname:" />
-                  <TextField layoutX="307.0" layoutY="135.0" />
-                  <Button layoutX="279.0" layoutY="174.0" mnemonicParsing="false" text="Connect" />
+                  <Label layoutX="151.0" layoutY="126.0" prefHeight="21.0" prefWidth="151.0" text="Type your nickname:" textFill="WHITE">
+                     <font>
+                        <Font name="Rossesie" size="14.0" />
+                     </font></Label>
+                  <MFXButton buttonType="RAISED" depthLevel="LEVEL4" layoutX="249.0" layoutY="170.0" prefHeight="34.0" prefWidth="106.0" rippleAnimateShadow="true" text="Connect">
+                     <font>
+                        <Font name="Rossesie" size="13.0" />
+                     </font>
+                  </MFXButton>
+                  <MFXTextField layoutX="313.0" layoutY="101.0" prefHeight="49.0" prefWidth="171.0" />
                </children>
             </Pane>
       </children>
