@@ -22,4 +22,5 @@ public abstract class Card{
     public boolean getSide() {
         return side;
     }
+    public List<Resources> getResources() {return null;};
 }
