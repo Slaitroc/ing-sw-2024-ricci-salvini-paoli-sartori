@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;*/
 
-public class HelloApplication /*extends Application*/ {
+public class Server /*extends Application*/ {
     /*@Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
@@ -19,7 +19,7 @@ public class HelloApplication /*extends Application*/ {
 
     public static void main(String[] args) {
         /*launch();*/
-        System.out.println("Ciao");
+        System.out.println("Ciao sono il server");
     }
 
     public static int test_prova(int x){

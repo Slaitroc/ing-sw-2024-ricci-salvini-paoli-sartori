@@ -1,9 +1,9 @@
-package it.polimi.ingsw.gc31;
+package it.polimi.ingsw.gc31.View;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloController {
+public class GameView {
     @FXML
     private Label welcomeText;
 
