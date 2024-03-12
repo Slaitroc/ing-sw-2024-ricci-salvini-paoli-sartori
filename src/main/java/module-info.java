@@ -4,6 +4,7 @@ module it.polimi.ingsw.gc31 {
     requires javafx.fxml;
 
     requires org.controlsfx.controls;
+    requires java.desktop;
 
     opens it.polimi.ingsw.gc31.View to javafx.fxml;
     exports it.polimi.ingsw.gc31;
