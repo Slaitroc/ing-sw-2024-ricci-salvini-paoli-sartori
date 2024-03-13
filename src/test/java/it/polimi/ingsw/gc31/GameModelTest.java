@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.gc31.Controller.Controller;
 import it.polimi.ingsw.gc31.Model.GameModel;
+import it.polimi.ingsw.gc31.Model.Exceptions.MaxPlayerNumberReachedException;
+import it.polimi.ingsw.gc31.Model.Exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.View.GameView;
 
 public class GameModelTest {
@@ -16,17 +18,40 @@ public class GameModelTest {
     private Controller controller;
     private GameView view;
 
-    private Controller creaController(){
-        return new Controller();
-    }
-
-    private void iniziaPartita() {
+    private void creaDatiXInizializzazioneGameController() {
+        //creo gli username per i futuri player
         usernamesList = new ArrayList<String>();
         usernamesList.add("Alessandro");
-        usernamesList.add("Christian");
-        usernamesList.add("Matteo");
-        usernamesList.add("Lorenzo");
+        Controller controller = new Controller();
+        //NOTE questo controller sará unico e giá presente nel server
+        //é il gestore di tutte le singole partite e degli username dei player
+        
+        
+        try {
+            usernamesList.add("Christian");
+            controller.addPlayerUsername(usernamesList.get(1));
+            usernamesList.add("Matteo");
+            controller.addPlayerUsername(usernamesList.get(2));
+            usernamesList.add("Lorenzo");
+            controller.addPlayerUsername(usernamesList.get(3));
+        } catch (PlayerNicknameAlreadyExistsException e) {
+            e.printStackTrace();
+        }
+        
+        int gameControllerID = controller.createGame(usernamesList.get(0));
+        try {
 
-    }
+            //WARN qui sto creando il player prima di aver creato il GameModel... non mi piace
+            //IDEA  nei controller voglio usare solo i nickname che possono anche tornare utili come identificativo esterno dei player del Model
+            controller.getGameController(gameControllerID).addPlayer(usernamesList.get(1));
+            controller.getGameController(gameControllerID).addPlayer(usernamesList.get(2));
+            controller.getGameController(gameControllerID).addPlayer(usernamesList.get(3));     
+        } catch (MaxPlayerNumberReachedException e) {
+            e.printStackTrace();
+        }
+
+
+
+        }
 
 }

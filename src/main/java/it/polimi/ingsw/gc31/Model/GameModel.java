@@ -13,7 +13,7 @@ public class GameModel {
     private Player playingPlayer;
 
     public GameModel(List<String> nicknames){}
-    /* public void beginEndGame(){} */
+    //public void beginEndGame(){}
     private void pick(Player p, Deck d){}
     private boolean checkPoints(){return false;}
 

@@ -3,6 +3,7 @@ import it.polimi.ingsw.gc31.Model.Card.Card;
 import it.polimi.ingsw.gc31.Model.Card.ObjectiveCard;
 import it.polimi.ingsw.gc31.Model.Enum.Color;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
@@ -13,9 +14,13 @@ public class Player {
     private ObjectiveCard objectiveCard;
     protected int score;
 
-    Player(Color color, String username){
+
+    public Player(Color color, String username){
         this.pawnColor = color;
         this.username = username;
+        playArea = new PlayArea(this);
+        hand = new ArrayList<Card>();
+        score = 0;
     }
 
     public boolean addToHand(Card card){
