@@ -24,6 +24,7 @@ public class Player {
     }
 
     public boolean addToHand(Card card){
+        return true;//FIX
 
     }
     public void moveCardInHand(){

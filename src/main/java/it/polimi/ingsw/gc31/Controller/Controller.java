@@ -35,9 +35,6 @@ public class Controller {
     public int createGame(String username) {
         gamesList.add(new GameController(4, username));
         return gamesList.size()-1;
-
-        // TODO sei rimasto qui
-
     }
 
     /**

@@ -18,7 +18,7 @@ public class GameModelTest {
     private Controller controller;
     private GameView view;
 
-    private void creaDatiXInizializzazioneGameController() {
+    public void creaDatiXInizializzazioneGameController() {
         //creo gli username per i futuri player
         usernamesList = new ArrayList<String>();
         usernamesList.add("Alessandro");
@@ -49,6 +49,8 @@ public class GameModelTest {
         } catch (MaxPlayerNumberReachedException e) {
             e.printStackTrace();
         }
+
+        System.out.println("FINE DEBUG");
 
 
 

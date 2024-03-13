@@ -27,10 +27,12 @@ public class PlayArea {
         if (allowedMove(point)){
             place(card, point);
             playerObj.score += card.getScore();
+            return playerObj.score;
         }
-        else return playerObj.;
+        else return playerObj.score;
     };
     private boolean allowedMove(Point point){
+        return true;//FIX
 
     };
     private void updatePlayableArea(Point point){
@@ -40,6 +42,7 @@ public class PlayArea {
 
     };
     public Map<Point, Card> getPlacedCards(){
+        return null; //FIX
 
     }
 
