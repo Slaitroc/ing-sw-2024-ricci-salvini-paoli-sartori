@@ -1,0 +1,32 @@
+[
+  {
+    "type" : "STARTER",
+    "color": null,
+    "front" : {
+      "score": 0,
+      "resources": ["PLANT", "ANIMAL", "INSECT", "MUSHROOM"],
+      "requirements": null,
+      "objective": null,
+      "dirImg": null
+    },
+    "back" : {
+      "resources": ["PLANT", "EMPTY", "INSECT", "EMPTY", "INSECT"],
+      "dirImg": null
+    }
+  },
+  {
+    "type" : "STARTER",
+    "color": null,
+    "front" : {
+      "score": 0,
+      "resources": ["ANIMAL", "INSECT", "MUSHROOM", "PLANT"],
+      "requirements": null,
+      "objective": null,
+      "dirImg": null
+    },
+    "back" : {
+      "resources": ["EMPTY", "MUSHROOM", "EMPTY", "ANIMAL", "MUSHROOM"],
+      "dirImg": null
+    }
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "type": "OBJECTIVE",
+    "score": 2,
+    "objective": "SCALASU",
+    "color": "RED"
+  },
+  {
+    "type": "OBJECTIVE",
+    "score": 2,
+    "objective": "SCALAGIU",
+    "color": "GREEN"
+  }
+]

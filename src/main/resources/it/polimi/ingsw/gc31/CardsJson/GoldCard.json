@@ -1,0 +1,32 @@
+[
+  {
+    "type" : "GOLD",
+    "color": "RED",
+    "front" : {
+      "score": 1,
+      "resources": ["EMPTY", "FEATHER", "EMPTY", "HIDDEN"],
+      "requirements": ["MUSHROOM", "MUSHROOM", "ANIMAL"],
+      "objective": "FEATHER",
+      "dirImg": null
+    },
+    "back" : {
+      "resources": ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "MUSHROOM"],
+      "dirImg": null
+    }
+  },
+  {
+    "type" : "GOLD",
+    "color": "RED",
+    "front" : {
+      "score": 1,
+      "resources": ["INK", "EMPTY", "HIDDEN", "EMPTY"],
+      "requirements": ["MUSHROOM", "MUSHROOM", "PLANT"],
+      "objective": "INK",
+      "dirImg": null
+    },
+    "back" : {
+      "resources": ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "MUSHROOM"],
+      "dirImg": null
+    }
+  }
+]

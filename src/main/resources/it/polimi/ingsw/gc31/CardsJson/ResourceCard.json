@@ -1,0 +1,32 @@
+[
+  {
+    "type" : "RESOURCE",
+    "color": "RED",
+    "front" : {
+      "score": 0,
+      "resources": ["EMPTY", "HIDDEN", "MUSHROOM", "MUSHROOM"],
+      "requirements": null,
+      "objective": null,
+      "dirImg": null
+    },
+    "back" : {
+      "resources": ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "MUSHROOM"],
+      "dirImg": null
+    }
+  },
+  {
+    "type" : "RESOURCE",
+    "color": "RED",
+    "front" : {
+      "score": 0,
+      "resources": ["MUSHROOM", "EMPTY", "HIDDEN", "MUSHROOM"],
+      "requirements": null,
+      "objective": null,
+      "dirImg": null
+    },
+    "back" : {
+      "resources": ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "MUSHROOM"],
+      "dirImg": null
+    }
+  }
+]
