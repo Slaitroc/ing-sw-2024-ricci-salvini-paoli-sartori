@@ -1,5 +1,5 @@
 package it.polimi.ingsw.gc31.Model.Deck;
 
-public class StarterDeck extends Deck {
+public class StarterDeck{
     
 }
