@@ -5,6 +5,7 @@ module it.polimi.ingsw.gc31 {
 
     requires org.controlsfx.controls;
     requires java.desktop;
+    requires com.google.gson;
 
     opens it.polimi.ingsw.gc31.View to javafx.fxml;
     exports it.polimi.ingsw.gc31;
