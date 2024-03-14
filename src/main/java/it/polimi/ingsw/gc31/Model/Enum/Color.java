@@ -18,7 +18,7 @@ public enum Color {
     private final String stringName;
 
     /**
-     * when a Color object is created the construtor automatically set the string representation based on the value
+     * when a Color object is created the constructor automatically set the string representation based on the value
      * of the object
      */
     Color(String stringName) {
