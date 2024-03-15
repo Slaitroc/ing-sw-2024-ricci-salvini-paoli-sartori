@@ -4,13 +4,13 @@ package it.polimi.ingsw.gc31.Model.Enum;
  * Enum that represents every color inside the game
  */
 public enum Color {
-    RED("Red"),
-    GREEN("Green"),
-    BLUE("Blue"),
-    BLACK("Black"),
-    YELLOW("Yellow"),
-    PURPLE("Purple"),
-    NOCOLOR("NoColor"),
+    RED("RED"),
+    GREEN("GREEN"),
+    BLUE("BLUE"),
+    BLACK("BLACK"),
+    YELLOW("YELLOW"),
+    PURPLE("PURPLE"),
+    NOCOLOR("NOCOLOR"),
     ;
     /**
      * it is the string representation of a Color object
