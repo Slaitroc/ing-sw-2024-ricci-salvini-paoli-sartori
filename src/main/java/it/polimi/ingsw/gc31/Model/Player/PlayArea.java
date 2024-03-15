@@ -30,7 +30,7 @@ public class PlayArea {
             return playerObj.score;
         }
         else return playerObj.score;
-    };
+    }
     private boolean allowedMove(Point point){
         Point newPoint = new Point();
         newPoint.x = point.x+1;
@@ -48,7 +48,6 @@ public class PlayArea {
         return 0;
     };
     private void updatePlayableArea(Point point){
-
     };
     private void updateAvaiableRes(Card card){
 
