@@ -32,8 +32,20 @@ public class PlayArea {
         else return playerObj.score;
     };
     private boolean allowedMove(Point point){
-        return true;//FIX
-
+        Point newPoint = new Point();
+        newPoint.x = point.x+1;
+        newPoint.y=point.y+1;
+        if (placedCards.get(point)) return 1;
+        newPoint.x = point.x-1;
+        newPoint.y = point.y-1;
+        if (placedCards.get(point)) return 1;
+        newPoint.x = point.x+1;
+        newPoint.y = point.y-1;
+        if (placedCards.get(point)) return 1;
+        newPoint.x = point.x-1;
+        newPoint.y = point.y+1;
+        if (placedCards.get(point)) return 1;
+        return 0;
     };
     private void updatePlayableArea(Point point){
 
@@ -42,8 +54,7 @@ public class PlayArea {
 
     };
     public Map<Point, Card> getPlacedCards(){
-        return null; //FIX
-
+        return this.placedCards; //%MODIFY%
     }
 
 }
