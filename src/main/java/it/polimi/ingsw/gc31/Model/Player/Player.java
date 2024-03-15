@@ -2,6 +2,8 @@ package it.polimi.ingsw.gc31.Model.Player;
 import it.polimi.ingsw.gc31.Model.Card.Card;
 import it.polimi.ingsw.gc31.Model.Card.ObjectiveCard;
 import it.polimi.ingsw.gc31.Model.Enum.Color;
+import java.util.Scanner;  // Import the Scanner class to test moveCardInHand
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,23 +20,32 @@ public class Player {
     public Player(Color color, String username){
         this.pawnColor = color;
         this.username = username;
-        playArea = new PlayArea(this);
-        hand = new ArrayList<Card>();
-        score = 0;
     }
 
     public boolean addToHand(Card card){
-        return true;//FIX
-
+        this.hand.add(card);
+    return true;
     }
     public void moveCardInHand(){
+        Scanner myScanner = new Scanner(System.in);
 
+        System.out.println("Insert position of the first card [1-3]: ");
+        int cardPosition1 = myScanner.nextInt();
+        Card card1 = hand.get(cardPosition1);
+
+        System.out.println("Insert position of the second card [1-3]: ");
+        int cardPosition2 = myScanner.nextInt();
+        Card card2 = hand.get(cardPosition2);
+
+        this.hand.set(cardPosition1, card2);
+        this.hand.set(cardPosition2, card1);
+        System.out.println("New Hand disposition: " + hand);
     }
     public void changeState(){
-
+//??
     }
     public void addObjectiveCard(ObjectiveCard card){
-
+        this.objectiveCard = card;
     }
     public int getScore(){
         return this.score;
