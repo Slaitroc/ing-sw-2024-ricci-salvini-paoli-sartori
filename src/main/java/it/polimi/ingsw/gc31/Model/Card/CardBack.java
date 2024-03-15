@@ -1,5 +1,7 @@
 package it.polimi.ingsw.gc31.Model.Card;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.gc31.Model.Enum.Resources;
 
 import java.util.ArrayList;
@@ -38,5 +40,17 @@ public class CardBack {
             newList.add(val);
         }
         return newList;
+    }
+
+    public JsonObject serializeToJson() {
+        JsonObject jsonObject = new JsonObject();
+        JsonArray resourcesArray = new JsonArray();
+        for (Resources res : this.resources) {
+            resourcesArray.add(res.toString());
+        }
+        jsonObject.add("resources", resourcesArray);
+        jsonObject.addProperty("dirImg", dirImg);
+
+        return jsonObject;
     }
 }

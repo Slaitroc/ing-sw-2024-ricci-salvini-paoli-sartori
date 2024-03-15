@@ -1,5 +1,7 @@
 package it.polimi.ingsw.gc31.Model.Card;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import it.polimi.ingsw.gc31.Model.Enum.CardType;
 import it.polimi.ingsw.gc31.Model.Enum.Color;
 import it.polimi.ingsw.gc31.Model.Enum.Resources;
@@ -52,4 +54,6 @@ public abstract class Card{
         return 0;
     }
     abstract public Objective getObjective();
+    abstract public JsonObject serializeToJson();
+
 }

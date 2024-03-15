@@ -1,5 +1,8 @@
 package it.polimi.ingsw.gc31.Model.Card;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import it.polimi.ingsw.gc31.Model.Enum.CardType;
 import it.polimi.ingsw.gc31.Model.Enum.Color;
 import it.polimi.ingsw.gc31.Model.Enum.Resources;
@@ -59,4 +62,15 @@ public abstract class PlayableCard extends Card{
         if (side) return front.getRequirements();
         else return Collections.emptyMap();
     }
+
+    @Override
+    public JsonObject serializeToJson() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("color", color.toString());
+        jsonObject.add("front", front.serializeToJson());
+        jsonObject.add("back", back.serializeToJson());
+
+        return jsonObject;
+    }
+
 }

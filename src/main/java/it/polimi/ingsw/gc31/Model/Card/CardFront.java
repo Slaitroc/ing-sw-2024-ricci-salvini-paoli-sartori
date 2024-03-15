@@ -1,12 +1,12 @@
 package it.polimi.ingsw.gc31.Model.Card;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.gc31.Model.Enum.Resources;
 import it.polimi.ingsw.gc31.Model.Strategies.Objective;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class represents the front side of card;
@@ -73,5 +73,33 @@ public class CardFront {
             newMap.put(val.getKey(), Integer.valueOf(val.getValue()));
         }
         return newMap;
+    }
+
+    /**
+     * utility per la serializzazione
+     */
+    public JsonObject serializeToJson() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("score", this.score);
+
+        JsonArray resourcesArray = new JsonArray();
+        for (Resources res : this.resources) {
+            resourcesArray.add(res.toString());
+        }
+        jsonObject.add("resources", resourcesArray);
+
+        if (requirements.equals(Collections.emptyMap())) {
+            jsonObject.add("requirements", null);
+        } else {
+            JsonArray requirementsArray = new JsonArray();
+            for (Map.Entry<Resources, Integer> res : this.requirements.entrySet()) {
+                requirementsArray.add(res.toString());
+            }
+            jsonObject.add("requirements", requirementsArray);
+        }
+        jsonObject.addProperty("dirImg", dirImg);
+
+        jsonObject.add("objective", null);
+        return jsonObject;
     }
 }

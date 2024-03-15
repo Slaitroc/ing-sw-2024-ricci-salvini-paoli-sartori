@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.Model.Card;
 
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.gc31.Model.Enum.CardType;
 import it.polimi.ingsw.gc31.Model.Strategies.Objective;
 
@@ -20,5 +21,10 @@ public class ObjectiveCard extends Card{
     @Override
     public Objective getObjective() {
         return front.getObjective();
+    }
+
+    @Override
+    public JsonObject serializeToJson() {
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.Model.Card;
 
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.gc31.Model.Enum.Color;
 import it.polimi.ingsw.gc31.Model.Enum.Resources;
 import it.polimi.ingsw.gc31.Model.Strategies.Objective;
@@ -21,6 +22,4 @@ public class ResourceCard extends PlayableCard{
     public Objective getObjective() {
         return null;
     }
-
-
 }
