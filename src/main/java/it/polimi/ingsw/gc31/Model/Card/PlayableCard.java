@@ -62,15 +62,4 @@ public abstract class PlayableCard extends Card{
         if (side) return front.getRequirements();
         else return Collections.emptyMap();
     }
-
-    @Override
-    public JsonObject serializeToJson() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("color", color.toString());
-        jsonObject.add("front", front.serializeToJson());
-        jsonObject.add("back", back.serializeToJson());
-
-        return jsonObject;
-    }
-
 }

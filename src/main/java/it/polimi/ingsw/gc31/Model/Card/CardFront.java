@@ -4,6 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.gc31.Model.Enum.Resources;
+import it.polimi.ingsw.gc31.Model.Exceptions.DirImgValueMissingException;
+import it.polimi.ingsw.gc31.Model.Exceptions.WrongNumberOfCornerException;
 import it.polimi.ingsw.gc31.Model.Strategies.Objective;
 
 import java.util.*;
@@ -19,12 +21,15 @@ public class CardFront {
     private final String dirImg;
     private final Objective ob;
 
-    public CardFront(int score, List<Resources> resources, Map<Resources, Integer> requirements, String dirImg, Objective ob) {
+    public CardFront(int score, List<Resources> resources, Map<Resources, Integer> requirements, String dirImg, Objective ob) throws WrongNumberOfCornerException,
+            DirImgValueMissingException {
         this.score = score;
 
+        if (resources.size() != 4) throw new WrongNumberOfCornerException();
         this.resources = listDeepCopy(resources);
         this.requirements = mapDeepCopy(requirements);
 
+        if (dirImg == null) throw new DirImgValueMissingException();
         this.dirImg = dirImg;
         //TODO implementare depp copy per ob
         this.ob = ob;
@@ -75,9 +80,8 @@ public class CardFront {
         return newMap;
     }
 
-    /**
-     * utility per la serializzazione
-     */
+    // serve solo per la serializzazione
+    // TODO da togliere
     public JsonObject serializeToJson() {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("score", this.score);
@@ -91,11 +95,11 @@ public class CardFront {
         if (requirements.equals(Collections.emptyMap())) {
             jsonObject.add("requirements", null);
         } else {
-            JsonArray requirementsArray = new JsonArray();
-            for (Map.Entry<Resources, Integer> res : this.requirements.entrySet()) {
-                requirementsArray.add(res.toString());
+            JsonObject requirementsObjet = new JsonObject();
+            for (Map.Entry<Resources, Integer> res: this.requirements.entrySet()) {
+                requirementsObjet.addProperty(res.getKey().toString(), res.getValue());
             }
-            jsonObject.add("requirements", requirementsArray);
+            jsonObject.add("requirements", requirementsObjet);
         }
         jsonObject.addProperty("dirImg", dirImg);
 

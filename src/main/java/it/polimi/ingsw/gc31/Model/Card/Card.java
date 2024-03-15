@@ -54,6 +54,13 @@ public abstract class Card{
         return 0;
     }
     abstract public Objective getObjective();
-    abstract public JsonObject serializeToJson();
+    //abstract public JsonObject serializeToJson();
+
+    public JsonObject frontSerializeToJson() {
+        return front.serializeToJson();
+    }
+    public JsonObject backSerializeToJson() {
+        return back.serializeToJson();
+    }
 
 }
