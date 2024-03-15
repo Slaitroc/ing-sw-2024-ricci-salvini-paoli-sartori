@@ -1,60 +1,72 @@
 package it.polimi.ingsw.gc31.Model.Deck;
 
-import it.polimi.ingsw.gc31.Model.Card.Card;
-import it.polimi.ingsw.gc31.Model.Card.GoldCard;
-import it.polimi.ingsw.gc31.Model.Card.ObjectiveCard;
-import it.polimi.ingsw.gc31.Model.Card.PlayableCard;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+import it.polimi.ingsw.gc31.GsonUtility.*;
+import it.polimi.ingsw.gc31.Model.Card.*;
 import it.polimi.ingsw.gc31.Model.Enum.Color;
 import it.polimi.ingsw.gc31.Model.Enum.Resources;
+import it.polimi.ingsw.gc31.Model.Exceptions.DirImgValueMissingException;
+import it.polimi.ingsw.gc31.Model.Exceptions.WrongNumberOfCornerException;
 import it.polimi.ingsw.gc31.Model.Strategies.Objective;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class DeckTest {
 
     @Test
     void draw() {
-        List<Card> temp = new ArrayList<>();
-        temp.add(crateGoldCard());
-        temp.add(crateGoldCard());
-        temp.add(crateGoldCard());
-        temp.add(crateGoldCard());
+        try {
+            List<Card> deck = new ArrayList<>();
 
-        Deck deck = new Deck(temp);
+            FileReader fileReader = new FileReader("src/main/resources/it/polimi/ingsw/gc31/CardsJson/GoldCard.json");
 
-        List<Card> temp2 = new ArrayList<>();
-        temp2.add(createObjectiveCard());
-        temp2.add(createObjectiveCard());
-        temp2.add(createObjectiveCard());
-        temp2.add(createObjectiveCard());
+            JsonElement jsonElement = JsonParser.parseReader(fileReader);
 
-        Deck deckOb = new Deck(temp2);
+            fileReader.close();
 
-        List<PlayableCard> hand = new ArrayList<>();
-        hand.add((PlayableCard) deck.draw());
-        hand.add((PlayableCard) deck.draw());
 
-        ObjectiveCard ob = (ObjectiveCard) deckOb.draw();
-        assertFalse(ob.getSide());
+            if (jsonElement.isJsonArray()) {
+                JsonArray jsonArray = jsonElement.getAsJsonArray();
 
-        hand.get(0).changeSide();
+                // create GsonBuilder and add typeAdapter necessary
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(GoldCard.class, new PlayableCardAdapter())
+                        .registerTypeAdapter(CardFront.class, new FrontClassAdapter())
+                        .registerTypeAdapter(CardBack.class, new BackClassAdapter())
+                        .registerTypeAdapter(Resources.class, new ListResourcesEnumAdapter())
+                        .registerTypeAdapter(new TypeToken<Map<Resources, Integer>>(){}.getType(), new MapRequirementsAdapter())
+                        .create();
+
+                // pars every element
+                for (JsonElement element: jsonArray) {
+                    if (element.isJsonObject()) {
+                        JsonObject jsonObject = element.getAsJsonObject();
+
+                        // deserialize a single element and add it to the deck
+                        Card res = gson.fromJson(jsonObject, GoldCard.class);
+                        deck.add(res);
+                    }
+                }
+
+                for (Card card: deck) {
+                    card.changeSide();
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
     void refill() {
     }
-    public ObjectiveCard createObjectiveCard() {
-        Objective ob = null;
-        int score = 0;
-        String dirImgFront = null;
-        String dirImgBack = null;
-
-        return new ObjectiveCard(ob, score, null, null);
-    }
-    public GoldCard crateGoldCard() {
+    /*
+    public GoldCard crateGoldCard() throws WrongNumberOfCornerException, DirImgValueMissingException {
         Color color = Color.RED;
         int score = 0;
         List<Resources> resourcesFront = new ArrayList<>();
@@ -74,10 +86,13 @@ class DeckTest {
         requirements.put(Resources.MUSHROOM, 2);
         requirements.put(Resources.ANIMAL, 1);
 
-        String dirImgFront = null;
-        String dirImgBack = null;
+        String dirImgFront = "";
+        String dirImgBack = "";
         Objective ob = null;
 
-        return new GoldCard(color, score, resourcesFront, resourcesBack, requirements, dirImgFront, dirImgBack, ob);
+
+        GoldCard goldCard = new GoldCard(color, score, resourcesFront, resourcesBack, requirements, dirImgFront, dirImgBack, ob);
+        return goldCard;
     }
+     */
 }
