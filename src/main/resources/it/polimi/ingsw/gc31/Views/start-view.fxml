@@ -98,7 +98,7 @@
       <children>
             <ImageView fitHeight="374.0" fitWidth="643.0" pickOnBounds="true">
                <image>
-                  <Image url="@../Images/bg-black1.jpg" />
+                  <Image url="@../Images/Codex_Exploded.png" />
                </image>
                <effect>
                   <ColorAdjust brightness="-0.64" contrast="-0.1" hue="-0.31" />
