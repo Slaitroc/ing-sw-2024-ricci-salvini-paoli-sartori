@@ -891,14 +891,14 @@
     }
   },
   {
-    "color": "PURPLE", /* bhooo */
+    "color": "PURPLE",
     "front": {
       "score": 0,
       "resources": [
         "INSECT",
+        "INSECT",
         "HIDDEN",
-        "EMPTY",
-        "INSECT"
+        "EMPTY"
       ],
       "requirements": [
         null
