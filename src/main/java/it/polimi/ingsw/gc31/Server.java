@@ -82,10 +82,6 @@ public class Server /*extends Application*/ {
         
     }
 
-    public static int test_prova(int x){
-        return x*x;
-    }
-
 
     
 }

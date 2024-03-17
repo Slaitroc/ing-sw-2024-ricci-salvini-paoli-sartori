@@ -1,4 +1,4 @@
-package it.polimi.ingsw.gc31.GsonUtility;
+package it.polimi.ingsw.gc31.utility.GsonUtility;
 
 import com.google.gson.*;
 import it.polimi.ingsw.gc31.Model.Enum.Resources;

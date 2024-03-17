@@ -2,13 +2,15 @@ package it.polimi.ingsw.gc31.Model.Deck;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-import it.polimi.ingsw.gc31.GsonUtility.*;
+
 import it.polimi.ingsw.gc31.Model.Card.*;
 import it.polimi.ingsw.gc31.Model.Enum.Color;
 import it.polimi.ingsw.gc31.Model.Enum.Resources;
 import it.polimi.ingsw.gc31.Model.Exceptions.DirImgValueMissingException;
 import it.polimi.ingsw.gc31.Model.Exceptions.WrongNumberOfCornerException;
 import it.polimi.ingsw.gc31.Model.Strategies.Objective;
+import it.polimi.ingsw.gc31.utility.GsonUtility.*;
+
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
