@@ -16,9 +16,11 @@ public class ResourceCard extends PlayableCard{
                 new CardFront(score, resourcesFront, Collections.emptyMap(), dirImgFront, null),
                 new CardBack(resourcesBack, dirImgBack));
     }
+
     public Map<Resources, Integer> getRequirements() {
         return Collections.emptyMap();
     }
+
     @Override
     public Objective getObjective() {
         return null;

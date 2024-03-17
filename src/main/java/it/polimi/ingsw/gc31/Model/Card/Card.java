@@ -11,13 +11,15 @@ import java.util.*;
 
 /**
  * This is an abstract class that represents a generic Card.
- * All cards have three attributes: {@link CardFront}, {@link CardBack} and side. Side is a boolean parameter
+ * All cards have three attributes: {@link CardFront}, {@link CardBack} and
+ * side. Side is a boolean parameter
  * that represents which side of the card is active:
- *      side = false -> back is active
- *      side = true -> front is active
+ * side = false -> back is active
+ * side = true -> front is active
+ * 
  * @author Christian Salvini
  */
-public abstract class Card{
+public abstract class Card {
     protected final CardFront front;
     protected final CardBack back;
     protected boolean side;
@@ -46,13 +48,18 @@ public abstract class Card{
     public void changeSide() {
         side = !side;
     }
+
     public String getImage() {
-        if (side) return front.getImage();
-        else return back.getImage();
+        if (side)
+            return front.getImage();
+        else
+            return back.getImage();
     }
+
     public int getScore() {
         return 0;
     }
+
     abstract public Objective getObjective();
     //abstract public JsonObject serializeToJson();
 

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.gc31.Model.Card;
 
-import it.polimi.ingsw.gc31.Model.Deck.GoldDeck;
+import it.polimi.ingsw.gc31.Model.Deck.Deck;
 import it.polimi.ingsw.gc31.Model.Enum.CardType;
 import it.polimi.ingsw.gc31.Model.Enum.Resources;
 import it.polimi.ingsw.gc31.Model.Strategies.Objective;

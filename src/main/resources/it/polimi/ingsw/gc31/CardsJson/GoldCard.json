@@ -1,32 +1,1108 @@
 [
-  {
-    "type" : "GOLD",
-    "color": "RED",
-    "front" : {
-      "score": 1,
-      "resources": ["EMPTY", "FEATHER", "EMPTY", "HIDDEN"],
-      "requirements": ["MUSHROOM", "MUSHROOM", "ANIMAL"],
-      "objective": "FEATHER",
-      "dirImg": null
+    {
+        "color": "RED",
+        "front": {
+            "score": 1,
+            "resources": [
+                "EMPTY",
+                "FEATHER",
+                "EMPTY",
+                "HIDDEN"
+            ],
+            "requirements": {
+                "MUSHROOM": 2,
+                "ANIMAL": 1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "MUSHROOM"
+            ],
+            "dirImg": null
+        }
     },
-    "back" : {
-      "resources": ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "MUSHROOM"],
-      "dirImg": null
-    }
-  },
-  {
-    "type" : "GOLD",
-    "color": "RED",
-    "front" : {
-      "score": 1,
-      "resources": ["INK", "EMPTY", "HIDDEN", "EMPTY"],
-      "requirements": ["MUSHROOM", "MUSHROOM", "PLANT"],
-      "objective": "INK",
-      "dirImg": null
+    {
+        "color": "RED",
+        "front": {
+            "score": 1,
+            "resources": [
+                "INK",
+                "EMPTY",
+                "HIDDEN",
+                "EMPTY"
+            ],
+            "requirements": {
+                "MUSHROOM": 2,
+                "PLANT": 1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "MUSHROOM"
+            ],
+            "dirImg": null
+        }
     },
-    "back" : {
-      "resources": ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "MUSHROOM"],
-      "dirImg": null
+    {
+        "color": "RED",
+        "front": {
+            "score": 1,
+            "resources": [
+                "EMPTY",
+                "HIDDEN",
+                "EMPTY",
+                "SCROLL"
+            ],
+            "requirements": {
+                "MUSHROOM": 2,
+                "INSECT": 1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "MUSHROOM"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "RED",
+        "front": {
+            "score": 2,
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "HIDDEN",
+                "EMPTY"
+            ],
+            "requirements": {
+                "MUSHROOM": 3,
+                "PLANT": 1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "MUSHROOM"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "RED",
+        "front": {
+            "score": 2,
+            "resources": [
+                "EMPTY",
+                "HIDDEN",
+                "EMPTY",
+                "EMPTY"
+            ],
+            "requirements": {
+                "MUSHROOM": 3,
+                "PLANT": 1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "MUSHROOM"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "RED",
+        "front": {
+            "score": 2,
+            "resources": [
+                "HIDDEN",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY"
+            ],
+            "requirements": {
+                "MUSHROOM": 3,
+                "INSECT": 1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "MUSHROOM"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "RED",
+        "front": {
+            "score": 3,
+            "resources": [
+                "HIDDEN",
+                "HIDDEN",
+                "INK",
+                "EMPTY"
+            ],
+            "requirements": {
+                "MUSHROOM": 3
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "MUSHROOM"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "RED",
+        "front": {
+            "score": 3,
+            "resources": [
+                "EMPTY",
+                "HIDDEN",
+                "HIDDEN",
+                "FEATHER"
+            ],
+            "requirements": {
+                "MUSHROOM": 3
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "MUSHROOM"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "RED",
+        "front": {
+            "score": 3,
+            "resources": [
+                "SCROLL",
+                "EMPTY",
+                "HIDDEN",
+                "HIDDEN"
+            ],
+            "requirements": {
+                "MUSHROOM": 3
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "MUSHROOM"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "RED",
+        "front": {
+            "score": 5,
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "HIDDEN",
+                "EMPTY"
+            ],
+            "requirements": {
+                "MUSHROOM": 5
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "MUSHROOM"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "GREEN",
+        "front": {
+            "score": 1,
+            "resources": [
+                "EMPTY",
+                "HIDDEN",
+                "EMPTY",
+                "FEATHER"
+            ],
+            "requirements": {
+                "PLANT": 2,
+                "INSECT": 1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "PLANT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "GREEN",
+        "front": {
+            "score": 1,
+            "resources": [
+                "SCROLL",
+                "EMPTY",
+                "HIDDEN",
+                "EMPTY"
+            ],
+            "requirements": {
+                "PLANT": 2,
+                "MUSHROOM": 1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "PLANT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "GREEN",
+        "front": {
+            "score": 1,
+            "resources": [
+                "HIDDEN",
+                "EMPTY",
+                "INK",
+                "EMPTY"
+            ],
+            "requirements": {
+                "PLANT": 2,
+                "ANIMAL": 1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "PLANT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "GREEN",
+        "front": {
+            "score": 2,
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "HIDDEN"
+            ],
+            "requirements": {
+                "PLANT": 3,
+                "INSECT": 1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "PLANT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "GREEN",
+        "front": {
+            "score": 2,
+            "resources": [
+                "EMPTY",
+                "HIDDEN",
+                "EMPTY",
+                "EMPTY"
+            ],
+            "requirements": {
+                "PLANT": 3,
+                "ANIMAL": 1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "PLANT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "GREEN",
+        "front": {
+            "score": 2,
+            "resources": [
+                "HIDDEN",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY"
+            ],
+            "requirements": {
+                "PLANT": 3,
+                "MUSHROOM": 1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "PLANT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "GREEN",
+        "front": {
+            "score": 3,
+            "resources": [
+                "HIDDEN",
+                "HIDDEN",
+                "FEATHER",
+                "EMPTY"
+            ],
+            "requirements": {
+                "PLANT": 3
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "PLANT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "GREEN",
+        "front": {
+            "score": 3,
+            "resources": [
+                "EMPTY",
+                "HIDDEN",
+                "HIDDEN",
+                "SCROLL"
+            ],
+            "requirements": {
+                "PLANT": 3
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "PLANT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "GREEN",
+        "front": {
+            "score": 3,
+            "resources": [
+                "INK",
+                "EMPTY",
+                "HIDDEN",
+                "HIDDEN"
+            ],
+            "requirements": {
+                "PLANT": 3
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "PLANT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "GREEN",
+        "front": {
+            "score": 5,
+            "resources": [
+                "EMPTY",
+                "HIDDEN",
+                "HIDDEN",
+                "EMPTY"
+            ],
+            "requirements": {
+                "PLANT": 5
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "PLANT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "BLUE",
+        "front": {
+            "score": 1,
+            "resources": [
+                "EMPTY",
+                "HIDDEN",
+                "EMPTY",
+                "INK"
+            ],
+            "requirements": {
+                "ANIMAL": 2,
+                "INSECT":1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "ANIMAL"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "BLUE",
+        "front": {
+            "score": 1,
+            "resources": [
+                "EMPTY",
+                "SCROLL",
+                "EMPTY",
+                "HIDDEN"
+            ],
+            "requirements": {
+                "ANIMAL": 2,
+                "PLANT":1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "ANIMAL"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "BLUE",
+        "front": {
+            "score": 1,
+            "resources": [
+                "HIDDEN",
+                "EMPTY",
+                "FEATHER",
+                "EMPTY"
+            ],
+            "requirements": {
+                "ANIMAL": 2,
+                "MUSHROOM":1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "ANIMAL"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "BLUE",
+        "front": {
+            "score": 2,
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "HIDDEN",
+                "EMPTY"
+            ],
+            "requirements": {
+                "ANIMAL": 3,
+                "INSECT":1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "ANIMAL"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "BLUE",
+        "front": {
+            "score": 2,
+            "resources": [
+                "HIDDEN",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY"
+            ],
+            "requirements": {
+                "ANIMAL": 3,
+                "MUSHROOM":1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "ANIMAL"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "BLUE",
+        "front": {
+            "score": 2,
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "HIDDEN"
+            ],
+            "requirements": {
+                "ANIMAL": 3,
+                "PLANT":1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "ANIMAL"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "BLUE",
+        "front": {
+            "score": 3,
+            "resources": [
+                "HIDDEN",
+                "HIDDEN",
+                "SCROLL",
+                "EMPTY"
+            ],
+            "requirements": {
+                "ANIMAL": 3
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "ANIMAL"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "BLUE",
+        "front": {
+            "score": 3,
+            "resources": [
+                "INK",
+                "HIDDEN",
+                "HIDDEN",
+                "EMPTY"
+            ],
+            "requirements": {
+                "ANIMAL": 3
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "ANIMAL"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "BLUE",
+        "front": {
+            "score": 3,
+            "resources": [
+                "EMPTY",
+                "FEATHER",
+                "HIDDEN",
+                "HIDDEN"
+            ],
+            "requirements": {
+                "ANIMAL": 3
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "ANIMAL"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "BLUE",
+        "front": {
+            "score": 5,
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "HIDDEN",
+                "HIDDEN"
+            ],
+            "requirements": {
+                "ANIMAL": 3
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "ANIMAL"
+            ],
+            "dirImg": null
+        }
+    },
+    
+
+    {
+        "color": "PURPLE",
+        "front": {
+            "score": 1,
+            "resources": [
+                "FEATHER",
+                "EMPTY",
+                "HIDDEN",
+                "EMPTY"
+            ],
+            "requirements": {
+                "INSECT": 2,
+                "PLANT":1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "INSECT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "PURPLE",
+        "front": {
+            "score": 1,
+            "resources": [
+                "HIDDEN",
+                "EMPTY",
+                "SCROLL",
+                "EMPTY"
+            ],
+            "requirements": {
+                "INSECT": 2,
+                "ANIMAL":1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "INSECT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "PURPLE",
+        "front": {
+            "score": 1,
+            "resources": [
+                "EMPTY",
+                "INK",
+                "EMPTY",
+                "HIDDEN"
+            ],
+            "requirements": {
+                "INSECT": 2,
+                "MUSHROOM":1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "INSECT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "PURPLE",
+        "front": {
+            "score": 2,
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "HIDDEN",
+                "EMPTY"
+            ],
+            "requirements": {
+                "INSECT": 3,
+                "ANIMAL":1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "INSECT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "PURPLE",
+        "front": {
+            "score": 2,
+            "resources": [
+                "EMPTY",
+                "HIDDEN",
+                "EMPTY",
+                "EMPTY"
+            ],
+            "requirements": {
+                "INSECT": 3,
+                "PLANT":1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "INSECT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "PURPLE",
+        "front": {
+            "score": 2,
+            "resources": [
+                "HIDDEN",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY"
+            ],
+            "requirements": {
+                "INSECT": 3,
+                "MUSHROOM":1
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "INSECT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "PURPLE",
+        "front": {
+            "score": 3,
+            "resources": [
+                "HIDDEN",
+                "HIDDEN",
+                "EMPTY",
+                "INK"
+            ],
+            "requirements": {
+                "INSECT": 3
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "INSECT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "PURPLE",
+        "front": {
+            "score": 3,
+            "resources": [
+                "SCROLL",
+                "HIDDEN",
+                "HIDDEN",
+                "EMPTY"
+            ],
+            "requirements": {
+                "INSECT": 3
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "INSECT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "PURPLE",
+        "front": {
+            "score": 3,
+            "resources": [
+                "HIDDEN",
+                "EMPTY",
+                "FEATHER",
+                "HIDDEN"
+            ],
+            "requirements": {
+                "INSECT": 3
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "INSECT"
+            ],
+            "dirImg": null
+        }
+    },
+    {
+        "color": "PURPLE",
+        "front": {
+            "score": 5,
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "HIDDEN",
+                "HIDDEN"
+            ],
+            "requirements": {
+                "INSECT": 3
+            },
+            "dirImg": null,
+            "objective": null
+        },
+        "back": {
+            "resources": [
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "EMPTY",
+                "INSECT"
+            ],
+            "dirImg": null
+        }
     }
-  }
 ]

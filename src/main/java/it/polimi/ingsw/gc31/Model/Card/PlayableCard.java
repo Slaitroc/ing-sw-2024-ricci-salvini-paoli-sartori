@@ -12,21 +12,24 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/**
- * This class represents a generic card that can be placed on the {@link it.polimi.ingsw.gc31.Model.Player.PlayArea}. It extends {@link Card}
+/**w
+ * This class represents a generic card that can be placed on the
+ * {@link it.polimi.ingsw.gc31.Model.Player.PlayArea}. It extends {@link Card}
  * All PlayableCard must extend this class.
  *
  * @author Christian Salvini
  */
-public abstract class PlayableCard extends Card{
+public abstract class PlayableCard extends Card {
     /**
-     * It represents the color of a card. It must be set by subclasses, and could be set to null.
+     * It represents the color of a card. It must be set by subclasses, and could be
+     * set to null.
      * It is final because the color of the card can't change.
      */
     protected final Color color;
 
     /**
-     * The constructor of the class calls the constructor of the upperclass {@link Card} that sets side to the
+     * The constructor of the class calls the constructor of the upperclass
+     * {@link Card} that sets side to the
      * dafault value.
      */
     public PlayableCard(Color color, CardFront front, CardBack back) {
@@ -47,19 +50,30 @@ public abstract class PlayableCard extends Card{
      * @return
      */
     public boolean checkCorner(int corner) {
-        if (side) return front.checkCorner(corner);
-        else return back.checkCorner(corner);
+        if (side)
+            return front.checkCorner(corner);
+        else
+            return back.checkCorner(corner);
     }
+
     public void coverCorner(int corner) {
-        if (side) front.coverCorner(corner);
-        else back.coverCorner(corner);
+        if (side)
+            front.coverCorner(corner);
+        else
+            back.coverCorner(corner);
     }
+
     public List<Resources> getResources() {
-        if (side) return front.getResources();
-        else return back.getResources();
+        if (side)
+            return front.getResources();
+        else
+            return back.getResources();
     }
+
     public Map<Resources, Integer> getRequirements() {
-        if (side) return front.getRequirements();
-        else return Collections.emptyMap();
+        if (side)
+            return front.getRequirements();
+        else
+            return Collections.emptyMap();
     }
 }

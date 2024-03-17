@@ -30,6 +30,8 @@ public class Server /*extends Application*/ {
     private Controller controller;
     private GameView view;
     private static List<String> usernamesList;
+    
+    
     public static void main(String[] args) {
         /*launch();*/
 
@@ -55,19 +57,23 @@ public class Server /*extends Application*/ {
             e.printStackTrace();
         }
         
-        int gameControllerID = controller.createGame(usernamesList.get(0));
+        int gameControllerID = controller.createGameController(usernamesList.get(0), 4);
         GameController gameController = controller.getGameController(gameControllerID);
         
         try {
-            //WARN qui sto creando il player prima di aver creato il GameModel... non mi piace
-            //IDEA  nei controller voglio usare solo i nickname che possono anche tornare utili come identificativo esterno dei player del Model
             gameController.addPlayer(usernamesList.get(1));
             gameController.addPlayer(usernamesList.get(2));
-            gameController.addPlayer(usernamesList.get(3));     
+            gameController.addPlayer(usernamesList.get(3));
         } catch (MaxPlayerNumberReachedException e) {
             e.printStackTrace();
         }
 
+        try {
+            gameController.createGameModel();
+        } catch (PlayerNumberNotReachedException e) {
+            System.out.println("Player Number Not Reached!");
+            e.printStackTrace();
+        }
         System.out.println("FINE DEBUG");
 
 

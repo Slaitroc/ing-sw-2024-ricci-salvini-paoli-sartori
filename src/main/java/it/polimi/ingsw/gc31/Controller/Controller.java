@@ -18,9 +18,6 @@ public class Controller {
     private List<GameController> gamesList;
     private Set<String> globalUsernameSet;
 
-    // NOTE potrebbe essere utile anche usare una mappa dove ad ogni controller
-    // collego un ID del game per trovarlo piú agevolmente
-
     public Controller() {
         this.gamesList = new ArrayList<GameController>();
         this.globalUsernameSet = new HashSet<String>();
@@ -30,15 +27,15 @@ public class Controller {
 
     /**
      * @param username player's nickname
-     * @return the gamePosition in gameSet
+     * @return the gamePosition of the GameController in gameSet
      */
-    public int createGame(String username) {
-        gamesList.add(new GameController(4, username));
+    public int createGameController(String username, int numPlayers) {
+        gamesList.add(new GameController(numPlayers, username));
         return gamesList.size()-1;
     }
 
     /**
-     * @apiNote add the player's nickname to the global players set
+     * @apiNote add the player's nickname to the globalPlayersSet
      * @param username
      * @throws PlayerNicknameAlreadyExistsException if the nickname is already in
      *                                              use

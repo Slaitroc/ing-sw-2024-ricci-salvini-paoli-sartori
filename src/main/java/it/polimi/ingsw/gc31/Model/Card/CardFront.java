@@ -12,6 +12,7 @@ import java.util.*;
 
 /**
  * This class represents the front side of card;
+ * 
  * @author Christian Salvini
  */
 public class CardFront {
@@ -31,16 +32,18 @@ public class CardFront {
 
         if (dirImg == null) throw new DirImgValueMissingException();
         this.dirImg = dirImg;
-        //TODO implementare depp copy per ob
+        // TODO implementare depp copy per ob
         this.ob = ob;
     }
 
     public boolean checkCorner(int corner) {
         return resources.get(corner) != Resources.HIDDEN;
     }
+
     public void coverCorner(int corner) {
         resources.set(corner, Resources.HIDDEN);
     }
+
     // TODO provare con programmazione funzionale e usando listDeepCopy
     public List<Resources> getResources() {
         List<Resources> res = new ArrayList<>();
@@ -51,7 +54,8 @@ public class CardFront {
         }
         return res;
     }
-    public Map<Resources, Integer> getRequirements(){
+
+    public Map<Resources, Integer> getRequirements() {
         return mapDeepCopy(requirements);
     }
 
@@ -62,9 +66,11 @@ public class CardFront {
     public String getImage() {
         return this.dirImg;
     }
+
     public int getScore() {
         return this.score;
     }
+
     private List<Resources> listDeepCopy(List<Resources> listToCopy) {
         List<Resources> newList = new ArrayList<>();
         for (Resources val : listToCopy) {
@@ -72,6 +78,7 @@ public class CardFront {
         }
         return newList;
     }
+
     private Map<Resources, Integer> mapDeepCopy(Map<Resources, Integer> mapToCopy) {
         Map<Resources, Integer> newMap = new HashMap<>();
         for (Map.Entry<Resources, Integer> val : mapToCopy.entrySet()) {
