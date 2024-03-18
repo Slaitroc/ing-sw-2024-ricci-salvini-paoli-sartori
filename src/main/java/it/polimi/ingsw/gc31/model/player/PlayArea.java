@@ -1,11 +1,10 @@
 package it.polimi.ingsw.gc31.model.player;
 import java.awt.Point;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class PlayArea {
 
@@ -45,7 +44,7 @@ public class PlayArea {
         return true;
     }
 
-    //Firstly it checks out if I have enough Resources to play the card.
+    // Firstly it checks out if I have enough Resources to play the card.
     //Then it adds the card in the placedCard Map if the function allowedMove return true.
     //Then return the value of points gained from that card
     //Notice that player will have to call:
