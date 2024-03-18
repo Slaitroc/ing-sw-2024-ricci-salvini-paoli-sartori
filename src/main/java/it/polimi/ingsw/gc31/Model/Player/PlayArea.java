@@ -1,10 +1,13 @@
 package it.polimi.ingsw.gc31.Model.Player;
 import it.polimi.ingsw.gc31.Model.Card.PlayableCard;
 import it.polimi.ingsw.gc31.Model.Enum.Resources;
+import it.polimi.ingsw.gc31.Model.Strategies.CoverCornerScore;
+
 import java.awt.Point;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class PlayArea {
 
@@ -16,31 +19,48 @@ public class PlayArea {
     PlayArea(){
     }
 
+
     //Create the HashMap, place starter at (0,0)
     //Create a hashMap for the achievedResources and
     //Add the resources to the map itself
     //It could be done calling UpdateAvailableRes, but it would be less efficient
     // and unnecessary being the first card placed
-
     public void placeStarter(PlayableCard card){
         placedCards = new HashMap<>();
-        Point coordinate = new Point(0, 0);
-        placedCards.put(coordinate, card);
+        Point point = new Point(0, 0);
+        placedCards.put(point, card);
         this.achievedResources = new HashMap<>();
         for (Resources r: card.getResources()){
             achievedResources.put(r, achievedResources.get(r)+1);
         }
     }
 
-    //Adds the card in the placedCard Map if the function allowedMove return true.
+    // this method creates a set of keys from the requirements read from the card
+    // than it proceed to slide them with a for to verify that in the map of achieved resources,
+    // I have enough of them
+    private boolean checkRequirements (PlayableCard card){
+        Set<Resources> RequiredRes = card.getRequirements().keySet();
+        for(Resources r: RequiredRes){
+            if(achievedResources.get(r)==null) return false;
+            if (card.getRequirements().get(r) < achievedResources.get(r)) return false;
+        }
+        return true;
+    }
+
+    //Firstly it checks out if I have enough Resources to play the card.
+    //Then it adds the card in the placedCard Map if the function allowedMove return true.
     //Then return the value of points gained from that card
     //Notice that player will have to call:
     // score += hisPlayArea.place(card, point) to adds points at his score correctly
     public int place(PlayableCard card, Point point){
-        if (allowedMove(point)) {
-            placedCards.put(point, card);
-            updateAvailableRes(card, point);
+        if (checkRequirements(card)) {
+            if (allowedMove(point)) {
+                placedCards.put(point, card);
+                updateAvailableRes(card, point);
+            }
         }
+        if (card.getObjective()!=null)
+            return card.getObjective().isObjectiveDone(placedCards, point);
         return card.getScore();
     }
 
@@ -58,34 +78,30 @@ public class PlayArea {
     //Return true if move is allowed, false if it is not.
     //Refers to card placement rule only
     private boolean allowedMove(Point point){
-        //Double corner coverage condition !!!!
-        // (think about it. Sum of coordinates needs to be EVEN, or you are covering 2 edges of the same card)!!
-        if((point.x + point.y) % 2 != 0) {
-            Point newPoint = new Point();
+        //Double corner coverage condition !!
+        //(Think about it. Sum of coordinates NEEDS to be EVEN, or you are covering 2 edges of the same card)
+        if((point.getX() + point.getY()) % 2 != 0) {
+            Point newPoint = new Point(point);
             //Placing new card on NorthEst
-            newPoint.x = point.x - 1;
-            newPoint.y = point.y - 1;
+            newPoint.move((int) point.getX()-1, (int) point.getY()-1);
             if (placedCards.get(newPoint) != null) {
                 if (placedCards.get(newPoint).getResources().get(0) != Resources.HIDDEN)
                     return true;
             }
             // Placing new card on SouthEast
-            newPoint.x = point.x - 1;
-            newPoint.y = point.y + 1;
+            newPoint.move((int) point.getX()-1, (int) point.getY()+1);
             if (placedCards.get(newPoint) != null) {
                 if (placedCards.get(newPoint).getResources().get(1) != Resources.HIDDEN)
                     return true;
             }
             //Placing new card on SouthWest
-            newPoint.x = point.x + 1;
-            newPoint.y = point.y + 1;
+            newPoint.move((int) point.getX()+1, (int) point.getY()+1);
             if (placedCards.get(newPoint) != null) {
                 if (placedCards.get(newPoint).getResources().get(2) != Resources.HIDDEN)
                     return true;
             }
             // Placing new card on NorthWest
-            newPoint.x = point.x+1;
-            newPoint.y = point.y-1;
+            newPoint.move((int) point.getX()+1, (int) point.getY()-1);
             if (placedCards.get(newPoint)!=null) {
                 if (placedCards.get(newPoint).getResources().get(2) != Resources.HIDDEN)
                     return true;
@@ -149,6 +165,10 @@ public class PlayArea {
 
     public Map<Point, PlayableCard> getPlacedCards(){
         return this.placedCards;
+    }
+
+    public Map<Resources, Integer> getAchievedResources(){
+        return this.achievedResources;
     }
 
 }
