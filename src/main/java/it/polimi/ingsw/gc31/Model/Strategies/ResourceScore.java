@@ -2,11 +2,8 @@ package it.polimi.ingsw.gc31.Model.Strategies;
 
 import it.polimi.ingsw.gc31.Model.Card.PlayableCard;
 import it.polimi.ingsw.gc31.Model.Enum.Resources;
-
 import java.awt.*;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -23,7 +20,7 @@ public class ResourceScore extends Objective {
      * @param placedCard : is the card the player is placing now
      * @return int : the number of points the player get by placing this card
      */
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard) {
+    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint) {
         /**
          * itero per ogni coordinata presente nella mappa ottenendo ogni carta posizionata. Per ogni carta
          * ottengo la lista di risorse che possiede e verifico per ogni posizione della lista se la Resource

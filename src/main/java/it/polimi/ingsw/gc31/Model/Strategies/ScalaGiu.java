@@ -2,7 +2,6 @@ package it.polimi.ingsw.gc31.Model.Strategies;
 
 import it.polimi.ingsw.gc31.Model.Card.PlayableCard;
 import it.polimi.ingsw.gc31.Model.Enum.Color;
-
 import java.awt.*;
 import java.util.Map;
 
@@ -20,7 +19,7 @@ public class ScalaGiu extends Objective {
      * @param placedCard
      * @return
      */
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard){
+    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint){
         /**
          * inizializzo i point massime e minime presenti sul campo del giocatore
          */

@@ -2,7 +2,6 @@ package it.polimi.ingsw.gc31.Model.Strategies;
 
 import it.polimi.ingsw.gc31.Model.Card.PlayableCard;
 import it.polimi.ingsw.gc31.Model.Enum.Color;
-
 import java.awt.*;
 import java.util.Map;
 
@@ -22,7 +21,7 @@ public class ElleRiflesso extends Objective {
         this.color2=color2;
     }
 
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard){
+    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint){
         /**
          * inizializzo i point massime presente sul campo del giocatore
          */

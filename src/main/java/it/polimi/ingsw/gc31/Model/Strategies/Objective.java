@@ -13,9 +13,6 @@ public abstract class Objective {
         this.score=0;
     }
 
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard){
-        return 0;
-    }
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point point){
         return 0;
     }
@@ -60,3 +57,4 @@ public abstract class Objective {
         return minY;
     }
 }
+

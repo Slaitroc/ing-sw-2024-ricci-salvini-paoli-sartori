@@ -2,7 +2,6 @@ package it.polimi.ingsw.gc31.Model.Strategies;
 
 import it.polimi.ingsw.gc31.Model.Card.PlayableCard;
 import it.polimi.ingsw.gc31.Model.Enum.Resources;
-
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,7 @@ public class Count extends Objective {
      * @param placedCard
      * @return
      */
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard){
+    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint){
         /**
          * se la lista di risorse da controllare contiene animali, insetti, funghi o piante richiamo la funzione
          * countAPIM che ritorna il numero di punti che a mia volta ritorno al chiamante.

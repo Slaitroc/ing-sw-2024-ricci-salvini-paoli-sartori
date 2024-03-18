@@ -1,7 +1,6 @@
 package it.polimi.ingsw.gc31.Model.Strategies;
 
 import it.polimi.ingsw.gc31.Model.Card.PlayableCard;
-
 import java.awt.*;
 import java.util.Map;
 
