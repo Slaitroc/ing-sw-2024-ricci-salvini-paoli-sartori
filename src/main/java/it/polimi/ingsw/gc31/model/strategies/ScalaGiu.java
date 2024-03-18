@@ -35,9 +35,9 @@ public class ScalaGiu extends Objective {
                 if(placedCard.get(point)!=null) {
 
                     if (placedCard.get(point).getColor().equals(color)) {
-                        point = new Point(i + 1, j + 1);
+                        point = new Point(i + 1, j - 1);
                         if (placedCard.get(point)!=null && placedCard.get(point).getColor().equals(color)) {
-                            point = new Point(i + 2, j + 2);
+                            point = new Point(i + 2, j - 2);
                             if (placedCard.get(point)!=null && placedCard.get(point).getColor().equals(color)) {
                                 /**
                                  * incremento score ogni volta che soddisfo l'biettivo di 2 punti
@@ -48,7 +48,7 @@ public class ScalaGiu extends Objective {
                                  * rimuovo le carte utilizzate per ottenere i punti
                                  */
                                 placedCard.remove(point);
-                                point = new Point(i+1, j+1);
+                                point = new Point(i+1, j-1);
                                 placedCard.remove(point);
                                 point = new Point(i, j);
                                 placedCard.remove(point);

@@ -19,7 +19,7 @@ public class CoverCornerScore extends Objective {
      * @param point
      * @return
      */
-    public int isObjeciveDone(Map<Point, PlayableCard> placedCard, Point point){
+    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point point){
         /**
          * creo 4 Point per ogni angolo che possiede la carta
          */

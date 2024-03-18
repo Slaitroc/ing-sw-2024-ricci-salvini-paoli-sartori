@@ -111,8 +111,8 @@ public class Count extends Objective {
              * itero la lista di risorse presenti nella carta, nel caso in cui la risorsa alla posizione i sia
              * uguale a quella ricercata (seed) incremento il contatore
              */
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).equals(seed)) {
+            for (Resources value : list) {
+                if (value.equals(seed)) {
                     score++;
                 }
             }
