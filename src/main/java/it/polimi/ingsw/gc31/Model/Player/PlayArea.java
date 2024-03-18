@@ -31,9 +31,14 @@ public class PlayArea {
             achievedResources.put(r, achievedResources.get(r)+1);
         }
     }
+
+    //Adds the card in the placedCard Map if the function allowedMove return true.
+    //Then return the value of points gained from that card
+    //Notice that player will have to call:
+    // score += hisPlayArea.place(card, point) to adds points at his score correctly
     public int place(PlayableCard card, Point point){
         if (allowedMove(point)) {
-            place(card, point);
+            placedCards.put(point, card);
             updateAvailableRes(card, point);
         }
         return card.getScore();
