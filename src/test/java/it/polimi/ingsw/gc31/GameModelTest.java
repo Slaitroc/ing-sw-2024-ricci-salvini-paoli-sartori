@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.gc31.Controller.Controller;
-import it.polimi.ingsw.gc31.Model.GameModel;
-import it.polimi.ingsw.gc31.Model.Exceptions.MaxPlayerNumberReachedException;
-import it.polimi.ingsw.gc31.Model.Exceptions.PlayerNicknameAlreadyExistsException;
-import it.polimi.ingsw.gc31.View.GameView;
+import it.polimi.ingsw.gc31.controller.Controller;
+import it.polimi.ingsw.gc31.model.GameModel;
+import it.polimi.ingsw.gc31.model.exceptions.MaxPlayerNumberReachedException;
+import it.polimi.ingsw.gc31.model.exceptions.PlayerNicknameAlreadyExistsException;
+import it.polimi.ingsw.gc31.view.GameView;
 
 public class GameModelTest {
     private List<String> usernamesList;
