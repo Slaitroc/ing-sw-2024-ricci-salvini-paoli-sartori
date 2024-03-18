@@ -22,10 +22,13 @@ public class Player {
         this.username = username;
     }
 
+    //Really Necessary?
     public boolean addToHand(Card card){
         this.hand.add(card);
     return true;
     }
+
+    //Basic repositioning of the card in hand implemented temporarily with an input output System
     public void moveCardInHand(){
         Scanner myScanner = new Scanner(System.in);
 
@@ -42,7 +45,7 @@ public class Player {
         System.out.println("New Hand disposition: " + hand);
     }
     public void changeState(){
-//??
+        //??
     }
     public void addObjectiveCard(ObjectiveCard card){
         this.objectiveCard = card;
