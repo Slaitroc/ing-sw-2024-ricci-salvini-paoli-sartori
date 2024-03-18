@@ -9,30 +9,33 @@ import it.polimi.ingsw.gc31.model.enumeration.Color;
 public class ScalaGiu extends Objective {
     private Color color;
 
-    public ScalaGiu(Color color){
+    public ScalaGiu(Color color) {
         super();
-        this.color=color;
+        this.color = color;
     }
 
     /**
      * per dettagli su problematiche e funzionalità vedi classe "ScalaSu"
-     * obiettivo e funzionamento analogo cambia solamente l'ordine in cui effettuare i confronti
+     * obiettivo e funzionamento analogo cambia solamente l'ordine in cui effettuare
+     * i confronti
+     * 
      * @param placedCard
      * @return
      */
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint){
+    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint) {
         /**
          * inizializzo i point massime e minime presenti sul campo del giocatore
          */
-        int maxX=findMaxX(placedCard), minX=findMinX(placedCard), maxY=findMaxY(placedCard), minY=findMinY(placedCard);
+        int maxX = findMaxX(placedCard), minX = findMinX(placedCard), maxY = findMaxY(placedCard),
+                minY = findMinY(placedCard);
 
-        for(int j = maxY; j >= minY + 2; j--) {
+        for (int j = maxY; j >= minY + 2; j--) {
             for (int i = minX; i <= maxX - 2; i++) {
-                Point point = new Point(i,j);
+                Point point = new Point(i, j);
                 /**
                  * se qui non è presente una carta devo passare subito alla prossima posizione
                  */
-                if(placedCard.get(point)!=null) {
+                if (placedCard.get(point) != null) {
 
                     if (placedCard.get(point).getColor().equals(color)) {
                         point = new Point(i + 1, j - 1);
@@ -42,7 +45,7 @@ public class ScalaGiu extends Objective {
                                 /**
                                  * incremento score ogni volta che soddisfo l'biettivo di 2 punti
                                  */
-                                score+=2;
+                                score += 2;
 
                                 /**
                                  * rimuovo le carte utilizzate per ottenere i punti
