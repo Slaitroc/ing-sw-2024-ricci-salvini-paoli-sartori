@@ -1,5 +1,4 @@
 package it.polimi.ingsw.gc31.Model.Enum;
-
 /**
  * Enum that represents every color inside the game
  */
