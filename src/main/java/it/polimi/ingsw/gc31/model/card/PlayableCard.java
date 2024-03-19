@@ -4,10 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
-import it.polimi.ingsw.gc31.model.strategies.Objective;
 
 import java.util.Collections;
 import java.util.List;

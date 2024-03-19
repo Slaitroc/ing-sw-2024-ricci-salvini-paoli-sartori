@@ -3,11 +3,11 @@ package it.polimi.ingsw.gc31;
 import java.util.List;
 import java.util.ArrayList;
 
-import it.polimi.ingsw.gc31.Controller.Controller;
-import it.polimi.ingsw.gc31.Controller.GameController;
-import it.polimi.ingsw.gc31.Model.GameModel;
-import it.polimi.ingsw.gc31.Model.Exceptions.*;
-import it.polimi.ingsw.gc31.View.GameView;
+import it.polimi.ingsw.gc31.controller.Controller;
+import it.polimi.ingsw.gc31.controller.GameController;
+import it.polimi.ingsw.gc31.model.GameModel;
+import it.polimi.ingsw.gc31.model.exceptions.*;
+import it.polimi.ingsw.gc31.view.GameView;
 
 /*import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
