@@ -8,6 +8,7 @@ import java.util.Set;
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -59,13 +60,14 @@ public class PlayArea {
     // Then return the value of points gained from that card
     // Notice that player will have to call:
     // score += hisPlayArea.place(card, point) to adds points at his score correctly
-    public int place(PlayableCard card, Point point) {
+    public int place(PlayableCard card, Point point)  {
         if (checkRequirements(card)) {
             if (allowedMove(point)) {
                 placedCards.put(point, card);
                 updateAvailableRes(card, point);
             }
         }
+        if (card.getObjective() != null)
         if (card.getObjective() != null)
             return card.getObjective().isObjectiveDone(placedCards, point);
         return card.getScore();
@@ -157,7 +159,7 @@ public class PlayArea {
             placedCards.get(newPoint).coverCorner(3);
         }
 
-        // Covering SouthWest
+        //  Covering SouthWest
         newPoint.x = point.x - 1;
         newPoint.y = point.y - 1;
         if (placedCards.get(newPoint) != null) {
@@ -177,12 +179,12 @@ public class PlayArea {
     }
 
 
-    public Map<Point, PlayableCard> getPlacedCards(){
+    public Map<Point, PlayableCard> getPlacedCards() {
         return new HashMap<>(placedCards);
     }
 
-    public Map<Resources, Integer> getAchievedResources(){
-            return new HashMap<>(achievedResources);
+    public Map<Resources, Integer> getAchievedResources() {
+        return new HashMap<>(achievedResources);
     }
 
 }
