@@ -1,85 +1,117 @@
 package it.polimi.ingsw.gc31.model.deck;
 
-import it.polimi.ingsw.gc31.model.card.Card;
-import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
-import it.polimi.ingsw.gc31.utility.file.FileUtility;
+import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import it.polimi.ingsw.gc31.utility.gsonUtility.*;
 
-import java.io.BufferedReader;
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-
-import com.google.gson.Gson;
-
-public class Deck {
+public class Deck <T> {
     // TODO cambiare implementazione con queue
-    private List<Card> deck;
-    private Card card1;
-    private Card card2;
+    private Queue<T> deck;
+    private T card1;
+    private T card2;
+    // TODO forse da mettere statiche da qualche altra parte
+    private final String dirImgGoldCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/GoldCard.json";
+    private final String dirImgResourceCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/ResourceCard.json";
+    private final String dirImgStarterCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/StarterCard.json";
+    private final String dirImgObjectiveCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/ObjectiveCard.json";
 
-    public Deck(List<Card> deck) {
-        // TODO forse implementare deep copy
-        this.deck = deck;
-    }
+    public Deck(CardType cardType) {
+        List<T> tempDeck = new ArrayList<>();
+        FileReader fileReader = null;
+        // classe delle carte che formeranno il deck
+        Type type = null;
 
-    public Deck(CardType x) {
-        String cardJson; //NOTE debug 
-        switch (x) {
-            case GOLD:
-                cardJson = deserializaGoldDeck();
-                System.out.println("Gold Deck letto");
-                break;
-            case RESOURCE:
-                cardJson = deserializaResourceDeck();
-                System.out.println("Resource Deck letto");
-                break;
-            case STARTER:
-                cardJson = deserializaStarterDeck();
-                System.out.println("Starter Deck letto");
-                break;
-            case OBJECTIVE:
-                cardJson = deserializaObjectiveDeck();
-                System.out.println("Objective Deck letto");
-                break;
-            default:
-            cardJson = null;
-            System.out.println("nessun file trovato");
-                break;
+        this.deck = new ArrayDeque<>();
+        try {
+            switch (cardType) {
+                case GOLD:
+                    fileReader = new FileReader(dirImgGoldCard);
+                    type = GoldCard.class;
+                    break;
+                case RESOURCE:
+                    fileReader = new FileReader(dirImgResourceCard);
+                    type = ResourceCard.class;
+                    break;
+                case STARTER:
+                    fileReader = new FileReader(dirImgStarterCard);
+                    type = StarterCard.class;
+                    break;
+                case OBJECTIVE:
+                    fileReader = new FileReader(dirImgObjectiveCard);
+                    type = ObjectiveCard.class;
+                    break;
+                default:
+                    // TODO aggiungere default
+                    break;
+            }
+
+            JsonElement jsonElement = JsonParser.parseReader(fileReader);
+            fileReader.close();
+
+            // TODO aggiungere else con expection?
+            if (jsonElement.isJsonArray()) {
+                JsonArray jsonArray = jsonElement.getAsJsonArray();
+
+                //create GsonBuilder and add typeAdapter necessary
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(GoldCard.class, new PlayableCardAdapter())
+                        .registerTypeAdapter(ResourceCard.class, new PlayableCardAdapter())
+                        .registerTypeAdapter(StarterCard.class, new PlayableCardAdapter())
+                        .registerTypeAdapter(CardFront.class, new FrontClassAdapter())
+                        .registerTypeAdapter(CardBack.class, new BackClassAdapter())
+                        .registerTypeAdapter(Resources.class, new ListResourcesEnumAdapter())
+                        .registerTypeAdapter(new TypeToken<Map<Resources, Integer>>(){}.getType(), new MapRequirementsAdapter())
+                        .create();
+
+                // pars every element
+                for (JsonElement element: jsonArray) {
+                    if (element.isJsonObject()) {
+                        JsonObject jsonObject = element.getAsJsonObject();
+
+                        // deserialize a single element and add it to the deck
+                        T res = gson.fromJson(jsonObject, type);
+                        tempDeck.add((T) res);
+                    }
+                }
+
+                //TODO, tradurre: Mischio le carte
+                Collections.shuffle(tempDeck);
+                for (T card: tempDeck) {
+                    deck.add(card);
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
     }
 
-    private String deserializaGoldDeck() {
-        return FileUtility.fileToString("src/main/resources/it/polimi/ingsw/gc31/CardsJson/GoldCard.json");
-    }
-    private String deserializaResourceDeck() {
-        return FileUtility.fileToString("src/main/resources/it/polimi/ingsw/gc31/CardsJson/ResourceCard.json");
-    }
-    private String deserializaStarterDeck() {
-        return FileUtility.fileToString("src/main/resources/it/polimi/ingsw/gc31/CardsJson/StarterCard.json");
-    }
-    private String deserializaObjectiveDeck() {
-        return FileUtility.fileToString("src/main/resources/it/polimi/ingsw/gc31/CardsJson/ObjectiveCard.json");
-    }
-
-    public Card draw() {
-        return deck.remove(0);
+    public T draw() {
+        return deck.peek();
     }
 
     public Card getCard1() {
-        Card ret = card1;
-        card1 = draw();
-        return ret;
+        return null;
     }
 
     public Card getCard2() {
+        /*
         Card ret = card2;
         card2 = draw();
-        return ret;
+
+         */
+        return null;
     }
 }

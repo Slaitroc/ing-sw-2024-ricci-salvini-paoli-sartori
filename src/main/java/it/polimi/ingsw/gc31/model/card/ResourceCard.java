@@ -11,6 +11,10 @@ import it.polimi.ingsw.gc31.model.exceptions.WrongNumberOfCornerException;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
 
 public class ResourceCard extends PlayableCard{
+    // TODO non sono convinto
+    public ResourceCard(Color color, CardFront front, CardBack back) {
+        super(color, front, back);
+    }
     public ResourceCard(Color color , int score, List<Resources> resourcesFront, List<Resources> resourcesBack, String dirImgFront, String dirImgBack) throws WrongNumberOfCornerException, DirImgValueMissingException {
         super(color,
                 new CardFront(score, resourcesFront, Collections.emptyMap(), dirImgFront, null),

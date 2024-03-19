@@ -4,6 +4,7 @@ import java.util.Scanner;  // Import the Scanner class to test moveCardInHand
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 
 import java.util.ArrayList;

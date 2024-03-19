@@ -59,13 +59,7 @@ public class FrontClassAdapter implements JsonDeserializer<CardFront> {
 
         // Create and returns a new object of the type CardFront
         CardFront front = null;
-        try {
-            front = new CardFront(score, resources, requirements, dirImg, null);
-        } catch (WrongNumberOfCornerException e) {
-            throw new RuntimeException(e);
-        } catch (DirImgValueMissingException e) {
-            throw new RuntimeException(e);
-        }
+        front = new CardFront(score, resources, requirements, dirImg, null);
         return front;
     }
 }
