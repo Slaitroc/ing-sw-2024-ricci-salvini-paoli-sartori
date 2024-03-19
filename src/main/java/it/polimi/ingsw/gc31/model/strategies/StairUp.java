@@ -31,6 +31,7 @@ public class StairUp extends Objective {
      */
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint){
         int maxX=findMaxX(placedCard), minX=findMinX(placedCard), maxY=findMaxY(placedCard), minY=findMinY(placedCard);
+        int count=0;
 
         for(int j = maxY; j >= minY + 2; j--) {
             for (int i = minX; i <= maxX - 2; i++) {
@@ -42,7 +43,7 @@ public class StairUp extends Objective {
                         if (placedCard.get(point)!=null && placedCard.get(point).getColor().equals(color)) {
                             point = new Point(i + 2, j - 2);
                             if (placedCard.get(point)!=null && placedCard.get(point).getColor().equals(color)) {
-                                score+=2;
+                                count+=2;
 
                                 placedCard.remove(point);
                                 point = new Point(i+1, j-1);
@@ -56,6 +57,6 @@ public class StairUp extends Objective {
             }
         }
 
-        return score;
+        return count;
     }
 }

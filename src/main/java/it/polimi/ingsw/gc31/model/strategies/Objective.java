@@ -10,16 +10,9 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
  */
 public abstract class Objective {
     /**
-     * This attribute represents the points obtained by the player
-     */
-    protected int score;
-
-    /**
      * This method is the constructor of the class
      */
-    public Objective(){
-        this.score=0;
-    }
+    public Objective(){}
 
     /**
      * This method check if the objective is done by the player

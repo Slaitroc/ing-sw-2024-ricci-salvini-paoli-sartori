@@ -25,16 +25,18 @@ public class CoverCornerScore extends Objective {
      * @return the number of point obtained by the player
      */
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point point){
+        int count=0;
+
         Point altoDx = new Point((int) point.getX() + 1, (int) point.getY() + 1);
         Point altoSx = new Point((int) point.getX() - 1, (int) point.getY() + 1);
         Point bassoDx = new Point((int) point.getX() + 1, (int) point.getY() - 1);
         Point bassoSx = new Point((int) point.getX() - 1, (int) point.getY() - 1);
 
-        if(placedCard.get(altoDx)!=null){ score++; }
-        if(placedCard.get(altoSx)!=null){ score++; }
-        if(placedCard.get(bassoDx)!=null){ score++; }
-        if(placedCard.get(bassoSx)!=null){ score++; }
+        if(placedCard.get(altoDx)!=null){ count++; }
+        if(placedCard.get(altoSx)!=null){ count++; }
+        if(placedCard.get(bassoDx)!=null){ count++; }
+        if(placedCard.get(bassoSx)!=null){ count++; }
 
-        return 2 * score;
+        return 2 * count;
     }
 }

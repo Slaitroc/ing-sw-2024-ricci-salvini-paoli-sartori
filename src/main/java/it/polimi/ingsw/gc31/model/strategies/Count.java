@@ -84,18 +84,19 @@ public class Count extends Objective {
      */
     private int searchOnBoard(Map<Point, PlayableCard> placedCard, Resources seed) {
         List<Resources> list=null;
+        int count=0;
 
         for (Point c : placedCard.keySet()) {
             list = placedCard.get(c).getResources();
 
             for (Resources value : list) {
                 if (value.equals(seed)) {
-                    score++;
+                    count++;
                 }
             }
 
         }
 
-        return score;
+        return count;
     }
 }

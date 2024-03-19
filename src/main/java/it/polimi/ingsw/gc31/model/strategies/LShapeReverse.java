@@ -38,6 +38,7 @@ public class LShapeReverse extends Objective {
      */
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint){
         int maxX=findMaxX(placedCard), minX=findMinX(placedCard), maxY=findMaxY(placedCard), minY=findMinY(placedCard);
+        int count=0;
 
         for(int j = maxY; j >= minY + 2; j--) {
             for (int i = minX + 1; i <= maxX; i++) {
@@ -49,7 +50,7 @@ public class LShapeReverse extends Objective {
                         if(placedCard.get(point)!=null && placedCard.get(point).getColor().equals(color1)){
                             point = new Point(i-1, j-2);
                             if(placedCard.get(point)!=null && placedCard.get(point).getColor().equals(color2)){
-                                score+=3;
+                                count+=3;
 
                                 placedCard.remove(point);
                                 point = new Point(i, j-1);
@@ -63,6 +64,6 @@ public class LShapeReverse extends Objective {
             }
         }
 
-        return score;
+        return count;
     }
 }
