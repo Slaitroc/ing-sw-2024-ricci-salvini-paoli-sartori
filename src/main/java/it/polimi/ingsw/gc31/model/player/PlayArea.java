@@ -1,7 +1,10 @@
 package it.polimi.ingsw.gc31.model.player;
+
 import java.awt.Point;
+
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -14,7 +17,7 @@ public class PlayArea {
     // unnecessary anyway
     private Map<Resources, Integer> achievedResources;
 
-    PlayArea(){
+    PlayArea() {
     }
 
 
@@ -23,23 +26,23 @@ public class PlayArea {
     //Add the resources to the map itself
     //It could be done calling UpdateAvailableRes, but it would be less efficient
     // and unnecessary being the first card placed
-    public void placeStarter(PlayableCard card){
+    public void placeStarter(PlayableCard card) {
         placedCards = new HashMap<>();
         Point point = new Point(0, 0);
         placedCards.put(point, card);
         this.achievedResources = new HashMap<>();
-        for (Resources r: card.getResources()){
-            achievedResources.put(r, achievedResources.get(r)+1);
+        for (Resources r : card.getResources()) {
+            achievedResources.put(r, achievedResources.get(r) + 1);
         }
     }
 
     // this method creates a set of keys from the requirements read from the card
     // than it proceed to slide them with a for to verify that in the map of achieved resources,
     // I have enough of them
-    private boolean checkRequirements (PlayableCard card){
+    private boolean checkRequirements(PlayableCard card) {
         Set<Resources> RequiredRes = card.getRequirements().keySet();
-        for(Resources r: RequiredRes){
-            if(achievedResources.get(r)==null) return false;
+        for (Resources r : RequiredRes) {
+            if (achievedResources.get(r) == null) return false;
             if (card.getRequirements().get(r) < achievedResources.get(r)) return false;
         }
         return true;
@@ -50,14 +53,14 @@ public class PlayArea {
     //Then return the value of points gained from that card
     //Notice that player will have to call:
     // score += hisPlayArea.place(card, point) to adds points at his score correctly
-    public int place(PlayableCard card, Point point){
+    public int place(PlayableCard card, Point point) {
         if (checkRequirements(card)) {
             if (allowedMove(point)) {
                 placedCards.put(point, card);
                 updateAvailableRes(card, point);
             }
         }
-        if (card.getObjective()!=null)
+        if (card.getObjective() != null)
             return card.getObjective().isObjectiveDone(placedCards, point);
         return card.getScore();
     }
@@ -166,12 +169,12 @@ public class PlayArea {
     }
 
 
-    public Map<Point, PlayableCard> getPlacedCards(){
+    public Map<Point, PlayableCard> getPlacedCards() {
         return new HashMap<>(placedCards);
     }
 
-    public Map<Resources, Integer> getAchievedResources(){
-            return new HashMap<>(achievedResources);
+    public Map<Resources, Integer> getAchievedResources() {
+        return new HashMap<>(achievedResources);
     }
 
 }
