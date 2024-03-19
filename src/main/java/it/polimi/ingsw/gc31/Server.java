@@ -16,35 +16,36 @@ import javafx.stage.Stage;
 
 import java.io.IOException;*/
 
-public class Server /*extends Application*/ {
-    /*@Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
-    }*/
-    
+public class Server /* extends Application */ {
+    /*
+     * @Override
+     * public void start(Stage stage) throws IOException {
+     * FXMLLoader fxmlLoader = new
+     * FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+     * Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+     * stage.setTitle("Hello!");
+     * stage.setScene(scene);
+     * stage.show();
+     * }
+     */
+
     private GameModel gameModel;
     private Controller controller;
     private GameView view;
     private static List<String> usernamesList;
-    
-    
+
     public static void main(String[] args) {
-        /*launch();*/
+        /* launch(); */
 
-
-  /*   public void creaDatiXInizializzazioneGameController() { */
-        //creo gli username per i futuri player
         Controller controller = new Controller();
-        //NOTE questo controller sará unico e giá presente nel server
-        //é il gestore di tutte le singole partite e degli username dei player
+        // NOTE questo controller sará unico e giá presente nel server
+        // é il gestore di tutte le singole partite e degli username dei player
+        
+
+        // creo gli username per i futuri player
         usernamesList = new ArrayList<String>();
         usernamesList.add("Alessandro");
-        
-        
+
         try {
             controller.addPlayerUsername(usernamesList.get(0));
             usernamesList.add("Christian");
@@ -56,10 +57,10 @@ public class Server /*extends Application*/ {
         } catch (PlayerNicknameAlreadyExistsException e) {
             e.printStackTrace();
         }
-        
+
         int gameControllerID = controller.createGameController(usernamesList.get(0), 4);
         GameController gameController = controller.getGameController(gameControllerID);
-        
+
         try {
             gameController.addPlayer(usernamesList.get(1));
             gameController.addPlayer(usernamesList.get(2));
@@ -76,12 +77,6 @@ public class Server /*extends Application*/ {
         }
         System.out.println("FINE DEBUG");
 
-
-
-        
-        
     }
 
-
-    
 }

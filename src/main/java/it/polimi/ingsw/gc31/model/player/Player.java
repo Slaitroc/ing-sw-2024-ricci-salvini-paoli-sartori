@@ -59,13 +59,11 @@ public class Player {
         this.objectiveCard = card;
     }
 
-    public int getScore() {
 
     public int getScore() {
         return this.score;
     }
 
-    public PlayArea getPlayArea() {
     public PlayArea getPlayArea() {
         return playArea;
     }
