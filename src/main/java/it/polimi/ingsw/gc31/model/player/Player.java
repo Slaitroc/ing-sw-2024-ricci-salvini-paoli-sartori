@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    private String username;
-    private PlayArea playArea;
+    private final String username;
+    private final PlayArea playArea;
     private final Color pawnColor;
-    private List<PlayableCard> hand;
+    private final List<PlayableCard> hand;
     private ObjectiveCard objectiveCard;
     private PlayerState inGameState;
     protected int score;
@@ -23,7 +23,7 @@ public class Player {
         this.pawnColor = color;
         this.username = username;
         playArea = new PlayArea();
-        hand = new ArrayList<PlayableCard>();
+        hand = new ArrayList<>();
         score = 0;
     }
 

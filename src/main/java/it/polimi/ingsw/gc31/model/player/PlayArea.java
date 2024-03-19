@@ -2,9 +2,7 @@ package it.polimi.ingsw.gc31.model.player;
 
 import java.awt.Point;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
@@ -15,11 +13,12 @@ import java.util.Set;
 
 public class PlayArea {
 
-    private Map<Point, PlayableCard> placedCards;
+    private final Map<Point, PlayableCard> placedCards;
 
     // private Integer[] playAreaLimit; //Actually inefficient in my opinion or
     // unnecessary anyway
-    private Map<Resources, Integer> achievedResources;
+
+    private final Map<Resources, Integer> achievedResources;
 
     PlayArea() {
         placedCards = new HashMap<>();
@@ -27,11 +26,13 @@ public class PlayArea {
     }
 
 
-    //Create the HashMap, place starter at (0,0)
-    //Create a hashMap for the achievedResources and
-    //Add the resources to the map itself
-    //It could be done calling UpdateAvailableRes, but it would be less efficient
-    // and unnecessary being the first card placed
+    /** Create the HashMap, place starter at (0,0)
+    * Create a hashMap for the achievedResources and
+    * Add the resources to the map itself
+    * It could be done calling UpdateAvailableRes, but it would be less efficient
+    * and unnecessary being the first card placed
+    * @author Matteo Paoli
+    */
     public void placeStarter(PlayableCard card) {
         Point point = new Point(0, 0);
         placedCards.put(point, card);
@@ -40,23 +41,30 @@ public class PlayArea {
         }
     }
 
-    // this method creates a set of keys from the requirements read from the card
-    // than it proceed to slide through them with a for to verify that in the map of
-    // achieved resources I have enough of them
+    /** this method creates a set of keys from the requirements read from the cart
+     * than it proceed to slide through them with a for to verify that in the map of
+     * achieved resources I have enough of them
+     * @author Matteo Paoli
+     */
     private boolean checkRequirements(PlayableCard card) {
-        Set<Resources> RequiredRes = card.getRequirements().keySet();
-        for (Resources r : RequiredRes) {
-            if (achievedResources.get(r) == null) return false;
-            if (card.getRequirements().get(r) < achievedResources.get(r)) return false;
+        if (!card.getRequirements().equals(Collections.emptyMap())) {
+            Set<Resources> RequiredRes = card.getRequirements().keySet();
+            for (Resources r : RequiredRes) {
+                if (achievedResources.get(r) == null) return false;
+                if (card.getRequirements().get(r) < achievedResources.get(r)) return false;
+            }
         }
         return true;
     }
 
-    // Firstly it checks out if I have enough Resources to play the card.
-    //Then it adds the card in the placedCard Map if the function allowedMove return true.
-    //Then return the value of points gained from that card
-    //Notice that player will have to call:
-    // score += hisPlayArea.place(card, point) to adds points at his score correctly
+    /**
+     * Firstly it checks out if I have enough Resources to play the card.
+     * Then it adds the card in the placedCard Map if the function allowedMove return true.
+     * Then return the value of points gained from that card
+     * Notice that player will have to call:
+     * score += hisPlayArea.place(card, point) to adds points at his score correctly
+     * @author Matteo Paoli
+     * */
     public int place(PlayableCard card, Point point) {
         if (checkRequirements(card)) {
             if (allowedMove(point)) {
@@ -66,7 +74,6 @@ public class PlayArea {
         }
         if (card.getObjective() != null) return card.getObjective().isObjectiveDone(placedCards, point);
         return card.getScore();
-
     }
 
     /*
@@ -81,8 +88,10 @@ public class PlayArea {
      * }
      */
 
-    // Return true if move is allowed, false if it is not.
-    // Refers to card placement rule only
+    /** Return true if move is allowed, false if it is not.
+     * Refers to card placement rule only
+     * @author Matteo Paoli
+     */
     private boolean allowedMove(Point point) {
         // Double corner coverage condition !!
         // (Think about it. Sum of coordinates NEEDS to be EVEN, or you are covering 2
@@ -107,19 +116,20 @@ public class PlayArea {
             // Placing new card on NorthWest
             newPoint.move((int) point.getX() + 1, (int) point.getY() - 1);
             if (placedCards.get(newPoint) != null) {
-                if (placedCards.get(newPoint).getResources().get(2) != Resources.HIDDEN) return true;
+                return placedCards.get(newPoint).getResources().get(2) != Resources.HIDDEN;
             }
         }
         return false;
     }
 
-    // Command update the value in the achievedResource map under the key (r) with
-    // its value +1
-    // when adding resources (unless r == HIDDEN)
-    // than it checks all the cards that could have been covered by the new placed
-    // card and
-    // update the value in the achievedResource map under the key (r) with its value
-    // -1
+    /**
+     * Command update the value in the achievedResource map under the key (r) with
+     * its value +1 when adding resources (unless r == HIDDEN)
+     * than it checks all the cards that could have been covered by the new placed
+     * card and update the value in the achievedResource map under the key (r)
+     * with its value -1
+     * @author Matteo Paoli
+     */
     private void updateAvailableRes(PlayableCard card, Point point) {
         // Adding Resources
         for (Resources r : card.getResources()) {
