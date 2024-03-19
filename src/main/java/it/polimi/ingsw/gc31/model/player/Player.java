@@ -53,6 +53,20 @@ public class Player {
 
     public void changeState() {
         // ??
+        playArea = new PlayArea();
+        hand = new ArrayList<Card>();
+        score = 0;
+    }
+
+    public boolean addToHand(Card card){
+        return true;//FIX
+
+    }
+    public void moveCardInHand(){
+
+    }
+    public void changeState(){
+
     }
 
     public void addObjectiveCard(ObjectiveCard card) {
