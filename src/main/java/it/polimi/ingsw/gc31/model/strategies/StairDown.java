@@ -6,14 +6,14 @@ import java.util.Map;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 
-/**
+/*
  * l'attributo Color penso dovrebbe essere sosituito con Resource. Color si riferisce al colore della pedina del giocatore
  * mentre a me interssa la tipologia di carta (animale, insetto, fungo, vegetale) che corrisponde al certo colore rappresentato
  */
-public class ScalaSu extends Objective {
+public class StairDown extends Objective {
     private Color color;
 
-    public ScalaSu(Color color){
+    public StairDown(Color color){
         super();
         this.color=color;
     }
@@ -23,12 +23,12 @@ public class ScalaSu extends Objective {
      * @return
      */
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint){
-        /**
+        /*
          * inizializzo i point massime e minime presenti sul campo del giocatore
          */
         int maxX=findMaxX(placedCard), minX=findMinX(placedCard), maxY=findMaxY(placedCard), minY=findMinY(placedCard);
 
-        /**
+        /*
          * Partendo dall'angolo in basso a sinistra verifico se è stata soddisfatta la richiesta dell'obiettivo.
          * Ad ogni iterazione mi sposto a destra lungo l'asse orizzontale, quando raggiungo la fine riparto daccapo
          * ma alzandomi sull'asse delle ordinate.
@@ -53,12 +53,12 @@ public class ScalaSu extends Objective {
                         if (placedCard.get(point)!=null && placedCard.get(point).getColor().equals(color)) {
                             point = new Point(i+2, j+2);
                             if (placedCard.get(point)!=null && placedCard.get(point).getColor().equals(color)) {
-                                /**
+                                /*
                                  * incremento score ogni volta che soddisfo l'biettivo di 2 punti
                                  */
                                 score += 2;
 
-                                /**
+                                /*
                                  * se l'obiettivo è conseguito devo togliere le carte considerate, non posso usare
                                  * la stessa carta per completare pù volte lo stesso obiettivo
                                  * Idea: setto a null il value associato a quello specifico valore di point, devo
@@ -79,7 +79,7 @@ public class ScalaSu extends Objective {
                 }
             }
         }
-        /**
+        /*
          * ritorno i punti accumulati
          */
         return score;

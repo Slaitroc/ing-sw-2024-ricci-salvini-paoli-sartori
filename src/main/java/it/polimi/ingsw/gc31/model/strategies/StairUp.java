@@ -6,10 +6,10 @@ import java.util.Map;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 
-public class ScalaGiu extends Objective {
+public class StairUp extends Objective {
     private Color color;
 
-    public ScalaGiu(Color color){
+    public StairUp(Color color){
         super();
         this.color=color;
     }
@@ -21,7 +21,7 @@ public class ScalaGiu extends Objective {
      * @return
      */
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint){
-        /**
+        /*
          * inizializzo i point massime e minime presenti sul campo del giocatore
          */
         int maxX=findMaxX(placedCard), minX=findMinX(placedCard), maxY=findMaxY(placedCard), minY=findMinY(placedCard);
@@ -29,7 +29,7 @@ public class ScalaGiu extends Objective {
         for(int j = maxY; j >= minY + 2; j--) {
             for (int i = minX; i <= maxX - 2; i++) {
                 Point point = new Point(i,j);
-                /**
+                /*
                  * se qui non è presente una carta devo passare subito alla prossima posizione
                  */
                 if(placedCard.get(point)!=null) {
@@ -39,12 +39,12 @@ public class ScalaGiu extends Objective {
                         if (placedCard.get(point)!=null && placedCard.get(point).getColor().equals(color)) {
                             point = new Point(i + 2, j - 2);
                             if (placedCard.get(point)!=null && placedCard.get(point).getColor().equals(color)) {
-                                /**
+                                /*
                                  * incremento score ogni volta che soddisfo l'biettivo di 2 punti
                                  */
                                 score+=2;
 
-                                /**
+                                /*
                                  * rimuovo le carte utilizzate per ottenere i punti
                                  */
                                 placedCard.remove(point);
@@ -58,7 +58,7 @@ public class ScalaGiu extends Objective {
                 }
             }
         }
-        /**
+        /*
          * ritorno i punti accumulati
          */
         return score;

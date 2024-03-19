@@ -7,31 +7,30 @@ import java.util.Map;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
+/**
+ *  This class represents the objective that gives points based on how many resources are held by a player
+ */
 public class Count extends Objective {
+    /**
+     * This attribute represents the resources the player needs to hold to obtain points
+     */
     private List<Resources> resources;
 
+    /**
+     * This method is the constructor of the class
+     * @param resources the list of resources the player needs to hold to obtain points
+     */
     public Count(List<Resources> resources){
         super();
         this.resources=resources;
     }
 
     /**
-     * ritorno il numero di punti ottenuti dal giocatore
-     * a seconda del "sottotipo" della carta obiettivo richiamo diversi metodi privati interni alla classe
-     * caso 1: obiettivo con 3 risorse che siano solo animali, funghi, insetti o piante
-     * caso 2: obiettivo che contiene gli altri tipi di risorse (pergamena, inchiostro, piuma)
-     * @param placedCard
-     * @return
+     * This method check if this particular objective is done
+     * @param placedCard is the map that contains all the card on the player's board
+     * @return the number of points obtained by the player
      */
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint){
-        /**
-         * se la lista di risorse da controllare contiene animali, insetti, funghi o piante richiamo la funzione
-         * countAPIM che ritorna il numero di punti che a mia volta ritorno al chiamante.
-         * Altrimenti richiamo e ritorno il valore della funzione countFIS per il caso che la lista di risorse
-         * contenga gli altri possibili oggetti.
-         * I metodi sono leggermente diversi, il numero di punti ottenuti è diverso... Potrebbe essere overkill, valuto
-         * alla fine dell'implementazione se è opportuno unirli in un unico metodo
-         */
         if(resources.get(0)==Resources.ANIMAL || resources.get(0)==Resources.PLANT ||
                 resources.get(0)==Resources.INSECT || resources.get(0)==Resources.MUSHROOM ) {
             return countAPIM(placedCard);
@@ -40,77 +39,55 @@ public class Count extends Objective {
     }
 
     /**
-     * conto e ritorno i punti ottenuti nel caso in cui la lista contenga piante, animali, insetti o funghi
-     * @param placedCard
-     * @return
+     * This method check the objective in the particular case where the list of resources contains only Animal,
+     * Plants, Insects and Mushrooms
+     * @param placedCard is the map that contains all the card on the player's board
+     * @return the number of points obtained by the player
      */
     private int countAPIM(Map<Point, PlayableCard> placedCard){
-        /**
-         * salvo in seed il tipo di risorsa che voglio cercare. Prendo la prima perchè sono tutte uguali
-         * suppongo che la lista sia ben formata
-         */
         Resources seed = resources.get(0);
         int found=searchOnBoard(placedCard, seed);
         return 2 * ( (found - found % 3 ) / 3 );
     }
 
     /**
-     * conto e ritorno i punti ottenuti nel caso in cui la lista contenga inchiostro, piume o pergamena
-     * @param placedCard
-     * @return
+     * This method check the objective in the particular case where the list of resources contains only Feathers, Ink
+     * or Scrolls
+     * @param placedCard is the map that contains all the card on the player's board
+     * @return the number of points obtained by the player
      */
     private int countFIS(Map<Point, PlayableCard> placedCard) {
         Resources seed = null;
         int found = 0;
 
-        /**
-         * se la lunghezza della lista resources è pari a 2 so che avrò la stessa risorsa ripetuta nella lista
-         * trovo quante volte è presente la risorsa con il metodo searchOnBoard
-         */
         if (resources.size() == 2) {
             seed = resources.get(0);
             found = searchOnBoard(placedCard, seed);
 
-            /**
-             * ritorno il numero di coppie trovato, contando per ciascuna coppia 2 punti
-             */
             return 2 * ((found - found % 2) / 2);
         }
 
-        /**
-         * trovo la risorsa con minore ricorrenza, che sarà uguale al numero di terne complete presenti nel campo
-         */
         found = searchOnBoard(placedCard, Resources.FEATHER);
         if (searchOnBoard(placedCard, Resources.INK) < found)
             found = searchOnBoard(placedCard, Resources.INK);
         if (searchOnBoard(placedCard, Resources.SCROLL) < found)
             found = searchOnBoard(placedCard, Resources.SCROLL);
 
-        /**
-         * ritorno il numero di terne trovato, contando per ciascuna terna 3 punti
-         */
         return 3 * ( (found - found % 3) / 3);
     }
 
     /**
-     * ritorna quante volte è presente la risorsa seed all'interno del campo di gioco del giocatore
-     * @param placedCard
-     * @param seed
-     * @return
+     * This method searches the Resource "seed" on the board
+     * @param placedCard is the map that contains all the card on the player's board
+     * @param seed is the resource I want to search on the player's board
+     * @return the number of occurrences of seed
      */
     private int searchOnBoard(Map<Point, PlayableCard> placedCard, Resources seed) {
         List<Resources> list=null;
 
-        /**
-         * per ogni chiave della mappa controllo la carta corrispondente
-         */
         for (Point c : placedCard.keySet()) {
             list = placedCard.get(c).getResources();
 
-            /**
-             * itero la lista di risorse presenti nella carta, nel caso in cui la risorsa alla posizione i sia
-             * uguale a quella ricercata (seed) incremento il contatore
-             */
             for (Resources value : list) {
                 if (value.equals(seed)) {
                     score++;
@@ -119,9 +96,6 @@ public class Count extends Objective {
 
         }
 
-        /**
-         * ritorno il numero di risorse pari a seed trovate
-         */
         return score;
     }
 }

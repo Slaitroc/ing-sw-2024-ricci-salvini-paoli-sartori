@@ -6,25 +6,31 @@ import java.util.Map;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
+/**
+ * This class represents the objective where the player obtain points based on how many resources he holds of a
+ * specific type
+ */
 public class ResourceScore extends Objective {
+    /**
+     * This attribute represents the resource the player needs to have to obtain points
+     */
     private Resources resource;
 
+    /**
+     * This method is the constructor of the class
+     * @param resource is the specific Resource requested to obtain points
+     */
     public ResourceScore(Resources resource){
         super();
         this.resource=resource;
     }
 
     /**
-     * @param placedCard : is the card the player is placing now
-     * @return int : the number of points the player get by placing this card
+     * This method check if this particular objective is done
+     * @param placedCard is the map that contains all the card on the player's board
+     * @return the number of points obtained by the player
      */
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint) {
-        /**
-         * itero per ogni coordinata presente nella mappa ottenendo ogni carta posizionata. Per ogni carta
-         * ottengo la lista di risorse che possiede e verifico per ogni posizione della lista se la Resource
-         * che cerco è presente, contando quante volte appare. Alla fine del conteggio so quante risorse uguali a
-         * Resource sono presenti sul tavolo e ne ritorno il valore.
-         */
         for (Point c : placedCard.keySet()) {
             for (int i=0; i >= 0 && i < placedCard.get(c).getResources().size(); i++) {
                 if (resource.equals(placedCard.get(c).getResources().get(i))) {
