@@ -6,49 +6,47 @@ import java.util.Map;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 
-public class ScalaGiu extends Objective {
+/**
+ * This class represent the Objective where the player needs to have 3 cards placed diagonally (towards the top)
+ */
+public class StairUp extends Objective {
+    /**
+     * This attribute represents the color requested by the objective to be done
+     */
     private Color color;
 
-    public ScalaGiu(Color color){
+    /**
+     * This method is the constructor of the class
+     * @param color is the color requested by the objective
+     */
+    public StairUp(Color color){
         super();
         this.color=color;
     }
 
     /**
-     * per dettagli su problematiche e funzionalità vedi classe "ScalaSu"
-     * obiettivo e funzionamento analogo cambia solamente l'ordine in cui effettuare i confronti
-     * @param placedCard
-     * @return
+     * This method check if this particular objective is done
+     * @param placedCard SevenReverse
+     * @return the number of points obtained by the player
      */
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint){
-        /**
-         * inizializzo i point massime e minime presenti sul campo del giocatore
-         */
         int maxX=findMaxX(placedCard), minX=findMinX(placedCard), maxY=findMaxY(placedCard), minY=findMinY(placedCard);
+        int count=0;
 
         for(int j = maxY; j >= minY + 2; j--) {
             for (int i = minX; i <= maxX - 2; i++) {
                 Point point = new Point(i,j);
-                /**
-                 * se qui non è presente una carta devo passare subito alla prossima posizione
-                 */
                 if(placedCard.get(point)!=null) {
 
                     if (placedCard.get(point).getColor().equals(color)) {
-                        point = new Point(i + 1, j + 1);
+                        point = new Point(i + 1, j - 1);
                         if (placedCard.get(point)!=null && placedCard.get(point).getColor().equals(color)) {
-                            point = new Point(i + 2, j + 2);
+                            point = new Point(i + 2, j - 2);
                             if (placedCard.get(point)!=null && placedCard.get(point).getColor().equals(color)) {
-                                /**
-                                 * incremento score ogni volta che soddisfo l'biettivo di 2 punti
-                                 */
-                                score+=2;
+                                count+=2;
 
-                                /**
-                                 * rimuovo le carte utilizzate per ottenere i punti
-                                 */
                                 placedCard.remove(point);
-                                point = new Point(i+1, j+1);
+                                point = new Point(i+1, j-1);
                                 placedCard.remove(point);
                                 point = new Point(i, j);
                                 placedCard.remove(point);
@@ -58,9 +56,7 @@ public class ScalaGiu extends Objective {
                 }
             }
         }
-        /**
-         * ritorno i punti accumulati
-         */
-        return score;
+
+        return count;
     }
 }

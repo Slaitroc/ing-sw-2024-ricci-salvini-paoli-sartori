@@ -7,6 +7,9 @@ import java.util.Set;
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class PlayArea {
 
