@@ -5,6 +5,10 @@ import java.util.Map;
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 
+/**
+ * This class represents the Objective where the player gets points based on how many corner are covered
+ * by the played card
+ */
 public class CoverCornerScore extends Objective {
 
     /**

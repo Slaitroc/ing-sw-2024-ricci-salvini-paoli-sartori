@@ -6,6 +6,9 @@ import java.util.Map;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 
+/**
+ * This class represents the Objective where the player needs to have 3 cards placed as an L's reverted shape
+ */
 public class LShapeReverse extends Objective {
     /**
      * color1 represents the color with more occurrences (2)
