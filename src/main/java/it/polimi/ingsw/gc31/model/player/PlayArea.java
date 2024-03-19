@@ -161,11 +161,11 @@ public class PlayArea {
 
 
     public Map<Point, PlayableCard> getPlacedCards(){
-        return this.placedCards;
+        return new HashMap<>(placedCards);
     }
 
     public Map<Resources, Integer> getAchievedResources(){
-        return this.achievedResources;
+            return new HashMap<>(achievedResources);
     }
 
 }

@@ -19,9 +19,10 @@ public class Player {
 
 
     public Player(Color color, String username){
-        //inGameState = Waiting;
         this.pawnColor = color;
         this.username = username;
+        this.playArea = new PlayArea();
+
     }
 
     //Really Necessary?
