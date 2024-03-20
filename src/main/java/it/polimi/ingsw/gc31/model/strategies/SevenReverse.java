@@ -45,21 +45,19 @@ public class SevenReverse extends Objective {
         for (int j = maxY; j >= minY + 2; j--) {
             for (int i = minX; i <= maxX - 1; i++) {
                 Point point = new Point(i, j);
-                if (placedCard.containsKey(point)) {
 
-                    if (placedCard.get(point).getColor().equals(color2)) {
-                        point.move(i + 1, j - 1);
+                if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color2)) {
+                    point.move(i + 1, j - 1);
+                    if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color1)) {
+                        point.move(i + 1, j - 2);
                         if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color1)) {
-                            point.move(i + 1, j - 2);
-                            if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color1)) {
-                                count += 3;
+                            count += 3;
 
-                                placedCard.remove(point);
-                                point.move(i + 1, j - 1);
-                                placedCard.remove(point);
-                                point.move(i, j);
-                                placedCard.remove(point);
-                            }
+                            placedCard.remove(point);
+                            point.move(i + 1, j - 1);
+                            placedCard.remove(point);
+                            point.move(i, j);
+                            placedCard.remove(point);
                         }
                     }
                 }
