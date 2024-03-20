@@ -17,36 +17,38 @@ public class StairUp extends Objective {
 
     /**
      * This method is the constructor of the class
+     *
      * @param color is the color requested by the objective
      */
-    public StairUp(Color color){
+    public StairUp(Color color) {
         super();
-        this.color=color;
+        this.color = color;
     }
 
     /**
      * This method check if this particular objective is done
+     *
      * @param placedCard SevenReverse
      * @return the number of points obtained by the player
      */
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint){
-        int maxX=findMaxX(placedCard), minX=findMinX(placedCard), maxY=findMaxY(placedCard), minY=findMinY(placedCard);
-        int count=0;
+    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint) {
+        int maxX = findMaxX(placedCard), minX = findMinX(placedCard), maxY = findMaxY(placedCard), minY = findMinY(placedCard);
+        int count = 0;
 
-        for(int j = maxY; j >= minY + 2; j--) {
+        for (int j = maxY; j >= minY + 2; j--) {
             for (int i = minX; i <= maxX - 2; i++) {
-                Point point = new Point(i,j);
-                if(placedCard.get(point)!=null) {
+                Point point = new Point(i, j);
+                if (placedCard.get(point) != null) {
 
                     if (placedCard.get(point).getColor().equals(color)) {
                         point = new Point(i + 1, j - 1);
-                        if (placedCard.get(point)!=null && placedCard.get(point).getColor().equals(color)) {
+                        if (placedCard.get(point) != null && placedCard.get(point).getColor().equals(color)) {
                             point = new Point(i + 2, j - 2);
-                            if (placedCard.get(point)!=null && placedCard.get(point).getColor().equals(color)) {
-                                count+=2;
+                            if (placedCard.get(point) != null && placedCard.get(point).getColor().equals(color)) {
+                                count += 2;
 
                                 placedCard.remove(point);
-                                point = new Point(i+1, j-1);
+                                point = new Point(i + 1, j - 1);
                                 placedCard.remove(point);
                                 point = new Point(i, j);
                                 placedCard.remove(point);
