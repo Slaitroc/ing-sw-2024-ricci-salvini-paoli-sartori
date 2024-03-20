@@ -14,7 +14,10 @@
                 "ANIMAL": 1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "RESOURCESCORE",
+                "resources": "FEATHER"
+            }
         },
         "back": {
             "resources": [
@@ -42,7 +45,10 @@
                 "PLANT": 1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "RESOURCESCORE",
+                "resources": "INK"
+            }
         },
         "back": {
             "resources": [
@@ -70,7 +76,10 @@
                 "INSECT": 1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "RESOURCESCORE",
+                "resources": "SCROLL"
+            }
         },
         "back": {
             "resources": [
@@ -98,7 +107,9 @@
                 "PLANT": 1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "COVERCORNERSCORE"
+            }
         },
         "back": {
             "resources": [
@@ -126,7 +137,9 @@
                 "PLANT": 1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "COVERCORNERSCORE"
+            }
         },
         "back": {
             "resources": [
@@ -154,7 +167,9 @@
                 "INSECT": 1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "COVERCORNERSCORE"
+            }
         },
         "back": {
             "resources": [
@@ -290,7 +305,10 @@
                 "INSECT": 1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "RESOURCESCORE",
+                "resources": "FEATHER"
+            }
         },
         "back": {
             "resources": [
@@ -318,7 +336,10 @@
                 "MUSHROOM": 1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "RESOURCESCORE",
+                "resources": "SCROLL"
+            }
         },
         "back": {
             "resources": [
@@ -346,7 +367,10 @@
                 "ANIMAL": 1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "RESOURCESCORE",
+                "resources": "INK"
+            }
         },
         "back": {
             "resources": [
@@ -374,7 +398,9 @@
                 "INSECT": 1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "COVERCORNERSCORE"
+            }
         },
         "back": {
             "resources": [
@@ -402,7 +428,9 @@
                 "ANIMAL": 1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "COVERCORNERSCORE"
+            }
         },
         "back": {
             "resources": [
@@ -430,7 +458,9 @@
                 "MUSHROOM": 1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "COVERCORNERSCORE"
+            }
         },
         "back": {
             "resources": [
@@ -566,7 +596,10 @@
                 "INSECT":1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "RESOURCESCORE",
+                "resources": "INK"
+            }
         },
         "back": {
             "resources": [
@@ -594,7 +627,10 @@
                 "PLANT":1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "RESOURCESCORE",
+                "resources": "SCROLL"
+            }
         },
         "back": {
             "resources": [
@@ -622,7 +658,10 @@
                 "MUSHROOM":1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "RESOURCESCORE",
+                "resources": "FEATHER"
+            }
         },
         "back": {
             "resources": [
@@ -650,7 +689,9 @@
                 "INSECT":1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "COVERCORNERSCORE"
+            }
         },
         "back": {
             "resources": [
@@ -678,7 +719,9 @@
                 "MUSHROOM":1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "COVERCORNERSCORE"
+            }
         },
         "back": {
             "resources": [
@@ -706,7 +749,9 @@
                 "PLANT":1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "COVERCORNERSCORE"
+            }
         },
         "back": {
             "resources": [
@@ -844,7 +889,10 @@
                 "PLANT":1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "RESOURCESCORE",
+                "resources": "FEATHER"
+            }
         },
         "back": {
             "resources": [
@@ -872,7 +920,10 @@
                 "ANIMAL":1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "RESOURCESCORE",
+                "resources": "SCROLL"
+            }
         },
         "back": {
             "resources": [
@@ -900,7 +951,10 @@
                 "MUSHROOM":1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "RESOURCESCORE",
+                "resources": "INK"
+            }
         },
         "back": {
             "resources": [
@@ -928,7 +982,9 @@
                 "ANIMAL":1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "COVERCORNERSCORE"
+            }
         },
         "back": {
             "resources": [
@@ -956,7 +1012,9 @@
                 "PLANT":1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "COVERCORNERSCORE"
+            }
         },
         "back": {
             "resources": [
@@ -984,7 +1042,9 @@
                 "MUSHROOM":1
             },
             "dirImg": null,
-            "objective": null
+            "objective": {
+                "type": "COVERCORNERSCORE"
+            }
         },
         "back": {
             "resources": [

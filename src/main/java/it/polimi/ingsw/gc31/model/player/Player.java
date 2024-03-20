@@ -18,11 +18,10 @@ public class Player {
     private PlayerState inGameState;
     protected int score;
 
-
     public Player(Color color, String username) {
         this.pawnColor = color;
         this.username = username;
-        playArea = new PlayArea();
+        this.playArea = new PlayArea();
         hand = new ArrayList<>();
         score = 0;
     }

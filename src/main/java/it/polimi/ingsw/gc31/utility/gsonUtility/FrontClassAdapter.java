@@ -4,9 +4,11 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import it.polimi.ingsw.gc31.model.card.CardFront;
+import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.exceptions.DirImgValueMissingException;
 import it.polimi.ingsw.gc31.model.exceptions.WrongNumberOfCornerException;
+import it.polimi.ingsw.gc31.model.strategies.Objective;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -39,7 +41,13 @@ public class FrontClassAdapter implements JsonDeserializer<CardFront> {
 
         int score = jsonObject.get("score").getAsInt();
         // extract the list of Resources using the adapter ListResourcesEnumAdapter
-        List<Resources> resources = jsonDeserializationContext.deserialize(jsonObject.get("resources"), Resources.class);
+
+        List<Resources> resources;
+        if (jsonObject.get("resources").isJsonNull()) {
+            resources = new ArrayList<>();
+        } else {
+            resources = jsonDeserializationContext.deserialize(jsonObject.get("resources"), Resources.class);
+        }
         // extract the map of requirements using the adapter MapRequirementsAdapter.
         // TypeToken<Map<Resources, Integer>>(){}.getType() used to create the Type for a map like Map<Resources, Integer>
         // get("requirements") can be null.
@@ -57,15 +65,17 @@ public class FrontClassAdapter implements JsonDeserializer<CardFront> {
             dirImg = jsonObject.get("dirImg").getAsString();
         }
 
+        Objective ob;
+        if(jsonObject.get("objective").isJsonNull()) {
+            ob = null;
+        } else {
+            JsonElement obElement = jsonObject.get("objective");
+            ob = jsonDeserializationContext.deserialize(obElement, Objective.class);
+        }
+
         // Create and returns a new object of the type CardFront
         CardFront front = null;
-        try {
-            front = new CardFront(score, resources, requirements, dirImg, null);
-        } catch (WrongNumberOfCornerException e) {
-            throw new RuntimeException(e);
-        } catch (DirImgValueMissingException e) {
-            throw new RuntimeException(e);
-        }
+        front = new CardFront(score, resources, requirements, dirImg, ob);
         return front;
     }
 }

@@ -9,9 +9,7 @@
         "MUSHROOM",
         "MUSHROOM"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -36,9 +34,7 @@
         "HIDDEN",
         "MUSHROOM"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -63,9 +59,7 @@
         "MUSHROOM",
         "EMPTY"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -90,9 +84,7 @@
         "EMPTY",
         "HIDDEN"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -117,9 +109,7 @@
         "PLANT",
         "HIDDEN"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -144,9 +134,7 @@
         "HIDDEN",
         "INK"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -171,9 +159,7 @@
         "SCROLL",
         "MUSHROOM"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -198,9 +184,7 @@
         "EMPTY",
         "EMPTY"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -225,9 +209,7 @@
         "EMPTY",
         "MUSHROOM"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -252,9 +234,7 @@
         "MUSHROOM",
         "HIDDEN"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -279,9 +259,7 @@
         "PLANT",
         "PLANT"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -306,9 +284,7 @@
         "HIDDEN",
         "PLANT"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -333,9 +309,7 @@
         "PLANT",
         "EMPTY"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -360,9 +334,7 @@
         "EMPTY",
         "HIDDEN"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -387,9 +359,7 @@
         "FEATHER",
         "HIDDEN"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -414,9 +384,7 @@
         "HIDDEN",
         "MUSHROOM"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -441,9 +409,7 @@
         "PLANT",
         "SCROLL"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -468,9 +434,7 @@
         "PLANT",
         "EMPTY"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -495,9 +459,7 @@
         "HIDDEN",
         "EMPTY"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -522,9 +484,7 @@
         "EMPTY",
         "HIDDEN"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -549,9 +509,7 @@
         "EMPTY",
         "ANIMAL"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -576,9 +534,7 @@
         "ANIMAL",
         "HIDDEN"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -603,9 +559,7 @@
         "ANIMAL",
         "ANIMAL"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -630,9 +584,7 @@
         "HIDDEN",
         "EMPTY"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -657,9 +609,7 @@
         "INK",
         "HIDDEN"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -684,9 +634,7 @@
         "HIDDEN",
         "PLANT"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -711,9 +659,7 @@
         "ANIMAL",
         "FEATHER"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -738,9 +684,7 @@
         "ANIMAL",
         "HIDDEN"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -765,9 +709,7 @@
         "EMPTY",
         "EMPTY"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -792,9 +734,7 @@
         "EMPTY",
         "EMPTY"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -819,9 +759,7 @@
         "EMPTY",
         "INSECT"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -846,9 +784,7 @@
         "INSECT",
         "HIDDEN"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -873,9 +809,7 @@
         "INSECT",
         "INSECT"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -900,9 +834,7 @@
         "HIDDEN",
         "EMPTY"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -927,9 +859,7 @@
         "ANIMAL",
         "HIDDEN"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -954,9 +884,7 @@
         "HIDDEN",
         "SCROLL"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -981,9 +909,7 @@
         "INK",
         "INSECT"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -1008,9 +934,7 @@
         "EMPTY",
         "INSECT"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -1035,9 +959,7 @@
         "HIDDEN",
         "EMPTY"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },
@@ -1062,9 +984,7 @@
         "EMPTY",
         "HIDDEN"
       ],
-      "requirements": [
-        null
-      ],
+      "requirements": null,
       "dirImg": null,
       "objective": null
     },

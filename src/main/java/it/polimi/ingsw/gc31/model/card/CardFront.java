@@ -23,15 +23,16 @@ public class CardFront {
     private final String dirImg;
     private final Objective ob;
 
-    public CardFront(int score, List<Resources> resources, Map<Resources, Integer> requirements, String dirImg, Objective ob) throws WrongNumberOfCornerException,
-            DirImgValueMissingException {
+    public CardFront(int score, List<Resources> resources, Map<Resources, Integer> requirements, String dirImg, Objective ob)
+            //throws WrongNumberOfCornerException, DirImgValueMissingException
+    {
         this.score = score;
 
-        if (resources.size() != 4) throw new WrongNumberOfCornerException();
+        //if (resources.size() != 4) throw new WrongNumberOfCornerException();
         this.resources = listDeepCopy(resources);
         this.requirements = mapDeepCopy(requirements);
 
-        if (dirImg == null) throw new DirImgValueMissingException();
+        //if (dirImg == null) throw new DirImgValueMissingException();
         this.dirImg = dirImg;
         // TODO implementare depp copy per ob
         this.ob = ob;

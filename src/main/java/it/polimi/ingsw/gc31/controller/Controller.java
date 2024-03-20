@@ -15,7 +15,7 @@ import java.util.HashSet;
 //Mi sembra più semplice fare così che gestire le attese per la creazione dei GameController nel Controller 
 
 public class Controller {
-    private List<GameController> gamesList; //FIX cambia a HashSet
+    private List<GameController> gamesList; //NOTE meglio Set o List?
     private Set<String> globalUsernameSet;
 
     public Controller() {
