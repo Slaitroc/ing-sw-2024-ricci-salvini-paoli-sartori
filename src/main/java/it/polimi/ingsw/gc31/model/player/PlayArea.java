@@ -24,9 +24,9 @@ public class PlayArea {
         this.placedCards = new HashMap<>();
         this.achievedResources = new HashMap<>();
         achievedResources.put(Resources.MUSHROOM, 0);
-        achievedResources.put(Resources.MUSHROOM, 0);
-        achievedResources.put(Resources.MUSHROOM, 0);
-        achievedResources.put(Resources.MUSHROOM, 0);
+        achievedResources.put(Resources.ANIMAL, 0);
+        achievedResources.put(Resources.PLANT, 0);
+        achievedResources.put(Resources.INSECT, 0);
     }
 
 
