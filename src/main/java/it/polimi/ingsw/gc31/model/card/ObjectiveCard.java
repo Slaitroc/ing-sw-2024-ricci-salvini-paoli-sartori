@@ -3,11 +3,15 @@ package it.polimi.ingsw.gc31.model.card;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.google.gson.JsonDeserializer;
 import it.polimi.ingsw.gc31.model.exceptions.DirImgValueMissingException;
 import it.polimi.ingsw.gc31.model.exceptions.WrongNumberOfCornerException;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
 
 public class ObjectiveCard extends Card{
+    public ObjectiveCard(CardFront front, CardBack back) {
+        super(front, back);
+    }
     public ObjectiveCard(Objective ob, int score, String dirImgFront, String dirImgBack) throws WrongNumberOfCornerException, DirImgValueMissingException {
         super(
                 new CardFront(score, new ArrayList<>(), Collections.emptyMap(), dirImgFront, ob),
@@ -18,6 +22,7 @@ public class ObjectiveCard extends Card{
      *
      * @return
      */
+    // TODO da rivedere
     @Override
     public Objective getObjective() {
         return front.getObjective();

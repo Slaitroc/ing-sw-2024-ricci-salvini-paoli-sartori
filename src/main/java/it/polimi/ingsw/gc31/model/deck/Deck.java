@@ -17,8 +17,8 @@ import java.util.*;
 public class Deck <T> {
     // TODO cambiare implementazione con queue
     private Queue<T> deck;
-    private T card1;
-    private T card2;
+    private Card card1;
+    private Card card2;
     // TODO forse da mettere statiche da qualche altra parte
     private final String dirImgGoldCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/GoldCard.json";
     private final String dirImgResourceCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/ResourceCard.json";
@@ -67,6 +67,7 @@ public class Deck <T> {
                         .registerTypeAdapter(GoldCard.class, new PlayableCardAdapter())
                         .registerTypeAdapter(ResourceCard.class, new PlayableCardAdapter())
                         .registerTypeAdapter(StarterCard.class, new PlayableCardAdapter())
+                        .registerTypeAdapter(ObjectiveCard.class, new ObjectiveCardAdapter())
                         .registerTypeAdapter(CardFront.class, new FrontClassAdapter())
                         .registerTypeAdapter(CardBack.class, new BackClassAdapter())
                         .registerTypeAdapter(Objective.class, new ObjectiveAdapter())
@@ -101,19 +102,37 @@ public class Deck <T> {
     }
 
     public T draw() {
-        return deck.peek();
+        return deck.poll();
+    }
+    public void refill() {
+        if (card1 == null) {
+            card1 = (Card) this.draw();
+            card1.changeSide();
+        }
+        if (card2 == null) {
+            card2 = (Card) this.draw();
+            card2.changeSide();
+        }
     }
 
-    public Card getCard1() {
-        return null;
+    public T getCard1() {
+        T retCard = (T)card1;
+        card1 = null;
+        refill();
+        return retCard;
     }
 
-    public Card getCard2() {
-        /*
-        Card ret = card2;
-        card2 = draw();
-
-         */
-        return null;
+    public T getCard2() {
+        T retCard = (T) card2;
+        card2 = null;
+        refill();
+        return retCard;
     }
+    public void flipCard1() {
+        this.card1.changeSide();
+    }
+    public void flipCard2() {
+        this.card2.changeSide();
+    }
+    //TODO da implementare quando vengono refillate le carte
 }

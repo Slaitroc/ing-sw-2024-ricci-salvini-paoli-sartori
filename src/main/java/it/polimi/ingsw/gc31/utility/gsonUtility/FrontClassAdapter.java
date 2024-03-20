@@ -41,7 +41,13 @@ public class FrontClassAdapter implements JsonDeserializer<CardFront> {
 
         int score = jsonObject.get("score").getAsInt();
         // extract the list of Resources using the adapter ListResourcesEnumAdapter
-        List<Resources> resources = jsonDeserializationContext.deserialize(jsonObject.get("resources"), Resources.class);
+
+        List<Resources> resources;
+        if (jsonObject.get("resources").isJsonNull()) {
+            resources = new ArrayList<>();
+        } else {
+            resources = jsonDeserializationContext.deserialize(jsonObject.get("resources"), Resources.class);
+        }
         // extract the map of requirements using the adapter MapRequirementsAdapter.
         // TypeToken<Map<Resources, Integer>>(){}.getType() used to create the Type for a map like Map<Resources, Integer>
         // get("requirements") can be null.
