@@ -34,7 +34,7 @@ public class LShapeReverse extends Objective {
      * This method check if this particular objective is done
      * @param placedCard is the map that contains all the card on the player's board
      * @param uselessPoint is the point of the played card
-     * @return the number of points obained by the player
+     * @return the number of points obtained by the player
      */
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint){
         int maxX=findMaxX(placedCard), minX=findMinX(placedCard), maxY=findMaxY(placedCard), minY=findMinY(placedCard);

@@ -1,0 +1,17 @@
+Cosa NON può fare player durante lo stato di waiting:
+    pescare
+    posizionare la carta
+    
+
+Cosa può fare player durante lo stato di not placed:
+
+
+Cosa può fare player durante lo stato di placed:
+
+
+
+COSA  PUÒ FARE IL PLAYER:
+    muovere le carte nella sua mano
+    posizionare le carte nella play area
+    pescare le carte dai deck
+    aggiornare il suo punteggio????
