@@ -35,20 +35,20 @@ public class StairDown extends Objective {
         int maxX = findMaxX(placedCard), minX = findMinX(placedCard), maxY = findMaxY(placedCard), minY = findMinY(placedCard);
         int count = 0;
 
-        for (int j = minY; j <= maxY - 2; j++) {
+        for (int j = maxY; j >= minY + 2; j--) {
             for (int i = minX; i <= maxX - 2; i++) {
                 Point point = new Point(i, j);
                 if (placedCard.get(point) != null) {
 
                     if (placedCard.get(point).getColor().equals(color)) {
-                        point.move(i + 1, j + 1);
+                        point.move(i + 1, j - 1);
                         if (placedCard.get(point) != null && placedCard.get(point).getColor().equals(color)) {
-                            point.move(i + 2, j + 2);
+                            point.move(i + 2, j - 2);
                             if (placedCard.get(point) != null && placedCard.get(point).getColor().equals(color)) {
                                 count += 2;
 
                                 placedCard.remove(point);
-                                point.move(i + 1, j + 1);
+                                point.move(i + 1, j - 1);
                                 placedCard.remove(point);
                                 point.move(i, j);
                                 placedCard.remove(point);
