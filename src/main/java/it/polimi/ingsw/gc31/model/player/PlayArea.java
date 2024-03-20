@@ -9,10 +9,6 @@ import java.util.Set;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 public class PlayArea {
 
     private Map<Point, PlayableCard> placedCards;
@@ -40,8 +36,9 @@ public class PlayArea {
     }
 
     // this method creates a set of keys from the requirements read from the card
-    // than it proceed to slide through them with a for to verify that in the map of
-    // achieved resources I have enough of them
+    // than it proceed to slide them with a for to verify that in the map of
+    // achieved resources,
+    // I have enough of them
     private boolean checkRequirements(PlayableCard card) {
         Set<Resources> RequiredRes = card.getRequirements().keySet();
         for (Resources r : RequiredRes) {
@@ -66,14 +63,15 @@ public class PlayArea {
                 updateAvailableRes(card, point);
             }
         }
-        if (card.getObjective() != null) return card.getObjective().isObjectiveDone(placedCards, point);
+        if (card.getObjective() != null)
+            return card.getObjective().isObjectiveDone(placedCards, point);
         return card.getScore();
 
     }
 
     /*
      * //skeleton of the quickMoveCheck (unnecessary)
-     * 
+     *
      * private boolean quickMoveCheck(Point point){
      * if (point.x >= playAreaLimit[0] || point.x <= playAreaLimit[2]) {
      * if (point.y >= playAreaLimit[1] || point.y >= playAreaLimit[3])
@@ -94,22 +92,26 @@ public class PlayArea {
             // Placing new card on NorthEst
             newPoint.move((int) point.getX() - 1, (int) point.getY() - 1);
             if (placedCards.get(newPoint) != null) {
-                if (placedCards.get(newPoint).getResources().get(0) != Resources.HIDDEN) return true;
+                if (placedCards.get(newPoint).getResources().get(0) != Resources.HIDDEN)
+                    return true;
             }
             // Placing new card on SouthEast
             newPoint.move((int) point.getX() - 1, (int) point.getY() + 1);
             if (placedCards.get(newPoint) != null) {
-                if (placedCards.get(newPoint).getResources().get(1) != Resources.HIDDEN) return true;
+                if (placedCards.get(newPoint).getResources().get(1) != Resources.HIDDEN)
+                    return true;
             }
             // Placing new card on SouthWest
             newPoint.move((int) point.getX() + 1, (int) point.getY() + 1);
             if (placedCards.get(newPoint) != null) {
-                if (placedCards.get(newPoint).getResources().get(2) != Resources.HIDDEN) return true;
+                if (placedCards.get(newPoint).getResources().get(2) != Resources.HIDDEN)
+                    return true;
             }
             // Placing new card on NorthWest
             newPoint.move((int) point.getX() + 1, (int) point.getY() - 1);
             if (placedCards.get(newPoint) != null) {
-                if (placedCards.get(newPoint).getResources().get(2) != Resources.HIDDEN) return true;
+                if (placedCards.get(newPoint).getResources().get(2) != Resources.HIDDEN)
+                    return true;
             }
         }
         return false;
@@ -125,7 +127,8 @@ public class PlayArea {
     private void updateAvailableRes(PlayableCard card, Point point) {
         // Adding Resources
         for (Resources r : card.getResources()) {
-            if (r != Resources.HIDDEN) achievedResources.put(r, achievedResources.get(r) + 1);
+            if (r != Resources.HIDDEN)
+                achievedResources.put(r, achievedResources.get(r) + 1);
         }
 
         // Deleting Resources
