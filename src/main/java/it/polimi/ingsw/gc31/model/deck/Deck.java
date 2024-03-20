@@ -14,11 +14,11 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
 
-public class Deck <T> {
+public class Deck<T extends Card> {
     // TODO cambiare implementazione con queue
     private Queue<T> deck;
-    private Card card1;
-    private Card card2;
+    private T card1;
+    private T card2;
     // TODO forse da mettere statiche da qualche altra parte
     private final String dirImgGoldCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/GoldCard.json";
     private final String dirImgResourceCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/ResourceCard.json";
@@ -72,11 +72,12 @@ public class Deck <T> {
                         .registerTypeAdapter(CardBack.class, new BackClassAdapter())
                         .registerTypeAdapter(Objective.class, new ObjectiveAdapter())
                         .registerTypeAdapter(Resources.class, new ListResourcesEnumAdapter())
-                        .registerTypeAdapter(new TypeToken<Map<Resources, Integer>>(){}.getType(), new MapRequirementsAdapter())
+                        .registerTypeAdapter(new TypeToken<Map<Resources, Integer>>() {
+                        }.getType(), new MapRequirementsAdapter())
                         .create();
 
                 // pars every element
-                for (JsonElement element: jsonArray) {
+                for (JsonElement element : jsonArray) {
                     if (element.isJsonObject()) {
                         JsonObject jsonObject = element.getAsJsonObject();
 
@@ -88,7 +89,7 @@ public class Deck <T> {
 
                 //TODO, tradurre: Mischio le carte
                 Collections.shuffle(tempDeck);
-                for (T card: tempDeck) {
+                for (T card : tempDeck) {
                     deck.add(card);
                 }
             }
@@ -104,35 +105,37 @@ public class Deck <T> {
     public T draw() {
         return deck.poll();
     }
+
     public void refill() {
         if (card1 == null) {
-            card1 = (Card) this.draw();
+            card1 = this.draw();
             card1.changeSide();
         }
         if (card2 == null) {
-            card2 = (Card) this.draw();
+            card2 = this.draw();
             card2.changeSide();
         }
     }
 
     public T getCard1() {
-        T retCard = (T)card1;
+        T retCard = card1;
         card1 = null;
         refill();
         return retCard;
     }
 
     public T getCard2() {
-        T retCard = (T) card2;
+        T retCard = card2;
         card2 = null;
         refill();
         return retCard;
     }
+
     public void flipCard1() {
         this.card1.changeSide();
     }
+
     public void flipCard2() {
         this.card2.changeSide();
     }
-    //TODO da implementare quando vengono refillate le carte
 }
