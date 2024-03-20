@@ -47,12 +47,12 @@ public class Seven extends Objective {
             for (int i = maxX; i >= minX + 1; i--) {
                 Point point = new Point(i, j);
 
-                if (placedCard.get(point) != null) {
+                if (placedCard.containsKey(point)) {
                     if (placedCard.get(point).getColor().equals(color2)) {
                         point.move(i - 1, j - 1);
-                        if (placedCard.get(point) != null && placedCard.get(point).getColor().equals(color1)) {
+                        if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color1)) {
                             point.move(i - 1, j - 2);
-                            if (placedCard.get(point) != null && placedCard.get(point).getColor().equals(color1)) {
+                            if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color1)) {
                                 count += 3;
 
                                 placedCard.remove(point);

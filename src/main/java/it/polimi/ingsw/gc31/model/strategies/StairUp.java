@@ -38,13 +38,13 @@ public class StairUp extends Objective {
         for (int j = minY; j <= maxY - 2; j++) {
             for (int i = minX; i <= maxX - 2; i++) {
                 Point point = new Point(i, j);
-                if (placedCard.get(point) != null) {
+                if (placedCard.containsKey(point)) {
 
                     if (placedCard.get(point).getColor().equals(color)) {
                         point.move(i + 1, j + 1);
-                        if (placedCard.get(point) != null && placedCard.get(point).getColor().equals(color)) {
+                        if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color)) {
                             point.move(i + 2, j + 2);
-                            if (placedCard.get(point) != null && placedCard.get(point).getColor().equals(color)) {
+                            if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color)) {
                                 count += 2;
 
                                 placedCard.remove(point);
