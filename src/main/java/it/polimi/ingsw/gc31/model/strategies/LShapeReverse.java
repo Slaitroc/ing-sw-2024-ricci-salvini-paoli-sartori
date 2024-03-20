@@ -55,7 +55,7 @@ public class LShapeReverse extends Objective {
                                 count += 3;
 
                                 placedCard.remove(point);
-                                point.move(i, j- 1);
+                                point.move(i, j - 1);
                                 placedCard.remove(point);
                                 point.move(i, j);
                                 placedCard.remove(point);
