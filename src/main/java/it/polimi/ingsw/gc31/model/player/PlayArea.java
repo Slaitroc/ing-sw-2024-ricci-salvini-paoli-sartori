@@ -16,6 +16,7 @@ public class PlayArea {
     // private Integer[] playAreaLimit; //Actually inefficient in my opinion or
     // unnecessary anyway
     private Map<Resources, Integer> achievedResources;
+    private Point lastPlaced = new Point(0,0); //TODO da implementare 
 
     PlayArea() {
         placedCards = new HashMap<>();
@@ -70,6 +71,7 @@ public class PlayArea {
             if (allowedMove(point)) {
                 placedCards.put(point, card);
                 updateAvailableRes(card, point);
+                lastPlaced = point;
             }
         }
         if (card.getObjective() != null)
