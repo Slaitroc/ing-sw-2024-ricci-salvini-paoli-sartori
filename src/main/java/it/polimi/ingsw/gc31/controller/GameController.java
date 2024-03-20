@@ -13,9 +13,7 @@ import it.polimi.ingsw.gc31.view.GameView;
 
 public class GameController {
 
-    //NOTE prova commit 
     private int ID;
-
     private GameModel gameModel;
     private GameView gameView;
     private List<String> playerList;
