@@ -13,7 +13,7 @@ public class StairUp extends Objective {
     /**
      * This attribute represents the color requested by the objective to be done
      */
-    private Color color;
+    private final Color color;
 
     /**
      * This method is the constructor of the class
@@ -41,16 +41,16 @@ public class StairUp extends Objective {
                 if (placedCard.get(point) != null) {
 
                     if (placedCard.get(point).getColor().equals(color)) {
-                        point = new Point(i + 1, j - 1);
+                        point.move(i + 1, j - 1);
                         if (placedCard.get(point) != null && placedCard.get(point).getColor().equals(color)) {
-                            point = new Point(i + 2, j - 2);
+                            point.move(i + 2, j - 2);
                             if (placedCard.get(point) != null && placedCard.get(point).getColor().equals(color)) {
                                 count += 2;
 
                                 placedCard.remove(point);
-                                point = new Point(i + 1, j - 1);
+                                point.move(i + 1, j - 1);
                                 placedCard.remove(point);
-                                point = new Point(i, j);
+                                point.move(i, j);
                                 placedCard.remove(point);
                             }
                         }

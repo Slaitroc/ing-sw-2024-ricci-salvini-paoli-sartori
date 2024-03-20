@@ -14,7 +14,7 @@ public class Count extends Objective {
     /**
      * This attribute represents the resources the player needs to hold to obtain points
      */
-    private List<Resources> resources;
+    private final List<Resources> resources;
 
     /**
      * This method is the constructor of the class

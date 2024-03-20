@@ -14,7 +14,7 @@ public class ResourceScore extends Objective {
     /**
      * This attribute represents the resource the player needs to have to obtain points
      */
-    private Resources resource;
+    private final Resources resource;
 
     /**
      * This method is the constructor of the class

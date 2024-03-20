@@ -13,11 +13,11 @@ public class LShapeReverse extends Objective {
     /**
      * color1 represents the color with more occurrences (2)
      */
-    private Color color1;
+    private final Color color1;
     /**
      * color2 represents the color with fewer occurrences (2)
      */
-    private Color color2;
+    private final Color color2;
 
     /**
      * This method is the constructor
@@ -43,21 +43,21 @@ public class LShapeReverse extends Objective {
         int count = 0;
 
         for (int j = maxY; j >= minY + 2; j--) {
-            for (int i = minX + 1; i <= maxX; i++) {
+            for (int i = maxX; i >= minX + 1; i--) {
                 Point point = new Point(i, j);
                 if (placedCard.get(point) != null) {
 
                     if (placedCard.get(point).getColor().equals(color1)) {
-                        point = new Point(i, j - 1);
+                        point.move(i, j - 1);
                         if (placedCard.get(point) != null && placedCard.get(point).getColor().equals(color1)) {
-                            point = new Point(i - 1, j - 2);
+                            point.move(i - 1, j - 2);
                             if (placedCard.get(point) != null && placedCard.get(point).getColor().equals(color2)) {
                                 count += 3;
 
                                 placedCard.remove(point);
-                                point = new Point(i, j - 1);
+                                point.move(i, j- 1);
                                 placedCard.remove(point);
-                                point = new Point(i, j);
+                                point.move(i, j);
                                 placedCard.remove(point);
                             }
                         }

@@ -22,9 +22,7 @@ public abstract class Objective {
      * @param point      is the point of the played card
      * @return the number of points obtained by the player
      */
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point point) {
-        return 0;
-    }
+    protected abstract int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point point);
 
     /**
      * This method find the max X on the board

@@ -14,11 +14,11 @@ public class Seven extends Objective {
     /**
      * color1 represents the color with more occurrences  (2)
      */
-    private Color color1;
+    private final Color color1;
     /**
      * color2 represents the color with fewer occurrences (1)
      */
-    private Color color2;
+    private final Color color2;
 
     /**
      * This method is the constructor of the class
@@ -49,16 +49,16 @@ public class Seven extends Objective {
 
                 if (placedCard.get(point) != null) {
                     if (placedCard.get(point).getColor().equals(color2)) {
-                        point = new Point(i - 1, j - 1);
+                        point.move(i - 1, j - 1);
                         if (placedCard.get(point) != null && placedCard.get(point).getColor().equals(color1)) {
-                            point = new Point(i - 1, j - 2);
+                            point.move(i - 1, j - 2);
                             if (placedCard.get(point) != null && placedCard.get(point).getColor().equals(color1)) {
                                 count += 3;
 
                                 placedCard.remove(point);
-                                point = new Point(i - 1, j - 1);
+                                point.move(i - 1, j - 1);
                                 placedCard.remove(point);
-                                point = new Point(i, j);
+                                point.move(i, j);
                                 placedCard.remove(point);
                             }
                         }
