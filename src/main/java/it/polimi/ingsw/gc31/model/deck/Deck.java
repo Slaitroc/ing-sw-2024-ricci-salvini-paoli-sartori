@@ -20,10 +20,10 @@ public class Deck <T> {
     private Card card1;
     private Card card2;
     // TODO forse da mettere statiche da qualche altra parte
-    private final String dirImgGoldCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/GoldCard.json";
-    private final String dirImgResourceCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/ResourceCard.json";
-    private final String dirImgStarterCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/StarterCard.json";
-    private final String dirImgObjectiveCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/ObjectiveCard.json";
+    private final String dirJsonGoldCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/GoldCard.json";
+    private final String dirJsonResourceCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/ResourceCard.json";
+    private final String dirJsonStarterCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/StarterCard.json";
+    private final String dirJsonObjectiveCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/ObjectiveCard.json";
 
     public Deck(CardType cardType) {
         List<T> tempDeck = new ArrayList<>();
@@ -35,19 +35,19 @@ public class Deck <T> {
         try {
             switch (cardType) {
                 case GOLD:
-                    fileReader = new FileReader(dirImgGoldCard);
+                    fileReader = new FileReader(dirJsonGoldCard);
                     type = GoldCard.class;
                     break;
                 case RESOURCE:
-                    fileReader = new FileReader(dirImgResourceCard);
+                    fileReader = new FileReader(dirJsonResourceCard);
                     type = ResourceCard.class;
                     break;
                 case STARTER:
-                    fileReader = new FileReader(dirImgStarterCard);
+                    fileReader = new FileReader(dirJsonStarterCard);
                     type = StarterCard.class;
                     break;
                 case OBJECTIVE:
-                    fileReader = new FileReader(dirImgObjectiveCard);
+                    fileReader = new FileReader(dirJsonObjectiveCard);
                     type = ObjectiveCard.class;
                     break;
                 default:

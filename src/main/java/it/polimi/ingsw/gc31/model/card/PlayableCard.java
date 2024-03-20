@@ -55,11 +55,11 @@ public abstract class PlayableCard extends Card {
             return back.checkCorner(corner);
     }
 
-    public void coverCorner(int corner) {
+    public Resources coverCorner(int corner) {
         if (side)
-            front.coverCorner(corner);
+            return front.coverCorner(corner);
         else
-            back.coverCorner(corner);
+            return back.coverCorner(corner);
     }
 
     public List<Resources> getResources() {
