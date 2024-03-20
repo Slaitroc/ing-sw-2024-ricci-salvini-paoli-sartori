@@ -147,24 +147,6 @@
       "requirements": null,
       "dirImg": null,
       "objective": {
-        "color1": "RED",
-        "color2": "GREEN",
-        "type": "LSHAPE"
-      }
-    },
-    "back": {
-      "resources": null,
-      "dirImg": null
-    }
-  },
-  {
-    "color": null,
-    "front": {
-      "score": 3,
-      "resources": null,
-      "requirements": null,
-      "dirImg": null,
-      "objective": {
         "color1": "BLUE",
         "color2": "RED",
         "type": "SEVENREVERSE"
