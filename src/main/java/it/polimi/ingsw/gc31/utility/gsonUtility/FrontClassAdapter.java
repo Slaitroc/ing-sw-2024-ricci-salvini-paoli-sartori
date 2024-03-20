@@ -4,9 +4,11 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import it.polimi.ingsw.gc31.model.card.CardFront;
+import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.exceptions.DirImgValueMissingException;
 import it.polimi.ingsw.gc31.model.exceptions.WrongNumberOfCornerException;
+import it.polimi.ingsw.gc31.model.strategies.Objective;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -57,9 +59,17 @@ public class FrontClassAdapter implements JsonDeserializer<CardFront> {
             dirImg = jsonObject.get("dirImg").getAsString();
         }
 
+        Objective ob;
+        if(jsonObject.get("objective").isJsonNull()) {
+            ob = null;
+        } else {
+            JsonElement obElement = jsonObject.get("objective");
+            ob = jsonDeserializationContext.deserialize(obElement, Objective.class);
+        }
+
         // Create and returns a new object of the type CardFront
         CardFront front = null;
-        front = new CardFront(score, resources, requirements, dirImg, null);
+        front = new CardFront(score, resources, requirements, dirImg, ob);
         return front;
     }
 }

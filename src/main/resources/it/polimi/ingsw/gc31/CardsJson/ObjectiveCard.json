@@ -1,14 +1,21 @@
 [
   {
-    "type": "OBJECTIVE",
-    "score": 2,
-    "objective": "SCALASU",
-    "color": "RED"
-  },
-  {
-    "type": "OBJECTIVE",
-    "score": 2,
-    "objective": "SCALAGIU",
-    "color": "GREEN"
+    "color": null,
+    "front": {
+      "score": 2,
+      "resources": null,
+      "requirements": null,
+      "dirImg": "",
+      "objective": {
+        "type": "SCALASU",
+        "color1": "RED",
+        "color2": null,
+        "resources": null
+      }
+    },
+    "back": {
+      "resources": null,
+      "dirImg": ""
+    }
   }
 ]

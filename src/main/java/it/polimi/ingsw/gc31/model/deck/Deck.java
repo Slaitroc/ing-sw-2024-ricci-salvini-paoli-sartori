@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import it.polimi.ingsw.gc31.model.strategies.Objective;
 import it.polimi.ingsw.gc31.utility.gsonUtility.*;
 
 import java.io.FileNotFoundException;
@@ -68,6 +69,7 @@ public class Deck <T> {
                         .registerTypeAdapter(StarterCard.class, new PlayableCardAdapter())
                         .registerTypeAdapter(CardFront.class, new FrontClassAdapter())
                         .registerTypeAdapter(CardBack.class, new BackClassAdapter())
+                        .registerTypeAdapter(Objective.class, new ObjectiveAdapter())
                         .registerTypeAdapter(Resources.class, new ListResourcesEnumAdapter())
                         .registerTypeAdapter(new TypeToken<Map<Resources, Integer>>(){}.getType(), new MapRequirementsAdapter())
                         .create();
