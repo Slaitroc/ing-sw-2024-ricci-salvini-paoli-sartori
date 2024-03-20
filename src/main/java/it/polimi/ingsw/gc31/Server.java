@@ -61,7 +61,7 @@ public class Server /* extends Application */ {
 
         //creo il GameController specifico della partita 
         //il costruttore prende sono il player che vuole creare una nuova partita
-        int gameControllerID = controller.createGameController(usernamesList.get(0), 4);
+        int gameControllerID = controller.createGameController(usernamesList.get(0), 2);
         GameController gameController = controller.getGameController(gameControllerID);
 
         //aggiungo gli altri player al GameController

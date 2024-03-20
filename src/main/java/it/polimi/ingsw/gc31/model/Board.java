@@ -11,24 +11,27 @@ public class Board {
     private Deck<PlayableCard> goldDeck;
     private Deck<PlayableCard> resourceDeck;
     private Deck<ObjectiveCard> objectiveDeck;
+    private Deck<PlayableCard> starterDeck;
 
     public Board() {
         goldDeck = new Deck<>(CardType.GOLD);
         resourceDeck = new Deck<>(CardType.RESOURCE);
         objectiveDeck = new Deck<>(CardType.OBJECTIVE);
+        starterDeck = new Deck<>(CardType.STARTER);
     }
 
-    public Deck getDeck(CardType x) {
-        switch (x) {
-            case GOLD:
-                return goldDeck;
-            case RESOURCE:
-                return resourceDeck;
-            case OBJECTIVE:
-                return objectiveDeck;
-            default:
-                return null;
-        }
+    public Deck<PlayableCard> getDeckGold() {
+        return goldDeck;
+    }
+    public Deck<PlayableCard> getDeckStarer() {
+        return starterDeck;
     }
 
+    public Deck<PlayableCard> getDeckResource() {
+        return resourceDeck;
+    }
+
+    public Deck<ObjectiveCard> getDeckObjective() {
+        return objectiveDeck;
+    }
 }

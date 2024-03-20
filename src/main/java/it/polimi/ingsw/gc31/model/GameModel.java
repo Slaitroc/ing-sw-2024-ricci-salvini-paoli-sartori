@@ -77,11 +77,14 @@ public class GameModel {
 
     private void cardsToHands(){
         for (Player p : players){
-            p.addToHand((PlayableCard) board.getDeck(CardType.RESOURCE).draw()); //TODO da capire il casting 
-            p.addToHand((PlayableCard) board.getDeck(CardType.RESOURCE).draw());
-            p.addToHand((PlayableCard) board.getDeck(CardType.GOLD).draw());
+            p.addToHand(board.getDeckGold().draw()); 
+            p.addToHand( board.getDeckGold().draw());
+            p.addToHand( board.getDeckResource().draw());
 
-            p.getPlayArea().placeStarter((PlayableCard) board.getDeck(CardType.STARTER).draw());
+            PlayableCard starterCard = board.getDeckStarer().draw();
+            starterCard.changeSide();
+            //TODO dare la possibilità di girarla prima di piazzarla, per ora who cares 
+            p.getPlayArea().placeStarter(starterCard);            
 
         }
     }
