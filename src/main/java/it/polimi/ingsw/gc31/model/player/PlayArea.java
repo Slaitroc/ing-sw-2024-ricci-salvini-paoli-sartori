@@ -21,18 +21,24 @@ public class PlayArea {
     private final Map<Resources, Integer> achievedResources;
 
     PlayArea() {
-        placedCards = new HashMap<>();
+        this.placedCards = new HashMap<>();
         this.achievedResources = new HashMap<>();
+        achievedResources.put(Resources.MUSHROOM, 0);
+        achievedResources.put(Resources.MUSHROOM, 0);
+        achievedResources.put(Resources.MUSHROOM, 0);
+        achievedResources.put(Resources.MUSHROOM, 0);
     }
 
 
-    /** Create the HashMap, place starter at (0,0)
-    * Create a hashMap for the achievedResources and
-    * Add the resources to the map itself
-    * It could be done calling UpdateAvailableRes, but it would be less efficient
-    * and unnecessary being the first card placed
-    * @author Matteo Paoli
-    */
+    /**
+     * Create the HashMap, place starter at (0,0)
+     * Create a hashMap for the achievedResources and
+     * Add the resources to the map itself
+     * It could be done calling UpdateAvailableRes, but it would be less efficient
+     * and unnecessary being the first card placed
+     *
+     * @author Matteo Paoli
+     */
     public void placeStarter(PlayableCard card) {
         Point point = new Point(0, 0);
         placedCards.put(point, card);
@@ -41,9 +47,11 @@ public class PlayArea {
         }
     }
 
-    /** this method creates a set of keys from the requirements read from the cart
+    /**
+     * this method creates a set of keys from the requirements read from the cart
      * than it proceed to slide through them with a for to verify that in the map of
      * achieved resources I have enough of them
+     *
      * @author Matteo Paoli
      */
     private boolean checkRequirements(PlayableCard card) {
@@ -63,8 +71,9 @@ public class PlayArea {
      * Then return the value of points gained from that card
      * Notice that player will have to call:
      * score += hisPlayArea.place(card, point) to adds points at his score correctly
+     *
      * @author Matteo Paoli
-     * */
+     */
     public int place(PlayableCard card, Point point) {
         if (checkRequirements(card)) {
             if (allowedMove(point)) {
@@ -88,8 +97,10 @@ public class PlayArea {
      * }
      */
 
-    /** Return true if move is allowed, false if it is not.
+    /**
+     * Return true if move is allowed, false if it is not.
      * Refers to card placement rule only
+     *
      * @author Matteo Paoli
      */
     private boolean allowedMove(Point point) {
@@ -99,24 +110,28 @@ public class PlayArea {
         if ((point.getX() + point.getY()) % 2 != 0) {
             Point newPoint = new Point(point);
             // Placing new card on NorthEst
-            newPoint.move((int) point.getX() - 1, (int) point.getY() - 1);
+            newPoint.x = point.x - 1;
+            newPoint.y = point.y - 1;
             if (placedCards.get(newPoint) != null) {
-                if (placedCards.get(newPoint).getResources().get(0) != Resources.HIDDEN) return true;
+                if (placedCards.get(newPoint).checkCorner(0)) return true;
             }
             // Placing new card on SouthEast
-            newPoint.move((int) point.getX() - 1, (int) point.getY() + 1);
+            newPoint.x = point.x - 1;
+            newPoint.y = point.y + 1;
             if (placedCards.get(newPoint) != null) {
-                if (placedCards.get(newPoint).getResources().get(1) != Resources.HIDDEN) return true;
+                if (placedCards.get(newPoint).checkCorner(1)) return true;
             }
             // Placing new card on SouthWest
-            newPoint.move((int) point.getX() + 1, (int) point.getY() + 1);
+            newPoint.x = point.x + 1;
+            newPoint.y = point.y + 1;
             if (placedCards.get(newPoint) != null) {
-                if (placedCards.get(newPoint).getResources().get(2) != Resources.HIDDEN) return true;
+                if (placedCards.get(newPoint).checkCorner(2)) return true;
             }
             // Placing new card on NorthWest
-            newPoint.move((int) point.getX() + 1, (int) point.getY() - 1);
+            newPoint.x = point.x + 1;
+            newPoint.y = point.y - 1;
             if (placedCards.get(newPoint) != null) {
-                return placedCards.get(newPoint).getResources().get(2) != Resources.HIDDEN;
+                return placedCards.get(newPoint).checkCorner(3);
             }
         }
         return false;
@@ -128,54 +143,52 @@ public class PlayArea {
      * than it checks all the cards that could have been covered by the new placed
      * card and update the value in the achievedResource map under the key (r)
      * with its value -1
+     *
      * @author Matteo Paoli
      */
     private void updateAvailableRes(PlayableCard card, Point point) {
         // Adding Resources
-        for (Resources r : card.getResources()) {
-            if (r != Resources.HIDDEN) achievedResources.put(r, achievedResources.get(r) + 1);
+        for (Resources newRes : card.getResources()) {
+            achievedResources.put(newRes, achievedResources.get(newRes) + 1);
         }
 
         // Deleting Resources
         Point newPoint = new Point();
-        Resources r;
+        Resources delRes;
 
         // Covering NorthEast
         newPoint.x = point.x + 1;
         newPoint.y = point.y + 1; // coordinates of the card in the NorthEst position of the one I am placing
         if (placedCards.get(newPoint) != null) {
-            r = placedCards.get(newPoint).getResources().get(2); // Assign to r the value of the Resources that im
-            // covering
-            achievedResources.put(r, achievedResources.get(r) - 1); // Decrement the number of that given resource in
-            // the map
-            placedCards.get(newPoint).coverCorner(2); // CoverCorner of the card
+            delRes = placedCards.get(newPoint).coverCorner(2);
+            // Assign to delRes the value of the Resources that im covering
+
+            achievedResources.put(delRes, achievedResources.get(delRes) - 1);
+            // Decrement the number of that given resource in the map
         }
 
         // Covering SouthEast
         newPoint.x = point.x + 1;
         newPoint.y = point.y - 1;
         if (placedCards.get(newPoint) != null) {
-            r = placedCards.get(newPoint).getResources().get(3);
-            achievedResources.put(r, achievedResources.get(r) - 1);
-            placedCards.get(newPoint).coverCorner(3);
+            delRes = placedCards.get(newPoint).coverCorner(3);
+            achievedResources.put(delRes, achievedResources.get(delRes) - 1);
         }
 
         // Covering SouthWest
         newPoint.x = point.x - 1;
         newPoint.y = point.y - 1;
         if (placedCards.get(newPoint) != null) {
-            r = placedCards.get(newPoint).getResources().get(0);
-            achievedResources.put(r, achievedResources.get(r) - 1);
-            placedCards.get(newPoint).coverCorner(0);
+            delRes = placedCards.get(newPoint).coverCorner(0);
+            achievedResources.put(delRes, achievedResources.get(delRes) - 1);
         }
 
         // Covering NorthWest
         newPoint.x = point.x - 1;
         newPoint.y = point.y + 1;
         if (placedCards.get(newPoint) != null) {
-            r = placedCards.get(newPoint).getResources().get(1);
-            achievedResources.put(r, achievedResources.get(r) - 1);
-            placedCards.get(newPoint).coverCorner(1);
+            delRes = placedCards.get(newPoint).coverCorner(1);
+            achievedResources.put(delRes, achievedResources.get(delRes) - 1);
         }
     }
 
