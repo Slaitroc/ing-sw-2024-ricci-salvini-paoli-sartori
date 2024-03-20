@@ -14,27 +14,29 @@ public class ResourceScore extends Objective {
     /**
      * This attribute represents the resource the player needs to have to obtain points
      */
-    private Resources resource;
+    private final Resources resource;
 
     /**
      * This method is the constructor of the class
+     *
      * @param resource is the specific Resource requested to obtain points
      */
-    public ResourceScore(Resources resource){
+    public ResourceScore(Resources resource) {
         super();
-        this.resource=resource;
+        this.resource = resource;
     }
 
     /**
      * This method check if this particular objective is done
+     *
      * @param placedCard is the map that contains all the card on the player's board
      * @return the number of points obtained by the player
      */
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint) {
-        int count=0;
+        int count = 0;
 
         for (Point c : placedCard.keySet()) {
-            for (int i=0; i >= 0 && i < placedCard.get(c).getResources().size(); i++) {
+            for (int i = 0; i >= 0 && i < placedCard.get(c).getResources().size(); i++) {
                 if (resource.equals(placedCard.get(c).getResources().get(i))) {
                     count++;
                 }

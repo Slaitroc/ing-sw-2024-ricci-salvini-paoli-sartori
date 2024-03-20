@@ -13,7 +13,7 @@ import java.util.*;
 
 /**
  * This class represents the front side of card;
- * 
+ *
  * @author Christian Salvini
  */
 public class CardFront {
