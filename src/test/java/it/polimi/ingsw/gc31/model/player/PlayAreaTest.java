@@ -12,14 +12,11 @@ import java.awt.Point;
 
 class PlayAreaTest {
 
-    private PlayArea playArea;
-    private PlayableCard playableCard, starterCard;
-
     @Test
     public void testPlaceStarter() {
         PlayArea playArea = new PlayArea();
         Deck<PlayableCard> starterDeck = new Deck<>(CardType.STARTER);
-        starterCard = starterDeck.draw();
+        PlayableCard starterCard = starterDeck.draw();
         playArea.placeStarter(starterCard);
         assertEquals(1, playArea.getPlacedCards().size());
         assertEquals(starterCard, playArea.getPlacedCards().get(new Point(0, 0)));
@@ -29,7 +26,7 @@ class PlayAreaTest {
     public void testPlace() {
         PlayArea playArea = new PlayArea();
         Deck<PlayableCard> starterDeck = new Deck<>(CardType.STARTER);
-        starterCard = starterDeck.draw();
+        PlayableCard starterCard = starterDeck.draw();
         playArea.placeStarter(starterCard);
         assertEquals(1, playArea.getPlacedCards().size());
         assertEquals(starterCard, playArea.getPlacedCards().get(new Point(0, 0)));
@@ -37,7 +34,7 @@ class PlayAreaTest {
         Deck<PlayableCard> resourceDeck = new Deck<>(CardType.RESOURCE);
 
         System.out.println("testPlace NE: ");
-        playableCard = resourceDeck.draw();
+        PlayableCard playableCard = resourceDeck.draw();
         playArea.place(playableCard, new Point(1,1));
         assertEquals(playableCard, playArea.getPlacedCards().get(new Point(1, 1)));
         System.out.println("Correct");
@@ -63,13 +60,13 @@ class PlayAreaTest {
     /*
     @Test
     public void testCheckRequirements() {
-        PlayableCard card = new GoldCard(); // Inserisci qui un oggetto PlayableCard valido
+        PlayableCard card = new GoldCard(); // Insert a valid PlayableCard obj
         assertTrue(playArea.checkRequirements(card));
     }
 
     @Test
     public void testAllowedMove() {
-        assertFalse(playArea.allowedMove(new Point(1, 1))); // Inserisci qui un punto valido
+        assertFalse(playArea.allowedMove(new Point(1, 1))); // Insert a valid point
         assertTrue(playArea.allowedMove(new Point(0, 0)));
     }
 
@@ -77,24 +74,24 @@ class PlayAreaTest {
     public void testPlace() {
         Deck<PlayableCard> deck1 = new Deck<>(CardType.GOLD);
         PlayableCard card = deck1.draw();
-        Point point = new Point(1, 1); // Inserisci qui un punto valido
+        Point point = new Point(1, 1); // Insert a valid point
         int score = playArea.place(card, point);
-        assertEquals(0, score); // Inserisci qui il punteggio corretto previsto
+        assertEquals(0, score); // Insert the right score
         assertEquals(card, playArea.getPlacedCards().get(point));
     }
 
     @Test
     public void testUpdateAvailableRes() {
-        PlayableCard card = new PlayableCard(); // Inserisci qui un oggetto PlayableCard valido
-        Point point = new Point(1, 1); // Inserisci qui un punto valido
+        PlayableCard card = new PlayableCard(); // Insert a valid PlayableCard obj
+        Point point = new Point(1, 1); // Insert a valid point
         Map<Resources, Integer> initialResources = new HashMap<>(playArea.getAchievedResources());
         playArea.updateAvailableRes(card, point);
-        // Verifica che le risorse siano state aggiornate correttamente
+        // Verify the Resources are being updated correctly
         assertEquals(initialResources.getOrDefault(Resources.MUSHROOM, 0) + 1,
                 playArea.getAchievedResources().getOrDefault(Resources.MUSHROOM, 0).intValue());
         assertEquals(initialResources.getOrDefault(Resources.ANIMAL, 0) + 1,
                 playArea.getAchievedResources().getOrDefault(Resources.PLANT, 0).intValue());
-        // Continua con le altre risorse...
+        // Go on with more resources ...
     }
 
  */
