@@ -12,11 +12,14 @@ import java.awt.Point;
 
 class PlayAreaTest {
 
+    private PlayArea playArea;
+    private PlayableCard playableCard, starterCard;
+
     @Test
     public void testPlaceStarter() {
         PlayArea playArea = new PlayArea();
         Deck<PlayableCard> starterDeck = new Deck<>(CardType.STARTER);
-        PlayableCard starterCard = starterDeck.draw();
+        starterCard = starterDeck.draw();
         playArea.placeStarter(starterCard);
         assertEquals(1, playArea.getPlacedCards().size());
         assertEquals(starterCard, playArea.getPlacedCards().get(new Point(0, 0)));
@@ -26,7 +29,7 @@ class PlayAreaTest {
     public void testPlace() {
         PlayArea playArea = new PlayArea();
         Deck<PlayableCard> starterDeck = new Deck<>(CardType.STARTER);
-        PlayableCard starterCard = starterDeck.draw();
+        starterCard = starterDeck.draw();
         playArea.placeStarter(starterCard);
         assertEquals(1, playArea.getPlacedCards().size());
         assertEquals(starterCard, playArea.getPlacedCards().get(new Point(0, 0)));
@@ -34,7 +37,7 @@ class PlayAreaTest {
         Deck<PlayableCard> resourceDeck = new Deck<>(CardType.RESOURCE);
 
         System.out.println("testPlace NE: ");
-        PlayableCard playableCard = resourceDeck.draw();
+        playableCard = resourceDeck.draw();
         playArea.place(playableCard, new Point(1,1));
         assertEquals(playableCard, playArea.getPlacedCards().get(new Point(1, 1)));
         System.out.println("Correct");
@@ -71,6 +74,16 @@ class PlayAreaTest {
     }
 
     @Test
+    public void testPlace() {
+        Deck<PlayableCard> deck1 = new Deck<>(CardType.GOLD);
+        PlayableCard card = deck1.draw();
+        Point point = new Point(1, 1); // Inserisci qui un punto valido
+        int score = playArea.place(card, point);
+        assertEquals(0, score); // Inserisci qui il punteggio corretto previsto
+        assertEquals(card, playArea.getPlacedCards().get(point));
+    }
+
+    @Test
     public void testUpdateAvailableRes() {
         PlayableCard card = new PlayableCard(); // Inserisci qui un oggetto PlayableCard valido
         Point point = new Point(1, 1); // Inserisci qui un punto valido
@@ -83,5 +96,6 @@ class PlayAreaTest {
                 playArea.getAchievedResources().getOrDefault(Resources.PLANT, 0).intValue());
         // Continua con le altre risorse...
     }
+
  */
 }
