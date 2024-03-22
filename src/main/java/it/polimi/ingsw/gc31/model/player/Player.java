@@ -28,11 +28,19 @@ public class Player {
 
     //Really Necessary?
     public boolean addToHand(PlayableCard card) {
-        this.hand.add(card);
-        return true;
+        try {
+            this.hand.add(card);
+            return true;
+        }
+
+        catch (NullPointerException e) {
+            e.getStackTrace();
+            return false;
+        }
     }
 
     //Basic repositioning of the card in hand implemented temporarily with an input output System
+    //TODO change I/O System with what we really will use
     public void moveCardInHand() {
         Scanner myScanner = new Scanner(System.in);
 
