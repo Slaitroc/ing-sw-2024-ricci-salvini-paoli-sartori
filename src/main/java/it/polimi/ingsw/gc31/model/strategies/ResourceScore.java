@@ -32,9 +32,12 @@ public class ResourceScore extends Objective {
      * @param placedCard is the map that contains all the card on the player's board
      * @return the number of points obtained by the player
      */
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint) {
-        int count = 0;
+    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint, Map<Resources, Integer> achievedResources) {
+        //  int count = 0;
 
+        return achievedResources.get(resource);
+
+        /* useless after achievedResources as a parameter
         for (Point c : placedCard.keySet()) {
             for (int i = 0; i >= 0 && i < placedCard.get(c).getResources().size(); i++) {
                 if (resource.equals(placedCard.get(c).getResources().get(i))) {
@@ -43,5 +46,6 @@ public class ResourceScore extends Objective {
             }
         }
         return count;
+         */
     }
 }

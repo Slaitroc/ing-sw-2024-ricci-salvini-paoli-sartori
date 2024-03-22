@@ -32,12 +32,12 @@ public class Count extends Objective {
      * @param placedCard is the map that contains all the card on the player's board
      * @return the number of points obtained by the player
      */
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint) {
+    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint, Map<Resources, Integer> achievedResources) {
         if (resources.get(0) == Resources.ANIMAL || resources.get(0) == Resources.PLANT ||
                 resources.get(0) == Resources.INSECT || resources.get(0) == Resources.MUSHROOM) {
-            return countAPIM(placedCard);
+            return countAPIM(placedCard, achievedResources);
         }
-        return countFIS(placedCard);
+        return countFIS(placedCard, achievedResources);
     }
 
     /**
@@ -47,10 +47,15 @@ public class Count extends Objective {
      * @param placedCard is the map that contains all the card on the player's board
      * @return the number of points obtained by the player
      */
-    private int countAPIM(Map<Point, PlayableCard> placedCard) {
+    private int countAPIM(Map<Point, PlayableCard> placedCard, Map<Resources, Integer> achievedResources) {
         Resources seed = resources.get(0);
-        int found = searchOnBoard(placedCard, seed);
+        int found = achievedResources.get(seed);
         return 2 * ((found - found % 3) / 3);
+
+        /* useless after achievedResources as a parameter
+            int found = searchOnBoard(placedCard, seed);
+            return 2 * ((found - found % 3) / 3);
+        */
     }
 
     /**
@@ -60,33 +65,34 @@ public class Count extends Objective {
      * @param placedCard is the map that contains all the card on the player's board
      * @return the number of points obtained by the player
      */
-    private int countFIS(Map<Point, PlayableCard> placedCard) {
+    private int countFIS(Map<Point, PlayableCard> placedCard, Map<Resources, Integer> achievedResources) {
         Resources seed = null;
         int found = 0;
 
         if (resources.size() == 2) {
             seed = resources.get(0);
-            found = searchOnBoard(placedCard, seed);
-
+            found = achievedResources.get(seed);
             return 2 * ((found - found % 2) / 2);
         }
 
-        found = searchOnBoard(placedCard, Resources.FEATHER);
-        if (searchOnBoard(placedCard, Resources.INK) < found)
-            found = searchOnBoard(placedCard, Resources.INK);
-        if (searchOnBoard(placedCard, Resources.SCROLL) < found)
-            found = searchOnBoard(placedCard, Resources.SCROLL);
+        found = achievedResources.get(Resources.FEATHER);
+        if (achievedResources.get(Resources.INK) < found)
+            found = achievedResources.get(Resources.INK);
+        if (achievedResources.get(Resources.SCROLL) < found)
+            found = achievedResources.get(Resources.SCROLL);
 
         return 3 * ((found - found % 3) / 3);
     }
 
+    /*
     /**
      * This method searches the Resource "seed" on the board
      *
      * @param placedCard is the map that contains all the card on the player's board
      * @param seed       is the resource I want to search on the player's board
      * @return the number of occurrences of seed
-     */
+
+     useless after achievedResources as a parameter
     private int searchOnBoard(Map<Point, PlayableCard> placedCard, Resources seed) {
         List<Resources> list = null;
         int count = 0;
@@ -104,4 +110,5 @@ public class Count extends Objective {
 
         return count;
     }
+    */
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
 /**
  * This class represent the Objective where the player needs to have 3 cards placed in a seven's reverse shape
@@ -38,7 +39,7 @@ public class SevenReverse extends Objective {
      * @param uselessPoint is the point of the played card
      * @return the number of points obtained by the player
      */
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint) {
+    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint, Map<Resources, Integer> achievedResources) {
         int maxX = findMaxX(placedCard), minX = findMinX(placedCard), maxY = findMaxY(placedCard), minY = findMinY(placedCard);
         int count = 0;
 

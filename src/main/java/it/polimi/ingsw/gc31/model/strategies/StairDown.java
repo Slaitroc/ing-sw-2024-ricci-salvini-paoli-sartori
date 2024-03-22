@@ -5,6 +5,7 @@ import java.util.Map;
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
 /**
  * This Class represents the Objective where the player needs to have 3 cards placed diagonally (towards the bottom)
@@ -31,7 +32,7 @@ public class StairDown extends Objective {
      * @param placedCard is the map that contains all the card on the player's board
      * @return the number of points obtained by the player
      */
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint) {
+    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint, Map<Resources, Integer> achievedResources) {
         int maxX = findMaxX(placedCard), minX = findMinX(placedCard), maxY = findMaxY(placedCard), minY = findMinY(placedCard);
         int count = 0;
 

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
 /**
  * This class represents the Objective where the player needs to have some Card placed forming the seven's shape in order
@@ -39,7 +40,7 @@ public class Seven extends Objective {
      * @param uselessPoint is the point of the played card
      * @return the number of points obtained by the player
      */
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint) {
+    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint, Map<Resources, Integer> achievedResources) {
         int maxX = findMaxX(placedCard), minX = findMinX(placedCard), maxY = findMaxY(placedCard), minY = findMinY(placedCard);
         int count = 0;
 
