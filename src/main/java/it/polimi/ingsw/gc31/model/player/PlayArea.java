@@ -1,15 +1,9 @@
 package it.polimi.ingsw.gc31.model.player;
 
 import java.awt.Point;
-
 import java.util.*;
-
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 public class PlayArea {
 
@@ -19,14 +13,18 @@ public class PlayArea {
     // unnecessary anyway
 
     private final Map<Resources, Integer> achievedResources;
+    private final Point lastPlaced = new Point(0, 0);
 
     PlayArea() {
         this.placedCards = new HashMap<>();
         this.achievedResources = new HashMap<>();
-        achievedResources.put(Resources.MUSHROOM, 0);
         achievedResources.put(Resources.ANIMAL, 0);
-        achievedResources.put(Resources.PLANT, 0);
         achievedResources.put(Resources.INSECT, 0);
+        achievedResources.put(Resources.INK, 0);
+        achievedResources.put(Resources.FEATHER, 0);
+        achievedResources.put(Resources.MUSHROOM, 0);
+        achievedResources.put(Resources.PLANT, 0);
+        achievedResources.put(Resources.SCROLL, 0);
     }
 
 
@@ -56,9 +54,8 @@ public class PlayArea {
      */
     private boolean checkRequirements(PlayableCard card) {
         if (!card.getRequirements().equals(Collections.emptyMap())) {
-            Set<Resources> RequiredRes = card.getRequirements().keySet();
-            for (Resources r : RequiredRes) {
-                if (achievedResources.get(r) == null) return false;
+            Set<Resources> requiredRes = card.getRequirements().keySet();
+            for (Resources r : requiredRes) {
                 if (card.getRequirements().get(r) < achievedResources.get(r)) return false;
             }
         }
@@ -82,6 +79,7 @@ public class PlayArea {
             }
         }
         if (card.getObjective() != null) return card.getObjective().isObjectiveDone(placedCards, point);
+        lastPlaced.setLocation(point);
         return card.getScore();
     }
 
@@ -107,31 +105,28 @@ public class PlayArea {
         // Double corner coverage condition !!
         // (Think about it. Sum of coordinates NEEDS to be EVEN, or you are covering 2
         // edges of the same card)
-        if ((point.getX() + point.getY()) % 2 != 0) {
-            Point newPoint = new Point(point);
+        if ((point.getX() + point.getY()) % 2 == 0) {
+            Point alreadyPlaced = new Point(point);
+
             // Placing new card on NorthEst
-            newPoint.x = point.x - 1;
-            newPoint.y = point.y - 1;
-            if (placedCards.get(newPoint) != null) {
-                if (placedCards.get(newPoint).checkCorner(0)) return true;
+            alreadyPlaced.setLocation(point.getX() - 1, point.getY() - 1);
+            if (placedCards.get(alreadyPlaced) != null) {
+                return placedCards.get(alreadyPlaced).checkCorner(0);
             }
             // Placing new card on SouthEast
-            newPoint.x = point.x - 1;
-            newPoint.y = point.y + 1;
-            if (placedCards.get(newPoint) != null) {
-                if (placedCards.get(newPoint).checkCorner(1)) return true;
+            alreadyPlaced.setLocation(point.getX() - 1, point.getY() + 1);
+            if (placedCards.get(alreadyPlaced) != null) {
+                return placedCards.get(alreadyPlaced).checkCorner(1);
             }
             // Placing new card on SouthWest
-            newPoint.x = point.x + 1;
-            newPoint.y = point.y + 1;
-            if (placedCards.get(newPoint) != null) {
-                if (placedCards.get(newPoint).checkCorner(2)) return true;
+            alreadyPlaced.setLocation(point.getX() + 1, point.getY() + 1);
+            if (placedCards.get(alreadyPlaced) != null) {
+                return placedCards.get(alreadyPlaced).checkCorner(2);
             }
             // Placing new card on NorthWest
-            newPoint.x = point.x + 1;
-            newPoint.y = point.y - 1;
-            if (placedCards.get(newPoint) != null) {
-                return placedCards.get(newPoint).checkCorner(3);
+            alreadyPlaced.setLocation(point.getX() + 1, point.getY() - 1);
+            if (placedCards.get(alreadyPlaced) != null) {
+                return placedCards.get(alreadyPlaced).checkCorner(3);
             }
         }
         return false;
@@ -143,6 +138,8 @@ public class PlayArea {
      * than it checks all the cards that could have been covered by the new placed
      * card and update the value in the achievedResource map under the key (r)
      * with its value -1
+     * Notice that the condition of covering a not HIDDEN corner has already been checked
+     * (Method also calls .coverCorner(int) to modify the card value)
      *
      * @author Matteo Paoli
      */
@@ -153,42 +150,40 @@ public class PlayArea {
         }
 
         // Deleting Resources
-        Point newPoint = new Point();
+        Point alreadyPlaced = new Point();
         Resources delRes;
 
         // Covering NorthEast
-        newPoint.x = point.x + 1;
-        newPoint.y = point.y + 1; // coordinates of the card in the NorthEst position of the one I am placing
-        if (placedCards.get(newPoint) != null) {
-            delRes = placedCards.get(newPoint).coverCorner(2);
+        alreadyPlaced.setLocation(point.getX() + 1, point.getY() + 1);
+        // coordinates of the card in the NorthEst position of the one I am placing
+
+        if (placedCards.get(alreadyPlaced) != null) {
+            delRes = placedCards.get(alreadyPlaced).coverCorner(2);
             // Assign to delRes the value of the Resources that im covering
 
-            achievedResources.put(delRes, achievedResources.get(delRes) - 1);
+            if (delRes != Resources.EMPTY) achievedResources.put(delRes, achievedResources.get(delRes) - 1);
             // Decrement the number of that given resource in the map
         }
 
         // Covering SouthEast
-        newPoint.x = point.x + 1;
-        newPoint.y = point.y - 1;
-        if (placedCards.get(newPoint) != null) {
-            delRes = placedCards.get(newPoint).coverCorner(3);
-            achievedResources.put(delRes, achievedResources.get(delRes) - 1);
+        alreadyPlaced.setLocation(point.getX()+1, point.getY()-1);
+        if (placedCards.get(alreadyPlaced) != null) {
+            delRes = placedCards.get(alreadyPlaced).coverCorner(3);
+            if (delRes != Resources.EMPTY) achievedResources.put(delRes, achievedResources.get(delRes) - 1);
         }
 
         // Covering SouthWest
-        newPoint.x = point.x - 1;
-        newPoint.y = point.y - 1;
-        if (placedCards.get(newPoint) != null) {
-            delRes = placedCards.get(newPoint).coverCorner(0);
-            achievedResources.put(delRes, achievedResources.get(delRes) - 1);
+        alreadyPlaced.setLocation(point.getX()-1, point.getY()-1);
+        if (placedCards.get(alreadyPlaced) != null) {
+            delRes = placedCards.get(alreadyPlaced).coverCorner(0);
+            if (delRes != Resources.EMPTY) achievedResources.put(delRes, achievedResources.get(delRes) - 1);
         }
 
         // Covering NorthWest
-        newPoint.x = point.x - 1;
-        newPoint.y = point.y + 1;
-        if (placedCards.get(newPoint) != null) {
-            delRes = placedCards.get(newPoint).coverCorner(1);
-            achievedResources.put(delRes, achievedResources.get(delRes) - 1);
+        alreadyPlaced.setLocation(point.getX()-1, point.getY()+1);
+        if (placedCards.get(alreadyPlaced) != null) {
+            delRes = placedCards.get(alreadyPlaced).coverCorner(1);
+            if (delRes != Resources.EMPTY) achievedResources.put(delRes, achievedResources.get(delRes) - 1);
         }
     }
 
