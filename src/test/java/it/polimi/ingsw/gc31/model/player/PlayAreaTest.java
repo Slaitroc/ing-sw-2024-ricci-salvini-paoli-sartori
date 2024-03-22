@@ -3,7 +3,6 @@ package it.polimi.ingsw.gc31.model.player;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
-import it.polimi.ingsw.gc31.model.player.PlayArea;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.awt.Point;
