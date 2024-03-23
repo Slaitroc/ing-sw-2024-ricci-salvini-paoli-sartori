@@ -10,18 +10,24 @@ import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.exceptions.MaxPlayerNumberReachedException;
 import it.polimi.ingsw.gc31.model.player.Player;
 
-public class GameModel {
-   
-    private int pawnSelector = 0; // NOTE o meglio playerCount
+public class GameModel implements Cloneable {
+
+    private int pawnSelector; // NOTE o meglio playerCount
     private Board board;
     private List<Player> players;
     private Player playingPlayer;
 
-    public GameModel(List<String> userList) {
+    private GameModel() {
+        pawnSelector = 0;
         players = new ArrayList<Player>();
+        board = new Board();
+
+    }
+
+    public GameModel(List<String> userList) {
+        this();
         createPlayers(userList);
         playingPlayer = players.get(0);
-        board = new Board();
         cardsToHands();
 
     }
@@ -75,19 +81,33 @@ public class GameModel {
         return color;
     }
 
-    private void cardsToHands(){
-        for (Player p : players){
-            p.addToHand(board.getDeckGold().draw()); 
-            p.addToHand( board.getDeckGold().draw());
-            p.addToHand( board.getDeckResource().draw());
+    private void cardsToHands() {
+        for (Player p : players) {
+            p.addToHand(board.getDeckGold().draw());
+            p.addToHand(board.getDeckGold().draw());
+            p.addToHand(board.getDeckResource().draw());
 
             PlayableCard starterCard = board.getDeckStarer().draw();
             starterCard.changeSide();
-            //TODO dare la possibilità di girarla prima di piazzarla, per ora who cares 
-            p.getPlayArea().placeStarter(starterCard);            
+            // TODO dare la possibilità di girarla prima di piazzarla, per ora who cares
+            p.getPlayArea().placeStarter(starterCard);
 
         }
     }
 
+    // NOTE cloneable
+    @Override
+    public GameModel clone() {
+        GameModel clone = new GameModel();
+        for (Player player : this.players) {
+            Player playerClone = new Player(clone.pawnAssignment(), player.getName());
+            clone.players.add(playerClone);
+            if (playingPlayer == player)
+                clone.playingPlayer = playerClone;
+        }
+        clone.board = this.board.clone();
+        return clone;
+
+    }
 
 }

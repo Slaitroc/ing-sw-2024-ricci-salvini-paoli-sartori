@@ -14,18 +14,25 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
 
-public class Deck<T extends Card> {
+public class Deck<T extends Card> implements Cloneable {
     // TODO cambiare implementazione con queue
     private Queue<T> deck;
     private T card1;
     private T card2;
+    private CardType deckCardType; // colpa di Slaitroc
     // TODO forse da mettere statiche da qualche altra parte
     private final String dirImgGoldCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/GoldCard.json";
     private final String dirImgResourceCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/ResourceCard.json";
     private final String dirImgStarterCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/StarterCard.json";
     private final String dirImgObjectiveCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/ObjectiveCard.json";
 
+    private Deck() {
+        deck = new ArrayDeque<>();
+
+    }
+
     public Deck(CardType cardType) {
+        deckCardType = cardType; // colpa di Slaitroc
         List<T> tempDeck = new ArrayList<>();
         FileReader fileReader = null;
         // classe delle carte che formeranno il deck
@@ -62,7 +69,7 @@ public class Deck<T extends Card> {
             if (jsonElement.isJsonArray()) {
                 JsonArray jsonArray = jsonElement.getAsJsonArray();
 
-                //create GsonBuilder and add typeAdapter necessary
+                // create GsonBuilder and add typeAdapter necessary
                 Gson gson = new GsonBuilder()
                         .registerTypeAdapter(GoldCard.class, new PlayableCardAdapter())
                         .registerTypeAdapter(ResourceCard.class, new PlayableCardAdapter())
@@ -87,7 +94,7 @@ public class Deck<T extends Card> {
                     }
                 }
 
-                //TODO, tradurre: Mischio le carte
+                // TODO, tradurre: Mischio le carte
                 Collections.shuffle(tempDeck);
                 for (T card : tempDeck) {
                     deck.add(card);
@@ -137,5 +144,20 @@ public class Deck<T extends Card> {
 
     public void flipCard2() {
         this.card2.changeSide();
+    }
+
+    // NOTE cloneable
+
+    @Override
+    public Deck<T> clone() {
+        Deck<T> clone = new Deck<>();
+        clone.deckCardType = this.deckCardType;
+        for (T card : this.deck) {
+            clone.deck.add(card); // FIX siamo sicuri che le aggiunga nell'ordine corretto?
+        }
+        clone.card1 = this.card1; // TODO chiedi a cri una deep copy di card utilizzando i suoi metodi di deepcopy
+                                  // di front e back
+        clone.card2 = this.card2; // WARN ricordati
+        return null;
     }
 }

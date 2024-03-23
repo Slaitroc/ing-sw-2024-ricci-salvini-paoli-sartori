@@ -1,12 +1,12 @@
 package it.polimi.ingsw.gc31;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.controller.GameController;
-import it.polimi.ingsw.gc31.model.GameModel;
 import it.polimi.ingsw.gc31.model.exceptions.*;
+import it.polimi.ingsw.gc31.model.GameModel;
 import it.polimi.ingsw.gc31.view.GameView;
 
 /*import javafx.application.Application;
@@ -29,65 +29,79 @@ public class Server /* extends Application */ {
      * }
      */
 
-    private GameModel gameModel;
-    private Controller controller;
-    private GameView view;
-    private static List<String> usernamesList;
+    private static final Controller controller = new Controller();
+
+    public static Controller getController() {
+        return controller.clone();
+    }
 
     public static void main(String[] args) {
         /* launch(); */
 
-        Controller controller = new Controller();
-        // NOTE questo controller sará unico e giá presente nel server
-        // é il gestore di tutte le singole partite e degli username dei player
-        
+        // aggiungo il player1 al Controller
+        String player1 = "Christian";
+        addPlayerToController(player1);
 
-        // creo gli username per i futuri player
-        usernamesList = new ArrayList<String>();
-        usernamesList.add("Alessandro");
-        usernamesList.add("Christian");
-        usernamesList.add("Matteo");
-        usernamesList.add("Lorenzo");
+        // creo il GameController corrispondente al player1
+        int numPlayer = 2;
+        GameController gameController = createGameController(player1, numPlayer);
 
-        //aggiungo gli username al controller (che verifica se esistono già lanciando se necessario un'eccezione)
+        // aggiungo il player2 al GameController già creato
+        String player2 = "Matteo";
+        addPlayerToGameController(gameController, player2);
+
+        // creo il gameModel
+        createGameModel(gameController);
+
+    }
+
+    // NOTE for testing
+    public static void addPlayerToController(String player) {
+        // aggiungo gli username al controller (che verifica se esistono già lanciando
+        // se necessario un'eccezione)
         try {
-            controller.addPlayerUsername(usernamesList.get(0));
-            controller.addPlayerUsername(usernamesList.get(1));
-            controller.addPlayerUsername(usernamesList.get(2));
-            controller.addPlayerUsername(usernamesList.get(3));
+            controller.addPlayerUsername(player);
         } catch (PlayerNicknameAlreadyExistsException e) {
             e.printStackTrace();
         }
 
-        //creo il GameController specifico della partita 
-        //il costruttore prende sono il player che vuole creare una nuova partita
-        int gameControllerID = controller.createGameController(usernamesList.get(0), 2);
-        GameController gameController = controller.getGameController(gameControllerID);
+    }
 
-        //aggiungo gli altri player al GameController
+    public static GameController createGameController(List<String> usernamesList, int numPlayers) {
+        if (usernamesList != null && !usernamesList.isEmpty()) {
+
+            int gameControllerID = controller.createGameController(usernamesList.get(0), numPlayers);
+            GameController gameController = controller.getGameController(gameControllerID);
+            return gameController;
+        } else
+            return null;
+    }
+
+    public static GameController createGameController(String player, int numPlayers) {
+        int gameControllerID = controller.createGameController(player, numPlayers);
+        GameController gameController = controller.getGameController(gameControllerID);
+        return gameController;
+    }
+
+    public static void addPlayerToGameController(GameController gameController, String player) {
         try {
-            gameController.addPlayer(usernamesList.get(1));
-            gameController.addPlayer(usernamesList.get(2));
-            gameController.addPlayer(usernamesList.get(3));
+            gameController.addPlayer(player);
         } catch (MaxPlayerNumberReachedException e) {
             e.printStackTrace();
+        } catch (PlayerNicknameAlreadyExistsException c) {
+            c.printStackTrace();
         }
+    }
 
-        //creo il modello
-        //se i player non hanno raggiunto il numero massimo allora viene lanciata un'eccezione
+    public static void createGameModel(GameController gameController) {
         try {
             gameController.createGameModel();
         } catch (PlayerNumberNotReachedException e) {
             System.out.println("Player Number Not Reached!");
             e.printStackTrace();
+        } catch (GameModelAlreadyCreatedException e) {
+            System.out.println("Game Model Alredy Created!");
+            e.printStackTrace();
         }
-
-        
-
-
-        
-        System.out.println("FINE DEBUG");
-
     }
-
 }

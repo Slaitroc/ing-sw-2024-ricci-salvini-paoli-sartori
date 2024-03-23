@@ -4,6 +4,7 @@ import java.util.Set;
 
 import it.polimi.ingsw.gc31.model.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.model.player.Player;
+import javafx.scene.layout.CornerRadii;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -14,9 +15,14 @@ import java.util.HashSet;
 //il GameController relativo al primo match viene creato subito dopo che il primo player si è loggato? 
 //Mi sembra più semplice fare così che gestire le attese per la creazione dei GameController nel Controller 
 
-public class Controller {
-    private List<GameController> gamesList; //NOTE meglio Set o List?
-    private Set<String> globalUsernameSet;
+public class Controller implements Cloneable {
+    private final List<GameController> gamesList; // NOTE meglio Set o List?
+
+    private final Set<String> globalUsernameSet;
+
+    public Set<String> getGlobalUsernameSet() {
+        return globalUsernameSet;
+    }
 
     public Controller() {
         this.gamesList = new ArrayList<GameController>();
@@ -24,6 +30,16 @@ public class Controller {
 
     }
 
+    public Controller(Controller controller) {
+        this.gamesList = controller.gamesList;
+        this.globalUsernameSet = controller.globalUsernameSet;
+        ArrayList<GameController> deepCopy = new ArrayList<GameController>();
+        for (GameController g : controller.gamesList) {
+            deepCopy.add(g.clone());
+
+        }
+
+    }
 
     /**
      * @param username player's nickname
@@ -31,7 +47,7 @@ public class Controller {
      */
     public int createGameController(String username, int numPlayers) {
         gamesList.add(new GameController(numPlayers, username));
-        return gamesList.size()-1;
+        return gamesList.size() - 1;
     }
 
     /**
@@ -61,8 +77,22 @@ public class Controller {
 
     }
 
-    public GameController getGameController(int gameID){
+    public GameController getGameController(int gameID) {
         return gamesList.get(gameID);
+    }
+
+    // NOTE deep copy e cloneable
+
+    @Override
+    public Controller clone() {
+        Controller cloned = new Controller();
+        for (GameController gc : gamesList) {
+            cloned.gamesList.add(gc.clone());
+        }
+        for (String nickname : globalUsernameSet) {
+            cloned.globalUsernameSet.add(new String(nickname));
+        }
+        return cloned;
     }
 
 }

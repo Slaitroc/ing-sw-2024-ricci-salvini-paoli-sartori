@@ -6,7 +6,7 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
 
-public class Board {
+public class Board implements Cloneable {
 
     private Deck<PlayableCard> goldDeck;
     private Deck<PlayableCard> resourceDeck;
@@ -23,6 +23,7 @@ public class Board {
     public Deck<PlayableCard> getDeckGold() {
         return goldDeck;
     }
+
     public Deck<PlayableCard> getDeckStarer() {
         return starterDeck;
     }
@@ -34,4 +35,16 @@ public class Board {
     public Deck<ObjectiveCard> getDeckObjective() {
         return objectiveDeck;
     }
+
+    // NOTE cloneable
+    @Override
+    public Board clone() {
+        Board clone = new Board();
+        clone.goldDeck = this.goldDeck.clone();
+        clone.resourceDeck = this.resourceDeck.clone();
+        clone.starterDeck = this.starterDeck.clone();
+        clone.objectiveDeck = this.objectiveDeck.clone();
+        return null;
+    }
+
 }
