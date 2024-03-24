@@ -9,11 +9,12 @@ import it.polimi.ingsw.gc31.model.exceptions.MaxPlayerNumberReachedException;
 import it.polimi.ingsw.gc31.model.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.model.exceptions.PlayerNumberAlreadySetException;
 import it.polimi.ingsw.gc31.model.exceptions.PlayerNumberNotReachedException;
+import it.polimi.ingsw.gc31.utility.DeepCopy;
 import it.polimi.ingsw.gc31.view.GameView;
 
 //IDEA  nei controller voglio usare solo i nickname che possono anche tornare utili come identificativo esterno dei player del Model
 
-public class GameController implements Cloneable {
+public class GameController implements Cloneable, DeepCopy<GameController> {
 
     private int ID;
     private GameModel gameModel;
@@ -80,19 +81,18 @@ public class GameController implements Cloneable {
     }
 
     public GameModel getGameModel() {
-        return gameModel.clone();
+        return gameModel.deepCopy();
     }
 
-    // NOTE da qui in poi deep copy e cloneable
     @Override
-    public GameController clone() {
+    public GameController deepCopy() {
         GameController cloned = new GameController();
         try {
             cloned.setNumPlayers(this.maxNumPlayer);
         } catch (PlayerNumberAlreadySetException e) {
             e.printStackTrace();
         }
-        cloned.gameModel = this.gameModel.clone();
+        cloned.gameModel = this.gameModel.deepCopy();
         cloned.gameView = new GameView(); // TODO da implementare clone()
         cloned.playerList = new ArrayList<String>();
         for (String string : this.playerList) {

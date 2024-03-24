@@ -32,7 +32,7 @@ public class Server /* extends Application */ {
     private static final Controller controller = new Controller();
 
     public static Controller getController() {
-        return controller.clone();
+        return controller.deepCopy();
     }
 
     public static void main(String[] args) {

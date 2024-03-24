@@ -4,6 +4,7 @@ import java.util.Set;
 
 import it.polimi.ingsw.gc31.model.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.model.player.Player;
+import it.polimi.ingsw.gc31.utility.DeepCopy;
 import javafx.scene.layout.CornerRadii;
 
 import java.awt.Color;
@@ -15,7 +16,7 @@ import java.util.HashSet;
 //il GameController relativo al primo match viene creato subito dopo che il primo player si è loggato? 
 //Mi sembra più semplice fare così che gestire le attese per la creazione dei GameController nel Controller 
 
-public class Controller implements Cloneable {
+public class Controller implements Cloneable, DeepCopy<Controller> {
     private final List<GameController> gamesList; // NOTE meglio Set o List?
 
     private final Set<String> globalUsernameSet;
@@ -27,17 +28,6 @@ public class Controller implements Cloneable {
     public Controller() {
         this.gamesList = new ArrayList<GameController>();
         this.globalUsernameSet = new HashSet<String>();
-
-    }
-
-    public Controller(Controller controller) {
-        this.gamesList = controller.gamesList;
-        this.globalUsernameSet = controller.globalUsernameSet;
-        ArrayList<GameController> deepCopy = new ArrayList<GameController>();
-        for (GameController g : controller.gamesList) {
-            deepCopy.add(g.clone());
-
-        }
 
     }
 
@@ -81,13 +71,11 @@ public class Controller implements Cloneable {
         return gamesList.get(gameID);
     }
 
-    // NOTE deep copy e cloneable
-
     @Override
-    public Controller clone() {
+    public Controller deepCopy() {
         Controller cloned = new Controller();
         for (GameController gc : gamesList) {
-            cloned.gamesList.add(gc.clone());
+            cloned.gamesList.add(gc.deepCopy());
         }
         for (String nickname : globalUsernameSet) {
             cloned.globalUsernameSet.add(new String(nickname));

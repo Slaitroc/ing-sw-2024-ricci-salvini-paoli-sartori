@@ -6,6 +6,7 @@ import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
+import it.polimi.ingsw.gc31.utility.DeepCopy;
 import it.polimi.ingsw.gc31.utility.gsonUtility.*;
 
 import java.io.FileNotFoundException;
@@ -14,7 +15,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
 
-public class Deck<T extends Card> implements Cloneable {
+public class Deck<T extends Card> implements Cloneable, DeepCopy<Deck> {
     // TODO cambiare implementazione con queue
     private Queue<T> deck;
     private T card1;
@@ -146,10 +147,8 @@ public class Deck<T extends Card> implements Cloneable {
         this.card2.changeSide();
     }
 
-    // NOTE cloneable
-
     @Override
-    public Deck<T> clone() {
+    public Deck<T> deepCopy() {
         Deck<T> clone = new Deck<>();
         clone.deckCardType = this.deckCardType;
         for (T card : this.deck) {
@@ -158,6 +157,10 @@ public class Deck<T extends Card> implements Cloneable {
         clone.card1 = this.card1; // TODO chiedi a cri una deep copy di card utilizzando i suoi metodi di deepcopy
                                   // di front e back
         clone.card2 = this.card2; // WARN ricordati
-        return null;
+        return clone;
+    }
+
+    public Queue<T> getQueue() { // FIX
+        return deck;
     }
 }

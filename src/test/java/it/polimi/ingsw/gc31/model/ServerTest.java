@@ -12,15 +12,20 @@ import it.polimi.ingsw.gc31.Server;
 import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.model.GameModel;
+import it.polimi.ingsw.gc31.model.card.Card;
+import it.polimi.ingsw.gc31.model.card.GoldCard;
 import it.polimi.ingsw.gc31.model.exceptions.GameModelAlreadyCreatedException;
 import it.polimi.ingsw.gc31.model.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.model.exceptions.PlayerNumberNotReachedException;
 import it.polimi.ingsw.gc31.view.GameView;
+import it.polimi.ingsw.gc31.model.deck.Deck;
+import it.polimi.ingsw.gc31.model.enumeration.CardType;
 
-public class ServerTest {
+public class ServerTest<T extends Card> {
     private GameModel gameModel;
     private Controller controller;
     private GameView view;
+    private Deck<T> deck;
     private static List<String> usernamesTestList = new ArrayList<String>();
 
     @BeforeAll
@@ -60,6 +65,8 @@ public class ServerTest {
         assert (gameController.getPlayerList().containsAll(usernamesTestList));
     }
 
+    // Qui viene create un GameModel sul quale è possibile effettuare i test sulla
+    // corretta inizializzazione della partita
     @Test
     void gameModelCreationTest() {
         GameController gameController = Server.createGameController(usernamesTestList, 4);
@@ -78,6 +85,20 @@ public class ServerTest {
          * Tutto questo sta implicitamente testando anche le deepcopy che ora si
          * chiamano clone
          */
+    }
+
+    // Verifica che:
+    // La deepcopy del deck restituisca effettivamente un'altro deck con le carti
+    // presenti nello stesso ordine
+    @Test
+    void deepCopyDeck() {
+        deck = new Deck<T>(CardType.GOLD);
+        deck.refill();
+        Deck<T> clone = deck.deepCopy();
+        assert (deck.getCard1().equals(clone.getCard1()));
+        assert (deck.draw().equals(clone.draw()));
+        for (int i = 0; i < deck.getQueue().size(); i++)
+            assert (deck.getQueue().poll().equals(clone.getQueue().poll()));
     }
 
 }

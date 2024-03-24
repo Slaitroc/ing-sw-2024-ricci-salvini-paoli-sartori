@@ -9,8 +9,9 @@ import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.exceptions.MaxPlayerNumberReachedException;
 import it.polimi.ingsw.gc31.model.player.Player;
+import it.polimi.ingsw.gc31.utility.DeepCopy;
 
-public class GameModel implements Cloneable {
+public class GameModel implements Cloneable, DeepCopy<GameModel> {
 
     private int pawnSelector; // NOTE o meglio playerCount
     private Board board;
@@ -95,9 +96,8 @@ public class GameModel implements Cloneable {
         }
     }
 
-    // NOTE cloneable
     @Override
-    public GameModel clone() {
+    public GameModel deepCopy() {
         GameModel clone = new GameModel();
         for (Player player : this.players) {
             Player playerClone = new Player(clone.pawnAssignment(), player.getName());
@@ -105,9 +105,8 @@ public class GameModel implements Cloneable {
             if (playingPlayer == player)
                 clone.playingPlayer = playerClone;
         }
-        clone.board = this.board.clone();
+        clone.board = this.board.deepCopy();
         return clone;
-
     }
 
 }
