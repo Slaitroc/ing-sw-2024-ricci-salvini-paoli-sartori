@@ -19,15 +19,7 @@ public class PlayArea {
     PlayArea() {
         this.placedCards = new HashMap<>();
         this.achievedResources = new HashMap<>();
-        achievedResources.put(Resources.ANIMAL, 0);
-        achievedResources.put(Resources.INSECT, 0);
-        achievedResources.put(Resources.INK, 0);
-        achievedResources.put(Resources.FEATHER, 0);
-        achievedResources.put(Resources.MUSHROOM, 0);
-        achievedResources.put(Resources.PLANT, 0);
-        achievedResources.put(Resources.SCROLL, 0);
     }
-
 
     /**
      * Create the HashMap, place starter at (0,0)
@@ -57,7 +49,8 @@ public class PlayArea {
         if (!card.getRequirements().equals(Collections.emptyMap())) {
             Set<Resources> requiredRes = card.getRequirements().keySet();
             for (Resources r : requiredRes) {
-                if (card.getRequirements().get(r) > achievedResources.get(r)) return false;
+                if (card.getRequirements().get(r) > achievedResources.get(r))
+                    return false;
             }
         }
         return true;
@@ -65,7 +58,8 @@ public class PlayArea {
 
     /**
      * Firstly it checks out if I have enough Resources to play the card.
-     * Then it adds the card in the placedCard Map if the function allowedMove return true.
+     * Then it adds the card in the placedCard Map if the function allowedMove
+     * return true.
      * Then return the value of points gained from that card
      * Notice that player will have to call:
      * score += hisPlayArea.place(card, point) to adds points at his score correctly
@@ -78,7 +72,8 @@ public class PlayArea {
                 placedCards.put(point, card);
                 updateAvailableRes(card, point);
 
-                if (card.getObjective() != null) return card.getObjective().isObjectiveDone(placedCards, point);
+                if (card.getObjective() != null)
+                    return card.getObjective().isObjectiveDone(getPlacedCards(), point, getAchievedResources());
                 lastPlaced.setLocation(point);
                 return card.getScore();
             }
@@ -102,9 +97,11 @@ public class PlayArea {
      * Return true if move is allowed, false if it is not.
      * Refers to card placement rule only
      * The algorithm starts with the idea that the move is illegal.
-     * It needs to check all 4 corners of already placed cards that it could be covering
+     * It needs to check all 4 corners of already placed cards that it could be
+     * covering
      * if it finds at least 1 of those corner HIDDEN than the move is ILLEGAL
-     * if it finds at least 1 existing corner not HIDDEN than it flags the move as POSSIBLE
+     * if it finds at least 1 existing corner not HIDDEN than it flags the move as
+     * POSSIBLE
      * To return true it needs to have all 4 corners checked
      *
      * @author Matteo Paoli
@@ -121,25 +118,29 @@ public class PlayArea {
                 // Placing new card on NorthEst
                 alreadyPlaced.setLocation(point.getX() - 1, point.getY() - 1);
                 if (placedCards.get(alreadyPlaced) != null) {
-                    if (!placedCards.get(alreadyPlaced).checkCorner(0)) return false;
+                    if (!placedCards.get(alreadyPlaced).checkCorner(0))
+                        return false;
                     possibleMove = true;
                 }
                 // Placing new card on SouthEast
                 alreadyPlaced.setLocation(point.getX() - 1, point.getY() + 1);
                 if (placedCards.get(alreadyPlaced) != null) {
-                    if (!placedCards.get(alreadyPlaced).checkCorner(1)) return false;
+                    if (!placedCards.get(alreadyPlaced).checkCorner(1))
+                        return false;
                     possibleMove = true;
                 }
                 // Placing new card on SouthWest
                 alreadyPlaced.setLocation(point.getX() + 1, point.getY() + 1);
                 if (placedCards.get(alreadyPlaced) != null) {
-                    if (!placedCards.get(alreadyPlaced).checkCorner(2)) return false;
+                    if (!placedCards.get(alreadyPlaced).checkCorner(2))
+                        return false;
                     possibleMove = true;
                 }
                 // Placing new card on NorthWest
                 alreadyPlaced.setLocation(point.getX() + 1, point.getY() - 1);
                 if (placedCards.get(alreadyPlaced) != null) {
-                    if (!placedCards.get(alreadyPlaced).checkCorner(3)) return false;
+                    if (!placedCards.get(alreadyPlaced).checkCorner(3))
+                        return false;
                     possibleMove = true;
                 }
             }
@@ -153,7 +154,8 @@ public class PlayArea {
      * than it checks all the cards that could have been covered by the new placed
      * card and update the value in the achievedResource map under the key (r)
      * with its value -1
-     * Notice that the condition of covering a not HIDDEN corner has already been checked
+     * Notice that the condition of covering a not HIDDEN corner has already been
+     * checked
      * (Method also calls .coverCorner(int) to modify the card value)
      *
      * @author Matteo Paoli
@@ -176,7 +178,8 @@ public class PlayArea {
             delRes = placedCards.get(alreadyPlaced).coverCorner(2);
             // Assign to delRes the value of the Resources that im covering
 
-            if (delRes != Resources.EMPTY) achievedResources.put(delRes, achievedResources.get(delRes) - 1);
+            if (delRes != Resources.EMPTY)
+                achievedResources.put(delRes, achievedResources.get(delRes) - 1);
             // Decrement the number of that given resource in the map
         }
 
@@ -184,24 +187,26 @@ public class PlayArea {
         alreadyPlaced.setLocation(point.getX() + 1, point.getY() - 1);
         if (placedCards.get(alreadyPlaced) != null) {
             delRes = placedCards.get(alreadyPlaced).coverCorner(3);
-            if (delRes != Resources.EMPTY) achievedResources.put(delRes, achievedResources.get(delRes) - 1);
+            if (delRes != Resources.EMPTY)
+                achievedResources.put(delRes, achievedResources.get(delRes) - 1);
         }
 
         // Covering SouthWest
         alreadyPlaced.setLocation(point.getX() - 1, point.getY() - 1);
         if (placedCards.get(alreadyPlaced) != null) {
             delRes = placedCards.get(alreadyPlaced).coverCorner(0);
-            if (delRes != Resources.EMPTY) achievedResources.put(delRes, achievedResources.get(delRes) - 1);
+            if (delRes != Resources.EMPTY)
+                achievedResources.put(delRes, achievedResources.get(delRes) - 1);
         }
 
         // Covering NorthWest
         alreadyPlaced.setLocation(point.getX() - 1, point.getY() + 1);
         if (placedCards.get(alreadyPlaced) != null) {
             delRes = placedCards.get(alreadyPlaced).coverCorner(1);
-            if (delRes != Resources.EMPTY) achievedResources.put(delRes, achievedResources.get(delRes) - 1);
+            if (delRes != Resources.EMPTY)
+                achievedResources.put(delRes, achievedResources.get(delRes) - 1);
         }
     }
-
 
     public Map<Point, PlayableCard> getPlacedCards() {
         return new HashMap<>(placedCards);

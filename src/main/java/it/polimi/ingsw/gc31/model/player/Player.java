@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.model.player;
 
-import java.util.Scanner;  // Import the Scanner class to test moveCardInHand
+import java.awt.*;
+import java.util.Scanner; // Import the Scanner class to test moveCardInHand
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
@@ -26,7 +27,7 @@ public class Player {
         score = 0;
     }
 
-    //Really Necessary?
+    // Really Necessary?
     public boolean addToHand(PlayableCard card) {
         try {
             this.hand.add(card);
@@ -39,8 +40,9 @@ public class Player {
         }
     }
 
-    //Basic repositioning of the card in hand implemented temporarily with an input output System
-    //TODO change I/O System with what we really will use
+    // Basic repositioning of the card in hand implemented temporarily with an input
+    // output System
+    // TODO change I/O System with what we really will use
     public void moveCardInHand() {
         Scanner myScanner = new Scanner(System.in);
 
@@ -58,9 +60,13 @@ public class Player {
     }
 
     public void changeState() {
-        //??
+        // ??
     }
 
+    //TODO questionable method!?
+    public void play (PlayableCard card, Point point){
+        this.score += playArea.place(card, point);
+    }
     public void addObjectiveCard(ObjectiveCard card) {
         this.objectiveCard = card;
     }
@@ -71,6 +77,10 @@ public class Player {
 
     public PlayArea getPlayArea() {
         return playArea;
+    }
+
+    public String getName() {
+        return username;
     }
 
 }

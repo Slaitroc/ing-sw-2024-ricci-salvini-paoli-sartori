@@ -12,16 +12,27 @@ import it.polimi.ingsw.gc31.model.strategies.Objective;
  * that represents which side of the card is active:
  * side = false -> back is active
  * side = true -> front is active
- * 
+ *
  * @author Christian Salvini
  */
 public abstract class Card {
+    /**
+     * The front side of a Card
+     */
     protected final CardFront front;
+    /**
+     * The back side of a Card
+     */
     protected final CardBack back;
+    /**
+     * Side is a boolean parameter that represents which side of the card is active:
+     * side = false -> back is active
+     * side = true -> front is active
+     */
     protected boolean side;
 
     /**
-     * Constructor of the class.
+     * Constructor of a Card.
      * All the cards are initially set to false
      */
     public Card(CardFront front, CardBack back) {
@@ -45,6 +56,9 @@ public abstract class Card {
         side = !side;
     }
 
+    /**
+     * @return the link to the image related to the active side
+     */
     public String getImage() {
         if (side)
             return front.getImage();
@@ -52,16 +66,35 @@ public abstract class Card {
             return back.getImage();
     }
 
+    //TODO da vedere meglio
+
+    /**
+     * @return the score obtained with the placement of the card. If back is active, always return 0.
+     */
     public int getScore() {
-        return 0;
+        if (side)
+            return front.getScore();
+        else return 0;
     }
 
+    /**
+     * @return return the {@link Objective} of a card that must be verified to obtain
+     * the score.
+     */
     abstract public Objective getObjective();
-    //abstract public JsonObject serializeToJson();
 
+    //TODO metodi temporanei, da togliere
+    /**
+     * Method for serializing the front of a card.
+     */
     public JsonObject frontSerializeToJson() {
         return front.serializeToJson();
     }
+
+    /**
+     * Method for serializing the back of a card.
+     * @return
+     */
     public JsonObject backSerializeToJson() {
         return back.serializeToJson();
     }
