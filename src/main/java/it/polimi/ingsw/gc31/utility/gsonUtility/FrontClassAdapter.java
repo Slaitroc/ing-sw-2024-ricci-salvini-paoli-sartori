@@ -24,14 +24,14 @@ import java.util.Map;
  * It can be registered to a GsonBuilder when you have to deserialize an object of the class {@link CardFront}
  * or any other object that contains a parameter of the {@link CardFront} class.
  * Gson gson = new GsonBuilder().registerTypeAdapter(CardFront.class, new FrontClassAdapter()).create();
- *
  */
 public class FrontClassAdapter implements JsonDeserializer<CardFront> {
 
     /**
      * Method that deserialize an object of the {@link CardFront} class.
+     *
      * @param jsonElement an object of type JsonElement containing the information to be extracted.
-     * @param type class of the object to be deserialized.
+     * @param type        class of the object to be deserialized.
      * @return it returns the deserialized object. It returns an object of the {@link CardFront} class.
      * @throws JsonParseException
      */
@@ -55,7 +55,8 @@ public class FrontClassAdapter implements JsonDeserializer<CardFront> {
         if (jsonObject.get("requirements").isJsonNull()) {
             requirements = Collections.emptyMap();
         } else {
-            requirements= jsonDeserializationContext.deserialize(jsonObject.get("requirements"), new TypeToken<Map<Resources, Integer>>(){}.getType());
+            requirements = jsonDeserializationContext.deserialize(jsonObject.get("requirements"), new TypeToken<Map<Resources, Integer>>() {
+            }.getType());
         }
 
         String dirImg;
@@ -66,7 +67,7 @@ public class FrontClassAdapter implements JsonDeserializer<CardFront> {
         }
 
         Objective ob;
-        if(jsonObject.get("objective").isJsonNull()) {
+        if (jsonObject.get("objective").isJsonNull()) {
             ob = null;
         } else {
             JsonElement obElement = jsonObject.get("objective");
