@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/**w
+/**
  * This class represents a generic card that can be placed on the
  * {@link it.polimi.ingsw.gc31.model.player.PlayArea}. It extends {@link Card}
  * All PlayableCard must extend this class.
