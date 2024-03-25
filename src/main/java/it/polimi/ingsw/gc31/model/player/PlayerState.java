@@ -16,4 +16,5 @@ public abstract class PlayerState {
 
     public abstract void play(PlayableCard card, Point point) throws IllegalStateOperationException;
 
+    public abstract PlayerState changeState();
 }

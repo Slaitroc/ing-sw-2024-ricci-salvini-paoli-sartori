@@ -6,6 +6,7 @@ import java.util.Scanner; // Import the Scanner class to test moveCardInHand
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.exceptions.IllegalStateOperationException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +71,12 @@ public class Player {
     }
 
     public void addObjectiveCard(ObjectiveCard card) {
-        inGameState.addObjectiveCard(objectiveCard, this);
+        try {
+            inGameState.addObjectiveCard(objectiveCard, this);
+        } catch (IllegalStateOperationException e) {
+            System.out.println("Operazione non permessa in questo momento!");
+            e.printStackTrace();
+        }
     }
 
     public int getScore() {
@@ -87,6 +93,10 @@ public class Player {
 
     public String getName() {
         return username;
+    }
+
+    public void changeStateReal() {
+        inGameState = inGameState.changeState();
     }
 
 }
