@@ -1,41 +1,48 @@
 package it.polimi.ingsw.gc31.model.player;
 
-import java.util.Scanner;  // Import the Scanner class to test moveCardInHand
+import java.awt.*;
+import java.util.Scanner; // Import the Scanner class to test moveCardInHand
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
-import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    private String username;
-    private PlayArea playArea;
+    private final String username;
+    private final PlayArea playArea;
     private final Color pawnColor;
-    private List<PlayableCard> hand;
+    private final List<PlayableCard> hand;
     private ObjectiveCard objectiveCard;
     private PlayerState inGameState;
     protected int score;
 
     public Player(Color color, String username) {
-        // inGameState = Waiting;
         this.pawnColor = color;
         this.username = username;
         this.playArea = new PlayArea();
-        hand = new ArrayList<PlayableCard>();
+        hand = new ArrayList<>();
         score = 0;
-
     }
 
-    //Really Necessary?
+    // Really Necessary?
     public boolean addToHand(PlayableCard card) {
-        this.hand.add(card);
-        return true;
+        try {
+            this.hand.add(card);
+            return true;
+        }
+
+        catch (NullPointerException e) {
+            e.getStackTrace();
+            return false;
+        }
     }
 
-    //Basic repositioning of the card in hand implemented temporarily with an input output System
+    // Basic repositioning of the card in hand implemented temporarily with an input
+    // output System
+    // TODO change I/O System with what we really will use
     public void moveCardInHand() {
         Scanner myScanner = new Scanner(System.in);
 
@@ -53,13 +60,16 @@ public class Player {
     }
 
     public void changeState() {
-        //??
+        // ??
     }
 
+    //TODO questionable method!?
+    public void play (PlayableCard card, Point point){
+        this.score += playArea.place(card, point);
+    }
     public void addObjectiveCard(ObjectiveCard card) {
         this.objectiveCard = card;
     }
-
 
     public int getScore() {
         return this.score;
@@ -67,6 +77,10 @@ public class Player {
 
     public PlayArea getPlayArea() {
         return playArea;
+    }
+
+    public String getName() {
+        return username;
     }
 
 }

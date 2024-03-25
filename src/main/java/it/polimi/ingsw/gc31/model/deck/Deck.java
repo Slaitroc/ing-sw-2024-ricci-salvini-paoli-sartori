@@ -25,6 +25,11 @@ public class Deck<T extends Card> {
     private final String dirJsonStarterCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/StarterCard.json";
     private final String dirJsonObjectiveCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/ObjectiveCard.json";
 
+    private Deck() {
+        deck = new ArrayDeque<>();
+
+    }
+
     public Deck(CardType cardType) {
         List<T> tempDeck = new ArrayList<>();
         FileReader fileReader = null;
@@ -62,7 +67,7 @@ public class Deck<T extends Card> {
             if (jsonElement.isJsonArray()) {
                 JsonArray jsonArray = jsonElement.getAsJsonArray();
 
-                //create GsonBuilder and add typeAdapter necessary
+                // create GsonBuilder and add typeAdapter necessary
                 Gson gson = new GsonBuilder()
                         .registerTypeAdapter(GoldCard.class, new PlayableCardAdapter())
                         .registerTypeAdapter(ResourceCard.class, new PlayableCardAdapter())
@@ -137,5 +142,22 @@ public class Deck<T extends Card> {
 
     public void flipCard2() {
         this.card2.changeSide();
+    }
+
+    @Override
+    public Deck<T> deepCopy() {
+        Deck<T> clone = new Deck<>();
+        clone.deckCardType = this.deckCardType;
+        for (T card : this.deck) {
+            clone.deck.add(card);
+        }
+        clone.card1 = this.card1; // TODO chiedi a cri una deep copy di card utilizzando i suoi metodi di deepcopy
+                                  // di front e back
+        clone.card2 = this.card2; // WARN ricordati
+        return clone;
+    }
+
+    public Queue<T> getQueue() { // FIX
+        return deck;
     }
 }

@@ -22,17 +22,19 @@ public class CardFront {
      */
     private final int score;
     /**
-     * List of Resources that represents the corners of the card's Front. The corners are identified according
+     * List of Resources that represents the corners of the card's Front. The
+     * corners are identified according
      * to the following convention:
-     *      0-> Up Dx
-     *      1-> Down Dx
-     *      2-> Down Sx
-     *      3-> Up Sx
+     * 0-> Up Dx
+     * 1-> Down Dx
+     * 2-> Down Sx
+     * 3-> Up Sx
      * It can have a maximum of 4 elements.
      */
     private final List<Resources> resources;
     /**
-     * The resources the Player must have in their playArea to be able to place the card.
+     * The resources the Player must have in their playArea to be able to place the
+     * card.
      */
     private final Map<Resources, Integer> requirements;
     /**
@@ -47,9 +49,10 @@ public class CardFront {
     /**
      * Constructor of the class
      */
-    public CardFront(int score, List<Resources> resources, Map<Resources, Integer> requirements, String dirImg, Objective ob)
-            //throws WrongNumberOfCornerException
-            //, DirImgValueMissingException
+    public CardFront(int score, List<Resources> resources, Map<Resources, Integer> requirements, String dirImg,
+            Objective ob)
+    // throws WrongNumberOfCornerException
+    // , DirImgValueMissingException
     {
         this.score = score;
 
@@ -64,9 +67,12 @@ public class CardFront {
     }
 
     /**
-     * Check if it's possible to place a card on the corner indicated by the parameter Corner
+     * Check if it's possible to place a card on the corner indicated by the
+     * parameter Corner
+     *
      * @param corner corner to be checked
-     * @return true if it is possible to place a card on that corner, false otherwise
+     * @return true if it is possible to place a card on that corner, false
+     *         otherwise
      */
     public boolean checkCorner(int corner) {
         return resources.get(corner) != Resources.HIDDEN;
@@ -142,7 +148,7 @@ public class CardFront {
             jsonObject.add("requirements", null);
         } else {
             JsonObject requirementsObjet = new JsonObject();
-            for (Map.Entry<Resources, Integer> res: this.requirements.entrySet()) {
+            for (Map.Entry<Resources, Integer> res : this.requirements.entrySet()) {
                 requirementsObjet.addProperty(res.getKey().toString(), res.getValue());
             }
             jsonObject.add("requirements", requirementsObjet);
