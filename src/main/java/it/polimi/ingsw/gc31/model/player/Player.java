@@ -64,7 +64,7 @@ public class Player {
 
     public void addObjectiveCard(ObjectiveCard card) {
         try {
-            inGameState.addObjectiveCard(objectiveCard, this);
+            inGameState.addObjectiveCard(card, this);
             changeState();
         } catch (IllegalStateOperationException e) {
             System.out.println("Action not allowed in current state");
