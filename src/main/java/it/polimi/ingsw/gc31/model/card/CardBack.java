@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import it.polimi.ingsw.gc31.model.exceptions.WrongNumberOfCornerException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,8 @@ public class CardBack {
     private final String dirImg;
 
     // TODO implementare deep copy per resources
-    public CardBack(List<Resources> resources, String dirImg) {
+    public CardBack(List<Resources> resources, String dirImg){
+        //if (resources.size() < 4 || resources.size() > 7) throw new  WrongNumberOfCornerException();
         this.resources = listDeepCopy(resources);
         this.dirImg = dirImg;
     }
@@ -22,8 +24,10 @@ public class CardBack {
         return resources.get(corner) != Resources.HIDDEN;
     }
 
-    public void coverCorner(int corner) {
+    public Resources coverCorner(int corner) {
+        Resources ret = resources.get(corner);
         resources.set(corner, Resources.HIDDEN);
+        return ret;
     }
 
     public List<Resources> getResources() {

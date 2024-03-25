@@ -17,32 +17,76 @@ import java.util.*;
  * @author Christian Salvini
  */
 public class CardFront {
+    /**
+     * The score obtained from placing the card.
+     */
     private final int score;
+    /**
+     * List of Resources that represents the corners of the card's Front. The
+     * corners are identified according
+     * to the following convention:
+     * 0-> Up Dx
+     * 1-> Down Dx
+     * 2-> Down Sx
+     * 3-> Up Sx
+     * It can have a maximum of 4 elements.
+     */
     private final List<Resources> resources;
+    /**
+     * The resources the Player must have in their playArea to be able to place the
+     * card.
+     */
     private final Map<Resources, Integer> requirements;
+    /**
+     * link to the image of the front side
+     */
     private final String dirImg;
+    /**
+     * Objective of the card to be verified in order to obtain the score points.
+     */
     private final Objective ob;
 
-    public CardFront(int score, List<Resources> resources, Map<Resources, Integer> requirements, String dirImg, Objective ob) throws WrongNumberOfCornerException,
-            DirImgValueMissingException {
+    /**
+     * Constructor of the class
+     */
+    public CardFront(int score, List<Resources> resources, Map<Resources, Integer> requirements, String dirImg,
+            Objective ob)
+    // throws WrongNumberOfCornerException
+    // , DirImgValueMissingException
+    {
         this.score = score;
 
-        if (resources.size() != 4) throw new WrongNumberOfCornerException();
+        // if (resources.size() != 4) throw new WrongNumberOfCornerException();
         this.resources = listDeepCopy(resources);
         this.requirements = mapDeepCopy(requirements);
 
-        if (dirImg == null) throw new DirImgValueMissingException();
+        // if (dirImg == null) throw new DirImgValueMissingException();
         this.dirImg = dirImg;
         // TODO implementare depp copy per ob
         this.ob = ob;
     }
 
+    /**
+     * Check if it's possible to place a card on the corner indicated by the
+     * parameter Corner
+     * 
+     * @param corner corner to be checked
+     * @return true if it is possible to place a card on that corner, false
+     *         otherwise
+     */
     public boolean checkCorner(int corner) {
         return resources.get(corner) != Resources.HIDDEN;
     }
 
-    public void coverCorner(int corner) {
+    /**
+     *
+     * @param corner
+     * @return
+     */
+    public Resources coverCorner(int corner) {
+        Resources ret = resources.get(corner);
         resources.set(corner, Resources.HIDDEN);
+        return ret;
     }
 
     // TODO provare con programmazione funzionale e usando listDeepCopy
@@ -104,7 +148,7 @@ public class CardFront {
             jsonObject.add("requirements", null);
         } else {
             JsonObject requirementsObjet = new JsonObject();
-            for (Map.Entry<Resources, Integer> res: this.requirements.entrySet()) {
+            for (Map.Entry<Resources, Integer> res : this.requirements.entrySet()) {
                 requirementsObjet.addProperty(res.getKey().toString(), res.getValue());
             }
             jsonObject.add("requirements", requirementsObjet);

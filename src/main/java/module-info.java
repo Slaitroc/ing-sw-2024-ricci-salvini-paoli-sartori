@@ -7,6 +7,7 @@ module it.polimi.ingsw.gc31 {
     requires java.desktop;
     requires com.google.gson;
 
-    opens it.polimi.ingsw.gc31.View to javafx.fxml;
+    opens it.polimi.ingsw.gc31.view to javafx.fxml;
+
     exports it.polimi.ingsw.gc31;
 }

@@ -4,10 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
-import it.polimi.ingsw.gc31.model.strategies.Objective;
 
 import java.util.Collections;
 import java.util.List;
@@ -57,11 +55,11 @@ public abstract class PlayableCard extends Card {
             return back.checkCorner(corner);
     }
 
-    public void coverCorner(int corner) {
+    public Resources coverCorner(int corner) {
         if (side)
-            front.coverCorner(corner);
+            return front.coverCorner(corner);
         else
-            back.coverCorner(corner);
+            return back.coverCorner(corner);
     }
 
     public List<Resources> getResources() {
