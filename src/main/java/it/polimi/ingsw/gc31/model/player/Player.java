@@ -67,6 +67,7 @@ public class Player {
     public void play (PlayableCard card, Point point){
         this.score += playArea.place(card, point);
     }
+
     public void addObjectiveCard(ObjectiveCard card) {
         this.objectiveCard = card;
     }
@@ -79,6 +80,9 @@ public class Player {
         return playArea;
     }
 
+    public Player getPlayer(){
+        return this;
+    }
     public String getName() {
         return username;
     }
