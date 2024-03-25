@@ -43,10 +43,11 @@ public class LShape extends Objective {
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint, Map<Resources, Integer> achievedResources) {
         int maxX = findMaxX(placedCard), minX = findMinX(placedCard), maxY = findMaxY(placedCard), minY = findMinY(placedCard);
         int count = 0;
+        Point point = new Point(0, 0);
 
         for (int j = maxY; j >= minY + 2; j--) {
             for (int i = minX; i <= maxX - 1; i++) {
-                Point point = new Point(i, j);
+                point.move(i, j);
 
                 if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color1)) {
                     point.move(i, j - 1);
