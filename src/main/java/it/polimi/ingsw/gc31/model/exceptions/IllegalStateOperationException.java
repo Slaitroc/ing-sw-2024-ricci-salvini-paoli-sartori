@@ -5,4 +5,5 @@ public class IllegalStateOperationException extends Exception {
     public IllegalStateOperationException() {
         super();
     }
+
 }
