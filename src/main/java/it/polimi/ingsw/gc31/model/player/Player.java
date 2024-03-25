@@ -1,7 +1,6 @@
 package it.polimi.ingsw.gc31.model.player;
 
 import java.awt.*;
-import java.util.Scanner; // Import the Scanner class to test moveCardInHand
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
@@ -24,20 +23,18 @@ public class Player {
         this.pawnColor = color;
         this.username = username;
         this.playArea = new PlayArea();
+        this.inGameState = new Start();
         hand = new ArrayList<>();
         score = 0;
     }
 
-    // Really Necessary?
-    public boolean addToHand(PlayableCard card) {
+    public void addToHand(PlayableCard card) {
         try {
-            this.hand.add(card);
-            return true;
-        }
-
-        catch (NullPointerException e) {
+            inGameState.addToHand(card, this);
+            if(this.hand.size()==3) changeState();
+        } catch (IllegalStateOperationException e) {
+            System.out.println("Action not allowed in current state");
             e.getStackTrace();
-            return false;
         }
     }
 
@@ -45,37 +42,33 @@ public class Player {
     // output System
     // TODO change I/O System with what we really will use
     public void moveCardInHand() {
-        Scanner myScanner = new Scanner(System.in);
-
-        System.out.println("Insert position of the first card [1-3]: ");
-        int cardPosition1 = myScanner.nextInt();
-        PlayableCard card1 = hand.get(cardPosition1);
-
-        System.out.println("Insert position of the second card [1-3]: ");
-        int cardPosition2 = myScanner.nextInt();
-        PlayableCard card2 = hand.get(cardPosition2);
-
-        this.hand.set(cardPosition1, card2);
-        this.hand.set(cardPosition2, card1);
-        System.out.println("New Hand disposition: " + hand);
-    }
-
-    public void changeState() {
-        // ??
+        try {
+            inGameState.moveCardInHand(this);
+        } catch (IllegalStateOperationException e) {
+            System.out.println("Action not allowed in current state");
+            e.getStackTrace();
+        }
     }
 
     // TODO questionable method!?
     public void play(PlayableCard card, Point point) {
-        this.score += playArea.place(card, point);
-        changeState();
+        try {
+            inGameState.play(card, point, this);
+            this.hand.remove(card);
+            changeState();
+        } catch (IllegalStateOperationException e) {
+            System.out.println("Action not allowed in current state");
+            e.getStackTrace();
+        }
     }
 
     public void addObjectiveCard(ObjectiveCard card) {
         try {
             inGameState.addObjectiveCard(objectiveCard, this);
+            changeState();
         } catch (IllegalStateOperationException e) {
-            System.out.println("Operazione non permessa in questo momento!");
-            e.printStackTrace();
+            System.out.println("Action not allowed in current state");
+            e.getStackTrace();
         }
     }
 
@@ -95,7 +88,7 @@ public class Player {
         return username;
     }
 
-    public void changeStateReal() {
+    public void changeState() {
         inGameState = inGameState.changeState();
     }
 
