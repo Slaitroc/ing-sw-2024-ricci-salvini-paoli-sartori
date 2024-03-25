@@ -16,9 +16,16 @@ public class PlayArea {
     private final Map<Resources, Integer> achievedResources;
     private final Point lastPlaced = new Point(0, 0);
 
-    PlayArea() {
+    public PlayArea() {
         this.placedCards = new HashMap<>();
         this.achievedResources = new HashMap<>();
+        achievedResources.put(Resources.ANIMAL, 0);
+        achievedResources.put(Resources.INSECT, 0);
+        achievedResources.put(Resources.INK, 0);
+        achievedResources.put(Resources.FEATHER, 0);
+        achievedResources.put(Resources.MUSHROOM, 0);
+        achievedResources.put(Resources.PLANT, 0);
+        achievedResources.put(Resources.SCROLL, 0);
     }
 
     /**
