@@ -12,12 +12,11 @@ import java.util.List;
 
 public class Player {
     private final String username;
-    private final PlayArea playArea;
+    protected final PlayArea playArea;
     private final Color pawnColor;
-    private final List<PlayableCard> hand;
-    private ObjectiveCard objectiveCard;
+    protected final List<PlayableCard> hand;
+    protected ObjectiveCard objectiveCard;
     private PlayerState inGameState;
-
     protected int score;
 
     public Player(Color color, String username) {
@@ -64,8 +63,8 @@ public class Player {
         // ??
     }
 
-    //TODO questionable method!?
-    public void play (PlayableCard card, Point point){
+    // TODO questionable method!?
+    public void play(PlayableCard card, Point point) {
         this.score += playArea.place(card, point);
         changeState();
     }
@@ -75,16 +74,17 @@ public class Player {
     }
 
     public int getScore() {
-        return inGameState.getScore(this);
+        return this.score;
     }
 
     public PlayArea getPlayArea() {
         return playArea;
     }
 
-    public Player getPlayer(){
+    public Player getPlayer() {
         return this;
     }
+
     public String getName() {
         return username;
     }
