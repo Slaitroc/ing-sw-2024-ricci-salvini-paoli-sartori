@@ -73,7 +73,7 @@ public class PlayArea {
                 updateAvailableRes(card, point);
 
                 if (card.getObjective() != null)
-                    return card.getObjective().isObjectiveDone(placedCards, point);
+                    return card.getObjective().isObjectiveDone(getPlacedCards(), point, getAchievedResources());
                 lastPlaced.setLocation(point);
                 return card.getScore();
             }

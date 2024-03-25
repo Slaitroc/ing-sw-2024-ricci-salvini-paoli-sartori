@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.model.player;
 
+import java.awt.*;
 import java.util.Scanner; // Import the Scanner class to test moveCardInHand
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
@@ -62,6 +63,10 @@ public class Player {
         // ??
     }
 
+    //TODO questionable method!?
+    public void play (PlayableCard card, Point point){
+        this.score += playArea.place(card, point);
+    }
     public void addObjectiveCard(ObjectiveCard card) {
         this.objectiveCard = card;
     }
