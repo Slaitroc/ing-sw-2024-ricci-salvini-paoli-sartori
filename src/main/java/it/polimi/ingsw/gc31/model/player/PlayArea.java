@@ -215,6 +215,7 @@ public class PlayArea {
         }
     }
 
+
     public Map<Point, PlayableCard> getPlacedCards() {
         return new HashMap<>(placedCards);
     }

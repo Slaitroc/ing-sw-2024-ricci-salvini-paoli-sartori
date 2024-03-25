@@ -42,7 +42,6 @@ class PlayAreaTest {
     /*
     * Generic test that place random cards (placed on the back) in specified location
     * To add new card in new space copy/paste the pattern and update the location value
-    * TODO Implement a Test non dependent on the randomness of the deck.draw() function
     *  @author Matteo Paoli
     */
     @Test
@@ -108,7 +107,6 @@ class PlayAreaTest {
     /*
     * Warning:
     * This test SHOULD result positive in the vast majority of the cases
-    * TODO Implement a Test non dependent on the randomness of the deck.draw() function
     *  @author Matteo Paoli
     */
     @Test
@@ -231,6 +229,23 @@ class PlayAreaTest {
         goldCard.changeSide();
         playArea.place(goldCard, new Point(2,0));
         assertEquals(goldCard, playArea.getPlacedCards().get(new Point(2, 0)));
+
+        System.out.println("goldCard in (3,1)):");
+        goldCard = createGoldCard(
+                Resources.ANIMAL,
+                Resources.EMPTY,
+                Resources.EMPTY,
+                Resources.EMPTY,
+                Resources.EMPTY,
+                Resources.EMPTY,
+                Resources.EMPTY,
+                Resources.EMPTY,
+                Resources.EMPTY,
+                Resources.ANIMAL, 5,
+                Resources.MUSHROOM, 1);
+        goldCard.changeSide();
+        playArea.place(goldCard, new Point(3,1));
+        assertNull(playArea.getPlacedCards().get(new Point(3,1)));
 
     }
 
