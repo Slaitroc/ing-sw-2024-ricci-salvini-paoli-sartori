@@ -20,7 +20,6 @@ public class Deck<T extends Card> implements Cloneable, DeepCopy<Deck> {
     private Queue<T> deck;
     private T card1;
     private T card2;
-    private CardType deckCardType; // colpa di Slaitroc
     // TODO forse da mettere statiche da qualche altra parte
     private final String dirJsonGoldCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/GoldCard.json";
     private final String dirJsonResourceCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/ResourceCard.json";
@@ -33,7 +32,6 @@ public class Deck<T extends Card> implements Cloneable, DeepCopy<Deck> {
     }
 
     public Deck(CardType cardType) {
-        deckCardType = cardType; // colpa di Slaitroc
         List<T> tempDeck = new ArrayList<>();
         FileReader fileReader = null;
         // classe delle carte che formeranno il deck
@@ -150,7 +148,6 @@ public class Deck<T extends Card> implements Cloneable, DeepCopy<Deck> {
     @Override
     public Deck<T> deepCopy() {
         Deck<T> clone = new Deck<>();
-        clone.deckCardType = this.deckCardType;
         for (T card : this.deck) {
             clone.deck.add(card);
         }

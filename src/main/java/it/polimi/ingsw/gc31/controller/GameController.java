@@ -18,10 +18,8 @@ public class GameController implements Cloneable, DeepCopy<GameController> {
 
     private int ID;
     private GameModel gameModel;
-
     private GameView gameView;
     private List<String> playerList;
-
     private int maxNumPlayer;
 
     public GameController() {
@@ -43,15 +41,17 @@ public class GameController implements Cloneable, DeepCopy<GameController> {
             throw new PlayerNicknameAlreadyExistsException();
         else
             playerList.add(username);
-    }
-
-    public void createGameModel() throws PlayerNumberNotReachedException, GameModelAlreadyCreatedException {
-        if (gameModel != null)
-            throw new GameModelAlreadyCreatedException();
-        if (playerList.size() < maxNumPlayer)
-            throw new PlayerNumberNotReachedException();
-        else
-            gameModel = new GameModel(playerList);
+        try {
+            createGameModel();
+        } catch (PlayerNumberNotReachedException e) {
+            String text = "players left";
+            if (playerList.size() - maxNumPlayer == 1) {
+                text = "player left";
+            }
+            System.out.println(playerList.size() - maxNumPlayer + text);
+        } catch (GameModelAlreadyCreatedException g) {
+            System.out.println("GameModel already created! Can't add new players");
+        }
     }
 
     public void setNumPlayers(int n) throws PlayerNumberAlreadySetException {
@@ -61,7 +61,14 @@ public class GameController implements Cloneable, DeepCopy<GameController> {
             throw new PlayerNumberAlreadySetException();
     }
 
-    // NOTE utility
+    private void createGameModel() throws PlayerNumberNotReachedException, GameModelAlreadyCreatedException {
+        if (gameModel != null)
+            throw new GameModelAlreadyCreatedException();
+        if (playerList.size() < maxNumPlayer)
+            throw new PlayerNumberNotReachedException();
+        else
+            gameModel = new GameModel(playerList);
+    }
 
     private boolean doesNameAlreadyExist(String username) {
         if (playerList.contains(username))
@@ -93,7 +100,7 @@ public class GameController implements Cloneable, DeepCopy<GameController> {
             e.printStackTrace();
         }
         cloned.gameModel = this.gameModel.deepCopy();
-        cloned.gameView = new GameView(); // TODO da implementare clone()
+        cloned.gameView = new GameView(); // TODO da implementare deepCopy()
         cloned.playerList = new ArrayList<String>();
         for (String string : this.playerList) {
             cloned.playerList.add(new String(string)); // TODO un metodo generico per le liste ???

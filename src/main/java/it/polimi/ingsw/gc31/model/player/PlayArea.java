@@ -16,7 +16,7 @@ public class PlayArea {
     private final Map<Resources, Integer> achievedResources;
     private final Point lastPlaced = new Point(0, 0);
 
-    PlayArea() {
+    public PlayArea() {
         this.placedCards = new HashMap<>();
         this.achievedResources = new HashMap<>();
     }

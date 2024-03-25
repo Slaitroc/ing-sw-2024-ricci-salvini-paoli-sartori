@@ -70,15 +70,6 @@ public class ServerTest<T extends Card> {
     @Test
     void gameModelCreationTest() {
         GameController gameController = Server.createGameController(usernamesTestList, 4);
-        try {
-            gameController.createGameModel();
-        } catch (PlayerNumberNotReachedException e) {
-            System.out.println("Player Number Not Reached!");
-            e.printStackTrace();
-        } catch (GameModelAlreadyCreatedException e) {
-            System.out.println("Game Model Already Exists!");
-            e.printStackTrace();
-        }
         // assert(gameController.getGameModel())
         /* Qui vanno aggiunti test sul Game Model creato */
         /*

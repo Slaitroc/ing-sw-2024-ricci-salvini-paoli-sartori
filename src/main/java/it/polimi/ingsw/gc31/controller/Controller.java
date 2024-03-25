@@ -17,13 +17,9 @@ import java.util.HashSet;
 //Mi sembra più semplice fare così che gestire le attese per la creazione dei GameController nel Controller 
 
 public class Controller implements Cloneable, DeepCopy<Controller> {
+
     private final List<GameController> gamesList; // NOTE meglio Set o List?
-
     private final Set<String> globalUsernameSet;
-
-    public Set<String> getGlobalUsernameSet() {
-        return globalUsernameSet;
-    }
 
     public Controller() {
         this.gamesList = new ArrayList<GameController>();
@@ -32,6 +28,22 @@ public class Controller implements Cloneable, DeepCopy<Controller> {
     }
 
     /**
+     * 
+     * @param username : player's nickname
+     * @return true if the player's nickname already exists, false otherwise
+     * @autor Slaitroc
+     */
+    private boolean doesNameAlreadyExist(String username) {
+        if (globalUsernameSet.contains(username))
+            return true;
+        else
+            return false;
+
+    }
+
+    /**
+     * Add the new GameController to the Controller gameList
+     * 
      * @param username player's nickname
      * @return the gamePosition of the GameController in gameSet
      */
@@ -53,22 +65,12 @@ public class Controller implements Cloneable, DeepCopy<Controller> {
             throw new PlayerNicknameAlreadyExistsException();
     }
 
-    /**
-     * 
-     * @param username : player's nickname
-     * @return true if the player's nickname already exists, false otherwise
-     * @autor Slaitroc
-     */
-    private boolean doesNameAlreadyExist(String username) {
-        if (globalUsernameSet.contains(username))
-            return true;
-        else
-            return false;
-
-    }
-
     public GameController getGameController(int gameID) {
         return gamesList.get(gameID);
+    }
+
+    public Set<String> getGlobalUsernameSet() {
+        return globalUsernameSet;
     }
 
     @Override

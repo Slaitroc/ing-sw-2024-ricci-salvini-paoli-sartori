@@ -49,9 +49,7 @@ public class Server /* extends Application */ {
         // aggiungo il player2 al GameController già creato
         String player2 = "Matteo";
         addPlayerToGameController(gameController, player2);
-
-        // creo il gameModel
-        createGameModel(gameController);
+        // aggiunto l'ultimo player al GameController viene creato il GameModel
 
     }
 
@@ -69,9 +67,15 @@ public class Server /* extends Application */ {
 
     public static GameController createGameController(List<String> usernamesList, int numPlayers) {
         if (usernamesList != null && !usernamesList.isEmpty()) {
-
             int gameControllerID = controller.createGameController(usernamesList.get(0), numPlayers);
             GameController gameController = controller.getGameController(gameControllerID);
+            for (int i = 1; i < usernamesList.size() && i < numPlayers; i++) {
+                try {
+                    gameController.addPlayer(usernamesList.get(i));
+                } catch (MaxPlayerNumberReachedException | PlayerNicknameAlreadyExistsException e) {
+                    e.printStackTrace();// TODO gestire
+                }
+            }
             return gameController;
         } else
             return null;
@@ -91,17 +95,7 @@ public class Server /* extends Application */ {
         } catch (PlayerNicknameAlreadyExistsException c) {
             c.printStackTrace();
         }
+
     }
 
-    public static void createGameModel(GameController gameController) {
-        try {
-            gameController.createGameModel();
-        } catch (PlayerNumberNotReachedException e) {
-            System.out.println("Player Number Not Reached!");
-            e.printStackTrace();
-        } catch (GameModelAlreadyCreatedException e) {
-            System.out.println("Game Model Alredy Created!");
-            e.printStackTrace();
-        }
-    }
 }
