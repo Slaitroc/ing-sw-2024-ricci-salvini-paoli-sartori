@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.Map;
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
 /**
  * This class represents the Objective where the player gets points based on how many corner are covered
@@ -25,7 +26,7 @@ public class CoverCornerScore extends Objective {
      * @param point      is the point of played card
      * @return the number of point obtained by the player
      */
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point point) {
+    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point point, Map<Resources, Integer> achievedResources) {
         int count = 0;
 
         Point altoDx = new Point((int) point.getX() + 1, (int) point.getY() + 1);

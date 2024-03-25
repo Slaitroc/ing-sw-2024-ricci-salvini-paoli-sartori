@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.Map;
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
 /**
  * This Class represents the generic Objective of the Card
@@ -22,7 +23,8 @@ public abstract class Objective {
      * @param point      is the point of the played card
      * @return the number of points obtained by the player
      */
-    public abstract int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point point);
+    public abstract int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point point,
+            Map<Resources, Integer> achievedResources);
 
     /**
      * This method find the max X on the board
@@ -88,4 +90,3 @@ public abstract class Objective {
         return minY;
     }
 }
-
