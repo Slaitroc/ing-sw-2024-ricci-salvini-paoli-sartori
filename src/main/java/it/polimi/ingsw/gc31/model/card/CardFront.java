@@ -8,15 +8,16 @@ import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.exceptions.DirImgValueMissingException;
 import it.polimi.ingsw.gc31.model.exceptions.WrongNumberOfCornerException;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
+import it.polimi.ingsw.gc31.utility.DeepCopy;
 
 import java.util.*;
 
 /**
  * This class represents the front side of card;
- *
+ * 
  * @author Christian Salvini
  */
-public class CardFront {
+public class CardFront implements DeepCopy<CardFront> {
     /**
      * The score obtained from placing the card.
      */
@@ -56,11 +57,11 @@ public class CardFront {
     {
         this.score = score;
 
-        // if (resources.size() != 4) throw new WrongNumberOfCornerException();
+        //if (resources.size() != 4) throw new WrongNumberOfCornerException();
         this.resources = listDeepCopy(resources);
         this.requirements = mapDeepCopy(requirements);
 
-        // if (dirImg == null) throw new DirImgValueMissingException();
+        //if (dirImg == null) throw new DirImgValueMissingException();
         this.dirImg = dirImg;
         // TODO implementare depp copy per ob
         this.ob = ob;
@@ -69,7 +70,7 @@ public class CardFront {
     /**
      * Check if it's possible to place a card on the corner indicated by the
      * parameter Corner
-     * 
+     *
      * @param corner corner to be checked
      * @return true if it is possible to place a card on that corner, false
      *         otherwise
@@ -157,5 +158,10 @@ public class CardFront {
 
         jsonObject.add("objective", null);
         return jsonObject;
+    }
+
+    @Override
+    public CardFront deepCopy() {
+        return null;
     }
 }

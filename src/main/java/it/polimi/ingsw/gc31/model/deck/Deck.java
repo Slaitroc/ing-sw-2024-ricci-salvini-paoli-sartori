@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
 
-public class Deck<T extends Card> implements Cloneable, DeepCopy<Deck> {
+public class Deck<T extends Card> implements DeepCopy<Deck<T>> {
     // TODO cambiare implementazione con queue
     private Queue<T> deck;
     private T card1;
@@ -93,7 +93,7 @@ public class Deck<T extends Card> implements Cloneable, DeepCopy<Deck> {
                     }
                 }
 
-                // TODO, tradurre: Mischio le carte
+                //TODO, tradurre: Mischio le carte
                 Collections.shuffle(tempDeck);
                 for (T card : tempDeck) {
                     deck.add(card);
