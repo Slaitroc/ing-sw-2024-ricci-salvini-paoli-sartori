@@ -152,7 +152,7 @@ public class Deck<T extends Card> implements Cloneable, DeepCopy<Deck> {
         Deck<T> clone = new Deck<>();
         clone.deckCardType = this.deckCardType;
         for (T card : this.deck) {
-            clone.deck.add(card); // FIX siamo sicuri che le aggiunga nell'ordine corretto?
+            clone.deck.add(card);
         }
         clone.card1 = this.card1; // TODO chiedi a cri una deep copy di card utilizzando i suoi metodi di deepcopy
                                   // di front e back
