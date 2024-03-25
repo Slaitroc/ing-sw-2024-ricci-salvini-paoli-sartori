@@ -17,6 +17,7 @@ public class Player {
     private final List<PlayableCard> hand;
     private ObjectiveCard objectiveCard;
     private PlayerState inGameState;
+
     protected int score;
 
     public Player(Color color, String username) {
@@ -66,19 +67,24 @@ public class Player {
     //TODO questionable method!?
     public void play (PlayableCard card, Point point){
         this.score += playArea.place(card, point);
+        changeState();
     }
+
     public void addObjectiveCard(ObjectiveCard card) {
-        this.objectiveCard = card;
+        inGameState.addObjectiveCard(objectiveCard, this);
     }
 
     public int getScore() {
-        return this.score;
+        return inGameState.getScore(this);
     }
 
     public PlayArea getPlayArea() {
         return playArea;
     }
 
+    public Player getPlayer(){
+        return this;
+    }
     public String getName() {
         return username;
     }

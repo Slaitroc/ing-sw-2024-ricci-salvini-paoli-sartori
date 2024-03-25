@@ -19,6 +19,13 @@ public class PlayArea {
     public PlayArea() {
         this.placedCards = new HashMap<>();
         this.achievedResources = new HashMap<>();
+        achievedResources.put(Resources.ANIMAL, 0);
+        achievedResources.put(Resources.INSECT, 0);
+        achievedResources.put(Resources.INK, 0);
+        achievedResources.put(Resources.FEATHER, 0);
+        achievedResources.put(Resources.MUSHROOM, 0);
+        achievedResources.put(Resources.PLANT, 0);
+        achievedResources.put(Resources.SCROLL, 0);
     }
 
     /**
@@ -207,6 +214,7 @@ public class PlayArea {
                 achievedResources.put(delRes, achievedResources.get(delRes) - 1);
         }
     }
+
 
     public Map<Point, PlayableCard> getPlacedCards() {
         return new HashMap<>(placedCards);
