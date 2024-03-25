@@ -8,6 +8,7 @@ import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.exceptions.DirImgValueMissingException;
 import it.polimi.ingsw.gc31.model.exceptions.WrongNumberOfCornerException;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
+import it.polimi.ingsw.gc31.utility.DeepCopy;
 
 import java.util.*;
 
@@ -16,7 +17,7 @@ import java.util.*;
  * 
  * @author Christian Salvini
  */
-public class CardFront {
+public class CardFront implements DeepCopy<CardFront> {
     /**
      * The score obtained from placing the card.
      */
@@ -157,5 +158,10 @@ public class CardFront {
 
         jsonObject.add("objective", null);
         return jsonObject;
+    }
+
+    @Override
+    public CardFront deepCopy() {
+        return null;
     }
 }

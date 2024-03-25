@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.model.card;
 import com.google.gson.JsonObject;
 
 import it.polimi.ingsw.gc31.model.strategies.Objective;
+import it.polimi.ingsw.gc31.utility.DeepCopy;
 
 
 /**
@@ -15,7 +16,7 @@ import it.polimi.ingsw.gc31.model.strategies.Objective;
  *
  * @author Christian Salvini
  */
-public abstract class Card {
+public abstract class Card implements DeepCopy<Card>{
     /**
      * The front side of a Card
      */
@@ -65,9 +66,6 @@ public abstract class Card {
         else
             return back.getImage();
     }
-
-    //TODO da vedere meglio
-
     /**
      * @return the score obtained with the placement of the card. If back is active, always return 0.
      */
@@ -82,21 +80,4 @@ public abstract class Card {
      * the score.
      */
     abstract public Objective getObjective();
-
-    //TODO metodi temporanei, da togliere
-    /**
-     * Method for serializing the front of a card.
-     */
-    public JsonObject frontSerializeToJson() {
-        return front.serializeToJson();
-    }
-
-    /**
-     * Method for serializing the back of a card.
-     * @return
-     */
-    public JsonObject backSerializeToJson() {
-        return back.serializeToJson();
-    }
-
 }

@@ -28,4 +28,13 @@ public class GoldCard extends PlayableCard {
         if (side) return front.getObjective();
         else return null;
     }
+
+    @Override
+    public GoldCard deepCopy() {
+        return new GoldCard(
+                color,
+                front.deepCopy(),
+                back.deepCopy()
+        );
+    }
 }
