@@ -88,7 +88,7 @@ public class GameModel implements Cloneable, DeepCopy<GameModel> {
             p.addToHand(board.getDeckGold().draw());
             p.addToHand(board.getDeckResource().draw());
 
-            PlayableCard starterCard = board.getDeckStarer().draw();
+            PlayableCard starterCard = board.getDeckStarter().draw();
             starterCard.changeSide();
             // TODO dare la possibilità di girarla prima di piazzarla, per ora who cares
             p.getPlayArea().placeStarter(starterCard);
