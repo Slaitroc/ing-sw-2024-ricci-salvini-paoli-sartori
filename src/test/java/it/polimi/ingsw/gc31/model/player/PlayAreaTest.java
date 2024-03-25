@@ -4,7 +4,9 @@ import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 //import it.polimi.ingsw.gc31.model.player.PlayArea;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
+import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import it.polimi.ingsw.gc31.model.strategies.Objective;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 
@@ -148,6 +150,50 @@ class PlayAreaTest {
         assertEquals(initialResources.getOrDefault(Resources.ANIMAL, 0) + 1,
                 playArea.getAchievedResources().getOrDefault(Resources.PLANT, 0).intValue());
         // Go on with more resources ...
+    }
+
+    public PlayableCard createCard() {
+        Color color = Color.RED;
+
+        int score = 0;
+
+        // resources deve avere 4 elementi
+        List<Resources> resourcesFront = new ArrayList<>();
+        resourcesFront.add(Resources.EMPTY);
+        resourcesFront.add(Resources.EMPTY);
+        resourcesFront.add(Resources.EMPTY);
+        resourcesFront.add(Resources.EMPTY);
+
+        Map<Resources, Integer> requirements = new HashMap<>();
+        requirements.put(Resources.ANIMAL, 2);
+
+        String dirImgFront = null;
+        Objective ob = null;
+
+        CardFront front = new CardFront(
+                score,
+                resourcesFront,
+                requirements,
+                dirImgFront,
+                ob
+        );
+
+        // resourceBack può avere dai 4 ai 7 elementi
+        List<Resources> resourceBack = new ArrayList<>();
+        resourceBack.add(Resources.EMPTY);
+        resourceBack.add(Resources.EMPTY);
+        resourceBack.add(Resources.EMPTY);
+        resourceBack.add(Resources.EMPTY);
+        resourceBack.add(Resources.MUSHROOM);
+
+        String dirImgBack = null;
+
+        CardBack back = new CardBack(
+                resourceBack,
+                dirImgBack
+        );
+
+        return new GoldCard(color, front, back);
     }
 
 }
