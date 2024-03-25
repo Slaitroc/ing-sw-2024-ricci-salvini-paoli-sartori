@@ -22,8 +22,10 @@ public class CardBack {
         return resources.get(corner) != Resources.HIDDEN;
     }
 
-    public void coverCorner(int corner) {
+    public Resources coverCorner(int corner) {
+        Resources ret = resources.get(corner);
         resources.set(corner, Resources.HIDDEN);
+        return ret;
     }
 
     public List<Resources> getResources() {
