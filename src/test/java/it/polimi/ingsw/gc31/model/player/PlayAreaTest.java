@@ -39,7 +39,7 @@ class PlayAreaTest {
         assertEquals(starterCard, playArea.getPlacedCards().get(new Point(0, 0)));
     }
 
-    /*
+    /**
     * Generic test that place random cards (placed on the back) in specified location
     * To add new card in new space copy/paste the pattern and update the location value
     *  @author Matteo Paoli
@@ -104,9 +104,11 @@ class PlayAreaTest {
     }
 
 
-    /*
-    * Warning:
+   /**
+    * Verify that gold card on front is tested before placement
+    * WARNING:
     * This test SHOULD result positive in the vast majority of the cases
+    * There is little to non chances to fail caused to the randomness of the resources cards
     *  @author Matteo Paoli
     */
     @Test
@@ -135,20 +137,10 @@ class PlayAreaTest {
         assertNull(playArea.getPlacedCards().get(new Point(-2, 2)));
     }
 
-    @Disabled
-    public void testUpdateAvailableRes() {
-        Point point = new Point(1, 1);
-        Map<Resources, Integer> initialResources = new HashMap<>(playArea.getAchievedResources());
-        playArea.updateAvailableRes(board.getDeckResource().draw(), point);
-        // Verify the Resources are being updated correctly
-        assertEquals(initialResources.getOrDefault(Resources.MUSHROOM, 0) + 1,
-                playArea.getAchievedResources().getOrDefault(Resources.MUSHROOM, 0).intValue());
-        assertEquals(initialResources.getOrDefault(Resources.ANIMAL, 0) + 1,
-                playArea.getAchievedResources().getOrDefault(Resources.PLANT, 0).intValue());
-        // Go on with more resources ...
-    }
-
-
+    /**
+     * General Test that allow me to place specific cards (resource and gold)
+     * in specific locations
+     */
     @Test
     @DisplayName("Placing goldCards Test")
     public void testGoldCards() {
@@ -249,21 +241,27 @@ class PlayAreaTest {
 
     }
 
-
-
-    private PlayableCard createGoldCard(Resources f1, Resources f2, Resources f3, Resources f4,
-                                       Resources b1, Resources b2, Resources b3, Resources b4, Resources b5,
-                                       Resources r1, int n1, Resources r2, int n2) {
+    /**
+     * Custom method to build a gold card
+     * @param f0,f1,f2,f3: Resources on front (0=NorthWest → than clockwise)
+     * @param b0,b1,b2,b3,b4 Resources on Back (b4 is the permanent resource in center)
+     * @param r1,r2 Resources required
+     * @param n1,n2 number of required resources
+     * @return obj GoldCard
+     */
+    private PlayableCard createGoldCard(Resources f0, Resources f1, Resources f2, Resources f3,
+                                        Resources b0, Resources b1, Resources b2, Resources b3, Resources b4,
+                                        Resources r1, int n1, Resources r2, int n2) {
         Color color = Color.RED;
 
         int score = 0;
 
         // resources deve avere 4 elementi
         List<Resources> resourcesFront = new ArrayList<>();
+        resourcesFront.add(f0);
         resourcesFront.add(f1);
         resourcesFront.add(f2);
         resourcesFront.add(f3);
-        resourcesFront.add(f4);
 
         Map<Resources, Integer> requirements = new HashMap<>();
         requirements.put(r1, n1);
@@ -282,11 +280,12 @@ class PlayAreaTest {
 
         // resourceBack può avere dai 4 ai 7 elementi
         List<Resources> resourceBack = new ArrayList<>();
+        resourceBack.add(b0);
         resourceBack.add(b1);
         resourceBack.add(b2);
         resourceBack.add(b3);
         resourceBack.add(b4);
-        resourceBack.add(b5);
+
 
         String dirImgBack = null;
 
@@ -298,18 +297,25 @@ class PlayAreaTest {
         return new GoldCard(color, front, back);
     }
 
-    private PlayableCard createResourceCard(Resources f1, Resources f2, Resources f3, Resources f4,
-                                       Resources b1, Resources b2, Resources b3, Resources b4, Resources b5) {
+    /**
+     * Custom method to build a resource card
+     * @param f0,f1,f2,f3: Resources on front (0=NorthWest → than clockwise)
+     * @param b0,b1,b2,b3,b4 Resources on Back (b4 is the permanent resource in center)
+     * @return obj ResourceCard
+     */
+    private PlayableCard createResourceCard(Resources f0, Resources f1, Resources f2, Resources f3,
+                                            Resources b0, Resources b1, Resources b2, Resources b3, Resources b4) {
         Color color = Color.RED;
 
         int score = 0;
 
         // resources deve avere 4 elementi
         List<Resources> resourcesFront = new ArrayList<>();
+        resourcesFront.add(f0);
         resourcesFront.add(f1);
         resourcesFront.add(f2);
         resourcesFront.add(f3);
-        resourcesFront.add(f4);
+
 
         Map<Resources, Integer> requirements = Collections.emptyMap() ;
 
@@ -326,11 +332,11 @@ class PlayAreaTest {
 
         // resourceBack può avere dai 4 ai 7 elementi
         List<Resources> resourceBack = new ArrayList<>();
+        resourceBack.add(b0);
         resourceBack.add(b1);
         resourceBack.add(b2);
         resourceBack.add(b3);
         resourceBack.add(b4);
-        resourceBack.add(b5);
 
         String dirImgBack = null;
 

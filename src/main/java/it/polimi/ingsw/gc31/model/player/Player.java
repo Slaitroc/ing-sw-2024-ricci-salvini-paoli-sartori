@@ -28,6 +28,12 @@ public class Player {
         score = 0;
     }
 
+    /**
+     * Method add the selected card to the player hand
+     * Notice that after the operation, if the player has 3 cards in hand,
+     * he should not be able to draw anymore → changeState();
+     * @param card: address of the card to add in hand
+     */
     public void addToHand(PlayableCard card) {
         try {
             inGameState.addToHand(card, this);
@@ -38,9 +44,11 @@ public class Player {
         }
     }
 
-    // Basic repositioning of the card in hand implemented temporarily with an input
-    // output System
-    // TODO change I/O System with what we really will use
+    /**
+     * Basic repositioning of the card in hand implemented temporarily with an input
+     * output System
+     * TODO change I/O System with what we will actually use
+     */
     public void moveCardInHand() {
         try {
             inGameState.moveCardInHand(this);
@@ -50,7 +58,12 @@ public class Player {
         }
     }
 
-    // TODO questionable method!?
+    /**
+     *  Method that calls player.playArea.place(card, point)
+     * TODO questionable method!?
+     * @param card: address of the card to place on players playArea
+     * @param point: coordinate of where in the map to place the card
+     */
     public void play(PlayableCard card, Point point) {
         try {
             inGameState.play(card, point, this);
@@ -62,6 +75,10 @@ public class Player {
         }
     }
 
+    /**
+     *
+     * @param card: Objective Card to assign to the player (called secret obj in game)
+     */
     public void addObjectiveCard(ObjectiveCard card) {
         try {
             inGameState.addObjectiveCard(card, this);
@@ -88,6 +105,9 @@ public class Player {
         return username;
     }
 
+    /**
+     * Method cycles through the Player states like in a FSA
+     */
     public void changeState() {
         inGameState = inGameState.changeState();
     }
