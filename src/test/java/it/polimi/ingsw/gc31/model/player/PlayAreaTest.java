@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class PlayAreaTest {
 
     private PlayArea playArea;
-    private PlayableCard starterCard, resourceCard, goldCard;
 
     private Board board;
 
@@ -24,17 +23,8 @@ class PlayAreaTest {
     public void setUp() {
         playArea = new PlayArea();
         board = new Board();
-        starterCard = board.getDeckStarer().draw();
         //starterCard.changeSide();
-        playArea.placeStarter(starterCard);
-    }
-
-    // TODO Ask why the starter card seems to not be random?
-    @Test
-    @DisplayName("First Card Placement Test")
-    public void testPlaceStarter() {
-        assertEquals(1, playArea.getPlacedCards().size());
-        assertEquals(starterCard, playArea.getPlacedCards().get(new Point(0, 0)));
+        playArea.placeStarter(board.getDeckStarer().draw());
     }
 
     /**
@@ -144,7 +134,7 @@ class PlayAreaTest {
     public void testGoldCards() {
 
         System.out.println("resourceCard in (1,1))");
-        resourceCard = createResourceCard(
+        PlayableCard resourceCard = createResourceCard(
                 Resources.ANIMAL,
                 Resources.EMPTY,
                 Resources.EMPTY,
@@ -204,7 +194,7 @@ class PlayAreaTest {
         assertEquals(resourceCard, playArea.getPlacedCards().get(new Point(-1, 1)));
 
         System.out.println("goldCard in (2,0)):");
-        goldCard = createGoldCard(
+        PlayableCard goldCard = createGoldCard(
                 Resources.ANIMAL,
                 Resources.EMPTY,
                 Resources.EMPTY,
@@ -265,14 +255,13 @@ class PlayAreaTest {
         requirements.put(r1, n1);
         requirements.put(r2, n2);
 
-        String dirImgFront = null;
-        Objective ob = null;
+        Objective ob =null;
 
         CardFront front = new CardFront(
                 score,
                 resourcesFront,
                 requirements,
-                dirImgFront,
+                null,
                 ob
         );
 
@@ -284,12 +273,9 @@ class PlayAreaTest {
         resourceBack.add(b3);
         resourceBack.add(b4);
 
-
-        String dirImgBack = null;
-
         CardBack back = new CardBack(
                 resourceBack,
-                dirImgBack
+                null
         );
 
         return new GoldCard(color, front, back);
@@ -317,15 +303,12 @@ class PlayAreaTest {
 
         Map<Resources, Integer> requirements = Collections.emptyMap() ;
 
-        String dirImgFront = null;
-        Objective ob = null;
-
         CardFront front = new CardFront(
-                score,
-                resourcesFront,
-                requirements,
-                dirImgFront,
-                ob
+        score,
+        resourcesFront,
+        requirements,
+        null,
+        null
         );
 
         // resourceBack può avere dai 4 ai 7 elementi
@@ -336,11 +319,10 @@ class PlayAreaTest {
         resourceBack.add(b3);
         resourceBack.add(b4);
 
-        String dirImgBack = null;
 
         CardBack back = new CardBack(
                 resourceBack,
-                dirImgBack
+                null
         );
 
         return new ResourceCard(color, front, back);

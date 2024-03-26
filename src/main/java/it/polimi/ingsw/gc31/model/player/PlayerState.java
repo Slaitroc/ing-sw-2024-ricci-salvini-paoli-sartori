@@ -6,7 +6,7 @@ import it.polimi.ingsw.gc31.model.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.exceptions.FullHandException;
 
 import java.awt.*;
-import java.util.List;
+//import java.util.List;
 import java.util.Scanner;
 
 public abstract class PlayerState {
@@ -17,6 +17,7 @@ public abstract class PlayerState {
     public abstract void moveCardInHand(Player player) throws IllegalStateOperationException;
 
     public abstract void play(PlayableCard card, Point point, Player player) throws IllegalStateOperationException;
+
     public abstract void playStarter(PlayableCard card, Player player) throws IllegalStateOperationException;
 
     //Notice: Intellij gives me a warning if I copy the same code 4 times
@@ -34,6 +35,20 @@ public abstract class PlayerState {
         player.hand.set(cardPosition1, card2);
         player.hand.set(cardPosition2, card1);
         System.out.println("New Hand disposition: " + player.hand);
+    }
+
+    public void executeAddToHand(PlayableCard card, Player player)throws NullPointerException, FullHandException{
+        if (player.hand.size()>2) {
+            System.out.println("The player: "+ player +"is full");
+            throw new FullHandException();
+        }
+        try {
+            player.hand.add(card);
+        }
+        catch (NullPointerException e) {
+            System.out.println("There was a problem adding card in hand (is card null?)");
+            e.getStackTrace();
+        }
     }
 
 }

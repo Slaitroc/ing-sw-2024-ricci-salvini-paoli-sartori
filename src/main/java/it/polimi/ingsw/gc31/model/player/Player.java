@@ -39,6 +39,7 @@ public class Player {
         try {
             inGameState.addToHand(card, this);
         } catch (IllegalStateOperationException | FullHandException e) {
+            System.out.println("Error adding to hand");
             e.getStackTrace();
         }
     }
@@ -68,6 +69,15 @@ public class Player {
             inGameState.play(card, point, this);
         } catch (IllegalStateOperationException e) {
             System.out.println("Player not allowed to place cards in current state");
+            e.getStackTrace();
+        }
+    }
+    public void playStarter(PlayableCard card){
+        try{
+            inGameState.playStarter(card, this);
+        }
+        catch (IllegalStateOperationException e){
+            System.out.println("Player not allowed to place the starter card in current state");
             e.getStackTrace();
         }
     }

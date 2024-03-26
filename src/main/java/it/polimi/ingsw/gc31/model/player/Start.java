@@ -16,17 +16,7 @@ public class Start extends PlayerState {
 
     @Override
     public void addToHand(PlayableCard card, Player player) throws NullPointerException, FullHandException{
-        if (player.hand.size()>2) {
-            System.out.println("The player: "+ player +"is full");
-            throw new FullHandException();
-        }
-        try {
-            player.hand.add(card);
-        }
-        catch (NullPointerException e) {
-            System.out.println("There was a problem adding card in hand (is card null?)");
-            e.getStackTrace();
-        }
+        executeAddToHand(card, player);
     }
 
     @Override
