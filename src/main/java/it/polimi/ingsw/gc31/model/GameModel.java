@@ -108,5 +108,4 @@ public class GameModel implements Cloneable, DeepCopy<GameModel> {
         clone.board = this.board.deepCopy();
         return clone;
     }
-
 }

@@ -54,6 +54,9 @@ public class CardBack implements DeepCopy<CardBack> {
     }
     @Override
     public CardBack deepCopy() {
-        return null;
+        return new CardBack(
+                listDeepCopy(resources),
+                new String(dirImg)
+        );
     }
 }

@@ -14,7 +14,7 @@ import java.util.*;
 
 /**
  * This class represents the front side of card;
- *
+ * 
  * @author Christian Salvini
  */
 public class CardFront implements DeepCopy<CardFront> {
@@ -51,7 +51,7 @@ public class CardFront implements DeepCopy<CardFront> {
      * Constructor of the class
      */
     public CardFront(int score, List<Resources> resources, Map<Resources, Integer> requirements, String dirImg,
-                     Objective ob)
+            Objective ob)
     // throws WrongNumberOfCornerException
     // , DirImgValueMissingException
     {
@@ -73,13 +73,14 @@ public class CardFront implements DeepCopy<CardFront> {
      *
      * @param corner corner to be checked
      * @return true if it is possible to place a card on that corner, false
-     * otherwise
+     *         otherwise
      */
     public boolean checkCorner(int corner) {
         return resources.get(corner) != Resources.HIDDEN;
     }
 
     /**
+     *
      * @param corner
      * @return
      */
@@ -134,6 +135,13 @@ public class CardFront implements DeepCopy<CardFront> {
 
     @Override
     public CardFront deepCopy() {
-        return null;
+        return new CardFront(
+                score,
+                listDeepCopy(resources),
+                mapDeepCopy(requirements),
+                new String(dirImg),
+                // TODO non serve la deepCopy di ob, credo
+                ob
+        );
     }
 }
