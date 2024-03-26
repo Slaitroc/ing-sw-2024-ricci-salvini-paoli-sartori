@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.model;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.exceptions.MaxPlayerNumberReachedException;
 import it.polimi.ingsw.gc31.model.player.Player;
+import it.polimi.ingsw.gc31.model.player.PlayerState;
 import it.polimi.ingsw.gc31.utility.DeepCopy;
 
 public class GameModel implements Cloneable, DeepCopy<GameModel> {
@@ -32,9 +34,6 @@ public class GameModel implements Cloneable, DeepCopy<GameModel> {
         cardsToHands();
 
     }
-    // public void beginEndGame(){}
-    // private void pick(Player p, Deck d){}
-    // private boolean checkPoints(){return false;}
 
     /**
      * Create a new player for each nickname in the list
@@ -87,13 +86,39 @@ public class GameModel implements Cloneable, DeepCopy<GameModel> {
             p.addToHand(board.getDeckGold().draw());
             p.addToHand(board.getDeckResource().draw());
             p.addToHand(board.getDeckResource().draw());
-
-            PlayableCard starterCard = board.getDeckStarer().draw();
-            starterCard.changeSide();
-            // TODO dare la possibilità di girarla prima di piazzarla, per ora who cares
-            p.getPlayArea().placeStarter(starterCard);
-
+            p.setStarterCard(board.getDeckStarer().draw());
+            // p.addToHand(board.getDeckStarer().draw());
         }
+    }
+
+    public GameModel playStarterCard(int player) {
+        players.get(player).playStarter();
+        return this;
+    }
+
+    public GameModel selectCard(int player, int handPosition) {
+        players.get(player).setSelectedCard(handPosition);
+        return this;
+    }
+
+    public GameModel playCard(int player, Point point) {
+        players.get(player).play(point);
+        return this;
+    }
+
+    public GameModel changeStarterCardSide(int player) {
+        players.get(player).getStarterCard().changeSide();
+        return this;
+    }
+
+    public GameModel changeCardSide(int player) {
+        players.get(player).getSelectedCard().changeSide();
+        return this;
+    }
+
+    public GameModel changeState(int player, PlayerState stato) {
+        players.get(player).setInGameState(stato); // FIX
+        return this;
     }
 
     @Override

@@ -8,30 +8,33 @@ import java.awt.*;
 
 public class Placed extends PlayerState {
 
-
     @Override
     public void addObjectiveCard(ObjectiveCard card, Player player) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
     @Override
-    public void addToHand(PlayableCard card, Player player){
+    public void addToHand(PlayableCard card, Player player) {
         try {
             player.hand.add(card);
             player.setInGameState(new Waiting());
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             e.getStackTrace();
         }
     }
 
     @Override
-    public void moveCardInHand(Player player){
+    public void moveCardInHand(Player player) {
         executeMoveCardInHand(player);
     }
 
     @Override
     public void play(PlayableCard card, Point point, Player player) throws IllegalStateOperationException {
+        throw new IllegalStateOperationException();
+    }
+
+    @Override
+    public void playStarter(Player player) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 }

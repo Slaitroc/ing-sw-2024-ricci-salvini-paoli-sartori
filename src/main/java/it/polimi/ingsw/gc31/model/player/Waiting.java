@@ -28,4 +28,9 @@ public class Waiting extends PlayerState {
         throw new IllegalStateOperationException();
     }
 
+    @Override
+    public void playStarter(Player player) throws IllegalStateOperationException {
+        throw new IllegalStateOperationException();
+    }
+
 }

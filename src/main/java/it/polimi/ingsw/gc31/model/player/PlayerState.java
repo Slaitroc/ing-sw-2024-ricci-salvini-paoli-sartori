@@ -12,15 +12,18 @@ import java.util.Scanner;
 public abstract class PlayerState {
     public abstract void addObjectiveCard(ObjectiveCard card, Player player) throws IllegalStateOperationException;
 
-    public abstract void addToHand(PlayableCard card, Player player) throws IllegalStateOperationException, FullHandException;
+    public abstract void addToHand(PlayableCard card, Player player)
+            throws IllegalStateOperationException, FullHandException;
 
     public abstract void moveCardInHand(Player player) throws IllegalStateOperationException;
 
     public abstract void play(PlayableCard card, Point point, Player player) throws IllegalStateOperationException;
 
-    //Notice: Intellij gives me a warning if I copy the same code 4 times
-    //        In this way I can execute the common code writing it here
-    public void executeMoveCardInHand(Player player){
+    public abstract void playStarter(Player player) throws IllegalStateOperationException;
+
+    // Notice: Intellij gives me a warning if I copy the same code 4 times
+    // In this way I can execute the common code writing it here
+    public void executeMoveCardInHand(Player player) {
         Scanner myScanner = new Scanner(System.in);
         System.out.println("Insert position of the first card [1-3]: ");
         int cardPosition1 = myScanner.nextInt();
@@ -36,5 +39,3 @@ public abstract class PlayerState {
     }
 
 }
-
-
