@@ -16,7 +16,7 @@ public class Start extends PlayerState {
 
     @Override
     public void addToHand(PlayableCard card, Player player) throws NullPointerException, FullHandException{
-        if (player.hand.size()>3) {
+        if (player.hand.size()>2) {
             System.out.println("The player: "+ player +"is full");
             throw new FullHandException();
         }
@@ -37,6 +37,11 @@ public class Start extends PlayerState {
     @Override
     public void play(PlayableCard card, Point point, Player player) throws IllegalStateOperationException{
         throw new IllegalStateOperationException();
+    }
+
+    @Override
+    public void playStarter(PlayableCard card, Player player){
+        player.getPlayArea().placeStarter(card);
     }
 
 }

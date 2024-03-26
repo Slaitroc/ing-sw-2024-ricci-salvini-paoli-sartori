@@ -17,6 +17,7 @@ public abstract class PlayerState {
     public abstract void moveCardInHand(Player player) throws IllegalStateOperationException;
 
     public abstract void play(PlayableCard card, Point point, Player player) throws IllegalStateOperationException;
+    public abstract void playStarter(PlayableCard card, Player player) throws IllegalStateOperationException;
 
     //Notice: Intellij gives me a warning if I copy the same code 4 times
     //        In this way I can execute the common code writing it here
