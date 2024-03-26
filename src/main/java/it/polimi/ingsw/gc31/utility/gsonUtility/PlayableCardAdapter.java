@@ -9,17 +9,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class PlayableCardAdapter implements JsonSerializer<PlayableCard>, JsonDeserializer<PlayableCard>{
-    @Override
-    public JsonElement serialize(PlayableCard playableCard, Type type, JsonSerializationContext jsonSerializationContext) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("color", playableCard.getColor().toString());
-        jsonObject.add("front", playableCard.frontSerializeToJson());
-        jsonObject.add("back", playableCard.backSerializeToJson());
-
-        return jsonObject;
-    }
-
+public class PlayableCardAdapter implements JsonDeserializer<PlayableCard>{
     @Override
     public PlayableCard deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();

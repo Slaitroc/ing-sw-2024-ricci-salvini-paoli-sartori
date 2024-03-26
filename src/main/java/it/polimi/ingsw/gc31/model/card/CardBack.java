@@ -52,19 +52,6 @@ public class CardBack implements DeepCopy<CardBack> {
         }
         return newList;
     }
-
-    public JsonObject serializeToJson() {
-        JsonObject jsonObject = new JsonObject();
-        JsonArray resourcesArray = new JsonArray();
-        for (Resources res : this.resources) {
-            resourcesArray.add(res.toString());
-        }
-        jsonObject.add("resources", resourcesArray);
-        jsonObject.addProperty("dirImg", dirImg);
-
-        return jsonObject;
-    }
-
     @Override
     public CardBack deepCopy() {
         return null;

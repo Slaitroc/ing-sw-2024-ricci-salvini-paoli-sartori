@@ -15,18 +15,17 @@ public class ResourceCard extends PlayableCard{
     public ResourceCard(Color color, CardFront front, CardBack back) {
         super(color, front, back);
     }
-    public ResourceCard(Color color , int score, List<Resources> resourcesFront, List<Resources> resourcesBack, String dirImgFront, String dirImgBack) throws WrongNumberOfCornerException, DirImgValueMissingException {
-        super(color,
-                new CardFront(score, resourcesFront, Collections.emptyMap(), dirImgFront, null),
-                new CardBack(resourcesBack, dirImgBack));
-    }
-
     public Map<Resources, Integer> getRequirements() {
         return Collections.emptyMap();
     }
 
     @Override
     public Objective getObjective() {
+        return null;
+    }
+
+    @Override
+    public Card deepCopy() {
         return null;
     }
 }

@@ -14,7 +14,7 @@ import java.util.*;
 
 /**
  * This class represents the front side of card;
- * 
+ *
  * @author Christian Salvini
  */
 public class CardFront implements DeepCopy<CardFront> {
@@ -51,7 +51,7 @@ public class CardFront implements DeepCopy<CardFront> {
      * Constructor of the class
      */
     public CardFront(int score, List<Resources> resources, Map<Resources, Integer> requirements, String dirImg,
-            Objective ob)
+                     Objective ob)
     // throws WrongNumberOfCornerException
     // , DirImgValueMissingException
     {
@@ -73,14 +73,13 @@ public class CardFront implements DeepCopy<CardFront> {
      *
      * @param corner corner to be checked
      * @return true if it is possible to place a card on that corner, false
-     *         otherwise
+     * otherwise
      */
     public boolean checkCorner(int corner) {
         return resources.get(corner) != Resources.HIDDEN;
     }
 
     /**
-     *
      * @param corner
      * @return
      */
@@ -131,33 +130,6 @@ public class CardFront implements DeepCopy<CardFront> {
             newMap.put(val.getKey(), Integer.valueOf(val.getValue()));
         }
         return newMap;
-    }
-
-    // serve solo per la serializzazione
-    // TODO da togliere
-    public JsonObject serializeToJson() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("score", this.score);
-
-        JsonArray resourcesArray = new JsonArray();
-        for (Resources res : this.resources) {
-            resourcesArray.add(res.toString());
-        }
-        jsonObject.add("resources", resourcesArray);
-
-        if (requirements.equals(Collections.emptyMap())) {
-            jsonObject.add("requirements", null);
-        } else {
-            JsonObject requirementsObjet = new JsonObject();
-            for (Map.Entry<Resources, Integer> res : this.requirements.entrySet()) {
-                requirementsObjet.addProperty(res.getKey().toString(), res.getValue());
-            }
-            jsonObject.add("requirements", requirementsObjet);
-        }
-        jsonObject.addProperty("dirImg", dirImg);
-
-        jsonObject.add("objective", null);
-        return jsonObject;
     }
 
     @Override
