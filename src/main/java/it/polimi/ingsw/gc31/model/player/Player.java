@@ -33,6 +33,7 @@ public class Player {
      * Method add the selected card to the player hand
      * Notice that after the operation, if the player has 3 cards in hand,
      * he should not be able to draw anymore → changeState();
+     *
      * @param card: address of the card to add in hand
      */
     public void addToHand(PlayableCard card) {
@@ -59,9 +60,10 @@ public class Player {
     }
 
     /**
-     *  Method that calls player.playArea.place(card, point)
+     * Method that calls player.playArea.place(card, point)
      * TODO questionable method!?
-     * @param card: address of the card to place on players playArea
+     *
+     * @param card:  address of the card to place on players playArea
      * @param point: coordinate of where in the map to place the card
      */
     public void play(PlayableCard card, Point point) {
@@ -72,18 +74,17 @@ public class Player {
             e.getStackTrace();
         }
     }
-    public void playStarter(PlayableCard card){
-        try{
+
+    public void playStarter(PlayableCard card) {
+        try {
             inGameState.playStarter(card, this);
-        }
-        catch (IllegalStateOperationException e){
+        } catch (IllegalStateOperationException e) {
             System.out.println("Player not allowed to place the starter card in current state");
             e.getStackTrace();
         }
     }
 
     /**
-     *
      * @param card: Objective Card to assign to the player (called secret obj in game)
      */
     public void addObjectiveCard(ObjectiveCard card) {

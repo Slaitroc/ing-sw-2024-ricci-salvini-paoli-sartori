@@ -15,22 +15,22 @@ public class Start extends PlayerState {
     }
 
     @Override
-    public void addToHand(PlayableCard card, Player player) throws NullPointerException, FullHandException{
+    public void addToHand(PlayableCard card, Player player) throws NullPointerException, FullHandException {
         executeAddToHand(card, player);
     }
 
     @Override
-    public void moveCardInHand(Player player) throws IllegalStateOperationException{
+    public void moveCardInHand(Player player) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
     @Override
-    public void play(PlayableCard card, Point point, Player player) throws IllegalStateOperationException{
+    public void play(PlayableCard card, Point point, Player player) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
     @Override
-    public void playStarter(PlayableCard card, Player player){
+    public void playStarter(PlayableCard card, Player player) {
         player.getPlayArea().placeStarter(card);
     }
 

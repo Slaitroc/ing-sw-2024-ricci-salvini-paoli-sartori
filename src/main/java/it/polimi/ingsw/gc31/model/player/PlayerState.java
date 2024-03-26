@@ -22,7 +22,7 @@ public abstract class PlayerState {
 
     //Notice: Intellij gives me a warning if I copy the same code 4 times
     //        In this way I can execute the common code writing it here
-    public void executeMoveCardInHand(Player player){
+    public void executeMoveCardInHand(Player player) {
         Scanner myScanner = new Scanner(System.in);
         System.out.println("Insert position of the first card [1-3]: ");
         int cardPosition1 = myScanner.nextInt();
@@ -37,15 +37,14 @@ public abstract class PlayerState {
         System.out.println("New Hand disposition: " + player.hand);
     }
 
-    public void executeAddToHand(PlayableCard card, Player player)throws NullPointerException, FullHandException{
-        if (player.hand.size()>2) {
-            System.out.println("The player: "+ player +"is full");
+    public void executeAddToHand(PlayableCard card, Player player) throws NullPointerException, FullHandException {
+        if (player.hand.size() > 2) {
+            System.out.println("The player: " + player + "is full");
             throw new FullHandException();
         }
         try {
             player.hand.add(card);
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             System.out.println("There was a problem adding card in hand (is card null?)");
             e.getStackTrace();
         }
