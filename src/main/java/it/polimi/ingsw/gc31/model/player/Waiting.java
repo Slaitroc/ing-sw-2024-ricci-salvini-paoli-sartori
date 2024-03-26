@@ -28,8 +28,4 @@ public class Waiting extends PlayerState {
         throw new IllegalStateOperationException();
     }
 
-    @Override
-    public PlayerState changeState() {
-        return new NotPlaced();
-    }
 }

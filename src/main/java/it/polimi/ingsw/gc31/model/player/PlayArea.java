@@ -77,7 +77,7 @@ public class PlayArea {
     public int place(PlayableCard card, Point point) {
         if (checkRequirements(card)) {
             if (allowedMove(point)) {
-                placedCards.put(point, card);
+                placedCards.put(new Point(point), card);
                 updateAvailableRes(card, point);
 
                 if (card.getObjective() != null)
@@ -164,7 +164,7 @@ public class PlayArea {
      * with its value -1
      * Notice that the condition of covering a not HIDDEN corner has already been
      * checked
-     * (Method also calls .coverCorner(int) to modify the card value)
+     * (Method also calls coverCorner(int) to modify the card value)
      *
      * @author Matteo Paoli
      */

@@ -14,8 +14,8 @@ public class PlayableCardAdapter implements JsonSerializer<PlayableCard>, JsonDe
     public JsonElement serialize(PlayableCard playableCard, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("color", playableCard.getColor().toString());
-        jsonObject.add("front", playableCard.frontSerializeToJson());
-        jsonObject.add("back", playableCard.backSerializeToJson());
+        //jsonObject.add("front", playableCard.frontSerializeToJson());
+        //jsonObject.add("back", playableCard.backSerializeToJson());
 
         return jsonObject;
     }

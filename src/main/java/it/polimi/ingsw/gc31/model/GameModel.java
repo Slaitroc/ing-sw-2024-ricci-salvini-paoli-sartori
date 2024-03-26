@@ -40,7 +40,7 @@ public class GameModel implements Cloneable, DeepCopy<GameModel> {
      * Create a new player for each nickname in the list
      * 
      * @param userList : List of usernames
-     * @Slaitroc
+     * @author Slaitroc
      */
     private void createPlayers(List<String> userList) {
         for (String user : userList)
@@ -51,7 +51,7 @@ public class GameModel implements Cloneable, DeepCopy<GameModel> {
      * Assigns the right pawn Color to the player
      * 
      * @return Color object
-     * @Slaitroc
+     * @author Slaitroc
      */
     private Color pawnAssignment() {
         Color color;
@@ -85,7 +85,7 @@ public class GameModel implements Cloneable, DeepCopy<GameModel> {
     private void cardsToHands() {
         for (Player p : players) {
             p.addToHand(board.getDeckGold().draw());
-            p.addToHand(board.getDeckGold().draw());
+            p.addToHand(board.getDeckResource().draw());
             p.addToHand(board.getDeckResource().draw());
 
             PlayableCard starterCard = board.getDeckStarer().draw();

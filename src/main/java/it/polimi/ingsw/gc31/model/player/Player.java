@@ -5,6 +5,7 @@ import java.awt.*;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.exceptions.FullHandException;
 import it.polimi.ingsw.gc31.model.exceptions.IllegalStateOperationException;
 
 import java.util.ArrayList;
@@ -12,11 +13,11 @@ import java.util.List;
 
 public class Player {
     private final String username;
-    protected final PlayArea playArea;
+    private final PlayArea playArea;
     private final Color pawnColor;
     protected final List<PlayableCard> hand;
     protected ObjectiveCard objectiveCard;
-    private PlayerState inGameState;
+    protected PlayerState inGameState;
     protected int score;
 
     public Player(Color color, String username) {
@@ -37,9 +38,7 @@ public class Player {
     public void addToHand(PlayableCard card) {
         try {
             inGameState.addToHand(card, this);
-            if(this.hand.size()==3) changeState();
-        } catch (IllegalStateOperationException e) {
-            System.out.println("Action not allowed in current state");
+        } catch (IllegalStateOperationException | FullHandException e) {
             e.getStackTrace();
         }
     }
@@ -53,7 +52,7 @@ public class Player {
         try {
             inGameState.moveCardInHand(this);
         } catch (IllegalStateOperationException e) {
-            System.out.println("Action not allowed in current state");
+            System.out.println("Player not allowed to move cards in hands in current state");
             e.getStackTrace();
         }
     }
@@ -67,10 +66,8 @@ public class Player {
     public void play(PlayableCard card, Point point) {
         try {
             inGameState.play(card, point, this);
-            this.hand.remove(card);
-            changeState();
         } catch (IllegalStateOperationException e) {
-            System.out.println("Action not allowed in current state");
+            System.out.println("Player not allowed to place cards in current state");
             e.getStackTrace();
         }
     }
@@ -82,9 +79,8 @@ public class Player {
     public void addObjectiveCard(ObjectiveCard card) {
         try {
             inGameState.addObjectiveCard(card, this);
-            changeState();
         } catch (IllegalStateOperationException e) {
-            System.out.println("Action not allowed in current state");
+            System.out.println("Player not allowed to draw objective card in current state");
             e.getStackTrace();
         }
     }
@@ -105,11 +101,7 @@ public class Player {
         return username;
     }
 
-    /**
-     * Method cycles through the Player states like in a FSA
-     */
-    public void changeState() {
-        inGameState = inGameState.changeState();
+    public void setInGameState(PlayerState inGameState) {
+        this.inGameState = inGameState;
     }
-
 }

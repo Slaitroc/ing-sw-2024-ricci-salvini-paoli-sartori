@@ -18,6 +18,7 @@ public class Placed extends PlayerState {
     public void addToHand(PlayableCard card, Player player){
         try {
             player.hand.add(card);
+            player.setInGameState(new Waiting());
         }
         catch (NullPointerException e) {
             e.getStackTrace();
@@ -32,10 +33,5 @@ public class Placed extends PlayerState {
     @Override
     public void play(PlayableCard card, Point point, Player player) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
-    }
-
-    @Override
-    public PlayerState changeState() {
-        return new Waiting();
     }
 }
