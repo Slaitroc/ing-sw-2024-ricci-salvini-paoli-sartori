@@ -1,0 +1,14 @@
+Deve essere il GameController quando il Controller aggiunge i player, a verificare se il num player è corretto e se è possibile avviare il GameModel
+
+
+
+Bottone
+|
+v 
+Funzione del Controller della Vista 
+|
+v
+Funzione del Controller
+|
+v
+Funzione del Model

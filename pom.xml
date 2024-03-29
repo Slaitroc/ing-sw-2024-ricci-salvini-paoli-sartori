@@ -88,37 +88,4 @@
     </plugins>
   </build>
 
-
-  <dependencyManagement>
-  
-
-    <dependencies>
-
-      <dependency>
-        <groupId>io.github.palexdev</groupId>
-        <artifactId>mfxeffects</artifactId>
-        <version>11.2.1</version>
-      </dependency>
-
-
-      <dependency>
-        <groupId>io.github.palexdev</groupId>
-        <artifactId>mfxcore</artifactId>
-        <version>11.6.2</version>
-      </dependency>
-
-
-      
-
-    
-
-      <dependency>
-        <groupId>io.github.palexdev</groupId>
-        <artifactId>mfxresources</artifactId>
-        <version>11.8.0</version>
-      </dependency>
-
-    </dependencies>
-
-  </dependencyManagement>
 </project>

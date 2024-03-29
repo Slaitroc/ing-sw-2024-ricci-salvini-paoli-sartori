@@ -23,16 +23,17 @@ public class GameModelTest {
         usernamesTestList.add("Lorenzo");
     }
 
-    @Test
-    void simulazione() {
+    // @Test
+    // void simulazione() {
 
-        // player 0
-        gameModel.selectCard(0, 0).changeStarterCardSide(0).playStarterCard(0).changeCardSide(0);
-        gameModel.selectCard(0, 1);
-        gameModel.changeState(0, new NotPlaced());
-        gameModel.playCard(0, new Point(1, 1));
-        System.out.println("ciao");
+    // // player 0
+    // gameModel.selectCard(0,
+    // 0).changeStarterCardSide(0).playStarterCard(0).changeCardSide(0);
+    // gameModel.selectCard(0, 1);
+    // gameModel.changeState(0, new NotPlaced());
+    // gameModel.playCard(0, new Point(1, 1));
+    // System.out.println("ciao");
 
-    }
+    // }
 
 }

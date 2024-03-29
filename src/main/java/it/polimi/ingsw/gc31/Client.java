@@ -2,49 +2,45 @@ package it.polimi.ingsw.gc31;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
+import javafx.scene.text.Font;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Paint;
-import javafx.scene.paint.RadialGradient;
 import javafx.stage.Stage;
 
-import java.awt.Color;
 import java.io.IOException;
 
 public class Client extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage primaryStage) throws IOException {
+        // Carica il file FXML
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/it/polimi/ingsw/gc31/Views/start-view.fxml"));
+        Parent root = loader.load();
+        Font font = Font.loadFont(getClass().getResource("/it/polimi/ingsw/gc31/Fonts/FrakturNo2.ttf").toExternalForm(),
+                10);
 
-        // Stage stage = new Stage();
-        Group root = new Group();
-        Scene scene = new Scene(root, Paint.valueOf("Black"));
+        // Imposta il controller se necessario
+        // Esempio:
+        // MyController controller = loader.getController();
 
-        stage.getIcons().add(new Image(Client.class.getResourceAsStream("AppIcons/icon.png")));
-        stage.setTitle("CODEX Naturalis");
+        // Imposta la scena
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
 
-        // stage.setFullScreen(true); // non funziona sul mio pc
-        stage.setWidth(800);
-        stage.setHeight(700);
+        // Imposta le dimensioni della finestra
+        primaryStage.setWidth(640);
+        primaryStage.setHeight(480);
+        // primaryStage.setFullScreen(true);
 
-        // stage.setResizable(false);
+        // Imposta il titolo e l'icona della finestra
+        primaryStage.setTitle("CODEX Naturalis");
+        primaryStage.getIcons().add(new Image(Client.class.getResourceAsStream("AppIcons/icon.png")));
 
-        stage.setScene(scene);
-        stage.show();
+        // Mostra la finestra
+        primaryStage.show();
     }
-
-    // FXMLLoader fxmlLoader = new
-    // FXMLLoader(Client.class.getResource("Views/start-view.fxml"));
-    // Scene scene = new Scene(fxmlLoader.load(), 643, 374);
-    // stage.getIcons().add(new
-    // Image(Client.class.getResourceAsStream("AppIcons/icon.png")));
-    // stage.setTitle("CODEX Naturalis-30L Version");
-    // stage.setScene(scene);
-    // stage.show();
 
     public static void main(String[] args) {
         launch();
     }
-
 }
