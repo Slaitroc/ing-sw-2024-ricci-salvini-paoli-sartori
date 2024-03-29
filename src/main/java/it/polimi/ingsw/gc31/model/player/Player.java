@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.model.player;
 import java.awt.*;
 import java.util.Scanner; // Import the Scanner class to test moveCardInHand
 
+import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
@@ -11,22 +12,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
+    private final Board board;
     private final String username;
     private final PlayArea playArea;
-    private final Color pawnColor;
     private final List<PlayableCard> hand;
+    private Color pawnColor;
     private ObjectiveCard objectiveCard;
     private PlayerState inGameState;
     protected int score;
-
-    public Player(Color color, String username) {
-        this.pawnColor = color;
-        this.username = username;
-        this.playArea = new PlayArea();
-        hand = new ArrayList<>();
-        score = 0;
+    public Player(Player player, Board board) {
+        this.pawnColor = player.pawnColor;
+        this.username = player.username;
+        this.playArea = player.playArea;
+        this.hand = player.hand;
+        this.score = player.score;
+        this.board = board;
     }
 
+    public Player(String username) {
+        this.board = null;
+        this.pawnColor = null;
+        this.username = username;
+        this.playArea = new PlayArea();
+        this.hand = new ArrayList<>();
+        this.score = 0;
+    }
+
+    public void drawGold() {
+        hand.add(board.getDeckGold().draw());
+    }
+    public void drawResource() {
+        hand.add(board.getDeckResource().draw());
+    }
+    public void drawStarter() {
+        hand.add(board.getDeckStarter().draw());
+    }
+    public List<PlayableCard> getHand() {
+        return this.hand;
+    }
+    public void setPawnColor(Color color) {
+        this.pawnColor = color;
+    }
     // Really Necessary?
     public boolean addToHand(PlayableCard card) {
         try {

@@ -81,4 +81,10 @@ public abstract class Card{
      */
     abstract public Objective getObjective();
     abstract public Card deepCopy();
+    public JsonObject frontSerializeToJson() {
+        return front.serializeToJson();
+    }
+    public JsonObject backSerializeToJson() {
+        return back.serializeToJson();
+    }
 }

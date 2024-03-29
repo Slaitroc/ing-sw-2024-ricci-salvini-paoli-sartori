@@ -133,6 +133,31 @@ public class CardFront implements DeepCopy<CardFront> {
         return newMap;
     }
 
+    public JsonObject serializeToJson() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("score", this.score);
+
+        JsonArray resourcesArray = new JsonArray();
+        for (Resources res : this.resources) {
+            resourcesArray.add(res.toString());
+        }
+        jsonObject.add("resources", resourcesArray);
+
+        if (requirements.equals(Collections.emptyMap())) {
+            jsonObject.add("requirements", null);
+        } else {
+            JsonObject requirementsObjet = new JsonObject();
+            for (Map.Entry<Resources, Integer> res: this.requirements.entrySet()) {
+                requirementsObjet.addProperty(res.getKey().toString(), res.getValue());
+            }
+            jsonObject.add("requirements", requirementsObjet);
+        }
+        jsonObject.addProperty("dirImg", dirImg);
+
+        jsonObject.add("objective", null);
+        return jsonObject;
+    }
+
     @Override
     public CardFront deepCopy() {
         return new CardFront(
