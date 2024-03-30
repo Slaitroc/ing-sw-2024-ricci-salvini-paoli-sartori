@@ -1,20 +1,28 @@
-.firstStyle {
+.vbox {
   -fx-background-color: #fffefffb;
   -fx-cursor: hand;
   -fx-font: 36px "FrakturNo2";
   -fx-text-alignment: center;
 }
 
+.mfx-button.small-button {
+  -fx-background-color: #d15c18;
+  -fx-font: 15px "glimmer of light";
+  -fx-text-fill: #fffefffb;
+  -fx-cursor: hand;
+  -fx-text-alignment: center;
+}
+
 .mfx-button {
   -fx-background-color: #442a1b;
-  -fx-font: 30px "FrakturNo2";
+  -fx-font: 30px "glimmer of light";
   -fx-text-fill: #fffefffb;
   -fx-cursor: hand;
   -fx-text-alignment: center;
 }
 
 .mfx-button .text {
-  -fx-stroke: rgb(255, 255, 255); /* Colore del bordo del testo */
+  -fx-stroke: #ffffff; /* Colore del bordo del testo */
   -fx-stroke-width: 1px; /* Spessore del bordo del testo */
 }
 
@@ -25,6 +33,6 @@
 .label {
   -fx-background-color: transparent;
   -fx-cursor: hand;
-  -fx-font: 36px "FrakturNo2";
+  -fx-font: 36px "glimmer of light";
   -fx-text-alignment: center;
 }
