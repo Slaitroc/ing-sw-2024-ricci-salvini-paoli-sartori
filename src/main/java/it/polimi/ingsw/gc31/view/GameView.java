@@ -33,6 +33,7 @@ public class GameView {
         Image image = new Image(
                 getClass().getResource("/it/polimi/ingsw/gc31/Images/Misc/Misc1.jpg").toExternalForm());
         riferimentoFxml.setImage(image);
+
     }
 
     // crea la scena dal file gameScene.fxml e fa si che il client la mostri nel suo
@@ -51,8 +52,8 @@ public class GameView {
             e.printStackTrace();
         }
         Scene scene = new Scene(root);
-        ClientFxml.clientPrimaryStage.setWidth(800);
-        ClientFxml.clientPrimaryStage.setHeight(800);
+        ClientFxml.clientPrimaryStage.setWidth(600);
+        ClientFxml.clientPrimaryStage.setHeight(600);
         ClientFxml.clientPrimaryStage.setScene(scene);
         System.out.println("pulsante premuto");
     }

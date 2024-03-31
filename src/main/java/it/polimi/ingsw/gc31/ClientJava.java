@@ -1,14 +1,9 @@
 package it.polimi.ingsw.gc31;
 
-import javafx.animation.ScaleTransition;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.text.Font;
-import javafx.scene.Cursor;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import io.github.palexdev.materialfx.enums.ButtonType;
@@ -16,7 +11,6 @@ import io.github.palexdev.materialfx.enums.ButtonType;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import java.io.IOException;
 
@@ -24,7 +18,6 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 
 public class ClientJava extends Application {
     private Stage primaryStage;
-    private Scene startScene, gamesScene;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
