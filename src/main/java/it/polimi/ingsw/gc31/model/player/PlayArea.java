@@ -34,8 +34,8 @@ public class PlayArea {
      * Add the resources to the map itself
      * It could be done calling UpdateAvailableRes, but it would be less efficient
      * and unnecessary being the first card placed
-     * @param card: starter card to place at (0,0)
      *
+     * @param card: starter card to place at (0,0)
      * @author Matteo Paoli
      */
     public void placeStarter(PlayableCard card) {

@@ -16,22 +16,13 @@ public class Placed extends PlayerState {
     }
 
     @Override
-    public void addToHand(PlayableCard card, Player player) throws FullHandException, NullPointerException{
-        if (player.hand.size()>2) {
-            System.out.println("The player: "+ player +"is full");
-            throw new FullHandException();
-        }
-        try {
-            player.hand.add(card);
-        }
-        catch (NullPointerException e) {
-            System.out.println("There was a problem adding card in hand (is card null?)");
-            e.getStackTrace();
-        }
+    public void addToHand(PlayableCard card, Player player) throws FullHandException, NullPointerException {
+        executeAddToHand(card, player);
+        player.setInGameState(new Waiting());
     }
 
     @Override
-    public void moveCardInHand(Player player){
+    public void moveCardInHand(Player player) {
         executeMoveCardInHand(player);
     }
 
