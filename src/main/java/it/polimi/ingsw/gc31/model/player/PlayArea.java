@@ -80,8 +80,10 @@ public class PlayArea {
                 placedCards.put(new Point(point), card);
                 updateAvailableRes(card, point);
 
-                if (card.getObjective() != null)
+                if (card.getObjective() != null) {
+                    lastPlaced.setLocation(point);
                     return card.getObjective().isObjectiveDone(getPlacedCards(), point, getAchievedResources());
+                }
                 lastPlaced.setLocation(point);
                 return card.getScore();
             }

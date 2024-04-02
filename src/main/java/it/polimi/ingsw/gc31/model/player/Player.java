@@ -64,6 +64,7 @@ public class Player {
      * @param point: coordinate of where in the map to place the card
      */
     public void play(PlayableCard card, Point point) {
+        //TODO mettere una condizione per cui puoi giocare solo le carte in mano
         try {
             inGameState.play(card, point, this);
         } catch (IllegalStateOperationException e) {
