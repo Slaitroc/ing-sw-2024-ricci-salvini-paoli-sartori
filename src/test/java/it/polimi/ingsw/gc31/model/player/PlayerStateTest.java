@@ -23,25 +23,28 @@ public class PlayerStateTest {
     @BeforeAll
     public static void setUp() {
         Board board = new Board();
-        player1 = new Player(Color.RED, "Player1", board);
-        player2 = new Player(Color.BLUE, "Player2", board);
-        player3 = new Player(Color.YELLOW, "Player3", board);
+        player1 = new Player(Color.RED, "Alessandro", board);
+        player2 = new Player(Color.BLUE, "Christian", board);
+        player3 = new Player(Color.YELLOW, "Lorenzo", board);
         player1.playStarter();
         player2.playStarter();
         player3.getPlayArea().placeStarter(createStarterCard());
 
         for (int j = 0; j < 2; j++) {
+            player2.drawResourceCard1();
             player1.drawResource();
             // System.out.println("Assertion1");
             assertInstanceOf(Start.class, player1.inGameState);
             player2.drawResource();
-            // System.out.println("Assertion3");
+            // System.out.println("Assertion2");
             assertInstanceOf(Start.class, player2.inGameState);
             player3.drawResource();
             // System.out.println("Assertion3");
             assertInstanceOf(Start.class, player3.inGameState);
         }
         player1.drawGold();
+        player1.drawGoldCard1();
+        player1.drawResource();
         player1.setInGameState(new NotPlaced());
         // System.out.println("Assertion4");
         assertInstanceOf(NotPlaced.class, player1.inGameState);
@@ -68,14 +71,25 @@ public class PlayerStateTest {
     @Test
     public void testGameTurns() {
         // System.out.println("Start testGameTurns");
+        PlayableCard verifyCard;
+
+        player1.setSelectedCard(0);
+        assertEquals(player1.getHand().get(0), player1.getSelectedCard());
+        player1.setSelectedCard(1);
+        assertEquals(player1.getHand().get(1), player1.getSelectedCard());
+        player1.setSelectedCard(2);
+        assertEquals(player1.getHand().get(2), player1.getSelectedCard());
 
         assertInstanceOf(NotPlaced.class, player1.inGameState);
         assertInstanceOf(Waiting.class, player2.inGameState);
         assertInstanceOf(Waiting.class, player3.inGameState);
 
+        player1.setSelectedCard(2);
+        verifyCard = player1.getSelectedCard();
         player1.play(new Point(1, 1));
         assertInstanceOf(Placed.class, player1.inGameState);
-        player1.drawResource();
+        assertEquals(verifyCard, player1.getPlayArea().getPlacedCards().get(new Point(1, 1)));
+        player1.drawResourceCard1();
         assertInstanceOf(Waiting.class, player1.inGameState);
 
         player1.drawResource();

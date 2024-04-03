@@ -9,6 +9,8 @@ import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.exceptions.FullHandException;
 import it.polimi.ingsw.gc31.model.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.model.exceptions.InvalidCardDraw;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +18,8 @@ import java.util.List;
 public class Player {
     private final Board board;
     private int selectedCard;
-    private ObjectiveCard objectiveCard;
     private PlayableCard selectedStarterCard;
+    private ObjectiveCard objectiveCard;
     private final String username;
     private final PlayArea playArea;
     private final Color pawnColor;
@@ -49,14 +51,17 @@ public class Player {
      *
      * @param card: address of the card to add in hand
      */
-    private void addToHand(PlayableCard card) {
+    private void addToHand(PlayableCard card, Boolean byDeck) {
         try {
-            inGameState.addToHand(card, this);
+            inGameState.addToHand(card, this, byDeck);
         } catch (IllegalStateOperationException e) {
-            System.out.println("Player " + username + " cannot draw in this moment");
+            System.out.println("Player " + username + " cannot draw in current state");
             e.getStackTrace();
         } catch (FullHandException e) {
             System.out.println("Player " + username + "'s hand is full");
+            e.getStackTrace();
+        } catch (InvalidCardDraw e){
+            System.out.println("Player " + username + " tried to draw an invalid card");
             e.getStackTrace();
         }
     }
@@ -69,27 +74,27 @@ public class Player {
      * and each one is going to call one of those methods.
      */
     public void drawGold() {
-        addToHand(board.getDeckGold().draw());
+        addToHand(board.getDeckGold().draw(), true);
     }
 
     public void drawGoldCard1() {
-        addToHand(board.getDeckGold().getCard1());
+        addToHand(board.getDeckGold().getCard1(),false);
     }
 
     public void drawGoldCard2() {
-        addToHand(board.getDeckGold().getCard2());
+        addToHand(board.getDeckGold().getCard2(),false);
     }
 
     public void drawResource() {
-        addToHand(board.getDeckResource().draw());
+        addToHand(board.getDeckResource().draw(),true);
     }
 
     public void drawResourceCard1() {
-        addToHand(board.getDeckResource().getCard1());
+        addToHand(board.getDeckResource().getCard1(),false);
     }
 
     public void drawResourceCard2() {
-        addToHand(board.getDeckResource().getCard2());
+        addToHand(board.getDeckResource().getCard2(),false);
     }
 
     /**
@@ -114,7 +119,6 @@ public class Player {
     public void play(Point point) {
         try {
             inGameState.play(point, this);
-            this.hand.remove(selectedCard);
         } catch (IllegalStateOperationException e) {
             System.out.println("Player " + username + " not allowed to place cards in current state");
             e.getStackTrace();
@@ -169,10 +173,6 @@ public class Player {
         return this.playArea;
     }
 
-    public Player getPlayer() {
-        return this;
-    }//????
-
     public List<PlayableCard> getHand() {
         return this.hand;
     }
@@ -183,12 +183,12 @@ public class Player {
         this.selectedCard = selectedCard;
     }
 
-    public void setObjectiveCard(ObjectiveCard card) {
-        this.objectiveCard = card;
-    }
-
     public void setStarterCard() {
         this.selectedStarterCard = board.getDeckStarter().draw();
+    }
+
+    public void setObjectiveCard(ObjectiveCard card) {
+        this.objectiveCard = card;
     }
 
     public void setInGameState(PlayerState inGameState) {

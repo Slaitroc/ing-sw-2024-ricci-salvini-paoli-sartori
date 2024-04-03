@@ -6,6 +6,7 @@ import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.exceptions.FullHandException;
+import it.polimi.ingsw.gc31.model.exceptions.InvalidCardDraw;
 
 public class Start extends PlayerState {
 
@@ -15,17 +16,14 @@ public class Start extends PlayerState {
     }
 
     @Override
-    public void addToHand(PlayableCard card, Player player) throws NullPointerException, FullHandException {
+    public void addToHand(PlayableCard card, Player player, Boolean byDeck) throws FullHandException, InvalidCardDraw {
+        if (!byDeck){
+            throw  new InvalidCardDraw();
+        }
         if (player.hand.size() > 3) {
-            System.out.println("The player: " + player + "is full");
             throw new FullHandException();
         }
-        try {
-            player.hand.add(card);
-        } catch (NullPointerException e) {
-            System.out.println("There was a problem adding card in hand (is card null?)");
-            e.getStackTrace();
-        }
+        executeAddToHand(card, player);
     }
 
     @Override
