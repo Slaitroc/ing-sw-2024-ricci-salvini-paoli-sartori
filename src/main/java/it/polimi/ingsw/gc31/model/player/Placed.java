@@ -26,7 +26,7 @@ public class Placed extends PlayerState {
     }
 
     @Override
-    public void play(PlayableCard card, Point point, Player player) throws IllegalStateOperationException {
+    public void play(Point point, Player player) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 

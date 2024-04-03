@@ -17,7 +17,7 @@ public abstract class PlayerState {
 
     public abstract void moveCardInHand(Player player) throws IllegalStateOperationException;
 
-    public abstract void play(PlayableCard card, Point point, Player player) throws IllegalStateOperationException;
+    public abstract void play(Point point, Player player) throws IllegalStateOperationException;
 
     public abstract void playStarter(Player player) throws IllegalStateOperationException;
 
@@ -40,7 +40,6 @@ public abstract class PlayerState {
 
     public void executeAddToHand(PlayableCard card, Player player) throws NullPointerException, FullHandException {
         if (player.hand.size() > 2) {
-            System.out.println("The player: " + player + "is full");
             throw new FullHandException();
         }
         try {

@@ -24,7 +24,8 @@ public class NotPlaced extends PlayerState {
     }
 
     @Override
-    public void play(PlayableCard card, Point point, Player player) {
+    public void play(Point point, Player player) {
+        PlayableCard card = player.getSelectedCard();
         player.score += player.getPlayArea().place(card, point);
         player.hand.remove(card);
         player.setInGameState(new Placed());
