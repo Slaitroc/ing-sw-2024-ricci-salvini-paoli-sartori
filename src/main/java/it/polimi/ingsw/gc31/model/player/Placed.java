@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.model.player;
 
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import it.polimi.ingsw.gc31.model.exceptions.FullHandException;
 import it.polimi.ingsw.gc31.model.exceptions.IllegalStateOperationException;
 
 import java.awt.*;
@@ -14,13 +15,9 @@ public class Placed extends PlayerState {
     }
 
     @Override
-    public void addToHand(PlayableCard card, Player player) {
-        try {
-            player.hand.add(card);
-            player.setInGameState(new Waiting());
-        } catch (NullPointerException e) {
-            e.getStackTrace();
-        }
+    public void addToHand(PlayableCard card, Player player) throws FullHandException, NullPointerException {
+        executeAddToHand(card, player);
+        player.setInGameState(new Waiting());
     }
 
     @Override

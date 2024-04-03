@@ -28,7 +28,7 @@ public class Player {
         this.username = username;
         this.playArea = new PlayArea();
         this.inGameState = new Start();
-        this.starterCard = null;
+        this.starterCard = null; // TODO possiamo farla pescare
         hand = new ArrayList<>();
         score = 0;
     }
@@ -52,6 +52,7 @@ public class Player {
         try {
             inGameState.addToHand(card, this);
         } catch (IllegalStateOperationException | FullHandException e) {
+            System.out.println("Error adding to hand");
             e.getStackTrace();
         }
     }
@@ -91,7 +92,7 @@ public class Player {
         try {
             inGameState.playStarter(this);
         } catch (IllegalStateOperationException e) {
-            System.out.println("Player not allowed to place cards in current state");
+            System.out.println("Player not allowed to place the starter card in current state");
             e.getStackTrace();
         }
     }

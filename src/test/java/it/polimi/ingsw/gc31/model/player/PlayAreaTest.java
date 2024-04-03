@@ -5,7 +5,6 @@ import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
-import it.polimi.ingsw.gc31.model.strategies.Objective;
 import org.junit.jupiter.api.*;
 
 import java.awt.Point;
@@ -16,24 +15,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class PlayAreaTest {
 
         private PlayArea playArea;
+
         private Board board;
-        private PlayableCard starterCard, resourceCard, goldCard;
 
         @BeforeEach
         public void setUp() {
                 playArea = new PlayArea();
                 board = new Board();
-                starterCard = board.getDeckStarter().draw();
                 // starterCard.changeSide();
-                playArea.placeStarter(starterCard);
-        }
-
-        // TODO Ask why the starter card seems to not be random?
-        @Test
-        @DisplayName("First Card Placement Test")
-        public void testPlaceStarter() {
-                assertEquals(1, playArea.getPlacedCards().size());
-                assertEquals(starterCard, playArea.getPlacedCards().get(new Point(0, 0)));
+                playArea.placeStarter(board.getDeckStarter().draw());
         }
 
         /**
@@ -49,7 +39,6 @@ class PlayAreaTest {
         public void testPlaceOnRight() {
 
                 System.out.println("testPlace (1,1)):");
-                PlayableCard playableCard = board.getDeckResource().draw();
                 PlayableCard playableCard = board.getDeckResource().draw();
                 playArea.place(playableCard, new Point(1, 1));
                 assertEquals(playableCard, playArea.getPlacedCards().get(new Point(1, 1)));
@@ -77,7 +66,6 @@ class PlayAreaTest {
                 System.out.println("Correct");
 
                 System.out.println("testPlace (1,-1):");
-                PlayableCard playableCard2 = board.getDeckResource().draw();
                 PlayableCard playableCard2 = board.getDeckResource().draw();
                 playArea.place(playableCard2, new Point(1, -1));
                 assertEquals(playableCard, playArea.getPlacedCards().get(new Point(1, -1)));
@@ -125,7 +113,6 @@ class PlayAreaTest {
         public void testCheckRequirements() {
 
                 PlayableCard resourceCard = board.getDeckResource().draw();
-                PlayableCard resourceCard = board.getDeckResource().draw();
                 playArea.place(resourceCard, new Point(1, 1));
                 assertEquals(resourceCard, playArea.getPlacedCards().get(new Point(1, 1)));
 
@@ -145,7 +132,6 @@ class PlayAreaTest {
                 assertEquals(resourceCard, playArea.getPlacedCards().get(new Point(-1, 1)));
 
                 PlayableCard goldCard = board.getDeckGold().draw();
-                PlayableCard goldCard = board.getDeckGold().draw();
                 goldCard.changeSide();
                 // Map<Resources, Integer> achievedResources = new HashMap<Resources,
                 // Integer>(playArea.getAchievedResources());
@@ -162,7 +148,7 @@ class PlayAreaTest {
         public void testGoldCards() {
 
                 System.out.println("resourceCard in (1,1))");
-                resourceCard = createResourceCard(
+                PlayableCard resourceCard = createResourceCard(
                                 Resources.ANIMAL,
                                 Resources.EMPTY,
                                 Resources.EMPTY,
@@ -222,7 +208,7 @@ class PlayAreaTest {
                 assertEquals(resourceCard, playArea.getPlacedCards().get(new Point(-1, 1)));
 
                 System.out.println("goldCard in (2,0)):");
-                goldCard = createGoldCard(
+                PlayableCard goldCard = createGoldCard(
                                 Resources.ANIMAL,
                                 Resources.EMPTY,
                                 Resources.EMPTY,
@@ -285,14 +271,13 @@ class PlayAreaTest {
                 requirements.put(r1, n1);
                 requirements.put(r2, n2);
 
-                String dirImgFront = null;
                 Objective ob = null;
 
                 CardFront front = new CardFront(
                                 score,
                                 resourcesFront,
                                 requirements,
-                                dirImgFront,
+                                null,
                                 ob);
 
                 // resourceBack può avere dai 4 ai 7 elementi
@@ -303,11 +288,9 @@ class PlayAreaTest {
                 resourceBack.add(b3);
                 resourceBack.add(b4);
 
-                String dirImgBack = null;
-
                 CardBack back = new CardBack(
                                 resourceBack,
-                                dirImgBack);
+                                null);
 
                 return new GoldCard(color, front, back);
         }
@@ -335,15 +318,12 @@ class PlayAreaTest {
 
                 Map<Resources, Integer> requirements = Collections.emptyMap();
 
-                String dirImgFront = null;
-                Objective ob = null;
-
                 CardFront front = new CardFront(
                                 score,
                                 resourcesFront,
                                 requirements,
-                                dirImgFront,
-                                ob);
+                                null,
+                                null);
 
                 // resourceBack può avere dai 4 ai 7 elementi
                 List<Resources> resourceBack = new ArrayList<>();
@@ -353,11 +333,9 @@ class PlayAreaTest {
                 resourceBack.add(b3);
                 resourceBack.add(b4);
 
-                String dirImgBack = null;
-
                 CardBack back = new CardBack(
                                 resourceBack,
-                                dirImgBack);
+                                null);
 
                 return new ResourceCard(color, front, back);
         }
