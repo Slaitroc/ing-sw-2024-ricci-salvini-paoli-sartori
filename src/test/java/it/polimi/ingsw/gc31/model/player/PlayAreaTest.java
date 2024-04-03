@@ -27,7 +27,7 @@ class PlayAreaTest {
     public void setUp() {
         playArea = new PlayArea();
         board = new Board();
-        starterCard = board.getDeckStarer().draw();
+        starterCard = board.getDeckStarter().draw();
         //starterCard.changeSide();
         playArea.placeStarter(starterCard);
     }

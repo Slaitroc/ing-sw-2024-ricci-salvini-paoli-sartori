@@ -15,6 +15,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This class contains the attributes and methods used to test the ResourceScore class
+ */
 class ResourceScoreTest {
     static private PlayArea playArea;
     static private Board board;
@@ -31,6 +34,8 @@ class ResourceScoreTest {
 
     /**
      * This method tests if the result of ResourceScore is correct with a certain Resources contained on the board
+     * Firstly create a ResourceScore objective, then places 4 card on the play area. When the 4 cards are placed
+     * the result of the ResourceScore class is tested
      */
     @Test
     void equalsResourceNumberTest() {
