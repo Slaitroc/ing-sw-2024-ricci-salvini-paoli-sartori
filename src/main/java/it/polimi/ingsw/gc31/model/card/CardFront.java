@@ -133,8 +133,6 @@ public class CardFront implements DeepCopy<CardFront> {
         return newMap;
     }
 
-    // serve solo per la serializzazione
-    // TODO da togliere
     public JsonObject serializeToJson() {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("score", this.score);
@@ -149,7 +147,7 @@ public class CardFront implements DeepCopy<CardFront> {
             jsonObject.add("requirements", null);
         } else {
             JsonObject requirementsObjet = new JsonObject();
-            for (Map.Entry<Resources, Integer> res : this.requirements.entrySet()) {
+            for (Map.Entry<Resources, Integer> res: this.requirements.entrySet()) {
                 requirementsObjet.addProperty(res.getKey().toString(), res.getValue());
             }
             jsonObject.add("requirements", requirementsObjet);
@@ -162,6 +160,13 @@ public class CardFront implements DeepCopy<CardFront> {
 
     @Override
     public CardFront deepCopy() {
-        return null;
+        return new CardFront(
+                score,
+                listDeepCopy(resources),
+                mapDeepCopy(requirements),
+                new String(dirImg),
+                // TODO non serve la deepCopy di ob, credo
+                ob
+        );
     }
 }

@@ -151,9 +151,9 @@ public class Deck<T extends Card> implements DeepCopy<Deck<T>> {
         for (T card : this.deck) {
             clone.deck.add(card);
         }
-        clone.card1 = this.card1; // TODO chiedi a cri una deep copy di card utilizzando i suoi metodi di deepcopy
-                                  // di front e back
-        clone.card2 = this.card2; // WARN ricordati
+        // Cast a (T) controllato perchè T è sottoclasse di deck
+        clone.card1 = (T) this.card1.deepCopy(); // TODO chiedi a cri una deep copy di card utilizzando i suoi metodi di deepcopy
+        clone.card2 = (T) this.card2.deepCopy();
         return clone;
     }
 

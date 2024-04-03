@@ -16,7 +16,7 @@ import it.polimi.ingsw.gc31.utility.DeepCopy;
  *
  * @author Christian Salvini
  */
-public abstract class Card implements DeepCopy<Card>{
+public abstract class Card{
     /**
      * The front side of a Card
      */
@@ -80,4 +80,11 @@ public abstract class Card implements DeepCopy<Card>{
      * the score.
      */
     abstract public Objective getObjective();
+    abstract public Card deepCopy();
+    public JsonObject frontSerializeToJson() {
+        return front.serializeToJson();
+    }
+    public JsonObject backSerializeToJson() {
+        return back.serializeToJson();
+    }
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.model.card;
 
+import it.polimi.ingsw.gc31.model.Board;
 import org.junit.jupiter.api.Test;
 
 import it.polimi.ingsw.gc31.model.deck.Deck;
@@ -12,34 +13,19 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CardTest {
+    Board board = new Board();
 
     @Test
     void getSide() {
-        int score = 1;
-        List<Resources> resourcesFront= new ArrayList<>();
-        resourcesFront.add(Resources.EMPTY);
-        resourcesFront.add(Resources.HIDDEN);
-        resourcesFront.add(Resources.MUSHROOM);
-        resourcesFront.add(Resources.MUSHROOM);
-        List<Resources> resourcesBack = new ArrayList<>();
+        Card card = board.getDeckGold().draw();
 
-        Map<Resources, Integer> requirements = new HashMap<>();
-        requirements.put(Resources.MUSHROOM, 2);
-        String dirImgFront = null;
-        String dirImgBack = null;
-        Objective ob = null;
+        // Le carte devono avere side=false di default
+        assertFalse(card.getSide());
 
-    }
+        // Cambio il lato a tutte le carte
+        card.changeSide();
 
-    @Test
-    void changeSide() {
-    }
-
-    @Test
-    void getImage() {
-    }
-
-    @Test
-    void getObjective() {
+        // Dopo aver cambiato il lato le carte devono avere side=true
+        assertTrue(card.getSide());
     }
 }

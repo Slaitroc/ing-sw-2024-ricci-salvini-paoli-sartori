@@ -15,7 +15,7 @@ public class CardBack implements DeepCopy<CardBack> {
     private final String dirImg;
 
     // TODO implementare deep copy per resources
-    public CardBack(List<Resources> resources, String dirImg){
+    public CardBack(List<Resources> resources, String dirImg) {
         //if (resources.size() < 4 || resources.size() > 7) throw new  WrongNumberOfCornerException();
         this.resources = listDeepCopy(resources);
         this.dirImg = dirImg;
@@ -67,6 +67,9 @@ public class CardBack implements DeepCopy<CardBack> {
 
     @Override
     public CardBack deepCopy() {
-        return null;
+        return new CardBack(
+                listDeepCopy(resources),
+                new String(dirImg)
+        );
     }
 }

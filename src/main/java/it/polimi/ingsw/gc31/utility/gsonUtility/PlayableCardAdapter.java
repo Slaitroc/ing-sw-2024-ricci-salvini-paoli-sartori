@@ -9,19 +9,26 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class PlayableCardAdapter implements JsonSerializer<PlayableCard>, JsonDeserializer<PlayableCard>{
+public class PlayableCardAdapter implements JsonSerializer<PlayableCard>, JsonDeserializer<PlayableCard> {
     @Override
-    public JsonElement serialize(PlayableCard playableCard, Type type, JsonSerializationContext jsonSerializationContext) {
+    public JsonElement serialize(PlayableCard playableCard, Type type,
+            JsonSerializationContext jsonSerializationContext) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("color", playableCard.getColor().toString());
-        //jsonObject.add("front", playableCard.frontSerializeToJson());
-        //jsonObject.add("back", playableCard.backSerializeToJson());
+
+        if (playableCard.getColor() == null) {
+            jsonObject.add("color", null);
+        } else {
+            jsonObject.addProperty("color", playableCard.getColor().toString());
+        }
+        jsonObject.add("front", playableCard.frontSerializeToJson());
+        jsonObject.add("back", playableCard.backSerializeToJson());
 
         return jsonObject;
     }
 
     @Override
-    public PlayableCard deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public PlayableCard deserialize(JsonElement jsonElement, Type type,
+            JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         Color color = null;
 
@@ -38,14 +45,12 @@ public class PlayableCardAdapter implements JsonSerializer<PlayableCard>, JsonDe
         CardBack back = jsonDeserializationContext.deserialize(backElement, CardBack.class);
         if (type.equals(GoldCard.class)) {
             return new GoldCard(color, front, back);
-        }
-        else if (type.equals(ResourceCard.class)) {
+        } else if (type.equals(ResourceCard.class)) {
             return new ResourceCard(color, front, back);
-        }
-        else if (type.equals(StarterCard.class)) {
+        } else if (type.equals(StarterCard.class)) {
             return new StarterCard(front, back);
         }
-        //TODO non sono sicuro
+        // TODO non sono sicuro
         else {
             return null;
         }

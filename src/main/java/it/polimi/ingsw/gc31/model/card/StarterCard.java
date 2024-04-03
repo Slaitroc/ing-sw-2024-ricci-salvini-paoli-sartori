@@ -13,12 +13,6 @@ public class StarterCard extends PlayableCard{
     public StarterCard(CardFront front, CardBack back) {
         super(null, front, back);
     }
-    public StarterCard(List<Resources> resourcesFront, List<Resources> resourcesBack, String dirImgFront, String dirImgBack) throws WrongNumberOfCornerException, DirImgValueMissingException {
-        super(null,
-                new CardFront(0, resourcesFront, Collections.emptyMap(), dirImgFront, null),
-                new CardBack(resourcesBack, dirImgBack));
-    }
-
     public Map<Resources, Integer> getRequirements() {
         return Collections.emptyMap();
     }
