@@ -67,6 +67,25 @@ public class Controller implements ControllerInterface {
             this.initGame();
         }
     }
+    @Override
+    public void getHand(String username) throws RemoteException {
+        List<PlayableCard> hand = players.get(username).getHand();
+        List<String> res = new ArrayList<>();
+        for (PlayableCard card: hand) {
+            res.add(gson.toJson(card, PlayableCard.class));
+        }
+        clients.get(username).showHand(res);
+    }
+
+    @Override
+    public void drawGold(String username) throws RemoteException {
+        this.players.get(username).drawGold();
+
+        // TODO da rivedere
+        for (var c: clients.entrySet()) {
+            c.getValue().reportError(username + "draw a gold Card");
+        }
+    }
 }
 
 // public class Controller implements Cloneable, DeepCopy<Controller> {
