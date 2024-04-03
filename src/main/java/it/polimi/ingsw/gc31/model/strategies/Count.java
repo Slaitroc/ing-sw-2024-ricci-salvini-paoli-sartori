@@ -19,7 +19,7 @@ public class Count extends Objective {
     /**
      * This method is the constructor of the class
      *
-     * @param resources the list of resources the player needs to hold to obtain points
+     * @param resources is the list of resources the player needs to hold to obtain points
      */
     public Count(List<Resources> resources) {
         super();
@@ -27,7 +27,7 @@ public class Count extends Objective {
     }
 
     /**
-     * This method check if this particular objective is done
+     * This method check if this particular objective is done and return the number of points obtained by the player
      *
      * @param placedCard is the map that contains all the card on the player's board
      * @return the number of points obtained by the player
@@ -44,10 +44,11 @@ public class Count extends Objective {
      * This method check the objective in the particular case where the list of resources contains only Animal,
      * Plants, Insects and Mushrooms
      *
-     * @param placedCard is the map that contains all the card on the player's board
+     * @param placedCard is the map that contains all the card on the player's board (it's useless if I get the
+     *                   attribute achievedResources)
      * @return the number of points obtained by the player
      */
-    private int countAPIM(Map<Point, PlayableCard> placedCard, Map<Resources, Integer> achievedResources) {
+    private int countAPIM( Map<Point, PlayableCard> placedCard, Map<Resources, Integer> achievedResources) {
         Resources seed = resources.get(0);
         int found = achievedResources.get(seed);
         return 2 * ((found - found % 3) / 3);
@@ -62,7 +63,8 @@ public class Count extends Objective {
      * This method check the objective in the particular case where the list of resources contains only Feathers, Ink
      * or Scrolls
      *
-     * @param placedCard is the map that contains all the card on the player's board
+     * @param placedCard is the map that contains all the card on the player's board (it's useless if I get the
+     *                   attribute achievedResources)
      * @return the number of points obtained by the player
      */
     private int countFIS(Map<Point, PlayableCard> placedCard, Map<Resources, Integer> achievedResources) {
@@ -84,7 +86,7 @@ public class Count extends Objective {
         return 3 * ((found - found % 3) / 3);
     }
 
-    /*
+    /* it's useless if I have the attribute achievedResources
     /**
      * This method searches the Resource "seed" on the board
      *

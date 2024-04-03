@@ -25,7 +25,7 @@ public class Board implements Cloneable, DeepCopy<Board> {
         return goldDeck;
     }
 
-    public Deck<PlayableCard> getDeckStarer() {
+    public Deck<PlayableCard> getDeckStarter() {
         return starterDeck;
     }
 

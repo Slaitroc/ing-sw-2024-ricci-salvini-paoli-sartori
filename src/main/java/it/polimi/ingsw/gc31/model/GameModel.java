@@ -86,39 +86,13 @@ public class GameModel implements Cloneable, DeepCopy<GameModel> {
             p.addToHand(board.getDeckGold().draw());
             p.addToHand(board.getDeckResource().draw());
             p.addToHand(board.getDeckResource().draw());
-            p.setStarterCard(board.getDeckStarer().draw());
-            // p.addToHand(board.getDeckStarer().draw());
+
+            PlayableCard starterCard = board.getDeckStarter().draw();
+            starterCard.changeSide();
+            // TODO dare la possibilità di girarla prima di piazzarla, per ora who cares
+            p.getPlayArea().placeStarter(starterCard);
+
         }
-    }
-
-    public GameModel playStarterCard(int player) {
-        players.get(player).playStarter();
-        return this;
-    }
-
-    public GameModel selectCard(int player, int handPosition) {
-        players.get(player).setSelectedCard(handPosition);
-        return this;
-    }
-
-    public GameModel playCard(int player, Point point) {
-        players.get(player).play(point);
-        return this;
-    }
-
-    public GameModel changeStarterCardSide(int player) {
-        players.get(player).getStarterCard().changeSide();
-        return this;
-    }
-
-    public GameModel changeCardSide(int player) {
-        players.get(player).getSelectedCard().changeSide();
-        return this;
-    }
-
-    public GameModel changeState(int player, PlayerState stato) {
-        players.get(player).setInGameState(stato); // FIX
-        return this;
     }
 
     @Override
