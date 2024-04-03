@@ -24,8 +24,8 @@ public class GameModel {
 
     public void addPlayers(Map<String, Player> players) {
         for (String user : players.keySet()) {
-            // ricrea i player passandogli come parametro la board
-            this.players.put(user, new Player(players.get(user), board));
+            // ricrea i player passandogli come parametro la boardprivate static Board board;
+            this.players.put(user, new Player(Color.RED,user, board));
         }
     }
 

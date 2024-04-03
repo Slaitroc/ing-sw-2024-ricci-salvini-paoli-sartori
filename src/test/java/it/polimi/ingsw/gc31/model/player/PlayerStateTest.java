@@ -17,145 +17,145 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerStateTest {
 
-        private static Player player1, player2, player3;
+    private static Player player1, player2, player3;
 
 
-        @BeforeAll
-        public static void setUp() {
-                Board board = new Board();
-                player1 = new Player(Color.RED, "Player1", board);
-                player2 = new Player(Color.BLUE, "Player2", board);
-                player3 = new Player(Color.YELLOW, "Player3", board);
-                player1.playStarter();
-                player2.playStarter();
-                player3.getPlayArea().placeStarter(createStarterCard());
+    @BeforeAll
+    public static void setUp() {
+        Board board = new Board();
+        player1 = new Player(Color.RED, "Player1", board);
+        player2 = new Player(Color.BLUE, "Player2", board);
+        player3 = new Player(Color.YELLOW, "Player3", board);
+        player1.playStarter();
+        player2.playStarter();
+        player3.getPlayArea().placeStarter(createStarterCard());
 
-                for (int j = 0; j < 2; j++) {
-                        player1.drawResource();
-                        // System.out.println("Assertion1");
-                        assertInstanceOf(Start.class, player1.inGameState);
-                        player2.drawResource();
-                        // System.out.println("Assertion3");
-                        assertInstanceOf(Start.class, player2.inGameState);
-                        player3.drawResource();
-                        // System.out.println("Assertion3");
-                        assertInstanceOf(Start.class, player3.inGameState);
-                }
-                player1.drawGold();
-                player1.setInGameState(new NotPlaced());
-                // System.out.println("Assertion4");
-                assertInstanceOf(NotPlaced.class, player1.inGameState);
-                assertInstanceOf(Start.class, player2.inGameState);
-                assertInstanceOf(Start.class, player3.inGameState);
-
-                player2.drawGold();
-                player2.setInGameState(new Waiting());
-                // System.out.println("Assertion5");
-                assertInstanceOf(NotPlaced.class, player1.inGameState);
-                assertInstanceOf(Waiting.class, player2.inGameState);
-                assertInstanceOf(Start.class, player3.inGameState);
-
-                player3.drawGold();
-                player3.setInGameState(new Waiting());
-                // System.out.println("Assertion6");
-                assertInstanceOf(NotPlaced.class, player1.inGameState);
-                assertInstanceOf(Waiting.class, player2.inGameState);
-                assertInstanceOf(Waiting.class, player3.inGameState);
-
-                // System.out.println("SetUp Completed");
+        for (int j = 0; j < 2; j++) {
+            player1.drawResource();
+            // System.out.println("Assertion1");
+            assertInstanceOf(Start.class, player1.inGameState);
+            player2.drawResource();
+            // System.out.println("Assertion3");
+            assertInstanceOf(Start.class, player2.inGameState);
+            player3.drawResource();
+            // System.out.println("Assertion3");
+            assertInstanceOf(Start.class, player3.inGameState);
         }
+        player1.drawGold();
+        player1.setInGameState(new NotPlaced());
+        // System.out.println("Assertion4");
+        assertInstanceOf(NotPlaced.class, player1.inGameState);
+        assertInstanceOf(Start.class, player2.inGameState);
+        assertInstanceOf(Start.class, player3.inGameState);
 
-        @Test
-        public void testGameTurns() {
-                // System.out.println("Start testGameTurns");
+        player2.drawGold();
+        player2.setInGameState(new Waiting());
+        // System.out.println("Assertion5");
+        assertInstanceOf(NotPlaced.class, player1.inGameState);
+        assertInstanceOf(Waiting.class, player2.inGameState);
+        assertInstanceOf(Start.class, player3.inGameState);
 
-                assertInstanceOf(NotPlaced.class, player1.inGameState);
-                assertInstanceOf(Waiting.class, player2.inGameState);
-                assertInstanceOf(Waiting.class, player3.inGameState);
+        player3.drawGold();
+        player3.setInGameState(new Waiting());
+        // System.out.println("Assertion6");
+        assertInstanceOf(NotPlaced.class, player1.inGameState);
+        assertInstanceOf(Waiting.class, player2.inGameState);
+        assertInstanceOf(Waiting.class, player3.inGameState);
 
-                player1.play(new Point(1, 1));
-                assertInstanceOf(Placed.class, player1.inGameState);
-                player1.drawResource();
-                assertInstanceOf(Waiting.class, player1.inGameState);
+        // System.out.println("SetUp Completed");
+    }
 
-                player1.drawResource();
-                player1.play(new Point(1, 1));
-                player2.setInGameState(new NotPlaced());
+    @Test
+    public void testGameTurns() {
+        // System.out.println("Start testGameTurns");
 
-                assertInstanceOf(NotPlaced.class, player2.inGameState);
-                player2.play(new Point(1, 1));
-                assertInstanceOf(Placed.class, player2.inGameState);
-                player2.drawResource();
-                assertInstanceOf(Waiting.class, player2.inGameState);
-                assertNotEquals(player1.getPlayArea().getPlacedCards().get(new Point(1, 1)),
-                                player2.getPlayArea().getPlacedCards().get(new Point(1, 1)));
+        assertInstanceOf(NotPlaced.class, player1.inGameState);
+        assertInstanceOf(Waiting.class, player2.inGameState);
+        assertInstanceOf(Waiting.class, player3.inGameState);
 
-                player3.setInGameState(new NotPlaced());
+        player1.play(new Point(1, 1));
+        assertInstanceOf(Placed.class, player1.inGameState);
+        player1.drawResource();
+        assertInstanceOf(Waiting.class, player1.inGameState);
 
-                assertInstanceOf(NotPlaced.class, player3.inGameState);
-                player3.play(new Point(1, 1));
-                assertInstanceOf(Placed.class, player3.inGameState);
-                player3.drawResource();
-                assertInstanceOf(Waiting.class, player3.inGameState);
+        player1.drawResource();
+        player1.play(new Point(1, 1));
+        player2.setInGameState(new NotPlaced());
 
-                player1.setInGameState(new NotPlaced());
-                assertInstanceOf(NotPlaced.class, player1.inGameState);
-                assertInstanceOf(Waiting.class, player2.inGameState);
-                assertInstanceOf(Waiting.class, player3.inGameState);
+        assertInstanceOf(NotPlaced.class, player2.inGameState);
+        player2.play(new Point(1, 1));
+        assertInstanceOf(Placed.class, player2.inGameState);
+        player2.drawResource();
+        assertInstanceOf(Waiting.class, player2.inGameState);
+        assertNotEquals(player1.getPlayArea().getPlacedCards().get(new Point(1, 1)),
+                player2.getPlayArea().getPlacedCards().get(new Point(1, 1)));
 
-                player1.play(new Point(1, 1));
-                assertInstanceOf(Placed.class, player1.inGameState);
-                player1.drawResourceCard1();
-                assertInstanceOf(Waiting.class, player1.inGameState);
-                player2.setInGameState(new NotPlaced());
+        player3.setInGameState(new NotPlaced());
 
-                assertInstanceOf(NotPlaced.class, player2.inGameState);
-                player2.play(new Point(1, 1));
-                assertInstanceOf(Placed.class, player2.inGameState);
-                player2.drawResourceCard2();
-                assertInstanceOf(Waiting.class, player2.inGameState);
-                assertNotEquals(player1.getPlayArea().getPlacedCards().get(new Point(1, 1)),
-                                player2.getPlayArea().getPlacedCards().get(new Point(1, 1)));
-                player3.setInGameState(new NotPlaced());
+        assertInstanceOf(NotPlaced.class, player3.inGameState);
+        player3.play(new Point(1, 1));
+        assertInstanceOf(Placed.class, player3.inGameState);
+        player3.drawResource();
+        assertInstanceOf(Waiting.class, player3.inGameState);
 
-                assertInstanceOf(NotPlaced.class, player3.inGameState);
-                player3.play(new Point(1, 1));
-                assertInstanceOf(Placed.class, player3.inGameState);
-                player3.drawResource();
-                assertInstanceOf(Waiting.class, player3.inGameState);
-        }
+        player1.setInGameState(new NotPlaced());
+        assertInstanceOf(NotPlaced.class, player1.inGameState);
+        assertInstanceOf(Waiting.class, player2.inGameState);
+        assertInstanceOf(Waiting.class, player3.inGameState);
 
-        private static PlayableCard createStarterCard() {
-                int score = 0;
+        player1.play(new Point(1, 1));
+        assertInstanceOf(Placed.class, player1.inGameState);
+        player1.drawResourceCard1();
+        assertInstanceOf(Waiting.class, player1.inGameState);
+        player2.setInGameState(new NotPlaced());
 
-                // resources needs to have 4 Resources
-                List<Resources> resourcesFront = new ArrayList<>();
-                resourcesFront.add(Resources.MUSHROOM);
-                resourcesFront.add(Resources.ANIMAL);
-                resourcesFront.add(Resources.INSECT);
-                resourcesFront.add(Resources.PLANT);
+        assertInstanceOf(NotPlaced.class, player2.inGameState);
+        player2.play(new Point(1, 1));
+        assertInstanceOf(Placed.class, player2.inGameState);
+        player2.drawResourceCard2();
+        assertInstanceOf(Waiting.class, player2.inGameState);
+        assertNotEquals(player1.getPlayArea().getPlacedCards().get(new Point(1, 1)),
+                player2.getPlayArea().getPlacedCards().get(new Point(1, 1)));
+        player3.setInGameState(new NotPlaced());
 
-                Map<Resources, Integer> requirements = Collections.emptyMap();
+        assertInstanceOf(NotPlaced.class, player3.inGameState);
+        player3.play(new Point(1, 1));
+        assertInstanceOf(Placed.class, player3.inGameState);
+        player3.drawResource();
+        assertInstanceOf(Waiting.class, player3.inGameState);
+    }
 
-                CardFront front = new CardFront(
-                                score,
-                                resourcesFront,
-                                requirements,
-                                null,
-                                null);
+    private static PlayableCard createStarterCard() {
+        int score = 0;
 
-                // resourceBack can have from 4 to 7 Resources
-                List<Resources> resourceBack = new ArrayList<>();
-                resourceBack.add(Resources.EMPTY);
-                resourceBack.add(Resources.EMPTY);
-                resourceBack.add(Resources.EMPTY);
-                resourceBack.add(Resources.EMPTY);
-                resourceBack.add(Resources.MUSHROOM);
+        // resources needs to have 4 Resources
+        List<Resources> resourcesFront = new ArrayList<>();
+        resourcesFront.add(Resources.MUSHROOM);
+        resourcesFront.add(Resources.ANIMAL);
+        resourcesFront.add(Resources.INSECT);
+        resourcesFront.add(Resources.PLANT);
 
-                CardBack back = new CardBack(
-                                resourceBack,
-                                null);
+        Map<Resources, Integer> requirements = Collections.emptyMap();
 
-                return new StarterCard(front, back);
-        }
+        CardFront front = new CardFront(
+                score,
+                resourcesFront,
+                requirements,
+                null,
+                null);
+
+        // resourceBack can have from 4 to 7 Resources
+        List<Resources> resourceBack = new ArrayList<>();
+        resourceBack.add(Resources.EMPTY);
+        resourceBack.add(Resources.EMPTY);
+        resourceBack.add(Resources.EMPTY);
+        resourceBack.add(Resources.EMPTY);
+        resourceBack.add(Resources.MUSHROOM);
+
+        CardBack back = new CardBack(
+                resourceBack,
+                null);
+
+        return new StarterCard(front, back);
+    }
 }

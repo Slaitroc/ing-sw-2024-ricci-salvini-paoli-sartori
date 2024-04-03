@@ -1,6 +1,8 @@
 package it.polimi.ingsw.gc31.controller;
 
+import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.GameModel;
+import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.util.HashMap;
@@ -10,7 +12,8 @@ public class GameControllerLobbyState implements GameControllerState{
     @Override
     public void addPlayer(GameController controller, String username) {
         Map<String, Player> players = controller.getPlayers();
-        players.put(username, new Player(username));
+        Board board = controller.getPlayers().get(username).getBoard();
+        players.put(username, new Player(Color.RED, username, board));
     }
 
     @Override
