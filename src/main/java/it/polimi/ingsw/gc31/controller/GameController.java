@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import it.polimi.ingsw.gc31.model.GameModel;
+import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.exceptions.GameModelAlreadyCreatedException;
 import it.polimi.ingsw.gc31.model.exceptions.MaxPlayerNumberReachedException;
 import it.polimi.ingsw.gc31.model.exceptions.PlayerNicknameAlreadyExistsException;
@@ -20,29 +21,32 @@ import it.polimi.ingsw.gc31.view.GameView;
 public class GameController {
     private GameModel model;
     private GameControllerState gameState;
-    private final Map<String, Player> players;
+    //private final Map<String, Player> players;
 
     public GameController() {
         this.model = new GameModel();
-        this.players = new HashMap<>();
+//        this.players = new HashMap<>();
         gameState = new GameControllerLobbyState();
     }
 
-    public Map<String, PlayerController> initGame() {
-        return gameState.initGame(this, model);
+    public Map<String, Player> initGame() {
+        Map<String,Player> players = model.createPlayers();
+        model.dealCards();
+
+        return players;
     }
 
     public void addPlayer(String username) {
-        gameState.addPlayer(this, username);
+        gameState.addPlayer(model, username);
     }
 
     public void dealCard() {
         gameState.dealCards(model);
     }
 
-    Map<String, Player> getPlayers() {
-        return players;
-    }
+//    Map<String, Player> getPlayers() {
+//        return players;
+//    }
 
     void changeState(GameControllerState state) {
         this.gameState = state;

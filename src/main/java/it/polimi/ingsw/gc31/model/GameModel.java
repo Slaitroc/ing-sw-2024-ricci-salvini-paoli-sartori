@@ -21,12 +21,16 @@ public class GameModel {
         this.board = new Board();
         this.players = new HashMap<>();
     }
+    public void addPlayer(String username) {
+        players.put(username, null);
+    }
 
-    public void addPlayers(Map<String, Player> players) {
-        for (String user : players.keySet()) {
-            // ricrea i player passandogli come parametro la board
-            this.players.put(user, new Player(players.get(user), board));
+    public Map<String, Player> createPlayers() {
+        for (Map.Entry<String, Player> pl: players.entrySet()) {
+            players.put(pl.getKey(), new Player(pl.getKey(), Color.RED, board));
         }
+
+        return players;
     }
 
     public Player getPlayer(String username) {

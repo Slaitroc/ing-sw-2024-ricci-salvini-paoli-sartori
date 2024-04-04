@@ -17,7 +17,9 @@ import java.awt.Color;
 
 //NOTE creazione GameController x la creazione del match
 //il GameController relativo al primo match viene creato subito dopo che il primo player si è loggato? 
-//Mi sembra più semplice fare così che gestire le attese per la creazione dei GameController nel Controller 
+//Mi sembra più semplice fare così che gestire le attese per la creazione dei GameController nel Controller
+
+// gestisce l'interazione con i client
 
 public class Controller{
     // gson per serializzare i dati da inviare al client
@@ -32,6 +34,7 @@ public class Controller{
         this.maxNumberPlayers = maxNumberPlayers;
         this.clients = new HashMap<>();
         this.clients.put(username, client);
+        this.players = new HashMap<>();
 
         gameController.addPlayer(username);
         System.out.println("[SERVER-Controller] Added player: " + username);
@@ -39,13 +42,14 @@ public class Controller{
         gson = new GsonBuilder()
                 .registerTypeAdapter(PlayableCard.class, new PlayableCardAdapter())
                 .create();
-
     }
 
     private void initGame() {
-        this.players = gameController.initGame();
-        System.out.println(
-                "[SERVER-Controller] Partita iniziata, i player in gioco sono: " + players.keySet().stream().toList());
+        Map<String, Player> playerList = gameController.initGame();
+        for (Map.Entry<String, Player> pl: playerList.entrySet()) {
+            players.put(pl.getKey(), new PlayerController(pl.getValue()));
+        }
+        System.out.println("[SERVER-Controller] Partita iniziata, i player in gioco sono: " + players.keySet().stream().toList());
         System.out.println("[SERVER-Controller] Distribuzione carte...");
         gameController.dealCard();
     }
@@ -82,6 +86,7 @@ public class Controller{
             c.getValue().reportError(username + "draw a gold Card");
         }
     }
+
 }
 
 // public class Controller implements Cloneable, DeepCopy<Controller> {

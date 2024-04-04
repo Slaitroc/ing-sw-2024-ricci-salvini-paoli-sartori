@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class GameControllerStartingState implements GameControllerState{
     @Override
-    public void addPlayer(GameController controller, String username) {
+    public void addPlayer(GameModel model, String username) {
 
     }
 

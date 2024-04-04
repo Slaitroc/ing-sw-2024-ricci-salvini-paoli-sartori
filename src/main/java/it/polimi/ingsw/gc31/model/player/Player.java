@@ -45,9 +45,9 @@ public class Player {
         this.board = board;
     }
 
-    public Player(String username) {
-        this.board = null;
-        this.pawnColor = null;
+    public Player(String username, Color color, Board board) {
+        this.board = board;
+        this.pawnColor = color;
         this.username = username;
         this.playArea = new PlayArea();
         this.hand = new ArrayList<>();
