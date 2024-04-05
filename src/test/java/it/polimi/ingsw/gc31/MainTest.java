@@ -1,10 +1,11 @@
 package it.polimi.ingsw.gc31;
-
-
+/*
+import it.polimi.ingsw.gc31.model.ServerTest;
 
 public class MainTest {
     public static void main(String[] args) {
-        GameModelTest test = new GameModelTest();        
-        System.out.println("ciao"); 
+        ServerTest test = new ServerTest();
+        System.out.println("ciao");
     }
 }
+*/

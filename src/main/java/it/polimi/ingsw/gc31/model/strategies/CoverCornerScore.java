@@ -4,40 +4,49 @@ import java.awt.*;
 import java.util.Map;
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
+/**
+ * This class represents the Objective where the player gets points based on how many corner are covered
+ * by the played card
+ */
 public class CoverCornerScore extends Objective {
 
-    public CoverCornerScore(){
+    /**
+     * This method is the constructor of the class
+     */
+    public CoverCornerScore() {
         super();
     }
 
     /**
-     * prendo in input tutte le carte sul campo del giocatore e i point della carta appena giocata
-     * sapendo i point della carta appena giocata controllo quante delle 4 carte ai suoi angoli esistono
-     * per ogni carta che esiste aggiungo 1 allo score
-     * @param placedCard
-     * @param point
-     * @return
+     * This method check if this particular objective is done
+     *
+     * @param placedCard is the map that contains all the card on the player's board
+     * @param point      is the point of played card
+     * @return the number of point obtained by the player
      */
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point point){
-        /**
-         * creo 4 Point per ogni angolo che possiede la carta
-         */
+    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point point, Map<Resources, Integer> achievedResources) {
+        int count = 0;
+
         Point altoDx = new Point((int) point.getX() + 1, (int) point.getY() + 1);
         Point altoSx = new Point((int) point.getX() - 1, (int) point.getY() + 1);
         Point bassoDx = new Point((int) point.getX() + 1, (int) point.getY() - 1);
         Point bassoSx = new Point((int) point.getX() - 1, (int) point.getY() - 1);
 
-        /**
-         * verifico quali punti 4 punti adiacenti alla carta esistano. Se esistono aumento il numero di carte che
-         * sono coperte da quella appena piazzata
-         * alla fine ritorno il numero di carte coperte moltiplicato per 2
-         */
-        if(placedCard.get(altoDx)!=null){ score++; }
-        if(placedCard.get(altoSx)!=null){ score++; }
-        if(placedCard.get(bassoDx)!=null){ score++; }
-        if(placedCard.get(bassoSx)!=null){ score++; }
+        if (placedCard.get(altoDx) != null) {
+            count++;
+        }
+        if (placedCard.get(altoSx) != null) {
+            count++;
+        }
+        if (placedCard.get(bassoDx) != null) {
+            count++;
+        }
+        if (placedCard.get(bassoSx) != null) {
+            count++;
+        }
 
-        return 2 * score;
+        return 2 * count;
     }
 }

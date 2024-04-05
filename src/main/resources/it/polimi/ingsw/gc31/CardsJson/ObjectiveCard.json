@@ -1,14 +1,314 @@
 [
   {
-    "type": "OBJECTIVE",
-    "score": 2,
-    "objective": "SCALASU",
-    "color": "RED"
+    "color": null,
+    "front": {
+      "score": 2,
+      "resources": null,
+      "requirements": null,
+      "dirImg": null,
+      "objective": {
+        "color1": "RED",
+        "type": "STAIRUP"
+      }
+    },
+    "back": {
+      "resources": [
+        "EMPTY",
+        "EMPTY",
+        "EMPTY",
+        "EMPTY",
+        "MUSHROOM"
+      ],
+      "dirImg": null
+    }
   },
   {
-    "type": "OBJECTIVE",
-    "score": 2,
-    "objective": "SCALAGIU",
-    "color": "GREEN"
+    "color": null,
+    "front": {
+      "score": 2,
+      "resources": null,
+      "requirements": null,
+      "dirImg": null,
+      "objective": {
+        "color1": "GREEN",
+        "type": "STAIRDOWN"
+      }
+    },
+    "back": {
+      "resources": [
+        "EMPTY",
+        "EMPTY",
+        "EMPTY",
+        "EMPTY",
+        "MUSHROOM"
+      ],
+      "dirImg": null
+    }
+  },
+  {
+    "color": null,
+    "front": {
+      "score": 2,
+      "resources": null,
+      "requirements": null,
+      "dirImg": null,
+      "objective": {
+        "color1": "BLUE",
+        "type": "STAIRUP"
+      }
+    },
+    "back": {
+      "resources": [
+        "EMPTY",
+        "EMPTY",
+        "EMPTY",
+        "EMPTY",
+        "MUSHROOM"
+      ],
+      "dirImg": null
+    }
+  },
+  {
+    "color": null,
+    "front": {
+      "score": 2,
+      "resources": null,
+      "requirements": null,
+      "dirImg": null,
+      "objective": {
+        "color1": "PURPLE",
+        "type": "STAIRDOWN"
+      }
+    },
+    "back": {
+      "resources": [
+        "EMPTY",
+        "EMPTY",
+        "EMPTY",
+        "EMPTY",
+        "MUSHROOM"
+      ],
+      "dirImg": null
+    }
+  },
+  {
+    "color": null,
+    "front": {
+      "score": 3,
+      "resources": null,
+      "requirements": null,
+      "dirImg": null,
+      "objective": {
+        "color1": "RED",
+        "color2": "GREEN",
+        "type": "LSHAPE"
+      }
+    },
+    "back": {
+      "resources": [
+        "EMPTY",
+        "EMPTY",
+        "EMPTY",
+        "EMPTY",
+        "MUSHROOM"
+      ],
+      "dirImg": null
+    }
+  },
+  {
+    "color": null,
+    "front": {
+      "score": 3,
+      "resources": null,
+      "requirements": null,
+      "dirImg": null,
+      "objective": {
+        "color1": "GREEN",
+        "color2": "PURPLE",
+        "type": "LSHAPEREVERSE"
+      }
+    },
+    "back": {
+      "resources": [
+        "EMPTY",
+        "EMPTY",
+        "EMPTY",
+        "EMPTY",
+        "MUSHROOM"
+      ],
+      "dirImg": null
+    }
+  },
+  {
+    "color": null,
+    "front": {
+      "score": 3,
+      "resources": null,
+      "requirements": null,
+      "dirImg": null,
+      "objective": {
+        "color1": "BLUE",
+        "color2": "RED",
+        "type": "SEVENREVERSE"
+      }
+    },
+    "back": {
+      "resources": null,
+      "dirImg": null
+    }
+  },
+  {
+    "color": null,
+    "front": {
+      "score": 3,
+      "resources": null,
+      "requirements": null,
+      "dirImg": null,
+      "objective": {
+        "color1": "PURPLE",
+        "color2": "BLUE",
+        "type": "SEVEN"
+      }
+    },
+    "back": {
+      "resources": null,
+      "dirImg": null
+    }
+  },
+  {
+    "color": null,
+    "front": {
+      "score": 2,
+      "resources": null,
+      "requirements": null,
+      "dirImg": null,
+      "objective": {
+        "resources": ["MUSHROOM","MUSHROOM","MUSHROOM"],
+        "type": "COUNT"
+      }
+    },
+    "back": {
+      "resources": null,
+      "dirImg": null
+    }
+  },
+  {
+    "color": null,
+    "front": {
+      "score": 2,
+      "resources": null,
+      "requirements": null,
+      "dirImg": null,
+      "objective": {
+        "resources": ["PLANT","PLANT","PLANT"],
+        "type": "COUNT"
+      }
+    },
+    "back": {
+      "resources": null,
+      "dirImg": null
+    }
+  },
+  {
+    "color": null,
+    "front": {
+      "score": 2,
+      "resources": null,
+      "requirements": null,
+      "dirImg": null,
+      "objective": {
+        "resources": ["ANIMAL","ANIMAL","ANIMAL"],
+        "type": "COUNT"
+      }
+    },
+    "back": {
+      "resources": null,
+      "dirImg": null
+    }
+  },
+  {
+    "color": null,
+    "front": {
+      "score": 2,
+      "resources": null,
+      "requirements": null,
+      "dirImg": null,
+      "objective": {
+        "resources": ["INSECT","INSECT","INSECT"],
+        "type": "COUNT"
+      }
+    },
+    "back": {
+      "resources": null,
+      "dirImg": null
+    }
+  },
+  {
+    "color": null,
+    "front": {
+      "score": 3,
+      "resources": null,
+      "requirements": null,
+      "dirImg": null,
+      "objective": {
+        "resources": ["FEATHER","INK","SCROLL"],
+        "type": "COUNT"
+      }
+    },
+    "back": {
+      "resources": null,
+      "dirImg": null
+    }
+  },
+  {
+    "color": null,
+    "front": {
+      "score": 2,
+      "resources": null,
+      "requirements": null,
+      "dirImg": null,
+      "objective": {
+        "resources": ["SCROLL","SCROLL"],
+        "type": "COUNT"
+      }
+    },
+    "back": {
+      "resources": null,
+      "dirImg": null
+    }
+  },
+  {
+    "color": null,
+    "front": {
+      "score": 2,
+      "resources": null,
+      "requirements": null,
+      "dirImg": null,
+      "objective": {
+        "resources": ["INK","INK"],
+        "type": "COUNT"
+      }
+    },
+    "back": {
+      "resources": null,
+      "dirImg": null
+    }
+  },
+  {
+    "color": null,
+    "front": {
+      "score": 2,
+      "resources": null,
+      "requirements": null,
+      "dirImg": null,
+      "objective": {
+        "resources": ["FEATHER", "FEATHER"],
+        "type": "COUNT"
+      }
+    },
+    "back": {
+      "resources": null,
+      "dirImg": null
+    }
   }
 ]

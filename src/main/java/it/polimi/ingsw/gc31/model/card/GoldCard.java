@@ -13,13 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 public class GoldCard extends PlayableCard {
-
-    public GoldCard(Color color, int score, List<Resources> resourcesFront, List<Resources> resourcesBack, Map<Resources, Integer> requirements, String dirImgFront, String dirImgBack, Objective ob) throws WrongNumberOfCornerException, DirImgValueMissingException {
-        super(color,
-                new CardFront(score, resourcesFront, requirements, dirImgFront, ob),
-                new CardBack(resourcesBack, dirImgBack));
-    }
-    //TODO serve solo per la serializzazione, da togliere
     public GoldCard(Color color, CardFront front, CardBack back) {
         super(color, front, back);
     }
@@ -27,5 +20,14 @@ public class GoldCard extends PlayableCard {
     public Objective getObjective() {
         if (side) return front.getObjective();
         else return null;
+    }
+
+    @Override
+    public GoldCard deepCopy() {
+        return new GoldCard(
+                color,
+                front.deepCopy(),
+                back.deepCopy()
+        );
     }
 }

@@ -1,13 +1,13 @@
 package it.polimi.ingsw.gc31;
 
-import java.util.List;
-import java.util.ArrayList;
+import it.polimi.ingsw.gc31.rmi.RmiServer;
+import it.polimi.ingsw.gc31.rmi.VirtualServer;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 
-import it.polimi.ingsw.gc31.controller.Controller;
-import it.polimi.ingsw.gc31.controller.GameController;
-import it.polimi.ingsw.gc31.model.GameModel;
-import it.polimi.ingsw.gc31.model.exceptions.*;
-import it.polimi.ingsw.gc31.view.GameView;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 
 /*import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,72 +16,27 @@ import javafx.stage.Stage;
 
 import java.io.IOException;*/
 
-public class Server /*extends Application*/ {
-    /*@Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
-    }*/
-    
-    private GameModel gameModel;
-    private Controller controller;
-    private GameView view;
-    private static List<String> usernamesList;
-    
-    
-    public static void main(String[] args) {
-        /*launch();*/
+public class Server /* extends Application */ {
+    /*
+     * @Override
+     * public void start(Stage stage) throws IOException {
+     * FXMLLoader fxmlLoader = new
+     * FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+     * Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+     * stage.setTitle("Hello!");
+     * stage.setScene(scene);
+     * stage.show();
+     * }
+     */
 
+    public static void main(String[] args) throws RemoteException {
+        String name = "VirtualServer";
+        VirtualServer engine = new RmiServer();
+        VirtualServer stub = (VirtualServer) UnicastRemoteObject.exportObject(engine, 0);
+        Registry registry = LocateRegistry.createRegistry(1234);
+        registry.rebind(name, stub);
 
-  /*   public void creaDatiXInizializzazioneGameController() { */
-        //creo gli username per i futuri player
-        Controller controller = new Controller();
-        //NOTE questo controller sará unico e giá presente nel server
-        //é il gestore di tutte le singole partite e degli username dei player
-        usernamesList = new ArrayList<String>();
-        usernamesList.add("Alessandro");
-        
-        
-        try {
-            controller.addPlayerUsername(usernamesList.get(0));
-            usernamesList.add("Christian");
-            controller.addPlayerUsername(usernamesList.get(1));
-            usernamesList.add("Matteo");
-            controller.addPlayerUsername(usernamesList.get(2));
-            usernamesList.add("Lorenzo");
-            controller.addPlayerUsername(usernamesList.get(3));
-        } catch (PlayerNicknameAlreadyExistsException e) {
-            e.printStackTrace();
-        }
-        
-        int gameControllerID = controller.createGameController(usernamesList.get(0), 4);
-        GameController gameController = controller.getGameController(gameControllerID);
-        
-        try {
-            gameController.addPlayer(usernamesList.get(1));
-            gameController.addPlayer(usernamesList.get(2));
-            gameController.addPlayer(usernamesList.get(3));
-        } catch (MaxPlayerNumberReachedException e) {
-            e.printStackTrace();
-        }
+        System.out.println("[SERVER] Adder bound");
 
-        try {
-            gameController.createGameModel();
-        } catch (PlayerNumberNotReachedException e) {
-            System.out.println("Player Number Not Reached!");
-            e.printStackTrace();
-        }
-        System.out.println("FINE DEBUG");
-
-
-
-        
-        
     }
-
-
-    
 }

@@ -4,16 +4,15 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
-import it.polimi.ingsw.gc31.model.strategies.Objective;
+import it.polimi.ingsw.gc31.utility.DeepCopy;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/**w
+/**
  * This class represents a generic card that can be placed on the
  * {@link it.polimi.ingsw.gc31.model.player.PlayArea}. It extends {@link Card}
  * All PlayableCard must extend this class.
@@ -57,11 +56,11 @@ public abstract class PlayableCard extends Card {
             return back.checkCorner(corner);
     }
 
-    public void coverCorner(int corner) {
+    public Resources coverCorner(int corner) {
         if (side)
-            front.coverCorner(corner);
+            return front.coverCorner(corner);
         else
-            back.coverCorner(corner);
+            return back.coverCorner(corner);
     }
 
     public List<Resources> getResources() {

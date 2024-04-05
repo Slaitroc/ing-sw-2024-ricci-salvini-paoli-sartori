@@ -1,14 +1,10 @@
 package it.polimi.ingsw.gc31.model.card;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import it.polimi.ingsw.gc31.model.enumeration.CardType;
-import it.polimi.ingsw.gc31.model.enumeration.Color;
-import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
+import it.polimi.ingsw.gc31.utility.DeepCopy;
 
-import java.util.*;
 
 /**
  * This is an abstract class that represents a generic Card.
@@ -17,16 +13,27 @@ import java.util.*;
  * that represents which side of the card is active:
  * side = false -> back is active
  * side = true -> front is active
- * 
+ *
  * @author Christian Salvini
  */
-public abstract class Card {
+public abstract class Card{
+    /**
+     * The front side of a Card
+     */
     protected final CardFront front;
+    /**
+     * The back side of a Card
+     */
     protected final CardBack back;
+    /**
+     * Side is a boolean parameter that represents which side of the card is active:
+     * side = false -> back is active
+     * side = true -> front is active
+     */
     protected boolean side;
 
     /**
-     * Constructor of the class.
+     * Constructor of a Card.
      * All the cards are initially set to false
      */
     public Card(CardFront front, CardBack back) {
@@ -50,25 +57,34 @@ public abstract class Card {
         side = !side;
     }
 
+    /**
+     * @return the link to the image related to the active side
+     */
     public String getImage() {
         if (side)
             return front.getImage();
         else
             return back.getImage();
     }
-
+    /**
+     * @return the score obtained with the placement of the card. If back is active, always return 0.
+     */
     public int getScore() {
-        return 0;
+        if (side)
+            return front.getScore();
+        else return 0;
     }
 
+    /**
+     * @return return the {@link Objective} of a card that must be verified to obtain
+     * the score.
+     */
     abstract public Objective getObjective();
-    //abstract public JsonObject serializeToJson();
-
+    abstract public Card deepCopy();
     public JsonObject frontSerializeToJson() {
         return front.serializeToJson();
     }
     public JsonObject backSerializeToJson() {
         return back.serializeToJson();
     }
-
 }

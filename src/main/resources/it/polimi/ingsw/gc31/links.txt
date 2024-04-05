@@ -1,0 +1,26 @@
+Codex Font
+https://www.onlinewebfonts.com/download/560b8f3c5122387c54cef7f602961dc1
+
+
+
+
+
+utility:
+Find Font from image:
+https://www.myfonts.com/pages/whatthefont
+
+Color pick from image:
+https://imagecolorpicker.com/
+
+Cool fonts:
+https://www.dafont.com/it/glimmer-of-light.font
+
+MaterialsFX repo:
+https://github.com/palexdev/MaterialFX/issues?q=is%3Aissue+is%3Aclosed
+
+Remove bg from image:
+https://www.remove.bg/
+
+Javafx icons pack:
+https://kordamp.org/ikonli/#_antdesignicons
+

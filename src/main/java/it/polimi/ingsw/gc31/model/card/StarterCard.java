@@ -10,18 +10,20 @@ import it.polimi.ingsw.gc31.model.exceptions.WrongNumberOfCornerException;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
 
 public class StarterCard extends PlayableCard{
-    public StarterCard(List<Resources> resourcesFront, List<Resources> resourcesBack, String dirImgFront, String dirImgBack) throws WrongNumberOfCornerException, DirImgValueMissingException {
-        super(null,
-                new CardFront(0, resourcesFront, Collections.emptyMap(), dirImgFront, null),
-                new CardBack(resourcesBack, dirImgBack));
+    public StarterCard(CardFront front, CardBack back) {
+        super(null, front, back);
     }
-
     public Map<Resources, Integer> getRequirements() {
         return Collections.emptyMap();
     }
 
     @Override
     public Objective getObjective() {
+        return null;
+    }
+
+    @Override
+    public Card deepCopy() {
         return null;
     }
 }
