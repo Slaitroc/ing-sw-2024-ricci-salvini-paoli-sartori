@@ -9,6 +9,8 @@ import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.exceptions.FullHandException;
 import it.polimi.ingsw.gc31.model.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.model.exceptions.InvalidCardDraw;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,86 +18,83 @@ import java.util.List;
 public class Player {
     private final Board board;
     private int selectedCard;
+    private PlayableCard selectedStarterCard;
+    private ObjectiveCard objectiveCard;
     private final String username;
     private final PlayArea playArea;
-    private Color pawnColor;
+    private final Color pawnColor;
     protected final List<PlayableCard> hand;
-    protected ObjectiveCard objectiveCard;
-    protected PlayableCard starterCard;
     protected PlayerState inGameState;
     protected int score;
 
-    public Player(Color color, String username) {
-        this.board = null;
-        this.pawnColor = color;
+
+    //CONSTRUCTORS
+    public Player(Color color, String username, Board board) {
+        this.board = board;
         this.username = username;
         this.playArea = new PlayArea();
         this.inGameState = new Start();
-        this.starterCard = null; // TODO possiamo farla pescare
+        this.pawnColor = color;
         hand = new ArrayList<>();
+        setStarterCard();
         score = 0;
     }
 
-    public Player(Player player, Board board) {
-        this.pawnColor = player.pawnColor;
-        this.username = player.username;
-        this.playArea = player.playArea;
-        this.hand = player.hand;
-        this.score = player.score;
-        this.board = board;
-    }
 
-    public Player(String username) {
-        this.board = null;
-        this.pawnColor = null;
-        this.username = username;
-        this.playArea = new PlayArea();
-        this.hand = new ArrayList<>();
-        this.score = 0;
-    }
-
-    public void drawGold() {
-        hand.add(board.getDeckGold().draw());
-    }
-
-    public void drawResource() {
-        hand.add(board.getDeckResource().draw());
-    }
-
-    public void drawStarter() {
-        hand.add(board.getDeckStarter().draw());
-    }
-
-    public List<PlayableCard> getHand() {
-        return this.hand;
-    }
-
-    public void setPawnColor(Color color) {
-        this.pawnColor = color;
-    }
-
-    public PlayableCard getStarterCard() {
-        return starterCard;
-    }
-
-    public void setStarterCard(PlayableCard card) {
-        this.starterCard = card;
-    }
+    //PRIVATE METHODS
 
     /**
      * Method add the selected card to the player hand
-     * Notice that after the operation, if the player has 3 cards in hand,
-     * he should not be able to draw anymore → changeState();
-     * 
+     * Notice that the logic of this class is specified in the states
+     * and the method is called by the 6 public drawing methods.
+     * Here are written the exceptions messages
+     *
      * @param card: address of the card to add in hand
      */
-    public void addToHand(PlayableCard card) {
+    private void addToHand(PlayableCard card, Boolean byDeck) {
         try {
-            inGameState.addToHand(card, this);
-        } catch (IllegalStateOperationException | FullHandException e) {
-            System.out.println("Error adding to hand");
+            inGameState.addToHand(card, this, byDeck);
+        } catch (IllegalStateOperationException e) {
+            System.out.println("Player " + username + " cannot draw in current state");
+            e.getStackTrace();
+        } catch (FullHandException e) {
+            System.out.println("Player " + username + "'s hand is full");
+            e.getStackTrace();
+        } catch (InvalidCardDraw e){
+            System.out.println("Player " + username + " tried to draw an invalid card");
             e.getStackTrace();
         }
+    }
+
+
+    //PUBLIC METHODS
+
+    /**
+     * Methods to call when drawing a card. There are going to be 6 buttons in the GUI
+     * and each one is going to call one of those methods.
+     */
+    public void drawGold() {
+        addToHand(board.getDeckGold().draw(), true);
+    }
+
+    public void drawGoldCard1() {
+        addToHand(board.getDeckGold().getCard1(),false);
+    }
+
+    public void drawGoldCard2() {
+        addToHand(board.getDeckGold().getCard2(),false);
+    }
+
+    public void drawResource() {
+        addToHand(board.getDeckResource().draw(),true);
+    }
+
+    public void drawResourceCard1() {
+        addToHand(board.getDeckResource().getCard1(),false);
+    }
+
+    public void drawResourceCard2() {
+        addToHand(board.getDeckResource().getCard2(),false);
     }
 
     /**
@@ -107,24 +106,21 @@ public class Player {
         try {
             inGameState.moveCardInHand(this);
         } catch (IllegalStateOperationException e) {
-            System.out.println("Player not allowed to move cards in hands in current state");
+            System.out.println("Player " + username + " not allowed to move cards in hand in current state");
             e.getStackTrace();
         }
     }
 
     /**
-     * Method that calls player.playArea.place(card, point)
-     * TODO questionable method!?
-     * 
-     * @param card:  address of the card to place on players playArea
+     * Method that calls player.playArea.place(point)
+     *
      * @param point: coordinate of where in the map to place the card
      */
     public void play(Point point) {
         try {
-            inGameState.play(getSelectedCard(), point, this);
-            this.hand.remove(selectedCard);
+            inGameState.play(point, this);
         } catch (IllegalStateOperationException e) {
-            System.out.println("Player not allowed to place cards in current state");
+            System.out.println("Player " + username + " not allowed to place cards in current state");
             e.getStackTrace();
         }
     }
@@ -133,13 +129,12 @@ public class Player {
         try {
             inGameState.playStarter(this);
         } catch (IllegalStateOperationException e) {
-            System.out.println("Player not allowed to place the starter card in current state");
+            System.out.println("Player" + username + " not allowed to place the starter card in current state");
             e.getStackTrace();
         }
     }
 
     /**
-     *
      * @param card: Objective Card to assign to the player (called secret obj in
      *              game)
      */
@@ -147,9 +142,27 @@ public class Player {
         try {
             inGameState.addObjectiveCard(card, this);
         } catch (IllegalStateOperationException e) {
-            System.out.println("Player not allowed to draw objective card in current state");
+            System.out.println("Player " + username + " not allowed to draw objective card in current state");
             e.getStackTrace();
         }
+    }
+
+
+    //GETTERS
+    public Board getBoard() {
+        return this.board;
+    }
+
+    public PlayableCard getSelectedCard() {
+        return hand.get(selectedCard);
+    }
+
+    public PlayableCard getStarterCard() {
+        return this.selectedStarterCard;
+    }
+
+    public String getName() {
+        return this.username;
     }
 
     public int getScore() {
@@ -157,23 +170,25 @@ public class Player {
     }
 
     public PlayArea getPlayArea() {
-        return playArea;
+        return this.playArea;
     }
 
-    public Player getPlayer() {
-        return this;
+    public List<PlayableCard> getHand() {
+        return this.hand;
     }
 
-    public String getName() {
-        return username;
-    }
 
-    public PlayableCard getSelectedCard() {
-        return hand.get(selectedCard);
-    }
-
+    //SETTERS
     public void setSelectedCard(int selectedCard) {
         this.selectedCard = selectedCard;
+    }
+
+    public void setStarterCard() {
+        this.selectedStarterCard = board.getDeckStarter().draw();
+    }
+
+    public void setObjectiveCard(ObjectiveCard card) {
+        this.objectiveCard = card;
     }
 
     public void setInGameState(PlayerState inGameState) {
