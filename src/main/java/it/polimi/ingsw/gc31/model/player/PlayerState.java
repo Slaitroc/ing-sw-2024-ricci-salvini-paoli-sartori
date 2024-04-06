@@ -4,6 +4,7 @@ import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.exceptions.FullHandException;
+import it.polimi.ingsw.gc31.model.exceptions.InvalidCardDraw;
 
 import java.awt.*;
 //import java.util.List;
@@ -12,14 +13,27 @@ import java.util.Scanner;
 public abstract class PlayerState {
     public abstract void addObjectiveCard(ObjectiveCard card, Player player) throws IllegalStateOperationException;
 
-    public abstract void addToHand(PlayableCard card, Player player)
-            throws IllegalStateOperationException, FullHandException;
+    public abstract void addToHand(PlayableCard card, Player player, Boolean byDeck)
+            throws IllegalStateOperationException, FullHandException, InvalidCardDraw;
 
     public abstract void moveCardInHand(Player player) throws IllegalStateOperationException;
 
-    public abstract void play(PlayableCard card, Point point, Player player) throws IllegalStateOperationException;
+    public abstract void play(Point point, Player player) throws IllegalStateOperationException;
 
     public abstract void playStarter(Player player) throws IllegalStateOperationException;
+/*
+    public void drawResource(Player player) throws IllegalStateOperationException;
+
+    public void drawResourceCard1(Player player) throws IllegalStateOperationException;
+
+    public void drawResourceCard2(Player player) throws IllegalStateOperationException;
+
+    public void drawGold(Player player) throws IllegalStateOperationException;
+
+    public void drawGoldCard1(Player player) throws IllegalStateOperationException;
+
+    public void drawGoldCard2(Player player) throws IllegalStateOperationException;*/
+
 
     // Notice: Intellij gives me a warning if I copy the same code 4 times
     // In this way I can execute the common code writing it here
@@ -40,7 +54,6 @@ public abstract class PlayerState {
 
     public void executeAddToHand(PlayableCard card, Player player) throws NullPointerException, FullHandException {
         if (player.hand.size() > 2) {
-            System.out.println("The player: " + player + "is full");
             throw new FullHandException();
         }
         try {

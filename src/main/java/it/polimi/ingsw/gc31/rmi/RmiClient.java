@@ -77,7 +77,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualView {
         Scanner scan = new Scanner(System.in);
         String setUser = scan.nextLine().toString();
 
-        Registry registry = LocateRegistry.getRegistry(args[0], 1234);
+        Registry registry = LocateRegistry.getRegistry("127.0.0.1", 1234);
         VirtualServer server = (VirtualServer) registry.lookup("VirtualServer");
 
         new RmiClient(server).setUsername(setUser).run();

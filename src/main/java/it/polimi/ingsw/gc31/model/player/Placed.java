@@ -15,7 +15,7 @@ public class Placed extends PlayerState {
     }
 
     @Override
-    public void addToHand(PlayableCard card, Player player) throws FullHandException, NullPointerException {
+    public void addToHand(PlayableCard card, Player player, Boolean byDeck) throws FullHandException, NullPointerException {
         executeAddToHand(card, player);
         player.setInGameState(new Waiting());
     }
@@ -26,7 +26,7 @@ public class Placed extends PlayerState {
     }
 
     @Override
-    public void play(PlayableCard card, Point point, Player player) throws IllegalStateOperationException {
+    public void play(Point point, Player player) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 

@@ -14,7 +14,7 @@ public class Waiting extends PlayerState {
     }
 
     @Override
-    public void addToHand(PlayableCard card, Player player) throws IllegalStateOperationException {
+    public void addToHand(PlayableCard card, Player player, Boolean byDeck) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
@@ -24,7 +24,7 @@ public class Waiting extends PlayerState {
     }
 
     @Override
-    public void play(PlayableCard card, Point point, Player player) throws IllegalStateOperationException {
+    public void play(Point point, Player player) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
