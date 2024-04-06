@@ -1,5 +1,7 @@
 package it.polimi.ingsw.gc31.client_server;
 
-public interface VirtualClient {
+import java.rmi.Remote;
+
+public interface VirtualClient extends Remote {
 
 }
