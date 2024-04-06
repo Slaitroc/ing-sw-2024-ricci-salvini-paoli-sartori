@@ -67,6 +67,16 @@ public class Controller implements ControllerInterface {
             this.initGame();
         }
     }
+
+    @Override
+    public void getHand(String username) throws RemoteException {
+
+    }
+
+    @Override
+    public void drawGold(String username) throws RemoteException {
+
+    }
 }
 
 // public class Controller implements Cloneable, DeepCopy<Controller> {
