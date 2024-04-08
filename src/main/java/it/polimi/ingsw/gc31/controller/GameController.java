@@ -20,13 +20,11 @@ import it.polimi.ingsw.gc31.view.GameView;
 
 public class GameController {
     private GameModel model;
-    private GameControllerState gameState;
     //private final Map<String, Player> players;
 
     public GameController() {
         this.model = new GameModel();
 //        this.players = new HashMap<>();
-        gameState = new GameControllerLobbyState();
     }
 
     public Map<String, Player> initGame() {
@@ -37,19 +35,11 @@ public class GameController {
     }
 
     public void addPlayer(String username) {
-        gameState.addPlayer(model, username);
+        model.addPlayer(username);
     }
 
     public void dealCard() {
-        gameState.dealCards(model);
-    }
-
-//    Map<String, Player> getPlayers() {
-//        return players;
-//    }
-
-    void changeState(GameControllerState state) {
-        this.gameState = state;
+        model.dealCards();
     }
 }
 

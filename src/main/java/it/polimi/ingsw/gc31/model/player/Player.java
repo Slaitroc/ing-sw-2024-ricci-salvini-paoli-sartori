@@ -23,7 +23,6 @@ public class Player {
     private final PlayArea playArea;
     private Color pawnColor;
     protected final List<PlayableCard> hand;
-    protected ObjectiveCard objectiveCard;
     protected PlayableCard starterCard;
     protected PlayerState inGameState;
     protected int score;
