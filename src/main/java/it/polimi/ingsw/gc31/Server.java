@@ -1,5 +1,7 @@
 package it.polimi.ingsw.gc31;
 
+import it.polimi.ingsw.gc31.controller.Controller;
+import it.polimi.ingsw.gc31.controller.VirtualController;
 import it.polimi.ingsw.gc31.rmi.RmiServer;
 import it.polimi.ingsw.gc31.rmi.VirtualServer;
 import java.rmi.registry.LocateRegistry;
@@ -28,15 +30,7 @@ public class Server /* extends Application */ {
      * stage.show();
      * }
      */
-
     public static void main(String[] args) throws RemoteException {
-        String name = "VirtualServer";
-        VirtualServer engine = new RmiServer();
-        VirtualServer stub = (VirtualServer) UnicastRemoteObject.exportObject(engine, 0);
-        Registry registry = LocateRegistry.createRegistry(1234);
-        registry.rebind(name, stub);
-
-        System.out.println("[SERVER] Adder bound");
-
+        new RmiServer();
     }
 }

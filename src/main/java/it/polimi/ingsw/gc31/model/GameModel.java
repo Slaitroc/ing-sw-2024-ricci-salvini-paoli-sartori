@@ -21,17 +21,20 @@ public class GameModel {
         this.board = new Board();
         this.players = new HashMap<>();
     }
-
-    public void addPlayers(Map<String, Player> players) {
-        for (String user : players.keySet()) {
-            // ricrea i player passandogli come parametro la boardprivate static Board board;
-            this.players.put(user, new Player(Color.RED,user, board));
-        }
+    public void addPlayer(String username) {
+        players.put(username, null);
     }
+    public Map<String, Player> createPlayers() {
+        for (Map.Entry<String, Player> pls : players.entrySet()) {
+            players.put(pls.getKey(), new Player(Color.RED, pls.getKey(), board)); //TODO implementare assegnazione colore
+        }
 
+        return players;
+    }
     public Player getPlayer(String username) {
         return players.get(username);
     }
+
 
     public void dealCards() {
         for (Map.Entry<String, Player> pl : players.entrySet()) {

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.gc31.controller;
 
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 import com.google.gson.Gson;
@@ -17,72 +19,76 @@ import java.awt.Color;
 
 //NOTE creazione GameController x la creazione del match
 //il GameController relativo al primo match viene creato subito dopo che il primo player si è loggato? 
-//Mi sembra più semplice fare così che gestire le attese per la creazione dei GameController nel Controller 
+//Mi sembra più semplice fare così che gestire le attese per la creazione dei GameController nel Controller
 
-public class Controller {
-    // gson per serializzare i dati da inviare al client
-    private Gson gson;
-    private final GameController gameController;
-    private final Map<String, VirtualView> clients;
-    private Map<String, PlayerController> players;
-    private final int maxNumberPlayers;
+// gestisce l'interazione con i client
 
-    public Controller(String username, VirtualView client, int maxNumberPlayers) {
-        this.gameController = new GameController();
-        this.maxNumberPlayers = maxNumberPlayers;
-        this.clients = new HashMap<>();
-        this.clients.put(username, client);
+public class Controller implements VirtualController{
+    private final Map<Integer, MainGameController> gameList;
+    private Map<String, VirtualView> tempClients;
+    private Set<String> usernameList;
+    private Integer progressiveIdGame;
+    Registry registry;
 
-        gameController.addPlayer(username);
-        System.out.println("[SERVER-Controller] Added player: " + username);
-
-        gson = new GsonBuilder()
-                .registerTypeAdapter(PlayableCard.class, new PlayableCardAdapter())
-                .create();
-
+    public Controller() throws RemoteException{
+        gameList = new HashMap<>();
+        tempClients = new HashMap<>();
+        this.registry = registry;
+        this.usernameList = new HashSet<>();
+        progressiveIdGame = 0;
     }
+    @Override
+    public void connect(VirtualView client, String username) throws PlayerNicknameAlreadyExistsException {
+        if (usernameList.contains(username)) {
+            throw  new PlayerNicknameAlreadyExistsException();
+        }
 
-    private void initGame() {
-        this.players = gameController.initGame();
-        System.out.println(
-                "[SERVER-Controller] Partita iniziata, i player in gioco sono: " + players.keySet().stream().toList());
-        System.out.println("[SERVER-Controller] Distribuzione carte...");
-        gameController.dealCard();
+        System.out.println("[SERVER-Controller] new client connected");
+        usernameList.add(username);
+        tempClients.put(username, client);
     }
-
-    public int getMaxNumberPlayers() {
-        return maxNumberPlayers;
-    }
-
-    public int getCurrentNumberPlayers() {
-        return clients.size();
-    }
-
-    public void joinGame(String username, VirtualView client) throws RemoteException {
-        gameController.addPlayer(username);
-        System.out.println("Added players: " + username);
-        clients.put(username, client);
-        if (maxNumberPlayers == clients.size()) {
-            this.initGame();
+    @Override
+    public void getGameList(String username) throws RemoteException {
+        if (gameList.isEmpty()) {
+            tempClients.get(username).reportError("Non sono presenti game creati. Digita 'crea game' per creare un nuovo game");
+        } else {
+            List<String> res = new ArrayList<>();
+            for (Integer idGame : gameList.keySet()) {
+                res.add(
+                        idGame.toString() + " "
+                                + gameList.get(idGame).getMaxNumberPlayers() + " / "
+                                + gameList.get(idGame).getCurrentNumberPlayers()
+                );
+            }
+            tempClients.get(username).showGameList(res);
         }
     }
 
-    public void getHand(String username) throws RemoteException {
-        List<PlayableCard> hand = players.get(username).getHand();
-        List<String> res = new ArrayList<>();
-        for (PlayableCard card : hand) {
-            res.add(gson.toJson(card, PlayableCard.class));
-        }
-        clients.get(username).showHand(res);
+    @Override
+    public VirtualMainGameController createGame(String username, int maxNumberPlayers) throws RemoteException {
+        gameList.put(progressiveIdGame, new MainGameController(username, tempClients.get(username), maxNumberPlayers));
+
+        // viene rimosso il client da quelli temporanei
+        tempClients.remove(username);
+
+//        VirtualMainGameController stubMainGameController = (VirtualMainGameController) UnicastRemoteObject.exportObject(gameList.get(progressiveIdGame), 0);
+//        registry.rebind("VirtualMainGameController"+progressiveIdGame.toString(), stubMainGameController);
+
+        System.out.println("[SERVER] Creato game con id: " + progressiveIdGame);
+
+        //viene ritornato l'id del game associato al client, poi viene incrementato
+        return gameList.get(progressiveIdGame++);
     }
 
-    public void drawGold(String username) throws RemoteException {
-        this.players.get(username).drawGold();
+    @Override
+    public VirtualMainGameController joinGame(String username, Integer idGame) throws RemoteException {
+        // viene aggiunto il client al game corrispondente
+        gameList.get(idGame).joinGame(username, tempClients.get(username));
 
-        // TODO da rivedere
-        for (var c : clients.entrySet()) {
-            c.getValue().reportError(username + "draw a gold Card");
-        }
+        // viene rimosso il client da quelli temporanei
+        tempClients.remove(username);
+
+        return gameList.get(idGame);
     }
 }
 
