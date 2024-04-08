@@ -21,7 +21,7 @@ import java.awt.Color;
 
 // gestisce l'interazione con i client
 
-public class Controller{
+public class Controller {
     // gson per serializzare i dati da inviare al client
     private Gson gson;
     private final GameController gameController;
@@ -70,19 +70,21 @@ public class Controller{
             this.initGame();
         }
     }
+
     public void getHand(String username) throws RemoteException {
         List<PlayableCard> hand = players.get(username).getHand();
         List<String> res = new ArrayList<>();
-        for (PlayableCard card: hand) {
+        for (PlayableCard card : hand) {
             res.add(gson.toJson(card, PlayableCard.class));
         }
         clients.get(username).showHand(res);
     }
+
     public void drawGold(String username) throws RemoteException {
         this.players.get(username).drawGold();
 
         // TODO da rivedere
-        for (var c: clients.entrySet()) {
+        for (var c : clients.entrySet()) {
             c.getValue().reportError(username + "draw a gold Card");
         }
     }

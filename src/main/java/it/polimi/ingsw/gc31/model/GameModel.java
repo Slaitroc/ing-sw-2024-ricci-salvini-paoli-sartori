@@ -25,9 +25,10 @@ public class GameModel {
         players.put(username, null);
     }
 
-    public Map<String, Player> createPlayers() {
-        for (Map.Entry<String, Player> pl: players.entrySet()) {
-            players.put(pl.getKey(), new Player(pl.getKey(), Color.RED, board));
+    public void addPlayers(Map<String, Player> players) {
+        for (String user : players.keySet()) {
+            // ricrea i player passandogli come parametro la boardprivate static Board board;
+            this.players.put(user, new Player(Color.RED,user, board));
         }
 
         return players;

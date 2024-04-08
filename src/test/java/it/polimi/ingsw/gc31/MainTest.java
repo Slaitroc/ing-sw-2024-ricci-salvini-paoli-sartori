@@ -1,5 +1,5 @@
 package it.polimi.ingsw.gc31;
-
+/*
 import it.polimi.ingsw.gc31.model.ServerTest;
 
 public class MainTest {
@@ -8,3 +8,4 @@ public class MainTest {
         System.out.println("ciao");
     }
 }
+*/
