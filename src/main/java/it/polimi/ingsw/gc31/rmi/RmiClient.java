@@ -1,5 +1,10 @@
 package it.polimi.ingsw.gc31.rmi;
 
+import it.polimi.ingsw.gc31.controller.*;
+import it.polimi.ingsw.gc31.model.exceptions.PlayerNicknameAlreadyExistsException;
+
+import java.util.*;
+
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -9,12 +14,14 @@ import java.util.List;
 import java.util.Scanner;
 
 public class RmiClient extends UnicastRemoteObject implements VirtualView {
-    final VirtualServer server;
+    final VirtualController controller;
+    private VirtualMainGameController mainGameController;
     private Integer idGame;
     private String username;
+    private VirtualPlayerController playerController;
 
-    protected RmiClient(VirtualServer server) throws RemoteException {
-        this.server = server;
+    protected RmiClient(VirtualController controller) throws RemoteException {
+        this.controller = controller;
         this.idGame = null;
     }
 
@@ -23,36 +30,64 @@ public class RmiClient extends UnicastRemoteObject implements VirtualView {
         return this;
     }
 
-    private void run() throws RemoteException {
-        this.server.connect(this, username);
+    private void run() throws RemoteException, NotBoundException, PlayerNicknameAlreadyExistsException {
+        controller.connect(this, username);
         runCli();
     }
 
-    private void runCli() throws RemoteException {
+    private void runCli() throws RemoteException, NotBoundException {
         Scanner scan = new Scanner(System.in);
 
         while (true) {
             System.out.print("> ");
             String command = scan.nextLine().toString();
 
-            if (command.equals("draw gold")) {
-                server.drawGold(username, idGame);
-            } else if (command.equals("show hand")) {
-                server.getHand(username, idGame);
-            } else if (command.equals("mostra game")) {
-                // se il giocatore ha già creato una partita non può chiamare getGameList
-                server.getGameList(username);
-            } else if (command.equals("crea game")) {
+            if (command.equals("crea game")) {
                 System.out.print("Inserisci il numero di giocatori della partita:");
                 int maxNumberPlayer = scan.nextInt();
-                idGame = server.createGame(username, maxNumberPlayer);
+                mainGameController = controller.createGame(username, maxNumberPlayer);
+
                 System.out.println("Creata partita con id: " + idGame);
+
+                runCliInitGame();
+
+            } else if (command.equals("mostra game")) {
+                controller.getGameList(username);
             } else if (command.equals("join game")) {
-                System.out.print("Inserisci l'id del game:");
-                idGame = scan.nextInt();
-                server.joinGame(username, idGame);
+                System.out.print("Inserisci l'ID del game a cui vuoi partecipare: ");
+                int idGame = scan.nextInt();
+
+                mainGameController = controller.joinGame(username, idGame);
+
+                runCliInitGame();
             }
         }
+    }
+
+    public void runCliInitGame() throws RemoteException {
+        Scanner scan = new Scanner(System.in);
+
+        while (true) {
+            System.out.print("> ");
+            String command = scan.nextLine().toString();
+
+            if (command.equals("info")) {
+                if (mainGameController.isGameStarted()) {
+                    System.out.println("Il gioco è iniziato");
+                } else {
+                    System.out.println("Il gioco non è ancora iniziato");
+                }
+            } else if (command.equals("mostra mano")) {
+                playerController.getHand();
+            } else if (command.equals("draw gold")) {
+                playerController.drawGold();
+            }
+        }
+    }
+
+    @Override
+    public void setPlayerController(VirtualPlayerController playerController) throws RemoteException {
+        this.playerController = playerController;
     }
 
     @Override
@@ -73,13 +108,16 @@ public class RmiClient extends UnicastRemoteObject implements VirtualView {
     }
 
     public static void main(String[] args) throws RemoteException, NotBoundException {
+        Registry registry = LocateRegistry.getRegistry("127.0.0.1", 1234);
+        VirtualController controller = (VirtualController) registry.lookup("VirtualController");
         System.out.print("Inserisci il tuo nome utente: ");
         Scanner scan = new Scanner(System.in);
         String setUser = scan.nextLine().toString();
 
-        Registry registry = LocateRegistry.getRegistry("127.0.0.1", 1234);
-        VirtualServer server = (VirtualServer) registry.lookup("VirtualServer");
-
-        new RmiClient(server).setUsername(setUser).run();
+        try {
+            new RmiClient(controller).setUsername(setUser).run();
+        } catch (PlayerNicknameAlreadyExistsException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

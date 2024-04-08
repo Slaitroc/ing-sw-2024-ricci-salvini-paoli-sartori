@@ -21,8 +21,9 @@ public class Player {
     private ObjectiveCard objectiveCard;
     private final String username;
     private final PlayArea playArea;
-    private final Color pawnColor;
+    private Color pawnColor;
     protected final List<PlayableCard> hand;
+    protected PlayableCard starterCard;
     protected PlayerState inGameState;
     protected int score;
 

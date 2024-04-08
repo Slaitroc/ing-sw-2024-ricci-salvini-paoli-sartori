@@ -12,6 +12,8 @@ module it.polimi.ingsw.gc31 {
 
     exports it.polimi.ingsw.gc31; // Esporta il tuo package principale
     exports it.polimi.ingsw.gc31.rmi;
+    exports it.polimi.ingsw.gc31.controller;
+    exports it.polimi.ingsw.gc31.model.exceptions;
     exports it.polimi.ingsw.gc31.client_server;
 
 }
