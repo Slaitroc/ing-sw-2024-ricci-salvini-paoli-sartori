@@ -5,5 +5,7 @@ import java.rmi.RemoteException;
 
 public interface VirtualServer extends Remote {
 
-    public void clientConnection(VirtualClient client, String nick) throws RemoteException;
+    public boolean clientConnection(VirtualClient client, String nick) throws RemoteException;
+
+    public void printMessageOnServer(String message) throws RemoteException;
 }

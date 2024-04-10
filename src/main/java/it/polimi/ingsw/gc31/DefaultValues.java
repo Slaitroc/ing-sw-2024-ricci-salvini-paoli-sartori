@@ -6,5 +6,6 @@ public class DefaultValues {
     public final static String RMI_SERVER_TAG = "[RMI server] > ";
     public final static String TCP_SERVER_TAG = "[TCP server] > ";
     public final static String TUI_START_LINE_SYMBOL = "> ";
+    public final static String DEFAULT_USERNAME = "New User";
 
 }

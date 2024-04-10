@@ -6,5 +6,5 @@ import java.rmi.RemoteException;
 import it.polimi.ingsw.gc31.client_server.rmi.RMIClient;
 
 public interface VirtualClient extends Remote {
-    public RMIClient setUsername(String nick) throws RemoteException;
+    public RMIClient setUsername() throws RemoteException;
 }

@@ -15,13 +15,20 @@ public class RMIServer implements VirtualServer, Serializable {
         controller = Controller.getController();
     }
 
+    // Se lo username esiste nel Controller allora l'utente non può proseguire.
     @Override
-    public void clientConnection(VirtualClient client, String nick) throws RemoteException {
-        if (Controller.addNickname(nick))
+    public boolean clientConnection(VirtualClient client, String nick) throws RemoteException {
+        if (Controller.addNickname(nick)) {
             System.out.println(DefaultValues.RMI_SERVER_TAG + "New client connected: " + nick);
-        else
+            return true;
+        } else
             System.out.println(DefaultValues.RMI_SERVER_TAG + "Connection Refused: username already exists");
+        return false;
+    }
 
+    @Override
+    public void printMessageOnServer(String message) {
+        System.out.println(message);
     }
 
 }
