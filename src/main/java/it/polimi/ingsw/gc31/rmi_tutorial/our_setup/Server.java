@@ -1,4 +1,4 @@
-package it.rmi30l.our_setup;
+package it.polimi.ingsw.gc31.rmi_tutorial.our_setup;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

@@ -1,11 +1,9 @@
-package it.polimi.ingsw.gc31.rmi_tutorial;
+package it.polimi.ingsw.gc31.rmi_tutorial.basic_setup;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-
-import it.rmi30l.our_setup.RMIserver;
 
 public class Client {
 

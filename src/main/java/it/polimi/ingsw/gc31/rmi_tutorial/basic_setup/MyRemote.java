@@ -1,4 +1,4 @@
-package it.rmi30l.basic_setup;
+package it.polimi.ingsw.gc31.rmi_tutorial.basic_setup;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
