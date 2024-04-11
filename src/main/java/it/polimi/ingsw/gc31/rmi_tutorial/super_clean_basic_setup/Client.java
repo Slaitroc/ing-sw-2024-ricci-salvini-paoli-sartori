@@ -8,7 +8,7 @@ import java.rmi.registry.Registry;
 
 public class Client {
     public static void main(String[] args) throws RemoteException, NotBoundException {
-        Registry registry = LocateRegistry.getRegistry(null);
+        Registry registry = LocateRegistry.getRegistry(null, 1234);
         Remote stub = registry.lookup("Skeleton");
         // stub.{metodi che non ci sono}---> per questo serve l'interfaccia che estende
         // da Remote.

@@ -11,9 +11,13 @@ module it.polimi.ingsw.gc31 {
     opens it.polimi.ingsw.gc31.view to javafx.fxml;
 
     exports it.polimi.ingsw.gc31; // Esporta il tuo package principale
-    exports it.polimi.ingsw.gc31.rmi;
     exports it.polimi.ingsw.gc31.controller;
     exports it.polimi.ingsw.gc31.model.exceptions;
-    exports it.polimi.ingsw.gc31.client_server;
+    exports it.polimi.ingsw.gc31.client_server.interfaces;
+    exports it.polimi.ingsw.gc31.client_server.tcp;
+    exports it.polimi.ingsw.gc31.client_server.rmi;
+    exports it.polimi.ingsw.gc31.rmi_tutorial.basic_setup;
+    exports it.polimi.ingsw.gc31.rmi_tutorial.our_setup;
+    exports it.polimi.ingsw.gc31.rmi_tutorial.super_clean_basic_setup;
 
 }

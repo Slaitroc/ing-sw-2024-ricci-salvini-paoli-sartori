@@ -16,7 +16,8 @@ public class Server implements MyRemote {
     }
 
     @Override
-    public void printMessage(String message) throws RemoteException {
+    public void printMessage(String message, String nick) throws RemoteException {
+        System.out.println(nick);
         System.out.println(message);
     }
 }

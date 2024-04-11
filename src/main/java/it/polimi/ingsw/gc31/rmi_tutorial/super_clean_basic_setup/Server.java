@@ -14,7 +14,6 @@ public class Server implements Remote {
         Registry registry = LocateRegistry.createRegistry(1234);
         registry.rebind("Skeleton", skeleton);
         System.out.println("[RMI-Server]");
-
     }
 
 }

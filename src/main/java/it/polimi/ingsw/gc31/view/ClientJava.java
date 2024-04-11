@@ -1,4 +1,4 @@
-package it.polimi.ingsw.gc31;
+package it.polimi.ingsw.gc31.view;
 
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import io.github.palexdev.materialfx.enums.ButtonType;
-
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
