@@ -5,7 +5,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 import it.polimi.ingsw.gc31.controller.Controller;
-import it.polimi.ingsw.gc31.model.exceptions.PlayerNicknameAlreadyExistsException;
+import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

@@ -9,7 +9,8 @@ import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IMainGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.model.exceptions.PlayerNicknameAlreadyExistsException;
+import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
 //NOTE creazione GameController x la creazione del match
 //il GameController relativo al primo match viene creato subito dopo che il primo player si è loggato? 
@@ -59,10 +60,9 @@ public class Controller extends UnicastRemoteObject implements IController, Seri
     }
 
     @Override
-    public void getGameList(String username) throws RemoteException {
+    public List<String> getGameList() throws RemoteException, NoGamesException {
         if (mgcList.isEmpty()) {
-            tempClients.get(username)
-                    .sendMessage("Non sono presenti game creati. Digita 'crea game' per creare un nuovo game");
+            throw new NoGamesException();
         } else {
             List<String> res = new ArrayList<>();
             for (int i = 0; i < mgcList.size(); i++) {
@@ -71,20 +71,20 @@ public class Controller extends UnicastRemoteObject implements IController, Seri
                                 + mgcList.get(i).getMaxNumberPlayers() + " / "
                                 + mgcList.get(i).getCurrentNumberPlayers());
             }
-            tempClients.get(username).showGameList(res);
+            return res;
         }
     }
 
     @Override
     public IMainGameController createGame(String username, int maxNumberPlayers) throws RemoteException {
-        System.out.println(DefaultValues.RMI_SERVER_TAG + DefaultValues.CONTROLLER_TAG + "Creato game con id: "
+        System.out.println(DefaultValues.RMI_SERVER_TAG + DefaultValues.CONTROLLER_TAG + "New game created with ID: "
                 + (mgcList.size()));
         VirtualClient client = tempClients.get(username);
         mgcList.add(new MainGameController(username, client, maxNumberPlayers, nextID));
+        client.setGameID(mgcList.size() - 1);
         updateNextID();
         // viene rimosso il client da quelli temporanei
         tempClients.remove(username);
-        client.setGameID(mgcList.size() - 1);
         return mgcList.get(mgcList.size() - 1);
     }
 

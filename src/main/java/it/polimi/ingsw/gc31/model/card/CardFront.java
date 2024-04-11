@@ -1,12 +1,9 @@
 package it.polimi.ingsw.gc31.model.card;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
-import it.polimi.ingsw.gc31.model.exceptions.DirImgValueMissingException;
-import it.polimi.ingsw.gc31.model.exceptions.WrongNumberOfCornerException;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
 import it.polimi.ingsw.gc31.utility.DeepCopy;
 
@@ -57,11 +54,11 @@ public class CardFront implements DeepCopy<CardFront> {
     {
         this.score = score;
 
-        //if (resources.size() != 4) throw new WrongNumberOfCornerException();
+        // if (resources.size() != 4) throw new WrongNumberOfCornerException();
         this.resources = listDeepCopy(resources);
         this.requirements = mapDeepCopy(requirements);
 
-        //if (dirImg == null) throw new DirImgValueMissingException();
+        // if (dirImg == null) throw new DirImgValueMissingException();
         this.dirImg = dirImg;
         // TODO implementare depp copy per ob
         this.ob = ob;
@@ -147,7 +144,7 @@ public class CardFront implements DeepCopy<CardFront> {
             jsonObject.add("requirements", null);
         } else {
             JsonObject requirementsObjet = new JsonObject();
-            for (Map.Entry<Resources, Integer> res: this.requirements.entrySet()) {
+            for (Map.Entry<Resources, Integer> res : this.requirements.entrySet()) {
                 requirementsObjet.addProperty(res.getKey().toString(), res.getValue());
             }
             jsonObject.add("requirements", requirementsObjet);
@@ -166,7 +163,6 @@ public class CardFront implements DeepCopy<CardFront> {
                 mapDeepCopy(requirements),
                 new String(dirImg),
                 // TODO non serve la deepCopy di ob, credo
-                ob
-        );
+                ob);
     }
 }

@@ -1,10 +1,10 @@
 package it.polimi.ingsw.gc31.model.player;
 
+import it.polimi.ingsw.gc31.exceptions.FullHandException;
+import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.exceptions.InvalidCardDraw;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
-import it.polimi.ingsw.gc31.model.exceptions.IllegalStateOperationException;
-import it.polimi.ingsw.gc31.model.exceptions.FullHandException;
-import it.polimi.ingsw.gc31.model.exceptions.InvalidCardDraw;
 
 import java.awt.*;
 //import java.util.List;
@@ -21,19 +21,24 @@ public abstract class PlayerState {
     public abstract void play(Point point, Player player) throws IllegalStateOperationException;
 
     public abstract void playStarter(Player player) throws IllegalStateOperationException;
-/*
-    public void drawResource(Player player) throws IllegalStateOperationException;
-
-    public void drawResourceCard1(Player player) throws IllegalStateOperationException;
-
-    public void drawResourceCard2(Player player) throws IllegalStateOperationException;
-
-    public void drawGold(Player player) throws IllegalStateOperationException;
-
-    public void drawGoldCard1(Player player) throws IllegalStateOperationException;
-
-    public void drawGoldCard2(Player player) throws IllegalStateOperationException;*/
-
+    /*
+     * public void drawResource(Player player) throws
+     * IllegalStateOperationException;
+     * 
+     * public void drawResourceCard1(Player player) throws
+     * IllegalStateOperationException;
+     * 
+     * public void drawResourceCard2(Player player) throws
+     * IllegalStateOperationException;
+     * 
+     * public void drawGold(Player player) throws IllegalStateOperationException;
+     * 
+     * public void drawGoldCard1(Player player) throws
+     * IllegalStateOperationException;
+     * 
+     * public void drawGoldCard2(Player player) throws
+     * IllegalStateOperationException;
+     */
 
     // Notice: Intellij gives me a warning if I copy the same code 4 times
     // In this way I can execute the common code writing it here

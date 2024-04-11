@@ -9,6 +9,8 @@ public class DefaultValues {
     public static final String MAINCONTROLLER_TAG = "- [MainController]: ";
 
     public final static String TUI_START_LINE_SYMBOL = "> ";
+    public final static String TUI_TAG = "[TUI] ";
+
     public final static String DEFAULT_USERNAME = "New User";
 
     public static String mainControllerTag(String id) {

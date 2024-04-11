@@ -7,7 +7,8 @@ import it.polimi.ingsw.gc31.client_server.interfaces.IMainGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IPlayerController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
-import it.polimi.ingsw.gc31.model.exceptions.PlayerNicknameAlreadyExistsException;
+import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.view.GUI;
 import it.polimi.ingsw.gc31.view.TUI;
 import it.polimi.ingsw.gc31.view.UI;
@@ -32,11 +33,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient {
         this.idGame = null;
     }
 
-    @Override
-    public void setGameID(int i) throws RemoteException {
-        this.idGame = i;
-    }
-
     private UI setUI() {
         boolean isValid = false;
         String message = "Chose UI:\n\t1 -> TUI\n\t2 -> GUI:";
@@ -57,45 +53,47 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient {
         return UI;
     }
 
+    private IController chooseUsername(VirtualServer server_stub) throws RemoteException {
+        return UI.choose_username(server_stub, this);
+    }
+
+    @Override
+    public void setGameID(int i) throws RemoteException {
+        this.idGame = i;
+    }
+
+    @Override
+    public int getGameID() throws RemoteException {
+        return idGame;
+    }
+
     public void setUsername(String n) throws RemoteException {
         if (username.equals(DefaultValues.DEFAULT_USERNAME))
             username = n;
     }
 
-    private IController chooseUsername(VirtualServer server_stub) throws RemoteException {
-        return UI.choose_username(server_stub, this);
-    }
-
     public void run() throws RemoteException, NotBoundException, PlayerNicknameAlreadyExistsException {
-        runCli();
+        UI.runUI();
+        // runCli();
     }
 
-    private void runCli() throws RemoteException, NotBoundException {
+    @Override
+    public boolean createGame(int maxNumberPlayer) throws RemoteException {
+        mainGameController = controller.createGame(username, maxNumberPlayer);
+        if (mainGameController != null)
+            return true;
+        return false;
 
-        while (true) {
-            System.out.print("> ");
-            String command = OurScanner.scanner.nextLine();
+    }
 
-            if (command.equals("create game")) {
-                System.out.print("Inserisci il numero di giocatori della partita:");
-                int maxNumberPlayer = OurScanner.scanner.nextInt();
-                mainGameController = controller.createGame(username, maxNumberPlayer);
+    @Override
+    public List<String> showGames() throws RemoteException, NoGamesException {
+        return controller.getGameList();
+    }
 
-                System.out.println("Creata partita con id: " + idGame);
-
-                runCliInitGame();
-
-            } else if (command.equals("show games")) {
-                controller.getGameList(username);
-            } else if (command.equals("join game")) {
-                System.out.print("Inserisci l'ID del game a cui vuoi partecipare: ");
-                int idGame = OurScanner.scanner.nextInt();
-
-                mainGameController = controller.joinGame(username, idGame);
-
-                runCliInitGame();
-            }
-        }
+    @Override
+    public void joinGame(int idGame) throws RemoteException {
+        mainGameController = controller.joinGame(username, idGame);
     }
 
     public void runCliInitGame() throws RemoteException {
@@ -127,12 +125,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient {
     public void showHand(List<String> jsonHand) throws RemoteException {
         System.out.println("Le tue carte sono: ");
         jsonHand.stream().forEach(System.out::println);
-    }
-
-    @Override
-    public void showGameList(List<String> gameList) throws RemoteException {
-        System.out.println("Le partite disponibili sono");
-        gameList.stream().forEach(System.out::println);
     }
 
     @Override
