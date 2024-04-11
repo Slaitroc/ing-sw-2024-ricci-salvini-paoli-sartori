@@ -21,11 +21,16 @@ class DeckTest {
     void draw() {
         Deck<PlayableCard> deck1 = new Deck<>(CardType.GOLD);
         Deck<PlayableCard> deck2 = new Deck<>(CardType.RESOURCE);
-        Deck<StarterCard> deck3 = new Deck<>(CardType.STARTER);
+        Deck<PlayableCard> deck3 = new Deck<>(CardType.STARTER);
+        Deck<ObjectiveCard> deck4 = new Deck<>(CardType.OBJECTIVE);
 
         List<PlayableCard> hand = new ArrayList<>();
+
         hand.add(deck1.draw());
-        hand.add(deck2.draw());
+
+        hand.get(0).changeSide();
+
+        System.out.println("ok");
     }
 
     @Test
