@@ -1,4 +1,4 @@
-package it.polimi.ingsw.gc31;
+package it.polimi.ingsw.gc31.view;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
