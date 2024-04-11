@@ -5,6 +5,8 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 public interface VirtualClient extends Remote {
+    public void setUsername(String n) throws RemoteException;
+
     public void setPlayerController(IPlayerController playerController) throws RemoteException;
 
     public void showHand(List<String> jsonHand) throws RemoteException;

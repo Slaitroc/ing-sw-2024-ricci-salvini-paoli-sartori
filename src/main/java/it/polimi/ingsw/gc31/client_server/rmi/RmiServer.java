@@ -41,6 +41,11 @@ public class RmiServer implements VirtualServer {
     // avrà il riferimento)
     // 3. Registrare il nome dello stub in quanto oggetto remoto
 
+    // Note aggiuntive: se voglio passare al client un altro Remote tramite metodo
+    // del Remote che ho bindato sul registry e che il client prende tramite lookup
+    // in Remote che viene restituito deve estendere UnicastRemoteObject, altrimenti
+    // succede un bordello
+
     public RmiServer() throws RemoteException {
         LocateRegistry.createRegistry(1234).rebind("VirtualServer",
                 UnicastRemoteObject.exportObject(this, 0));

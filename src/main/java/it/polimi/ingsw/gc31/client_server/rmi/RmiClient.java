@@ -1,20 +1,21 @@
 package it.polimi.ingsw.gc31.client_server.rmi;
 
 import it.polimi.ingsw.gc31.DefaultValues;
+import it.polimi.ingsw.gc31.OurScanner;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IMainGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IPlayerController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 import it.polimi.ingsw.gc31.model.exceptions.PlayerNicknameAlreadyExistsException;
+import it.polimi.ingsw.gc31.view.GUI;
+import it.polimi.ingsw.gc31.view.TUI;
+import it.polimi.ingsw.gc31.view.UI;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
-import java.util.Scanner;
 
 public class RmiClient extends UnicastRemoteObject implements VirtualClient {
     private IController controller;
@@ -22,10 +23,12 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient {
     private Integer idGame;
     private String username;
     private IPlayerController playerController;
+    private UI UI;
 
     public RmiClient(VirtualServer server_stub) throws RemoteException {
         this.username = DefaultValues.DEFAULT_USERNAME;
-        this.controller = setUsername(server_stub);
+        this.UI = setUI();
+        this.controller = chooseUsername(server_stub);
         this.idGame = null;
     }
 
@@ -34,19 +37,33 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient {
         this.idGame = i;
     }
 
-    private IController setUsername(VirtualServer server_stub) throws RemoteException {
-        Scanner scanner = new Scanner(System.in);
-        String message = "Type your username:";
+    private UI setUI() {
+        boolean isValid = false;
+        String message = "Chose UI:\n\t1 -> TUI\n\t2 -> GUI:";
+
         String input;
-        IController c;
         do {
             System.out.println(message);
-            input = scanner.nextLine();
-            c = server_stub.clientConnection(this, input);
-            message = "Username already exists... \nTry a different username:";
-        } while (c == null);
-        this.username = input;
-        return c;
+            input = OurScanner.scanner.nextLine();
+            if (input.equals("1") || input.equals("2")) {
+                isValid = true;
+            }
+            message = "Invalid input";
+        } while (!isValid);
+        if (input.equals("1"))
+            UI = new TUI(this);
+        else
+            UI = new GUI(this);
+        return UI;
+    }
+
+    public void setUsername(String n) throws RemoteException {
+        if (username.equals(DefaultValues.DEFAULT_USERNAME))
+            username = n;
+    }
+
+    private IController chooseUsername(VirtualServer server_stub) throws RemoteException {
+        return UI.choose_username(server_stub, this);
     }
 
     public void run() throws RemoteException, NotBoundException, PlayerNicknameAlreadyExistsException {
@@ -54,15 +71,14 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient {
     }
 
     private void runCli() throws RemoteException, NotBoundException {
-        Scanner scan = new Scanner(System.in);
 
         while (true) {
             System.out.print("> ");
-            String command = scan.nextLine().toString();
+            String command = OurScanner.scanner.nextLine();
 
             if (command.equals("create game")) {
                 System.out.print("Inserisci il numero di giocatori della partita:");
-                int maxNumberPlayer = scan.nextInt();
+                int maxNumberPlayer = OurScanner.scanner.nextInt();
                 mainGameController = controller.createGame(username, maxNumberPlayer);
 
                 System.out.println("Creata partita con id: " + idGame);
@@ -73,7 +89,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient {
                 controller.getGameList(username);
             } else if (command.equals("join game")) {
                 System.out.print("Inserisci l'ID del game a cui vuoi partecipare: ");
-                int idGame = scan.nextInt();
+                int idGame = OurScanner.scanner.nextInt();
 
                 mainGameController = controller.joinGame(username, idGame);
 
@@ -83,11 +99,10 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient {
     }
 
     public void runCliInitGame() throws RemoteException {
-        Scanner scan = new Scanner(System.in);
 
         while (true) {
             System.out.print("> ");
-            String command = scan.nextLine().toString();
+            String command = OurScanner.scanner.nextLine();
 
             if (command.equals("info")) {
                 if (mainGameController.isGameStarted()) {
