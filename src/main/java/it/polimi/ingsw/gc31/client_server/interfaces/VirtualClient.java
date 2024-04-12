@@ -23,6 +23,10 @@ public interface VirtualClient extends Remote {
 
     public void joinGame(int idGame) throws RemoteException;
 
-    // non usati
-    public void showHand(List<String> jsonHand) throws RemoteException;
+    public boolean ready() throws RemoteException;
+
+    public List<String> showHand() throws RemoteException;
+
+    public void drawGold() throws RemoteException;
+
 }

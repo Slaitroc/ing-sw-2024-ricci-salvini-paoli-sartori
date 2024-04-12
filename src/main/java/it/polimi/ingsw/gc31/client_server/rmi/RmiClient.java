@@ -12,6 +12,7 @@ import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.view.GUI;
 import it.polimi.ingsw.gc31.view.TUI;
 import it.polimi.ingsw.gc31.view.UI;
+import javafx.beans.property.ReadOnlyMapPropertyBase;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -25,6 +26,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient {
     private String username;
     private IPlayerController playerController;
     private UI UI;
+    private boolean ready;
 
     public RmiClient(VirtualServer server_stub) throws RemoteException {
         this.username = DefaultValues.DEFAULT_USERNAME;
@@ -77,6 +79,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient {
         // runCli();
     }
 
+    /* commands */
     @Override
     public boolean createGame(int maxNumberPlayer) throws RemoteException {
         mainGameController = controller.createGame(username, maxNumberPlayer);
@@ -96,35 +99,30 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient {
         mainGameController = controller.joinGame(username, idGame);
     }
 
-    public void runCliInitGame() throws RemoteException {
-
-        while (true) {
-            System.out.print("> ");
-            String command = OurScanner.scanner.nextLine();
-
-            if (command.equals("info")) {
-                if (mainGameController.isGameStarted()) {
-                    System.out.println("Il gioco è iniziato");
-                } else {
-                    System.out.println("Il gioco non è ancora iniziato");
-                }
-            } else if (command.equals("mostra mano")) {
-                playerController.getHand();
-            } else if (command.equals("draw gold")) {
-                playerController.drawGold();
-            }
-        }
+    @Override
+    public boolean ready() throws RemoteException {
+        this.ready = !this.ready;
+        return this.ready;
+        // TODO qui bisognerebbe far partire un check sul game controller per verificare
+        // se anche gli altri player sono pronti e in caso avviare il modello
     }
+
+    /* game commands */
+    @Override
+    public List<String> showHand() throws RemoteException {
+        return playerController.getHand();
+    }
+
+    @Override
+    public void drawGold() throws RemoteException {
+        playerController.drawGold();
+    }
+
+    /* altra roba */
 
     @Override
     public void setPlayerController(IPlayerController playerController) throws RemoteException {
         this.playerController = playerController;
-    }
-
-    @Override
-    public void showHand(List<String> jsonHand) throws RemoteException {
-        System.out.println("Le tue carte sono: ");
-        jsonHand.stream().forEach(System.out::println);
     }
 
     @Override

@@ -14,12 +14,19 @@ import java.util.Map;
 
 public class TUI extends UI {
 
+    private boolean inGame = false;
+
     private Map<String, Runnable> commandsMap;
+    private Map<String, Runnable> gameCommandsMap;
     private Map<String, String> commandsInfo;
+    private Map<String, String> gameCommandsInfo;
 
     public TUI(VirtualClient client) {
         commandsMap = new HashMap<>();
         commandsInfo = new HashMap<>();
+        gameCommandsMap = new HashMap<>();
+        gameCommandsInfo = new HashMap<>();
+
         this.client = client;
         initializeCommands();
         initializeCommandsInfo();
@@ -33,15 +40,29 @@ public class TUI extends UI {
         commandsInfo.put("create game", "Create a new game");
         commandsInfo.put("show games", "Shows all the active games");
         commandsInfo.put("join game", "Join an existing game");
+        commandsInfo.put("ready", "Game chosen and your ready to play");
+
+        gameCommandsInfo.put("show hand", "Shows your cards");
+        gameCommandsInfo.put("draw gold", "Draw a gold card");
+
     }
 
     private void initializeCommands() {
         commandsMap.put(("create game").toLowerCase(), this::command_createGame);
         commandsMap.put("show games", this::command_showGames);
         commandsMap.put("join game", this::command_joinGame);
+        commandsMap.put("ready", this::command_ready);
+
+        // FIX
+        commandsMap.put("show hand", this::command_showHand);
+        commandsMap.put("draw gold", this::command_drawGold);
+
+        gameCommandsMap.put("show hand", this::command_showHand);
+        gameCommandsMap.put("draw gold", this::command_drawGold);
 
     }
 
+    /* commands */
     private void command_createGame() {
         tuiWrite("Type the number of players for the game:");
         int input = Integer.parseInt(OurScanner.scanner.nextLine());
@@ -74,7 +95,7 @@ public class TUI extends UI {
         }
     }
 
-    public void command_joinGame() {
+    private void command_joinGame() {
         tuiWrite("Type gameID:");
         int input = Integer.parseInt(OurScanner.scanner.nextLine());
         try {
@@ -85,8 +106,48 @@ public class TUI extends UI {
         }
     }
 
+    private void command_ready() {
+        boolean ready = false;
+        try {
+            ready = client.ready();
+            if (ready)
+                tuiWrite("U are ready to play!");
+            else
+                tuiWrite("U are not ready :`(");
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /* game commands */
+    private void command_showHand() {
+        List<String> list;
+        try {
+            list = client.showHand();
+            tuiWrite(">>Your Cards<<");
+            list.stream().forEach(System.out::println);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void command_drawGold() {
+        try {
+            client.drawGold();
+            tuiWrite("Gold card Pescata");
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // UI
     public void inputUpdate(String input) {
-        Runnable command = commandsMap.get(input);
+        Runnable command;
+        if (inGame) {
+            command = gameCommandsMap.get(input);
+        } else
+            command = commandsMap.get(input);
         if (command != null)
             command.run();
         else
@@ -105,19 +166,24 @@ public class TUI extends UI {
         String line = DefaultValues.TUI_START_LINE_SYMBOL;
         String input;
         do {
-
             do {
                 System.out.print(line);
                 input = OurScanner.scanner.nextLine();
             } while (input.isEmpty());
             inputUpdate(input);
         } while (!input.equals("quit"));
+
     }
 
     @Override
     protected void uiOptions() {
         tuiWrite(">>Commands List<< ");
-        for (Map.Entry<String, String> entry : commandsInfo.entrySet()) {
+        Map<String, String> commands;
+        if (!inGame)
+            commands = commandsInfo;
+        else
+            commands = gameCommandsInfo;
+        for (Map.Entry<String, String> entry : commands.entrySet()) {
             System.out.println(entry.getKey() + "\t : \t" + entry.getValue());
         }
     }

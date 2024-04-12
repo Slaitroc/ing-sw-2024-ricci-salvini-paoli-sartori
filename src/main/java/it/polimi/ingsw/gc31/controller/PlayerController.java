@@ -29,14 +29,13 @@ public class PlayerController extends UnicastRemoteObject implements IPlayerCont
     }
 
     @Override
-    public void getHand() throws RemoteException {
+    public List<String> getHand() throws RemoteException {
         List<PlayableCard> hand = player.getHand();
         List<String> res = new ArrayList<>();
         for (PlayableCard card : hand) {
             res.add(gson.toJson(card, PlayableCard.class));
         }
-
-        client.showHand(res);
+        return res;
     }
 
     @Override
