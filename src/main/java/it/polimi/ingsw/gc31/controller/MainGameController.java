@@ -53,8 +53,9 @@ public class MainGameController extends UnicastRemoteObject implements IMainGame
             entry.getValue().setPlayerController(players.get(entry.getKey()));
         }
 
-        System.out.println(DefaultValues.RMI_SERVER_TAG + DefaultValues.MAINCONTROLLER_TAG + "Game started! Players: "
-                + players.keySet().stream().toList());
+        System.out.println(
+                DefaultValues.RMI_SERVER_TAG + DefaultValues.mainControllerTag(gameID) + "Game started! Players: "
+                        + players.keySet().stream().toList());
         System.out.println("Distributing cards...");
         gameController.dealCard();
 
