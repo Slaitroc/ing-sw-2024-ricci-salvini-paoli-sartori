@@ -1,11 +1,10 @@
 package it.polimi.ingsw.gc31.tcp;
 
+import it.polimi.ingsw.gc31.OurScanner;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
-import java.util.Scanner;
-
 public class SocketClient {
     final BufferedReader input;
     final VirtualSocketServer server;
@@ -29,16 +28,15 @@ public class SocketClient {
             }
         }).start();
 
-        runCli();
+        //runCli();
     }
 
     // TODO Dovrebbe servire per leggere i messaggi in arrivo dal server e richiamare i rispettivi metodi
     //  serve anche per stampare a video i messaggi che il server semplicemente invia al client
     private void runVirtualServer() throws IOException{
-        Scanner scan = new Scanner(input);
         String line;
         while(true) {
-            line = scan.nextLine();
+            line = OurScanner.scanner.nextLine();
             //while ((line = scan.nextLine()) != null) {
                 switch (line) {
                     //case "" -> System.out.println("Message");
@@ -48,7 +46,8 @@ public class SocketClient {
         }
     }
 
-    private void runCli() throws RemoteException{
+    /*
+    private void runCli(){
         String line;
 
         System.out.print("[ SERVER ] Inserisci username: ");
@@ -113,6 +112,7 @@ public class SocketClient {
             }
         }
     }
+    */
 
     public static void main(String[] args) throws IOException{
         //TODO Verificare valori opportuni di host/port per il corretto funzionamento finale

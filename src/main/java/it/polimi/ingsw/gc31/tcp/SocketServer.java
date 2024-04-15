@@ -49,28 +49,16 @@ public class SocketServer {
                     Controller.getController(), this,
                     new BufferedReader(socketRx), new PrintWriter(socketTx), progressiveIdGame);
 
-            new Thread(() -> {
+            /*new Thread(() -> {
                 try {
                     handler.runVirtualView();
                 } catch (IOException | PlayerNicknameAlreadyExistsException e) {
                     throw new RuntimeException(e);
                 }
-            }).start();
+            }).start();*/
         }
 
     }
-
-    /*
-     * // Chiamata dal client come prima cosa appena creato. Così lo posso
-     * aggiungere alla mappa e lista
-     * public void connect(SocketClientHandler client, String username){
-     * usernameList.add(username);
-     * tempClients.put(username, client);
-     * 
-     * System.out.println("> Nuovo Client ( " + username +
-     * " ) collegato correttamente");
-     * }
-     */
 
     // public void broadcastUpdate(){}
 
