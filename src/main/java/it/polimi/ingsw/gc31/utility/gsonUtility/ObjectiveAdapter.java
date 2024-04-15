@@ -6,12 +6,11 @@ import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.strategies.*;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ObjectiveAdapter implements JsonDeserializer<Objective> {
     @Override
-    public Objective deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public Objective deserialize(JsonElement jsonElement, Type type,
+            JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         String typeOb = jsonObject.get("type").getAsString();
 
@@ -19,11 +18,10 @@ public class ObjectiveAdapter implements JsonDeserializer<Objective> {
 
         // TODO cambiare switch?
         // Dovrebbe essere una specie di factory method
-        switch(typeOb) {
+        switch (typeOb) {
             case "COUNT":
                 ob = new Count(
-                        jsonDeserializationContext.deserialize(jsonObject.get("resources"), Resources.class)
-                );
+                        jsonDeserializationContext.deserialize(jsonObject.get("resources"), Resources.class));
                 break;
             case "COVERCORNERSCORE":
                 ob = new CoverCornerScore();
@@ -31,43 +29,37 @@ public class ObjectiveAdapter implements JsonDeserializer<Objective> {
             case "LSHAPE":
                 ob = new LShape(
                         Color.valueOf(jsonObject.get("color1").getAsString()),
-                        Color.valueOf(jsonObject.get("color2").getAsString())
-                );
+                        Color.valueOf(jsonObject.get("color2").getAsString()));
                 break;
             case "LSHAPEREVERSE":
                 ob = new LShapeReverse(
                         Color.valueOf(jsonObject.get("color1").getAsString()),
-                        Color.valueOf(jsonObject.get("color2").getAsString())
-                );
+                        Color.valueOf(jsonObject.get("color2").getAsString()));
                 break;
             case "RESOURCESCORE":
                 ob = new ResourceScore(
-                      Resources.valueOf(jsonObject.get("resources").getAsString())
-                );
+                        Resources.valueOf(jsonObject.get("resources").getAsString()));
                 break;
             case "SEVEN":
                 ob = new Seven(
                         Color.valueOf(jsonObject.get("color1").getAsString()),
-                        Color.valueOf(jsonObject.get("color2").getAsString())
-                );
+                        Color.valueOf(jsonObject.get("color2").getAsString()));
                 break;
             case "SEVENREVERSE":
                 ob = new SevenReverse(
                         Color.valueOf(jsonObject.get("color1").getAsString()),
-                        Color.valueOf(jsonObject.get("color2").getAsString())
-                );
+                        Color.valueOf(jsonObject.get("color2").getAsString()));
                 break;
             case "STAIRDOWN":
                 ob = new StairDown(
-                        Color.valueOf(jsonObject.get("color1").getAsString())
-                );
+                        Color.valueOf(jsonObject.get("color1").getAsString()));
                 break;
             case "STAIRUP":
                 ob = new StairUp(
-                        Color.valueOf(jsonObject.get("color1").getAsString())
-                );
+                        Color.valueOf(jsonObject.get("color1").getAsString()));
                 break;
-            default: ob = null;
+            default:
+                ob = null;
         }
         return ob;
     }

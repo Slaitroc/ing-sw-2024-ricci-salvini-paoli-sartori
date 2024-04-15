@@ -1,6 +1,5 @@
 package it.polimi.ingsw.gc31.controller;
 
-import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
@@ -18,7 +17,7 @@ import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
 // gestisce l'interazione con i client
 
-public class Controller extends UnicastRemoteObject implements IController, Serializable {
+public class Controller extends UnicastRemoteObject implements IController {
     private static final Controller singleton;
 
     static {
