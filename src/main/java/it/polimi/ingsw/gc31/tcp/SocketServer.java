@@ -49,13 +49,13 @@ public class SocketServer {
                     Controller.getController(), this,
                     new BufferedReader(socketRx), new PrintWriter(socketTx), progressiveIdGame);
 
-            new Thread(() -> {
-                try {
-                    handler.runVirtualView();
-                } catch (IOException | PlayerNicknameAlreadyExistsException e) {
-                    throw new RuntimeException(e);
-                }
-            }).start();
+//            new Thread(() -> {
+//                try {
+//                    handler.runVirtualView();
+//                } catch (IOException | PlayerNicknameAlreadyExistsException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }).start();
         }
 
     }

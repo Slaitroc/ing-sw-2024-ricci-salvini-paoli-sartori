@@ -75,4 +75,14 @@ public class TCPClient implements VirtualClient {
         throw new UnsupportedOperationException("Unimplemented method 'drawGold'");
     }
 
+    @Override
+    public boolean isReady() throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public void startGame() throws RemoteException {
+
+    }
+
 }

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
-import it.polimi.ingsw.gc31.client_server.VirtualClient;
-import it.polimi.ingsw.gc31.client_server.VirtualServer;
+import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 import java.rmi.RemoteException;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
