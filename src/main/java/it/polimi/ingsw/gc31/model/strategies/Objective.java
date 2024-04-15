@@ -5,7 +5,6 @@ import java.util.Map;
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
-import it.polimi.ingsw.gc31.utility.DeepCopy;
 
 /**
  * This Class represents the generic Objective of the Card

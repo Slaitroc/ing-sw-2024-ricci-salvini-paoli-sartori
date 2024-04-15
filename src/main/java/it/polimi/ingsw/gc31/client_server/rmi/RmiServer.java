@@ -5,7 +5,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 import it.polimi.ingsw.gc31.controller.Controller;
-import it.polimi.ingsw.gc31.model.exceptions.PlayerNicknameAlreadyExistsException;
+import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -40,6 +40,11 @@ public class RmiServer implements VirtualServer {
     // client
     // avrà il riferimento)
     // 3. Registrare il nome dello stub in quanto oggetto remoto
+
+    // Note aggiuntive: se voglio passare al client un altro Remote tramite metodo
+    // del Remote che ho bindato sul registry e che il client prende tramite lookup
+    // in Remote che viene restituito deve estendere UnicastRemoteObject, altrimenti
+    // succede un bordello
 
     public RmiServer() throws RemoteException {
         LocateRegistry.createRegistry(1234).rebind("VirtualServer",

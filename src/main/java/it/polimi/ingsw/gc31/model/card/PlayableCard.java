@@ -27,8 +27,8 @@ public abstract class PlayableCard implements Card {
     protected final CardBack back;
     /**
      * Side is a boolean parameter that represents which side of the card is active:
-     * side = false -> back is active
-     * side = true -> front is active
+     * side = false → back is active
+     * side = true → front is active
      */
     protected boolean side;
     /**
@@ -56,8 +56,9 @@ public abstract class PlayableCard implements Card {
     }
 
     /**
-     * @param corner
-     * @return
+     * @param corner is the index (0 to 3) of the 4 corners of the card (central
+     *               resources included from number 4 to 7)
+     * @return False only if the checked corner is HIDDEN, True else
      */
     public boolean checkCorner(int corner) {
         if (side)
@@ -109,7 +110,8 @@ public abstract class PlayableCard implements Card {
     public int getScore() {
         if (side)
             return front.getScore();
-        else return 0;
+        else
+            return 0;
     }
 
     @Override

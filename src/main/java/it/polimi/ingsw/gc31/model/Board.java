@@ -1,13 +1,11 @@
 package it.polimi.ingsw.gc31.model;
 
-import it.polimi.ingsw.gc31.model.card.Card;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
-import it.polimi.ingsw.gc31.utility.DeepCopy;
 
-public class Board implements Cloneable, DeepCopy<Board> {
+public class Board implements Cloneable/* , DeepCopy<Board> */ {
 
     private Deck<PlayableCard> goldDeck;
     private Deck<PlayableCard> resourceDeck;
@@ -37,14 +35,14 @@ public class Board implements Cloneable, DeepCopy<Board> {
         return objectiveDeck;
     }
 
-    @Override
-    public Board deepCopy() {
-        Board clone = new Board();
-        clone.goldDeck = this.goldDeck.deepCopy();
-        clone.resourceDeck = this.resourceDeck.deepCopy();
-        clone.starterDeck = this.starterDeck.deepCopy();
-        clone.objectiveDeck = this.objectiveDeck.deepCopy();
-        return null;
-    }
+    // @Override
+    // public Board deepCopy() {
+    // Board clone = new Board();
+    // clone.goldDeck = this.goldDeck.deepCopy();
+    // clone.resourceDeck = this.resourceDeck.deepCopy();
+    // clone.starterDeck = this.starterDeck.deepCopy();
+    // clone.objectiveDeck = this.objectiveDeck.deepCopy();
+    // return null;
+    // }
 
 }

@@ -8,7 +8,8 @@ import java.lang.reflect.Type;
 
 public class ObjectiveCardAdapter implements JsonDeserializer<ObjectiveCard> {
     @Override
-    public ObjectiveCard deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public ObjectiveCard deserialize(JsonElement jsonElement, Type type,
+            JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
 
         int score = jsonObject.get("score").getAsInt();

@@ -1,8 +1,8 @@
 package it.polimi.ingsw.gc31.model.player;
 
+import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
-import it.polimi.ingsw.gc31.model.exceptions.IllegalStateOperationException;
 
 import java.awt.*;
 

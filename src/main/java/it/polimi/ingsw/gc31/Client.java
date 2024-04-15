@@ -6,7 +6,7 @@ import java.rmi.NotBoundException;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 import it.polimi.ingsw.gc31.client_server.rmi.RmiClient;
-import it.polimi.ingsw.gc31.model.exceptions.PlayerNicknameAlreadyExistsException;
+import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
 public class Client {
     private static VirtualServer virtualServer_stub;

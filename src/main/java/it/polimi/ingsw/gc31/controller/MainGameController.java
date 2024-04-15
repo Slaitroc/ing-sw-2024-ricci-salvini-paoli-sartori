@@ -11,13 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainGameController extends UnicastRemoteObject implements IMainGameController {
+
     private boolean isStarted;
-
-    @Override
-    public boolean isGameStarted() {
-        return isStarted;
-    }
-
     private final GameController gameController;
     private final Map<String, VirtualClient> clients;
     private final Map<String, PlayerController> players;
@@ -53,8 +48,9 @@ public class MainGameController extends UnicastRemoteObject implements IMainGame
             entry.getValue().setPlayerController(players.get(entry.getKey()));
         }
 
-        System.out.println(DefaultValues.RMI_SERVER_TAG + DefaultValues.MAINCONTROLLER_TAG + "Game started! Players: "
-                + players.keySet().stream().toList());
+        System.out.println(
+                DefaultValues.RMI_SERVER_TAG + DefaultValues.mainControllerTag(gameID) + "Game started! Players: "
+                        + players.keySet().stream().toList());
         System.out.println("Distributing cards...");
         gameController.dealCard();
 
@@ -68,9 +64,9 @@ public class MainGameController extends UnicastRemoteObject implements IMainGame
                         + username);
         clients.put(username, client);
 
-        if (maxNumberPlayers == this.getCurrentNumberPlayers()) {
-            this.initGame();
-        }
+        // if (maxNumberPlayers == this.getCurrentNumberPlayers()) {
+        // this.initGame();
+        // }
     }
 
     public int getMaxNumberPlayers() {
@@ -79,5 +75,31 @@ public class MainGameController extends UnicastRemoteObject implements IMainGame
 
     public int getCurrentNumberPlayers() {
         return clients.size();
+    }
+
+    @Override
+    public boolean isGameStarted() {
+        return isStarted;
+    }
+
+    @Override
+    public boolean checkReady() throws RemoteException {
+        int ready = 0;
+        for (VirtualClient client : clients.values()) {
+            if (client.isReady())
+                ready++;
+        }
+        if (ready == maxNumberPlayers) {
+            this.initGame();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void startGame() throws RemoteException {
+        for (VirtualClient client : clients.values()) {
+            client.startGame();
+        }
     }
 }

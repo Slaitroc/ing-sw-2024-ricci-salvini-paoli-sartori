@@ -20,7 +20,7 @@ public class Player {
     private ObjectiveCard objectiveCard;
     private final String username;
     private final PlayArea playArea;
-    private PawnColor pawnCardColor;
+    private PawnColor pawnColor;
     protected final List<PlayableCard> hand;
     protected PlayableCard starterCard;
     protected PlayerState inGameState;
@@ -32,7 +32,7 @@ public class Player {
         this.username = username;
         this.playArea = new PlayArea();
         this.inGameState = new Start();
-        this.pawnCardColor = pawnColor;
+        this.pawnColor = pawnColor;
         hand = new ArrayList<>();
         setStarterCard();
         score = 0;

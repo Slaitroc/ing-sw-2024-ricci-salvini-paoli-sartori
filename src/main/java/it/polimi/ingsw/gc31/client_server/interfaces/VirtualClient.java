@@ -4,14 +4,34 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
+import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import javafx.beans.property.ReadOnlyMapPropertyBase;
+
 public interface VirtualClient extends Remote {
+    public void setUsername(String n) throws RemoteException;
+
     public void setPlayerController(IPlayerController playerController) throws RemoteException;
-
-    public void showHand(List<String> jsonHand) throws RemoteException;
-
-    public void showGameList(List<String> gameList) throws RemoteException;
 
     public void sendMessage(String details) throws RemoteException;
 
     public void setGameID(int i) throws RemoteException;
+
+    public int getGameID() throws RemoteException;
+
+    public boolean createGame(int i) throws RemoteException;
+
+    public List<String> showGames() throws RemoteException, NoGamesException;
+
+    public void joinGame(int idGame) throws RemoteException;
+
+    public boolean ready() throws RemoteException;
+
+    public List<String> showHand() throws RemoteException;
+
+    public void drawGold() throws RemoteException;
+
+    public boolean isReady() throws RemoteException;
+
+    public void startGame() throws RemoteException;
+
 }

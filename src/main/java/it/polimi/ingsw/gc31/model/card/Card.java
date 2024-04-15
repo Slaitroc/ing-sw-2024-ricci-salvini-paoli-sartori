@@ -3,8 +3,6 @@ package it.polimi.ingsw.gc31.model.card;
 import com.google.gson.JsonObject;
 
 import it.polimi.ingsw.gc31.model.strategies.Objective;
-import it.polimi.ingsw.gc31.utility.DeepCopy;
-
 
 /**
  * This is an abstract class that represents a generic Card.
@@ -16,13 +14,20 @@ import it.polimi.ingsw.gc31.utility.DeepCopy;
  *
  * @author Christian Salvini
  */
-public interface Card{
+public interface Card {
     public boolean getSide();
+
     public void changeSide();
+
     public String getImage();
+
     public int getScore();
+
     abstract public Objective getObjective();
+
     abstract public Card deepCopy();
+
     public JsonObject frontSerializeToJson();
+
     public JsonObject backSerializeToJson();
 }

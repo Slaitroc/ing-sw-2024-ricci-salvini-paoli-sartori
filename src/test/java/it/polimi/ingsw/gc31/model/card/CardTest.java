@@ -3,13 +3,6 @@ package it.polimi.ingsw.gc31.model.card;
 import it.polimi.ingsw.gc31.model.Board;
 import org.junit.jupiter.api.Test;
 
-import it.polimi.ingsw.gc31.model.deck.Deck;
-import it.polimi.ingsw.gc31.model.enumeration.CardType;
-import it.polimi.ingsw.gc31.model.enumeration.Resources;
-import it.polimi.ingsw.gc31.model.strategies.Objective;
-
-import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class CardTest {
