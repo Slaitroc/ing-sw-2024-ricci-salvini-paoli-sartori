@@ -2,11 +2,12 @@ package it.polimi.ingsw.gc31.model.deck;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+
+import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
-import it.polimi.ingsw.gc31.utility.DeepCopy;
 import it.polimi.ingsw.gc31.utility.gsonUtility.*;
 
 import java.io.FileNotFoundException;
@@ -15,21 +16,11 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
 
-public class Deck<T extends Card> implements DeepCopy<Deck<T>> {
+public class Deck<T extends Card> /* implements DeepCopy<Deck<T>> */ {
     // TODO cambiare implementazione con queue
     private Queue<T> deck;
     private T card1;
     private T card2;
-    // TODO forse da mettere statiche da qualche altra parte
-    private final String dirJsonGoldCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/GoldCard.json";
-    private final String dirJsonResourceCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/ResourceCard.json";
-    private final String dirJsonStarterCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/StarterCard.json";
-    private final String dirJsonObjectiveCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/ObjectiveCard.json";
-
-    private Deck() {
-        deck = new ArrayDeque<>();
-
-    }
 
     public Deck(CardType cardType) {
         List<T> tempDeck = new ArrayList<>();
@@ -41,19 +32,19 @@ public class Deck<T extends Card> implements DeepCopy<Deck<T>> {
         try {
             switch (cardType) {
                 case GOLD:
-                    fileReader = new FileReader(dirJsonGoldCard);
+                    fileReader = new FileReader(DefaultValues.DIRJsonGoldCard);
                     type = GoldCard.class;
                     break;
                 case RESOURCE:
-                    fileReader = new FileReader(dirJsonResourceCard);
+                    fileReader = new FileReader(DefaultValues.DIRJsonResourceCard);
                     type = ResourceCard.class;
                     break;
                 case STARTER:
-                    fileReader = new FileReader(dirJsonStarterCard);
+                    fileReader = new FileReader(DefaultValues.DIRJsonStarterCard);
                     type = StarterCard.class;
                     break;
                 case OBJECTIVE:
-                    fileReader = new FileReader(dirJsonObjectiveCard);
+                    fileReader = new FileReader(DefaultValues.DIRJsonObjectiveCard);
                     type = ObjectiveCard.class;
                     break;
                 default:
@@ -93,7 +84,7 @@ public class Deck<T extends Card> implements DeepCopy<Deck<T>> {
                     }
                 }
 
-                //TODO, tradurre: Mischio le carte
+                // TODO, tradurre: Mischio le carte
                 Collections.shuffle(tempDeck);
                 for (T card : tempDeck) {
                     deck.add(card);
@@ -145,19 +136,21 @@ public class Deck<T extends Card> implements DeepCopy<Deck<T>> {
         this.card2.changeSide();
     }
 
-    @Override
-    public Deck<T> deepCopy() {
-        Deck<T> clone = new Deck<>();
-        for (T card : this.deck) {
-            clone.deck.add(card);
-        }
-        // Cast a (T) controllato perchè T è sottoclasse di deck
-        clone.card1 = (T) this.card1.deepCopy(); // TODO chiedi a cri una deep copy di card utilizzando i suoi metodi di deepcopy
-        clone.card2 = (T) this.card2.deepCopy();
-        return clone;
-    }
+    // @Override
+    // public Deck<T> deepCopy() {
+    // Deck<T> clone = new Deck<>();
+    // for (T card : this.deck) {
+    // clone.deck.add(card);
+    // }
+    // // Cast a (T) controllato perchè T è sottoclasse di deck
+    // clone.card1 = (T) this.card1.deepCopy(); // TODO chiedi a cri una deep copy
+    // di card utilizzando i suoi metodi di
+    // // deepcopy
+    // clone.card2 = (T) this.card2.deepCopy();
+    // return clone;
+    // }
 
-    public Queue<T> getQueue() { // FIX
-        return deck;
-    }
+    // public Queue<T> getQueue() { // FIX
+    // return deck;
+    // }
 }

@@ -176,7 +176,7 @@ public class TUI extends UI {
     }
 
     @Override
-    protected void uiOptions() {
+    protected void uiShow_Options() {
         tuiWrite(">>Commands List<< ");
         Map<String, String> commands;
         if (!inGame)
@@ -189,7 +189,7 @@ public class TUI extends UI {
     }
 
     @Override
-    protected void uiNicknames() {
+    protected void uiShow_Nicknames() {
         tuiWrite("Username -> ");
 
     }

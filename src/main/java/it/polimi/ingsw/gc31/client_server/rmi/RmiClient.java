@@ -12,7 +12,6 @@ import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.view.GUI;
 import it.polimi.ingsw.gc31.view.TUI;
 import it.polimi.ingsw.gc31.view.UI;
-import javafx.beans.property.ReadOnlyMapPropertyBase;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -31,7 +30,8 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient {
     public RmiClient(VirtualServer server_stub) throws RemoteException {
         this.username = DefaultValues.DEFAULT_USERNAME;
         this.UI = setUI();
-        this.controller = chooseUsername(server_stub);
+        this.controller = UI.choose_username(server_stub, this);
+        ;
         this.idGame = null;
     }
 
@@ -53,10 +53,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient {
         else
             UI = new GUI(this);
         return UI;
-    }
-
-    private IController chooseUsername(VirtualServer server_stub) throws RemoteException {
-        return UI.choose_username(server_stub, this);
     }
 
     @Override

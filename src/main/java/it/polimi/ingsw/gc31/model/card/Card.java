@@ -3,8 +3,6 @@ package it.polimi.ingsw.gc31.model.card;
 import com.google.gson.JsonObject;
 
 import it.polimi.ingsw.gc31.model.strategies.Objective;
-import it.polimi.ingsw.gc31.utility.DeepCopy;
-
 
 /**
  * This is an abstract class that represents a generic Card.
@@ -16,7 +14,7 @@ import it.polimi.ingsw.gc31.utility.DeepCopy;
  *
  * @author Christian Salvini
  */
-public abstract class Card{
+public abstract class Card {
     /**
      * The front side of a Card
      */
@@ -66,24 +64,31 @@ public abstract class Card{
         else
             return back.getImage();
     }
+
     /**
-     * @return the score obtained with the placement of the card. If back is active, always return 0.
+     * @return the score obtained with the placement of the card. If back is active,
+     *         always return 0.
      */
     public int getScore() {
         if (side)
             return front.getScore();
-        else return 0;
+        else
+            return 0;
     }
 
     /**
-     * @return return the {@link Objective} of a card that must be verified to obtain
-     * the score.
+     * @return return the {@link Objective} of a card that must be verified to
+     *         obtain
+     *         the score.
      */
     abstract public Objective getObjective();
+
     abstract public Card deepCopy();
+
     public JsonObject frontSerializeToJson() {
         return front.serializeToJson();
     }
+
     public JsonObject backSerializeToJson() {
         return back.serializeToJson();
     }

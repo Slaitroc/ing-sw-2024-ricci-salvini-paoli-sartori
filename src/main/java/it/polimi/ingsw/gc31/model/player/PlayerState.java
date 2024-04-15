@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.model.player;
 
+import it.polimi.ingsw.gc31.OurScanner;
 import it.polimi.ingsw.gc31.exceptions.FullHandException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.InvalidCardDraw;
@@ -8,7 +9,6 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 
 import java.awt.*;
 //import java.util.List;
-import java.util.Scanner;
 
 public abstract class PlayerState {
     public abstract void addObjectiveCard(ObjectiveCard card, Player player) throws IllegalStateOperationException;
@@ -43,13 +43,12 @@ public abstract class PlayerState {
     // Notice: Intellij gives me a warning if I copy the same code 4 times
     // In this way I can execute the common code writing it here
     public void executeMoveCardInHand(Player player) {
-        Scanner myScanner = new Scanner(System.in);
         System.out.println("Insert position of the first card [1-3]: ");
-        int cardPosition1 = myScanner.nextInt();
+        int cardPosition1 = OurScanner.scanner.nextInt();
         PlayableCard card1 = player.hand.get(cardPosition1);
 
         System.out.println("Insert position of the second card [1-3]: ");
-        int cardPosition2 = myScanner.nextInt();
+        int cardPosition2 = OurScanner.scanner.nextInt();
         PlayableCard card2 = player.hand.get(cardPosition2);
 
         player.hand.set(cardPosition1, card2);
