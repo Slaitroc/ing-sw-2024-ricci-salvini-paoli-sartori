@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.model.card;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
 
 public class ObjectiveCard implements Card {

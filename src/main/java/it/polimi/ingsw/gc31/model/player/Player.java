@@ -69,6 +69,7 @@ public class Player {
      * Methods to call when drawing a card. There are going to be 6 buttons in the
      * GUI
      * and each one is going to call one of those methods.
+     * They call the private method addToHand that calls addToHand of PlayerState
      */
     public void drawGold() {
         addToHand(board.getDeckGold().draw(), true);
