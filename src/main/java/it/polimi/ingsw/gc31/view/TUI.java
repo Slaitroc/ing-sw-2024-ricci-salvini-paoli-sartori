@@ -16,6 +16,7 @@ public class TUI extends UI {
 
     private Thread thread;
     private boolean quitRun = false;
+    private boolean ready = false;
 
     @Override
     public void setQuitRun(boolean quitRun) throws RemoteException {
@@ -121,13 +122,15 @@ public class TUI extends UI {
     }
 
     private void command_ready() {
-        boolean ready = false;
+        if (!ready) {
+            ready = !ready;
+            tuiWrite("U are ready to play!");
+        } else {
+            tuiWrite("U are not ready :`(");
+            ready = !ready;
+        }
         try {
-            ready = client.ready();
-            if (ready)
-                tuiWrite("U are ready to play!");
-            else
-                tuiWrite("U are not ready :`(");
+            client.ready();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -159,16 +162,19 @@ public class TUI extends UI {
     public boolean inputUpdate(String input) {
         Runnable command;
         boolean ret = true;
-        if (inGame) {
-            command = gameCommandsMap.get(input);
-        } else
-            command = commandsMap.get(input);
+        if (!input.equals("quit")) {
 
-        if (command != null) {
-            command.run();
-        }
-        if (command == null) {
-            tuiWrite("Invalid command");
+            if (inGame) {
+                command = gameCommandsMap.get(input);
+            } else
+                command = commandsMap.get(input);
+
+            if (command != null) {
+                command.run();
+            }
+            if (command == null) {
+                tuiWrite("Invalid command");
+            }
         }
         return ret;
 
