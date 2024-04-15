@@ -10,6 +10,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 //gli omonimi senza prefisso ui sono quelli da chiamare nei client
 public abstract class UI {
     protected VirtualClient client;
+    protected boolean inGame;
 
     // questo metodo viene chiamato nel costruttore delle concretizzazioni di
     // VirtualCLient.
@@ -47,4 +48,9 @@ public abstract class UI {
         update();
     }
 
+    public abstract boolean isInGame() throws RemoteException;
+
+    public abstract void setInGame(boolean inGame) throws RemoteException;
+
+    public abstract void setQuitRun(boolean bool) throws RemoteException;
 }

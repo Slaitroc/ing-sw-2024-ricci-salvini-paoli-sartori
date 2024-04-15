@@ -25,7 +25,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient {
     private String username;
     private IPlayerController playerController;
     private UI UI;
-    private boolean ready;
+    private boolean ready = false;
 
     public RmiClient(VirtualServer server_stub) throws RemoteException {
         this.username = DefaultValues.DEFAULT_USERNAME;
@@ -98,9 +98,22 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient {
     @Override
     public boolean ready() throws RemoteException {
         this.ready = !this.ready;
+        if (mainGameController.checkReady()) {
+            mainGameController.startGame();
+        }
         return this.ready;
-        // TODO qui bisognerebbe far partire un check sul game controller per verificare
-        // se anche gli altri player sono pronti e in caso avviare il modello
+    }
+
+    @Override
+    public void startGame() throws RemoteException {
+        UI.setQuitRun(true);
+        UI.setInGame(true);
+        UI.runUI();
+    }
+
+    @Override
+    public boolean isReady() {
+        return ready;
     }
 
     /* game commands */

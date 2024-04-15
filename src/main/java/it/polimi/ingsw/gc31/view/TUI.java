@@ -14,7 +14,23 @@ import java.util.Map;
 
 public class TUI extends UI {
 
-    private boolean inGame = false;
+    private Thread thread;
+    private boolean quitRun = false;
+
+    @Override
+    public void setQuitRun(boolean quitRun) throws RemoteException {
+        this.quitRun = quitRun;
+    }
+
+    @Override
+    public boolean isInGame() {
+        return inGame;
+    }
+
+    @Override
+    public void setInGame(boolean inGame) {
+        this.inGame = inGame;
+    }
 
     private Map<String, Runnable> commandsMap;
     private Map<String, Runnable> gameCommandsMap;
@@ -26,6 +42,8 @@ public class TUI extends UI {
         commandsInfo = new HashMap<>();
         gameCommandsMap = new HashMap<>();
         gameCommandsInfo = new HashMap<>();
+        thread = null;
+        inGame = false;
 
         this.client = client;
         initializeCommands();
@@ -52,10 +70,6 @@ public class TUI extends UI {
         commandsMap.put("show games", this::command_showGames);
         commandsMap.put("join game", this::command_joinGame);
         commandsMap.put("ready", this::command_ready);
-
-        // FIX
-        commandsMap.put("show hand", this::command_showHand);
-        commandsMap.put("draw gold", this::command_drawGold);
 
         gameCommandsMap.put("show hand", this::command_showHand);
         gameCommandsMap.put("draw gold", this::command_drawGold);
@@ -142,16 +156,21 @@ public class TUI extends UI {
     }
 
     // UI
-    public void inputUpdate(String input) {
+    public boolean inputUpdate(String input) {
         Runnable command;
+        boolean ret = true;
         if (inGame) {
             command = gameCommandsMap.get(input);
         } else
             command = commandsMap.get(input);
-        if (command != null)
+
+        if (command != null) {
             command.run();
-        else
+        }
+        if (command == null) {
             tuiWrite("Invalid command");
+        }
+        return ret;
 
     }
 
@@ -162,17 +181,38 @@ public class TUI extends UI {
 
     @Override
     protected void uiRunUI() {
-        show_Options();
-        String line = DefaultValues.TUI_START_LINE_SYMBOL;
-        String input;
-        do {
-            do {
-                System.out.print(line);
-                input = OurScanner.scanner.nextLine();
-            } while (input.isEmpty());
-            inputUpdate(input);
-        } while (!input.equals("quit"));
+        if (thread != null)
+            thread = null;
+        if (thread == null || !thread.isAlive()) {
+            thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    show_Options();
+                    String line = DefaultValues.TUI_START_LINE_SYMBOL;
+                    String input;
+                    do {
+                        do {
+                            System.out.print(line);
+                            input = getInput();
+                        } while (input.isEmpty());
+                        inputUpdate(input);
+                    } while (!input.equals("quit"));
+                    // System.out.println("thread terminato");
+                    thread = null;
 
+                }
+            });
+            thread.start();
+        }
+
+    }
+
+    private String getInput() {
+        if (quitRun) {
+            quitRun = false;
+            return "quit";
+        }
+        return OurScanner.scanner.nextLine();
     }
 
     @Override

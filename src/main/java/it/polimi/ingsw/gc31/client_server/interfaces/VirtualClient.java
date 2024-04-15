@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import javafx.beans.property.ReadOnlyMapPropertyBase;
 
 public interface VirtualClient extends Remote {
     public void setUsername(String n) throws RemoteException;
@@ -28,5 +29,9 @@ public interface VirtualClient extends Remote {
     public List<String> showHand() throws RemoteException;
 
     public void drawGold() throws RemoteException;
+
+    public boolean isReady() throws RemoteException;
+
+    public void startGame() throws RemoteException;
 
 }
