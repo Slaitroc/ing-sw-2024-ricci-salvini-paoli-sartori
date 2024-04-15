@@ -1,9 +1,8 @@
 package it.polimi.ingsw.gc31.model.strategies;
 
 import it.polimi.ingsw.gc31.model.Board;
-import it.polimi.ingsw.gc31.model.GameModel;
 import it.polimi.ingsw.gc31.model.card.*;
-import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.player.PlayArea;
 import org.junit.jupiter.api.BeforeAll;
@@ -114,7 +113,7 @@ class ResourceScoreTest {
     private PlayableCard createGoldCard(Resources f1, Resources f2, Resources f3, Resources f4,
                                         Resources b1, Resources b2, Resources b3, Resources b4, Resources b5,
                                         Resources r1, int n1, Resources r2, int n2) {
-        it.polimi.ingsw.gc31.model.enumeration.Color color = it.polimi.ingsw.gc31.model.enumeration.Color.RED;
+        CardColor cardColor = CardColor.RED;
 
         int score = 0;
 
@@ -155,13 +154,13 @@ class ResourceScoreTest {
                 dirImgBack
         );
 
-        return new GoldCard(color, front, back);
+        return new GoldCard(cardColor, front, back);
     }
 
     //f1 sta per front alto-dx, f2 basso-dx, f3 basso-sx, f4 alto-sx
     private PlayableCard createResourceCard(Resources f1, Resources f2, Resources f3, Resources f4,
                                             Resources b1, Resources b2, Resources b3, Resources b4, Resources b5) {
-        it.polimi.ingsw.gc31.model.enumeration.Color color = Color.RED;
+        CardColor cardColor = CardColor.RED;
 
         int score = 0;
 
@@ -200,6 +199,6 @@ class ResourceScoreTest {
                 dirImgBack
         );
 
-        return new ResourceCard(color, front, back);
+        return new ResourceCard(cardColor, front, back);
     }
 }

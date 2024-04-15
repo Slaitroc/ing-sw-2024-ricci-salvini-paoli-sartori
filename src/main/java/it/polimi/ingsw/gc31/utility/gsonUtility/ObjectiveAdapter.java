@@ -1,13 +1,11 @@
 package it.polimi.ingsw.gc31.utility.gsonUtility;
 
 import com.google.gson.*;
-import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.strategies.*;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ObjectiveAdapter implements JsonDeserializer<Objective> {
     @Override
@@ -30,14 +28,14 @@ public class ObjectiveAdapter implements JsonDeserializer<Objective> {
                 break;
             case "LSHAPE":
                 ob = new LShape(
-                        Color.valueOf(jsonObject.get("color1").getAsString()),
-                        Color.valueOf(jsonObject.get("color2").getAsString())
+                        CardColor.valueOf(jsonObject.get("color1").getAsString()),
+                        CardColor.valueOf(jsonObject.get("color2").getAsString())
                 );
                 break;
             case "LSHAPEREVERSE":
                 ob = new LShapeReverse(
-                        Color.valueOf(jsonObject.get("color1").getAsString()),
-                        Color.valueOf(jsonObject.get("color2").getAsString())
+                        CardColor.valueOf(jsonObject.get("color1").getAsString()),
+                        CardColor.valueOf(jsonObject.get("color2").getAsString())
                 );
                 break;
             case "RESOURCESCORE":
@@ -47,24 +45,24 @@ public class ObjectiveAdapter implements JsonDeserializer<Objective> {
                 break;
             case "SEVEN":
                 ob = new Seven(
-                        Color.valueOf(jsonObject.get("color1").getAsString()),
-                        Color.valueOf(jsonObject.get("color2").getAsString())
+                        CardColor.valueOf(jsonObject.get("color1").getAsString()),
+                        CardColor.valueOf(jsonObject.get("color2").getAsString())
                 );
                 break;
             case "SEVENREVERSE":
                 ob = new SevenReverse(
-                        Color.valueOf(jsonObject.get("color1").getAsString()),
-                        Color.valueOf(jsonObject.get("color2").getAsString())
+                        CardColor.valueOf(jsonObject.get("color1").getAsString()),
+                        CardColor.valueOf(jsonObject.get("color2").getAsString())
                 );
                 break;
             case "STAIRDOWN":
                 ob = new StairDown(
-                        Color.valueOf(jsonObject.get("color1").getAsString())
+                        CardColor.valueOf(jsonObject.get("color1").getAsString())
                 );
                 break;
             case "STAIRUP":
                 ob = new StairUp(
-                        Color.valueOf(jsonObject.get("color1").getAsString())
+                        CardColor.valueOf(jsonObject.get("color1").getAsString())
                 );
                 break;
             default: ob = null;

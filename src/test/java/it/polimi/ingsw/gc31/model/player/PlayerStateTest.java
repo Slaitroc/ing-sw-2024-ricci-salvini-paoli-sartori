@@ -2,7 +2,8 @@ package it.polimi.ingsw.gc31.model.player;
 
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.*;
-import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.enumeration.CardColor;
+import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,9 +24,9 @@ public class PlayerStateTest {
     @BeforeAll
     public static void setUp() {
         Board board = new Board();
-        player1 = new Player(Color.RED, "Alessandro", board);
-        player2 = new Player(Color.BLUE, "Christian", board);
-        player3 = new Player(Color.YELLOW, "Lorenzo", board);
+        player1 = new Player(PawnColor.RED, "Alessandro", board);
+        player2 = new Player(PawnColor.BLUE, "Christian", board);
+        player3 = new Player(PawnColor.YELLOW, "Lorenzo", board);
         player1.playStarter();
         player2.playStarter();
         player3.getPlayArea().placeStarter(createStarterCard());

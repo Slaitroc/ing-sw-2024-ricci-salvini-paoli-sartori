@@ -3,7 +3,8 @@ package it.polimi.ingsw.gc31.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.enumeration.CardColor;
+import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 public class GameModel {
@@ -47,28 +48,28 @@ public class GameModel {
      * @return Color object
      * @author Slaitroc
      */
-    private Color pawnAssignment() {
-        Color color;
+    private PawnColor pawnAssignment() {
+        PawnColor pawnColor = null;
         // WARN alternativa allo switch??
         // FIX lo facciamo scegliere al player?
         switch (pawnSelector) {
             case 0:
-                color = Color.RED;
+                pawnColor = PawnColor.RED;
                 break;
             case 1:
-                color = Color.BLUE;
+                pawnColor = PawnColor.BLUE;
                 break;
             case 2:
-                color = Color.GREEN;
+                pawnColor = PawnColor.GREEN;
                 break;
             case 3:
-                color = Color.YELLOW;
+                pawnColor = PawnColor.YELLOW;
                 break;
-            default:
-                color = Color.NOCOLOR;// NOTE piú per debugging che per utilitá
+            //default:
+            //    cardColor = CardColor.NOCOLOR;// NOTE piú per debugging che per utilitá
         }
         pawnSelector++;
-        return color;
+        return pawnColor;
     }
 
 }

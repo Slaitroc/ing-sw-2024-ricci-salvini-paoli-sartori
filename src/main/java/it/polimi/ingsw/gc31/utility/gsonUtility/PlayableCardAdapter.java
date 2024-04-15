@@ -3,11 +3,9 @@ package it.polimi.ingsw.gc31.utility.gsonUtility;
 import com.google.gson.*;
 
 import it.polimi.ingsw.gc31.model.card.*;
-import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class PlayableCardAdapter implements JsonSerializer<PlayableCard>, JsonDeserializer<PlayableCard> {
     @Override
@@ -30,13 +28,13 @@ public class PlayableCardAdapter implements JsonSerializer<PlayableCard>, JsonDe
     public PlayableCard deserialize(JsonElement jsonElement, Type type,
             JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
-        Color color = null;
+        CardColor cardColor = null;
 
         if (jsonObject.get("color").isJsonNull()) {
-            color = null;
+            cardColor = null;
         } else {
             JsonElement jsonElementColor = jsonObject.get("color");
-            color = Color.valueOf(jsonElementColor.getAsString());
+            cardColor = CardColor.valueOf(jsonElementColor.getAsString());
         }
 
         JsonElement frontElement = jsonObject.get("front");
@@ -44,9 +42,9 @@ public class PlayableCardAdapter implements JsonSerializer<PlayableCard>, JsonDe
         JsonElement backElement = jsonObject.get("back");
         CardBack back = jsonDeserializationContext.deserialize(backElement, CardBack.class);
         if (type.equals(GoldCard.class)) {
-            return new GoldCard(color, front, back);
+            return new GoldCard(cardColor, front, back);
         } else if (type.equals(ResourceCard.class)) {
-            return new ResourceCard(color, front, back);
+            return new ResourceCard(cardColor, front, back);
         } else if (type.equals(StarterCard.class)) {
             return new StarterCard(front, back);
         }

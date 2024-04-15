@@ -1,10 +1,7 @@
 package it.polimi.ingsw.gc31.utility.gsonUtility;
 
 import com.google.gson.*;
-import it.polimi.ingsw.gc31.model.card.CardBack;
-import it.polimi.ingsw.gc31.model.card.CardFront;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
-import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
 
 import java.lang.reflect.Type;

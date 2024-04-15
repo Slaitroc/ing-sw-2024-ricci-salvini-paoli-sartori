@@ -3,15 +3,12 @@ package it.polimi.ingsw.gc31.model.enumeration;
 /**
  * Enum that represents every color inside the game
  */
-public enum Color {
+public enum CardColor {
     RED("RED"),
     GREEN("GREEN"),
     BLUE("BLUE"),
-    BLACK("BLACK"),
-    YELLOW("YELLOW"),
-    PURPLE("PURPLE"),
-    NOCOLOR("NOCOLOR"),
-    ;
+    PURPLE("PURPLE");
+    //NOCOLOR("NOCOLOR");
     /**
      * it is the string representation of a Color object
      */
@@ -21,7 +18,7 @@ public enum Color {
      * when a Color object is created the constructor automatically set the string representation based on the value
      * of the object
      */
-    Color(String stringName) {
+    CardColor(String stringName) {
         this.stringName = stringName;
     }
 

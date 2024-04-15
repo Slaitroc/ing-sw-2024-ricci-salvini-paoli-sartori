@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.Map;
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
-import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
 /**
@@ -14,16 +14,16 @@ public class StairUp extends Objective {
     /**
      * This attribute represents the color requested by the objective to be done
      */
-    private final Color color;
+    private final CardColor cardColor;
 
     /**
      * This method is the constructor of the class
      *
-     * @param color is the color requested by the objective
+     * @param cardColor is the color requested by the objective
      */
-    public StairUp(Color color) {
+    public StairUp(CardColor cardColor) {
         super();
-        this.color = color;
+        this.cardColor = cardColor;
     }
 
     /**
@@ -41,11 +41,11 @@ public class StairUp extends Objective {
             for (int i = minX; i <= maxX - 2; i++) {
                 point.move(i, j);
 
-                if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color)) {
+                if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(cardColor)) {
                     point.move(i + 1, j + 1);
-                    if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color)) {
+                    if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(cardColor)) {
                         point.move(i + 2, j + 2);
-                        if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color)) {
+                        if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(cardColor)) {
                             count += 2;
 
                             placedCard.remove(point);

@@ -1,13 +1,9 @@
 package it.polimi.ingsw.gc31.model.card;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
-import it.polimi.ingsw.gc31.model.strategies.Objective;
-import it.polimi.ingsw.gc31.utility.DeepCopy;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,23 +36,23 @@ public abstract class PlayableCard implements Card {
      * set to null.
      * It is final because the color of the card can't change.
      */
-    protected final Color color;
+    protected final CardColor cardColor;
 
     /**
      * The constructor of the PlayableCard.
      */
-    public PlayableCard(Color color, CardFront front, CardBack back) {
+    public PlayableCard(CardColor cardColor, CardFront front, CardBack back) {
         this.front = front;
         this.back = back;
         this.side = false;
-        this.color = color;
+        this.cardColor = cardColor;
     }
 
     /**
      * @return the color of the card
      */
-    public Color getColor() {
-        return color;
+    public CardColor getColor() {
+        return cardColor;
     }
 
     /**

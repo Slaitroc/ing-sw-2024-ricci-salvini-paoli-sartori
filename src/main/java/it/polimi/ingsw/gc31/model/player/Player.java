@@ -4,9 +4,8 @@ import java.awt.*;
 
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
-import it.polimi.ingsw.gc31.model.card.StarterCard;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
-import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
 import it.polimi.ingsw.gc31.model.exceptions.FullHandException;
 import it.polimi.ingsw.gc31.model.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.exceptions.InvalidCardDraw;
@@ -21,19 +20,19 @@ public class Player {
     private ObjectiveCard objectiveCard;
     private final String username;
     private final PlayArea playArea;
-    private Color pawnColor;
+    private PawnColor pawnCardColor;
     protected final List<PlayableCard> hand;
     protected PlayableCard starterCard;
     protected PlayerState inGameState;
     protected int score;
 
     // CONSTRUCTORS
-    public Player(Color color, String username, Board board) {
+    public Player(PawnColor pawnColor, String username, Board board) {
         this.board = board;
         this.username = username;
         this.playArea = new PlayArea();
         this.inGameState = new Start();
-        this.pawnColor = color;
+        this.pawnCardColor = pawnColor;
         hand = new ArrayList<>();
         setStarterCard();
         score = 0;
