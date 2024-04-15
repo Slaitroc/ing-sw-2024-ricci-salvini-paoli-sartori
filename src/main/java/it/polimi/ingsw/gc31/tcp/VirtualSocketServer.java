@@ -1,7 +1,6 @@
 package it.polimi.ingsw.gc31.tcp;
 
 import java.io.PrintWriter;
-//import it.polimi.ingsw.gc31.rmi.VirtualServer;
 
 public class VirtualSocketServer implements VirtualServer{
 

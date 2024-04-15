@@ -2,7 +2,6 @@ package it.polimi.ingsw.gc31.tcp;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.gc31.tcp;
 
-import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.controller.VirtualController;
 import it.polimi.ingsw.gc31.controller.VirtualMainGameController;
 import it.polimi.ingsw.gc31.controller.VirtualPlayerController;

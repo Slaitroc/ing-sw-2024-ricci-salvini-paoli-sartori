@@ -1,7 +1,5 @@
 package it.polimi.ingsw.gc31.tcp;
 
-import it.polimi.ingsw.gc31.rmi.VirtualView;
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
