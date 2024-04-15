@@ -1,7 +1,7 @@
 package it.polimi.ingsw.gc31.tcp;
 
 import it.polimi.ingsw.gc31.controller.Controller;
-import it.polimi.ingsw.gc31.controller.VirtualMainGameController;
+import it.polimi.ingsw.gc31.model.exceptions.PlayerNicknameAlreadyExistsException;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -32,32 +32,24 @@ public class SocketServer {
 
     //TODO Gestire meglio le eccezioni
     private void runServer() throws IOException {
-        System.out.println("> Server created");
+        System.out.println("Server created");
         Socket clientSocket = null;
 
         while((clientSocket = this.listenSocket.accept()) != null){
             InputStreamReader socketRx = new InputStreamReader(clientSocket.getInputStream());
             OutputStreamWriter socketTx = new OutputStreamWriter(clientSocket.getOutputStream());
 
-            // Aggiungo la nuova connessione (nuovo handler del giocatore appena collegato) alla mappa.
-            // Problema: per aggiungere alla mappa il nuovo client ho bisogno del suo username
-            // che però non ho ancora chiesto.
-            // Soluzione: Posso chiedere direttamente qua (?)
-            // Altra soluzione: Chiedo come prima cosa nel SocketClientHandler, appena ricevo risposta
-            //                  invoco un (nuovo) metodo del server passando lo username come parametro
-            //                  e aggiungo quindi in un secondo momento il client alla mappa
+            // Se non sono presenti partite non ho nulla nella mappa e tantomeno i controller
+            // perciò se la mappa risulta null creo un primo controller da passare al primo client
 
-            //tempClients.put()
-
-
-            SocketClientHandler handler = new SocketClientHandler(gameList.get(progressiveIdGame), this,
+            SocketClientHandler handler = new SocketClientHandler(/*gameList.get(progressiveIdGame)*/
+                     new Controller(), this,
                     new BufferedReader(socketRx), new PrintWriter(socketTx), progressiveIdGame);
-
 
             new Thread( () -> {
                 try{
                     handler.runVirtualView();
-                } catch (IOException e){
+                } catch (IOException | PlayerNicknameAlreadyExistsException e){
                     throw new RuntimeException(e);
                 }
             }).start();
@@ -66,6 +58,7 @@ public class SocketServer {
 
     }
 
+    /*
     // Chiamata dal client come prima cosa appena creato. Così lo posso aggiungere alla mappa e lista
     public void connect(SocketClientHandler client, String username){
         usernameList.add(username);
@@ -73,10 +66,10 @@ public class SocketServer {
 
         System.out.println("> Nuovo Client ( " + username + " ) collegato correttamente");
     }
+    */
 
-    /*
-        public void broadcastUpdate(){}
-     */
+    //public void broadcastUpdate(){}
+
     //TODO Gestire meglio eccezioni
     public static void main(String[] args) throws IOException {
         //TODO Eliminare se rimane inutilizzato

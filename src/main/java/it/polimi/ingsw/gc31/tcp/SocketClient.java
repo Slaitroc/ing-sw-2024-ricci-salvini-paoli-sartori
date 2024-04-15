@@ -28,59 +28,94 @@ public class SocketClient {
                 throw new RuntimeException(e);
             }
         }).start();
+
         runCli();
     }
 
     // TODO Dovrebbe servire per leggere i messaggi in arrivo dal server e richiamare i rispettivi metodi
+    //  serve anche per stampare a video i messaggi che il server semplicemente invia al client
     private void runVirtualServer() throws IOException{
+        Scanner scan = new Scanner(input);
         String line;
-
-        while((line = input.readLine()) != null){
-            // Qui dovrei leggere i messaggi in arrivo dal server e eseguire di conseguenza i metodi corrispondenti
-            // ad esempio metodi che segnalano errori oppure segnali di update del model
-            switch(line){
-                case "" -> System.out.println("Message");
-            }
+        while(true) {
+            line = scan.nextLine();
+            //while ((line = scan.nextLine()) != null) {
+                switch (line) {
+                    //case "" -> System.out.println("Message");
+                    default -> System.out.println(line);
+                }
+            //}
         }
     }
 
     private void runCli() throws RemoteException{
-        Scanner scan = new Scanner(System.in);
         String line;
 
-        System.out.print("> Inserisci username: ");
+        System.out.print("[ SERVER ] Inserisci username: ");
+        Scanner scan = new Scanner(System.in);
         this.username = scan.nextLine();
         server.connect(username);
 
-
         // Qui devo leggere ciò che scrive l'utente e inoltro la richiesta di esecuzione al clientHandler (?)
         // Attraverso l'utilizzo del VirtualSocketServer. Per inoltrare però devo avere informazioni sul player
-        // che non ho ora, come username. Aggiungo ora
+        // che non ho ora, come username
         while(true) {
-            System.out.print("> ");
             line = scan.nextLine();
 
             switch(line){
-                case "draw gold" -> server.drawGold(username, idGame);
-                case "show hand" -> server.getHand(username, idGame);
-                case "mostra game" -> server.getGameList(username);
-                case "crea game" -> {
-                    System.out.println("> Inserisci il numero di giocatori della partita: ");
-                    int manNumPlayers = scan.nextInt();
-                    server.createGame(username, manNumPlayers);
-                    System.out.println("Creata partita con id: " + idGame);
+                case "mostra game" : {
+                    server.getGameList(username);
+                    break;
                 }
-                case "join game" -> {
-                    System.out.print("> Inserisci l'id del game: ");
+                case "crea game" : {
+                    System.out.print("[ SERVER ] Inserisci il numero di giocatori della partita: ");
+                    int maxNumPlayers = Integer.parseInt(scan.nextLine());
+                    // Istruzione necessaria per non stampare a schermo due > di fila
+                    // scan.nextLine();
+                    server.createGame(username, maxNumPlayers);
+                    //System.out.println("Creata partita con id: " + idGame);
+
+                    // I'll never exit this while statement, maybe it's bad I don't know
+                    runCliInitGame();
+                    break;
+                }
+                case "join game" : {
+                    System.out.print("[ SERVER ] Inserisci l'id del game: ");
                     idGame = scan.nextInt();
                     server.joinGame(username, idGame);
+                    break;
                 }
+                default : System.out.println("[ SERVER ] [ INVALID MESSAGE ]");
             }
         }
     }
 
-    public static void main(String[] args) throws IOException, UnknownHostException {
-        //TODO Verificare valori opportuni di host/port per il corretto funzioanamento finale
+    public void runCliInitGame(){
+        Scanner scan = new Scanner(System.in);
+
+        while (true){
+            String line = scan.nextLine();
+
+            switch(line){
+                case "info" : {
+                    server.info();
+                    break;
+                }
+                case "mostra mano" : {
+                    server.getHand(username, idGame);
+                    break;
+                }
+                case "draw gold" : {
+                    server.drawGold(username, idGame);
+                    break;
+                }
+                default : System.out.println("[ SERVER ] [ INVALID MESSAGE ]");
+            }
+        }
+    }
+
+    public static void main(String[] args) throws IOException{
+        //TODO Verificare valori opportuni di host/port per il corretto funzionamento finale
         String host = "127.0.0.1";
         int port = Integer.parseInt("1234");
 
