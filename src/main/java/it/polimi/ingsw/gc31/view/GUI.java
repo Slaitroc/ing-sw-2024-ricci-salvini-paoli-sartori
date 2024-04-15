@@ -42,4 +42,22 @@ public class GUI extends UI {
         throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
+    @Override
+    public boolean isInGame() throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'isInGame'");
+    }
+
+    @Override
+    public void setInGame(boolean inGame) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setInGame'");
+    }
+
+    @Override
+    public void setQuitRun(boolean bool) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setQuitRun'");
+    }
+
 }
