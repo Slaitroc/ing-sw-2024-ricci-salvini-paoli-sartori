@@ -2,6 +2,8 @@ package it.polimi.ingsw.gc31.model.card;
 
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import it.polimi.ingsw.gc31.model.strategies.Objective;
+import it.polimi.ingsw.gc31.utility.DeepCopy;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +16,21 @@ import java.util.Map;
  *
  * @author Christian Salvini
  */
-public abstract class PlayableCard extends Card {
+public abstract class PlayableCard implements Card {
+    /**
+     * The front side of a Card
+     */
+    protected final CardFront front;
+    /**
+     * The back side of a Card
+     */
+    protected final CardBack back;
+    /**
+     * Side is a boolean parameter that represents which side of the card is active:
+     * side = false -> back is active
+     * side = true -> front is active
+     */
+    protected boolean side;
     /**
      * It represents the color of a card. It must be set by subclasses, and could be
      * set to null.
@@ -23,12 +39,12 @@ public abstract class PlayableCard extends Card {
     protected final Color color;
 
     /**
-     * The constructor of the class calls the constructor of the upperclass
-     * {@link Card} that sets side to the
-     * dafault value.
+     * The constructor of the PlayableCard.
      */
     public PlayableCard(Color color, CardFront front, CardBack back) {
-        super(front, back);
+        this.front = front;
+        this.back = back;
+        this.side = false;
         this.color = color;
     }
 
@@ -40,7 +56,6 @@ public abstract class PlayableCard extends Card {
     }
 
     /**
-     *
      * @param corner
      * @return
      */
@@ -70,5 +85,46 @@ public abstract class PlayableCard extends Card {
             return front.getRequirements();
         else
             return Collections.emptyMap();
+    }
+
+    @Override
+    public boolean getSide() {
+        return side;
+    }
+
+    @Override
+    public void changeSide() {
+        side = !side;
+    }
+
+    @Override
+    public String getImage() {
+        if (side)
+            return front.getImage();
+        else
+            return back.getImage();
+    }
+
+    @Override
+    public int getScore() {
+        if (side)
+            return front.getScore();
+        else
+            return 0;
+    }
+
+    @Override
+    public Card deepCopy() {
+        return null;
+    }
+
+    @Override
+    public JsonObject frontSerializeToJson() {
+        return front.serializeToJson();
+    }
+
+    @Override
+    public JsonObject backSerializeToJson() {
+        return back.serializeToJson();
     }
 }
