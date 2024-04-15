@@ -33,6 +33,9 @@ public class Count extends Objective {
      * @return the number of points obtained by the player
      */
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint, Map<Resources, Integer> achievedResources) {
+        if(resources.size() == 1) {
+            return goldenCount(achievedResources);
+        }
         if (resources.get(0) == Resources.ANIMAL || resources.get(0) == Resources.PLANT ||
                 resources.get(0) == Resources.INSECT || resources.get(0) == Resources.MUSHROOM) {
             return countAPIM(placedCard, achievedResources);
@@ -113,4 +116,8 @@ public class Count extends Objective {
         return count;
     }
     */
+
+    private int goldenCount(Map<Resources, Integer> achievedResources){
+        return achievedResources.get(resources.get(0));
+    }
 }

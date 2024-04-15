@@ -15,22 +15,17 @@ public class Seven extends Objective {
     /**
      * color1 represents the color with more occurrences  (2)
      */
-    private final Color color1;
+    private static final Color color1 = Color.BLUE;
     /**
      * color2 represents the color with fewer occurrences (1)
      */
-    private final Color color2;
+    private static final Color color2 = Color.RED;
 
     /**
-     * This method is the constructor of the class
-     *
-     * @param color1 represents the color with more occurrences
-     * @param color2 represents the color with fewer occurrences
+     * This method is the constructor of the class. Changed line 43 in ObjectiveAdapter
      */
-    public Seven(Color color1, Color color2) {
+    public Seven() {
         super();
-        this.color1 = color1;
-        this.color2 = color2;
     }
 
     /**

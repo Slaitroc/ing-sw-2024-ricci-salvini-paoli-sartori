@@ -14,22 +14,17 @@ public class LShapeReverse extends Objective {
     /**
      * color1 represents the color with more occurrences (2)
      */
-    private final Color color1;
+    private static final Color color1 = Color.GREEN;
     /**
      * color2 represents the color with fewer occurrences (2)
      */
-    private final Color color2;
+    private static final Color color2 = Color.PURPLE;
 
     /**
-     * This method is the constructor
-     *
-     * @param color1 represents the color with more occurrences
-     * @param color2 represents the color with fewer occurrences
+     * This method is the constructor. Changed one line in ObjectiveAdapter (35)
      */
-    public LShapeReverse(Color color1, Color color2) {
+    public LShapeReverse() {
         super();
-        this.color1 = color1;
-        this.color2 = color2;
     }
 
     /**

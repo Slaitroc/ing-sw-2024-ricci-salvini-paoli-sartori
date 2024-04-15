@@ -14,23 +14,18 @@ public class LShape extends Objective {
     /**
      * color1 represents the color with more occurrences (2)
      */
-    private final Color color1;
+    private static final Color color1 = Color.RED;
 
     /**
      * color2 represents the color with fewer occurrences(1)
      */
-    private final Color color2;
+    private static final Color color2 = Color.GREEN;
 
     /**
-     * This method is the constructor
-     *
-     * @param color1 represents the color with more occurrences
-     * @param color2 represents the color with fewer occurrences
+     * This method is the constructor. Changed one line in ObjectiveAdapter (32)
      */
-    public LShape(Color color1, Color color2) {
+    public LShape() {
         super();
-        this.color1 = color1;
-        this.color2 = color2;
     }
 
     /**

@@ -14,22 +14,17 @@ public class SevenReverse extends Objective {
     /**
      * color1 represents the color with more occurrences (2)
      */
-    private final Color color1;
+    private static final Color color1 = Color.PURPLE;
     /**
      * color2 represents the color with fewer occurrences (1)
      */
-    private final Color color2;
+    private static final Color color2 = Color.BLUE;
 
     /**
-     * This method represents the constructor of the class
-     *
-     * @param color1 represents the color with more occurrences
-     * @param color2 represents the color with fewer occurrences
+     * This method represents the constructor of the class. Changed line 46 in ObjectiveAdapter
      */
-    public SevenReverse(Color color1, Color color2) {
+    public SevenReverse() {
         super();
-        this.color1 = color1;
-        this.color2 = color2;
     }
 
     /**
