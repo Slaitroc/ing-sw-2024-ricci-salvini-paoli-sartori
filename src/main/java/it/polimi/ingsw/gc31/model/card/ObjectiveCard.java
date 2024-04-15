@@ -1,12 +1,6 @@
 package it.polimi.ingsw.gc31.model.card;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.gc31.model.exceptions.DirImgValueMissingException;
-import it.polimi.ingsw.gc31.model.exceptions.WrongNumberOfCornerException;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
 
 public class ObjectiveCard implements Card {
