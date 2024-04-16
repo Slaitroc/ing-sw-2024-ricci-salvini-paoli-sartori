@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.Map;
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
-import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
 /**
@@ -14,13 +14,13 @@ public class StairUp extends Objective {
     /**
      * This attribute represents the color requested by the objective to be done
      */
-    private final Color color;
+    private final CardColor color;
 
     /**
      * This method is the constructor of the class
      * @param color is the color requested by the objective
      */
-    public StairUp(Color color) {
+    public StairUp(CardColor color) {
         super();
         this.color = color;
     }
