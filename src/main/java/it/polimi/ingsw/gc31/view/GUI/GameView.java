@@ -1,4 +1,4 @@
-package it.polimi.ingsw.gc31.view;
+package it.polimi.ingsw.gc31.view.GUI;
 
 import java.io.IOException;
 
@@ -20,7 +20,7 @@ public class GameView {
     }
 
     // Questo metodo inizializza i riferimenti della vista
-    // Per ora sto creando l'immagine Misc1.jpg quando viene creata la scena da
+    // Per ora sto caricando l'immagine Misc1.jpg quando viene creata la scena da
     // gamesScene.fxml nel metodo loadGamesScene() chiamato dal bottone di
     // startScene.
     // Prima inizializzo il riferimento dell'immagine per fxml (riferimentoFxml) poi
@@ -51,9 +51,9 @@ public class GameView {
             e.printStackTrace();
         }
         Scene scene = new Scene(root);
-        ClientFxml.clientPrimaryStage.setWidth(600);
-        ClientFxml.clientPrimaryStage.setHeight(600);
-        ClientFxml.clientPrimaryStage.setScene(scene);
+        GUIApplication.primaryStage.setWidth(600);
+        GUIApplication.primaryStage.setHeight(600);
+        GUIApplication.primaryStage.setScene(scene);
         System.out.println("pulsante premuto");
     }
 
@@ -69,7 +69,7 @@ public class GameView {
             e.printStackTrace();
         }
         Scene scene = new Scene(root);
-        ClientFxml.clientPrimaryStage.setScene(scene);
+        GUIApplication.primaryStage.setScene(scene);
         System.out.println("pulsante premuto");
     }
 

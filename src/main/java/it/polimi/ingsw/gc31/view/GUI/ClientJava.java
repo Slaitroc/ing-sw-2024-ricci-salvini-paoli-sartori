@@ -1,4 +1,4 @@
-package it.polimi.ingsw.gc31.view;
+package it.polimi.ingsw.gc31.view.GUI;
 
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -15,6 +15,9 @@ import java.io.IOException;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
 
+/**
+ * The old GUIapplication class made only using java
+ */
 public class ClientJava extends Application {
     private Stage primaryStage;
 
@@ -34,7 +37,7 @@ public class ClientJava extends Application {
         primaryStage.setWidth(640);
         primaryStage.setHeight(480);
         primaryStage.setTitle("CODEX Naturalis");
-        primaryStage.getIcons().add(new Image(ClientFxml.class.getResourceAsStream("AppIcons/icon.png")));
+        primaryStage.getIcons().add(new Image(GUIApplication.class.getResourceAsStream("AppIcons/icon.png")));
         primaryStage.show();
 
         // Imposta il controller se necessario

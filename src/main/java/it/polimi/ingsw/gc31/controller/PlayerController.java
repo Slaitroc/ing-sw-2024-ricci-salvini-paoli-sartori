@@ -44,7 +44,7 @@ public class PlayerController extends UnicastRemoteObject implements IPlayerCont
         try {
             player.drawGold();
         } catch (EmptyDeckException e) {
-            client.sendMessage("Unsuccesfull Draw, Deck is empty");
+            e.printStackTrace();
         }
     }
 }

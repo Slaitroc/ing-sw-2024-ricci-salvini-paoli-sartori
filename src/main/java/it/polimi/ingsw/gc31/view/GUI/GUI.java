@@ -1,10 +1,12 @@
-package it.polimi.ingsw.gc31.view;
+package it.polimi.ingsw.gc31.view.GUI;
 
 import java.rmi.RemoteException;
+import javafx.application.Application;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
+import it.polimi.ingsw.gc31.view.UI;
 
 import java.rmi.RemoteException;
 
@@ -16,8 +18,7 @@ public class GUI extends UI {
 
     @Override
     protected void uiRunUI() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'uiRunUI'");
+        Application.launch(GUIApplication.class);
     }
 
     @Override

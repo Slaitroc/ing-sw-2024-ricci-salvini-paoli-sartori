@@ -9,9 +9,10 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
-import it.polimi.ingsw.gc31.view.GUI;
 import it.polimi.ingsw.gc31.view.TUI;
 import it.polimi.ingsw.gc31.view.UI;
+import it.polimi.ingsw.gc31.view.GUI.GUI;
+import it.polimi.ingsw.gc31.view.GUI.GUIApplication;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
