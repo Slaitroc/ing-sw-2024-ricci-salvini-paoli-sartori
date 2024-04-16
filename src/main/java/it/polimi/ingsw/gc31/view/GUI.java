@@ -6,6 +6,8 @@ import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 
+import java.rmi.RemoteException;
+
 public class GUI extends UI {
 
     public GUI(VirtualClient client) {
@@ -13,15 +15,14 @@ public class GUI extends UI {
     }
 
     @Override
-    protected IController uiChooseUsername(VirtualServer server_stub, VirtualClient clients) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'uiChooseUsername'");
-    }
-
-    @Override
     protected void uiRunUI() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'uiRunUI'");
+    }
+
+    @Override
+    public void update() {
+
     }
 
     @Override
@@ -34,12 +35,6 @@ public class GUI extends UI {
     protected void uiShow_Nicknames() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'uiShow_Nicknames'");
-    }
-
-    @Override
-    public void update() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
     @Override
@@ -58,6 +53,11 @@ public class GUI extends UI {
     public void setQuitRun(boolean bool) throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'setQuitRun'");
+    }
+
+    @Override
+    protected IController uiChooseUsername(VirtualServer server_stub, VirtualClient clients) throws RemoteException {
+        return null;
     }
 
 }
