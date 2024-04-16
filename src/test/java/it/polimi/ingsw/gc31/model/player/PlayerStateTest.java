@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.model.player;
 
+import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
@@ -21,7 +22,7 @@ public class PlayerStateTest {
 
 
     @BeforeAll
-    public static void setUp() {
+    public static void setUp() throws EmptyDeckException {
         Board board = new Board();
         player1 = new Player(Color.RED, "Alessandro", board);
         player2 = new Player(Color.BLUE, "Christian", board);
@@ -69,7 +70,7 @@ public class PlayerStateTest {
     }
 
     @Test
-    public void testGameTurns() {
+    public void testGameTurns() throws EmptyDeckException{
         // System.out.println("Start testGameTurns");
         PlayableCard verifyCard;
 

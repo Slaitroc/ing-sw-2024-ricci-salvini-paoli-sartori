@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import it.polimi.ingsw.gc31.DefaultValues;
+import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
@@ -99,22 +100,40 @@ public class Deck<T extends Card> /* implements DeepCopy<Deck<T>> */ {
 
     }
 
-    public T draw() {
+    public void replaceDeck(Queue<T> deck) {
+        this.deck = deck;
+        refill();
+    }
+
+    public Queue<T> getQueueDeck() {
+        return deck;
+    }
+
+    public T draw() throws EmptyDeckException {
+        if (deck.isEmpty()) throw new EmptyDeckException();
         return deck.poll();
     }
 
-    public void refill() {
+    public void refill(){
         if (card1 == null) {
-            card1 = this.draw();
-            card1.changeSide();
+            try {
+                card1 = this.draw();
+                card1.changeSide();
+            } catch (EmptyDeckException e) {
+                card1 = null;
+            }
         }
         if (card2 == null) {
-            card2 = this.draw();
-            card2.changeSide();
+            try {
+                card2 = this.draw();
+                card2.changeSide();
+            } catch (EmptyDeckException e) {
+                card1 = null;
+            }
         }
     }
 
-    public T getCard1() {
+    public T getCard1(){
         T retCard = card1;
         card1 = null;
         refill();
@@ -134,6 +153,12 @@ public class Deck<T extends Card> /* implements DeepCopy<Deck<T>> */ {
 
     public void flipCard2() {
         this.card2.changeSide();
+    }
+    public T peekCard1() {
+        return this.card1;
+    }
+    public T peekCard2() {
+        return this.card2;
     }
 
     // @Override

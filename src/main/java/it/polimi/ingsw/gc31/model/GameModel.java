@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.player.Player;
 
@@ -35,9 +36,13 @@ public class GameModel {
 
     public void dealCards() {
         for (Map.Entry<String, Player> pl : players.entrySet()) {
-            pl.getValue().drawGold();
-            pl.getValue().drawResource();
-            pl.getValue().drawResource();
+            try {
+                pl.getValue().drawGold();
+                pl.getValue().drawResource();
+                pl.getValue().drawResource();
+            } catch (EmptyDeckException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
