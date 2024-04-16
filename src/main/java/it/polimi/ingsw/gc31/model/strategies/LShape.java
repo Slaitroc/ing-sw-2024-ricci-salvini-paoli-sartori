@@ -45,14 +45,14 @@ public class LShape extends Objective {
                 point.move(i, j);
 
                 if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color1)) {
-                    point.move(i, j - 1);
+                    point.move(i, j - 2);
                     if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color1)) {
-                        point.move(i + 1, j - 2);
+                        point.move(i + 1, j - 3);
                         if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color2)) {
                             count += 3;
 
                             placedCard.remove(point);
-                            point.move(i, j - 1);
+                            point.move(i, j - 2);
                             placedCard.remove(point);
                             point.move(i, j);
                             placedCard.remove(point);

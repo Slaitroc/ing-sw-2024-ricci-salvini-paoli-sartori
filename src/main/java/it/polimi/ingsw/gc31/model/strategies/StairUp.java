@@ -18,7 +18,6 @@ public class StairUp extends Objective {
 
     /**
      * This method is the constructor of the class
-     *
      * @param color is the color requested by the objective
      */
     public StairUp(Color color) {

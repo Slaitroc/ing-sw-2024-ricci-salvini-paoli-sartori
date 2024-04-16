@@ -238,28 +238,28 @@ class StrategiesTest {
 
     @Test
     void LShapeTest(){
-        Objective ob = new LShape(Color.RED, Color.GREEN);
-        assertEquals(2, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
+        Objective ob = new LShape();
+        assertEquals(3, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
         System.out.println("LShapeTest SUCCESS");
     }
 
     @Test
     void SevenTest(){
-        Objective ob = new Seven(Color.PURPLE, Color.BLUE);
-        assertEquals(4, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
+        Objective ob = new Seven();
+        assertEquals(6, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
         System.out.println("SevenTest SUCCESS");
     }
 
     @Test
     void LShapeReverseTest(){
-        Objective ob = new LShapeReverse(Color.GREEN, Color.PURPLE);
-        assertEquals(2, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
+        Objective ob = new LShapeReverse();
+        assertEquals(3, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
         System.out.println("LShapeReverseTest SUCCESS");
     }
 
     @Test
     void SevenReverseTest(){
-        Objective ob = new SevenReverse(Color.BLUE, Color.RED);
+        Objective ob = new SevenReverse();
         assertEquals(0, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
         System.out.println("SevenReverseTest SUCCESS");
     }
@@ -286,7 +286,7 @@ class StrategiesTest {
         assertEquals(2, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
         System.out.println("StairDownTest (PURPLE) SUCCESS");
 
-        ob = new StairUp(Color.GREEN);
+        ob = new StairDown(Color.GREEN);
         assertEquals(2, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
         System.out.println("StairDownTest (GREEN) SUCCESS");
     }
