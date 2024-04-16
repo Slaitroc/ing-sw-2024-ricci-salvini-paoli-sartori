@@ -3,8 +3,6 @@ package it.polimi.ingsw.gc31;
 import java.util.Map;
 
 import it.polimi.ingsw.gc31.view.GUI.SceneTag;
-import javafx.scene.Scene;
-
 import java.util.HashMap;
 
 public class DefaultValues {
