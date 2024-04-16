@@ -2,14 +2,13 @@ package it.polimi.ingsw.gc31.model.player;
 
 import java.awt.*;
 
+import it.polimi.ingsw.gc31.exceptions.FullHandException;
+import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.exceptions.InvalidCardDraw;
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
-import it.polimi.ingsw.gc31.model.card.StarterCard;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
-import it.polimi.ingsw.gc31.model.exceptions.FullHandException;
-import it.polimi.ingsw.gc31.model.exceptions.IllegalStateOperationException;
-import it.polimi.ingsw.gc31.model.exceptions.InvalidCardDraw;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +69,7 @@ public class Player {
      * Methods to call when drawing a card. There are going to be 6 buttons in the
      * GUI
      * and each one is going to call one of those methods.
+     * They call the private method addToHand that calls addToHand of PlayerState
      */
     public void drawGold() {
         addToHand(board.getDeckGold().draw(), true);

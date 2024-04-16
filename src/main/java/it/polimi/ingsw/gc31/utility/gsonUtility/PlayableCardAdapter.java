@@ -6,8 +6,6 @@ import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.Color;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class PlayableCardAdapter implements JsonSerializer<PlayableCard>, JsonDeserializer<PlayableCard> {
     @Override
