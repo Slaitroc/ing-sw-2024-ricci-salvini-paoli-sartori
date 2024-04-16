@@ -33,10 +33,11 @@ public class MainGameController extends UnicastRemoteObject implements IMainGame
 
         this.clients.put(username, client);
         gameController.addPlayer(username);
-        System.out
-                .println(
-                        DefaultValues.RMI_SERVER_TAG + DefaultValues.mainControllerTag(this.gameID) + "Player joined: "
-                                + username);
+        mgcWrite("Player joined: " + username);
+    }
+
+    private void mgcWrite(String text) {
+        System.out.println(DefaultValues.RMI_SERVER_TAG + DefaultValues.mainControllerTag(this.gameID) + text);
     }
 
     private void initGame() throws RemoteException {
@@ -48,20 +49,15 @@ public class MainGameController extends UnicastRemoteObject implements IMainGame
             entry.getValue().setPlayerController(players.get(entry.getKey()));
         }
 
-        System.out.println(
-                DefaultValues.RMI_SERVER_TAG + DefaultValues.mainControllerTag(gameID) + "Game started! Players: "
-                        + players.keySet().stream().toList());
+        mgcWrite("Game started! Players: " + players.keySet().stream().toList());
         System.out.println("Distributing cards...");
         gameController.dealCard();
-
         this.isStarted = true;
     }
 
     public void joinGame(String username, VirtualClient client) throws RemoteException {
         gameController.addPlayer(username);
-        System.out.println(
-                DefaultValues.RMI_SERVER_TAG + DefaultValues.mainControllerTag(this.gameID) + "Player joined: "
-                        + username);
+        mgcWrite("Player joined: " + username);
         clients.put(username, client);
 
         // if (maxNumberPlayers == this.getCurrentNumberPlayers()) {

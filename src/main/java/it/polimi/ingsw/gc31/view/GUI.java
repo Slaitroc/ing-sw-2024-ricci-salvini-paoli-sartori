@@ -25,24 +25,6 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void uiShow_Options() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'uiShow_Options'");
-    }
-
-    @Override
-    protected void uiShow_Nicknames() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'uiShow_Nicknames'");
-    }
-
-    @Override
-    public void update() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
-    }
-
-    @Override
     public boolean isInGame() throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'isInGame'");
