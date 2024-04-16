@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.model.deck;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
+import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
@@ -18,7 +19,7 @@ import java.util.*;
 class DeckTest {
 
     @Test
-    void draw() {
+    void draw() throws EmptyDeckException {
         Deck<PlayableCard> deck1 = new Deck<>(CardType.GOLD);
         Deck<PlayableCard> deck2 = new Deck<>(CardType.RESOURCE);
         Deck<PlayableCard> deck3 = new Deck<>(CardType.STARTER);

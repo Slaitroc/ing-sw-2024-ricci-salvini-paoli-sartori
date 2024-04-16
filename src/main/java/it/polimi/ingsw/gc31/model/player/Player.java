@@ -2,12 +2,14 @@ package it.polimi.ingsw.gc31.model.player;
 
 import java.awt.*;
 
+import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.exceptions.FullHandException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.InvalidCardDraw;
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
+import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
 
 import java.util.ArrayList;
@@ -34,7 +36,11 @@ public class Player {
         this.inGameState = new Start();
         this.pawnColor = pawnColor;
         hand = new ArrayList<>();
-        setStarterCard();
+        try {
+            setStarterCard();
+        } catch (EmptyDeckException e) {
+            throw new RuntimeException(e);
+        }
         score = 0;
     }
 
@@ -69,29 +75,51 @@ public class Player {
      * Methods to call when drawing a card. There are going to be 6 buttons in the
      * GUI
      * and each one is going to call one of those methods.
+     * They call the private method addToHand that calls addToHand of PlayerState
      */
-    public void drawGold() {
+    public void drawGold() throws EmptyDeckException {
         addToHand(board.getDeckGold().draw(), true);
     }
 
-    public void drawGoldCard1() {
-        addToHand(board.getDeckGold().getCard1(), false);
+    public void drawGoldCard1(){
+        Deck<PlayableCard> deck = board.getDeckGold();
+        addToHand(deck.getCard1(), false);
+
+        if (deck.peekCard1() == null) {
+            deck.replaceDeck(board.getDeckResource().getQueueDeck());
+        }
     }
 
     public void drawGoldCard2() {
-        addToHand(board.getDeckGold().getCard2(), false);
+        Deck<PlayableCard> deck = board.getDeckGold();
+        addToHand(deck.getCard2(), false);
+
+        if (deck.peekCard2() == null) {
+            deck.replaceDeck(board.getDeckResource().getQueueDeck());
+        }
+
     }
 
-    public void drawResource() {
+    public void drawResource() throws EmptyDeckException{
         addToHand(board.getDeckResource().draw(), true);
     }
 
     public void drawResourceCard1() {
-        addToHand(board.getDeckResource().getCard1(), false);
+        Deck<PlayableCard> deck = board.getDeckResource();
+        addToHand(deck.getCard1(), false);
+
+        if (deck.peekCard1() == null) {
+            deck.replaceDeck(board.getDeckGold().getQueueDeck());
+        }
     }
 
     public void drawResourceCard2() {
-        addToHand(board.getDeckResource().getCard2(), false);
+        Deck<PlayableCard> deck = board.getDeckResource();
+        addToHand(deck.getCard2(), false);
+
+        if (deck.peekCard2() == null) {
+            deck.replaceDeck(board.getDeckGold().getQueueDeck());
+        }
     }
 
     /**
@@ -178,7 +206,7 @@ public class Player {
         this.selectedCard = selectedCard;
     }
 
-    public void setStarterCard() {
+    public void setStarterCard() throws EmptyDeckException {
         this.selectedStarterCard = board.getDeckStarter().draw();
     }
 

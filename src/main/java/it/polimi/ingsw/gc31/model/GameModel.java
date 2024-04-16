@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
 import it.polimi.ingsw.gc31.model.player.Player;
@@ -35,16 +36,15 @@ public class GameModel {
     }
 
     public void dealCards() {
-        // for each player, deal one gold card and two resource cards
         for (Map.Entry<String, Player> pl : players.entrySet()) {
-            pl.getValue().drawGold();
-            pl.getValue().drawResource();
-            pl.getValue().drawResource();
+            try {
+                pl.getValue().drawGold();
+                pl.getValue().drawResource();
+                pl.getValue().drawResource();
+            } catch (EmptyDeckException e) {
+                throw new RuntimeException(e);
+            }
         }
-
-        // after dealing the cards, two gold cards and two resource card are revealed on the table
-        board.getDeckGold().refill();
-        board.getDeckResource().refill();
     }
 
     /**
@@ -54,27 +54,26 @@ public class GameModel {
      * @author Slaitroc
      */
     private PawnColor pawnAssignment() {
-        PawnColor pawnColor = null;
+        PawnColor color = null;
         // WARN alternativa allo switch??
         // FIX lo facciamo scegliere al player?
         switch (pawnSelector) {
             case 0:
-                pawnColor = PawnColor.RED;
+                color = PawnColor.RED;
                 break;
             case 1:
-                pawnColor = PawnColor.BLUE;
+                color = PawnColor.BLUE;
                 break;
             case 2:
-                pawnColor = PawnColor.GREEN;
+                color = PawnColor.GREEN;
                 break;
             case 3:
-                pawnColor = PawnColor.YELLOW;
+                color = PawnColor.YELLOW;
                 break;
             //default:
-            //    cardColor = CardColor.NOCOLOR;// NOTE piú per debugging che per utilitá
         }
         pawnSelector++;
-        return pawnColor;
+        return color;
     }
 
 }

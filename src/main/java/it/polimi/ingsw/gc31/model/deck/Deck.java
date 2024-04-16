@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
 
-public class Deck<T extends Card>/* implements DeepCopy<Deck<T>> */ {
+public class Deck<T extends Card> /* implements DeepCopy<Deck<T>> */ {
     // TODO cambiare implementazione con queue
     private Queue<T> deck;
     private T card1;
@@ -102,25 +102,40 @@ public class Deck<T extends Card>/* implements DeepCopy<Deck<T>> */ {
 
     }
 
-    public T draw(){
+    public void replaceDeck(Queue<T> deck) {
+        this.deck = deck;
+        refill();
+    }
+
+    public Queue<T> getQueueDeck() {
+        return deck;
+    }
+
+    public T draw() throws EmptyDeckException {
+        if (deck.isEmpty()) throw new EmptyDeckException();
         return deck.poll();
     }
 
-    public void refill() {
+    public void refill(){
         if (card1 == null) {
-            card1 = this.draw();
-            card1.changeSide();
+            try {
+                card1 = this.draw();
+                card1.changeSide();
+            } catch (EmptyDeckException e) {
+                card1 = null;
+            }
         }
         if (card2 == null) {
-            card2 = this.draw();
-            card2.changeSide();
+            try {
+                card2 = this.draw();
+                card2.changeSide();
+            } catch (EmptyDeckException e) {
+                card1 = null;
+            }
         }
     }
 
-    // return Card1 and remove it from deck
     public T getCard1() {
-        if (card1 == null) return null;
-
         T retCard = card1;
         card1 = null;
         refill();
@@ -128,7 +143,6 @@ public class Deck<T extends Card>/* implements DeepCopy<Deck<T>> */ {
     }
 
     public T getCard2() {
-        if (card2 == null) return null;
         T retCard = card2;
         card2 = null;
         refill();
@@ -142,13 +156,11 @@ public class Deck<T extends Card>/* implements DeepCopy<Deck<T>> */ {
     public void flipCard2() {
         this.card2.changeSide();
     }
-
-    // return Card1 and not remove it
     public T peekCard1() {
-        return card1;
+        return this.card1;
     }
     public T peekCard2() {
-        return card2;
+        return this.card2;
     }
 
     // @Override
@@ -163,5 +175,9 @@ public class Deck<T extends Card>/* implements DeepCopy<Deck<T>> */ {
     // // deepcopy
     // clone.card2 = (T) this.card2.deepCopy();
     // return clone;
+    // }
+
+    // public Queue<T> getQueue() { // FIX
+    // return deck;
     // }
 }
