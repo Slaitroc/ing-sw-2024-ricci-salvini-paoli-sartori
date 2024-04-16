@@ -27,6 +27,16 @@ public class DefaultValues {
     public final static String TUI_TAG = "[TUI] ";
     public final static String STOP_CURRENT_TUI_STRING = "quit";
 
+    // ANSI color
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+
     // GUI
     public final static String GUI_SCENE_startScene = "/it/polimi/ingsw/gc31/Views/startScene.fxml";
     public final static String GUI_SCENE_gameScene = "/it/polimi/ingsw/gc31/Views/gameScene.fxml";

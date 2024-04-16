@@ -71,7 +71,17 @@ public class TUI extends UI {
      * @Slaitroc
      */
     private void tuiWrite(String text) {
-        System.out.println(DefaultValues.TUI_TAG + text);
+        System.out.println(DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_RESET + text);
+    }
+
+    private void tuiWriteGreen(String text) {
+        System.out.println(DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_GREEN + text
+                + DefaultValues.ANSI_RESET);
+    }
+
+    private void tuiWritePurple(String text) {
+        System.out.println(DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_PURPLE + text
+                + DefaultValues.ANSI_RESET);
     }
 
     /**
@@ -299,7 +309,7 @@ public class TUI extends UI {
      * @Slaitroc
      */
     protected void showOptions() {
-        tuiWrite(">>Commands List<< ");
+        tuiWriteGreen(">>Commands List<< ");
         Map<String, String> commands;
         if (!inGame)
             commands = commandsInfo;
@@ -330,7 +340,7 @@ public class TUI extends UI {
         String input;
         IController c = null;
         do {
-            tuiWrite(message);
+            tuiWritePurple(message);
             input = OurScanner.scanner.nextLine();
 
             try {
