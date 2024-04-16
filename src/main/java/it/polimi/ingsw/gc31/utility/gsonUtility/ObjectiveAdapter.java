@@ -28,14 +28,10 @@ public class ObjectiveAdapter implements JsonDeserializer<Objective> {
                 break;
             case "LSHAPE":
                 ob = new LShape(
-                        CardColor.valueOf(jsonObject.get("color1").getAsString()),
-                        CardColor.valueOf(jsonObject.get("color2").getAsString())
                 );
                 break;
             case "LSHAPEREVERSE":
                 ob = new LShapeReverse(
-                        CardColor.valueOf(jsonObject.get("color1").getAsString()),
-                        CardColor.valueOf(jsonObject.get("color2").getAsString())
                 );
                 break;
             case "RESOURCESCORE":
@@ -44,15 +40,10 @@ public class ObjectiveAdapter implements JsonDeserializer<Objective> {
                 );
                 break;
             case "SEVEN":
-                ob = new Seven(
-                        CardColor.valueOf(jsonObject.get("color1").getAsString()),
-                        CardColor.valueOf(jsonObject.get("color2").getAsString())
-                );
+                ob = new Seven();
                 break;
             case "SEVENREVERSE":
                 ob = new SevenReverse(
-                        CardColor.valueOf(jsonObject.get("color1").getAsString()),
-                        CardColor.valueOf(jsonObject.get("color2").getAsString())
                 );
                 break;
             case "STAIRDOWN":
