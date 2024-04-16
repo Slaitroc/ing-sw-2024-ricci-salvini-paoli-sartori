@@ -2,9 +2,7 @@ package it.polimi.ingsw.gc31.model.strategies;
 
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.*;
-import it.polimi.ingsw.gc31.model.enumeration.CardColor;
-import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
-import it.polimi.ingsw.gc31.model.enumeration.CardType;
+import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.player.PlayArea;
 import org.junit.jupiter.api.BeforeAll;
@@ -240,28 +238,28 @@ class StrategiesTest {
 
     @Test
     void LShapeTest(){
-        Objective ob = new LShape(CardColor.RED, CardColor.GREEN);
-        assertEquals(2, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
+        Objective ob = new LShape();
+        assertEquals(3, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
         System.out.println("LShapeTest SUCCESS");
     }
 
     @Test
     void SevenTest(){
-        Objective ob = new Seven(CardColor.PURPLE, CardColor.BLUE);
-        assertEquals(4, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
+        Objective ob = new Seven();
+        assertEquals(6, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
         System.out.println("SevenTest SUCCESS");
     }
 
     @Test
     void LShapeReverseTest(){
-        Objective ob = new LShapeReverse(CardColor.GREEN, CardColor.PURPLE);
-        assertEquals(2, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
+        Objective ob = new LShapeReverse();
+        assertEquals(3, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
         System.out.println("LShapeReverseTest SUCCESS");
     }
 
     @Test
     void SevenReverseTest(){
-        Objective ob = new SevenReverse(CardColor.BLUE, CardColor.RED);
+        Objective ob = new SevenReverse();
         assertEquals(0, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
         System.out.println("SevenReverseTest SUCCESS");
     }
@@ -273,22 +271,22 @@ class StrategiesTest {
 
     @Test
     void StairUpTest(){
-        Objective ob = new StairUp(CardColor.BLUE);
+        Objective ob = new StairUp(Color.BLUE);
         assertEquals(2, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
         System.out.println("StairUpTest (BLUE) SUCCESS");
 
-        ob = new StairUp(CardColor.RED);
+        ob = new StairUp(Color.RED);
         assertEquals(2, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
         System.out.println("StairUpTest (RED) SUCCESS");
     }
 
     @Test
     void StairDownTest(){
-        Objective ob = new StairDown(CardColor.PURPLE);
+        Objective ob = new StairDown(Color.PURPLE);
         assertEquals(2, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
         System.out.println("StairDownTest (PURPLE) SUCCESS");
 
-        ob = new StairUp(CardColor.GREEN);
+        ob = new StairDown(Color.GREEN);
         assertEquals(2, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
         System.out.println("StairDownTest (GREEN) SUCCESS");
     }
@@ -333,13 +331,13 @@ class StrategiesTest {
                 resourceBack,
                 dirImgBack);
 
-        return new StarterCard(CardColor.NOCOLOR, front, back);
+        return new StarterCard(front, back);
     }
 
     private static PlayableCard createGoldCard(Resources f1, Resources f2, Resources f3, Resources f4,
                                                Resources b1, Resources b2, Resources b3, Resources b4, Resources b5,
                                                Resources r1, int n1, Resources r2, int n2) {
-        it.polimi.ingsw.gc31.model.enumeration.CardColor color = it.polimi.ingsw.gc31.model.enumeration.CardColor.RED;
+        it.polimi.ingsw.gc31.model.enumeration.Color color = it.polimi.ingsw.gc31.model.enumeration.Color.RED;
 
         int score = 0;
 
@@ -385,13 +383,13 @@ class StrategiesTest {
     private static PlayableCard createResourceCard(Resources f1, Resources f2, Resources f3, Resources f4,
                                                    Resources b1, Resources b2, Resources b3, Resources b4, Resources b5) {
 
-        CardColor color;
+        Color color;
         switch (b5){
-            case ANIMAL -> color=CardColor.BLUE;
-            case MUSHROOM -> color=CardColor.RED;
-            case INSECT -> color=CardColor.PURPLE;
-            case PLANT -> color=CardColor.GREEN;
-            default -> color=CardColor.NOCOLOR;
+            case ANIMAL -> color=Color.BLUE;
+            case MUSHROOM -> color=Color.RED;
+            case INSECT -> color=Color.PURPLE;
+            case PLANT -> color=Color.GREEN;
+            default -> color=Color.NOCOLOR;
         }
 
         int score = 0;

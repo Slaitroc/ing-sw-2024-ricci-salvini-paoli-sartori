@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.Map;
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
-import it.polimi.ingsw.gc31.model.enumeration.CardColor;
+import it.polimi.ingsw.gc31.model.enumeration.Color;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
 /**
@@ -14,22 +14,17 @@ public class SevenReverse extends Objective {
     /**
      * color1 represents the color with more occurrences (2)
      */
-    private final CardColor cardColor1;
+    private static final Color color1 = Color.BLUE;
     /**
      * color2 represents the color with fewer occurrences (1)
      */
-    private final CardColor cardColor2;
+    private static final Color color2 = Color.RED;
 
     /**
-     * This method represents the constructor of the class
-     *
-     * @param cardColor1 represents the color with more occurrences
-     * @param cardColor2 represents the color with fewer occurrences
+     * This method represents the constructor of the class. Changed line 46 in ObjectiveAdapter
      */
-    public SevenReverse(CardColor cardColor1, CardColor cardColor2) {
+    public SevenReverse() {
         super();
-        this.cardColor1 = cardColor1;
-        this.cardColor2 = cardColor2;
     }
 
     /**
@@ -45,18 +40,18 @@ public class SevenReverse extends Objective {
         Point point = new Point(0, 0);
 
         for (int j = maxY; j >= minY + 2; j--) {
-            for (int i = minX; i <= maxX - 1; i++) {
+            for (int i = maxX; i >= minX + 1; i--) {
                 point.move(i, j);
 
-                if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(cardColor2)) {
-                    point.move(i + 1, j - 1);
-                    if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(cardColor1)) {
-                        point.move(i + 1, j - 2);
-                        if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(cardColor1)) {
+                if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color2)) {
+                    point.move(i - 1, j - 1);
+                    if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color1)) {
+                        point.move(i - 1, j - 3);
+                        if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color1)) {
                             count += 3;
 
                             placedCard.remove(point);
-                            point.move(i + 1, j - 1);
+                            point.move(i - 1, j - 1);
                             placedCard.remove(point);
                             point.move(i, j);
                             placedCard.remove(point);
