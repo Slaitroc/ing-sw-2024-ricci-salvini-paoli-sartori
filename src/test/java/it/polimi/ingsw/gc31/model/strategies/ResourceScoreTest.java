@@ -110,7 +110,7 @@ class ResourceScoreTest {
                                 resourceBack,
                                 dirImgBack);
 
-                return new StarterCard(front, back);
+                return new StarterCard(CardColor.NOCOLOR, front, back);
         }
 
         private PlayableCard createGoldCard(Resources f1, Resources f2, Resources f3, Resources f4,

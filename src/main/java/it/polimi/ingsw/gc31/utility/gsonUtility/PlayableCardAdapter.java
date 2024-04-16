@@ -46,7 +46,7 @@ public class PlayableCardAdapter implements JsonSerializer<PlayableCard>, JsonDe
         } else if (type.equals(ResourceCard.class)) {
             return new ResourceCard(cardColor, front, back);
         } else if (type.equals(StarterCard.class)) {
-            return new StarterCard(front, back);
+            return new StarterCard(cardColor, front, back);
         }
         // TODO non sono sicuro
         else {

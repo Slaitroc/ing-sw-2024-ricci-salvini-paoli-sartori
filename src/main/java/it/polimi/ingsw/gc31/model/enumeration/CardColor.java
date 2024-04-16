@@ -7,8 +7,8 @@ public enum CardColor {
     RED("RED"),
     GREEN("GREEN"),
     BLUE("BLUE"),
-    PURPLE("PURPLE");
-    //NOCOLOR("NOCOLOR");
+    PURPLE("PURPLE"),
+    NOCOLOR("NOCOLOR");
     /**
      * it is the string representation of a Color object
      */

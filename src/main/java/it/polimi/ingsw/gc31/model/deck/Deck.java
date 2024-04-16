@@ -149,8 +149,4 @@ public class Deck<T extends Card> /* implements DeepCopy<Deck<T>> */ {
     // clone.card2 = (T) this.card2.deepCopy();
     // return clone;
     // }
-
-    // public Queue<T> getQueue() { // FIX
-    // return deck;
-    // }
 }

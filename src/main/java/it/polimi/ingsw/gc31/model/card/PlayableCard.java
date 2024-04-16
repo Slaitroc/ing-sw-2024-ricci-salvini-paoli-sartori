@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import it.polimi.ingsw.gc31.model.strategies.Objective;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,6 +48,12 @@ public abstract class PlayableCard implements Card {
         this.side = false;
         this.cardColor = cardColor;
     }
+    public int getScore() {
+        if (side)
+            return front.getScore();
+        else
+            return 0;
+    }
 
     /**
      * @return the color of the card
@@ -88,6 +95,16 @@ public abstract class PlayableCard implements Card {
             return Collections.emptyMap();
     }
 
+    abstract public Objective getObjective();
+
+    public JsonObject frontSerializeToJson() {
+        return front.serializeToJson();
+    }
+
+    public JsonObject backSerializeToJson() {
+        return back.serializeToJson();
+    }
+
     @Override
     public boolean getSide() {
         return side;
@@ -107,25 +124,7 @@ public abstract class PlayableCard implements Card {
     }
 
     @Override
-    public int getScore() {
-        if (side)
-            return front.getScore();
-        else
-            return 0;
-    }
-
-    @Override
     public Card deepCopy() {
         return null;
-    }
-
-    @Override
-    public JsonObject frontSerializeToJson() {
-        return front.serializeToJson();
-    }
-
-    @Override
-    public JsonObject backSerializeToJson() {
-        return back.serializeToJson();
     }
 }

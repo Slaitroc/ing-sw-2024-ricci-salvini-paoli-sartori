@@ -35,11 +35,16 @@ public class GameModel {
     }
 
     public void dealCards() {
+        // for each player, deal one gold card and two resource cards
         for (Map.Entry<String, Player> pl : players.entrySet()) {
             pl.getValue().drawGold();
             pl.getValue().drawResource();
             pl.getValue().drawResource();
         }
+
+        // after dealing the cards, two gold cards and two resource card are revealed on the table
+        board.getDeckGold().refill();
+        board.getDeckResource().refill();
     }
 
     /**

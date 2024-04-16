@@ -171,6 +171,6 @@ public class PlayerStateTest {
                 resourceBack,
                 null);
 
-        return new StarterCard(front, back);
+        return new StarterCard(CardColor.NOCOLOR, front, back);
     }
 }
