@@ -1,7 +1,7 @@
 [
   {
     "type" : "STARTER",
-    "color": null,
+    "color": "NOCOLOR",
     "front" : {
       "score": 0,
       "resources": ["PLANT", "ANIMAL", "INSECT", "MUSHROOM"],
@@ -16,7 +16,7 @@
   },
   {
     "type" : "STARTER",
-    "color": null,
+    "color": "NOCOLOR",
     "front" : {
       "score": 0,
       "resources": ["ANIMAL", "INSECT", "MUSHROOM", "PLANT"],
@@ -26,6 +26,66 @@
     },
     "back" : {
       "resources": ["EMPTY", "MUSHROOM", "EMPTY", "ANIMAL", "MUSHROOM"],
+      "dirImg": null
+    }
+  },
+  {
+    "type" : "STARTER",
+    "color": "NOCOLOR",
+    "front" : {
+      "score": 0,
+      "resources": ["ANIMAL", "PLANT", "MUSHROOM", "INSECT"],
+      "requirements": null,
+      "objective": null,
+      "dirImg": null
+    },
+    "back" : {
+      "resources": ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "MUSHROOM", "PLANT"],
+      "dirImg": null
+    }
+  },
+  {
+    "type" : "STARTER",
+    "color": "NOCOLOR",
+    "front" : {
+      "score": 0,
+      "resources": ["INSECT", "MUSHROOM", "ANIMAL", "PLANT"],
+      "requirements": null,
+      "objective": null,
+      "dirImg": null
+    },
+    "back" : {
+      "resources": ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "INSECT", "ANIMAL"],
+      "dirImg": null
+    }
+  },
+  {
+    "type" : "STARTER",
+    "color": "NOCOLOR",
+    "front" : {
+      "score": 0,
+      "resources": ["MUSHROOM", "ANIMAL", "PLANT", "INSECT"],
+      "requirements": null,
+      "objective": null,
+      "dirImg": null
+    },
+    "back" : {
+      "resources": ["EMPTY", "HIDDEN", "HIDDEN", "EMPTY", "PLANT", "INSECT", "ANIMAL"],
+      "dirImg": null
+    }
+  },
+  {
+    "type" : "STARTER",
+    "color": "NOCOLOR",
+    "front" : {
+      "score": 0,
+      "resources": ["ANIMAL", "INSECT", "PLANT", "MUSHROOM"],
+      "requirements": null,
+      "objective": null,
+      "dirImg": null
+    },
+    "back" : {
+      "resources": ["EMPTY", "HIDDEN", "HIDDEN", "EMPTY", "MUSHROOM", "ANIMAL", "PLANT"],
       "dirImg": null
     }
   }

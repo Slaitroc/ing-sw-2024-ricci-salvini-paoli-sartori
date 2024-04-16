@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.model.card;
 
+import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.model.Board;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +10,7 @@ class CardTest {
     Board board = new Board();
 
     @Test
-    void getSide() {
+    void getSide() throws EmptyDeckException {
         Card card = board.getDeckGold().draw();
 
         // Le carte devono avere side=false di default

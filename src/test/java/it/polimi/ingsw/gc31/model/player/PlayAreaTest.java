@@ -1,8 +1,9 @@
 package it.polimi.ingsw.gc31.model.player;
 
+import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.Board;
-import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
 import org.junit.jupiter.api.*;
@@ -19,7 +20,7 @@ class PlayAreaTest {
         private Board board;
 
         @BeforeEach
-        public void setUp() {
+        public void setUp() throws EmptyDeckException {
                 playArea = new PlayArea();
                 board = new Board();
                 // starterCard.changeSide();
@@ -36,7 +37,7 @@ class PlayAreaTest {
          */
         @Test
         @DisplayName("Placing overlapping Cards Test")
-        public void testPlaceOnRight() {
+        public void testPlaceOnRight() throws EmptyDeckException{
 
                 System.out.println("testPlace (1,1)):");
                 PlayableCard playableCard = board.getDeckResource().draw();
@@ -110,7 +111,7 @@ class PlayAreaTest {
          * @author Matteo Paoli
          */
         @Test
-        public void testCheckRequirements() {
+        public void testCheckRequirements() throws EmptyDeckException {
 
                 PlayableCard resourceCard = board.getDeckResource().draw();
                 playArea.place(resourceCard, new Point(1, 1));
@@ -256,7 +257,7 @@ class PlayAreaTest {
         private PlayableCard createGoldCard(Resources f0, Resources f1, Resources f2, Resources f3,
                         Resources b0, Resources b1, Resources b2, Resources b3, Resources b4,
                         Resources r1, int n1, Resources r2, int n2) {
-                Color color = Color.RED;
+                CardColor cardColor = CardColor.RED;
 
                 int score = 0;
 
@@ -292,7 +293,7 @@ class PlayAreaTest {
                                 resourceBack,
                                 null);
 
-                return new GoldCard(color, front, back);
+                return new GoldCard(cardColor, front, back);
         }
 
         /**
@@ -305,7 +306,7 @@ class PlayAreaTest {
          */
         private PlayableCard createResourceCard(Resources f0, Resources f1, Resources f2, Resources f3,
                         Resources b0, Resources b1, Resources b2, Resources b3, Resources b4) {
-                Color color = Color.RED;
+                CardColor cardColor = CardColor.RED;
 
                 int score = 0;
 
@@ -337,6 +338,6 @@ class PlayAreaTest {
                                 resourceBack,
                                 null);
 
-                return new ResourceCard(color, front, back);
+                return new ResourceCard(cardColor, front, back);
         }
 }
