@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import it.polimi.ingsw.gc31.DefaultValues;
+import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
@@ -16,7 +17,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
 
-public class Deck<T extends Card> /* implements DeepCopy<Deck<T>> */ {
+public class Deck<T extends Card>/* implements DeepCopy<Deck<T>> */ {
     // TODO cambiare implementazione con queue
     private Queue<T> deck;
     private T card1;
@@ -24,6 +25,8 @@ public class Deck<T extends Card> /* implements DeepCopy<Deck<T>> */ {
 
     public Deck(CardType cardType) {
         List<T> tempDeck = new ArrayList<>();
+        this.card1 = null;
+        this.card2 = null;
         FileReader fileReader = null;
         // classe delle carte che formeranno il deck
         Type type = null;
@@ -99,7 +102,7 @@ public class Deck<T extends Card> /* implements DeepCopy<Deck<T>> */ {
 
     }
 
-    public T draw() {
+    public T draw(){
         return deck.poll();
     }
 
@@ -114,7 +117,10 @@ public class Deck<T extends Card> /* implements DeepCopy<Deck<T>> */ {
         }
     }
 
+    // return Card1 and remove it from deck
     public T getCard1() {
+        if (card1 == null) return null;
+
         T retCard = card1;
         card1 = null;
         refill();
@@ -122,6 +128,7 @@ public class Deck<T extends Card> /* implements DeepCopy<Deck<T>> */ {
     }
 
     public T getCard2() {
+        if (card2 == null) return null;
         T retCard = card2;
         card2 = null;
         refill();
@@ -134,6 +141,14 @@ public class Deck<T extends Card> /* implements DeepCopy<Deck<T>> */ {
 
     public void flipCard2() {
         this.card2.changeSide();
+    }
+
+    // return Card1 and not remove it
+    public T peekCard1() {
+        return card1;
+    }
+    public T peekCard2() {
+        return card2;
     }
 
     // @Override
