@@ -31,7 +31,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient {
         this.username = DefaultValues.DEFAULT_USERNAME;
         this.UI = setUI();
         this.controller = UI.choose_username(server_stub, this);
-        ;
         this.idGame = null;
     }
 
