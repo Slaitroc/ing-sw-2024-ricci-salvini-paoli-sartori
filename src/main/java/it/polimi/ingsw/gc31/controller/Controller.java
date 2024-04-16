@@ -50,7 +50,8 @@ public class Controller extends UnicastRemoteObject implements IController {
     }
 
     private void controllerWrite(String text) {
-        System.out.println(DefaultValues.RMI_SERVER_TAG + DefaultValues.CONTROLLER_TAG + text);
+        System.out.println(DefaultValues.ANSI_GREEN + DefaultValues.RMI_SERVER_TAG + DefaultValues.ANSI_BLUE
+                + DefaultValues.CONTROLLER_TAG + DefaultValues.ANSI_RESET + text);
     }
 
     @Override

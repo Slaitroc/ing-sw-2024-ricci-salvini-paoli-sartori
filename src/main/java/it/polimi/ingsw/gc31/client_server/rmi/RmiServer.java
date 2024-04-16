@@ -45,12 +45,14 @@ public class RmiServer implements VirtualServer {
     // del Remote che ho bindato sul registry e che il client prende tramite lookup
     // in Remote che viene restituito deve estendere UnicastRemoteObject, altrimenti
     // succede un bordello
+    private void serverWrite(String text) {
+        System.out.println(DefaultValues.ANSI_GREEN + DefaultValues.RMI_SERVER_TAG + DefaultValues.ANSI_RESET + text);
+    }
 
     public RmiServer() throws RemoteException {
         LocateRegistry.createRegistry(1234).rebind("VirtualServer",
                 UnicastRemoteObject.exportObject(this, 0));
-
-        System.out.println("[RMI-Server]");
+        serverWrite("");
     }
 
     @Override
@@ -58,10 +60,10 @@ public class RmiServer implements VirtualServer {
         try {
             virtualController.connect(client, username);
         } catch (PlayerNicknameAlreadyExistsException e) {
-            System.out.println(DefaultValues.RMI_SERVER_TAG + "New connection refused - username already exists");
+            serverWrite("New connection refused - username already exists");
             return null;
         }
-        System.out.println(DefaultValues.RMI_SERVER_TAG + "New client connected: " + username);
+        serverWrite("New client connected: " + username);
         return virtualController;
     }
 

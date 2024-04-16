@@ -37,7 +37,8 @@ public class MainGameController extends UnicastRemoteObject implements IMainGame
     }
 
     private void mgcWrite(String text) {
-        System.out.println(DefaultValues.RMI_SERVER_TAG + DefaultValues.mainControllerTag(this.gameID) + text);
+        System.out.println(DefaultValues.ANSI_GREEN + DefaultValues.RMI_SERVER_TAG + DefaultValues.ANSI_CYAN
+                + DefaultValues.mainControllerTag(this.gameID) + DefaultValues.ANSI_RESET + text);
     }
 
     private void initGame() throws RemoteException {
