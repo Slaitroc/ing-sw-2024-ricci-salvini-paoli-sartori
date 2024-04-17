@@ -11,6 +11,7 @@ public class StartController extends ViewController {
     }
 
     @Override
+    @FXML
     protected void initialize() {
 
     }

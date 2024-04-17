@@ -29,6 +29,7 @@ public class GUIApplication extends Application {
         try {
             initializeScenesFXML();
         } catch (GUISceneInitializationException e) {
+            e.printStackTrace();
             System.err.println("GUI Scene Initialization Error! Wrong path...");
         }
 

@@ -26,9 +26,9 @@
                 <Label
                     alignment="CENTER" text="Type ur username here" styleClass="label" />
                 <MFXTextField fx:id="username" floatingText="Username" styleClass="text-field" />
-                <MFXButton layoutX="100.0" layoutY="200.0"
-                    text="Start a new game" styleClass="rounded-button, small-button"
-                    onAction="getUsername" />
+                <MFXButton fx:id="getUsername" layoutX="100.0" layoutY="200.0"
+                    text="Verify Username" styleClass="rounded-button, small-button"
+                    onAction="#getUsername" />
                 <Label alignment="CENTER"
                     text="What do you wanna do?" styleClass="label" />
                 <HBox alignment="CENTER"

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.view.GUI.controllers;
 
+import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.view.GUI.SceneTag;
@@ -10,11 +11,14 @@ import javafx.fxml.FXML;
 public class UsernameController extends ViewController {
 
     @FXML
+    private MFXButton getUsername;
+    @FXML
     private MFXTextField username;
 
     @FXML
     private void getUsername() {
         String nickname = username.getText();
+        getUsername.setText(nickname);
     }
 
     // da capire se posso mettere la tag fxml nella classe padre o se devo metterlo
@@ -25,6 +29,7 @@ public class UsernameController extends ViewController {
      * named initialize()...javafx needs it this way
      */
     @Override
+    @FXML
     public void initialize() {
         /* example */
         // Image image = new
