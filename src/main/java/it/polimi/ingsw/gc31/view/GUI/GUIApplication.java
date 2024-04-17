@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.exceptions.GUISceneInitializationException;
+import it.polimi.ingsw.gc31.view.GUI.controllers.ViewController;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ public class GUIApplication extends Application {
 
     public static Stage primaryStage;
     private Map<SceneTag, Scene> scenesMap;
+    private Map<SceneTag, ViewController> wcMap;
     private SceneTag activeScene;
 
     @Override
@@ -50,6 +52,7 @@ public class GUIApplication extends Application {
 
     private void initializeScenesFXML() throws GUISceneInitializationException {
         scenesMap = new HashMap<>();
+        wcMap = new HashMap<>();
         FXMLLoader loader;
         // Carica il file FXML
         for (Map.Entry<SceneTag, String> entry : DefaultValues.getGuiFxmlScenes().entrySet()) {
@@ -57,6 +60,9 @@ public class GUIApplication extends Application {
             try {
                 Scene scene = new Scene(loader.load());
                 scenesMap.put(entry.getKey(), scene);
+                ViewController wc = loader.getController();
+                wc.setGUIApplication(this);
+                wcMap.put(entry.getKey(), wc);
             } catch (IOException e) {
                 throw new GUISceneInitializationException();
             }
@@ -76,6 +82,10 @@ public class GUIApplication extends Application {
         activeScene = tag;
         return scenesMap.get(tag);
 
+    }
+
+    public void loadScene(SceneTag tag) {
+        primaryStage.setScene(choseScene(tag));
     }
 
 }

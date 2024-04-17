@@ -39,12 +39,12 @@ public class DefaultValues {
 
     // GUI
     public final static String GUI_SCENE_startScene = "/it/polimi/ingsw/gc31/Views/startScene.fxml";
-    public final static String GUI_SCENE_gameScene = "/it/polimi/ingsw/gc31/Views/gameScene.fxml";
+    public final static String GUI_SCENE_usernameScene = "/it/polimi/ingsw/gc31/Views/usernameScene.fxml";
 
     public static Map<SceneTag, String> getGuiFxmlScenes() {
         Map<SceneTag, String> sceneList = new HashMap<>();
         sceneList.put(SceneTag.START, GUI_SCENE_startScene);
-        sceneList.put(SceneTag.GAME, GUI_SCENE_gameScene);
+        sceneList.put(SceneTag.USERNAME, GUI_SCENE_usernameScene);
 
         return sceneList;
     }
