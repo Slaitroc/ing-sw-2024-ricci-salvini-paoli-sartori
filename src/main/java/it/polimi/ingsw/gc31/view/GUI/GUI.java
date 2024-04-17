@@ -42,6 +42,10 @@ public class GUI extends UI {
     @Override
     protected IController uiChooseUsername(VirtualServer server_stub, VirtualClient clients) throws RemoteException {
         return null;
+        // FIX la GUI dovrebbe aprirsi qui e permettere al client di scegliere lo
+        // username e di conseguenza ricevere il controller dal server. Probabilmente
+        // serviranno dei thread per permettere alla GUI di passare dati al main del
+        // client
     }
 
 }

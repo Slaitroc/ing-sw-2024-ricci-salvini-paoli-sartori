@@ -25,8 +25,10 @@
                     styleClass="rounded-button, small-button" onAction="#loadStartScene" />
                 <Label
                     alignment="CENTER" text="Type ur username here" styleClass="label" />
-                <MFXTextField
-                    floatingText="Username" styleClass="text-field" />
+                <MFXTextField fx:id="username" floatingText="Username" styleClass="text-field" />
+                <MFXButton layoutX="100.0" layoutY="200.0"
+                    text="Start a new game" styleClass="rounded-button, small-button"
+                    onAction="getUsername" />
                 <Label alignment="CENTER"
                     text="What do you wanna do?" styleClass="label" />
                 <HBox alignment="CENTER"

@@ -1,11 +1,21 @@
 package it.polimi.ingsw.gc31.view.GUI.controllers;
 
+import io.github.palexdev.materialfx.controls.MFXTextField;
+import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.view.GUI.SceneTag;
 import javafx.fxml.FXML;
 // import javafx.scene.image.Image;
 // import javafx.scene.image.ImageView;
 
 public class UsernameController extends ViewController {
+
+    @FXML
+    private MFXTextField username;
+
+    @FXML
+    private void getUsername() {
+        String nickname = username.getText();
+    }
 
     // da capire se posso mettere la tag fxml nella classe padre o se devo metterlo
     // nelle figlie insieme all'override (per ora lascio al caso)
