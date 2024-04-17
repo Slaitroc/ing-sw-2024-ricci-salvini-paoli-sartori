@@ -2,7 +2,7 @@ package it.polimi.ingsw.gc31.view.GUI;
 
 import java.rmi.RemoteException;
 import javafx.application.Application;
-
+import javafx.application.Platform;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
@@ -16,9 +16,20 @@ public class GUI extends UI {
         this.client = client;
     }
 
+    /**
+     * This method allows to call a Runnable inside the GUI thread
+     * 
+     * @param r
+     * 
+     * @Slaitroc
+     */
+    public void runInGuiApp(Runnable r) {
+        Platform.runLater(r);
+    }
+
     @Override
     protected void uiRunUI() {
-        Application.launch(GUIApplication.class);
+
     }
 
     @Override
@@ -41,7 +52,13 @@ public class GUI extends UI {
 
     @Override
     protected IController uiChooseUsername(VirtualServer server_stub, VirtualClient clients) throws RemoteException {
+        Application.launch(GUIApplication.class);
+        System.out.println("CiaoMODNOOOOO");
         return null;
+        // FIX la GUI dovrebbe aprirsi qui e permettere al client di scegliere lo
+        // username e di conseguenza ricevere il controller dal server. Probabilmente
+        // serviranno dei thread per permettere alla GUI di passare dati al main del
+        // client
     }
 
 }

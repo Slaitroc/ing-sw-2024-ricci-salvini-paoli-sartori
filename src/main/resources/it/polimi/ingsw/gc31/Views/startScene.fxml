@@ -9,7 +9,8 @@
 <?import javafx.fxml.FXML?>
 
 <VBox alignment="CENTER" spacing="20" xmlns="http://javafx.com/javafx/17"
-    xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gc31.view.GUI.GameView"
+    xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="it.polimi.ingsw.gc31.view.GUI.controllers.StartController"
     stylesheets="@stilefxml.css" styleClass="vbox">
     <children>
         <ImageView>
@@ -17,7 +18,8 @@
                 <Image url="@../Images/Misc/CodexLogo.png" />
             </image>
         </ImageView>
-        <MFXButton layoutX="188.0" layoutY="349.0" text="Play The Game" styleClass="rounded-button"
-            onAction="#loadGamesScene" />
+        <MFXButton layoutX="188.0" layoutY="349.0" text="Play The Game"
+            styleClass="rounded-button"
+            onAction="#loadLoginScene" />
     </children>
 </VBox>
