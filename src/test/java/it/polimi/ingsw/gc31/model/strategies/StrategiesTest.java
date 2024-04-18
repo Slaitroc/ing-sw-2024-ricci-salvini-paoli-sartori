@@ -1,13 +1,9 @@
 package it.polimi.ingsw.gc31.model.strategies;
 
-import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
-import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
-import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.player.PlayArea;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

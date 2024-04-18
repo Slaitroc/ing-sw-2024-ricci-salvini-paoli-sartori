@@ -43,6 +43,7 @@ public class Seven extends Objective {
         for (int j = maxY; j >= minY + 2; j--) {
             for (int i = minX; i <= maxX - 1; i++) {
                 point.move(i, j);
+
                 if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color2)) {
                     point.move(i + 1, j - 1);
                     if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color1)) {

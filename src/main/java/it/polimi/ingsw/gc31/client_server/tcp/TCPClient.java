@@ -1,72 +1,111 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
+import java.io.*;
+import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.List;
 
-import it.polimi.ingsw.gc31.client_server.interfaces.IPlayerController;
-import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 
+/*
+    La classe TCPClient in maniera simile all'RmiClient dovrebbe implementare i metodi di VirtualClient
+    che vengono richiamati dalla TUI. Tuttavia, al contrario dell'RmiClient il TCPClient non dovrebbe
+    avere il modo di richiamare i metodi del controller ma dovrebbe invece inoltrare il comando richiesto
+    al server grazie al VirtualSocketServer
+ */
 public class TCPClient implements VirtualClient {
+
+
+    final BufferedReader input;
+    final VirtualSocketServer server;
+    private String username;
+    private Integer idGame;
+
+    //TODO Manca il modo per assegnare correttamente il idGame al singolo player. Ora tenuto costantemente null
+    protected TCPClient(BufferedReader input, PrintWriter output){
+        this.input = input;
+        this.server = new VirtualSocketServer(output);
+        this.username = null;
+        this.idGame = null;
+    }
+
+    private void run() throws RemoteException {
+      /*
+      new Thread(() -> {
+            try {
+                runVirtualServer();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+
+        runCli();
+        */
+    }
+
+    public static void main(String[] args) throws IOException {
+        //TODO Verificare valori opportuni di host/port per il corretto funzionamento finale
+        String host = "127.0.0.1";
+        int port = Integer.parseInt("1234");
+
+        Socket serverSocket = new Socket(host, port);
+
+        InputStreamReader socketRx = new InputStreamReader(serverSocket.getInputStream());
+        OutputStreamWriter socketTx = new OutputStreamWriter(serverSocket.getOutputStream());
+
+        new TCPClient(new BufferedReader(socketRx), new PrintWriter(socketTx)).run();
+    }
+
 
     @Override
     public void setUsername(String n) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setUsername'");
+
     }
 
     @Override
     public void setPlayerController(IPlayerController playerController) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setPlayerController'");
+
     }
 
     @Override
     public void setGameID(int i) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setGameID'");
+
     }
 
     @Override
     public int getGameID() throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getGameID'");
+        return 0;
     }
 
     @Override
     public boolean createGame(int i) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createGame'");
+        return false;
     }
 
     @Override
     public List<String> showGames() throws RemoteException, NoGamesException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showGames'");
+        return null;
     }
 
     @Override
     public void joinGame(int idGame) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'joinGame'");
+
     }
 
     @Override
     public boolean ready() throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'ready'");
+        return false;
     }
 
     @Override
     public List<String> showHand() throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showHand'");
+        return null;
     }
 
     @Override
     public void drawGold() throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'drawGold'");
+        server.drawGold();
     }
 
     @Override
