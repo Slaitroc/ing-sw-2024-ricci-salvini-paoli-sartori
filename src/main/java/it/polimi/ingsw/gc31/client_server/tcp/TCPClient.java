@@ -69,11 +69,6 @@ public class TCPClient implements VirtualClient {
     }
 
     @Override
-    public void sendMessage(String details) throws RemoteException {
-
-    }
-
-    @Override
     public void setGameID(int i) throws RemoteException {
 
     }
