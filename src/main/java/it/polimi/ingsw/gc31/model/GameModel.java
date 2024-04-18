@@ -3,7 +3,9 @@ package it.polimi.ingsw.gc31.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
+import it.polimi.ingsw.gc31.model.enumeration.CardColor;
+import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 public class GameModel {
@@ -35,9 +37,13 @@ public class GameModel {
 
     public void dealCards() {
         for (Map.Entry<String, Player> pl : players.entrySet()) {
-            pl.getValue().drawGold();
-            pl.getValue().drawResource();
-            pl.getValue().drawResource();
+            try {
+                pl.getValue().drawGold();
+                pl.getValue().drawResource();
+                pl.getValue().drawResource();
+            } catch (EmptyDeckException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -47,25 +53,24 @@ public class GameModel {
      * @return Color object
      * @author Slaitroc
      */
-    private Color pawnAssignment() {
-        Color color;
+    private PawnColor pawnAssignment() {
+        PawnColor color = null;
         // WARN alternativa allo switch??
         // FIX lo facciamo scegliere al player?
         switch (pawnSelector) {
             case 0:
-                color = Color.RED;
+                color = PawnColor.RED;
                 break;
             case 1:
-                color = Color.BLUE;
+                color = PawnColor.BLUE;
                 break;
             case 2:
-                color = Color.GREEN;
+                color = PawnColor.GREEN;
                 break;
             case 3:
-                color = Color.YELLOW;
+                color = PawnColor.YELLOW;
                 break;
-            default:
-                color = Color.NOCOLOR;// NOTE piú per debugging che per utilitá
+            //default:
         }
         pawnSelector++;
         return color;

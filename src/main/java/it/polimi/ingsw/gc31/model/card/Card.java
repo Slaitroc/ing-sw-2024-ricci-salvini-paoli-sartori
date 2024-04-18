@@ -1,33 +1,29 @@
 package it.polimi.ingsw.gc31.model.card;
 
-import com.google.gson.JsonObject;
-
-import it.polimi.ingsw.gc31.model.strategies.Objective;
-
 /**
- * This is an abstract class that represents a generic Card.
- * All cards have three attributes: {@link CardFront}, {@link CardBack} and
- * side. Side is a boolean parameter
- * that represents which side of the card is active:
- * side = false -> back is active
- * side = true -> front is active
+ * This is an interface that defines the basic methods used by a generic Card.
+ * Every card must have an attribute "side" and an image for each side.
  *
  * @author Christian Salvini
  */
 public interface Card {
+
+    /**
+     * This method is used to determine which side of the card is visible.
+     * @return the value of the attribute side
+     */
     public boolean getSide();
 
+    /**
+     * This method change the side of a card, which means that it change the visible side of a card
+     */
     public void changeSide();
 
+    /**
+     *
+     * @return
+     */
     public String getImage();
 
-    public int getScore();
-
-    abstract public Objective getObjective();
-
     abstract public Card deepCopy();
-
-    public JsonObject frontSerializeToJson();
-
-    public JsonObject backSerializeToJson();
 }

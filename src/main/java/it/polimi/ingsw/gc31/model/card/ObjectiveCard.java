@@ -1,7 +1,5 @@
 package it.polimi.ingsw.gc31.model.card;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonObject;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
 
 public class ObjectiveCard implements Card {
@@ -17,6 +15,13 @@ public class ObjectiveCard implements Card {
         this.dirImgFront = dirImgFront;
         this.dirImgBack = dirImgBack;
         side = false;
+    }
+    public int getScore() {
+        return score;
+    }
+
+    public Objective getObjective() {
+        return objective;
     }
 
     @Override
@@ -38,27 +43,7 @@ public class ObjectiveCard implements Card {
     }
 
     @Override
-    public int getScore() {
-        return score;
-    }
-
-    @Override
-    public Objective getObjective() {
-        return objective;
-    }
-
-    @Override
     public ObjectiveCard deepCopy() {
-        return null;
-    }
-
-    @Override
-    public JsonObject frontSerializeToJson() {
-        return null;
-    }
-
-    @Override
-    public JsonObject backSerializeToJson() {
         return null;
     }
 }

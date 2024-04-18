@@ -8,16 +8,18 @@ module it.polimi.ingsw.gc31 {
     requires java.rmi;
     requires MaterialFX;
 
-    opens it.polimi.ingsw.gc31.view to javafx.fxml;
+    opens it.polimi.ingsw.gc31.view.GUI to javafx.fxml;
+    opens it.polimi.ingsw.gc31.view.GUI.controllers to javafx.fxml;
 
-    exports it.polimi.ingsw.gc31; // Esporta il tuo package principale
+    exports it.polimi.ingsw.gc31.view;
+    exports it.polimi.ingsw.gc31.view.GUI;
+    exports it.polimi.ingsw.gc31.view.GUI.controllers;
+
+    exports it.polimi.ingsw.gc31;
     exports it.polimi.ingsw.gc31.controller;
     exports it.polimi.ingsw.gc31.exceptions;
     exports it.polimi.ingsw.gc31.client_server.interfaces;
     exports it.polimi.ingsw.gc31.client_server.tcp;
     exports it.polimi.ingsw.gc31.client_server.rmi;
-    exports it.polimi.ingsw.gc31.rmi_tutorial.basic_setup;
-    exports it.polimi.ingsw.gc31.rmi_tutorial.our_setup;
-    exports it.polimi.ingsw.gc31.rmi_tutorial.super_clean_basic_setup;
 
 }

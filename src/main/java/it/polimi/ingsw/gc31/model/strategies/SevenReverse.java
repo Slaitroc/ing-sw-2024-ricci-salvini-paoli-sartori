@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.Map;
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
-import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
 /**
@@ -14,11 +14,11 @@ public class SevenReverse extends Objective {
     /**
      * color1 represents the color with more occurrences (2)
      */
-    private static final Color color1 = Color.BLUE;
+    private static final CardColor color1 = CardColor.BLUE;
     /**
      * color2 represents the color with fewer occurrences (1)
      */
-    private static final Color color2 = Color.RED;
+    private static final CardColor color2 = CardColor.RED;
 
     /**
      * This method represents the constructor of the class. Changed line 46 in ObjectiveAdapter

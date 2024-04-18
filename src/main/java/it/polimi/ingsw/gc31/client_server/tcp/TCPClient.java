@@ -22,12 +22,6 @@ public class TCPClient implements VirtualClient {
     }
 
     @Override
-    public void sendMessage(String details) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'sendMessage'");
-    }
-
-    @Override
     public void setGameID(int i) throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'setGameID'");

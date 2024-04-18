@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.IPlayerController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.utility.gsonUtility.PlayableCardAdapter;
@@ -40,6 +41,10 @@ public class PlayerController extends UnicastRemoteObject implements IPlayerCont
 
     @Override
     public void drawGold() throws RemoteException {
-        player.drawGold();
+        try {
+            player.drawGold();
+        } catch (EmptyDeckException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.Map;
 
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
-import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
 /**
@@ -14,11 +14,11 @@ public class LShapeReverse extends Objective {
     /**
      * color1 represents the color with more occurrences (2)
      */
-    private static final Color color1 = Color.GREEN;
+    private static final CardColor color1 = CardColor.GREEN;
     /**
      * color2 represents the color with fewer occurrences (2)
      */
-    private static final Color color2 = Color.PURPLE;
+    private static final CardColor color2 = CardColor.PURPLE;
 
     /**
      * This method is the constructor. Changed one line in ObjectiveAdapter (35)

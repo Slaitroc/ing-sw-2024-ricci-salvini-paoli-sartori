@@ -14,8 +14,21 @@ import java.util.Map;
 
 public class TUI extends UI {
 
-    private Thread thread;
+    /**
+     * when <code> true </code> stop the current TUI and reset itself to
+     * <code> false </code>
+     * 
+     * @Slaitroc
+     */
     private boolean quitRun = false;
+    /**
+     * tracks the current state of the player:
+     * <p>
+     * <code> true </code> if the player is ready to start the game
+     * <p>
+     * <code> false </code> otherwise
+     * 
+     */
     private boolean ready = false;
 
     @Override
@@ -43,7 +56,6 @@ public class TUI extends UI {
         commandsInfo = new HashMap<>();
         gameCommandsMap = new HashMap<>();
         gameCommandsInfo = new HashMap<>();
-        thread = null;
         inGame = false;
 
         this.client = client;
@@ -51,10 +63,33 @@ public class TUI extends UI {
         initializeCommandsInfo();
     }
 
+    /**
+     * Simply calls System.out.println adding the server tag and printing the text
+     * 
+     * @param text
+     * 
+     * @Slaitroc
+     */
     private void tuiWrite(String text) {
-        System.out.println(DefaultValues.TUI_TAG + text);
+        System.out.println(DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_RESET + text);
     }
 
+    private void tuiWriteGreen(String text) {
+        System.out.println(DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_GREEN + text
+                + DefaultValues.ANSI_RESET);
+    }
+
+    private void tuiWritePurple(String text) {
+        System.out.println(DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_PURPLE + text
+                + DefaultValues.ANSI_RESET);
+    }
+
+    /**
+     * Initializes all the commands info maps adding the right description for each
+     * command
+     * 
+     * @Slaitroc
+     */
     private void initializeCommandsInfo() {
         commandsInfo.put("create game", "Create a new game");
         commandsInfo.put("show games", "Shows all the active games");
@@ -66,6 +101,12 @@ public class TUI extends UI {
 
     }
 
+    /**
+     * Initializes the command maps adding the right runnable for each command
+     * string
+     * 
+     * @Slaitroc
+     */
     private void initializeCommands() {
         commandsMap.put(("create game").toLowerCase(), this::command_createGame);
         commandsMap.put("show games", this::command_showGames);
@@ -78,18 +119,36 @@ public class TUI extends UI {
     }
 
     /* commands */
+    /**
+     * {@link #commandsMap}'s command.
+     * <p>
+     * Defines the TUI implementation to get the input values needed to create the
+     * game.
+     * <p>
+     * Calls {@link VirtualClient#createGame(int)}
+     * 
+     * @Slaitroc
+     */
     private void command_createGame() {
         tuiWrite("Type the number of players for the game:");
         int input = Integer.parseInt(OurScanner.scanner.nextLine());
         try {
             if (client.createGame(input))
                 tuiWrite("New game created with ID: " + client.getGameID());
-            ;
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * {@link #commandsMap}'s command.
+     * <p>
+     * Defines the TUI visualization of the current available games
+     * <p>
+     * Calls {@link VirtualClient#showGames()}
+     * 
+     * @Slaitroc
+     */
     private void command_showGames() {
         List<String> list;
         try {
@@ -103,6 +162,15 @@ public class TUI extends UI {
 
     }
 
+    /**
+     * Private procedure called in {@link #command_showGames()}
+     * <p>
+     * Prints the game list
+     * 
+     * @param list
+     * 
+     * @Slaitroc
+     */
     private void show_gameList(List<String> list) {
         tuiWrite(">>Game List<<");
         for (String string : list) {
@@ -110,17 +178,38 @@ public class TUI extends UI {
         }
     }
 
+    /**
+     * {@link #commandsMap}'s command.
+     * <p>
+     * Defines the TUI implementation to get the inputs needed to join an existing
+     * game
+     * <p>
+     * Calls {@link VirtualClient#joinGame(int)()}
+     * 
+     * @Slaitroc
+     */
     private void command_joinGame() {
         tuiWrite("Type gameID:");
         int input = Integer.parseInt(OurScanner.scanner.nextLine());
         try {
             client.joinGame(input);
-            // TODO runcliinitgame()
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * {@link #commandsMap}'s command.
+     * <p>
+     * Defines the TUI implementation to get the inputs needed to join an existing
+     * game
+     * <p>
+     * Calls {@link VirtualClient#ready()()}
+     * 
+     * @see #ready
+     *
+     * @Slaitroc
+     */
     private void command_ready() {
         if (!ready) {
             ready = !ready;
@@ -138,6 +227,15 @@ public class TUI extends UI {
     }
 
     /* game commands */
+    /**
+     * {@link #gameCommandsMap}'s commands
+     * <p>
+     * Defines the TUI visualization for client's hand
+     * <p>
+     * Calls {@link VirtualClient#showHand()}
+     * 
+     * @Slaitroc
+     */
     private void command_showHand() {
         List<String> list;
         try {
@@ -149,6 +247,13 @@ public class TUI extends UI {
         }
     }
 
+    /**
+     * {@link #gameCommandsMap}'s commands
+     * <p>
+     * Calls {@link VirtualClient#drawGold()()}
+     * 
+     * @Slaitroc
+     */
     private void command_drawGold() {
         try {
             client.drawGold();
@@ -158,72 +263,53 @@ public class TUI extends UI {
         }
     }
 
-    // UI
-    public boolean inputUpdate(String input) {
+    /* TUI implementation */
+    /**
+     * Runs the corresponding Runnable value to the String key in the active command
+     * map
+     * 
+     * @param input key value of the active command map
+     * 
+     * @Slaitroc
+     */
+    public void inputUpdate(String input) {
         Runnable command;
-        boolean ret = true;
-        if (!input.equals("quit")) {
-
-            if (inGame) {
+        if (!input.equals(DefaultValues.STOP_CURRENT_TUI_STRING)) {
+            // sceglie la lista di comandi
+            if (inGame)
                 command = gameCommandsMap.get(input);
-            } else
+            else
                 command = commandsMap.get(input);
-
-            if (command != null) {
+            // verifica se il comando esiste nella lista
+            if (command != null)
                 command.run();
-            }
-            if (command == null) {
+            if (command == null)
                 tuiWrite("Invalid command");
-            }
         }
-        return ret;
-
     }
 
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    protected void uiRunUI() {
-        if (thread != null)
-            thread = null;
-        if (thread == null || !thread.isAlive()) {
-            thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    show_Options();
-                    String line = DefaultValues.TUI_START_LINE_SYMBOL;
-                    String input;
-                    do {
-                        do {
-                            System.out.print(line);
-                            input = getInput();
-                        } while (input.isEmpty());
-                        inputUpdate(input);
-                    } while (!input.equals("quit"));
-                    // System.out.println("thread terminato");
-                    thread = null;
-
-                }
-            });
-            thread.start();
-        }
-
-    }
-
+    /**
+     * @return the next line input. If {@link #quitRun} is set to
+     *         <code>true</code> returns the <code>String</code> value that stops
+     *         the TUI.
+     * 
+     * @Slaitroc
+     */
     private String getInput() {
         if (quitRun) {
             quitRun = false;
-            return "quit";
+            return DefaultValues.STOP_CURRENT_TUI_STRING;
         }
         return OurScanner.scanner.nextLine();
     }
 
-    @Override
-    protected void uiShow_Options() {
-        tuiWrite(">>Commands List<< ");
+    /**
+     * Prints the active command map info's commands
+     * 
+     * @Slaitroc
+     */
+    protected void showOptions() {
+        tuiWriteGreen(">>Commands List<< ");
         Map<String, String> commands;
         if (!inGame)
             commands = commandsInfo;
@@ -235,8 +321,16 @@ public class TUI extends UI {
     }
 
     @Override
-    protected void uiShow_Nicknames() {
-        tuiWrite("Username -> ");
+    protected void uiRunUI() {
+        showOptions();
+        String input;
+        do {
+            do {
+                System.out.print(DefaultValues.TUI_START_LINE_SYMBOL);
+                input = getInput();
+            } while (input.isEmpty());
+            inputUpdate(input);
+        } while (!input.equals(DefaultValues.STOP_CURRENT_TUI_STRING));
 
     }
 
@@ -246,7 +340,7 @@ public class TUI extends UI {
         String input;
         IController c = null;
         do {
-            tuiWrite(message);
+            tuiWritePurple(message);
             input = OurScanner.scanner.nextLine();
 
             try {
