@@ -14,22 +14,17 @@ public class LShapeReverse extends Objective {
     /**
      * color1 represents the color with more occurrences (2)
      */
-    private final CardColor cardColor1;
+    private static final CardColor color1 = CardColor.GREEN;
     /**
      * color2 represents the color with fewer occurrences (2)
      */
-    private final CardColor cardColor2;
+    private static final CardColor color2 = CardColor.PURPLE;
 
     /**
-     * This method is the constructor
-     *
-     * @param cardColor1 represents the color with more occurrences
-     * @param cardColor2 represents the color with fewer occurrences
+     * This method is the constructor. Changed one line in ObjectiveAdapter (35)
      */
-    public LShapeReverse(CardColor cardColor1, CardColor cardColor2) {
+    public LShapeReverse() {
         super();
-        this.cardColor1 = cardColor1;
-        this.cardColor2 = cardColor2;
     }
 
     /**
@@ -48,15 +43,15 @@ public class LShapeReverse extends Objective {
             for (int i = maxX; i >= minX + 1; i--) {
                 point.move(i, j);
 
-                if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(cardColor1)) {
-                    point.move(i, j - 1);
-                    if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(cardColor1)) {
-                        point.move(i - 1, j - 2);
-                        if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(cardColor2)) {
+                if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color1)) {
+                    point.move(i, j - 2);
+                    if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color1)) {
+                        point.move(i - 1, j - 3);
+                        if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color2)) {
                             count += 3;
 
                             placedCard.remove(point);
-                            point.move(i, j - 1);
+                            point.move(i, j - 2);
                             placedCard.remove(point);
                             point.move(i, j);
                             placedCard.remove(point);

@@ -33,7 +33,6 @@ public class Controller extends UnicastRemoteObject implements IController {
     private static final List<MainGameController> mgcList = new ArrayList<>();
     private Map<String, VirtualClient> tempClients;
     private Set<String> nicknames;
-    private static String nextID = "0";
 
     private Controller() throws RemoteException {
         tempClients = new HashMap<>();
@@ -48,6 +47,11 @@ public class Controller extends UnicastRemoteObject implements IController {
         synchronized (mgcList) {
             return mgcList.get(id);
         }
+    }
+
+    private void controllerWrite(String text) {
+        System.out.println(DefaultValues.ANSI_GREEN + DefaultValues.RMI_SERVER_TAG + DefaultValues.ANSI_BLUE
+                + DefaultValues.CONTROLLER_TAG + DefaultValues.ANSI_RESET + text);
     }
 
     @Override
@@ -76,12 +80,10 @@ public class Controller extends UnicastRemoteObject implements IController {
 
     @Override
     public IMainGameController createGame(String username, int maxNumberPlayers) throws RemoteException {
-        System.out.println(DefaultValues.RMI_SERVER_TAG + DefaultValues.CONTROLLER_TAG + "New game created with ID: "
-                + (mgcList.size()));
+        controllerWrite("New game created with ID: " + (mgcList.size()));
         VirtualClient client = tempClients.get(username);
-        mgcList.add(new MainGameController(username, client, maxNumberPlayers, nextID));
+        mgcList.add(new MainGameController(username, client, maxNumberPlayers, String.valueOf(mgcList.size())));
         client.setGameID(mgcList.size() - 1);
-        updateNextID();
         // viene rimosso il client da quelli temporanei
         tempClients.remove(username);
         return mgcList.get(mgcList.size() - 1);
@@ -96,9 +98,5 @@ public class Controller extends UnicastRemoteObject implements IController {
         tempClients.remove(username);
 
         return mgcList.get(idGame);
-    }
-
-    private void updateNextID() {
-        nextID = String.valueOf(mgcList.size());
     }
 }

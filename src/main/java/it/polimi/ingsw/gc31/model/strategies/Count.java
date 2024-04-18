@@ -33,6 +33,9 @@ public class Count extends Objective {
      * @return the number of points obtained by the player
      */
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint, Map<Resources, Integer> achievedResources) {
+        if(resources.size() == 1) {
+            return goldenCount(achievedResources);
+        }
         if (resources.get(0) == Resources.ANIMAL || resources.get(0) == Resources.PLANT ||
                 resources.get(0) == Resources.INSECT || resources.get(0) == Resources.MUSHROOM) {
             return countAPIM(placedCard, achievedResources);
@@ -86,31 +89,15 @@ public class Count extends Objective {
         return 3 * ((found - found % 3) / 3);
     }
 
-    /* it's useless if I have the attribute achievedResources
     /**
-     * This method searches the Resource "seed" on the board
-     *
-     * @param placedCard is the map that contains all the card on the player's board
-     * @param seed       is the resource I want to search on the player's board
-     * @return the number of occurrences of seed
-
-     useless after achievedResources as a parameter
-    private int searchOnBoard(Map<Point, PlayableCard> placedCard, Resources seed) {
-        List<Resources> list = null;
-        int count = 0;
-
-        for (Point c : placedCard.keySet()) {
-            list = placedCard.get(c).getResources();
-
-            for (Resources value : list) {
-                if (value.equals(seed)) {
-                    count++;
-                }
-            }
-
-        }
-
-        return count;
+     * This method is invoked only if the number of resources to gain points is 1. In this particular case
+     * the objective is of a golden card, and the player gains 1 point for every resource of the spicified
+     * type is possessed by the player.
+     * @param achievedResources is the map that contains the resource as a key and the number of occurrences
+     *                          of that resources
+     * @return the number of points gained by the player
+     */
+    private int goldenCount(Map<Resources, Integer> achievedResources){
+        return achievedResources.get(resources.get(0));
     }
-    */
 }

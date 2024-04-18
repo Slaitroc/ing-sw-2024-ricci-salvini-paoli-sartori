@@ -15,18 +15,20 @@
 
 
 <StackPane xmlns="http://javafx.com/javafx/17"
-    xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gc31.view.GameView"
+    xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="it.polimi.ingsw.gc31.view.GUI.controllers.UsernameController"
     stylesheets="@stilefxml.css" styleClass="stackpane-black">
     <children>
-        <ImageView fx:id="riferimentoFxml" fitHeight="800" fitWidth="800" />
         <VBox fillWidth="true" alignment="CENTER" spacing="20" styleClass="vbox">
             <children>
                 <MFXButton layoutX="188.0" layoutY="349.0" text="GoToStartScene"
                     styleClass="rounded-button, small-button" onAction="#loadStartScene" />
                 <Label
                     alignment="CENTER" text="Type ur username here" styleClass="label" />
-                <MFXTextField
-                    floatingText="Username" styleClass="text-field" />
+                <MFXTextField fx:id="username" floatingText="Username" styleClass="text-field" />
+                <MFXButton fx:id="getUsername" layoutX="100.0" layoutY="200.0"
+                    text="Verify Username" styleClass="rounded-button, small-button"
+                    onAction="#getUsername" />
                 <Label alignment="CENTER"
                     text="What do you wanna do?" styleClass="label" />
                 <HBox alignment="CENTER"
