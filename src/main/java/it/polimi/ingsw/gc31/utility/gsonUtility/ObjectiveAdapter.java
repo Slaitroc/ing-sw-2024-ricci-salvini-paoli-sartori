@@ -1,13 +1,11 @@
 package it.polimi.ingsw.gc31.utility.gsonUtility;
 
 import com.google.gson.*;
-import it.polimi.ingsw.gc31.model.enumeration.Color;
+import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.strategies.*;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ObjectiveAdapter implements JsonDeserializer<Objective> {
     @Override
