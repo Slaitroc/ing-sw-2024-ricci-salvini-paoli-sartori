@@ -1,12 +1,13 @@
 package it.polimi.ingsw.gc31.view;
 
 import it.polimi.ingsw.gc31.DefaultValues;
-import it.polimi.ingsw.gc31.OurScanner;
-import it.polimi.ingsw.gc31.client_server.interfaces.IController;
+import static it.polimi.ingsw.gc31.OurScanner.scanner;
+import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,8 @@ public class TUI extends UI {
      * @Slaitroc
      */
     private boolean quitRun = false;
+    private boolean usernameSet = false;
+    private boolean usernameIsValid = false;
     /**
      * tracks the current state of the player:
      * <p>
@@ -51,7 +54,7 @@ public class TUI extends UI {
     private Map<String, String> commandsInfo;
     private Map<String, String> gameCommandsInfo;
 
-    public TUI(VirtualClient client) {
+    public TUI(ClientCommands client) {
         commandsMap = new HashMap<>();
         commandsInfo = new HashMap<>();
         gameCommandsMap = new HashMap<>();
@@ -119,6 +122,28 @@ public class TUI extends UI {
     }
 
     /* commands */
+    private void command_setUsername() {
+        String message = "Type your username:";
+        String input;
+        while (!usernameIsValid) {
+            tuiWrite(message);
+            input = scanner.nextLine();
+            try {
+                client.setUsername(input);
+                usernameIsValid = true;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (PlayerNicknameAlreadyExistsException e) {
+                message = "Username already exists :,( \n Try another username:";
+                e.printStackTrace();
+
+            }
+        }
+
+        client.setUI(this);
+    }
+
     /**
      * {@link #commandsMap}'s command.
      * <p>
@@ -131,10 +156,18 @@ public class TUI extends UI {
      */
     private void command_createGame() {
         tuiWrite("Type the number of players for the game:");
-        int input = Integer.parseInt(OurScanner.scanner.nextLine());
+        int input = Integer.parseInt(scanner.nextLine());
         try {
-            if (client.createGame(input))
-                tuiWrite("New game created with ID: " + client.getGameID());
+            client.createGame(input);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void show_gameCreated() {
+        try {
+            tuiWrite("New game created with ID: " + client.getGameID());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -150,30 +183,45 @@ public class TUI extends UI {
      * @Slaitroc
      */
     private void command_showGames() {
-        List<String> list;
         try {
-            list = client.showGames();
-            show_gameList(list);
+            client.getGameList();
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (NoGamesException e) {
-            tuiWrite("No games  :'(");
+            e.printStackTrace();
         }
+
+        // List<String> list;
+        // try {
+        // list = client.getGameList();
+        // show_gameList(list);
+        // } catch (RemoteException e) {
+        // e.printStackTrace();
+        // } catch (NoGamesException e) {
+        // tuiWrite("No games :'(");
+        // }
 
     }
 
     /**
-     * Private procedure called in {@link #command_showGames()}
+     * JAVADOC da modificare (non prendetela seriamente)
      * <p>
-     * Prints the game list
-     * 
-     * @param list
+     * Prints the game list: this method is triggered by the controller.
+     * <p>
+     * <code>TUI.command_showGames()</code>->
+     * <p>
+     * <code>controller.getGameList(String username)</code> ->
+     * <p>
+     * <code>client.shoListGame(List gameList)</code> ->
+     * <p>
+     * <code>ui.showListGame(List gameList)</code>
      * 
      * @Slaitroc
      */
-    private void show_gameList(List<String> list) {
+    @Override
+    public void showListGame(List<String> listGame) throws RemoteException {
         tuiWrite(">>Game List<<");
-        for (String string : list) {
+        for (String string : listGame) {
             System.out.println(string);
         }
     }
@@ -190,7 +238,7 @@ public class TUI extends UI {
      */
     private void command_joinGame() {
         tuiWrite("Type gameID:");
-        int input = Integer.parseInt(OurScanner.scanner.nextLine());
+        int input = Integer.parseInt(scanner.nextLine());
         try {
             client.joinGame(input);
         } catch (RemoteException e) {
@@ -218,11 +266,11 @@ public class TUI extends UI {
             tuiWrite("U are not ready :`(");
             ready = !ready;
         }
-        try {
-            client.ready();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        // try {
+        // client.ready();
+        // } catch (RemoteException e) {
+        // e.printStackTrace();
+        // }
 
     }
 
@@ -238,13 +286,13 @@ public class TUI extends UI {
      */
     private void command_showHand() {
         List<String> list;
-        try {
-            list = client.showHand();
-            tuiWrite(">>Your Cards<<");
-            list.stream().forEach(System.out::println);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        // try {
+        // list = client.showHand();
+        // tuiWrite(">>Your Cards<<");
+        // list.stream().forEach(System.out::println);
+        // } catch (RemoteException e) {
+        // e.printStackTrace();
+        // }
     }
 
     /**
@@ -300,7 +348,7 @@ public class TUI extends UI {
             quitRun = false;
             return DefaultValues.STOP_CURRENT_TUI_STRING;
         }
-        return OurScanner.scanner.nextLine();
+        return scanner.nextLine();
     }
 
     /**
@@ -322,6 +370,8 @@ public class TUI extends UI {
 
     @Override
     protected void uiRunUI() {
+        if (!usernameSet)
+            command_setUsername();
         showOptions();
         String input;
         do {
@@ -335,23 +385,12 @@ public class TUI extends UI {
     }
 
     @Override
-    protected IController uiChooseUsername(VirtualServer server_stub, VirtualClient client) throws RemoteException {
-        String message = "Type your username:";
-        String input;
-        IController c = null;
-        do {
-            tuiWritePurple(message);
-            input = OurScanner.scanner.nextLine();
-
-            try {
-                c = server_stub.clientConnection(client, input);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-            message = "Username already exists... \nTry a different username:";
-        } while (c == null);
-        client.setUsername(input);
-        return c;
+    public void showHand(List<String> hand) {
+        hand.forEach(x -> System.out.println(x));
     }
 
+    @Override
+    public void showMessage(String msg) throws RemoteException {
+
+    }
 }
