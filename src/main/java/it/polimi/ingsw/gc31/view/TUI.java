@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.view;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.OurScanner;
+import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
@@ -51,7 +52,7 @@ public class TUI extends UI {
     private Map<String, String> commandsInfo;
     private Map<String, String> gameCommandsInfo;
 
-    public TUI(VirtualClient client) {
+    public TUI(ClientCommands client) {
         commandsMap = new HashMap<>();
         commandsInfo = new HashMap<>();
         gameCommandsMap = new HashMap<>();
@@ -354,4 +355,18 @@ public class TUI extends UI {
         return c;
     }
 
+    @Override
+    public void showHand(List<String> hand) {
+        hand.forEach(x-> System.out.println(x));
+    }
+
+    @Override
+    public void showListGame(List<String> listGame) throws RemoteException {
+
+    }
+
+    @Override
+    public void showMessage(String msg) throws RemoteException {
+
+    }
 }

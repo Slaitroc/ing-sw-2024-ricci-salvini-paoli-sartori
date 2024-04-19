@@ -9,12 +9,11 @@ import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
 public interface IController extends Remote {
     // TODO non sono sicuro
-    public void connect(VirtualClient client, String username)
-            throws RemoteException, PlayerNicknameAlreadyExistsException;
+    public void connect(VirtualClient client, String username) throws RemoteException, PlayerNicknameAlreadyExistsException;
 
-    public List<String> getGameList() throws RemoteException, NoGamesException;
+    public IGameController createGame(String username, int maxNumberPlayers) throws RemoteException;
 
-    public IMainGameController createGame(String username, int maxNumberPlayers) throws RemoteException;
+    public IGameController joinGame(String username, int idGame) throws RemoteException;
 
-    public IMainGameController joinGame(String username, Integer idGame) throws RemoteException;
+    public void getGameList(String username) throws RemoteException, NoGamesException;
 }

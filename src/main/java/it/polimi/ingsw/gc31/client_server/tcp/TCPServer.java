@@ -13,28 +13,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TCPServer implements VirtualServer {
+public class TCPServer{
     final ServerSocket listenSocket;
-
-    private final Map<Integer, Controller> gameList;
-    private final List<String> usernameList;
-    // TODO Verifica correttezza più avanti, rispetto ad rmi utilizzo
-    // SocketClientHandler
+    private final IController controller;
     private Map<String, SocketClientHandler> tempClients;
-    private Integer progressiveIdGame;
 
     // TODO Gestire meglio eccezioni
-    public TCPServer(ServerSocket listenSocket) {
+    public TCPServer(ServerSocket listenSocket, IController controller) {
         this.listenSocket = listenSocket;
-        this.gameList = new HashMap<>();
-        this.usernameList = new ArrayList<>();
+        this.controller = controller;
         this.tempClients = new HashMap<>();
-        this.progressiveIdGame = 0;
     }
 
-    // TODO Gestire meglio le eccezioni
-    private void runServer() throws IOException {
-        System.out.println("Server created");
+    public void runServer() throws IOException {
+        System.out.println("[TCP] Server created");
         Socket clientSocket = null;
 
         while ((clientSocket = this.listenSocket.accept()) != null) {
@@ -46,11 +38,17 @@ public class TCPServer implements VirtualServer {
             // perciò se la mappa risulta null creo un primo controller da passare al primo
             // client
 
-            SocketClientHandler handler = new SocketClientHandler(/* gameList.get(progressiveIdGame) */
-                    Controller.getController(), this,
-                    new BufferedReader(socketRx), new PrintWriter(socketTx), progressiveIdGame);
+            SocketClientHandler handler = new SocketClientHandler(
+                    controller, this,
+                    new BufferedReader(socketRx), new PrintWriter(socketTx));
 
-            new Thread(handler::runVirtualView).start();
+            new Thread(() -> {
+                try{
+                    handler.runVirtualView();
+                } catch (IOException | PlayerNicknameAlreadyExistsException e) {
+                    throw new RuntimeException();
+                }
+            });
         }
 
     }
@@ -66,24 +64,5 @@ public class TCPServer implements VirtualServer {
      * " ) collegato correttamente");
      * }
      */
-
-    // public void broadcastUpdate(){}
-
-    // TODO Gestire meglio eccezioni
-    public static void main(String[] args) throws IOException {
-        // TODO Eliminare se rimane inutilizzato
-        String host = "127.0.0.1";
-        // TODO Utilizzare parametri formali
-        int port = Integer.parseInt("1234");
-
-        ServerSocket listenSocket = new ServerSocket(port);
-
-        new TCPServer(listenSocket).runServer();
-    }
-    @Override
-    public IController clientConnection(VirtualClient client, String username) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'clientConnection'");
-    }
 
 }

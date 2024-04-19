@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerController extends UnicastRemoteObject implements IPlayerController {
-    Gson gson;
-    final Player player;
-    final VirtualClient client;
+    private Gson gson;
+    private final Player player;
+    private final VirtualClient client;
 
     public PlayerController(Player player, VirtualClient client) throws RemoteException {
         this.player = player;
@@ -30,21 +30,18 @@ public class PlayerController extends UnicastRemoteObject implements IPlayerCont
     }
 
     @Override
-    public List<String> getHand() throws RemoteException {
+    public void drawGold() throws RemoteException {
+        player.drawGold();
+
         List<PlayableCard> hand = player.getHand();
         List<String> res = new ArrayList<>();
         for (PlayableCard card : hand) {
             res.add(gson.toJson(card, PlayableCard.class));
         }
-        return res;
-    }
-
-    @Override
-    public void drawGold() throws RemoteException {
         try {
-            player.drawGold();
-        } catch (EmptyDeckException e) {
-            e.printStackTrace();
+            client.showHand(res);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
         }
     }
 }

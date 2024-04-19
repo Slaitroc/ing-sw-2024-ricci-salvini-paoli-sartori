@@ -1,6 +1,8 @@
 package it.polimi.ingsw.gc31.view.GUI;
 
 import java.rmi.RemoteException;
+
+import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import javafx.application.Application;
 import javafx.application.Platform;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
@@ -9,10 +11,11 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 import it.polimi.ingsw.gc31.view.UI;
 
 import java.rmi.RemoteException;
+import java.util.List;
 
 public class GUI extends UI {
 
-    public GUI(VirtualClient client) {
+    public GUI(ClientCommands client) {
         this.client = client;
     }
 
@@ -61,4 +64,18 @@ public class GUI extends UI {
         // client
     }
 
+    @Override
+    public void showHand(List<String> hand) throws RemoteException {
+
+    }
+
+    @Override
+    public void showListGame(List<String> listGame) throws RemoteException {
+
+    }
+
+    @Override
+    public void showMessage(String msg) throws RemoteException {
+
+    }
 }
