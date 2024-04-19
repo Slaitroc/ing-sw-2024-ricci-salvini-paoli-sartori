@@ -15,11 +15,20 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class PlayerController extends UnicastRemoteObject implements IPlayerController {
     Gson gson;
     final Player player;
     final VirtualClient client;
 
+    /**
+     * Constructor for the PlayerController class.
+     * It initializes the player, the client, and the Gson object.
+     *
+     * @param player the player to control.
+     * @param client the client to interact with.
+     * @throws RemoteException if an RMI error occurs.
+     */
     public PlayerController(Player player, VirtualClient client) throws RemoteException {
         this.player = player;
         this.client = client;
@@ -29,6 +38,13 @@ public class PlayerController extends UnicastRemoteObject implements IPlayerCont
                 .create();
     }
 
+    /**
+     * This method returns the hand of the player.
+     * It converts each card in the hand to a JSON string.
+     *
+     * @return a list of JSON strings representing the cards in the player’s hand.
+     * @throws RemoteException if an RMI error occurs.
+     */
     @Override
     public List<String> getHand() throws RemoteException {
         List<PlayableCard> hand = player.getHand();
@@ -39,6 +55,12 @@ public class PlayerController extends UnicastRemoteObject implements IPlayerCont
         return res;
     }
 
+    /**
+     * This method allows the player to draw a gold card.
+     * If the deck is empty, it prints the stack trace of the exception.
+     *
+     * @throws RemoteException if an RMI error occurs.
+     */
     @Override
     public void drawGold() throws RemoteException {
         try {
