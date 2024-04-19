@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TCPServer{
+public class TCPServer {
     final ServerSocket listenSocket;
     private final IController controller;
     private Map<String, SocketClientHandler> tempClients;
@@ -43,9 +43,9 @@ public class TCPServer{
                     new BufferedReader(socketRx), new PrintWriter(socketTx));
 
             new Thread(() -> {
-                try{
+                try {
                     handler.runVirtualView();
-                } catch (IOException | PlayerNicknameAlreadyExistsException e) {
+                } catch (IOException e) {
                     throw new RuntimeException();
                 }
             });

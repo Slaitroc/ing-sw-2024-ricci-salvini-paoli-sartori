@@ -12,6 +12,8 @@ import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.view.UI;
 
+import java.util.ArrayList;
+
 /*
     La classe TCPClient in maniera simile all'RmiClient dovrebbe implementare i metodi di VirtualClient
     che vengono richiamati dalla TUI. Tuttavia, al contrario dell'RmiClient il TCPClient non dovrebbe
@@ -35,9 +37,8 @@ public class TCPClient implements ClientCommands {
         run();
     }
 
-
-    public void run(){
-      new Thread(() -> {
+    public void run() {
+        new Thread(() -> {
             try {
                 runVirtualServer();
             } catch (Exception e) {
@@ -51,16 +52,14 @@ public class TCPClient implements ClientCommands {
         String line;
         while (true) {
             line = scan.nextLine();
-            switch(line) {
-                case "username already exists" : {
-                    throw new PlayerNicknameAlreadyExistsException();
-                }
-                case "show list game" : {
+            switch (line) {
+                case "show list game": {
                     List<String> list = new ArrayList<>();
                     list.add("ciao");
                     ui.showListGame(list);
                 }
-                default -> System.out.println(line);
+                default:
+                    System.out.println(line);
             }
         }
     }
@@ -72,10 +71,10 @@ public class TCPClient implements ClientCommands {
         output.flush();
 
         String line = input.readLine();
-        if(line.equals("username already exists"))
+        if (line.equals("username already exists"))
             throw new PlayerNicknameAlreadyExistsException();
-        else if(line.equals("username set"))
-            this.username=username;
+        else if (line.equals("username set"))
+            this.username = username;
     }
 
     @Override

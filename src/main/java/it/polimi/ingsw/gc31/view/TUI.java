@@ -3,9 +3,7 @@ package it.polimi.ingsw.gc31.view;
 import it.polimi.ingsw.gc31.DefaultValues;
 import static it.polimi.ingsw.gc31.OurScanner.scanner;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
-import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
@@ -126,9 +124,10 @@ public class TUI extends UI {
     /* commands */
     private void command_setUsername() {
         String message = "Type your username:";
-        String input = scanner.nextLine();
-        do {
+        String input;
+        while (!usernameIsValid) {
             tuiWrite(message);
+            input = scanner.nextLine();
             try {
                 client.setUsername(input);
                 usernameIsValid = true;
@@ -140,7 +139,7 @@ public class TUI extends UI {
                 e.printStackTrace();
 
             }
-        } while (!usernameIsValid);
+        }
 
         client.setUI(this);
     }
@@ -205,7 +204,7 @@ public class TUI extends UI {
     }
 
     /**
-     * JAVADOC da modificare
+     * JAVADOC da modificare (non prendetela seriamente)
      * <p>
      * Prints the game list: this method is triggered by the controller.
      * <p>
@@ -239,7 +238,7 @@ public class TUI extends UI {
      */
     private void command_joinGame() {
         tuiWrite("Type gameID:");
-        int input = Integer.parseInt(scanner.nextLine());Team
+        int input = Integer.parseInt(scanner.nextLine());
         try {
             client.joinGame(input);
         } catch (RemoteException e) {
@@ -267,11 +266,11 @@ public class TUI extends UI {
             tuiWrite("U are not ready :`(");
             ready = !ready;
         }
-        try {
-            client.ready();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        // try {
+        // client.ready();
+        // } catch (RemoteException e) {
+        // e.printStackTrace();
+        // }
 
     }
 
@@ -287,13 +286,13 @@ public class TUI extends UI {
      */
     private void command_showHand() {
         List<String> list;
-        try {
-            list = client.showHand();
-            tuiWrite(">>Your Cards<<");
-            list.stream().forEach(System.out::println);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        // try {
+        // list = client.showHand();
+        // tuiWrite(">>Your Cards<<");
+        // list.stream().forEach(System.out::println);
+        // } catch (RemoteException e) {
+        // e.printStackTrace();
+        // }
     }
 
     /**
@@ -349,7 +348,7 @@ public class TUI extends UI {
             quitRun = false;
             return DefaultValues.STOP_CURRENT_TUI_STRING;
         }
-        return OurScanner.scanner.nextLine();
+        return scanner.nextLine();
     }
 
     /**

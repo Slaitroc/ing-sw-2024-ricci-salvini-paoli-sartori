@@ -17,8 +17,8 @@ public class Client {
     private static VirtualServer server;
 
     public static void main(String[] args) throws NotBoundException, RemoteException {
-        System.out.print("Vuoi usare RMI (0) o TCP (1): ");
-        int networkChoise = scanner.nextInt();
+        System.out.println("Vuoi usare RMI (0) o TCP (1): ");
+        int networkChoise = Integer.parseInt(scanner.nextLine());
 
         ClientCommands client = null;
         try {
@@ -36,7 +36,7 @@ public class Client {
         }
 
         System.out.println("Vuoi usare CLI (0) o GUI (1): ");
-        int uiChoise = scanner.nextInt();
+        int uiChoise = Integer.parseInt(scanner.nextLine());
 
         if (uiChoise == 0) {
             new TUI(client).runUI();

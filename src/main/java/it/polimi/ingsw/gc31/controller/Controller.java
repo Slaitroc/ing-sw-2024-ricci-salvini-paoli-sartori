@@ -7,7 +7,6 @@ import java.util.*;
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
-import it.polimi.ingsw.gc31.client_server.interfaces.IMainGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
@@ -66,6 +65,7 @@ public class Controller extends UnicastRemoteObject implements IController {
         mgcList.add(new GameController(username, client, maxNumberPlayers, mgcList.size() - 1));
         client.setGameID(mgcList.size() - 1);
         tempClients.remove(username);
+        controllerWrite("New Game Created with ID: " + (mgcList.size()));
         return mgcList.get(mgcList.size() - 1);
     }
 

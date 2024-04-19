@@ -21,7 +21,8 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     boolean isStarted = false;
     // private final Map<String, Player> players;
 
-    public GameController(String username, VirtualClient client, int maxNumberPlayers, int idGame) throws RemoteException{
+    public GameController(String username, VirtualClient client, int maxNumberPlayers, int idGame)
+            throws RemoteException {
         this.model = new GameModel();
         this.maxNumberPlayers = maxNumberPlayers;
         this.idGame = idGame;
@@ -38,7 +39,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         Map<String, Player> playerList = model.createPlayers();
         model.dealCards();
 
-        for (Map.Entry<String, Player> pl: playerList.entrySet()) {
+        for (Map.Entry<String, Player> pl : playerList.entrySet()) {
             players.put(pl.getKey(), new PlayerController(pl.getValue(), clients.get(pl.getKey())));
         }
         for (Map.Entry<String, VirtualClient> entry : clients.entrySet()) {
@@ -46,24 +47,25 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         }
 
         // TODO mandare messaggio al client di inizio partita
-//        for (VirtualClient player: clients.values()) {
-//            player.sendMessage("[GameController] la partita è iniziata");
-//        }
+        // for (VirtualClient player: clients.values()) {
+        // player.sendMessage("[GameController] la partita è iniziata");
+        // }
     }
 
-    public void joinGame(String username, VirtualClient client) throws RemoteException{
+    public void joinGame(String username, VirtualClient client) throws RemoteException {
         this.model.addPlayer(username);
         clients.put(username, client);
 
         // TODO mandare messaggio al client di connessione al server
         if (maxNumberPlayers == this.clients.size()) {
-            gameControllerWrite("Il numero di giocatori per la partita "+idGame+" è stato raggiunto");
+            gameControllerWrite("Il numero di giocatori per la partita " + maxNumberPlayers + " è stato raggiunto");
         }
     }
 
     public int getMaxNumberPlayers() {
         return maxNumberPlayers;
     }
+
     public int getCurrentNumberPlayers() {
         return clients.size();
     }
