@@ -151,30 +151,45 @@ public class TUI extends UI {
      * @Slaitroc
      */
     private void command_showGames() {
-        List<String> list;
         try {
-            list = client.showGames();
-            show_gameList(list);
+            client.getGameList();
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (NoGamesException e) {
-            tuiWrite("No games  :'(");
+            e.printStackTrace();
         }
+
+        // List<String> list;
+        // try {
+        // list = client.getGameList();
+        // show_gameList(list);
+        // } catch (RemoteException e) {
+        // e.printStackTrace();
+        // } catch (NoGamesException e) {
+        // tuiWrite("No games :'(");
+        // }
 
     }
 
     /**
-     * Private procedure called in {@link #command_showGames()}
+     * JAVADOC da modificare
      * <p>
-     * Prints the game list
-     * 
-     * @param list
+     * Prints the game list: this method is triggered by the controller.
+     * <p>
+     * <code>TUI.command_showGames()</code>->
+     * <p>
+     * <code>controller.getGameList(String username)</code> ->
+     * <p>
+     * <code>client.shoListGame(List gameList)</code> ->
+     * <p>
+     * <code>ui.showListGame(List gameList)</code>
      * 
      * @Slaitroc
      */
-    private void show_gameList(List<String> list) {
+    @Override
+    public void showListGame(List<String> listGame) throws RemoteException {
         tuiWrite(">>Game List<<");
-        for (String string : list) {
+        for (String string : listGame) {
             System.out.println(string);
         }
     }
@@ -357,12 +372,7 @@ public class TUI extends UI {
 
     @Override
     public void showHand(List<String> hand) {
-        hand.forEach(x-> System.out.println(x));
-    }
-
-    @Override
-    public void showListGame(List<String> listGame) throws RemoteException {
-
+        hand.forEach(x -> System.out.println(x));
     }
 
     @Override

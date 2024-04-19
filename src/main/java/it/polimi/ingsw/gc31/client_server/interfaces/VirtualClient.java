@@ -17,10 +17,14 @@ public interface VirtualClient extends Remote {
      * @Slaitroc
      */
 
-//    public int getGameID() throws RemoteException;
+    public void setGameID(int gameID) throws RemoteException;
+
     public void showHand(List<String> hand) throws RemoteException;
+
     public void showListGame(List<String> listGame) throws RemoteException;
+
     public void showMessage(String msg) throws RemoteException;
+
     public void setPlayerController(IPlayerController playerController) throws RemoteException;
 
 }

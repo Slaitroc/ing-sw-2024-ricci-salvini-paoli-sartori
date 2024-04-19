@@ -59,11 +59,12 @@ public class Controller extends UnicastRemoteObject implements IController {
 
         // TODO mandare un messaggio di conferma al client
     }
+
     @Override
     public IGameController createGame(String username, int maxNumberPlayers) throws RemoteException {
         VirtualClient client = tempClients.get(username);
-        mgcList.add(new GameController(username, client, maxNumberPlayers, mgcList.size()-1));
-//        client.setGameID(mgcList.size() - 1);
+        mgcList.add(new GameController(username, client, maxNumberPlayers, mgcList.size() - 1));
+        client.setGameID(mgcList.size() - 1);
         tempClients.remove(username);
         return mgcList.get(mgcList.size() - 1);
     }
@@ -84,8 +85,6 @@ public class Controller extends UnicastRemoteObject implements IController {
             tempClients.get(username).showListGame(res);
         }
     }
-
-
 
     @Override
     public IGameController joinGame(String username, int idGame) throws RemoteException {
