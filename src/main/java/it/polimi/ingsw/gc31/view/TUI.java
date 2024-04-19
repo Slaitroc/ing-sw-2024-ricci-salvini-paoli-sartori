@@ -1,12 +1,13 @@
 package it.polimi.ingsw.gc31.view;
 
 import it.polimi.ingsw.gc31.DefaultValues;
-import it.polimi.ingsw.gc31.OurScanner;
+import static it.polimi.ingsw.gc31.OurScanner.scanner;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -22,6 +23,8 @@ public class TUI extends UI {
      * @Slaitroc
      */
     private boolean quitRun = false;
+    private boolean usernameSet = false;
+    private boolean usernameIsValid = false;
     /**
      * tracks the current state of the player:
      * <p>
@@ -120,6 +123,27 @@ public class TUI extends UI {
     }
 
     /* commands */
+    private void command_setUsername() {
+        String message = "Type your username:";
+        String input = scanner.nextLine();
+        do {
+            tuiWrite(message);
+            try {
+                client.setUsername(input);
+                usernameIsValid = true;
+
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            } catch (PlayerNicknameAlreadyExistsException e) {
+                message = "Username already exists :,( \n Try another username:";
+                e.printStackTrace();
+
+            }
+        } while (!usernameIsValid);
+
+        client.setUI(this);
+    }
+
     /**
      * {@link #commandsMap}'s command.
      * <p>
@@ -132,10 +156,18 @@ public class TUI extends UI {
      */
     private void command_createGame() {
         tuiWrite("Type the number of players for the game:");
-        int input = Integer.parseInt(OurScanner.scanner.nextLine());
+        int input = Integer.parseInt(scanner.nextLine());
         try {
-            if (client.createGame(input))
-                tuiWrite("New game created with ID: " + client.getGameID());
+            client.createGame(input);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void show_gameCreated() {
+        try {
+            tuiWrite("New game created with ID: " + client.getGameID());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -338,6 +370,8 @@ public class TUI extends UI {
 
     @Override
     protected void uiRunUI() {
+        if (!usernameSet)
+            command_setUsername();
         showOptions();
         String input;
         do {

@@ -1,17 +1,12 @@
 package it.polimi.ingsw.gc31.client_server.rmi;
 
 import it.polimi.ingsw.gc31.DefaultValues;
-import it.polimi.ingsw.gc31.OurScanner;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
-import it.polimi.ingsw.gc31.view.TUI;
 import it.polimi.ingsw.gc31.view.UI;
-import it.polimi.ingsw.gc31.view.GUI.GUI;
-import it.polimi.ingsw.gc31.view.GUI.GUIApplication;
 
 import java.rmi.NotBoundException;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
@@ -40,19 +35,25 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     public RmiClient() throws RemoteException, NotBoundException {
         this.server = (VirtualServer) LocateRegistry.getRegistry("127.0.0.1", 1100).lookup("VirtualServer");
         this.username = DefaultValues.DEFAULT_USERNAME;
+        this.controller = null;
     }
 
     // metodi del ClientCommands
     @Override
-    public void run(UI ui, String username) throws RemoteException, PlayerNicknameAlreadyExistsException {
+    public void setUI(UI ui) {
         this.ui = ui;
-        controller = server.connect(this, username);
     }
 
     @Override
-    public void setUsername(String username) {
-        if (this.username.equals(DefaultValues.DEFAULT_USERNAME))
+    public void setUsername(String username) throws RemoteException, PlayerNicknameAlreadyExistsException {
+        if (controller == null) {
+            controller = server.connect(this, username);
+        }
+
+        if (this.username.equals(DefaultValues.DEFAULT_USERNAME)) {
             this.username = username;
+        }
+
     }
 
     @Override
@@ -61,11 +62,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
-    public boolean createGame(int maxNumberPlayer) throws RemoteException {
+    public void createGame(int maxNumberPlayer) throws RemoteException {
         gameController = controller.createGame(username, maxNumberPlayer);
-        if (gameController != null)
-            return true;
-        return false;
+        if (gameController != null) {
+            ui.show_gameCreated();
+        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.view;
 
 import java.rmi.RemoteException;
+import java.util.List;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
@@ -9,7 +10,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 
 //NOTE: i metodi che iniziano con ui (uiNomeMetodo()) sono le implementazioni delle classi che ereditano da UI
 //gli omonimi senza prefisso ui sono quelli da chiamare nei client
-public abstract class UI implements VirtualView{
+public abstract class UI {
     /**
      * The client interacting with the UI
      * 
@@ -121,4 +122,12 @@ public abstract class UI implements VirtualView{
      * @Slaitroc
      */
     public abstract void setQuitRun(boolean bool) throws RemoteException;
+
+    public abstract void showHand(List<String> hand) throws RemoteException;
+
+    public abstract void showListGame(List<String> listGame) throws RemoteException;
+
+    public abstract void showMessage(String msg) throws RemoteException;
+
+    public abstract void show_gameCreated();
 }

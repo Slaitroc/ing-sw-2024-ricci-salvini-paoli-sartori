@@ -2,15 +2,12 @@ package it.polimi.ingsw.gc31;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.NotBoundException;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 import it.polimi.ingsw.gc31.client_server.rmi.RmiClient;
-import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
 import it.polimi.ingsw.gc31.client_server.tcp.TCPClient;
-import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.view.GUI.GUI;
 import it.polimi.ingsw.gc31.view.TUI;
 

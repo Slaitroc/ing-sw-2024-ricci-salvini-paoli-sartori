@@ -10,9 +10,9 @@ public interface ClientCommands {
 
     public int getGameID() throws RemoteException;
 
-    public void setUsername(String username);
+    public void setUsername(String username) throws RemoteException, PlayerNicknameAlreadyExistsException;
 
-    public boolean createGame(int maxNumberPlayer) throws RemoteException;
+    public void createGame(int maxNumberPlayer) throws RemoteException;
 
     public void drawGold() throws RemoteException;
 
@@ -22,5 +22,5 @@ public interface ClientCommands {
 
     public void setPlayerController(IPlayerController playerController) throws RemoteException;
 
-    public void run(UI ui, String username) throws RemoteException, PlayerNicknameAlreadyExistsException;
+    public void setUI(UI ui);
 }

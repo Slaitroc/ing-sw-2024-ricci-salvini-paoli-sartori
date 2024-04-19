@@ -23,7 +23,8 @@ public class TCPClient implements ClientCommands {
     private String username;
     private Integer idGame;
 
-    //TODO Manca il modo per assegnare correttamente il idGame al singolo player. Ora tenuto costantemente null
+    // TODO Manca il modo per assegnare correttamente il idGame al singolo player.
+    // Ora tenuto costantemente null
     public TCPClient() throws IOException {
         Socket serverSocket = new Socket("127.0.0.1", 1200);
         this.input = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
@@ -31,8 +32,8 @@ public class TCPClient implements ClientCommands {
         run();
     }
 
-    public void run(){
-      new Thread(() -> {
+    public void run() {
+        new Thread(() -> {
             try {
                 runVirtualServer();
             } catch (Exception e) {
@@ -46,7 +47,7 @@ public class TCPClient implements ClientCommands {
         String line;
         while (true) {
             line = scan.nextLine();
-            switch(line) {
+            switch (line) {
                 default -> System.out.println(line);
             }
         }
@@ -62,6 +63,7 @@ public class TCPClient implements ClientCommands {
         output.println("crea game");
         output.println(maxNumberPlayer);
         output.flush();
+
     }
 
     @Override
@@ -87,5 +89,17 @@ public class TCPClient implements ClientCommands {
 
     @Override
     public void run(UI ui, String username) throws RemoteException, PlayerNicknameAlreadyExistsException {
+    }
+
+    @Override
+    public int getGameID() throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getGameID'");
+    }
+
+    @Override
+    public void setUI(UI ui) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setUI'");
     }
 }
