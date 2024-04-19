@@ -1,14 +1,7 @@
 package it.polimi.ingsw.gc31.controller;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.HashMap;
 import java.util.Map;
 
-import it.polimi.ingsw.gc31.DefaultValues;
-import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
-import it.polimi.ingsw.gc31.client_server.interfaces.IPlayerController;
-import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.model.GameModel;
 import it.polimi.ingsw.gc31.model.player.Player;
 
@@ -21,8 +14,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     boolean isStarted = false;
     // private final Map<String, Player> players;
 
-    public GameController(String username, VirtualClient client, int maxNumberPlayers, int idGame)
-            throws RemoteException {
+    public GameController() {
         this.model = new GameModel();
         this.maxNumberPlayers = maxNumberPlayers;
         this.idGame = idGame;

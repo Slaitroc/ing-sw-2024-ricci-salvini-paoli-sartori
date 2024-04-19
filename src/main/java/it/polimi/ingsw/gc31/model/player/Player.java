@@ -15,6 +15,10 @@ import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents a player in the game.
+ * It manages the player's state, hand, score, and other game-related attributes.
+ */
 public class Player {
     private final Board board;
     private int selectedCard;
@@ -28,7 +32,14 @@ public class Player {
     protected PlayerState inGameState;
     protected int score;
 
-    // CONSTRUCTORS
+    /**
+     * Constructor for the Player class.
+     * It initializes the player's state, hand, score, and other attributes.
+     *
+     * @param pawnColor the color of the player's pawn.
+     * @param username  the username of the player.
+     * @param board     the game board.
+     */
     public Player(PawnColor pawnColor, String username, Board board) {
         this.board = board;
         this.username = username;
@@ -49,10 +60,11 @@ public class Player {
     /**
      * Method add the selected card to the player hand
      * Notice that the logic of this class is specified in the states
-     * and the method is called by the 6 public drawing methods.
+     * and the method is called by the six public drawing methods.
      * Here are written the exceptions messages
      *
-     * @param card: address of the card to add in hand
+     * @param card:   address of the card to add in hand
+     * @param byDeck: boolean that specifies if the card is drawn from the deck
      */
     private void addToHand(PlayableCard card, Boolean byDeck) {
         try {
@@ -72,16 +84,18 @@ public class Player {
     // PUBLIC METHODS
 
     /**
-     * Methods to call when drawing a card. There are going to be 6 buttons in the
-     * GUI
-     * and each one is going to call one of those methods.
-     * They call the private method addToHand that calls addToHand of PlayerState
+     * Draws a gold card directly from the goldDeck and adds it to the player's hand.
+     *
+     * @throws EmptyDeckException if the deck is empty.
      */
     public void drawGold() throws EmptyDeckException {
         addToHand(board.getDeckGold().draw(), true);
     }
 
-    public void drawGoldCard1(){
+    /**
+     * Draws the first gold card and adds it to the player's hand.
+     */
+    public void drawGoldCard1() {
         Deck<PlayableCard> deck = board.getDeckGold();
         addToHand(deck.getCard1(), false);
 
@@ -90,6 +104,9 @@ public class Player {
         }
     }
 
+    /**
+     * Draws the second gold card and adds it to the player's hand.
+     */
     public void drawGoldCard2() {
         Deck<PlayableCard> deck = board.getDeckGold();
         addToHand(deck.getCard2(), false);
@@ -100,10 +117,18 @@ public class Player {
 
     }
 
-    public void drawResource() throws EmptyDeckException{
+    /**
+     * Draws a resource card directly from the resourceDeck and adds it to the player's hand.
+     *
+     * @throws EmptyDeckException if the deck is empty.
+     */
+    public void drawResource() throws EmptyDeckException {
         addToHand(board.getDeckResource().draw(), true);
     }
 
+    /**
+     * Draws the first resource card and adds it to the player's hand.
+     */
     public void drawResourceCard1() {
         Deck<PlayableCard> deck = board.getDeckResource();
         addToHand(deck.getCard1(), false);
@@ -113,6 +138,9 @@ public class Player {
         }
     }
 
+    /**
+     * Draws the second resource card and adds it to the player's hand.
+     */
     public void drawResourceCard2() {
         Deck<PlayableCard> deck = board.getDeckResource();
         addToHand(deck.getCard2(), false);
@@ -123,8 +151,8 @@ public class Player {
     }
 
     /**
-     * Basic repositioning of the card in hand implemented temporarily with an input
-     * output System
+     * Basic repositioning of the card in hand temporarily implemented
+     * with an input/output System
      * TODO change I/O System with what we will actually use
      */
     public void moveCardInHand() {
@@ -137,7 +165,7 @@ public class Player {
     }
 
     /**
-     * Method that calls player.playArea.place(point)
+     * Method let the player place the selectedCard in the map
      *
      * @param point: coordinate of where in the map to place the card
      */
@@ -150,6 +178,9 @@ public class Player {
         }
     }
 
+    /**
+     * Method let the player place the starterCard in the map on position (0,0)
+     */
     public void playStarter() {
         try {
             inGameState.playStarter(this);
@@ -172,7 +203,9 @@ public class Player {
         }
     }
 
+
     // GETTERS
+
     public Board getBoard() {
         return this.board;
     }
@@ -201,7 +234,9 @@ public class Player {
         return this.hand;
     }
 
+
     // SETTERS
+
     public void setSelectedCard(int selectedCard) {
         this.selectedCard = selectedCard;
     }
