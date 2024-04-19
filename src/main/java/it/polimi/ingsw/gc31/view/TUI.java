@@ -9,6 +9,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
@@ -132,7 +133,7 @@ public class TUI extends UI {
                 client.setUsername(input);
                 usernameIsValid = true;
 
-            } catch (RemoteException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             } catch (PlayerNicknameAlreadyExistsException e) {
                 message = "Username already exists :,( \n Try another username:";
@@ -238,7 +239,7 @@ public class TUI extends UI {
      */
     private void command_joinGame() {
         tuiWrite("Type gameID:");
-        int input = Integer.parseInt(OurScanner.scanner.nextLine());
+        int input = Integer.parseInt(scanner.nextLine());Team
         try {
             client.joinGame(input);
         } catch (RemoteException e) {
@@ -382,26 +383,6 @@ public class TUI extends UI {
             inputUpdate(input);
         } while (!input.equals(DefaultValues.STOP_CURRENT_TUI_STRING));
 
-    }
-
-    @Override
-    protected IController uiChooseUsername(VirtualServer server_stub, VirtualClient client) throws RemoteException {
-        String message = "Type your username:";
-        String input;
-        IController c = null;
-        do {
-            tuiWritePurple(message);
-            input = OurScanner.scanner.nextLine();
-
-            try {
-                c = server_stub.clientConnection(client, input);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-            message = "Username already exists... \nTry a different username:";
-        } while (c == null);
-        client.setUsername(input);
-        return c;
     }
 
     @Override

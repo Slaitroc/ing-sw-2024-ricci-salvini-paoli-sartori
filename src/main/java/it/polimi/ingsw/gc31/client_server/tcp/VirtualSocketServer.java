@@ -15,6 +15,12 @@ public class VirtualSocketServer implements VirtualClient {
         this.output = output;
         this.server = server;
     }
+
+    @Override
+    public void setGameID(int gameID) throws RemoteException {
+
+    }
+
     @Override
     public void showHand(List<String> hand) throws RemoteException {
         hand.forEach(x->output.println(x));

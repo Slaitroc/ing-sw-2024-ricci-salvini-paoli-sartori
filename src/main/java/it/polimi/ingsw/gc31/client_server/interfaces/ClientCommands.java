@@ -4,13 +4,14 @@ import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.view.UI;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 public interface ClientCommands {
 
     public int getGameID() throws RemoteException;
 
-    public void setUsername(String username) throws RemoteException, PlayerNicknameAlreadyExistsException;
+    public void setUsername(String username) throws IOException, PlayerNicknameAlreadyExistsException;
 
     public void createGame(int maxNumberPlayer) throws RemoteException;
 

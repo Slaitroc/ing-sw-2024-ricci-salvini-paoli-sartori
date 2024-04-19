@@ -28,38 +28,6 @@ public abstract class UI {
      */
     protected boolean inGame;
 
-    // questo metodo viene chiamato nel costruttore delle concretizzazioni di
-    // VirtualCLient.
-    // il controller viene restituito solo quando il nome viene accettato dal
-    // server.
-    /**
-     * Called in the client constructor, this method, is responsible to load the UI
-     * that allows the client to choose its username.
-     * 
-     * @apiNote override {@link #uiChooseUsername(VirtualServer, VirtualClient)} to
-     *          implement this method
-     * 
-     * @param server_stub : remote server object who checks the client's username
-     * @param clients     : the clients to whom, once validated, the username is
-     *                    assigned
-     * @return the remote Controller
-     * @throws RemoteException
-     * 
-     * @Slaitroc
-     */
-    public IController choose_username(VirtualServer server_stub, VirtualClient clients)
-            throws RemoteException {
-        return uiChooseUsername(server_stub, clients);
-    }
-
-    /**
-     * Implementation of {@link #choose_username(VirtualServer, VirtualClient)}
-     * 
-     * @Slaitroc
-     */
-    protected abstract IController uiChooseUsername(VirtualServer server_stub, VirtualClient clients)
-            throws RemoteException;
-
     /**
      * Run a new scene/view. Should be using {@link #inGame} to choose between
      * scenes/views.

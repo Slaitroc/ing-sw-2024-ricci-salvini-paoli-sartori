@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Scanner;
 
+import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
@@ -22,18 +23,21 @@ public class TCPClient implements ClientCommands {
     private final PrintWriter output;
     private String username;
     private Integer idGame;
+    private UI ui;
 
     // TODO Manca il modo per assegnare correttamente il idGame al singolo player.
     // Ora tenuto costantemente null
     public TCPClient() throws IOException {
+        this.username = DefaultValues.DEFAULT_USERNAME;
         Socket serverSocket = new Socket("127.0.0.1", 1200);
         this.input = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
         this.output = new PrintWriter(new OutputStreamWriter(serverSocket.getOutputStream()));
         run();
     }
 
-    public void run() {
-        new Thread(() -> {
+
+    public void run(){
+      new Thread(() -> {
             try {
                 runVirtualServer();
             } catch (Exception e) {
@@ -47,15 +51,31 @@ public class TCPClient implements ClientCommands {
         String line;
         while (true) {
             line = scan.nextLine();
-            switch (line) {
+            switch(line) {
+                case "username already exists" : {
+                    throw new PlayerNicknameAlreadyExistsException();
+                }
+                case "show list game" : {
+                    List<String> list = new ArrayList<>();
+                    list.add("ciao");
+                    ui.showListGame(list);
+                }
                 default -> System.out.println(line);
             }
         }
     }
 
     @Override
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(String username) throws IOException, PlayerNicknameAlreadyExistsException {
+        output.println("connect");
+        output.println(username);
+        output.flush();
+
+        String line = input.readLine();
+        if(line.equals("username already exists"))
+            throw new PlayerNicknameAlreadyExistsException();
+        else if(line.equals("username set"))
+            this.username=username;
     }
 
     @Override
@@ -79,16 +99,13 @@ public class TCPClient implements ClientCommands {
 
     @Override
     public void getGameList() throws RemoteException {
-
+        output.println("get game list");
+        output.flush();
     }
 
     @Override
     public void setPlayerController(IPlayerController playerController) throws RemoteException {
 
-    }
-
-    @Override
-    public void run(UI ui, String username) throws RemoteException, PlayerNicknameAlreadyExistsException {
     }
 
     @Override
@@ -99,7 +116,6 @@ public class TCPClient implements ClientCommands {
 
     @Override
     public void setUI(UI ui) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setUI'");
+        this.ui = ui;
     }
 }

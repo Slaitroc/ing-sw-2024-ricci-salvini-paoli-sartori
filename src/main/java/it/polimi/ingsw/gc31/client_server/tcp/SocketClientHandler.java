@@ -33,18 +33,23 @@ public class SocketClientHandler{
         this.output = output;
     }
 
-    public void runVirtualView() throws IOException, PlayerNicknameAlreadyExistsException {
+
+    public void runVirtualView() throws IOException{
         String line;
         while((line = input.readLine()) != null){
 
             switch(line) {
-                case "set username": {
-                    this.username = input.readLine();
-                    System.out.println("[SERVER-Tcp] Username settato per: "+username);
-                    sendMsg("[ SERVER ] L'username è stato settato correttamente");
-                }
                 case "connect" : {
-                    controller.connect(client, username);
+                    try {
+                        line=input.readLine();
+                        controller.connect(client, line);
+                        this.username=line;
+                        output.println("username set");
+                        output.flush();
+                    } catch (PlayerNicknameAlreadyExistsException e) {
+                        output.println("username already exists");
+                        output.flush();
+                    }
                     System.out.println("[SERVER-Tcp] New client connected. Username: "+username);
                     break;
                 }
@@ -56,11 +61,12 @@ public class SocketClientHandler{
                     runCliInitGame();
                     break;
                 }
-                case "mostra game" : {
+                case "get game list" : {
                     try {
                         controller.getGameList(username);
                     } catch (NoGamesException e) {
-                        throw new RuntimeException(e);
+                        output.println("no game exception");
+                        output.flush();
                     }
                     System.out.println("[SERVER-Tcp] Richiesta di gameList. Username: "+username);
                     break;
@@ -87,38 +93,6 @@ public class SocketClientHandler{
         }
     }
 
-
-    public void runCliInitGame() throws RemoteException {
-        /*
-        sendMsg("[ SERVER ] Game joined. Possible commands: [ info , mostra mano , draw gold ]");
-
-        Scanner scan = new Scanner(input);
-        while (true) {
-            String command = scan.nextLine();
-
-            switch(command){
-                case "info" : {
-                    if (mainGameController.isGameStarted()) {
-                        sendMsg("[ SERVER ] Il gioco è iniziato");
-                    } else {
-                        sendMsg("[ SERVER ] Il gioco non è ancora iniziato");
-                    }
-                }
-                case "mostra mano" : {
-                    sendMsg("[ SERVER ] Richiesta ricevuta");
-                    playerController.getHand();
-                }
-                case "draw gold" : {
-                    sendMsg("[ SERVER ] Richiesta ricevuta");
-                    playerController.drawGold();
-                }
-                // Same as before, probably is useless
-                //default -> sendMsg("[ SERVER ] [INVALID MESSAGE]");
-            }
-        }
-
-         */
-    }
     private void sendMsg(String line){
         output.println(line);
         output.flush();
