@@ -34,6 +34,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
      */
     public RmiClient() throws RemoteException, NotBoundException {
         this.server = (VirtualServer) LocateRegistry.getRegistry("127.0.0.1", 1100).lookup("VirtualServer");
+        this.server.RMIserverWrite("New connection detected...");
         this.username = DefaultValues.DEFAULT_USERNAME;
         this.controller = null;
     }

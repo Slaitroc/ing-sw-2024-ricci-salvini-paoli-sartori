@@ -32,4 +32,9 @@ public class RmiServer implements VirtualServer {
         return controller;
     }
 
+    @Override
+    public void RMIserverWrite(String text) throws RemoteException {
+        serverWrite(text);
+    }
+
 }

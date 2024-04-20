@@ -71,7 +71,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     }
 
     private void gameControllerWrite(String text) {
-        System.out.println(DefaultValues.ANSI_GREEN + DefaultValues.RMI_SERVER_TAG + DefaultValues.ANSI_BLUE
-                + DefaultValues.CONTROLLER_TAG + DefaultValues.ANSI_RESET + text);
+        System.out.println(DefaultValues.ANSI_PURPLE
+                + DefaultValues.gameControllerTag(String.valueOf(idGame)) + DefaultValues.ANSI_RESET + text);
     }
 }

@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IPlayerController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
@@ -27,6 +28,11 @@ public class PlayerController extends UnicastRemoteObject implements IPlayerCont
         gson = new GsonBuilder()
                 .registerTypeAdapter(PlayableCard.class, new PlayableCardAdapter())
                 .create();
+    }
+
+    private void playerControllerWrite(String text) {
+        System.out.println(DefaultValues.ANSI_CYAN
+                + DefaultValues.playerControllerTag(player.getName()) + DefaultValues.ANSI_RESET + text);
     }
 
     @Override

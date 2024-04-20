@@ -45,7 +45,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     }
 
     private void controllerWrite(String text) {
-        System.out.println(DefaultValues.ANSI_GREEN + DefaultValues.RMI_SERVER_TAG + DefaultValues.ANSI_BLUE
+        System.out.println(DefaultValues.ANSI_BLUE
                 + DefaultValues.CONTROLLER_TAG + DefaultValues.ANSI_RESET + text);
     }
 
@@ -62,7 +62,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     @Override
     public IGameController createGame(String username, int maxNumberPlayers) throws RemoteException {
         VirtualClient client = tempClients.get(username);
-        mgcList.add(new GameController(username, client, maxNumberPlayers, mgcList.size() - 1));
+        mgcList.add(new GameController(username, client, maxNumberPlayers, mgcList.size()));
         client.setGameID(mgcList.size() - 1);
         tempClients.remove(username);
         controllerWrite("New Game Created with ID: " + (mgcList.size()));
