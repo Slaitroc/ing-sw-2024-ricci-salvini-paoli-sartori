@@ -20,7 +20,7 @@ public class RmiServer implements VirtualServer {
     public RmiServer(IController controller) throws RemoteException {
         this.controller = controller;
         LocateRegistry.createRegistry(1100).rebind("VirtualServer", UnicastRemoteObject.exportObject(this, 0));
-        serverWrite("Rmi server created");
+        serverWrite("Server created");
     }
 
     @Override

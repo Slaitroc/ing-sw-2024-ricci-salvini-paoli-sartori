@@ -136,8 +136,6 @@ public class TUI extends UI {
                 e.printStackTrace();
             } catch (PlayerNicknameAlreadyExistsException e) {
                 message = "Username already exists :,( \n Try another username:";
-                e.printStackTrace();
-
             }
         }
 
