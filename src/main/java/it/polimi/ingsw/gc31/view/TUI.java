@@ -159,7 +159,7 @@ public class TUI extends UI {
         int input = Integer.parseInt(scanner.nextLine());
         try {
             client.createGame(input);
-        } catch (RemoteException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -185,7 +185,7 @@ public class TUI extends UI {
     private void command_showGames() {
         try {
             client.getGameList();
-        } catch (RemoteException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         } catch (NoGamesException e) {
             e.printStackTrace();

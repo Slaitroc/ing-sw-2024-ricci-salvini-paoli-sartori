@@ -15,35 +15,47 @@ import java.util.List;
  * sends the data, that need to be updated and showed to other clients, to the
  * server
  */
-public class SocketClientHandler {
+public class SocketClientHandler implements VirtualClient{
     final IController controller;
     private IGameController gameController;
     private String username;
     private IPlayerController playerController;
-    private VirtualClient client;
+    private Integer idGame;
 
     private final TCPServer server;
     private final BufferedReader input;
     private final PrintWriter output;
 
     // TODO Modificare l'inizializzazione di idGame
-    public SocketClientHandler(IController controller, TCPServer server, BufferedReader input, PrintWriter output)
-            throws RemoteException {
+
+    /**
+     * This method is the constructor of the client handler
+     * @param controller is the IController of the specific client
+     * @param server is the TCPServer linked to that client handler
+     * @param input is the reference to the input stream of the socket connection
+     * @param output is the reference to the output stream of the socket connection
+     */
+    public SocketClientHandler(IController controller, TCPServer server, BufferedReader input, PrintWriter output) {
         this.controller = controller;
-        this.server = server;
+        this.server=server;
         this.input = input;
         this.output = output;
     }
 
+    /**
+     * This method is invoked on the client handler creation (by a Thread), read in an infinite loop
+     * the commands sent by the TCPClient and invokes the methods based on the client messages
+     * @throws IOException if an error occurs reading on the socket input stream
+     */
     public void runVirtualView() throws IOException {
         String line;
         while ((line = input.readLine()) != null) {
 
             switch (line) {
                 case "connect": {
+                    line = input.readLine();
                     try {
-                        line = input.readLine();
-                        controller.connect(client, line);
+                        controller.connect(this, line);
                         this.username = line;
                         output.println("username set");
                         output.flush();
@@ -54,11 +66,11 @@ public class SocketClientHandler {
                     System.out.println("[SERVER-Tcp] New client connected. Username: " + username);
                     break;
                 }
-                case "crea game": {
+                case "create game": {
                     int maxNumberPlayer = Integer.parseInt(input.readLine());
                     gameController = controller.createGame(username, maxNumberPlayer);
-
-                    System.out.println("[SERVER-Tcp] New game create. IdGame: " + maxNumberPlayer);
+                    output.println(this.idGame);
+                    output.flush();
                     break;
                 }
                 case "get game list": {
@@ -68,7 +80,6 @@ public class SocketClientHandler {
                         output.println("no game exception");
                         output.flush();
                     }
-                    System.out.println("[SERVER-Tcp] Richiesta di gameList. Username: " + username);
                     break;
                 }
                 case "join game": {
@@ -76,28 +87,64 @@ public class SocketClientHandler {
 
                     gameController = controller.joinGame(username, idGame);
 
-                    System.out.println("[SERVER-Tcp] Il giocatore " + username + " ha joinato la partita " + idGame);
                     break;
                 }
                 case "draw gold": {
                     playerController.drawGold();
 
-                    System.out.println("[SERVER-Tcp] Il giocatore " + username + " ha pescato una carta gold");
                     break;
                 }
-                // It's probably useless. If the user write a not valid command it is
-                // immediately
-                // notified
-                // default : sendMsg("[ SERVER ] [INVALID MESSAGE]");
             }
         }
     }
 
-    private void sendMsg(String line) {
-        output.println(line);
+    /**
+     * This method sets the gameID
+     * @param gameID is the value that needs to be set
+     * @throws RemoteException
+     */
+    @Override
+    public void setGameID(int gameID) throws RemoteException {
+        this.idGame = gameID;
+    }
+
+    /**
+     * This methods should send a message to the TCPClient with the serialization
+     * of the player's hand
+     * @param hand is the list that contains all the card held by the player
+     * @throws RemoteException
+     */
+    @Override
+    public void showHand(List<String> hand) throws RemoteException {
+
+    }
+
+    /**
+     * This method should send to the tcp client the list of games created.
+     * In order to do so the method writes on the socket stream every String
+     * that represents a game
+     * @param listGame is the list with every String representing a game
+     * @throws RemoteException
+     */
+    @Override
+    public void showListGame(List<String> listGame) throws RemoteException {
+        output.println("ok");
+        //listGame.forEach(output::println);
+        for (String s : listGame)
+            output.println(s);
+        output.println("game list finished");
         output.flush();
     }
 
+    @Override
+    public void showMessage(String msg) throws RemoteException {
+
+    }
+
+    /**
+     * This method should set the playerController with the one got as parameter
+     * @param playerController is the playerController that needs to be set
+     */
     public void setPlayerController(IPlayerController playerController) {
         this.playerController = playerController;
     }
