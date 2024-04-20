@@ -13,13 +13,13 @@ public interface ClientCommands {
 
     public void setUsername(String username) throws IOException, PlayerNicknameAlreadyExistsException;
 
-    public void createGame(int maxNumberPlayer) throws RemoteException;
+    public void createGame(int maxNumberPlayer) throws IOException;
 
     public void drawGold() throws RemoteException;
 
     public void joinGame(int gameId) throws RemoteException;
 
-    public void getGameList() throws RemoteException, NoGamesException;
+    public void getGameList() throws IOException, NoGamesException;
 
     public void setPlayerController(IPlayerController playerController) throws RemoteException;
 
