@@ -33,7 +33,10 @@ public abstract class TuiState {
     protected void show_options() {
         tuiWriteGreen(">>Commands List<< ");
         for (Map.Entry<String, String> entry : commandsInfo.entrySet()) {
-            System.out.println(entry.getKey() + "\t : \t" + entry.getValue());
+            String command = entry.getKey();
+            String description = entry.getValue();
+            String formattedLine = String.format("%-15s : %s", command, description);
+            System.out.println(formattedLine);
         }
     }
 
