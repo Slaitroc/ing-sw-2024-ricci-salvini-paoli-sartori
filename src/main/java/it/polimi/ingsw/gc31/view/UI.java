@@ -17,16 +17,6 @@ public abstract class UI {
      * @Slaitroc
      */
     protected ClientCommands client;
-    /**
-     * This variable's type could change during the development.
-     * Its scope is to track the different section of an UI (Scenes for GUI
-     * and
-     * views for TUI)
-     * Probably it'll become an array of boolean or a Map or IDK
-     * 
-     * @Slaitroc
-     */
-    protected boolean inGame;
 
     /**
      * Run a new scene/view. Should be using {@link #inGame} to choose between
@@ -46,35 +36,6 @@ public abstract class UI {
      * @Slaitroc
      */
     protected abstract void uiRunUI();
-
-    /**
-     * Remote controllers may check the state of the clients' UI
-     * 
-     * @return
-     * @throws RemoteException
-     * 
-     * @see {@link #inGame}
-     * @see #isInGame()
-     * @see #setQuitRun(boolean)
-     * 
-     * @Slaitroc
-     */
-    public abstract boolean isInGame() throws RemoteException;
-
-    /**
-     * Remote controller may want to change clients' view/scene
-     * 
-     * @param inGame
-     * 
-     * @throws RemoteException
-     * 
-     * @see {@link #inGame}
-     * @see #setQuitRun(boolean)
-     * @see #isInGame()
-     * 
-     * @Slaitroc
-     */
-    public abstract void setInGame(boolean inGame) throws RemoteException;
 
     /**
      * Remote controller may want to stop (and typically rerun) the current UI

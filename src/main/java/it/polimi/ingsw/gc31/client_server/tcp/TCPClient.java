@@ -29,6 +29,7 @@ public class TCPClient implements ClientCommands {
 
     /**
      * This method is the constructor of the TCPClient
+     * 
      * @throws IOException
      */
     public TCPClient() throws IOException {
@@ -36,11 +37,12 @@ public class TCPClient implements ClientCommands {
         Socket serverSocket = new Socket("127.0.0.1", 1200);
         this.input = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
         this.output = new PrintWriter(new OutputStreamWriter(serverSocket.getOutputStream()));
-        //run();
+        // run();
     }
 
     /**
-     * Method disabled. It's only purpose was to launch the runVirtualServer method (below)
+     * Method disabled. It's only purpose was to launch the runVirtualServer method
+     * (below)
      */
     public void run() {
         new Thread(() -> {
@@ -54,7 +56,9 @@ public class TCPClient implements ClientCommands {
 
     /**
      * This method is disabled because the messages sent by the server are red
-     * in every method corresponding with the specific request launched by the client
+     * in every method corresponding with the specific request launched by the
+     * client
+     * 
      * @throws RemoteException
      */
     public void runVirtualServer() throws RemoteException {
@@ -68,8 +72,8 @@ public class TCPClient implements ClientCommands {
                     list.add("ciao");
                     ui.showListGame(list);
                 }
-                //default:
-                //    System.out.println(line);
+                // default:
+                // System.out.println(line);
             }
         }
     }
@@ -78,10 +82,14 @@ public class TCPClient implements ClientCommands {
      * This method is the first called by the client, it sends the client handler
      * the request to execute the "connect" method. If the server has already this
      * username ane exception is launched
+     * 
      * @param username is the username set by the client
-     * @throws IOException if there is an error reading the client handler messages
-     * @throws PlayerNicknameAlreadyExistsException if the username wrote by the client
-     *                                              is already in the server database
+     * @throws IOException                          if there is an error reading the
+     *                                              client handler messages
+     * @throws PlayerNicknameAlreadyExistsException if the username wrote by the
+     *                                              client
+     *                                              is already in the server
+     *                                              database
      */
     @Override
     public void setUsername(String username) throws IOException, PlayerNicknameAlreadyExistsException {
@@ -99,6 +107,7 @@ public class TCPClient implements ClientCommands {
     /**
      * This method send to the client handler the string corresponding with the
      * create game request
+     * 
      * @param maxNumberPlayer is the max number of the players for the new game
      * @throws IOException if there is an error reading the server messages
      */
@@ -125,6 +134,7 @@ public class TCPClient implements ClientCommands {
     /**
      * This method send the string that identifies the join game request made
      * by the player
+     * 
      * @param gameId is the gameId of the particular game the player wants to join
      * @throws RemoteException
      */
@@ -136,13 +146,20 @@ public class TCPClient implements ClientCommands {
     }
 
     /**
-     * This method should write on the user terminal the list of games already created
-     * Firstly it send to the client handler the request to execute the specified method.
-     * After that the method waits for the client handler's response, the response can be an exception
-     * (in this case the method launches the exception to the TUI) or the message "ok" otherwise.
-     * In this case the method reads every String sent by the client handler, collect every
+     * This method should write on the user terminal the list of games already
+     * created
+     * Firstly it send to the client handler the request to execute the specified
+     * method.
+     * After that the method waits for the client handler's response, the response
+     * can be an exception
+     * (in this case the method launches the exception to the TUI) or the message
+     * "ok" otherwise.
+     * In this case the method reads every String sent by the client handler,
+     * collect every
      * String in "list" and then call the method of the ui.
-     * @throws IOException is launched if an error is occurred in the readLine method
+     * 
+     * @throws IOException      is launched if an error is occurred in the readLine
+     *                          method
      * @throws NoGamesException is launched if there are no created games
      */
     @Override
@@ -152,19 +169,23 @@ public class TCPClient implements ClientCommands {
         output.flush();
 
         String line = input.readLine();
-        if(line.equals("no game exception"))
+        if (line.equals("no game exception"))
             throw new NoGamesException();
-        else if (line.equals("ok")){
-            while( !(line = input.readLine()).equals("game list finished"))
+        else if (line.equals("ok")) {
+            while (!(line = input.readLine()).equals("game list finished"))
                 list.add(line);
         }
         ui.showListGame(list);
     }
 
     /**
-     * NOTE: The TCPClient doesn't have any controller, the controllers are held in the client handler
-     * the setter is invoked by the GameController (server-side). It's useless to have this method here.
-     * This method sets a specific IPlayerController for the controller of the TCPClient
+     * NOTE: The TCPClient doesn't have any controller, the controllers are held in
+     * the client handler
+     * the setter is invoked by the GameController (server-side). It's useless to
+     * have this method here.
+     * This method sets a specific IPlayerController for the controller of the
+     * TCPClient
+     * 
      * @param playerController is the specific controller to be assigned
      * @throws RemoteException
      */
@@ -175,6 +196,7 @@ public class TCPClient implements ClientCommands {
 
     /**
      * This method returns the player's game idGame
+     * 
      * @return the idGame of the game
      * @throws RemoteException
      */
@@ -185,6 +207,7 @@ public class TCPClient implements ClientCommands {
 
     /**
      * This method set the UI for the TCPClient
+     * 
      * @param ui is the concrete UI that needs to be assigned for this TCPClient
      */
     @Override

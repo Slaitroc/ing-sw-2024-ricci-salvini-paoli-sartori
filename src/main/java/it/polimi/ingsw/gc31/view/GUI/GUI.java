@@ -31,16 +31,6 @@ public class GUI extends UI {
     }
 
     @Override
-    public boolean isInGame() throws RemoteException {
-        throw new UnsupportedOperationException("Unimplemented method 'isInGame'");
-    }
-
-    @Override
-    public void setInGame(boolean inGame) throws RemoteException {
-        throw new UnsupportedOperationException("Unimplemented method 'setInGame'");
-    }
-
-    @Override
     public void setQuitRun(boolean bool) throws RemoteException {
         throw new UnsupportedOperationException("Unimplemented method 'setQuitRun'");
     }
