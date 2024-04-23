@@ -17,7 +17,7 @@ import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 // Manages interaction with clients
 
 /**
- * This class represents the main controller of the game.
+ * This class represents the main controller of all the games that ar currently running.
  * It manages the interaction with the clients and the creation of game controllers for each match.
  * It implements the IController interface and extends the UnicastRemoteObject to allow remote method invocation.
  */
@@ -34,9 +34,9 @@ public class Controller extends UnicastRemoteObject implements IController {
         }
     }
 
-    private final List<GameController> mgcList;
+    private final List<GameController> gameControlList;
     private Map<String, VirtualClient> tempClients;
-    private Set<String> nicknames;
+    private final Set<String> nicknames;
 
     /**
      * Private constructor for the Controller class.
@@ -47,24 +47,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     private Controller() throws RemoteException {
         tempClients = new HashMap<>();
         nicknames = new HashSet<>();
-        mgcList = new ArrayList<>();
-    }
-
-    /**
-     * @return the singleton instance.
-     */
-    public static synchronized Controller getController() {
-        return singleton;
-    }
-
-    /**
-     * @param id the id of the MainGameController.
-     * @return the MainGameController with the specified id.
-     */
-    public MainGameController getMGController(int id) {
-        synchronized (mgcList) {
-            return mgcList.get(id);
-        }
+        gameControlList = new ArrayList<>();
     }
 
     /**
@@ -97,42 +80,50 @@ public class Controller extends UnicastRemoteObject implements IController {
     @Override
     public IGameController createGame(String username, int maxNumberPlayers) throws RemoteException {
         VirtualClient client = tempClients.get(username);
-        mgcList.add(new GameController(username, client, maxNumberPlayers, mgcList.size() - 1));
-        client.setGameID(mgcList.size() - 1);
+        gameControlList.add(new GameController(username, client, maxNumberPlayers, gameControlList.size() - 1));
+        client.setGameID(gameControlList.size() - 1);
         tempClients.remove(username);
-        controllerWrite("New Game Created with ID: " + (mgcList.size()));
-        return mgcList.get(mgcList.size() - 1);
+        controllerWrite("New Game Created with ID: " + (gameControlList.size()));
+        return gameControlList.getLast();
+    }
+
+    @Override
+    public IGameController joinGame(String username, int idGame) throws RemoteException {
+        gameControlList.get(idGame).joinGame(username, tempClients.get(username));
+        tempClients.remove(username);
+
+        return gameControlList.get(idGame);
+    }
+
+    //GETTERS
+
+    /**
+     * @return the singleton instance.
+     */
+    public static synchronized Controller getController() {
+        return singleton;
     }
 
     /**
      * Returns a list of the current games.
      *
-     * @return a list of the current games.
      * @throws RemoteException  if an RMI error occurs.
      * @throws NoGamesException if there are no current games.
      */
     @Override
     public void getGameList(String username) throws RemoteException, NoGamesException {
-        if (mgcList.isEmpty()) {
+        if (gameControlList.isEmpty()) {
             throw new NoGamesException();
         } else {
             List<String> res = new ArrayList<>();
-            for (int i = 0; i < mgcList.size(); i++) {
+            for (int i = 0; i < gameControlList.size(); i++) {
                 res.add(
                         i + " "
-                                + mgcList.get(i).getMaxNumberPlayers() + " / "
-                                + mgcList.get(i).getCurrentNumberPlayers());
+                                + gameControlList.get(i).getMaxNumberPlayers() + " / "
+                                + gameControlList.get(i).getCurrentNumberPlayers());
             }
             // TODO gestire qua l'eccezione?
             tempClients.get(username).showListGame(res);
         }
-    }
-
-    @Override
-    public IGameController joinGame(String username, int idGame) throws RemoteException {
-        mgcList.get(idGame).joinGame(username, tempClients.get(username));
-        tempClients.remove(username);
-
-        return mgcList.get(idGame);
     }
 }
