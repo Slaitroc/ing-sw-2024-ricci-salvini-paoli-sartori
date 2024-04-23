@@ -26,9 +26,8 @@ public class Player {
     private ObjectiveCard objectiveCard;
     private final String username;
     private final PlayArea playArea;
-    private PawnColor pawnColor;
+    private final PawnColor pawnColor;
     protected final List<PlayableCard> hand;
-    protected PlayableCard starterCard;
     protected PlayerState inGameState;
     protected int score;
 
@@ -66,18 +65,22 @@ public class Player {
      * @param card:   address of the card to add in hand
      * @param byDeck: boolean that specifies if the card is drawn from the deck
      */
-    private void addToHand(PlayableCard card, Boolean byDeck) {
+    private boolean addToHand(PlayableCard card, Boolean byDeck) {
         try {
             inGameState.addToHand(card, this, byDeck);
+            return true;
         } catch (IllegalStateOperationException e) {
             System.out.println("Player " + username + " cannot draw in current state");
             e.getStackTrace();
+            return false;
         } catch (FullHandException e) {
             System.out.println("Player " + username + "'s hand is full");
             e.getStackTrace();
+            return false;
         } catch (InvalidCardDraw e) {
             System.out.println("Player " + username + " tried to draw an invalid card");
             e.getStackTrace();
+            return false;
         }
     }
 
@@ -88,32 +91,34 @@ public class Player {
      *
      * @throws EmptyDeckException if the deck is empty.
      */
-    public void drawGold() throws EmptyDeckException {
-        addToHand(board.getDeckGold().draw(), true);
+    public boolean drawGold() throws EmptyDeckException {
+        Deck<PlayableCard> deck = board.getDeckGold();
+        if (deck.peekCard() == null) {
+            deck.replaceDeck(board.getDeckResource().getQueueDeck());
+        }
+        return addToHand(deck.draw(), true);
     }
 
     /**
      * Draws the first gold card and adds it to the player's hand.
      */
-    public void drawGoldCard1() {
+    public boolean drawGoldCard1() {
         Deck<PlayableCard> deck = board.getDeckGold();
-        addToHand(deck.getCard1(), false);
-
         if (deck.peekCard1() == null) {
             deck.replaceDeck(board.getDeckResource().getQueueDeck());
         }
+        return addToHand(deck.getCard1(), false);
     }
 
     /**
      * Draws the second gold card and adds it to the player's hand.
      */
-    public void drawGoldCard2() {
+    public boolean drawGoldCard2() {
         Deck<PlayableCard> deck = board.getDeckGold();
-        addToHand(deck.getCard2(), false);
-
         if (deck.peekCard2() == null) {
             deck.replaceDeck(board.getDeckResource().getQueueDeck());
         }
+        return addToHand(deck.getCard2(), false);
 
     }
 
@@ -122,32 +127,34 @@ public class Player {
      *
      * @throws EmptyDeckException if the deck is empty.
      */
-    public void drawResource() throws EmptyDeckException {
-        addToHand(board.getDeckResource().draw(), true);
+    public boolean drawResource() throws EmptyDeckException {
+        Deck<PlayableCard> deck = board.getDeckResource();
+        if (deck.peekCard() == null) {
+            deck.replaceDeck(board.getDeckGold().getQueueDeck());
+        }
+        return addToHand(deck.draw(), true);
     }
 
     /**
      * Draws the first resource card and adds it to the player's hand.
      */
-    public void drawResourceCard1() {
+    public boolean drawResourceCard1() {
         Deck<PlayableCard> deck = board.getDeckResource();
-        addToHand(deck.getCard1(), false);
-
         if (deck.peekCard1() == null) {
             deck.replaceDeck(board.getDeckGold().getQueueDeck());
         }
+        return addToHand(deck.getCard1(), false);
     }
 
     /**
      * Draws the second resource card and adds it to the player's hand.
      */
-    public void drawResourceCard2() {
+    public boolean drawResourceCard2() {
         Deck<PlayableCard> deck = board.getDeckResource();
-        addToHand(deck.getCard2(), false);
-
         if (deck.peekCard2() == null) {
             deck.replaceDeck(board.getDeckGold().getQueueDeck());
         }
+        return addToHand(deck.getCard2(), false);
     }
 
     /**
@@ -218,7 +225,7 @@ public class Player {
         return this.selectedStarterCard;
     }
 
-    public String getName() {
+    public String getUsername() {
         return this.username;
     }
 
@@ -232,6 +239,14 @@ public class Player {
 
     public List<PlayableCard> getHand() {
         return this.hand;
+    }
+
+    public ObjectiveCard getObjectiveCard() {
+        return this.objectiveCard;
+    }
+
+    public PawnColor getPawnColor() {
+        return this.pawnColor;
     }
 
 

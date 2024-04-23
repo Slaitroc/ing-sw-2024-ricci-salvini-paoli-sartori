@@ -39,6 +39,7 @@ public class Start extends PlayerState {
     @Override
     public void playStarter(Player player) {
         player.getPlayArea().placeStarter(player.getStarterCard());
+        player.setInGameState(new NotPlaced());
     }
 
 }
