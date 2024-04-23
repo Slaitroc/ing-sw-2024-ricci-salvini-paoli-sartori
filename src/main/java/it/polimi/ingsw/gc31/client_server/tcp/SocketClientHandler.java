@@ -8,7 +8,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class receives the inputs from the virtual socket server, executes the
@@ -22,12 +24,11 @@ public class SocketClientHandler implements VirtualClient {
     private String username;
     private IPlayerController playerController;
     private Integer idGame;
+    //private Map<String, Runnable> commandsMap;
 
     private final TCPServer server;
     private final BufferedReader input;
     private final PrintWriter output;
-
-    // TODO Modificare l'inizializzazione di idGame
 
     /**
      * This method is the constructor of the client handler
@@ -44,7 +45,23 @@ public class SocketClientHandler implements VirtualClient {
         this.server = server;
         this.input = input;
         this.output = output;
+    //    initializeMap();
     }
+
+
+    /*
+    private void initializeMap(){
+        this.commandsMap = new HashMap<>();
+        this.commandsMap.put("create game", this::runCreateGame);
+    }
+
+    private void runCreateGame() throws IOException {
+        int maxNumberPlayer = Integer.parseInt(input.readLine());
+        gameController = controller.createGame(username, maxNumberPlayer);
+        output.println(this.idGame);
+        output.flush();
+    }
+    */
 
     /**
      * This method is invoked on the client handler creation (by a Thread), read in
@@ -125,7 +142,12 @@ public class SocketClientHandler implements VirtualClient {
      */
     @Override
     public void showHand(List<String> hand) throws RemoteException {
-
+        output.println("start of list");
+        for (String s : hand){
+            output.println(s);
+        }
+        output.println("end of list");
+        output.flush();
     }
 
     /**
@@ -146,17 +168,18 @@ public class SocketClientHandler implements VirtualClient {
         output.flush();
     }
 
-    @Override
-    public void showMessage(String msg) throws RemoteException {
-
-    }
-
     /**
      * This method should set the playerController with the one got as parameter
      * 
      * @param playerController is the playerController that needs to be set
      */
+    @Override
     public void setPlayerController(IPlayerController playerController) {
         this.playerController = playerController;
+    }
+
+    @Override
+    public void showMessage(String msg) throws RemoteException {
+
     }
 }
