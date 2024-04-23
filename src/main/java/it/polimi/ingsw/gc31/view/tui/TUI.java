@@ -32,7 +32,6 @@ public class TUI extends UI {
      * <code> false </code> otherwise
      * 
      */
-    private boolean ready = false;
 
     public ClientCommands getClient() {
         return this.client;

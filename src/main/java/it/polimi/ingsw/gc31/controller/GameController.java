@@ -82,6 +82,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         // TODO mandare messaggio al client di connessione al server
         if (maxNumberPlayers == this.clients.size()) {
             gameControllerWrite("Il numero di giocatori per la partita " + maxNumberPlayers + " è stato raggiunto");
+            initGame();
         }
     }
 
