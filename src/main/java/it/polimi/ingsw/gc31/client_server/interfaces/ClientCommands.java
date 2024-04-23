@@ -21,7 +21,5 @@ public interface ClientCommands {
 
     public void getGameList() throws RemoteException, NoGamesException;
 
-    public void setPlayerController(IPlayerController playerController) throws RemoteException;
-
     public void setUI(UI ui);
 }

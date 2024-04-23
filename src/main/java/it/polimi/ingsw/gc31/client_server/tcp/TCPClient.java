@@ -103,11 +103,6 @@ public class TCPClient implements ClientCommands {
     }
 
     @Override
-    public void setPlayerController(IPlayerController playerController) throws RemoteException {
-
-    }
-
-    @Override
     public int getGameID() throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getGameID'");

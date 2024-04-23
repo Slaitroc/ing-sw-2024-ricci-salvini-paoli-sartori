@@ -18,7 +18,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     private IGameController gameController;
     private Integer idGame;
     private String username;
-    private IPlayerController playerController;
     private UI ui;
     private boolean ready = false;
 
@@ -29,8 +28,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
      * <p>
      * - sets its name and assigning it the remote controller once the name is
      * verified by the server controller.
-     * 
-     * @throws RemoteException
      */
     public RmiClient() throws RemoteException, NotBoundException {
         this.server = (VirtualServer) LocateRegistry.getRegistry("127.0.0.1", 1100).lookup("VirtualServer");
@@ -71,7 +68,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void drawGold() throws RemoteException {
-        playerController.drawGold();
+        gameController.drawGold(username);
     }
 
     @Override
@@ -96,8 +93,8 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     // Metodi del virtualController
 
     @Override
-    public void showHand(List<String> hand) throws RemoteException {
-        ui.showHand(hand);
+    public void showCards(List<String> cards) throws RemoteException {
+        ui.showCards(cards);
     }
 
     @Override
@@ -105,17 +102,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         ui.showMessage(msg);
     }
 
-    @Override
-    public void setPlayerController(IPlayerController playerController) throws RemoteException {
-        this.playerController = playerController;
-    }
 
-    /**
-     * Private procedure that allow the clients to choose its UI type during its
-     * creation.
-     *
-     * @return the chosen UI
-     */
     // private UI setUI() {
     // boolean isValid = false;
     // String message = "Chose UI:\n\t1 -> TUI\n\t2 -> GUI:";
@@ -125,7 +112,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     // System.out.println(message);
     // input = OurScanner.scanner.nextLine();
     // if (input.equals("1") || input.equals("2")) {
-    // isValid = true;
+    // isValid = true;switch
     // }
     // message = "Invalid input";
     // } while (!isValid);
@@ -145,11 +132,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     // return this.ready;
     // }
 
-    /**
-     * Stops the current TUI sets it to game TUI and rerun it
-     * 
-     * @throws RemoteException
-     */
     // @Override
     // public void startGame() throws RemoteException {
     // UI.setQuitRun(true);

@@ -11,7 +11,7 @@ public class VirtualSocketServer implements VirtualClient {
     private final PrintWriter output;
     private final SocketClientHandler server;
 
-    public VirtualSocketServer(PrintWriter output, SocketClientHandler server){
+    public VirtualSocketServer(PrintWriter output, SocketClientHandler server) {
         this.output = output;
         this.server = server;
     }
@@ -22,14 +22,14 @@ public class VirtualSocketServer implements VirtualClient {
     }
 
     @Override
-    public void showHand(List<String> hand) throws RemoteException {
-        hand.forEach(x->output.println(x));
+    public void showCards(List<String> hand) throws RemoteException {
+        hand.forEach(x -> output.println(x));
         output.flush();
     }
 
     @Override
     public void showListGame(List<String> listGame) throws RemoteException {
-        listGame.forEach(x->output.println(x));
+        listGame.forEach(x -> output.println(x));
         output.flush();
     }
 
@@ -37,10 +37,5 @@ public class VirtualSocketServer implements VirtualClient {
     public void showMessage(String msg) throws RemoteException {
         output.println(msg);
         output.flush();
-    }
-
-    @Override
-    public void setPlayerController(IPlayerController playerController) throws RemoteException {
-        server.setPlayerController(playerController);
     }
 }

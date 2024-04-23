@@ -1,7 +1,9 @@
 package it.polimi.ingsw.gc31.view;
 
 import it.polimi.ingsw.gc31.DefaultValues;
+
 import static it.polimi.ingsw.gc31.OurScanner.scanner;
+
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
@@ -18,7 +20,7 @@ public class TUI extends UI {
     /**
      * when <code> true </code> stop the current TUI and reset itself to
      * <code> false </code>
-     * 
+     *
      * @Slaitroc
      */
     private boolean quitRun = false;
@@ -30,7 +32,6 @@ public class TUI extends UI {
      * <code> true </code> if the player is ready to start the game
      * <p>
      * <code> false </code> otherwise
-     * 
      */
     private boolean ready = false;
 
@@ -68,9 +69,8 @@ public class TUI extends UI {
 
     /**
      * Simply calls System.out.println adding the server tag and printing the text
-     * 
+     *
      * @param text
-     * 
      * @Slaitroc
      */
     private void tuiWrite(String text) {
@@ -90,7 +90,7 @@ public class TUI extends UI {
     /**
      * Initializes all the commands info maps adding the right description for each
      * command
-     * 
+     *
      * @Slaitroc
      */
     private void initializeCommandsInfo() {
@@ -107,7 +107,7 @@ public class TUI extends UI {
     /**
      * Initializes the command maps adding the right runnable for each command
      * string
-     * 
+     *
      * @Slaitroc
      */
     private void initializeCommands() {
@@ -150,8 +150,7 @@ public class TUI extends UI {
      * Defines the TUI implementation to get the input values needed to create the
      * game.
      * <p>
-     * Calls {@link VirtualClient#createGame(int)}
-     * 
+     *
      * @Slaitroc
      */
     private void command_createGame() {
@@ -178,8 +177,7 @@ public class TUI extends UI {
      * <p>
      * Defines the TUI visualization of the current available games
      * <p>
-     * Calls {@link VirtualClient#showGames()}
-     * 
+     *
      * @Slaitroc
      */
     private void command_showGames() {
@@ -215,7 +213,7 @@ public class TUI extends UI {
      * <code>client.shoListGame(List gameList)</code> ->
      * <p>
      * <code>ui.showListGame(List gameList)</code>
-     * 
+     *
      * @Slaitroc
      */
     @Override
@@ -232,8 +230,7 @@ public class TUI extends UI {
      * Defines the TUI implementation to get the inputs needed to join an existing
      * game
      * <p>
-     * Calls {@link VirtualClient#joinGame(int)()}
-     * 
+     *
      * @Slaitroc
      */
     private void command_joinGame() {
@@ -252,11 +249,9 @@ public class TUI extends UI {
      * Defines the TUI implementation to get the inputs needed to join an existing
      * game
      * <p>
-     * Calls {@link VirtualClient#ready()()}
-     * 
-     * @see #ready
      *
      * @Slaitroc
+     * @see #ready
      */
     private void command_ready() {
         if (!ready) {
@@ -275,13 +270,13 @@ public class TUI extends UI {
     }
 
     /* game commands */
+
     /**
      * {@link #gameCommandsMap}'s commands
      * <p>
      * Defines the TUI visualization for client's hand
      * <p>
-     * Calls {@link VirtualClient#showHand()}
-     * 
+     *
      * @Slaitroc
      */
     private void command_showHand() {
@@ -298,8 +293,7 @@ public class TUI extends UI {
     /**
      * {@link #gameCommandsMap}'s commands
      * <p>
-     * Calls {@link VirtualClient#drawGold()()}
-     * 
+     *
      * @Slaitroc
      */
     private void command_drawGold() {
@@ -312,12 +306,12 @@ public class TUI extends UI {
     }
 
     /* TUI implementation */
+
     /**
      * Runs the corresponding Runnable value to the String key in the active command
      * map
-     * 
+     *
      * @param input key value of the active command map
-     * 
      * @Slaitroc
      */
     public void inputUpdate(String input) {
@@ -338,9 +332,8 @@ public class TUI extends UI {
 
     /**
      * @return the next line input. If {@link #quitRun} is set to
-     *         <code>true</code> returns the <code>String</code> value that stops
-     *         the TUI.
-     * 
+     * <code>true</code> returns the <code>String</code> value that stops
+     * the TUI.
      * @Slaitroc
      */
     private String getInput() {
@@ -353,7 +346,7 @@ public class TUI extends UI {
 
     /**
      * Prints the active command map info's commands
-     * 
+     *
      * @Slaitroc
      */
     protected void showOptions() {
@@ -385,8 +378,8 @@ public class TUI extends UI {
     }
 
     @Override
-    public void showHand(List<String> hand) {
-        hand.forEach(x -> System.out.println(x));
+    public void showCards(List<String> cards) {
+        cards.forEach(x -> System.out.println(x));
     }
 
     @Override

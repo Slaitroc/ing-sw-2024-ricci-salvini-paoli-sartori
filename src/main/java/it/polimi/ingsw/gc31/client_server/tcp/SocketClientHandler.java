@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
+import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 
@@ -19,9 +20,7 @@ public class SocketClientHandler {
     final IController controller;
     private IGameController gameController;
     private String username;
-    private IPlayerController playerController;
     private VirtualClient client;
-
     private final TCPServer server;
     private final BufferedReader input;
     private final PrintWriter output;
@@ -58,7 +57,7 @@ public class SocketClientHandler {
                     int maxNumberPlayer = Integer.parseInt(input.readLine());
                     gameController = controller.createGame(username, maxNumberPlayer);
 
-                    System.out.println("[SERVER-Tcp] New game create. IdGame: " + maxNumberPlayer);
+                    System.out.println("[SERVER-Tcp] New game created. IdGame: " + maxNumberPlayer);
                     break;
                 }
                 case "get game list": {
@@ -80,7 +79,7 @@ public class SocketClientHandler {
                     break;
                 }
                 case "draw gold": {
-                    playerController.drawGold();
+                    gameController.drawGold(username);
 
                     System.out.println("[SERVER-Tcp] Il giocatore " + username + " ha pescato una carta gold");
                     break;
@@ -96,9 +95,5 @@ public class SocketClientHandler {
     private void sendMsg(String line) {
         output.println(line);
         output.flush();
-    }
-
-    public void setPlayerController(IPlayerController playerController) {
-        this.playerController = playerController;
     }
 }
