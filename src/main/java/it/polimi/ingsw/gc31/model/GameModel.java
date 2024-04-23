@@ -1,9 +1,11 @@
 package it.polimi.ingsw.gc31.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
-import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
+import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
+import it.polimi.ingsw.gc31.model.enumeration.GameState;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
 import it.polimi.ingsw.gc31.model.player.Player;
 
@@ -16,66 +18,60 @@ import it.polimi.ingsw.gc31.model.player.Player;
  */
 public class GameModel {
     private final Board board;
-    private final Map<String, Player> players;
-    private static int pawnSelector = 0;
+    int playersInGame;
+    int pawnSelector;
+    private final List<Player> players;
+    private int currPlayingPlayer = 0;
+    private GameState gameState = GameState.SETUP;
+    private ObjectiveCard objective1, objective2;
 
     /**
      * Constructor for the GameModel class.
      * It initializes the board and the players map.
      */
     public GameModel() {
+        pawnSelector = 0;
         this.board = new Board();
-        this.players = new HashMap<>();
+        this.players = new ArrayList<>();
     }
 
-    /**
-     * This method adds a player to the players map.
-     *
-     * @param username the username of the player to add.
-     */
-    public void addPlayer(String username) {
-        players.put(username, null);
-    }
-
-    /**
-     * This method creates Player objects for each username in the players map.
-     * It assigns a pawn color to each player and associates the player with the game board.
-     * The method updates the players map by replacing the null value associated with each username with the newly created Player object.
-     *
-     * @return A map of usernames to Player objects.
-     */
-    public Map<String, Player> createPlayers() {
-        for (String pls : players.keySet()) {
-            players.put(pls, new Player(pawnAssignment(), pls, board));
-        }
-        return players;
-    }
-
-    /**
-     * This method returns the Player object associated with the given username.
-     *
-     * @param username the username of the player to retrieve.
-     * @return The Player object associated with the given username.
-     */
-    public Player getPlayer(String username) {
-        return players.get(username);
-    }
-
-    /**
-     * This method deals cards to each player in the game.
-     * It calls the drawGold and drawResource methods of the Player class.
-     * If the drawResource method throws an EmptyDeckException, it is caught and a RuntimeException is thrown.
-     */
-    public void dealCards() {
-        for (Map.Entry<String, Player> pl : players.entrySet()) {
-            try {
-                pl.getValue().drawGold();
-                pl.getValue().drawResource();
-                pl.getValue().drawResource();
-            } catch (EmptyDeckException e) {
-                throw new RuntimeException(e);
+    //GAME SETUP STAGE METHODS:
+    public Map<String, Player> createPlayers(Set<String> usernames) throws IllegalStateOperationException {
+        if (this.gameState == GameState.SETUP) {
+            HashMap<String, Player> players = new HashMap<>();
+            for (String username : usernames) {
+                Player player = new Player(pawnAssignment(), username, board);
+                this.players.add(player);
+                players.put(username, player);
             }
-        }
+            playersInGame = players.size();
+            return players;
+        } else throw new IllegalStateOperationException();
+    }
+
+    public void initHands() throws IllegalStateOperationException {
+        if (this.gameState == GameState.SETUP) {
+            for (Player player : players) {
+                player.drawResource();
+                player.drawResource();
+                player.drawGold();
+            }
+        } else throw new IllegalStateOperationException();
+    }
+
+    public void initCommonObj() throws IllegalStateOperationException {
+        if (this.gameState == GameState.SETUP) {
+            objective1 = board.getDeckObjective().draw();
+            objective2 = board.getDeckObjective().draw();
+        } else throw new IllegalStateOperationException();
+    }
+
+    public void initStarters() throws IllegalStateOperationException {
+        if (this.gameState == GameState.SETUP) {
+            for (Player player : players) {
+                player.setStarterCard();
+            }
+        } else throw new IllegalStateOperationException();
     }
 
     /**
@@ -96,6 +92,49 @@ public class GameModel {
         };
         pawnSelector++;
         return color;
+    }
+
+    //GAME STAGES METHODS:
+    public void startGame() {
+        this.gameState = GameState.RUNNING;
+    }
+
+    public void startLastTurn() {
+        this.gameState = GameState.LAST_TURN;
+    }
+
+    public void startEndGame() {
+        this.gameState = GameState.END_GAME;
+    }
+
+    //SETTERS AND GETTERS:
+    public ObjectiveCard getObjectives(int index) {
+        if (index == 0) return objective1;
+        if (index == 1) return objective2;
+        return null;
+    }
+
+    public Player getCurrPlayingPlayer() {
+        return this.players.get(currPlayingPlayer);
+    }
+
+    public void setNextPlayingPlayer() {
+        this.currPlayingPlayer += 1;
+        if (this.currPlayingPlayer == this.players.size()) {
+            this.currPlayingPlayer = 0;
+        }
+    }
+
+    public int getNumOfPlayers() {
+        return playersInGame;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public GameState getGameState() {
+        return gameState;
     }
 
 }
