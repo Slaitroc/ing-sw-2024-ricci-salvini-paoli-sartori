@@ -4,8 +4,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-import it.polimi.ingsw.gc31.exceptions.NoGamesException;
-
 public interface VirtualClient extends Remote {
     /**
      * Allows the Controller to set the client's remote PlayerController once

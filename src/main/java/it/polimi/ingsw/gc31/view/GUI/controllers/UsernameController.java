@@ -2,7 +2,6 @@ package it.polimi.ingsw.gc31.view.GUI.controllers;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
-import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.view.GUI.SceneTag;
 import javafx.fxml.FXML;
 // import javafx.scene.image.Image;

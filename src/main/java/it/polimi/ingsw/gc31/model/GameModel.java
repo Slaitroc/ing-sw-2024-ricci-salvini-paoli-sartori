@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
-import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
 import it.polimi.ingsw.gc31.model.player.Player;
 
@@ -70,7 +69,7 @@ public class GameModel {
             case 3:
                 color = PawnColor.YELLOW;
                 break;
-            //default:
+            // default:
         }
         pawnSelector++;
         return color;

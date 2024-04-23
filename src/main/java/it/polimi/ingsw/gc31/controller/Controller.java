@@ -93,4 +93,5 @@ public class Controller extends UnicastRemoteObject implements IController {
 
         return mgcList.get(idGame);
     }
+
 }

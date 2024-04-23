@@ -4,16 +4,19 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IPlayerController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.QueueObject;
 import it.polimi.ingsw.gc31.model.GameModel;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 public class GameController extends UnicastRemoteObject implements IGameController {
     private GameModel model;
+    private LinkedBlockingQueue<QueueObject> callsList;
     private Map<String, IPlayerController> players;
     private Map<String, VirtualClient> clients;
     private int maxNumberPlayers;
@@ -24,6 +27,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public GameController(String username, VirtualClient client, int maxNumberPlayers, int idGame)
             throws RemoteException {
         this.model = new GameModel();
+        this.callsList = new LinkedBlockingQueue<>();
         this.maxNumberPlayers = maxNumberPlayers;
         this.idGame = idGame;
         this.players = new HashMap<>();
@@ -31,8 +35,27 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
         this.clients.put(username, client);
         this.model.addPlayer(username);
+        new Thread(this::executor);
 
         // TODO mandare messaggio al client di avvenuta creazione della partita
+    }
+
+    private void addQueueObj(QueueObject obj) {
+        synchronized (callsList) {
+            callsList.add(obj);
+        }
+    }
+
+    private void executor() {
+        QueueObject action;
+        while (true) {
+            synchronized (callsList) {
+                action = callsList.poll();
+            }
+            action.execute();
+        }
+        // TODO ciclo da terminare alla fine del gioco altrimenti diventa demoooone
+        // uuuuhhhhh
     }
 
     public void initGame() throws RemoteException {

@@ -11,6 +11,7 @@ public class PlayingState extends TuiState {
     public PlayingState(TUI tui) {
         this.tui = tui;
         stateName = "Playing State";
+        initialize();
     }
 
     @Override

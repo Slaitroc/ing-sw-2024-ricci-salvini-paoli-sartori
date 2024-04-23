@@ -4,9 +4,6 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
-import it.polimi.ingsw.gc31.client_server.interfaces.IController;
-import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 
 //NOTE: i metodi che iniziano con ui (uiNomeMetodo()) sono le implementazioni delle classi che ereditano da UI
 //gli omonimi senza prefisso ui sono quelli da chiamare nei client
