@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.controller;
 
+import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.GameModel;
 import it.polimi.ingsw.gc31.model.card.Card;
+import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.GameState;
 import it.polimi.ingsw.gc31.model.player.NotPlaced;
@@ -87,6 +89,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         if(model.getGameState() == GameState.SETUP){
             playerList = model.createPlayers(clientList.keySet()); // Here the players are created and added to the playerList
             model.setObjectives(); // Here the common goals are initialized
+            model.initSecretObj(); // Here the secret goals are drawn
             for (Player player : playerList.values()) {
                 player.setStarterCard(); // Here the starter cards are drawn
                 player.drawResource();
@@ -227,6 +230,42 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         }
     }
 
+    @Override
+    public void chooseSecretObjective1(String username) {
+        Player player = playerList.get(username);
+        model.setPlayerObjective(username, 1);
+    }
+
+    @Override
+    public void chooseSecretObjective2(String username) {
+        Player player = playerList.get(username);
+        model.setPlayerObjective(username, 2);
+    }
+
+    @Override
+    public void play(String username, int x, int y) {
+        Player player = playerList.get(username);
+        player.play(new Point(x, y));
+    }
+
+    @Override
+    public void playStarter(String username) {
+        Player player = playerList.get(username);
+        player.playStarter();
+    }
+
+    @Override
+    public void changeSide(String username) {
+        Player player = playerList.get(username);
+        player.getSelectedCard().changeSide();
+    }
+
+    @Override
+    public void selectCard(String username, int index) {
+        Player player = playerList.get(username);
+        player.setSelectedCard(index);
+    }
+
     /*@Override
     public void play(String username, Point point) {
         Player player = playerList.get(username);
@@ -298,10 +337,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
     /**
      * This method is used to end the turn of a player.
+     * It also
      */
     private void endTurn() {
         detectEndGame();
         model.setNextPlayingPlayer();
+        model.getCurrPlayingPlayer().setInGameState(new NotPlaced());
     }
 
     /**
@@ -314,12 +355,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         }
     }
 
-    /**
-     * How to use: wakeUpPlayer(gameModel.getCurrPlayingPlayer().getUsername());
-     *
-     * @param username username of the player that we want to be playing next
-     */
-    private void wakeUpPlayer(String username) {
-        playerList.get(username).setInGameState(new NotPlaced());
+    public GameModel getModel() {
+        return model;
     }
 }

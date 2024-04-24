@@ -24,6 +24,7 @@ public class GameModel {
     private int currPlayingPlayer = 0;
     private GameState gameState = GameState.SETUP;
     private ObjectiveCard objective1, objective2;
+    private List<ObjectiveCard> secretObjectives;
 
     /**
      * Constructor for the GameModel class.
@@ -70,6 +71,16 @@ public class GameModel {
         if (this.gameState == GameState.SETUP) {
             for (Player player : players) {
                 player.setStarterCard();
+            }
+        } else throw new IllegalStateOperationException();
+    }
+
+    public void initSecretObj() throws IllegalStateOperationException {
+        if (this.gameState == GameState.SETUP) {
+            secretObjectives = new ArrayList<>();
+            for (Player player : players) {
+                secretObjectives.add(board.getDeckObjective().draw());
+                secretObjectives.add(board.getDeckObjective().draw());
             }
         } else throw new IllegalStateOperationException();
     }
@@ -140,6 +151,22 @@ public class GameModel {
 
     public GameState getGameState() {
         return gameState;
+    }
+
+    public void setPlayerObjective(String username, int index) {
+        index --;
+        for (Player player : players) {
+            if (player.getUsername().equals(username)) {
+                player.addObjectiveCard(secretObjectives.get(index));
+                secretObjectives.remove(index);
+                return;
+            }
+            else index += 2;
+        }
+    }
+
+    public List<Player> getPlayers() {
+        return players;
     }
 
 }

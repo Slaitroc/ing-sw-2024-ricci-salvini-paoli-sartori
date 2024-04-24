@@ -77,16 +77,32 @@ public class Controller extends UnicastRemoteObject implements IController {
         // TODO mandare un messaggio di conferma al client
     }
 
+    /**
+     * Creates a new game and adds it to the game control list.
+     *
+     * @param username the username of the client creating the game.
+     * @param maxNumberPlayers the maximum number of players for the game.
+     * @return the game controller for the newly created game.
+     * @throws RemoteException if an RMI error occurs.
+     */
     @Override
     public IGameController createGame(String username, int maxNumberPlayers) throws RemoteException {
         VirtualClient client = tempClients.get(username);
         gameControlList.add(new GameController(username, client, maxNumberPlayers, gameControlList.size() - 1));
         client.setGameID(gameControlList.size() - 1);
         tempClients.remove(username);
-        controllerWrite("New Game Created with ID: " + (gameControlList.size()));
+        controllerWrite("New Game Created with ID: " + (gameControlList.size()-1));
         return gameControlList.getLast();
     }
 
+    /**
+     * Allows a client to join an existing game.
+     *
+     * @param username the username of the client joining the game.
+     * @param idGame the ID of the game to join.
+     * @return the game controller for the joined game.
+     * @throws RemoteException if an RMI error occurs.
+     */
     @Override
     public IGameController joinGame(String username, int idGame) throws RemoteException {
         gameControlList.get(idGame).joinGame(username, tempClients.get(username));

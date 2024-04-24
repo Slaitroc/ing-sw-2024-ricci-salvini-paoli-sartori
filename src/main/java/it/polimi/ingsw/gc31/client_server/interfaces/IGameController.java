@@ -1,27 +1,37 @@
 package it.polimi.ingsw.gc31.client_server.interfaces;
 
-import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
+import it.polimi.ingsw.gc31.model.GameModel;
 
-import java.awt.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface IGameController extends Remote {
-    public void drawGold(String username) throws RemoteException;
 
-    public void drawGoldCard1(String username) throws RemoteException;
+    void drawGold(String username) throws RemoteException;
 
-    public void drawGoldCard2(String username) throws RemoteException;
+    void drawGoldCard1(String username) throws RemoteException;
 
-    public void drawResource(String username) throws RemoteException;
+    void drawGoldCard2(String username) throws RemoteException;
 
-    public void drawResourceCard1(String username) throws RemoteException;
+    void drawResource(String username) throws RemoteException;
 
-    public void drawResourceCard2(String username) throws RemoteException;
+    void drawResourceCard1(String username) throws RemoteException;
 
-    //ObjectiveCard chooseSecretObjective(String username, ObjectiveCard obj1);
+    void drawResourceCard2(String username) throws RemoteException;
 
-    //void play(String username, Point point);
+    void chooseSecretObjective1(String username);
 
-    //void selectCard(String username, int index);
+    void chooseSecretObjective2(String username);
+
+    void play(String username, int x, int y);
+
+    void playStarter(String username);
+
+    void changeSide(String username);
+
+    void selectCard(String username, int index);
+
+    GameModel getModel();
+
+
 }
