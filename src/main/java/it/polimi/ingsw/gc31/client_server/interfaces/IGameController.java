@@ -19,19 +19,17 @@ public interface IGameController extends Remote {
 
     void drawResourceCard2(String username) throws RemoteException;
 
-    void chooseSecretObjective1(String username);
+    void chooseSecretObjective1(String username) throws RemoteException;
 
-    void chooseSecretObjective2(String username);
+    void chooseSecretObjective2(String username) throws RemoteException;
 
-    void play(String username, int x, int y);
+    void play(String username, int x, int y) throws RemoteException;
 
-    void playStarter(String username);
+    void playStarter(String username) throws RemoteException;
 
-    void changeSide(String username);
+    void changeSide(String username) throws RemoteException;
 
-    void selectCard(String username, int index);
+    void selectCard(String username, int index) throws RemoteException;
 
-    GameModel getModel();
-
-
+    GameModel getModel() throws RemoteException;
 }

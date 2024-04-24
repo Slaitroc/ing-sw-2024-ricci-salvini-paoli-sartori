@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.model;
 
+import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.controller.GameController;
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.*;
 public class ControllerTest {
     static Controller controller;
     static VirtualClient mockClient;
-    GameController gameController1, gameController2, gameController3;
+    IGameController gameController1, gameController2, gameController3;
 
     @BeforeAll
     public static void setUp() throws RemoteException {
@@ -44,15 +45,15 @@ public class ControllerTest {
             controller.connect(mockClient, "Pippo");
             controller.connect(mockClient, "Pluto");
 
-            gameController1 = (GameController) controller.createGame("Krotox", 4);
+            gameController1 = controller.createGame("Krotox", 4);
             controller.joinGame("Slaitroc", 0);
             controller.joinGame("SSalvo", 0);
             controller.joinGame("AleSarto", 0);
 
-            gameController2 = (GameController) controller.createGame("Matteo", 2);
+            gameController2 = controller.createGame("Matteo", 2);
             controller.joinGame("Nicola", 1);
 
-            gameController3 = (GameController) controller.createGame("Pippo", 2);
+            gameController3 = controller.createGame("Pippo", 2);
             controller.joinGame("Pluto", 2);
         }
 
@@ -72,7 +73,7 @@ public class ControllerTest {
     public void testGameFlow() throws PlayerNicknameAlreadyExistsException, RemoteException, IllegalStateOperationException {
         synchronized (controller){
             controller.connect(mockClient, "Player1");
-            gameController1 = (GameController) controller.createGame("Player1", 4);
+            gameController1 = controller.createGame("Player1", 4);
             controller.connect(mockClient, "Player2");
             controller.joinGame("Player2", 3);
             controller.connect(mockClient, "Player3");
