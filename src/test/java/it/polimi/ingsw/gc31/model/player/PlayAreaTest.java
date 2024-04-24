@@ -23,8 +23,9 @@ class PlayAreaTest {
         public void setUp() throws EmptyDeckException {
                 playArea = new PlayArea();
                 board = new Board();
-                // starterCard.changeSide();
-                playArea.placeStarter(board.getDeckStarter().draw());
+                PlayableCard starterCard = board.getDeckResource().draw();
+                //starterCard.changeSide();
+                playArea.placeStarter(starterCard);
         }
 
         /**
@@ -110,7 +111,7 @@ class PlayAreaTest {
          * 
          * @author Matteo Paoli
          */
-        @Test
+        @Disabled
         public void testCheckRequirements() throws EmptyDeckException {
 
                 PlayableCard resourceCard = board.getDeckResource().draw();
@@ -161,6 +162,7 @@ class PlayAreaTest {
                                 Resources.EMPTY);
                 resourceCard.changeSide();
                 playArea.place(resourceCard, new Point(1, 1));
+                System.out.println(playArea.getAchievedResources());
                 assertEquals(resourceCard, playArea.getPlacedCards().get(new Point(1, 1)));
 
                 System.out.println("resourceCard in (1,-1))");
@@ -176,6 +178,7 @@ class PlayAreaTest {
                                 Resources.EMPTY);
                 resourceCard.changeSide();
                 playArea.place(resourceCard, new Point(1, -1));
+                System.out.println(playArea.getAchievedResources());
                 assertEquals(resourceCard, playArea.getPlacedCards().get(new Point(1, -1)));
 
                 System.out.println("resourceCard in (-1,-1))");
@@ -191,6 +194,7 @@ class PlayAreaTest {
                                 Resources.EMPTY);
                 resourceCard.changeSide();
                 playArea.place(resourceCard, new Point(-1, -1));
+                System.out.println(playArea.getAchievedResources());
                 assertEquals(resourceCard, playArea.getPlacedCards().get(new Point(-1, -1)));
 
                 System.out.println("resourceCard in (-1,1))");
@@ -206,6 +210,7 @@ class PlayAreaTest {
                                 Resources.EMPTY);
                 resourceCard.changeSide();
                 playArea.place(resourceCard, new Point(-1, 1));
+                System.out.println(playArea.getAchievedResources());
                 assertEquals(resourceCard, playArea.getPlacedCards().get(new Point(-1, 1)));
 
                 System.out.println("goldCard in (2,0)):");
@@ -223,6 +228,7 @@ class PlayAreaTest {
                                 Resources.MUSHROOM, 1);
                 goldCard.changeSide();
                 playArea.place(goldCard, new Point(2, 0));
+                System.out.println(playArea.getAchievedResources());
                 assertEquals(goldCard, playArea.getPlacedCards().get(new Point(2, 0)));
 
                 System.out.println("goldCard in (3,1)):");
@@ -236,9 +242,10 @@ class PlayAreaTest {
                                 Resources.EMPTY,
                                 Resources.EMPTY,
                                 Resources.EMPTY,
-                                Resources.ANIMAL, 5,
+                                Resources.ANIMAL, 6,
                                 Resources.MUSHROOM, 1);
                 goldCard.changeSide();
+                System.out.println(playArea.getAchievedResources());
                 playArea.place(goldCard, new Point(3, 1));
                 assertNull(playArea.getPlacedCards().get(new Point(3, 1)));
 

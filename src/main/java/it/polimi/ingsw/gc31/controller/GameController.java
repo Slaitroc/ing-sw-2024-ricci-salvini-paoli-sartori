@@ -15,12 +15,12 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.GameModel;
 import it.polimi.ingsw.gc31.model.card.Card;
-import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import it.polimi.ingsw.gc31.model.enumeration.GameState;
 import it.polimi.ingsw.gc31.model.player.NotPlaced;
 import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.utility.gsonUtility.PlayableCardAdapter;
-//import it.polimi.ingsw.gc31.utility.gsonUtility.ObjectiveCardAdapter;
+//import it.polimi.ingsw.gc31.utility.gsonUtility.ObjectiveAdapter;
 
 /**
  * This class is the controller of one single game.
@@ -70,7 +70,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         // TODO mandare messaggio al client di connessione al server
         if (maxNumberPlayers == this.clientList.size()) {
             gameControllerWrite("Il numero di giocatori per la partita " + maxNumberPlayers + " è stato raggiunto");
-            initGame(); //somewhere it's supposed to start the game
+            try {
+                initGame(); //somewhere it's supposed to start the game
+            } catch (IllegalStateOperationException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -78,20 +83,23 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * Initializes the game by creating players and dealing cards.
      * It also sets the player controller for each client.
      */
-    public void initGame() throws RemoteException {
-        try {
-            playerList = model.createPlayers(clientList.keySet());
-            model.initCommonObj(); // Here the common goals are initialized
-            model.initStarters(); // Here the starter cards are drawn
-            model.initHands(); // Here the player hands are initialized
-            for (String player : playerList.keySet()) {
-                showHand(playerList.get(player)); // Here the player's hands are shown
-                //showObjectives(playerList.get(player)); // Here the common goals are shown
+    public void initGame() throws RemoteException, IllegalStateOperationException {
+        if(model.getGameState() == GameState.SETUP){
+            playerList = model.createPlayers(clientList.keySet()); // Here the players are created and added to the playerList
+            initCommonObj(); // Here the common goals are initialized
+            for (Player player : playerList.values()) {
+                initStarter(player); // Here the starter cards are drawn
+                initHand(player); // Here the player hands are initialized
+                //showHand(player); // Here the player's hands are shown
+                //showObjectives(playerList.get(player)); // Here the common goals are supposed to be shown :)
             }
+            model.getBoard().getDeckGold().refill(); // Here the GoldCard1 and GoldCard2 are drawn on the board
+            model.getBoard().getDeckResource().refill(); // Here the ResourceCard1 and ResourceCard2 are drawn on the board
             model.startGame();
-        } catch (IllegalStateOperationException e) {
+        }
+        else {
             System.out.println("Failed to initialize game.");
-            e.getStackTrace();
+            throw new RemoteException();
         }
 
         // TODO mandare messaggio al client di inizio partita
@@ -99,6 +107,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         // player.sendMessage("[GameController] la partita è iniziata");
         // }
     }
+
+    /*TODO Do I use this and create all the initStarters etc. methods in the GameController,
+              or do I use the methods in the GameModel and call them from the GameController?*/
 
     /**
      * Initializes the player's hand by drawing two resources and one gold card from the deck.
@@ -110,6 +121,14 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         player.drawResource();
         player.drawResource();
         player.drawGold();
+    }
+
+    private void initCommonObj() {
+        model.setObjectives();
+    }
+
+    private void initStarter(Player player) {
+        player.setStarterCard();
     }
 
     /**
@@ -126,9 +145,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         return clientList.size();
     }
 
-    public Player getPlayer(String username) {
+    /*public Player getPlayer(String username) {
         return playerList.get(username);
-    }
+    }*/
 
     /**
      * Writes a message to the game controller.
@@ -141,7 +160,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     }
 
     //WARNING: methods receive username in input, instead of using model.currPlayingPlayer.drawGold() etc.
-    // because otherwise other clients could play the turn of others
+    // because otherwise clients could play the turn of others
 
     /**
      * Draws a gold card from the deck for the player and then shows the player's hand.
@@ -151,9 +170,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     @Override
     public void drawGold(String username) throws RemoteException {
         Player player = playerList.get(username);
-        player.drawGold();
-        showHand(player);
-        endTurn();
+        if(player.drawGold()) {
+            showCard(player.getHand().getLast(), player);
+            endTurn();
+        }
     }
 
     /**
@@ -164,9 +184,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     @Override
     public void drawGoldCard1(String username) throws RemoteException {
         Player player = playerList.get(username);
-        player.drawGoldCard1();
-        showHand(player);
-        endTurn();
+        if(player.drawGoldCard1()){
+            showCard(player.getHand().getLast(), player);
+            endTurn();
+        }
     }
 
     /**
@@ -177,9 +198,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     @Override
     public void drawGoldCard2(String username) throws RemoteException {
         Player player = playerList.get(username);
-        player.drawGoldCard2();
-        showHand(player);
-        endTurn();
+        if(player.drawGoldCard2()){
+            showCard(player.getHand().getLast(), player);
+            endTurn();
+        }
     }
 
     /**
@@ -190,9 +212,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     @Override
     public void drawResource(String username) throws RemoteException {
         Player player = playerList.get(username);
-        player.drawResource();
-        showHand(player);
-        endTurn();
+        if(player.drawResource()){
+            showCard(player.getHand().getLast(), player);
+            endTurn();
+        }
     }
 
     /**
@@ -203,9 +226,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     @Override
     public void drawResourceCard1(String username) throws RemoteException {
         Player player = playerList.get(username);
-        player.drawResourceCard1();
-        showHand(player);
-        endTurn();
+        if(player.drawResourceCard1()){
+            showCard(player.getHand().getLast(), player);
+            endTurn();
+        }
     }
 
     /**
@@ -216,9 +240,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     @Override
     public void drawResourceCard2(String username) throws RemoteException {
         Player player = playerList.get(username);
-        player.drawResourceCard2();
-        showCard(player.getHand().getLast(), player);
-        endTurn();
+        if(player.drawResourceCard2()){
+            endTurn();
+        }
     }
 
     /*@Override
@@ -238,8 +262,8 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     /**
      * This method is used to show a card to a player.
      *
-     * @param card
-     * @param player
+     * @param card  the card to be shown.
+     * @param player the player to whom the card is to be shown.
      */
     private void showCard(Card card, Player player) {
         List<String> res = new ArrayList<>();

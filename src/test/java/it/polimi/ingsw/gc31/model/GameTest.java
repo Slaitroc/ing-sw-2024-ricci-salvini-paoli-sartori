@@ -30,6 +30,8 @@ public class GameTest {
         gameModel.createPlayers(usernames);
         gameModel.initCommonObj();
         gameModel.initHands();
+        gameModel.getBoard().getDeckResource().refill();
+        gameModel.getBoard().getDeckGold().refill();
         gameModel.initStarters();
         gameModel.startGame();
         System.out.println("Current Game Cycle is: ");

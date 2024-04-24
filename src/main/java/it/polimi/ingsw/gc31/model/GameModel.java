@@ -114,6 +114,11 @@ public class GameModel {
         return null;
     }
 
+    public void setObjectives(){
+        objective1 = board.getDeckObjective().draw();
+        objective2 = board.getDeckObjective().draw();
+    }
+
     public Player getCurrPlayingPlayer() {
         return this.players.get(currPlayingPlayer);
     }
