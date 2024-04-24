@@ -3,9 +3,6 @@ package it.polimi.ingsw.gc31.model;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.controller.Controller;
-import it.polimi.ingsw.gc31.controller.GameController;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
-import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.model.enumeration.GameState;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,7 +16,6 @@ import java.awt.*;
 import java.rmi.RemoteException;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 public class ControllerTest {
     static Controller controller;
@@ -27,7 +23,7 @@ public class ControllerTest {
     IGameController gameController1, gameController2, gameController3;
 
     @BeforeAll
-    public static void setUp() throws RemoteException {
+    public static void setUp() {
         controller = Controller.getController();
         mockClient = Mockito.mock(VirtualClient.class);
     }
@@ -35,8 +31,8 @@ public class ControllerTest {
     //NOTE To run with coverage, use different usernames also in different tests
     //     and call a test per time or
     @Test
-    public void managementOfMultipleMatches() throws RemoteException, PlayerNicknameAlreadyExistsException, NoGamesException {
-        synchronized (controller){
+    public void managementOfMultipleMatches() throws RemoteException, PlayerNicknameAlreadyExistsException {
+        synchronized (controller) {
             controller.connect(mockClient, "Krotox");
             controller.connect(mockClient, "Slaitroc");
             controller.connect(mockClient, "SSalvo");
@@ -62,7 +58,7 @@ public class ControllerTest {
 
 
     @Test
-    public void testSameUsernames() throws RemoteException, PlayerNicknameAlreadyExistsException {
+    public void testSameUsernames() throws PlayerNicknameAlreadyExistsException {
         controller.connect(mockClient, "Player");
         assertThrows(PlayerNicknameAlreadyExistsException.class, () -> controller.connect(mockClient, "Player"));
     }
@@ -70,8 +66,8 @@ public class ControllerTest {
     //NOTE to run this test singularly, make the players connect with idGame = 0
     //      otherwise, connect with idGame = 3
     @Test
-    public void testGameFlow() throws PlayerNicknameAlreadyExistsException, RemoteException, IllegalStateOperationException {
-        synchronized (controller){
+    public void testGameFlow() throws PlayerNicknameAlreadyExistsException, RemoteException {
+        synchronized (controller) {
             controller.connect(mockClient, "Player1");
             gameController1 = controller.createGame("Player1", 4);
             controller.connect(mockClient, "Player2");
@@ -85,7 +81,7 @@ public class ControllerTest {
         GameModel gameModel = gameController1.getModel();
         String playingPlayer = gameModel.getCurrPlayingPlayer().getUsername();
         System.out.println("Current Game Cycle is: ");
-        for (int i = 0; i < gameModel.getNumOfPlayers()-1; i++) {
+        for (int i = 0; i < gameModel.getNumOfPlayers() - 1; i++) {
             System.out.println(playingPlayer);
             gameController1.chooseSecretObjective1(playingPlayer);
             gameController1.playStarter(playingPlayer);
@@ -112,18 +108,20 @@ public class ControllerTest {
                 playingPlayer = gameModel.getCurrPlayingPlayer().getUsername();
             }
             count++;
-            if (gameModel.getGameState() == GameState.LAST_TURN) break;  //This in case of players actually earning points
+            if (gameModel.getGameState() == GameState.LAST_TURN)
+                break;  //This in case of players actually earning points
             if (count == 15) { //Momentarily set to 15, to simulate a full match even without points
                 System.out.println("___TESTING MORE FUNCTIONS___\n");
                 lastTurn = false;
+                break;
             }
         }
 
-        if(!lastTurn){ //Works only if 4 players are playing
-            count++;
+        if (!lastTurn) { //Works only if 4 players are playing
             playingPlayer = gameModel.getCurrPlayingPlayer().getUsername();
             System.out.println("It's currently " + playingPlayer + "'s turn");
             gameController1.selectCard(playingPlayer, 0);
+            gameController1.changeSide(playingPlayer);
             gameController1.play(playingPlayer, count, count);
             assertNotNull(gameModel.getCurrPlayingPlayer().getPlayArea().getPlacedCards().get(new Point(count, count)));
             System.out.println("Player: " + playingPlayer + " placed a card in (" + count + ", " + count + ")");
@@ -160,6 +158,7 @@ public class ControllerTest {
 
             gameModel.startLastTurn();
         }
+        System.out.println("\n___GAME LAST TURN___\n");
 
         //TODO During the last turn can the players draw?? CHECK RULES
         for (int i = 0; i < gameModel.getNumOfPlayers(); i++) {

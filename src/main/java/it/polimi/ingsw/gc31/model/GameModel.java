@@ -158,7 +158,6 @@ public class GameModel {
         for (Player player : players) {
             if (player.getUsername().equals(username)) {
                 player.addObjectiveCard(secretObjectives.get(index));
-                secretObjectives.remove(index);
                 return;
             }
             else index += 2;

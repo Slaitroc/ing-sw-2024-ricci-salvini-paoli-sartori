@@ -16,13 +16,11 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.GameModel;
 import it.polimi.ingsw.gc31.model.card.Card;
-import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.GameState;
 import it.polimi.ingsw.gc31.model.player.NotPlaced;
 import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.utility.gsonUtility.PlayableCardAdapter;
-//import it.polimi.ingsw.gc31.utility.gsonUtility.ObjectiveAdapter;
 
 /**
  * This class is the controller of one single game.
@@ -232,13 +230,11 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
     @Override
     public void chooseSecretObjective1(String username) {
-        Player player = playerList.get(username);
         model.setPlayerObjective(username, 1);
     }
 
     @Override
     public void chooseSecretObjective2(String username) {
-        Player player = playerList.get(username);
         model.setPlayerObjective(username, 2);
     }
 
@@ -317,23 +313,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             throw new RuntimeException(e);
         }
     }
-
-    /**
-     * This method is used to show the common objectives to a player.
-     * @param player
-     */
-    /*private void showObjectives(Player player) {
-        List<ObjectiveCard> objectives = model.getObjectives();
-        List<String> res = new ArrayList<>();
-        for (ObjectiveCard card : objectives) {
-            res.add(gsonObjective.toJson(card, ObjectiveCard.class));
-        }
-        try {
-            clientList.get(player.getUsername()).showCards(res);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }*/
 
     /**
      * This method is used to end the turn of a player.

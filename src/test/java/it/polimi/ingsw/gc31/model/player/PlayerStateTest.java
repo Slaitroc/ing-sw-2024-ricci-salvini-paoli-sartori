@@ -3,17 +3,11 @@ package it.polimi.ingsw.gc31.model.player;
 import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.*;
-import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
-import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,6 +40,10 @@ public class PlayerStateTest {
         player1.setStarterCard();
         player2.setStarterCard();
         player3.setStarterCard();
+
+        player1.addObjectiveCard(board.getDeckObjective().draw());
+        player2.addObjectiveCard(board.getDeckObjective().draw());
+        player3.addObjectiveCard(board.getDeckObjective().draw());
 
         player1.playStarter();
         player2.playStarter();
@@ -131,7 +129,7 @@ public class PlayerStateTest {
         player3.drawResource();
         assertInstanceOf(Waiting.class, player3.inGameState);
     }
-
+/*
     private static PlayableCard createStarterCard() {
         int score = 0;
 
@@ -164,5 +162,5 @@ public class PlayerStateTest {
                 null);
 
         return new StarterCard(CardColor.NOCOLOR, front, back);
-    }
+    }*/
 }
