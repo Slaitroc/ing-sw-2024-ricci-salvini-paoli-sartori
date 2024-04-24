@@ -46,11 +46,6 @@ public class Player {
         this.inGameState = new Start();
         this.pawnColor = pawnColor;
         hand = new ArrayList<>();
-        try {
-            setStarterCard();
-        } catch (EmptyDeckException e) {
-            throw new RuntimeException(e);
-        }
         score = 0;
     }
 

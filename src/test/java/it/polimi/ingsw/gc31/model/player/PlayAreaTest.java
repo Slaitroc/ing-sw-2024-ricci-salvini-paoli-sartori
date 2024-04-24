@@ -23,8 +23,8 @@ class PlayAreaTest {
         public void setUp() throws EmptyDeckException {
                 playArea = new PlayArea();
                 board = new Board();
-                PlayableCard starterCard = board.getDeckResource().draw();
-                //starterCard.changeSide();
+                PlayableCard starterCard = board.getDeckStarter().draw();
+                starterCard.changeSide();
                 playArea.placeStarter(starterCard);
         }
 

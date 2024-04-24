@@ -69,7 +69,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         clientList.put(username, client);
         // TODO mandare messaggio al client di connessione al server
         if (maxNumberPlayers == this.clientList.size()) {
-            gameControllerWrite("Il numero di giocatori per la partita " + maxNumberPlayers + " è stato raggiunto");
+            gameControllerWrite("The number of players for the game " + maxNumberPlayers + " has been reached");
             try {
                 initGame(); //somewhere it's supposed to start the game
             } catch (IllegalStateOperationException e) {
@@ -86,10 +86,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void initGame() throws RemoteException, IllegalStateOperationException {
         if(model.getGameState() == GameState.SETUP){
             playerList = model.createPlayers(clientList.keySet()); // Here the players are created and added to the playerList
-            initCommonObj(); // Here the common goals are initialized
+            model.setObjectives(); // Here the common goals are initialized
             for (Player player : playerList.values()) {
-                initStarter(player); // Here the starter cards are drawn
-                initHand(player); // Here the player hands are initialized
+                player.setStarterCard(); // Here the starter cards are drawn
+                player.drawResource();
+                player.drawResource();
+                player.drawGold(); // Here the player hands are initialized
                 //showHand(player); // Here the player's hands are shown
                 //showObjectives(playerList.get(player)); // Here the common goals are supposed to be shown :)
             }
@@ -110,26 +112,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
     /*TODO Do I use this and create all the initStarters etc. methods in the GameController,
               or do I use the methods in the GameModel and call them from the GameController?*/
-
-    /**
-     * Initializes the player's hand by drawing two resources and one gold card from the deck.
-     * After drawing the cards, it shows the player's hand.
-     *
-     * @throws RemoteException If a remote invocation error occurs.
-     */
-    private void initHand(Player player) throws RemoteException {
-        player.drawResource();
-        player.drawResource();
-        player.drawGold();
-    }
-
-    private void initCommonObj() {
-        model.setObjectives();
-    }
-
-    private void initStarter(Player player) {
-        player.setStarterCard();
-    }
 
     /**
      * @return the maximum number of players.

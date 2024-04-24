@@ -15,10 +15,10 @@ public class ControllerTest {
 
     @Test
     public void setUp() throws IllegalStateOperationException, RemoteException {
-        gameController = new GameController("Krotox", null, 3, 0);
+        gameController = new GameController("Krotox", null, 4, 0);
         gameController.joinGame("Slaitroc", null);
         gameController.joinGame("SSalvo", null);
-        //gameController.joinGame("AleSarto", null);
+        gameController.joinGame("AleSarto", null);
 
     }
 }
