@@ -11,6 +11,7 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
+import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,6 +190,9 @@ public class Player {
         } catch (IllegalStateOperationException e) {
             System.out.println("Player" + username + " not allowed to place the starter card in current state");
             e.getStackTrace();
+        } catch (ObjectiveCardNotChosenException e) {
+            System.out.println("Player " + username + " has not chosen an objective card yet");
+            e.getStackTrace();
         }
     }
 
@@ -247,6 +251,11 @@ public class Player {
 
     // SETTERS
 
+    /**
+     * Notice that the index is from 0 to 2
+     *
+     * @param selectedCard: index of the card in the hand
+     */
     public void setSelectedCard(int selectedCard) {
         this.selectedCard = selectedCard;
     }
@@ -255,7 +264,8 @@ public class Player {
         this.selectedStarterCard = board.getDeckStarter().draw();
     }
 
-    public void setObjectiveCard(ObjectiveCard card) {
+    //NOTICE: This setter is not supposed to be called from anyone except the Start state of the player
+    protected void setObjectiveCard(ObjectiveCard card) {
         this.objectiveCard = card;
     }
 
