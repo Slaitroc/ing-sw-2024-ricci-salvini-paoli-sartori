@@ -17,7 +17,7 @@ import java.util.Map;
  * TypeToken<Map<Resources, Integer>>(){}.getType(), new
  * MapRequirementsAdapter()).create();
  */
-public class MapRequirementsAdapter implements JsonDeserializer<Map<Resources, Integer>> {
+public class MapRequirementsAdapter implements JsonDeserializer<Map<Resources, Integer>>, JsonSerializer<Map<Resources, Integer>> {
 
     /**
      * Method that deserialize a map of the type Map<Resources, Integer>.
@@ -46,5 +46,18 @@ public class MapRequirementsAdapter implements JsonDeserializer<Map<Resources, I
         }
         // returns the map created
         return res;
+    }
+
+    @Override
+    public JsonElement serialize(Map<Resources, Integer> resourcesIntegerMap, Type type, JsonSerializationContext jsonSerializationContext) {
+        JsonArray jsonArray = new JsonArray();
+
+        for (Map.Entry<Resources, Integer> entry: resourcesIntegerMap.entrySet()) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("resource", entry.getKey().toString());
+            jsonObject.addProperty("count", entry.getValue());
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray;
     }
 }

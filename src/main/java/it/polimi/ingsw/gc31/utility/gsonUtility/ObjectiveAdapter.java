@@ -7,7 +7,7 @@ import it.polimi.ingsw.gc31.model.strategies.*;
 
 import java.lang.reflect.Type;
 
-public class ObjectiveAdapter implements JsonDeserializer<Objective> {
+public class ObjectiveAdapter implements JsonDeserializer<Objective>{
     @Override
     public Objective deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
