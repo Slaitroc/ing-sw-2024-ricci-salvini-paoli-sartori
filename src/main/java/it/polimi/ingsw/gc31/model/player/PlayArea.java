@@ -3,8 +3,10 @@ package it.polimi.ingsw.gc31.model.player;
 import java.awt.Point;
 import java.util.*;
 
+import it.polimi.ingsw.gc31.client_server.listeners.Observable;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import javafx.util.Pair;
 
 /**
  * This class represents the play area of a player in the game.
@@ -12,7 +14,7 @@ import it.polimi.ingsw.gc31.model.enumeration.Resources;
  *
  * @author Matteo Paoli
  */
-public class PlayArea {
+public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> {
 
     private final Map<Point, PlayableCard> placedCards;
     private final Map<Resources, Integer> achievedResources;
@@ -45,6 +47,8 @@ public class PlayArea {
         for (Resources r : card.getResources()) {
             achievedResources.put(r, achievedResources.get(r) + 1);
         }
+
+
     }
 
     /**

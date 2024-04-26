@@ -94,8 +94,50 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     // Metodi del virtualController
 
     @Override
-    public void showCards(List<String> cards) throws RemoteException {
-        ui.showCards(cards);
+    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
+        // TODO temporaneo
+        System.out.println("Hand of "+username);
+        hand.forEach(System.out::println);
+    }
+
+    @Override
+    public void show_scorePlayer(String username, Integer score) throws RemoteException {
+    }
+
+    @Override
+    public void show_starterCard(String starterCard) throws RemoteException {
+        // TODO temporaneo
+        System.out.println("Starter card:");
+        System.out.println(starterCard);
+    }
+
+    @Override
+    public void show_objectiveCard(String objectiveCard) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+        // TODO temporaneo
+        System.out.println("Gold deck");
+        System.out.println("Card on top of the deck: "+firstCardDeck);
+        System.out.println("Card1: "+card1);
+        System.out.println("Card2: "+card2);
+    }
+
+    @Override
+    public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+
     }
 
     @Override

@@ -21,5 +21,6 @@ module it.polimi.ingsw.gc31 {
     exports it.polimi.ingsw.gc31.client_server.interfaces;
     exports it.polimi.ingsw.gc31.client_server.tcp;
     exports it.polimi.ingsw.gc31.client_server.rmi;
+    exports it.polimi.ingsw.gc31.model.enumeration;
 
 }

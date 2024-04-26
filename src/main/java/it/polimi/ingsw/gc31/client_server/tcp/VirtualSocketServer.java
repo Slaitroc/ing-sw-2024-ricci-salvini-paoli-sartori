@@ -22,9 +22,43 @@ public class VirtualSocketServer implements VirtualClient {
     }
 
     @Override
-    public void showHand(List<String> hand) throws RemoteException {
-        hand.forEach(x->output.println(x));
-        output.flush();
+    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_scorePlayer(String username, Integer score) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_starterCard(String starterCard) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_objectiveCard(String objectiveCard) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+
     }
 
     @Override

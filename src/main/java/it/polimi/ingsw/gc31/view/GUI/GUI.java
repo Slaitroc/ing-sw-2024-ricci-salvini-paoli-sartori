@@ -30,12 +30,22 @@ public class GUI extends UI {
     }
 
     @Override
+    public boolean isInGame() throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public void setInGame(boolean inGame) throws RemoteException {
+
+    }
+
+    @Override
     public void setQuitRun(boolean bool) throws RemoteException {
         throw new UnsupportedOperationException("Unimplemented method 'setQuitRun'");
     }
 
     @Override
-    public void showCards(List<String> hand) throws RemoteException {
+    public void showHand(List<String> hand) throws RemoteException {
 
     }
 

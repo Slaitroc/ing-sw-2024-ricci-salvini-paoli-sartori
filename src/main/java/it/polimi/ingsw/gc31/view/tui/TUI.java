@@ -164,6 +164,16 @@ public class TUI extends UI {
     }
 
     @Override
+    public boolean isInGame() throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public void setInGame(boolean inGame) throws RemoteException {
+
+    }
+
+    @Override
     public void showHand(List<String> hand) {
         hand.forEach(x -> System.out.println(x));
     }

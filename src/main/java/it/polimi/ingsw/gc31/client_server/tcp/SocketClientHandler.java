@@ -116,15 +116,43 @@ public class SocketClientHandler implements VirtualClient {
         this.idGame = gameID;
     }
 
-    /**
-     * This methods should send a message to the TCPClient with the serialization
-     * of the player's hand
-     *
-     * @param hand is the list that contains all the card held by the player
-     * @throws RemoteException
-     */
     @Override
-    public void showHand(List<String> hand) throws RemoteException {
+    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_scorePlayer(String username, Integer score) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_starterCard(String starterCard) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_objectiveCard(String objectiveCard) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
 
     }
 

@@ -85,7 +85,7 @@ public abstract class UI {
      */
     public abstract void setQuitRun(boolean bool) throws RemoteException;
 
-    public abstract void showCards(List<String> cards) throws RemoteException;
+    public abstract void showHand(List<String> hand) throws RemoteException;
 
     public abstract void showListGame(List<String> listGame) throws RemoteException;
 
