@@ -16,9 +16,8 @@ public class GUI extends UI {
 
     /**
      * This method allows to call a Runnable inside the GUI thread
-     * 
+     *
      * @param r
-     * 
      * @Slaitroc
      */
     public void runInGuiApp(Runnable r) {
@@ -36,7 +35,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void showHand(List<String> hand) throws RemoteException {
+    public void showCards(List<String> hand) throws RemoteException {
 
     }
 

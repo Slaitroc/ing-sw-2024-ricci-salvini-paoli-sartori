@@ -5,14 +5,17 @@ import java.awt.Point;
 import it.polimi.ingsw.gc31.exceptions.FullHandException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.InvalidCardDraw;
+import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 
 public class Start extends PlayerState {
+    private boolean objectiveChosen = false;
 
     @Override
     public void addObjectiveCard(ObjectiveCard card, Player player) {
         player.setObjectiveCard(card);
+        objectiveChosen = true;
     }
 
     @Override
@@ -37,8 +40,14 @@ public class Start extends PlayerState {
     }
 
     @Override
-    public void playStarter(Player player) {
-        player.getPlayArea().placeStarter(player.getStarterCard());
+    public void playStarter(Player player) throws ObjectiveCardNotChosenException {
+        if (objectiveChosen) {
+            player.getPlayArea().placeStarter(player.getStarterCard());
+            player.setInGameState(new NotPlaced());
+        }
+        else {
+            throw new ObjectiveCardNotChosenException();
+        }
     }
 
 }

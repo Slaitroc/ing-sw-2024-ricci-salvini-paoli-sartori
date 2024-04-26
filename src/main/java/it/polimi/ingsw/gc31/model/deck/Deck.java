@@ -116,7 +116,7 @@ public class Deck<T extends Card> /* implements DeepCopy<Deck<T>> */ {
         return deck.poll();
     }
 
-    public void refill(){
+    public void refill() {
         if (card1 == null) {
             try {
                 card1 = this.draw();
@@ -156,9 +156,15 @@ public class Deck<T extends Card> /* implements DeepCopy<Deck<T>> */ {
     public void flipCard2() {
         this.card2.changeSide();
     }
+
+    public T peekCard() {
+        return this.deck.peek();
+    }
+
     public T peekCard1() {
         return this.card1;
     }
+
     public T peekCard2() {
         return this.card2;
     }
