@@ -9,9 +9,11 @@ import java.rmi.RemoteException;
 
 public class PlayerStarterCardListener implements Listener<PlayableCard> {
     private VirtualClient client;
+
     public PlayerStarterCardListener(VirtualClient client) {
         this.client = client;
     }
+
     @Override
     public void update(PlayableCard data) throws RemoteException {
         client.show_starterCard(gsonTranslater.toJson(data, PlayableCard.class));
