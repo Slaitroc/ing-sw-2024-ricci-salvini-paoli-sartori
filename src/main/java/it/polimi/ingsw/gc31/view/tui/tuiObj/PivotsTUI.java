@@ -5,17 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Pivots {
+public class PivotsTUI {
 
     public List<Integer[]> pivots;
     public Map<String, List<Integer[]>> corners;
 
-    public Pivots(PlayArea playArea) {
+    public PivotsTUI(PlayAreaTUI playArea) {
         pivots = new ArrayList<>();
         corners = new HashMap<>();
     }
 
-    private List<Integer[]> findPivots(PlayArea playArea) {
+    private List<Integer[]> findPivots(PlayAreaTUI playArea) {
         List<Integer[]> pivots = new ArrayList<>();
         boolean isValid = true;
         List<String> pA = playArea.getPlayArea();
@@ -145,7 +145,7 @@ public class Pivots {
         return newCorners;
     }
 
-    public void findPivotAndCorners(PlayArea playArea) {
+    public void findPivotAndCorners(PlayAreaTUI playArea) {
         this.pivots = findPivots(playArea);
         this.corners = findCorners(this.pivots);
 

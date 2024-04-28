@@ -31,11 +31,6 @@ public class GUI extends UI {
     }
 
     @Override
-    public void setQuitRun(boolean bool) throws RemoteException {
-        throw new UnsupportedOperationException("Unimplemented method 'setQuitRun'");
-    }
-
-    @Override
     public void showHand(List<String> hand) throws RemoteException {
 
     }

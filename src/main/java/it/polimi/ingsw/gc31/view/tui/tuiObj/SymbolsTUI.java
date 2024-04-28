@@ -1,6 +1,6 @@
 package it.polimi.ingsw.gc31.view.tui.tuiObj;
 
-public enum Symbols {
+public enum SymbolsTUI {
     ANIMAL("🐺"),
     INSECT("🦋"),
     PLANT("🌿"),
@@ -20,7 +20,7 @@ public enum Symbols {
      * string representation base on the value
      * of the object
      */
-    Symbols(String stringName) {
+    SymbolsTUI(String stringName) {
         this.stringName = stringName;
     }
 

@@ -5,22 +5,22 @@ import java.util.List;
 import java.util.Map;
 
 import it.polimi.ingsw.gc31.DefaultValues;
-import it.polimi.ingsw.gc31.view.tui.tuiObj.exceptions.IsNotPivotException;
+import it.polimi.ingsw.gc31.view.tui.tuiObj.exceptions.IsNotPivotTUIException;
 
 import static it.polimi.ingsw.gc31.OurScanner.scanner;
 
-public class PlayArea {
+public class PlayAreaTUI {
 
     // debug
     boolean check = false;
 
     public List<String> playArea;
-    public Pivots pivots;
+    public PivotsTUI pivots;
     public List<CardTUI> cards;
 
-    public PlayArea(CardTUI card) {
+    public PlayAreaTUI(CardTUI card) {
         playArea = new ArrayList<>();
-        pivots = new Pivots(this);
+        pivots = new PivotsTUI(this);
         cards = new ArrayList<>();
         addFirstCard(card);
         findPivotAndCorners();
@@ -64,7 +64,7 @@ public class PlayArea {
         pivots.printCorners();
     }
 
-    public void coverPivot(CardTUI card, Integer[] pivot) throws IsNotPivotException {
+    public void coverPivot(CardTUI card, Integer[] pivot) throws IsNotPivotTUIException {
         Integer width = playArea.get(0).length();
 
         Integer x = pivot[0];
@@ -72,7 +72,7 @@ public class PlayArea {
 
         // se non è un pivot valido lancia l'eccezione
         if (!(pivots.isPivot(pivot)))
-            throw new IsNotPivotException();
+            throw new IsNotPivotTUIException();
         // Se il pivot è in uno degli angoli più estremi della play area
         // bisogna (almeno) allargare la mappa
         // NOTE probabilmente sempre qui posso gestire il relativo corner case
@@ -109,7 +109,7 @@ public class PlayArea {
 
         StringBuilder builder;
         Integer[] angle;
-        Map<String, Integer[]> cardCorners = Pivots.getCardCorners(card);
+        Map<String, Integer[]> cardCorners = PivotsTUI.getCardCorners(card);
         char p = playArea.get(y).charAt(x);
         switch (p) {
             case '┌':

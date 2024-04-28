@@ -35,7 +35,7 @@ public class CardTUI {
 
         String obj = "─";
         if (hasObjective)
-            obj = Symbols.OBJ.toString(); // FIX
+            obj = SymbolsTUI.OBJ.toString(); // FIX
 
         String topBottomBorder = String.format("┌─────%1s──────┐", obj);
         // String middleLine = "│ │";
@@ -81,22 +81,22 @@ public class CardTUI {
 
     public static CardTUI createStandardCard1() {
         List<String> needs = new ArrayList<>();
-        needs.add(Symbols.ANIMAL.toString());
-        needs.add(Symbols.ANIMAL.toString());
-        needs.add(Symbols.PLANT.toString());
-        needs.add(Symbols.PLANT.toString());
-        return new CardTUI("1", Symbols.INSECT.toString(), Symbols.INSECT.toString(), Symbols.PLANT.toString(),
-                Symbols.MUSHROOM.toString(), needs, true);
+        needs.add(SymbolsTUI.ANIMAL.toString());
+        needs.add(SymbolsTUI.ANIMAL.toString());
+        needs.add(SymbolsTUI.PLANT.toString());
+        needs.add(SymbolsTUI.PLANT.toString());
+        return new CardTUI("1", SymbolsTUI.INSECT.toString(), SymbolsTUI.INSECT.toString(), SymbolsTUI.PLANT.toString(),
+                SymbolsTUI.MUSHROOM.toString(), needs, true);
     }
 
     public static CardTUI createStandardCard2() {
         List<String> needs = new ArrayList<>();
-        needs.add(Symbols.INSECT.toString());
-        needs.add(Symbols.INSECT.toString());
-        needs.add(Symbols.MUSHROOM.toString());
-        needs.add(Symbols.MUSHROOM.toString());
-        return new CardTUI("1", Symbols.PLANT.toString(), Symbols.INSECT.toString(), Symbols.PLANT.toString(),
-                Symbols.MUSHROOM.toString(), needs, false);
+        needs.add(SymbolsTUI.INSECT.toString());
+        needs.add(SymbolsTUI.INSECT.toString());
+        needs.add(SymbolsTUI.MUSHROOM.toString());
+        needs.add(SymbolsTUI.MUSHROOM.toString());
+        return new CardTUI("1", SymbolsTUI.PLANT.toString(), SymbolsTUI.INSECT.toString(), SymbolsTUI.PLANT.toString(),
+                SymbolsTUI.MUSHROOM.toString(), needs, false);
     }
 
 }

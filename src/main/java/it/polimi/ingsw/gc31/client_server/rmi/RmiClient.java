@@ -111,33 +111,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         this.playerController = playerController;
     }
 
-    /**
-     * Private procedure that allow the clients to choose its UI type during its
-     * creation.
-     *
-     * @return the chosen UI
-     */
-    // private UI setUI() {
-    // boolean isValid = false;
-    // String message = "Chose UI:\n\t1 -> TUI\n\t2 -> GUI:";
-    //
-    // String input;
-    // do {
-    // System.out.println(message);
-    // input = OurScanner.scanner.nextLine();
-    // if (input.equals("1") || input.equals("2")) {
-    // isValid = true;
-    // }
-    // message = "Invalid input";
-    // } while (!isValid);
-    // if (input.equals("1"))
-    // UI = new TUI(this);
-    // else
-    // UI = new GUI(this);
-    // return UI;
-    // }
-
-    // @Override
     // public boolean ready() throws RemoteException {
     // this.ready = !this.ready;
     // if (mainGameController.checkReady()) {

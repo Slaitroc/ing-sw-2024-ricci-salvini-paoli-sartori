@@ -1,28 +1,118 @@
 package it.polimi.ingsw.gc31.view.tui;
 
 import it.polimi.ingsw.gc31.DefaultValues;
-import static it.polimi.ingsw.gc31.OurScanner.scanner;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.view.UI;
 
 import java.rmi.RemoteException;
 import java.util.List;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class TUI extends UI {
 
-    private Runnable runTUI = this::run;
     private TuiState state;
+
+    private Thread inputThread;
+    private volatile boolean shouldInterrupt = false;
+
+    public void runInputLoop() {
+        tuiWriteGreen(state.stateName);
+        state.run();
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder inputBuilder;
+        try {
+            System.out.print(DefaultValues.TUI_START_LINE_SYMBOL);
+            while (!shouldInterrupt) {
+                if (reader.ready()) {
+                    inputBuilder = new StringBuilder();
+                    while (reader.ready()) {
+                        inputBuilder.append((char) reader.read());
+                    }
+                    String input = inputBuilder.toString().trim();
+                    // una volta premuto invio il buffer è vuoto e dunque viene printato l'input
+                    if (!input.isEmpty()) {
+                        inputUpdate(input);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Eccezione nel run --> Thread Interrotto");
+        } finally {
+            try {
+                reader.close(); // Chiude il BufferedReader
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void runThreads() {
+        shouldInterrupt = false;
+        inputThread = new Thread(this::runInputLoop);
+        inputThread.start();
+
+    }
+
+    public void stopThreads() {
+        if (inputThread != null && inputThread.isAlive()) {
+            shouldInterrupt = true; // Imposta il flag per interrompere il thread di input
+        }
+        inputThread.interrupt(); // Interrompe il thread di input
+    }
+
+    @Override
+    protected void uiRunUI() {
+        this.runThreads();
+    }
+
     /**
      * when <code> true </code> stop the current TUI and reset itself to
      * <code> false </code>
      * 
      * @Slaitroc
      */
-    private boolean quitRun = false;
 
-    public void setQuitRun(boolean quitRun) {
-        this.quitRun = quitRun;
+    /* TUI implementation */
+    /**
+     * Runs the corresponding Runnable value to the String key in the active command
+     * map
+     * 
+     * @param input key value of the active command map
+     * 
+     * @Slaitroc
+     */
+    public void inputUpdate(String input) {
+        Runnable command;
+        command = state.commandsMap.get(input);
+        // verifica se il comando esiste nella lista
+        if (command != null)
+            command.run();
+        if (command == null)
+            tuiWrite("Invalid command");
     }
+
+    /**
+     * @return the next line input. If {@link #quitRun} is set to
+     *         <code>true</code> returns the <code>String</code> value that stops
+     *         the TUI.
+     * 
+     * @Slaitroc
+     */
+
+    @Override
+    public void showHand(List<String> hand) {
+        hand.forEach(x -> System.out.println(x));
+    }
+
+    @Override
+    public void showMessage(String msg) throws RemoteException {
+
+    }
+    /* Fine TUI Implementation */
 
     /**
      * tracks the current state of the player:
@@ -103,77 +193,4 @@ public class TUI extends UI {
         }
     }
 
-    /* TUI implementation */
-    /**
-     * Runs the corresponding Runnable value to the String key in the active command
-     * map
-     * 
-     * @param input key value of the active command map
-     * 
-     * @Slaitroc
-     */
-    public void inputUpdate(String input) {
-
-        Runnable command;
-        if (!input.equals(DefaultValues.STOP_CURRENT_TUI_STRING)) {
-            command = state.commandsMap.get(input);
-            // verifica se il comando esiste nella lista
-            if (command != null)
-                command.run();
-            if (command == null)
-                tuiWrite("Invalid command");
-        }
-    }
-
-    /**
-     * @return the next line input. If {@link #quitRun} is set to
-     *         <code>true</code> returns the <code>String</code> value that stops
-     *         the TUI.
-     * 
-     * @Slaitroc
-     */
-    private String getInput() {
-        if (quitRun) {
-            quitRun = false;
-            return DefaultValues.STOP_CURRENT_TUI_STRING;
-        }
-        return scanner.nextLine();
-    }
-
-    public synchronized void run() {
-        tuiWriteGreen(state.stateName);
-        quitRun = false;
-        state.run();
-        String input;
-
-        do {
-            do {
-                System.out.print(DefaultValues.TUI_START_LINE_SYMBOL);
-                input = getInput();
-            } while (input.isEmpty());
-            inputUpdate(input);
-        } while (!quitRun);
-        tuiWriteGreen("Cambio Stato");
-
-    }
-
-    @Override
-    protected void uiRunUI() {
-        new Thread(runTUI).start();
-
-    }
-
-    @Override
-    public void showHand(List<String> hand) {
-        hand.forEach(x -> System.out.println(x));
-    }
-
-    @Override
-    public void showMessage(String msg) throws RemoteException {
-
-    }
-
-    protected void set() {
-
-    }
 }

@@ -62,6 +62,7 @@ public class JoinedToGameState extends TuiState {
         if (!ready) {
             ready = !ready;
             tuiWrite("U are ready to play!");
+            // tui.getClient().setReady();
         } else {
             tuiWrite("U are not ready :`(");
             ready = !ready;
