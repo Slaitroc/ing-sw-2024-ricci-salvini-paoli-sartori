@@ -1,6 +1,6 @@
 [
   {
-    "type" : "STARTER",
+    "cardType" : "STARTER",
     "color": "NOCOLOR",
     "front" : {
       "score": 0,
@@ -15,7 +15,7 @@
     }
   },
   {
-    "type" : "STARTER",
+    "cardType" : "STARTER",
     "color": "NOCOLOR",
     "front" : {
       "score": 0,
@@ -30,7 +30,7 @@
     }
   },
   {
-    "type" : "STARTER",
+    "cardType" : "STARTER",
     "color": "NOCOLOR",
     "front" : {
       "score": 0,
@@ -45,7 +45,7 @@
     }
   },
   {
-    "type" : "STARTER",
+    "cardType" : "STARTER",
     "color": "NOCOLOR",
     "front" : {
       "score": 0,
@@ -60,7 +60,7 @@
     }
   },
   {
-    "type" : "STARTER",
+    "cardType" : "STARTER",
     "color": "NOCOLOR",
     "front" : {
       "score": 0,
@@ -75,7 +75,7 @@
     }
   },
   {
-    "type" : "STARTER",
+    "cardType" : "STARTER",
     "color": "NOCOLOR",
     "front" : {
       "score": 0,

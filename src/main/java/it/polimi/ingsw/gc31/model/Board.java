@@ -5,12 +5,14 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
 
+import java.util.List;
+
 public class Board implements Cloneable/* , DeepCopy<Board> */ {
 
-    private Deck<PlayableCard> goldDeck;
-    private Deck<PlayableCard> resourceDeck;
-    private Deck<ObjectiveCard> objectiveDeck;
-    private Deck<PlayableCard> starterDeck;
+    private final Deck<PlayableCard> goldDeck;
+    private final Deck<PlayableCard> resourceDeck;
+    private final Deck<ObjectiveCard> objectiveDeck;
+    private final Deck<PlayableCard> starterDeck;
 
     public Board() {
         goldDeck = new Deck<>(CardType.GOLD);

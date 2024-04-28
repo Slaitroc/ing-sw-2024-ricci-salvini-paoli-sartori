@@ -1,6 +1,6 @@
-package it.polimi.ingsw.gc31.view.GUI.controllers;
+package it.polimi.ingsw.gc31.view.gui.controllers;
 
-import it.polimi.ingsw.gc31.view.GUI.SceneTag;
+import it.polimi.ingsw.gc31.view.gui.SceneTag;
 import javafx.fxml.FXML;
 
 public class StartController extends ViewController {

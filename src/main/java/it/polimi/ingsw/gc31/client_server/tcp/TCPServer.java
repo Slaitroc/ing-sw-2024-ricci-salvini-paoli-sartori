@@ -1,43 +1,32 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
+import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
-import it.polimi.ingsw.gc31.controller.Controller;
-import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-public class TCPServer implements VirtualServer {
+public class TCPServer {
     final ServerSocket listenSocket;
+    private final IController controller;
 
-    private final Map<Integer, Controller> gameList;
-    private final List<String> usernameList;
-    // TODO Verifica correttezza più avanti, rispetto ad rmi utilizzo
-    // SocketClientHandler
-    private Map<String, SocketClientHandler> tempClients;
-    private Integer progressiveIdGame;
-
-    // TODO Gestire meglio eccezioni
-    public TCPServer(ServerSocket listenSocket) {
-        this.listenSocket = listenSocket;
-        this.gameList = new HashMap<>();
-        this.usernameList = new ArrayList<>();
-        this.tempClients = new HashMap<>();
-        this.progressiveIdGame = 0;
+    public void TCPserverWrite(String text) {
+        System.out.println(DefaultValues.ANSI_YELLOW + DefaultValues.TCP_SERVER_TAG + DefaultValues.ANSI_RESET + text);
     }
 
-    // TODO Gestire meglio le eccezioni
-    private void runServer() throws IOException {
-        System.out.println("Server created");
-        Socket clientSocket = null;
+    // TODO Gestire meglio eccezioni
+    public TCPServer(ServerSocket listenSocket, IController controller) {
+        this.listenSocket = listenSocket;
+        this.controller = controller;
+    }
 
-        while ((clientSocket = this.listenSocket.accept()) != null) {
+    public void runServer() throws IOException {
+        TCPserverWrite("Server created");
+
+        while (true) {
+            Socket clientSocket = this.listenSocket.accept();
+            TCPserverWrite("New connection detected...");
             InputStreamReader socketRx = new InputStreamReader(clientSocket.getInputStream());
             OutputStreamWriter socketTx = new OutputStreamWriter(clientSocket.getOutputStream());
 
@@ -46,11 +35,17 @@ public class TCPServer implements VirtualServer {
             // perciò se la mappa risulta null creo un primo controller da passare al primo
             // client
 
-            SocketClientHandler handler = new SocketClientHandler(/* gameList.get(progressiveIdGame) */
-                    Controller.getController(), this,
-                    new BufferedReader(socketRx), new PrintWriter(socketTx), progressiveIdGame);
+            SocketClientHandler handler = new SocketClientHandler(
+                    this.controller, this,
+                    new BufferedReader(socketRx), new PrintWriter(socketTx));
 
-            new Thread(handler::runVirtualView).start();
+            new Thread(() -> {
+                try {
+                    handler.runVirtualView();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }).start();
         }
 
     }
@@ -66,24 +61,5 @@ public class TCPServer implements VirtualServer {
      * " ) collegato correttamente");
      * }
      */
-
-    // public void broadcastUpdate(){}
-
-    // TODO Gestire meglio eccezioni
-    public static void main(String[] args) throws IOException {
-        // TODO Eliminare se rimane inutilizzato
-        String host = "127.0.0.1";
-        // TODO Utilizzare parametri formali
-        int port = Integer.parseInt("1234");
-
-        ServerSocket listenSocket = new ServerSocket(port);
-
-        new TCPServer(listenSocket).runServer();
-    }
-    @Override
-    public IController clientConnection(VirtualClient client, String username) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'clientConnection'");
-    }
 
 }
