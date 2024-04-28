@@ -18,7 +18,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     private IGameController gameController;
     private Integer idGame;
     private String username;
-    private IPlayerController playerController;
     private UI ui;
     private boolean ready = false;
 
@@ -29,8 +28,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
      * <p>
      * - sets its name and assigning it the remote controller once the name is
      * verified by the server controller.
-     * 
-     * @throws RemoteException
      */
     public RmiClient() throws RemoteException, NotBoundException {
         this.server = (VirtualServer) LocateRegistry.getRegistry("127.0.0.1", 1100).lookup("VirtualServer");
@@ -72,7 +69,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void drawGold() throws RemoteException {
-        playerController.drawGold();
+        gameController.drawGold(username);
     }
 
     @Override
@@ -97,18 +94,55 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     // Metodi del virtualController
 
     @Override
-    public void showHand(List<String> hand) throws RemoteException {
-        ui.showHand(hand);
+    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
+        // TODO temporaneo
+        System.out.println("Hand of " + username);
+        hand.forEach(System.out::println);
+    }
+
+    @Override
+    public void show_scorePlayer(String username, Integer score) throws RemoteException {
+    }
+
+    @Override
+    public void show_starterCard(String starterCard) throws RemoteException {
+        // TODO temporaneo
+        System.out.println("Starter card:");
+        System.out.println(starterCard);
+    }
+
+    @Override
+    public void show_objectiveCard(String objectiveCard) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+        // TODO temporaneo
+        System.out.println("Gold deck");
+        System.out.println("Card on top of the deck: " + firstCardDeck);
+        System.out.println("Card1: " + card1);
+        System.out.println("Card2: " + card2);
+    }
+
+    @Override
+    public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+
     }
 
     @Override
     public void showMessage(String msg) throws RemoteException {
         ui.showMessage(msg);
-    }
-
-    @Override
-    public void setPlayerController(IPlayerController playerController) throws RemoteException {
-        this.playerController = playerController;
     }
 
     // public boolean ready() throws RemoteException {
@@ -119,11 +153,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     // return this.ready;
     // }
 
-    /**
-     * Stops the current TUI sets it to game TUI and rerun it
-     * 
-     * @throws RemoteException
-     */
     // @Override
     // public void startGame() throws RemoteException {
     // UI.setQuitRun(true);
@@ -136,17 +165,4 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     // return ready;
     // }
 
-    /* game commands */
-
-    /* altra roba */
-
-    // TODO in questo caso chri sta giustamente facendo in modo che una volta
-    // inizializzati i PlayerController sia il MainGameController a chiamare questo
-    // metodo per settare nel client il corretto player controller
-    // Al momento dell'assegnazione del nome del client invece io lo stavo facendo
-    // fare alla TUI tramite il metodo setUsername(String) (a seguire). Vanno bene
-    // entrambi i casi ma penso che seguirò l'esempio di chri (big up to my man).
-    // Però il commento l'ho scritto perché prima o poi, senza fare questo avanti
-    // indietro terribile, che magari in questi casi (inizializzazione) è pure
-    // necessario, dovremmo implementare un pattern ObserverObservable... mondo cane
 }

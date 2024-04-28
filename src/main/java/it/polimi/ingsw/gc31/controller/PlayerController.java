@@ -62,7 +62,7 @@ public class PlayerController extends UnicastRemoteObject implements IPlayerCont
 
     private void playerControllerWrite(String text) {
         System.out.println(DefaultValues.ANSI_CYAN
-                + DefaultValues.playerControllerTag(player.getName()) + DefaultValues.ANSI_RESET + text);
+                + DefaultValues.playerControllerTag(player.getUsername()) + DefaultValues.ANSI_RESET + text);
     }
 
     @Override
@@ -73,11 +73,6 @@ public class PlayerController extends UnicastRemoteObject implements IPlayerCont
         List<String> res = new ArrayList<>();
         for (PlayableCard card : hand) {
             res.add(gson.toJson(card, PlayableCard.class));
-        }
-        try {
-            client.showHand(res);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
         }
     }
 

@@ -179,22 +179,6 @@ public class TCPClient implements ClientCommands {
     }
 
     /**
-     * NOTE: The TCPClient doesn't have any controller, the controllers are held in
-     * the client handler
-     * the setter is invoked by the GameController (server-side). It's useless to
-     * have this method here.
-     * This method sets a specific IPlayerController for the controller of the
-     * TCPClient
-     * 
-     * @param playerController is the specific controller to be assigned
-     * @throws RemoteException
-     */
-    @Override
-    public void setPlayerController(IPlayerController playerController) throws RemoteException {
-
-    }
-
-    /**
      * This method returns the player's game idGame
      * 
      * @return the idGame of the game

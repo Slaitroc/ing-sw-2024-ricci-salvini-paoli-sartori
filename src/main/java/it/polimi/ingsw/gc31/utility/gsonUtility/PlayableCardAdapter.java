@@ -4,14 +4,24 @@ import com.google.gson.*;
 
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
+import it.polimi.ingsw.gc31.model.enumeration.CardType;
 
 import java.lang.reflect.Type;
 
 public class PlayableCardAdapter implements JsonSerializer<PlayableCard>, JsonDeserializer<PlayableCard> {
     @Override
-    public JsonElement serialize(PlayableCard playableCard, Type type,
-            JsonSerializationContext jsonSerializationContext) {
+    public JsonElement serialize(PlayableCard playableCard, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject jsonObject = new JsonObject();
+
+        if (playableCard.getClass().equals(GoldCard.class)) {
+            jsonObject.addProperty("cardType", "GOLD");
+        }
+        else if (playableCard.getClass().equals(ResourceCard.class)) {
+            jsonObject.addProperty("cardType", "RESOURCE");
+        }
+        else if (playableCard.getClass().equals(StarterCard.class)) {
+            jsonObject.addProperty("cardType", "STARTER");
+        }
 
         if (playableCard.getColor() == null) {
             jsonObject.add("color", null);
@@ -25,11 +35,11 @@ public class PlayableCardAdapter implements JsonSerializer<PlayableCard>, JsonDe
     }
 
     @Override
-    public PlayableCard deserialize(JsonElement jsonElement, Type type,
-            JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public PlayableCard deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
-        CardColor cardColor = null;
+        CardType cardType = CardType.valueOf(jsonObject.get("cardType").getAsString());
 
+        CardColor cardColor = null;
         if (jsonObject.get("color").isJsonNull()) {
             cardColor = null;
         } else {
@@ -41,16 +51,14 @@ public class PlayableCardAdapter implements JsonSerializer<PlayableCard>, JsonDe
         CardFront front = jsonDeserializationContext.deserialize(frontElement, CardFront.class);
         JsonElement backElement = jsonObject.get("back");
         CardBack back = jsonDeserializationContext.deserialize(backElement, CardBack.class);
-        if (type.equals(GoldCard.class)) {
+        if (cardType.equals(CardType.GOLD)) {
             return new GoldCard(cardColor, front, back);
-        } else if (type.equals(ResourceCard.class)) {
+        } else if (cardType.equals(CardType.RESOURCE)) {
             return new ResourceCard(cardColor, front, back);
-        } else if (type.equals(StarterCard.class)) {
+        } else if (cardType.equals(CardType.STARTER)) {
             return new StarterCard(cardColor, front, back);
         }
-        // TODO non sono sicuro
-        else {
-            return null;
-        }
+        // TODO non so se è giusto
+        return null;
     }
 }

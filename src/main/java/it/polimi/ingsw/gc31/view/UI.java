@@ -14,6 +14,16 @@ public abstract class UI {
      * @Slaitroc
      */
     protected ClientCommands client;
+    /**
+     * This variable's type could change during the development.
+     * Its scope is to track the different section of an UI (Scenes for GUI
+     * and
+     * views for TUI)
+     * Probably it'll become an array of boolean or a Map or IDK
+     * 
+     * @Slaitroc
+     */
+    protected boolean inGame;
 
     /**
      * Run a new scene/view. Should be using {@link #inGame} to choose between
@@ -40,7 +50,6 @@ public abstract class UI {
      * @param bool
      * 
      * @throws RemoteException
-     * 
      * @see {@link #inGame}
      * @see #runUI()
      * @see #isInGame()

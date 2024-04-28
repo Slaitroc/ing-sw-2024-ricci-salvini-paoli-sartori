@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.model.strategies;
 import java.awt.*;
 import java.util.Map;
 
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
@@ -63,5 +64,12 @@ public class Seven extends Objective {
         }
 
         return count;
+    }
+
+    @Override
+    public JsonObject serializeToJson() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("type", "SEVEN");
+        return jsonObject;
     }
 }
