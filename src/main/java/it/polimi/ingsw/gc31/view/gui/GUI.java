@@ -1,4 +1,4 @@
-package it.polimi.ingsw.gc31.view.GUI;
+package it.polimi.ingsw.gc31.view.gui;
 
 import java.rmi.RemoteException;
 
