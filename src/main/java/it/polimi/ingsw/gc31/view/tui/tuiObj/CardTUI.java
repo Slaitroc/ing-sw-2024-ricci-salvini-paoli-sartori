@@ -30,43 +30,48 @@ public class CardTUI {
             String bottomLeft, List<String> needs, boolean hasObjective) {
         List<String> cardLines = new ArrayList<>();
         List<String> check = new ArrayList<>();
-        int size = 0;
+        int size = 1;
         if (!(needs == null)) {
             check = needs;
-            size = needs.size();
+            if (!(needs.size() > 5))
+                size = needs.size() * 2;
+            else
+                size = 10;
         }
         List<String> needed = new ArrayList<>(check) {
             @Override
             public String toString() {
                 StringBuilder sb = new StringBuilder();
-                sb.append("");
+                // sb.append("");
                 for (int i = 0; i < size(); i++) {
-                    if (i > 0) {
-                    }
-                    sb.append(get(i).toString());
+                    if (i < 5)
+                        sb.append(get(i).toString());
                 }
                 return sb.toString();
             }
         };
 
-        int totalPadding = 8 - size;
+        int totalPadding = 12 - size;
         int leftPadding = totalPadding / 2;
         int rightPadding = totalPadding - leftPadding;
 
         String obj = "─";
         if (hasObjective)
-            obj = SymbolsTUI.OBJ.toString(); // FIX
+            obj = "╳"; // FIX
 
         String topBottomBorder = String.format("┌─────%1s──────┐", obj);
         // String middleLine = "│ │";
-        String topCorners = String.format("│%-5s%1s%6s│", topLeft, rank, topRight);
-        String rankLine = String.format("│%s%s%s│", " ".repeat(rightPadding), needed, " ".repeat(leftPadding));
-        String bottomCorners = String.format("│%-6s%6s│", bottomLeft, bottomRight);
+        String topCorners = String.format("│%-5s%1s%6s│", topLeft.isEmpty() ? " " : topLeft, rank,
+                topRight.isEmpty() ? " " : topRight);
+        String neededLine = String.format("│%s%s%s│", " ".repeat(leftPadding), needed.isEmpty() ? " " : needed,
+                " ".repeat(rightPadding));
+        String bottomCorners = String.format("│%-5s%1s%6s│", bottomLeft.isEmpty() ? " " : bottomLeft, " ",
+                bottomRight.isEmpty() ? " " : bottomRight);
         String bottomBorder = "└────────────┘";
 
         cardLines.add(topBottomBorder);
         cardLines.add(topCorners);
-        cardLines.add(rankLine);
+        cardLines.add(neededLine);
         cardLines.add(bottomCorners);
         cardLines.add(bottomBorder);
 
@@ -101,22 +106,22 @@ public class CardTUI {
 
     public static CardTUI createStandardCard1() {
         List<String> needs = new ArrayList<>();
-        needs.add(SymbolsTUI.ANIMAL.toString());
-        needs.add(SymbolsTUI.ANIMAL.toString());
-        needs.add(SymbolsTUI.PLANT.toString());
-        needs.add(SymbolsTUI.PLANT.toString());
-        return new CardTUI("1", SymbolsTUI.INSECT.toString(), SymbolsTUI.INSECT.toString(), SymbolsTUI.PLANT.toString(),
-                SymbolsTUI.MUSHROOM.toString(), needs, true);
+        needs.add(Resources.ANIMAL.getSymbol());
+        needs.add(Resources.ANIMAL.getSymbol());
+        needs.add(Resources.PLANT.getSymbol());
+        needs.add(Resources.PLANT.getSymbol());
+        return new CardTUI("1", Resources.INSECT.getSymbol(), Resources.INSECT.getSymbol(), Resources.PLANT.getSymbol(),
+                Resources.MUSHROOM.getSymbol(), needs, true);
     }
 
     public static CardTUI createStandardCard2() {
         List<String> needs = new ArrayList<>();
-        needs.add(SymbolsTUI.INSECT.toString());
-        needs.add(SymbolsTUI.INSECT.toString());
-        needs.add(SymbolsTUI.MUSHROOM.toString());
-        needs.add(SymbolsTUI.MUSHROOM.toString());
-        return new CardTUI("1", SymbolsTUI.PLANT.toString(), SymbolsTUI.INSECT.toString(), SymbolsTUI.PLANT.toString(),
-                SymbolsTUI.MUSHROOM.toString(), needs, false);
+        needs.add(Resources.INSECT.getSymbol());
+        needs.add(Resources.INSECT.getSymbol());
+        needs.add(Resources.MUSHROOM.getSymbol());
+        needs.add(Resources.MUSHROOM.getSymbol());
+        return new CardTUI("1", Resources.PLANT.getSymbol(), Resources.INSECT.getSymbol(), Resources.PLANT.getSymbol(),
+                Resources.MUSHROOM.getSymbol(), needs, false);
     }
 
 }
