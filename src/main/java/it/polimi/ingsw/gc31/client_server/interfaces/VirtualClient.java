@@ -34,4 +34,8 @@ public interface VirtualClient extends Remote {
     public void showListGame(List<String> listGame) throws RemoteException;
 
     public void showMessage(String msg) throws RemoteException;
+
+    public boolean isReady() throws RemoteException;
+
+    public void startGame() throws RemoteException;
 }

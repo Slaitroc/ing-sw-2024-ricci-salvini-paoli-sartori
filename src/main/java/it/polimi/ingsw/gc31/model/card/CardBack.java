@@ -71,4 +71,8 @@ public class CardBack implements DeepCopy<CardBack> {
                 listDeepCopy(resources),
                 new String(dirImg));
     }
+
+    public List<Resources> getCorners() {
+        return resources;
+    }
 }

@@ -50,4 +50,10 @@ public class GUI extends UI {
     public void show_gameCreated() {
         throw new UnsupportedOperationException("Unimplemented method 'show_gameCreated'");
     }
+
+    @Override
+    public void updateToPlayingState() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateToPlayingState'");
+    }
 }

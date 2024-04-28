@@ -48,6 +48,7 @@ public abstract class PlayableCard implements Card {
         this.side = false;
         this.cardColor = cardColor;
     }
+
     public int getScore() {
         if (side)
             return front.getScore();
@@ -126,5 +127,12 @@ public abstract class PlayableCard implements Card {
     @Override
     public Card deepCopy() {
         return null;
+    }
+
+    public List<Resources> getCorners() {
+        if (side)
+            return front.getCorners();
+        else
+            return back.getCorners();
     }
 }

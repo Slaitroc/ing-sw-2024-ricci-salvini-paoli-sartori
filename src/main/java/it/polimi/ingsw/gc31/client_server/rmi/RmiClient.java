@@ -2,15 +2,27 @@ package it.polimi.ingsw.gc31.client_server.rmi;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
+import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
+import it.polimi.ingsw.gc31.model.player.PlayArea;
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater;
 import it.polimi.ingsw.gc31.view.UI;
+import it.polimi.ingsw.gc31.view.tui.tuiObj.CardTUI;
+import it.polimi.ingsw.gc31.view.tui.tuiObj.PlayAreaTUI;
+
+import com.google.gson.reflect.TypeToken;
+
+import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.Map;
+import java.awt.Point;
 
 public class RmiClient extends UnicastRemoteObject implements VirtualClient, ClientCommands {
     private IController controller;
@@ -19,7 +31,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     private Integer idGame;
     private String username;
     private UI ui;
-    private boolean ready = false;
 
     /**
      * Creates a client with a default name and calls inner procedures to:
@@ -96,8 +107,9 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public void show_handPlayer(String username, List<String> hand) throws RemoteException {
         // TODO temporaneo
-        System.out.println("Hand of " + username);
-        hand.forEach(System.out::println);
+        // System.out.println("Hand of " + username);
+        ui.showHand(hand);
+        // hand.forEach(System.out::println);
     }
 
     @Override
@@ -106,9 +118,9 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void show_starterCard(String starterCard) throws RemoteException {
-        // TODO temporaneo
-        System.out.println("Starter card:");
-        System.out.println(starterCard);
+        // // TODO temporaneo
+        // System.out.println("Starter card:");
+        // System.out.println(starterCard);
     }
 
     @Override
@@ -118,16 +130,17 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
-
+        Map<Point, PlayableCard> pA = gsonTranslater.fromJson(playArea, new TypeToken<Map<Point, PlayableCard>>() {
+        }.getType());
     }
 
     @Override
     public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
-        // TODO temporaneo
-        System.out.println("Gold deck");
-        System.out.println("Card on top of the deck: " + firstCardDeck);
-        System.out.println("Card1: " + card1);
-        System.out.println("Card2: " + card2);
+        // // TODO temporaneo
+        // System.out.println("Gold deck");
+        // System.out.println("Card on top of the deck: " + firstCardDeck);
+        // System.out.println("Card1: " + card1);
+        // System.out.println("Card2: " + card2);
     }
 
     @Override
@@ -145,13 +158,29 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         ui.showMessage(msg);
     }
 
-    // public boolean ready() throws RemoteException {
-    // this.ready = !this.ready;
-    // if (mainGameController.checkReady()) {
-    // mainGameController.startGame();
-    // }
-    // return this.ready;
-    // }
+    private boolean ready = false;
+
+    @Override
+    public boolean isReady() {
+        return ready;
+    }
+
+    @Override
+    public void setReady(boolean ready) {
+        this.ready = ready;
+        if (ready) {
+            try {
+                gameController.checkReady();
+            } catch (RemoteException | IllegalStateOperationException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void startGame() throws RemoteException {
+        ui.updateToPlayingState();
+    }
 
     // @Override
     // public void startGame() throws RemoteException {

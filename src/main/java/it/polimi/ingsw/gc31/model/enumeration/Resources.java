@@ -11,8 +11,8 @@ public enum Resources {
     FEATHER("FEATHER", "🪶"),
     INK("INK", "🖋️"),
     SCROLL("SCROLL", "📜"),
-    EMPTY("EMPTY", ""),
-    HIDDEN("HIDDEN", "❌");
+    EMPTY("EMPTY", " "),
+    HIDDEN("HIDDEN", "🖋️");
 
     /**
      * it is the string representation of a Resources object

@@ -198,4 +198,9 @@ public class TCPClient implements ClientCommands {
     public void setUI(UI ui) {
         this.ui = ui;
     }
+
+    @Override
+    public void setReady(boolean ready) throws RemoteException {
+        // TODO Auto-generated method stub
+    }
 }

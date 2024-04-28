@@ -26,6 +26,7 @@ public class SocketClientHandler implements VirtualClient {
     private final TCPServer server;
     private final BufferedReader input;
     private final PrintWriter output;
+    private boolean ready = false;
 
     // TODO Modificare l'inizializzazione di idGame
 
@@ -177,5 +178,16 @@ public class SocketClientHandler implements VirtualClient {
     @Override
     public void showMessage(String msg) throws RemoteException {
 
+    }
+
+    @Override
+    public boolean isReady() throws RemoteException {
+        return ready;
+    }
+
+    @Override
+    public void startGame() throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'startGame'");
     }
 }

@@ -2,23 +2,28 @@ package it.polimi.ingsw.gc31.view.tui;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.UI;
+import it.polimi.ingsw.gc31.view.tui.tuiObj.CardTUI;
+
+import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.ArrayList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class TUI extends UI {
-
+    /* TUI implementation */
     private TuiState state;
 
     private Thread inputThread;
     private volatile boolean shouldInterrupt = false;
 
-    public void runInputLoop() {
+    private void runInputLoop() {
         tuiWriteGreen(state.stateName);
         state.run();
 
@@ -50,7 +55,7 @@ public class TUI extends UI {
         }
     }
 
-    public void runThreads() {
+    private void runThreads() {
         shouldInterrupt = false;
         inputThread = new Thread(this::runInputLoop);
         inputThread.start();
@@ -69,14 +74,13 @@ public class TUI extends UI {
         this.runThreads();
     }
 
-    /**
-     * when <code> true </code> stop the current TUI and reset itself to
-     * <code> false </code>
-     * 
-     * @Slaitroc
-     */
+    @Override
+    public void updateToPlayingState() {
+        stopThreads();
+        this.state = new PlayingState(this);
+        this.runThreads();
+    }
 
-    /* TUI implementation */
     /**
      * Runs the corresponding Runnable value to the String key in the active command
      * map
@@ -95,33 +99,20 @@ public class TUI extends UI {
             tuiWrite("Invalid command");
     }
 
-    /**
-     * @return the next line input. If {@link #quitRun} is set to
-     *         <code>true</code> returns the <code>String</code> value that stops
-     *         the TUI.
-     * 
-     * @Slaitroc
-     */
-
     @Override
     public void showHand(List<String> hand) {
-        hand.forEach(x -> System.out.println(x));
+        System.out.println(" ");
+        List<CardTUI> cardList = new ArrayList<>();
+        for (String line : hand)
+            cardList.add(new CardTUI(gsonTranslater.fromJson(line, PlayableCard.class)));
+        CardTUI.showHand(cardList);
+        // hand.forEach(x -> System.out.println(x));
     }
 
     @Override
     public void showMessage(String msg) throws RemoteException {
 
     }
-    /* Fine TUI Implementation */
-
-    /**
-     * tracks the current state of the player:
-     * <p>
-     * <code> true </code> if the player is ready to start the game
-     * <p>
-     * <code> false </code> otherwise
-     * 
-     */
 
     public ClientCommands getClient() {
         return this.client;
@@ -139,6 +130,7 @@ public class TUI extends UI {
         this.state = new InitState(this);
         this.client = client;
     }
+    /* Fine TUI Implementation */
 
     /**
      * Simply calls System.out.println adding the server tag and printing the text

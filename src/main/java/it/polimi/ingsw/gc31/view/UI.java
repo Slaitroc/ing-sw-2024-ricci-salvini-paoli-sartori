@@ -63,4 +63,6 @@ public abstract class UI {
     public abstract void showMessage(String msg) throws RemoteException;
 
     public abstract void show_gameCreated();
+
+    public abstract void updateToPlayingState();
 }

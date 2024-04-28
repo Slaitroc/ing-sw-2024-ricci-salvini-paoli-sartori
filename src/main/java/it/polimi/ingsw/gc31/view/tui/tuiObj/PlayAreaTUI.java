@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import it.polimi.ingsw.gc31.DefaultValues;
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.tui.tuiObj.exceptions.IsNotPivotTUIException;
 
 import static it.polimi.ingsw.gc31.OurScanner.scanner;

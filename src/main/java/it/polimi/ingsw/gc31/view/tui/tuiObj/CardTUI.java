@@ -1,11 +1,25 @@
 package it.polimi.ingsw.gc31.view.tui.tuiObj;
 
 import java.util.List;
+
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import it.polimi.ingsw.gc31.model.enumeration.Resources;
+
 import java.util.ArrayList;
 
 public class CardTUI {
 
     List<String> cardLines = new ArrayList<>();
+
+    public CardTUI(PlayableCard card) {
+        card.changeSide();
+        List<Resources> res = card.getCorners();
+        this.cardLines = constructCardLines(String.valueOf(card.getScore()), res.get(3).getSymbol(),
+                res.get(0).getSymbol(),
+                res.get(1).getSymbol(), res.get(2).getSymbol(), null,
+                false);
+
+    }
 
     public CardTUI(String rank, String topLeft, String topRight, String bottomRight, String bottomLeft,
             List<String> needs, boolean hasObjective) {
@@ -15,8 +29,13 @@ public class CardTUI {
     private List<String> constructCardLines(String rank, String topLeft, String topRight, String bottomRight,
             String bottomLeft, List<String> needs, boolean hasObjective) {
         List<String> cardLines = new ArrayList<>();
-
-        List<String> needed = new ArrayList<>(needs) {
+        List<String> check = new ArrayList<>();
+        int size = 0;
+        if (!(needs == null)) {
+            check = needs;
+            size = needs.size();
+        }
+        List<String> needed = new ArrayList<>(check) {
             @Override
             public String toString() {
                 StringBuilder sb = new StringBuilder();
@@ -29,7 +48,8 @@ public class CardTUI {
                 return sb.toString();
             }
         };
-        int totalPadding = 8 - needs.size();
+
+        int totalPadding = 8 - size;
         int leftPadding = totalPadding / 2;
         int rightPadding = totalPadding - leftPadding;
 

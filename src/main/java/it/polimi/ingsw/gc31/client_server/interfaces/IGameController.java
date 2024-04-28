@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.client_server.interfaces;
 
+import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.GameModel;
 
 import java.rmi.Remote;
@@ -32,4 +33,7 @@ public interface IGameController extends Remote {
     void selectCard(String username, int index) throws RemoteException;
 
     GameModel getModel() throws RemoteException;
+
+    void checkReady() throws RemoteException, IllegalStateOperationException;
+
 }

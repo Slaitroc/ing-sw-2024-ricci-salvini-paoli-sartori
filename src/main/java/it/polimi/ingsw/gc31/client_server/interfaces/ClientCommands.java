@@ -22,4 +22,6 @@ public interface ClientCommands {
     void getGameList() throws RemoteException, NoGamesException, IOException;
 
     void setUI(UI ui);
+
+    void setReady(boolean ready) throws RemoteException;
 }

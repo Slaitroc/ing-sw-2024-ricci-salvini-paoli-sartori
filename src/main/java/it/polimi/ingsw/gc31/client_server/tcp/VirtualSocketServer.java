@@ -63,7 +63,7 @@ public class VirtualSocketServer implements VirtualClient {
 
     @Override
     public void showListGame(List<String> listGame) throws RemoteException {
-        listGame.forEach(x->output.println(x));
+        listGame.forEach(x -> output.println(x));
         output.flush();
     }
 
@@ -71,5 +71,15 @@ public class VirtualSocketServer implements VirtualClient {
     public void showMessage(String msg) throws RemoteException {
         output.println(msg);
         output.flush();
+    }
+
+    @Override
+    public boolean isReady() throws RemoteException {
+        throw new UnsupportedOperationException("Unimplemented method 'isReady'");
+    }
+
+    @Override
+    public void startGame() throws RemoteException {
+        throw new UnsupportedOperationException("Unimplemented method 'startGame'");
     }
 }
