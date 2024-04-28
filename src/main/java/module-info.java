@@ -8,12 +8,12 @@ module it.polimi.ingsw.gc31 {
     requires java.rmi;
     requires MaterialFX;
 
-    opens it.polimi.ingsw.gc31.view.GUI to javafx.fxml;
-    opens it.polimi.ingsw.gc31.view.GUI.controllers to javafx.fxml;
+    opens it.polimi.ingsw.gc31.view.gui to javafx.fxml;
+    opens it.polimi.ingsw.gc31.view.gui.controllers to javafx.fxml;
 
     exports it.polimi.ingsw.gc31.view;
-    exports it.polimi.ingsw.gc31.view.GUI;
-    exports it.polimi.ingsw.gc31.view.GUI.controllers;
+    exports it.polimi.ingsw.gc31.view.gui;
+    exports it.polimi.ingsw.gc31.view.gui.controllers;
 
     exports it.polimi.ingsw.gc31;
     exports it.polimi.ingsw.gc31.controller;

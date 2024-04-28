@@ -9,7 +9,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 import it.polimi.ingsw.gc31.client_server.rmi.RmiClient;
 import it.polimi.ingsw.gc31.client_server.tcp.TCPClient;
 import it.polimi.ingsw.gc31.utility.CliPrint;
-import it.polimi.ingsw.gc31.view.GUI.GUI;
+import it.polimi.ingsw.gc31.view.gui.GUI;
 import it.polimi.ingsw.gc31.view.tui.TUI;
 
 import static it.polimi.ingsw.gc31.OurScanner.scanner;
