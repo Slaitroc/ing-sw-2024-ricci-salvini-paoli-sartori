@@ -2,6 +2,8 @@ package it.polimi.ingsw.gc31.model.player;
 
 import java.awt.*;
 
+import it.polimi.ingsw.gc31.client_server.listeners.Observable;
+import it.polimi.ingsw.gc31.client_server.listeners.PlayerObservable;
 import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.exceptions.FullHandException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
@@ -12,6 +14,7 @@ import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
 import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +23,8 @@ import java.util.List;
  * This class represents a player in the game.
  * It manages the player's state, hand, score, and other game-related attributes.
  */
-public class Player {
+public class Player extends PlayerObservable{
+
     private final Board board;
     private int selectedCard;
     private PlayableCard selectedStarterCard;
@@ -64,6 +68,7 @@ public class Player {
     private boolean addToHand(PlayableCard card, Boolean byDeck) {
         try {
             inGameState.addToHand(card, this, byDeck);
+            notifyPlayerHandListener(new Pair<>(username, hand));
             return true;
         } catch (IllegalStateOperationException e) {
             System.out.println("Player " + username + " cannot draw in current state");
@@ -175,6 +180,7 @@ public class Player {
     public void play(Point point) {
         try {
             inGameState.play(point, this);
+            notifyPlayAreaListener(new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
         } catch (IllegalStateOperationException e) {
             System.out.println("Player " + username + " not allowed to place cards in current state");
             e.getStackTrace();
@@ -187,6 +193,8 @@ public class Player {
     public void playStarter() {
         try {
             inGameState.playStarter(this);
+            notifyPlayerScoreListener(new Pair<>(username, score));
+            notifyPlayAreaListener(new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
         } catch (IllegalStateOperationException e) {
             System.out.println("Player" + username + " not allowed to place the starter card in current state");
             e.getStackTrace();
@@ -262,11 +270,13 @@ public class Player {
 
     public void setStarterCard() throws EmptyDeckException {
         this.selectedStarterCard = board.getDeckStarter().draw();
+        notifyPlayerStarterCardListener(selectedStarterCard);
     }
 
     //NOTICE: This setter is not supposed to be called from anyone except the Start state of the player
     protected void setObjectiveCard(ObjectiveCard card) {
         this.objectiveCard = card;
+        notifyPlayerObjectiveCardListener(objectiveCard);
     }
 
     public void setInGameState(PlayerState inGameState) {

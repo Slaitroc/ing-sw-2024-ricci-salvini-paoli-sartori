@@ -2,7 +2,8 @@ package it.polimi.ingsw.gc31;
 
 import java.util.Map;
 
-import it.polimi.ingsw.gc31.view.GUI.SceneTag;
+import it.polimi.ingsw.gc31.view.gui.SceneTag;
+
 import java.util.HashMap;
 
 public class DefaultValues {
@@ -16,16 +17,16 @@ public class DefaultValues {
     // Server Log
     public final static String RMI_SERVER_TAG = "[RMI server] ";
     public final static String TCP_SERVER_TAG = "[TCP server] ";
-    public static final String CONTROLLER_TAG = "- [Controller]: ";
+    public static final String CONTROLLER_TAG = "\t[Controller]: ";
+    public static final String PLAYER_CONTROLLER_TAG = "\t[PlayerController]: ";
 
-    public static String mainControllerTag(String id) {
-        return "- [MainController " + id + "]: ";
+    public static String gameControllerTag(String id) {
+        return "\t[GameController " + id + "]: ";
     }
 
-    // TUI
-    public final static String TUI_START_LINE_SYMBOL = "> ";
-    public final static String TUI_TAG = "[TUI] ";
-    public final static String STOP_CURRENT_TUI_STRING = "quit";
+    public static String playerControllerTag(String name) {
+        return "\t[PlayerController " + name + "]: ";
+    }
 
     // ANSI color
     public static final String ANSI_RESET = "\u001B[0m";
@@ -36,6 +37,21 @@ public class DefaultValues {
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
+
+    // TUI
+    public final static String TUI_START_LINE_SYMBOL = "> ";
+    public final static String TUI_TAG = "[TUI] ";
+    public final static String STOP_CURRENT_TUI_STRING = "quit";
+
+    // TUIobj
+    public static final int cardHeight = 5;
+    public static final int cardWidth = 14;
+
+    public static final int width_intersect = 3;
+    public static final int height_intersect = 2;;
+
+    public static final int height_shift = cardHeight - height_intersect;
+    public static final int width_shift = cardWidth - width_intersect;
 
     // GUI
     public final static String GUI_SCENE_startScene = "/it/polimi/ingsw/gc31/Views/startScene.fxml";

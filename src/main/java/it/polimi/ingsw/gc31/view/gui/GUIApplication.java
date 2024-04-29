@@ -1,4 +1,4 @@
-package it.polimi.ingsw.gc31.view.GUI;
+package it.polimi.ingsw.gc31.view.gui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.exceptions.GUISceneInitializationException;
-import it.polimi.ingsw.gc31.view.GUI.controllers.ViewController;
+import it.polimi.ingsw.gc31.view.gui.controllers.ViewController;
 
 import java.util.Map;
 import java.util.HashMap;

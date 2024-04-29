@@ -1,35 +1,32 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
+import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
-import it.polimi.ingsw.gc31.controller.Controller;
-import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class TCPServer {
     final ServerSocket listenSocket;
     private final IController controller;
-    private Map<String, SocketClientHandler> tempClients;
+
+    public void TCPserverWrite(String text) {
+        System.out.println(DefaultValues.ANSI_YELLOW + DefaultValues.TCP_SERVER_TAG + DefaultValues.ANSI_RESET + text);
+    }
 
     // TODO Gestire meglio eccezioni
     public TCPServer(ServerSocket listenSocket, IController controller) {
         this.listenSocket = listenSocket;
         this.controller = controller;
-        this.tempClients = new HashMap<>();
     }
 
     public void runServer() throws IOException {
-        System.out.println("[TCP] Server created");
-        Socket clientSocket = null;
+        TCPserverWrite("Server created");
 
-        while ((clientSocket = this.listenSocket.accept()) != null) {
+        while (true) {
+            Socket clientSocket = this.listenSocket.accept();
+            TCPserverWrite("New connection detected...");
             InputStreamReader socketRx = new InputStreamReader(clientSocket.getInputStream());
             OutputStreamWriter socketTx = new OutputStreamWriter(clientSocket.getOutputStream());
 
@@ -39,16 +36,16 @@ public class TCPServer {
             // client
 
             SocketClientHandler handler = new SocketClientHandler(
-                    controller, this,
+                    this.controller, this,
                     new BufferedReader(socketRx), new PrintWriter(socketTx));
 
             new Thread(() -> {
                 try {
                     handler.runVirtualView();
                 } catch (IOException e) {
-                    throw new RuntimeException();
+                    throw new RuntimeException(e);
                 }
-            });
+            }).start();
         }
 
     }

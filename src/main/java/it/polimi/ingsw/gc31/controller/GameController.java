@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,10 +31,11 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     private final GameModel model;
     private Map<String, Player> playerList;
     private final Map<String, VirtualClient> clientList;
-    private final Gson gsonCard/*, gsonObjective*/;
+    private final Gson gsonCard/* , gsonObjective */;
     private final int maxNumberPlayers;
     private final int idGame;
     boolean lastTurn = false;
+    private LinkedBlockingQueue<QueueObject> callsList;
 
     /**
      * Constructor for the GameController class.
@@ -44,19 +46,43 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * @param maxNumberPlayers the maximum number of players.
      * @param idGame           the id of the game.
      */
-    public GameController(String username, VirtualClient client, int maxNumberPlayers, int idGame) throws RemoteException {
+    public GameController(String username, VirtualClient client, int maxNumberPlayers, int idGame)
+            throws RemoteException {
         this.model = new GameModel();
+        this.callsList = new LinkedBlockingQueue<>();
         this.maxNumberPlayers = maxNumberPlayers;
         this.idGame = idGame;
         this.playerList = new HashMap<>();
         this.clientList = new HashMap<>();
         this.clientList.put(username, client);
-        /*gsonObjective = new GsonBuilder()
-                .registerTypeAdapter(ObjectiveCard.class, new ObjectiveCardAdapter())
-                .create();*/
+        /*
+         * gsonObjective = new GsonBuilder()
+         * .registerTypeAdapter(ObjectiveCard.class, new ObjectiveCardAdapter())
+         * .create();
+         */
         gsonCard = new GsonBuilder()
                 .registerTypeAdapter(PlayableCard.class, new PlayableCardAdapter())
                 .create();
+
+        new Thread(this::executor);
+    }
+
+    private void addQueueObj(QueueObject obj) {
+        synchronized (callsList) {
+            callsList.add(obj);
+        }
+    }
+
+    private void executor() {
+        QueueObject action;
+        while (true) {
+            synchronized (callsList) {
+                action = callsList.poll();
+            }
+            action.execute();
+        }
+        // TODO ciclo da terminare alla fine del gioco altrimenti diventa demoooone
+        // uuuuhhhhh
     }
 
     /**
@@ -70,12 +96,28 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         // TODO mandare messaggio al client di connessione al server
         if (maxNumberPlayers == this.clientList.size()) {
             gameControllerWrite("The number of players for the game " + maxNumberPlayers + " has been reached");
-            try {
-                initGame(); //somewhere it's supposed to start the game
-            } catch (IllegalStateOperationException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
+            // try {
+            // // initGame(); // somewhere it's supposed to start the game
+            // } catch (IllegalStateOperationException e) {
+            // e.printStackTrace();
+            // throw new RuntimeException(e);
+            // }
+        }
+    }
+
+    @Override
+    public void checkReady() throws RemoteException, IllegalStateOperationException {
+        int counter = 0;
+        for (VirtualClient clients : clientList.values()) {
+            if (clients.isReady()) {
+                counter++;
             }
+        }
+        if (counter == maxNumberPlayers) {
+            for (VirtualClient clients : clientList.values()) {
+                clients.startGame();
+            }
+            initGame();
         }
     }
 
@@ -84,22 +126,64 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * It also sets the player controller for each client.
      */
     public void initGame() throws RemoteException, IllegalStateOperationException {
-        if(model.getGameState() == GameState.SETUP){
-            playerList = model.createPlayers(clientList.keySet()); // Here the players are created and added to the playerList
+        if (model.getGameState() == GameState.SETUP) {
+            playerList = model.createPlayers(clientList.keySet()); // Here the players are created and added to the
+                                                                   // playerList
             model.setObjectives(); // Here the common goals are initialized
             model.initSecretObj(); // Here the secret goals are drawn
+
+            // TODO creare funzione per la creazione di tutti i listener
+            // create playerHandListener for all players
+            List<PlayerHandListener> playerHandListenersList = new ArrayList<>();
+            for (String username : playerList.keySet()) {
+                playerHandListenersList.add(new PlayerHandListener(clientList.get(username)));
+            }
+
+            // create playerScoreListener for all players
+            List<PlayerScoreListener> playerScoreListeners = new ArrayList<>();
+            for (String username : playerList.keySet()) {
+                playerScoreListeners.add(new PlayerScoreListener(clientList.get(username)));
+            }
+
+            List<PlayAreaListener> playAreaListenerList = new ArrayList<>();
+            for (String username : playerList.keySet()) {
+                playAreaListenerList.add(new PlayAreaListener(clientList.get(username)));
+            }
+
             for (Player player : playerList.values()) {
+                // TODO temporaneo
+                // add all playerHandListener to all player
+                for (PlayerHandListener listener : playerHandListenersList) {
+                    player.addPlayerHandListener(listener);
+                }
+                // add all playerScoreListener to all player
+                for (PlayerScoreListener listener : playerScoreListeners) {
+                    player.addPlayerScoreListener(listener);
+                }
+                for (PlayAreaListener listener : playAreaListenerList) {
+                    player.addPlayAreaListener(listener);
+                }
+                // add to the player its own playerStarterCardListener
+                player.addPlayerStarterCardListener(
+                        new PlayerStarterCardListener(clientList.get(player.getUsername())));
+
+                // add to the player its own playerObjectiveCardListener
+                player.addPlayerObjectiveCardListener(
+                        new PlayerObjectiveCardListener(clientList.get(player.getUsername())));
+
                 player.setStarterCard(); // Here the starter cards are drawn
                 player.drawResource();
                 player.drawResource();
                 player.drawGold(); // Here the player hands are initialized
-                //showHand(player); // Here the player's hands are shown
-                //showObjectives(playerList.get(player)); // Here the common goals are supposed to be shown :)
+                // showHand(player); // Here the player's hands are shown
+                // showObjectives(playerList.get(player)); // Here the common goals are supposed
+                // to be shown :)
             }
             model.getBoard().getDeckGold().refill(); // Here the GoldCard1 and GoldCard2 are drawn on the board
-            model.getBoard().getDeckResource().refill(); // Here the ResourceCard1 and ResourceCard2 are drawn on the board
-        }
-        else {
+            model.getBoard().getDeckResource().refill(); // Here the ResourceCard1 and ResourceCard2 are drawn on the
+                                                         // board
+            model.startGame();
+        } else {
             System.out.println("Failed to initialize game.");
             throw new RemoteException();
         }
@@ -110,8 +194,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         // }
     }
 
-    /*TODO Do I use this and create all the initStarters etc. methods in the GameController,
-              or do I use the methods in the GameModel and call them from the GameController?*/
+    /*
+     * TODO Do I use this and create all the initStarters etc. methods in the
+     * GameController,
+     * or do I use the methods in the GameModel and call them from the
+     * GameController?
+     */
 
     /**
      * @return the maximum number of players.
@@ -127,9 +215,11 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         return clientList.size();
     }
 
-    /*public Player getPlayer(String username) {
-        return playerList.get(username);
-    }*/
+    /*
+     * public Player getPlayer(String username) {
+     * return playerList.get(username);
+     * }
+     */
 
     /**
      * Writes a message to the game controller.
@@ -137,23 +227,24 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * @param text the message to write.
      */
     private void gameControllerWrite(String text) {
-        System.out.println(DefaultValues.ANSI_GREEN + DefaultValues.RMI_SERVER_TAG + DefaultValues.ANSI_BLUE
-                + DefaultValues.CONTROLLER_TAG + DefaultValues.ANSI_RESET + text);
+        System.out.println(DefaultValues.ANSI_PURPLE
+                + DefaultValues.gameControllerTag(String.valueOf(idGame)) + DefaultValues.ANSI_RESET + text);
     }
 
-    //WARNING: methods receive username in input, instead of using model.currPlayingPlayer.drawGold() etc.
+    // WARNING: methods receive username in input, instead of using
+    // model.currPlayingPlayer.drawGold() etc.
     // because otherwise clients could play the turn of others
 
     /**
-     * Draws a gold card from the deck for the player and then shows the player's hand.
+     * Draws a gold card from the deck for the player and then shows the player's
+     * hand.
      *
      * @throws RemoteException If a remote invocation error occurs.
      */
     @Override
     public void drawGold(String username) throws RemoteException {
         Player player = playerList.get(username);
-        if(player.drawGold()) {
-            showCard(player.getHand().getLast(), player);
+        if (player.drawGold()) {
             endTurn();
         }
     }
@@ -166,8 +257,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     @Override
     public void drawGoldCard1(String username) throws RemoteException {
         Player player = playerList.get(username);
-        if(player.drawGoldCard1()){
-            showCard(player.getHand().getLast(), player);
+        if (player.drawGoldCard1()) {
             endTurn();
         }
     }
@@ -180,49 +270,49 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     @Override
     public void drawGoldCard2(String username) throws RemoteException {
         Player player = playerList.get(username);
-        if(player.drawGoldCard2()){
-            showCard(player.getHand().getLast(), player);
+        if (player.drawGoldCard2()) {
             endTurn();
         }
     }
 
     /**
-     * Draws a resource card from the deck for the player and then shows the player's hand.
+     * Draws a resource card from the deck for the player and then shows the
+     * player's hand.
      *
      * @throws RemoteException If a remote invocation error occurs.
      */
     @Override
     public void drawResource(String username) throws RemoteException {
         Player player = playerList.get(username);
-        if(player.drawResource()){
-            showCard(player.getHand().getLast(), player);
+        if (player.drawResource()) {
             endTurn();
         }
     }
 
     /**
-     * Draws the first resource card for the player and then shows the player's hand.
+     * Draws the first resource card for the player and then shows the player's
+     * hand.
      *
      * @throws RemoteException If a remote invocation error occurs.
      */
     @Override
     public void drawResourceCard1(String username) throws RemoteException {
         Player player = playerList.get(username);
-        if(player.drawResourceCard1()){
-            showCard(player.getHand().getLast(), player);
+        if (player.drawResourceCard1()) {
             endTurn();
         }
     }
 
     /**
-     * Draws the second resource card for the player and then shows the player's hand.
+     * Draws the second resource card for the player and then shows the player's
+     * hand.
      *
      * @throws RemoteException If a remote invocation error occurs.
      */
     @Override
     public void drawResourceCard2(String username) throws RemoteException {
         Player player = playerList.get(username);
-        if(player.drawResourceCard2()){
+        if (player.drawResourceCard2()) {
             endTurn();
         }
     }
@@ -275,45 +365,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     }*/
 
     //PRIVATE METHODS:
-
-    /**
-     * This method is used to show a card to a player.
-     *
-     * @param card  the card to be shown.
-     * @param player the player to whom the card is to be shown.
-     */
-    private void showCard(Card card, Player player) {
-        List<String> res = new ArrayList<>();
-        res.add(gsonCard.toJson(card, Card.class));
-        try {
-            clientList.get(player.getUsername()).showCards(res);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * This method is used to show the player's hand.
-     * It first retrieves the player's hand, which is a list of PlayableCard objects.
-     * Then, it creates a new list of strings, where each string is a JSON representation of a PlayableCard.
-     * Finally, it sends this list of strings to the client associated with the player, using the showHand method.
-     * If a RemoteException is thrown during this process, it is caught and wrapped in a RuntimeException.
-     *
-     * @param player The player whose hand is to be shown.
-     */
-    private void showHand(Player player) {
-        List<PlayableCard> hand = player.getHand();
-        List<String> res = new ArrayList<>();
-        for (PlayableCard card : hand) {
-            res.add(gsonCard.toJson(card, PlayableCard.class));
-        }
-        try {
-            clientList.get(player.getUsername()).showCards(res);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     /**
      * This method is used to end the turn of a player.
      * It also
