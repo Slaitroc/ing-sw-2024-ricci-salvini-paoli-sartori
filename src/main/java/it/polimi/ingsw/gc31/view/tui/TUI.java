@@ -4,8 +4,6 @@ import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.UI;
-import it.polimi.ingsw.gc31.view.tui.tuiObj.CardTUI;
-import static it.polimi.ingsw.gc31.OurScanner.scanner;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
@@ -24,27 +22,32 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class TUI extends UI {
 
     private TuiState state;
-    private boolean isStateChanged = true;
+    private volatile boolean isStateChanged = true;
 
     public void setStateChanged(boolean isStateChanged) {
         this.isStateChanged = isStateChanged;
     }
 
-    private final BlockingQueue<String> messageQueue;
-
-    private volatile boolean isRunning = false;
+    private final BufferedReader buffer;
+    private String command = null;
+    private final BlockingQueue<String> globalCommands;
+    private volatile boolean isCommandChanged = false;
 
     public TUI(TuiState state, ClientCommands client) {
         this.client = client;
         this.state = state;
-        messageQueue = new LinkedBlockingQueue<>();
+
+        buffer = new BufferedReader(new InputStreamReader(System.in));
+        globalCommands = new LinkedBlockingQueue<>();
 
     }
 
     public TUI(ClientCommands client) {
         this.state = new InitState(this);
         this.client = client;
-        messageQueue = new LinkedBlockingQueue<>();
+
+        buffer = new BufferedReader(new InputStreamReader(System.in));
+        globalCommands = new LinkedBlockingQueue<>();
     }
 
     /**
@@ -70,52 +73,98 @@ public class TUI extends UI {
 
     @Override
     protected void uiRunUI() {
-        Thread inputReaderThread = new Thread(this::inputReaderThread);
-        inputReaderThread.start();
-        Thread executorThread = new Thread(this::executorThread);
-        executorThread.start();
+        new Thread(this::nonBlockingInputReader).start();
+        new Thread(this::processThread).start();
     }
 
-    public void inputReaderThread() {
+    public void nonBlockingInputReader() {
         try {
+            command = "default";
+            String input;
+            StringBuilder builder = new StringBuilder(50);
+            synchronized (this) {
+                try {
+                    this.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             while (true) {
-                if (isRunning)
-                    continue;
-                if (isStateChanged) {
+                while (buffer.ready()) {
+                    char newChar = (char) buffer.read();
+                    if (newChar != '\n')
+                        builder.append(newChar);
+                    else {
+                        if (builder.isEmpty()) {
+                            System.out.print("> ");
+                            continue;
+                        }
+                        input = builder.toString().trim();
+                        synchronized (this) {
+                            if (!input.isEmpty()) {
+                                command = input;
+                                isCommandChanged = true;
+                            }
+                            try {
+                                this.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        builder = new StringBuilder(50);
+                    }
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void processThread() {
+        while (true) {
+            if (isStateChanged) {
+                synchronized (this) {
                     state.command_initial();
                     isStateChanged = false;
+                    this.notify();
                 }
-                String input = scanner.nextLine().trim();
-                messageQueue.put(input); // Metti l'input nella coda
             }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    public void executorThread() {
-        while (true) {
-            executeCommand();
-        }
-    }
-
-    private void executeCommand() {
-        isRunning = true;
-        String action = null;
-        synchronized (messageQueue) {
-            try {
-                action = messageQueue.take();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (isCommandChanged) {
+                synchronized (this) {
+                    execute_command(command);
+                    isCommandChanged = false;
+                    this.notify();
+                }
             }
+            if (!globalCommands.isEmpty()) {
+                synchronized (this) {
+                    List<String> commands = new ArrayList<>();
+                    globalCommands.drainTo(commands);
+                    for (String command : commands) {
+                        execute_command(command);
+                    }
+                }
+            }
+
         }
-        if (state.commandsMap.containsKey(action))
-            state.commandsMap.get(action).run();
-        else
-            System.out.println("Invalid Command");
-        isRunning = false;
     }
 
+    public void execute_command(String command) {
+
+        if (state.commandsMap.containsKey(command)) {
+            state.commandsMap.get(command).run();
+        } else {
+            tuiWrite("Command not recognized");
+        }
+    }
+
+    // UTLITIES
     public ClientCommands getClient() {
         return this.client;
     }

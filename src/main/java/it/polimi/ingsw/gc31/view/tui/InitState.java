@@ -38,6 +38,7 @@ public class InitState extends TuiState {
     @Override
     protected void command_createGame() {
         tuiWrite("Type the number of players for the game:");
+        System.out.print("> ");
         int input = Integer.parseInt(scanner.nextLine());
         try {
             tui.getClient().createGame(input);
@@ -62,6 +63,7 @@ public class InitState extends TuiState {
     @Override
     protected void command_joinGame() {
         tuiWrite("Type gameID:");
+        System.out.print("> ");
         int input = Integer.parseInt(scanner.nextLine());
         try {
             tui.getClient().joinGame(input);
@@ -90,6 +92,7 @@ public class InitState extends TuiState {
         String input;
         while (!usernameIsValid) {
             tuiWrite(message);
+            System.out.print("> ");
             input = scanner.nextLine();
             try {
                 tui.getClient().setUsername(input);

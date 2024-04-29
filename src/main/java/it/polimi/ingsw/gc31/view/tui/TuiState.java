@@ -36,6 +36,7 @@ public abstract class TuiState {
             String formattedLine = String.format("%-15s : %s", command, description);
             System.out.println(formattedLine);
         }
+        System.out.print("> ");
     }
 
     protected void command_showCommandsInfo() {
