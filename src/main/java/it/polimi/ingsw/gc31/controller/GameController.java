@@ -98,7 +98,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             }
             model.getBoard().getDeckGold().refill(); // Here the GoldCard1 and GoldCard2 are drawn on the board
             model.getBoard().getDeckResource().refill(); // Here the ResourceCard1 and ResourceCard2 are drawn on the board
-            model.startGame();
         }
         else {
             System.out.println("Failed to initialize game.");
@@ -248,6 +247,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void playStarter(String username) {
         Player player = playerList.get(username);
         player.playStarter();
+        model.checkStartGame();
     }
 
     @Override

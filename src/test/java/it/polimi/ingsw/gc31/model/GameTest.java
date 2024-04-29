@@ -27,7 +27,6 @@ public class GameTest {
         gameModel.getBoard().getDeckResource().refill();
         gameModel.getBoard().getDeckGold().refill();
         gameModel.initStarters();
-        gameModel.startGame();
         System.out.println("Current Game Cycle is: ");
         for (int i = 0; i < gameModel.getNumOfPlayers(); i++) {
             System.out.println(gameModel.getCurrPlayingPlayer().getUsername());

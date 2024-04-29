@@ -106,7 +106,12 @@ public class GameModel {
     }
 
     //GAME STAGES METHODS:
-    public void startGame() {
+    public void checkStartGame() {
+        for (Player player: players) {
+            if (player.getStarterCard() == null) {
+                return;
+            }
+        }
         this.gameState = GameState.RUNNING;
     }
 
