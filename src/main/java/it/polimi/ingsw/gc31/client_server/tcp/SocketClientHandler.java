@@ -24,7 +24,7 @@ public class SocketClientHandler implements VirtualClient {
     private String username;
     private IPlayerController playerController;
     private Integer idGame;
-    //private Map<String, Runnable> commandsMap;
+    private Map<String, Runnable> commandsMap;
 
     private final TCPServer server;
     private final BufferedReader input;
@@ -45,23 +45,76 @@ public class SocketClientHandler implements VirtualClient {
         this.server = server;
         this.input = input;
         this.output = output;
-    //    initializeMap();
+        initializeMap();
     }
 
-
-    /*
     private void initializeMap(){
         this.commandsMap = new HashMap<>();
+        this.commandsMap.put("connect", this::runConnect);
         this.commandsMap.put("create game", this::runCreateGame);
+        this.commandsMap.put("get game list", this::runGetGameList);
+        this.commandsMap.put("join game", this::runJoinGame);
+        this.commandsMap.put("draw gold", this::runDrawGold);
     }
 
-    private void runCreateGame() throws IOException {
-        int maxNumberPlayer = Integer.parseInt(input.readLine());
-        gameController = controller.createGame(username, maxNumberPlayer);
-        output.println(this.idGame);
-        output.flush();
+    private void runConnect(){
+        String line = null;
+        try{
+            line = input.readLine();
+            controller.connect(this, line);
+            this.username = line;
+            output.println("username set");
+            output.flush();
+            server.TCPserverWrite("New client connected: " + username);
+
+        } catch (IOException e){
+            e.printStackTrace();
+        } catch (PlayerNicknameAlreadyExistsException p){
+            output.println("Username already exists!");
+            output.flush();
+        }
     }
-    */
+
+    private void runCreateGame(){
+        try{
+            int maxNumberPlayer = Integer.parseInt(input.readLine());
+            gameController = controller.createGame(username, maxNumberPlayer);
+            output.println(this.idGame);
+            output.flush();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void runGetGameList(){
+        try {
+            controller.getGameList(username);
+        } catch (NoGamesException e) {
+            output.println("no game exception");
+            output.flush();
+        } catch (RemoteException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void runJoinGame(){
+        Integer idGame = null;
+        try {
+            idGame = Integer.parseInt(input.readLine());
+            gameController = controller.joinGame(username, idGame);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    private void runDrawGold(){
+        try{
+            playerController.drawGold();
+        } catch (RemoteException e){
+            e.printStackTrace();
+        }
+    }
 
     /**
      * This method is invoked on the client handler creation (by a Thread), read in
@@ -74,9 +127,12 @@ public class SocketClientHandler implements VirtualClient {
     public void runVirtualView() throws IOException {
         String line;
         while ((line = input.readLine()) != null) {
-
+            commandsMap.get(line).run();
+            /*
             switch (line) {
                 case "connect": {
+                    commandsMap.get("connect");
+
                     line = input.readLine();
                     try {
                         controller.connect(this, line);
@@ -88,25 +144,34 @@ public class SocketClientHandler implements VirtualClient {
                         output.println("username already exists");
                         output.flush();
                     }
+
                     break;
                 }
                 case "create game": {
+                    commandsMap.get("create game");
+
                     int maxNumberPlayer = Integer.parseInt(input.readLine());
                     gameController = controller.createGame(username, maxNumberPlayer);
                     output.println(this.idGame);
                     output.flush();
+
                     break;
                 }
                 case "get game list": {
+                    commandsMap.get("get game list");
+
                     try {
                         controller.getGameList(username);
                     } catch (NoGamesException e) {
                         output.println("no game exception");
                         output.flush();
                     }
+
                     break;
                 }
                 case "join game": {
+                    commandsMap.get("join game");
+
                     int idGame = Integer.parseInt(input.readLine());
 
                     gameController = controller.joinGame(username, idGame);
@@ -114,11 +179,16 @@ public class SocketClientHandler implements VirtualClient {
                     break;
                 }
                 case "draw gold": {
+                    commandsMap.get("draw gold");
+
                     playerController.drawGold();
+
 
                     break;
                 }
+
             }
+        */
         }
     }
 
