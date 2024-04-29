@@ -2,7 +2,7 @@ package it.polimi.ingsw.gc31.view.tui;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import static it.polimi.ingsw.gc31.OurScanner.scanner;
 
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
@@ -19,28 +19,20 @@ public class InitState extends TuiState {
     @Override
     protected void initialize() {
         // command's map
-        commandsMap = new HashMap<>();
+        commandsMap = new LinkedHashMap<>();
 
-        commandsMap.put(("commands info").toLowerCase(), this::command_showCommandsInfo);
+        commandsMap.put(("help").toLowerCase(), this::command_showCommandsInfo);
         commandsMap.put(("create game").toLowerCase(), this::command_createGame);
         commandsMap.put("show games", this::command_showGames);
         commandsMap.put("join game", this::command_joinGame);
-        commandsMap.put("ready", this::command_ready);
 
         // info map
-        commandsInfo = new HashMap<>();
+        commandsInfo = new LinkedHashMap<>();
 
-        commandsInfo.put("commands info", "Shows this command info");
+        commandsInfo.put("help", "Shows commands info");
         commandsInfo.put("create game", "Create a new game");
         commandsInfo.put("show games", "Shows all the active games");
         commandsInfo.put("join game", "Join an existing game");
-        commandsInfo.put("ready", "Game chosen and your ready to play");
-    }
-
-    @Override
-    protected void run() {
-        procedure_setUsername();
-        show_options();
     }
 
     @Override
@@ -49,9 +41,8 @@ public class InitState extends TuiState {
         int input = Integer.parseInt(scanner.nextLine());
         try {
             tui.getClient().createGame(input);
-            tui.stopThreads();
             tui.setState(new JoinedToGameState(tui));
-            tui.runUI();
+            tui.setStateChanged(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,9 +65,8 @@ public class InitState extends TuiState {
         int input = Integer.parseInt(scanner.nextLine());
         try {
             tui.getClient().joinGame(input);
-            tui.stopThreads();
             tui.setState(new JoinedToGameState(tui));
-            tui.runUI();
+            tui.setStateChanged(true);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -94,7 +84,7 @@ public class InitState extends TuiState {
     protected void command_drawGold() {
     }
 
-    protected void procedure_setUsername() {
+    private void procedure_setUsername() {
         String message = "Type your username:";
         boolean usernameIsValid = false;
         String input;
@@ -113,6 +103,20 @@ public class InitState extends TuiState {
         }
 
         tui.getClient().setUI(this.tui);
+    }
+
+    @Override
+    protected void command_drawResource() {
+    }
+
+    @Override
+    protected void command_showDrawable() {
+    }
+
+    @Override
+    protected void command_initial() {
+        procedure_setUsername();
+        command_showCommandsInfo();
     }
 
 }

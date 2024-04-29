@@ -26,8 +26,6 @@ public abstract class TuiState {
                 + DefaultValues.ANSI_RESET);
     }
 
-    protected abstract void run();
-
     protected abstract void initialize();
 
     protected void show_options() {
@@ -44,6 +42,8 @@ public abstract class TuiState {
         show_options();
     }
 
+    protected abstract void command_initial();
+
     protected abstract void command_createGame();
 
     protected abstract void command_showGames();
@@ -55,5 +55,9 @@ public abstract class TuiState {
     protected abstract void command_showHand();
 
     protected abstract void command_drawGold();
+
+    protected abstract void command_drawResource();
+
+    protected abstract void command_showDrawable();
 
 }

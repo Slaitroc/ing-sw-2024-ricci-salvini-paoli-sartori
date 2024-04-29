@@ -3,7 +3,6 @@ package it.polimi.ingsw.gc31.client_server.listeners;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
-import it.polimi.ingsw.gc31.model.card.StarterCard;
 
 import java.awt.*;
 import java.rmi.RemoteException;

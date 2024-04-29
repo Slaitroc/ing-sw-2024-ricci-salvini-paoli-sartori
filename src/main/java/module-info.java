@@ -7,6 +7,7 @@ module it.polimi.ingsw.gc31 {
     requires com.google.gson;
     requires java.rmi;
     requires MaterialFX;
+    requires org.jline;
 
     opens it.polimi.ingsw.gc31.view.gui to javafx.fxml;
     opens it.polimi.ingsw.gc31.view.gui.controllers to javafx.fxml;

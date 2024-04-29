@@ -17,6 +17,8 @@ public interface ClientCommands {
 
     void drawGold() throws RemoteException;
 
+    void drawResource() throws RemoteException;
+
     void joinGame(int gameId) throws RemoteException;
 
     void getGameList() throws RemoteException, NoGamesException, IOException;
@@ -24,4 +26,6 @@ public interface ClientCommands {
     void setUI(UI ui);
 
     void setReady(boolean ready) throws RemoteException;
+
+    String getUsername();
 }

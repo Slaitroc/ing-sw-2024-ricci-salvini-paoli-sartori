@@ -5,132 +5,47 @@ import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.UI;
 import it.polimi.ingsw.gc31.view.tui.tuiObj.CardTUI;
+import static it.polimi.ingsw.gc31.OurScanner.scanner;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.ArrayList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class TUI extends UI {
-    /* TUI implementation */
+
     private TuiState state;
+    private boolean isStateChanged = true;
 
-    private Thread inputThread;
-    private volatile boolean shouldInterrupt = false;
-
-    private void runInputLoop() {
-        tuiWriteGreen(state.stateName);
-        state.run();
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder inputBuilder;
-        try {
-            System.out.print(DefaultValues.TUI_START_LINE_SYMBOL);
-            while (!shouldInterrupt) {
-                if (reader.ready()) {
-                    inputBuilder = new StringBuilder();
-                    while (reader.ready()) {
-                        inputBuilder.append((char) reader.read());
-                    }
-                    String input = inputBuilder.toString().trim();
-                    // una volta premuto invio il buffer è vuoto e dunque viene printato l'input
-                    if (!input.isEmpty()) {
-                        inputUpdate(input);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Eccezione nel run --> Thread Interrotto");
-        } finally {
-            try {
-                reader.close(); // Chiude il BufferedReader
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public void setStateChanged(boolean isStateChanged) {
+        this.isStateChanged = isStateChanged;
     }
 
-    private void runThreads() {
-        shouldInterrupt = false;
-        inputThread = new Thread(this::runInputLoop);
-        inputThread.start();
+    private final BlockingQueue<String> messageQueue;
 
-    }
+    private volatile boolean isRunning = false;
 
-    public void stopThreads() {
-        if (inputThread != null && inputThread.isAlive()) {
-            shouldInterrupt = true; // Imposta il flag per interrompere il thread di input
-        }
-        inputThread.interrupt(); // Interrompe il thread di input
-    }
-
-    @Override
-    protected void uiRunUI() {
-        this.runThreads();
-    }
-
-    @Override
-    public void updateToPlayingState() {
-        stopThreads();
-        this.state = new PlayingState(this);
-        this.runThreads();
-    }
-
-    /**
-     * Runs the corresponding Runnable value to the String key in the active command
-     * map
-     * 
-     * @param input key value of the active command map
-     * 
-     * @Slaitroc
-     */
-    public void inputUpdate(String input) {
-        Runnable command;
-        command = state.commandsMap.get(input);
-        // verifica se il comando esiste nella lista
-        if (command != null)
-            command.run();
-        if (command == null)
-            tuiWrite("Invalid command");
-    }
-
-    @Override
-    public void showHand(List<String> hand) {
-        System.out.println(" ");
-        List<CardTUI> cardList = new ArrayList<>();
-        for (String line : hand)
-            cardList.add(new CardTUI(gsonTranslater.fromJson(line, PlayableCard.class)));
-        CardTUI.showHand(cardList);
-        // hand.forEach(x -> System.out.println(x));
-    }
-
-    @Override
-    public void showMessage(String msg) throws RemoteException {
-
-    }
-
-    public ClientCommands getClient() {
-        return this.client;
-    }
-
-    public void setState(TuiState state) {
+    public TUI(TuiState state, ClientCommands client) {
+        this.client = client;
         this.state = state;
-    }
+        messageQueue = new LinkedBlockingQueue<>();
 
-    public TuiState getState() {
-        return state;
     }
 
     public TUI(ClientCommands client) {
         this.state = new InitState(this);
         this.client = client;
+        messageQueue = new LinkedBlockingQueue<>();
     }
-    /* Fine TUI Implementation */
 
     /**
      * Simply calls System.out.println adding the server tag and printing the text
@@ -151,6 +66,93 @@ public class TUI extends UI {
     protected void tuiWritePurple(String text) {
         System.out.println(DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_PURPLE + text
                 + DefaultValues.ANSI_RESET);
+    }
+
+    @Override
+    protected void uiRunUI() {
+        Thread inputReaderThread = new Thread(this::inputReaderThread);
+        inputReaderThread.start();
+        Thread executorThread = new Thread(this::executorThread);
+        executorThread.start();
+    }
+
+    public void inputReaderThread() {
+        try {
+            while (true) {
+                if (isRunning)
+                    continue;
+                if (isStateChanged) {
+                    state.command_initial();
+                    isStateChanged = false;
+                }
+                String input = scanner.nextLine().trim();
+                messageQueue.put(input); // Metti l'input nella coda
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public void executorThread() {
+        while (true) {
+            executeCommand();
+        }
+    }
+
+    private void executeCommand() {
+        isRunning = true;
+        String action = null;
+        synchronized (messageQueue) {
+            try {
+                action = messageQueue.take();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if (state.commandsMap.containsKey(action))
+            state.commandsMap.get(action).run();
+        else
+            System.out.println("Invalid Command");
+        isRunning = false;
+    }
+
+    public ClientCommands getClient() {
+        return this.client;
+    }
+
+    public void setState(TuiState state) {
+        this.state = state;
+    }
+
+    public TuiState getState() {
+        return state;
+    }
+
+    // UPDATES
+
+    Map<String, List<PlayableCard>> playersHands = new HashMap<>();
+
+    public List<PlayableCard> getPlayersHands(String username) {
+        return playersHands.get(username);
+    }
+
+    @Override
+    public void showMessage(String msg) throws RemoteException {
+    }
+
+    @Override
+    public void updateToPlayingState() {
+        this.state = new PlayingState(this);
+        setStateChanged(true);
+    }
+
+    @Override
+    public void updateHand(String username, List<String> hand) {
+        List<PlayableCard> temp = new ArrayList<>();
+        for (String line : hand)
+            temp.add(gsonTranslater.fromJson(line, PlayableCard.class));
+        playersHands.put(username, temp);
+
     }
 
     @Override
