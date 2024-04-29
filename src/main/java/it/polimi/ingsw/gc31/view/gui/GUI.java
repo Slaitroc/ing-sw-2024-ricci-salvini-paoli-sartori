@@ -1,4 +1,5 @@
-package it.polimi.ingsw.gc31.view.GUI;
+
+package it.polimi.ingsw.gc31.view.gui;
 
 import java.rmi.RemoteException;
 
@@ -31,11 +32,6 @@ public class GUI extends UI {
     }
 
     @Override
-    public void setQuitRun(boolean bool) throws RemoteException {
-        throw new UnsupportedOperationException("Unimplemented method 'setQuitRun'");
-    }
-
-    @Override
     public void showHand(List<String> hand) throws RemoteException {
 
     }
@@ -53,5 +49,11 @@ public class GUI extends UI {
     @Override
     public void show_gameCreated() {
         throw new UnsupportedOperationException("Unimplemented method 'show_gameCreated'");
+    }
+
+    @Override
+    public void updateToPlayingState() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateToPlayingState'");
     }
 }

@@ -9,17 +9,19 @@ import java.rmi.RemoteException;
 
 public interface ClientCommands {
 
-    public int getGameID() throws RemoteException;
+    int getGameID() throws RemoteException;
 
-    public void setUsername(String username) throws IOException, PlayerNicknameAlreadyExistsException;
+    void setUsername(String username) throws IOException, PlayerNicknameAlreadyExistsException;
 
-    public void createGame(int maxNumberPlayer) throws IOException;
+    void createGame(int maxNumberPlayer) throws RemoteException, IOException;
 
-    public void drawGold() throws RemoteException;
+    void drawGold() throws RemoteException;
 
-    public void joinGame(int gameId) throws RemoteException;
+    void joinGame(int gameId) throws RemoteException;
 
-    public void getGameList() throws IOException, NoGamesException;
+    void getGameList() throws RemoteException, NoGamesException, IOException;
 
-    public void setUI(UI ui);
+    void setUI(UI ui);
+
+    void setReady(boolean ready) throws RemoteException;
 }

@@ -3,19 +3,27 @@ package it.polimi.ingsw.gc31.model.player;
 import java.awt.Point;
 import java.util.*;
 
+import it.polimi.ingsw.gc31.client_server.listeners.Observable;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import javafx.util.Pair;
 
-public class PlayArea {
+/**
+ * This class represents the play area of a player in the game.
+ * It manages the player's placed cards and achieved resources.
+ *
+ * @author Matteo Paoli
+ */
+public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> {
 
     private final Map<Point, PlayableCard> placedCards;
-
-    // private Integer[] playAreaLimit; //Actually inefficient in my opinion or
-    // unnecessary anyway
-
     private final Map<Resources, Integer> achievedResources;
     private final Point lastPlaced = new Point(0, 0);
 
+    /**
+     * Constructor for the PlayArea class.
+     * It initializes the placed cards and achieved resources.
+     */
     public PlayArea() {
         this.placedCards = new HashMap<>();
         this.achievedResources = new HashMap<>();
@@ -29,14 +37,9 @@ public class PlayArea {
     }
 
     /**
-     * Create the HashMap, place starter at (0,0)
-     * Create a hashMap for the achievedResources and
-     * Add the resources to the map itself
-     * It could be done calling UpdateAvailableRes, but it would be less efficient
-     * and unnecessary being the first card placed
+     * Places the starter card at (0,0) and updates the achieved resources.
      *
-     * @param card: starter card to place at (0,0)
-     * @author Matteo Paoli
+     * @param card the starter card to place.
      */
     public void placeStarter(PlayableCard card) {
         Point point = new Point(0, 0);
@@ -44,14 +47,15 @@ public class PlayArea {
         for (Resources r : card.getResources()) {
             achievedResources.put(r, achievedResources.get(r) + 1);
         }
+
+
     }
 
     /**
-     * this method creates a set of keys from the requirements read from the cart
-     * than it proceed to slide through them with a for to verify that in the map of
-     * achieved resources I have enough of them
+     * Checks if the player has enough resources to play the card.
      *
-     * @author Matteo Paoli
+     * @param card the card to check.
+     * @return true if the player has enough resources, false otherwise.
      */
     private boolean checkRequirements(PlayableCard card) {
         if (!card.getRequirements().equals(Collections.emptyMap())) {
@@ -70,9 +74,11 @@ public class PlayArea {
      * return true.
      * Then return the value of points gained from that card
      * Notice that player will have to call:
-     * score += hisPlayArea.place(card, point) to adds points at his score correctly
+     * score += hisPlayArea.place(card, point) to add points at his score correctly
      *
-     * @author Matteo Paoli
+     * @param card the card to place.
+     * @param point the point to place the card at.
+     * @return the score gained from the card.
      */
     public int place(PlayableCard card, Point point) {
         if (checkRequirements(card)) {
@@ -91,30 +97,19 @@ public class PlayArea {
         return 0;
     }
 
-    /*
-     * skeleton of the quickMoveCheck (unnecessary)
-     *
-     * private boolean quickMoveCheck(Point point){
-     * if (point.x >= playAreaLimit[0] || point.x <= playAreaLimit[2]) {
-     * if (point.y >= playAreaLimit[1] || point.y >= playAreaLimit[3])
-     * return true;
-     * }
-     * return false;
-     * }
-     */
-
     /**
      * Return true if move is allowed, false if it is not.
      * Refers to card placement rule only
-     * The algorithm starts with the idea that the move is illegal.
-     * It needs to check all 4 corners of already placed cards that it could be
-     * covering
-     * if it finds at least 1 of those corner HIDDEN than the move is ILLEGAL
-     * if it finds at least 1 existing corner not HIDDEN than it flags the move as
+     * The algorithm starts with the idea that the move is ILLEGAL.
+     * It needs to check all four corners of already placed cards that it could be
+     * covering.
+     * If it finds at least one of those corners HIDDEN, then the move is ILLEGAL.
+     * If it finds at least one existing corner not HIDDEN, then it flags the move as
      * POSSIBLE
-     * To return true it needs to have all 4 corners checked
+     * To return true it needs to have all four corners checked
      *
-     * @author Matteo Paoli
+     * @param point the point to check.
+     * @return true if the move is allowed, false otherwise.
      */
     private boolean allowedMove(Point point) {
         // Double corner coverage condition !!
@@ -168,7 +163,8 @@ public class PlayArea {
      * checked
      * (Method also calls coverCorner(int) to modify the card value)
      *
-     * @author Matteo Paoli
+     * @param card the card that is placed.
+     * @param point the point where the card is placed.
      */
     protected void updateAvailableRes(PlayableCard card, Point point) {
         // Adding Resources
@@ -218,10 +214,16 @@ public class PlayArea {
         }
     }
 
+    /**
+     * @return a copy of the placed cards.
+     */
     public Map<Point, PlayableCard> getPlacedCards() {
         return new HashMap<>(placedCards);
     }
 
+    /**
+     * @return a copy of the achieved resources.
+     */
     public Map<Resources, Integer> getAchievedResources() {
         return new HashMap<>(achievedResources);
     }

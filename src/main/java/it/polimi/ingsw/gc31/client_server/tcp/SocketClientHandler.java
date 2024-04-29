@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
+import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.client_server.tcp.TCPServer;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
@@ -22,17 +23,18 @@ public class SocketClientHandler implements VirtualClient {
     final IController controller;
     private IGameController gameController;
     private String username;
-    private IPlayerController playerController;
+    private VirtualClient client;
     private Integer idGame;
     private Map<String, Runnable> commandsMap;
 
     private final TCPServer server;
     private final BufferedReader input;
     private final PrintWriter output;
+    private boolean ready = false;
 
     /**
      * This method is the constructor of the client handler
-     * 
+     *
      * @param controller is the IController of the specific client
      * @param server     is the TCPServer linked to that client handler
      * @param input      is the reference to the input stream of the socket
@@ -121,7 +123,7 @@ public class SocketClientHandler implements VirtualClient {
      * an infinite loop
      * the commands sent by the TCPClient and invokes the methods based on the
      * client messages
-     * 
+     *
      * @throws IOException if an error occurs reading on the socket input stream
      */
     public void runVirtualView() throws IOException {
@@ -144,7 +146,6 @@ public class SocketClientHandler implements VirtualClient {
                         output.println("username already exists");
                         output.flush();
                     }
-
                     break;
                 }
                 case "create game": {
@@ -154,7 +155,6 @@ public class SocketClientHandler implements VirtualClient {
                     gameController = controller.createGame(username, maxNumberPlayer);
                     output.println(this.idGame);
                     output.flush();
-
                     break;
                 }
                 case "get game list": {
@@ -166,7 +166,6 @@ public class SocketClientHandler implements VirtualClient {
                         output.println("no game exception");
                         output.flush();
                     }
-
                     break;
                 }
                 case "join game": {
@@ -179,22 +178,17 @@ public class SocketClientHandler implements VirtualClient {
                     break;
                 }
                 case "draw gold": {
+                    gameController.drawGold(username);
                     commandsMap.get("draw gold");
-
-                    playerController.drawGold();
-
-
                     break;
                 }
-
             }
-        */
         }
     }
 
     /**
      * This method sets the gameID
-     * 
+     *
      * @param gameID is the value that needs to be set
      * @throws RemoteException
      */
@@ -203,13 +197,31 @@ public class SocketClientHandler implements VirtualClient {
         this.idGame = gameID;
     }
 
-    /**
-     * This methods should send a message to the TCPClient with the serialization
-     * of the player's hand
-     * 
-     * @param hand is the list that contains all the card held by the player
-     * @throws RemoteException
-     */
+    @Override
+    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_scorePlayer(String username, Integer score) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_starterCard(String starterCard) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_objectiveCard(String objectiveCard) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
+
+    }
+
     @Override
     public void showHand(List<String> hand) throws RemoteException {
         output.println("start of list");
@@ -218,13 +230,25 @@ public class SocketClientHandler implements VirtualClient {
         }
         output.println("end of list");
         output.flush();
+    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+
+    }
+
+    @Override
+    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+
     }
 
     /**
      * This method should send to the tcp client the list of games created.
      * In order to do so the method writes on the socket stream every String
      * that represents a game
-     * 
+     *
      * @param listGame is the list with every String representing a game
      * @throws RemoteException
      */
@@ -238,18 +262,19 @@ public class SocketClientHandler implements VirtualClient {
         output.flush();
     }
 
-    /**
-     * This method should set the playerController with the one got as parameter
-     * 
-     * @param playerController is the playerController that needs to be set
-     */
-    @Override
-    public void setPlayerController(IPlayerController playerController) {
-        this.playerController = playerController;
-    }
-
     @Override
     public void showMessage(String msg) throws RemoteException {
 
+    }
+
+    @Override
+    public boolean isReady() throws RemoteException {
+        return ready;
+    }
+
+    @Override
+    public void startGame() throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'startGame'");
     }
 }

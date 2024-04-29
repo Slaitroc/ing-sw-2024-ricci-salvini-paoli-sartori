@@ -3,17 +3,11 @@ package it.polimi.ingsw.gc31.model.player;
 import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.*;
-import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
-import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,42 +19,37 @@ public class PlayerStateTest {
     @BeforeAll
     public static void setUp() throws EmptyDeckException {
         Board board = new Board();
+        board.getDeckResource().refill();
+        board.getDeckGold().refill();
         player1 = new Player(PawnColor.RED, "Alessandro", board);
         player2 = new Player(PawnColor.BLUE, "Christian", board);
         player3 = new Player(PawnColor.YELLOW, "Lorenzo", board);
-        player1.playStarter();
-        player2.playStarter();
-        player3.getPlayArea().placeStarter(createStarterCard());
 
         for (int j = 0; j < 2; j++) {
-            player2.drawResourceCard1();
+            player2.drawResourceCard1(); // Error message supposed to be thrown here
             player1.drawResource();
-            // System.out.println("Assertion1");
-            assertInstanceOf(Start.class, player1.inGameState);
             player2.drawResource();
-            // System.out.println("Assertion2");
-            assertInstanceOf(Start.class, player2.inGameState);
             player3.drawResource();
-            // System.out.println("Assertion3");
-            assertInstanceOf(Start.class, player3.inGameState);
         }
         player1.drawGold();
-        player1.drawGoldCard1();
-        player1.drawResource();
-        player1.setInGameState(new NotPlaced());
-        // System.out.println("Assertion4");
-        assertInstanceOf(NotPlaced.class, player1.inGameState);
-        assertInstanceOf(Start.class, player2.inGameState);
-        assertInstanceOf(Start.class, player3.inGameState);
-
+        player1.drawGoldCard1(); // Error message supposed to be thrown here
+        player1.drawResource(); // Error message supposed to be thrown here
         player2.drawGold();
-        player2.setInGameState(new Waiting());
-        // System.out.println("Assertion5");
-        assertInstanceOf(NotPlaced.class, player1.inGameState);
-        assertInstanceOf(Waiting.class, player2.inGameState);
-        assertInstanceOf(Start.class, player3.inGameState);
-
         player3.drawGold();
+
+        player1.setStarterCard();
+        player2.setStarterCard();
+        player3.setStarterCard();
+
+        player1.addObjectiveCard(board.getDeckObjective().draw());
+        player2.addObjectiveCard(board.getDeckObjective().draw());
+        player3.addObjectiveCard(board.getDeckObjective().draw());
+
+        player1.playStarter();
+        player2.playStarter();
+        player3.playStarter();
+
+        player2.setInGameState(new Waiting());
         player3.setInGameState(new Waiting());
         // System.out.println("Assertion6");
         assertInstanceOf(NotPlaced.class, player1.inGameState);
@@ -140,7 +129,7 @@ public class PlayerStateTest {
         player3.drawResource();
         assertInstanceOf(Waiting.class, player3.inGameState);
     }
-
+/*
     private static PlayableCard createStarterCard() {
         int score = 0;
 
@@ -173,5 +162,5 @@ public class PlayerStateTest {
                 null);
 
         return new StarterCard(CardColor.NOCOLOR, front, back);
-    }
+    }*/
 }

@@ -1,8 +1,10 @@
 package it.polimi.ingsw.gc31.view.tui;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.HashMap;
 
+import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 
 public class JoinedToGameState extends TuiState {
@@ -59,12 +61,19 @@ public class JoinedToGameState extends TuiState {
 
     @Override
     protected void command_ready() {
-        if (!ready) {
-            ready = !ready;
-            tuiWrite("U are ready to play!");
-        } else {
-            tuiWrite("U are not ready :`(");
-            ready = !ready;
+        ClientCommands client = tui.getClient();
+        try {
+            if (!ready) {
+                ready = true;
+                tuiWrite("U are ready to play!");
+                client.setReady(true);
+            } else {
+                ready = false;
+                tuiWrite("U are not ready :`(");
+                client.setReady(false);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
     }
 

@@ -49,7 +49,7 @@ public class InitState extends TuiState {
         int input = Integer.parseInt(scanner.nextLine());
         try {
             tui.getClient().createGame(input);
-            tui.setQuitRun(true);
+            tui.stopThreads();
             tui.setState(new JoinedToGameState(tui));
             tui.runUI();
         } catch (IOException e) {
@@ -74,7 +74,7 @@ public class InitState extends TuiState {
         int input = Integer.parseInt(scanner.nextLine());
         try {
             tui.getClient().joinGame(input);
-            tui.setQuitRun(true);
+            tui.stopThreads();
             tui.setState(new JoinedToGameState(tui));
             tui.runUI();
         } catch (RemoteException e) {

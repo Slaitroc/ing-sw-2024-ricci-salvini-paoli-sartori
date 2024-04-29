@@ -1,6 +1,6 @@
-package it.polimi.ingsw.gc31.view.GUI.controllers;
+package it.polimi.ingsw.gc31.view.gui.controllers;
 
-import it.polimi.ingsw.gc31.view.GUI.GUIApplication;
+import it.polimi.ingsw.gc31.view.gui.GUIApplication;
 
 public abstract class ViewController {
 

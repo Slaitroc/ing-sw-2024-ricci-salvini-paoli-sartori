@@ -6,7 +6,7 @@ import it.polimi.ingsw.gc31.model.strategies.Objective;
 
 import java.lang.reflect.Type;
 
-public class ObjectiveCardAdapter implements JsonDeserializer<ObjectiveCard> {
+public class ObjectiveCardAdapter implements JsonSerializer<ObjectiveCard>, JsonDeserializer<ObjectiveCard> {
     @Override
     public ObjectiveCard deserialize(JsonElement jsonElement, Type type,
             JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
@@ -38,5 +38,19 @@ public class ObjectiveCardAdapter implements JsonDeserializer<ObjectiveCard> {
         }
 
         return new ObjectiveCard(score, ob, dirImgBack, dirImgFront);
+    }
+
+    @Override
+    public JsonElement serialize(ObjectiveCard objectiveCard, Type type, JsonSerializationContext jsonSerializationContext) {
+        JsonObject jsonObject = new JsonObject();
+
+        jsonObject.addProperty("score", objectiveCard.getScore());
+        jsonObject.add("objective", objectiveCard.getObjective().serializeToJson());
+
+        // TODO aggiungere serializzazione delle immagini
+        jsonObject.add("dirImgBack", null);
+        jsonObject.add("dirImgFront", null);
+
+        return jsonObject;
     }
 }

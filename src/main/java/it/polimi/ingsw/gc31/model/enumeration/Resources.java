@@ -8,11 +8,11 @@ public enum Resources {
     INSECT("INSECT", "🦋"),
     PLANT("PLANT", "🌿"),
     MUSHROOM("MUSHROOM", "🍄"),
-    FEATHER("FEATHER", "🪶"),
-    INK("INK", "🖋️"),
+    FEATHER("FEATHER", "FE"),
+    INK("INK", "IN"),
     SCROLL("SCROLL", "📜"),
-    EMPTY("EMPTY", ""),
-    HIDDEN("HIDDEN", "❌");
+    EMPTY("EMPTY", "  "),
+    HIDDEN("HIDDEN", "  ");
 
     /**
      * it is the string representation of a Resources object

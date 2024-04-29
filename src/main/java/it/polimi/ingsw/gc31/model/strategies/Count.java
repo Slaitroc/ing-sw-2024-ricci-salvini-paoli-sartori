@@ -4,6 +4,8 @@ import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
@@ -41,6 +43,19 @@ public class Count extends Objective {
             return countAPIM(placedCard, achievedResources);
         }
         return countFIS(placedCard, achievedResources);
+    }
+
+    @Override
+    public JsonObject serializeToJson() {
+        JsonObject jsonObject = new JsonObject();
+
+        JsonArray resourcesArray = new JsonArray();
+        for (Resources res: this.resources) {
+            resourcesArray.add(res.toString());
+        }
+        jsonObject.add("resources", resourcesArray);
+        jsonObject.addProperty("type", "COUNT");
+        return jsonObject;
     }
 
     /**
