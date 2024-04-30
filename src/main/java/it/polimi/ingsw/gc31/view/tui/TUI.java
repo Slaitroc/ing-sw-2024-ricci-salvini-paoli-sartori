@@ -7,6 +7,9 @@ import it.polimi.ingsw.gc31.view.UI;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.Charset;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +21,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import org.fusesource.jansi.AnsiConsole;
+
+import static org.fusesource.jansi.Ansi.Color.GREEN;
+import static org.fusesource.jansi.Ansi.Color.WHITE;
+import static org.fusesource.jansi.Ansi.Color.YELLOW;
+import static org.fusesource.jansi.Ansi.ansi;
 
 public class TUI extends UI {
 
@@ -43,8 +53,16 @@ public class TUI extends UI {
     }
 
     public TUI(ClientCommands client) {
+        AnsiConsole.systemInstall();
+
         this.state = new InitState(this);
         this.client = client;
+
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        print_title();
+        print_chat();
+        print_playArea();
 
         buffer = new BufferedReader(new InputStreamReader(System.in));
         globalCommands = new LinkedBlockingQueue<>();
@@ -231,4 +249,63 @@ public class TUI extends UI {
         }
     }
 
+    public void print_title() {
+        new PrintStream(System.out, true, System.console() != null
+                ? System.console().charset()
+                : Charset.defaultCharset()).println(ansi().fg(YELLOW).a("""
+                        █▀▀█  █▀▀█  █▀▀▄  █▀▀▀ █   █
+                        █     █  █  █  █  █▀▀▀ ▀▀▄▀▀
+                        █▄▄█  █▄▄█  █▄▄▀  █▄▄▄ █   █
+                            """).reset());
+    }
+
+    public void print_chat() {
+        StringBuilder res = new StringBuilder();
+
+        res.append(ansi().cursor(DefaultValues.row_chat, DefaultValues.col_chat).fg(YELLOW)
+                .a("┌──────────────────────────────────┐"));
+        res.append(ansi().cursor(DefaultValues.row_chat + 1, DefaultValues.col_chat).fg(YELLOW)
+                .a("│         Chat                     │"));
+        res.append(ansi().cursor(DefaultValues.row_chat + 2, DefaultValues.col_chat).fg(YELLOW)
+                .a("│                                  │"));
+        res.append(ansi().cursor(DefaultValues.row_chat + 3, DefaultValues.col_chat).fg(YELLOW)
+                .a("│                                  │"));
+
+        res.append(ansi().cursor(DefaultValues.row_chat + 4, DefaultValues.col_chat).fg(YELLOW)
+                .a("│                                  │"));
+
+        res.append(ansi().cursor(DefaultValues.row_chat + 5, DefaultValues.col_chat).fg(YELLOW)
+                .a("│                                  │"));
+        res.append(ansi().cursor(DefaultValues.row_chat + 6, DefaultValues.col_chat).fg(YELLOW)
+                .a("└──────────────────────────────────┘"));
+
+        System.out.println(res);
+    }
+
+    public void print_playArea() {
+        StringBuilder ris = new StringBuilder();
+        int heightPlayArea = 15;
+
+        ris.append(ansi().cursor(DefaultValues.row_playArea, DefaultValues.col_playArea).fg(WHITE).a("┌"));
+        for (int i = 0; i < DefaultValues.col_chat - DefaultValues.col_playArea - 3; i++) {
+            ris.append(ansi().fg(WHITE).a("─"));
+        }
+        ris.append(ansi().fg(WHITE).a("┐"));
+
+        for (int i = 1; i < heightPlayArea; i++) {
+            ris.append(ansi().cursor(DefaultValues.row_playArea + i, DefaultValues.col_playArea).a("│"));
+            ris.append(ansi()
+                    .cursor(DefaultValues.row_playArea + i, DefaultValues.col_chat - DefaultValues.col_playArea - 1)
+                    .a("│"));
+        }
+
+        ris.append(ansi().cursor(DefaultValues.row_playArea + heightPlayArea, DefaultValues.col_playArea).fg(WHITE)
+                .a("└"));
+        for (int i = 0; i < DefaultValues.col_chat - DefaultValues.col_playArea - 3; i++) {
+            ris.append(ansi().fg(WHITE).a("─"));
+        }
+        ris.append(ansi().fg(WHITE).a("┘"));
+
+        System.out.println(ris);
+    }
 }

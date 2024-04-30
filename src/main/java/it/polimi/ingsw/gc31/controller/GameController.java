@@ -134,48 +134,11 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         if (model.getGameState() == GameState.SETUP) {
             playerList = model.createPlayers(clientList.keySet()); // Here the players are created and added to the
                                                                    // playerList
+            createAllListeners();
             model.setObjectives(); // Here the common goals are initialized
             model.initSecretObj(); // Here the secret goals are drawn
 
-            // TODO creare funzione per la creazione di tutti i listener
-            // create playerHandListener for all players
-            List<PlayerHandListener> playerHandListenersList = new ArrayList<>();
-            for (String username : playerList.keySet()) {
-                playerHandListenersList.add(new PlayerHandListener(clientList.get(username)));
-            }
-
-            // create playerScoreListener for all players
-            List<PlayerScoreListener> playerScoreListeners = new ArrayList<>();
-            for (String username : playerList.keySet()) {
-                playerScoreListeners.add(new PlayerScoreListener(clientList.get(username)));
-            }
-
-            List<PlayAreaListener> playAreaListenerList = new ArrayList<>();
-            for (String username : playerList.keySet()) {
-                playAreaListenerList.add(new PlayAreaListener(clientList.get(username)));
-            }
-
             for (Player player : playerList.values()) {
-                // TODO temporaneo
-                // add all playerHandListener to all player
-                for (PlayerHandListener listener : playerHandListenersList) {
-                    player.addPlayerHandListener(listener);
-                }
-                // add all playerScoreListener to all player
-                for (PlayerScoreListener listener : playerScoreListeners) {
-                    player.addPlayerScoreListener(listener);
-                }
-                for (PlayAreaListener listener : playAreaListenerList) {
-                    player.addPlayAreaListener(listener);
-                }
-                // add to the player its own playerStarterCardListener
-                player.addPlayerStarterCardListener(
-                        new PlayerStarterCardListener(clientList.get(player.getUsername())));
-
-                // add to the player its own playerObjectiveCardListener
-                player.addPlayerObjectiveCardListener(
-                        new PlayerObjectiveCardListener(clientList.get(player.getUsername())));
-
                 player.setStarterCard(); // Here the starter cards are drawn
                 player.drawResource();
                 player.drawResource();
@@ -380,4 +343,50 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public GameModel getModel() {
         return model;
     }
+
+    public void createAllListeners() {
+        List<PlayerHandListener> playerHandListenersList = new ArrayList<>();
+        List<PlayerScoreListener> playerScoreListeners = new ArrayList<>();
+        List<PlayAreaListener> playAreaListenerList = new ArrayList<>();
+
+        List<GoldDeckListener> goldDeckListeners = new ArrayList<>();
+
+        // TODO creare funzione per la creazione di tutti i listener
+        for (String username : playerList.keySet()) {
+            // create playerHandListener for all players
+            playerHandListenersList.add(new PlayerHandListener(clientList.get(username)));
+            // create playerScoreListener for all players
+            playerScoreListeners.add(new PlayerScoreListener(clientList.get(username)));
+            // create playAreaListener for all players
+            playAreaListenerList.add(new PlayAreaListener(clientList.get(username)));
+
+            goldDeckListeners.add(new GoldDeckListener(clientList.get(username)));
+        }
+
+        for (Player player : playerList.values()) {
+            // add all playerHandListener to all player
+            for (PlayerHandListener listener : playerHandListenersList) {
+                player.addPlayerHandListener(listener);
+            }
+            // add all playerScoreListener to all player
+            for (PlayerScoreListener listener : playerScoreListeners) {
+                player.addPlayerScoreListener(listener);
+            }
+            // add all playAreaListener to all player
+            for (PlayAreaListener listener : playAreaListenerList) {
+                player.addPlayAreaListener(listener);
+            }
+            // add to the player its own playerStarterCardListener
+            player.addPlayerStarterCardListener(new PlayerStarterCardListener(clientList.get(player.getUsername())));
+
+            // add to the player its own playerObjectiveCardListener
+            player.addPlayerObjectiveCardListener(
+                    new PlayerObjectiveCardListener(clientList.get(player.getUsername())));
+        }
+
+        for (GoldDeckListener listener : goldDeckListeners) {
+            model.getBoard().getDeckGold().addListener(listener);
+        }
+    }
+
 }
