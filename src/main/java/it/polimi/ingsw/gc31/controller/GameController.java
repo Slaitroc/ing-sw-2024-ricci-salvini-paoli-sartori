@@ -14,12 +14,16 @@ import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.listeners.PlayerHandListener;
+import it.polimi.ingsw.gc31.client_server.listeners.PlayAreaListener;
+import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
+import it.polimi.ingsw.gc31.client_server.listeners.PlayerStarterCardListener;
+import it.polimi.ingsw.gc31.client_server.listeners.PlayerObjectiveCardListener;
+import it.polimi.ingsw.gc31.client_server.queue.*;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.GameModel;
-import it.polimi.ingsw.gc31.model.card.Card;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.GameState;
-import it.polimi.ingsw.gc31.model.player.NotPlaced;
 import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.utility.gsonUtility.PlayableCardAdapter;
 
@@ -34,8 +38,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     private final Gson gsonCard/* , gsonObjective */;
     private final int maxNumberPlayers;
     private final int idGame;
-    boolean lastTurn = false;
-    private LinkedBlockingQueue<QueueObject> callsList;
+    private final LinkedBlockingQueue<QueueObject> callsList;
 
     /**
      * Constructor for the GameController class.
@@ -128,7 +131,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void initGame() throws RemoteException, IllegalStateOperationException {
         if (model.getGameState() == GameState.SETUP) {
             playerList = model.createPlayers(clientList.keySet()); // Here the players are created and added to the
-                                                                   // playerList
+            // playerList
             model.setObjectives(); // Here the common goals are initialized
             model.initSecretObj(); // Here the secret goals are drawn
 
@@ -181,8 +184,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             }
             model.getBoard().getDeckGold().refill(); // Here the GoldCard1 and GoldCard2 are drawn on the board
             model.getBoard().getDeckResource().refill(); // Here the ResourceCard1 and ResourceCard2 are drawn on the
-                                                         // board
-            model.startGame();
+            // board
         } else {
             System.out.println("Failed to initialize game.");
             throw new RemoteException();
@@ -243,10 +245,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      */
     @Override
     public void drawGold(String username) throws RemoteException {
-        Player player = playerList.get(username);
-        if (player.drawGold()) {
-            endTurn();
-        }
+        addQueueObj(new DrawGoldObj(playerList.get(username), model));
     }
 
     /**
@@ -256,10 +255,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      */
     @Override
     public void drawGoldCard1(String username) throws RemoteException {
-        Player player = playerList.get(username);
-        if (player.drawGoldCard1()) {
-            endTurn();
-        }
+        addQueueObj(new DrawGoldOneObj(playerList.get(username), model));
     }
 
     /**
@@ -269,10 +265,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      */
     @Override
     public void drawGoldCard2(String username) throws RemoteException {
-        Player player = playerList.get(username);
-        if (player.drawGoldCard2()) {
-            endTurn();
-        }
+        addQueueObj(new DrawGoldTwoObj(playerList.get(username), model));
     }
 
     /**
@@ -283,10 +276,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      */
     @Override
     public void drawResource(String username) throws RemoteException {
-        Player player = playerList.get(username);
-        if (player.drawResource()) {
-            endTurn();
-        }
+        addQueueObj(new DrawResObj(playerList.get(username), model));
     }
 
     /**
@@ -297,10 +287,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      */
     @Override
     public void drawResourceCard1(String username) throws RemoteException {
-        Player player = playerList.get(username);
-        if (player.drawResourceCard1()) {
-            endTurn();
-        }
+        addQueueObj(new DrawResOneObj(playerList.get(username), model));
     }
 
     /**
@@ -311,10 +298,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      */
     @Override
     public void drawResourceCard2(String username) throws RemoteException {
-        Player player = playerList.get(username);
-        if (player.drawResourceCard2()) {
-            endTurn();
-        }
+        addQueueObj(new DrawResTwoObj(playerList.get(username), model));
     }
 
     @Override
@@ -365,25 +349,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     }*/
 
     //PRIVATE METHODS:
-    /**
-     * This method is used to end the turn of a player.
-     * It also
-     */
-    private void endTurn() {
-        detectEndGame();
-        model.setNextPlayingPlayer();
-        model.getCurrPlayingPlayer().setInGameState(new NotPlaced());
-    }
-
-    /**
-     * This method is used to detect when a player reaches 20 points.
-     */
-    private void detectEndGame() {
-        if (model.getCurrPlayingPlayer().getScore() >= 20) {
-            lastTurn = true;
-            model.startLastTurn();
-        }
-    }
 
     public GameModel getModel() {
         return model;

@@ -11,7 +11,6 @@ import it.polimi.ingsw.gc31.client_server.queue.DrawGoldOneObj;
 import it.polimi.ingsw.gc31.client_server.queue.DrawGoldTwoObj;
 import it.polimi.ingsw.gc31.client_server.queue.DrawResOneObj;
 import it.polimi.ingsw.gc31.client_server.queue.DrawResTwoObj;
-import it.polimi.ingsw.gc31.client_server.queue.DrawResourceObj;
 import it.polimi.ingsw.gc31.client_server.queue.QueueObject;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.player.Player;

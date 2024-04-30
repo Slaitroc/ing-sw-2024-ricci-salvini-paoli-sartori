@@ -7,6 +7,7 @@ import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.enumeration.GameState;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
+import it.polimi.ingsw.gc31.model.player.NotPlaced;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 /**
@@ -171,6 +172,26 @@ public class GameModel {
 
     public List<Player> getPlayers() {
         return players;
+    }
+
+    /**
+     * This method is used to end the turn of a player.
+     * It also
+     */
+    public void endTurn() {
+        detectEndGame();
+        setNextPlayingPlayer();
+        getCurrPlayingPlayer().setInGameState(new NotPlaced());
+    }
+
+    /**
+     * This method is used to detect when a player reaches 20 points.
+     */
+    private void detectEndGame() {
+        if (getCurrPlayingPlayer().getScore() >= 20) {
+            lastTurn = true;
+            startLastTurn();
+        }
     }
 
 }
