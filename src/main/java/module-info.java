@@ -7,6 +7,7 @@ module it.polimi.ingsw.gc31 {
     requires com.google.gson;
     requires java.rmi;
     requires MaterialFX;
+    requires org.fusesource.jansi;
 
     opens it.polimi.ingsw.gc31.view.GUI to javafx.fxml;
     opens it.polimi.ingsw.gc31.view.GUI.controllers to javafx.fxml;
@@ -22,5 +23,4 @@ module it.polimi.ingsw.gc31 {
     exports it.polimi.ingsw.gc31.client_server.tcp;
     exports it.polimi.ingsw.gc31.client_server.rmi;
     exports it.polimi.ingsw.gc31.model.enumeration;
-
 }
