@@ -292,4 +292,5 @@ public class Player extends PlayerObservable{
     public void setInGameState(PlayerState inGameState) {
         this.inGameState = inGameState;
     }
+
 }

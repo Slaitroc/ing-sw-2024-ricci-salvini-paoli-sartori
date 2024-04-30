@@ -203,7 +203,7 @@ public class GameModel {
             } else if (this.gameState == GameState.SHOWDOWN & getCurrPlayingPlayer() == players.getFirst()) {
                 startLastTurn();
                 System.out.println("Players has now one more turn to play!");
-            } else if (this.gameState == GameState.LAST_TURN) {
+            } else if (this.gameState == GameState.LAST_TURN && getCurrPlayingPlayer() == players.getLast()) {
                 startEndGame();
                 System.out.println("\n_____GAME HAS ENDED_____!\n");
                 for (Player player : players) {

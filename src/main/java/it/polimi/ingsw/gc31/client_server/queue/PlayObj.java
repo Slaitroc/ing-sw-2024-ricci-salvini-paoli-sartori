@@ -21,6 +21,5 @@ public class PlayObj implements QueueObject{
     @Override
     public void execute() {
         player.play(new Point(x,y));
-        System.out.println("Player: "+ player.getUsername() + " HAS JUST PLAYED A CARD IN ("+ x +","+ y +")");
     }
 }

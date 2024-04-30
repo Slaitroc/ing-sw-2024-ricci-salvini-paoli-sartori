@@ -26,7 +26,7 @@ public class ControllerTest {
     static Controller controller;
     static VirtualClient mockClient;
     IGameController gameController2, gameController3;
-    static GameController gameController1;
+    GameController gameController1;
 
     @BeforeAll
     public static void setUp() {
@@ -88,102 +88,72 @@ public class ControllerTest {
 
         GameModel gameModel = gameController1.getModel();
         List<String> playerlist = new ArrayList<>();
-        String playingPlayer;
         System.out.println("Current Game Cycle is: ");
-        for (int i = 0; i < gameModel.getNumOfPlayers(); i++) {
-            playingPlayer = gameModel.getCurrPlayingPlayer().getUsername();
-            playerlist.add(playingPlayer);
-
-            gameController1.chooseSecretObjective1(playingPlayer);
-            gameController1.playStarter(playingPlayer);
+        for (int i = 0; i < gameModel.getNumOfPlayers() - 1; i++) {
+            playerlist.add(gameModel.getCurrPlayingPlayer().getUsername());
+            gameController1.chooseSecretObjective1(gameModel.getCurrPlayingPlayer().getUsername());
+            gameController1.playStarter(gameModel.getCurrPlayingPlayer().getUsername());
             gameModel.setNextPlayingPlayer();
-            playingPlayer = gameModel.getCurrPlayingPlayer().getUsername();
         }
         //System.out.println(playingPlayer);
-        gameController1.chooseSecretObjective2(playingPlayer);
-        gameController1.playStarter(playingPlayer);
+        playerlist.add(gameModel.getCurrPlayingPlayer().getUsername());
+        gameController1.chooseSecretObjective2(gameModel.getCurrPlayingPlayer().getUsername());
+        gameController1.playStarter(gameModel.getCurrPlayingPlayer().getUsername());
         gameModel.setNextPlayingPlayer();
-        playingPlayer = gameModel.getCurrPlayingPlayer().getUsername();
 
         boolean lastTurn = true;
         int count = 1;
-        while (true) {
-            for (int i = 0; i < gameModel.getNumOfPlayers(); i++) {
+        //Momentarily set to 15, to simulate a full match even without points
+        do {
+            for (String playingPlayer : playerlist) {
                 //System.out.println("It's currently " + playingPlayer + "'s turn");
                 gameController1.selectCard(playingPlayer, 0);
                 gameController1.play(playingPlayer, count, count);
-                //assertNotNull(gameModel.getCurrPlayingPlayer().getPlayArea().getPlacedCards().get(new Point(count, count)));
                 //System.out.println("Player: " + playingPlayer + " placed a card in (" + count + ", " + count + ")");
                 gameController1.drawResource(playingPlayer);
-                //gameController1.drawResource(playingPlayer);
                 //System.out.println("Player: " + playingPlayer + " drawn a resource card\n");
-                playingPlayer = gameModel.getCurrPlayingPlayer().getUsername();
             }
             count++;
-            if (gameModel.getGameState() == GameState.LAST_TURN)
-                break;  //This in case of players actually earning points
-            if (count == 15) { //Momentarily set to 15, to simulate a full match even without points
-                //System.out.println("___TESTING MORE FUNCTIONS___\n");
-                lastTurn = false;
-                break;
-            }
-        }
+        } while (count != 15);
 
-        if (!lastTurn) { //Works only if 4 players are playing
+        String playingPlayer = playerlist.get(2);
 
-            playingPlayer = gameModel.getCurrPlayingPlayer().getUsername();
-            //System.out.println("It's currently " + playingPlayer + "'s turn");
-            gameController1.selectCard(playingPlayer, 0);
-            gameController1.changeSide(playingPlayer);
-            gameController1.play(playingPlayer, count, count);
-            //assertNotNull(gameModel.getCurrPlayingPlayer().getPlayArea().getPlacedCards().get(new Point(count, count)));
-            //System.out.println("Player: " + playingPlayer + " placed a card in (" + count + ", " + count + ")");
-            gameController1.drawResourceCard1(playingPlayer);
-            //System.out.println("Player: " + playingPlayer + " drawn resource card 1\n");
+        gameController1.play(playingPlayer, count, count); //Supposed to throw error
+        playingPlayer = playerlist.getFirst();
+        //System.out.println("It's currently " + playingPlayer + "'s turn");
+        gameController1.selectCard(playingPlayer, 0);
+        gameController1.changeSide(playingPlayer);
+        gameController1.play(playingPlayer, count, count);
+        //System.out.println("Player: " + playingPlayer + " placed a card in (" + count + ", " + count + ")");
+        gameController1.drawResourceCard1(playingPlayer);
+        //System.out.println("Player: " + playingPlayer + " drawn resource card 1\n");
 
-            playingPlayer = gameModel.getCurrPlayingPlayer().getUsername();
-            //System.out.println("It's currently " + playingPlayer + "'s turn");
-            gameController1.selectCard(playingPlayer, 0);
-            gameController1.play(playingPlayer, count, count);
-            //assertNotNull(gameModel.getCurrPlayingPlayer().getPlayArea().getPlacedCards().get(new Point(count, count)));
-            //System.out.println("Player: " + playingPlayer + " placed a card in (" + count + ", " + count + ")");
-            gameController1.drawResourceCard2(playingPlayer);
-            //System.out.println("Player: " + playingPlayer + " drawn resource card 2\n");
-            gameModel.startLastTurn();
 
-            playingPlayer = gameModel.getCurrPlayingPlayer().getUsername();
-            //System.out.println("It's currently " + playingPlayer + "'s turn");
-            gameController1.selectCard(playingPlayer, 0);
-            gameController1.play(playingPlayer, count, count);
-            //assertNotNull(gameModel.getCurrPlayingPlayer().getPlayArea().getPlacedCards().get(new Point(count, count)));
-            //System.out.println("Player: " + playingPlayer + " placed a card in (" + count + ", " + count + ")");
-            gameController1.drawGoldCard1(playingPlayer);
-            //System.out.println("Player: " + playingPlayer + " drawn gold card 1\n");
+        playingPlayer = playerlist.get(1);
+        //System.out.println("It's currently " + playingPlayer + "'s turn");
+        gameController1.selectCard(playingPlayer, 0);
+        gameController1.play(playingPlayer, count, count);
+        //System.out.println("Player: " + playingPlayer + " placed a card in (" + count + ", " + count + ")");
+        gameController1.drawResourceCard2(playingPlayer);
+        //System.out.println("Player: " + playingPlayer + " drawn resource card 2\n");
+        gameModel.startLastTurn();
 
-            playingPlayer = gameModel.getCurrPlayingPlayer().getUsername();
-            //System.out.println("It's currently " + playingPlayer + "'s turn");
-            gameController1.selectCard(playingPlayer, 0);
-            gameController1.play(playingPlayer, count, count);
-            //assertNotNull(gameModel.getCurrPlayingPlayer().getPlayArea().getPlacedCards().get(new Point(count, count)));
-            //System.out.println("Player: " + playingPlayer + " placed a card in (" + count + ", " + count + ")");
-            gameController1.drawGoldCard2(playingPlayer);
-            //System.out.println("Player: " + playingPlayer + " drawn gold card 2\n");
+        playingPlayer = playerlist.get(2);
+        //System.out.println("It's currently " + playingPlayer + "'s turn");
+        gameController1.selectCard(playingPlayer, 0);
+        gameController1.play(playingPlayer, count, count);
+        //System.out.println("Player: " + playingPlayer + " placed a card in (" + count + ", " + count + ")");
+        gameController1.drawGoldCard1(playingPlayer);
+        //System.out.println("Player: " + playingPlayer + " drawn gold card 1\n");
 
-            gameModel.startLastTurn();
-        }
-        //System.out.println("\n___GAME LAST TURN___\n");
+        playingPlayer = playerlist.get(3);
+        //System.out.println("It's currently " + playingPlayer + "'s turn");
+        gameController1.selectCard(playingPlayer, 0);
+        gameController1.play(playingPlayer, count, count);
+        //System.out.println("Player: " + playingPlayer + " placed a card in (" + count + ", " + count + ")");
+        gameController1.drawGoldCard2(playingPlayer);
+        //System.out.println("Player: " + playingPlayer + " drawn gold card 2\n");
 
-        //TODO During the last turn can the players draw?? CHECK RULES
-        for (int i = 0; i < gameModel.getNumOfPlayers(); i++) {
-            playingPlayer = gameModel.getCurrPlayingPlayer().getUsername();
-            //System.out.println("It's currently " + playingPlayer + "'s turn");
-            gameController1.selectCard(playingPlayer, 0);
-            gameController1.play(playingPlayer, count, count);
-            //assertNotNull(gameModel.getCurrPlayingPlayer().getPlayArea().getPlacedCards().get(new Point(count, count)));
-            //System.out.println("Player: " + playingPlayer + " placed a card in (" + count + ", " + count + ")");
-            gameController1.drawGold(playingPlayer);
-            //System.out.println("Player: " + playingPlayer + " drawn a card \n");
-        }
 
         /*System.out.println("\n___Checking out players points___\n");
         gameModel.startEndGame();

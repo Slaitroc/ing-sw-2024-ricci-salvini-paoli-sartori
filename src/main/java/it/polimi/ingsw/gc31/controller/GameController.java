@@ -254,7 +254,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      */
     @Override
     public void drawGold(String username) throws RemoteException {
-        addQueueObj(new DrawGoldObj(playerList.get(username), model));
+        if(model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN || model.getGameState() == GameState.SHOWDOWN) {
+            addQueueObj(new DrawGoldObj(playerList.get(username), model));
+        }
+        else {
+            gameControllerWrite("The game is not in the right state to draw");
+        }
     }
 
     /**
@@ -264,7 +269,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      */
     @Override
     public void drawGoldCard1(String username) throws RemoteException {
-        addQueueObj(new DrawGoldOneObj(playerList.get(username), model));
+        if(model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN || model.getGameState() == GameState.SHOWDOWN) {
+            addQueueObj(new DrawGoldOneObj(playerList.get(username), model));
+        }
+        else {
+            gameControllerWrite("The game is not in the right state to draw");
+        }
     }
 
     /**
@@ -274,7 +284,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      */
     @Override
     public void drawGoldCard2(String username) throws RemoteException {
-        addQueueObj(new DrawGoldTwoObj(playerList.get(username), model));
+        if(model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN || model.getGameState() == GameState.SHOWDOWN) {
+            addQueueObj(new DrawGoldTwoObj(playerList.get(username), model));
+        }
+        else {
+            gameControllerWrite("The game is not in the right state to draw");
+        }
     }
 
     /**
@@ -285,7 +300,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      */
     @Override
     public void drawResource(String username) throws RemoteException {
-        addQueueObj(new DrawResObj(playerList.get(username), model));
+        if(model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN || model.getGameState() == GameState.SHOWDOWN) {
+            addQueueObj(new DrawResObj(playerList.get(username), model));
+        }
+        else {
+            gameControllerWrite("The game is not in the right state to draw");
+        }
     }
 
     /**
@@ -296,7 +316,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      */
     @Override
     public void drawResourceCard1(String username) throws RemoteException {
-        addQueueObj(new DrawResOneObj(playerList.get(username), model));
+        if(model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN || model.getGameState() == GameState.SHOWDOWN) {
+            addQueueObj(new DrawResOneObj(playerList.get(username), model));
+        }
+        else {
+            gameControllerWrite("The game is not in the right state to draw");
+        }
     }
 
     /**
@@ -307,7 +332,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      */
     @Override
     public void drawResourceCard2(String username) throws RemoteException {
-        addQueueObj(new DrawResTwoObj(playerList.get(username), model));
+        if(model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN || model.getGameState() == GameState.SHOWDOWN) {
+            addQueueObj(new DrawResTwoObj(playerList.get(username), model));
+        }
+        else {
+            gameControllerWrite("The game is not in the right state to draw");
+        }
     }
 
     @Override
@@ -321,8 +351,14 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     }
 
     @Override
-    public void play(String username, int x, int y) {
-        addQueueObj(new PlayObj(playerList.get(username), model, x, y));
+    public void play(String username, int x, int y)  {
+        if(model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN || model.getGameState() == GameState.SHOWDOWN) {
+            addQueueObj(new PlayObj(playerList.get(username), model, x, y));
+        }
+        else {
+            gameControllerWrite("The game is not in the right state to play");
+        }
+
     }
 
     @Override
