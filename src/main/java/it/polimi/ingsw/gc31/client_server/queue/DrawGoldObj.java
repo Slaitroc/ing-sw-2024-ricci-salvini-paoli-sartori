@@ -17,6 +17,7 @@ public class DrawGoldObj implements QueueObject {
     public void execute() {
         if (player.drawGold()) {
             model.endTurn();
+            //System.out.println("PLAYER: " + player.getUsername() + " HAS JUST DRAWN A GOLD CARD.");
         }
     }
 

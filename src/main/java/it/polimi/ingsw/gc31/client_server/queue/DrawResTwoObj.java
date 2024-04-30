@@ -17,6 +17,7 @@ public class DrawResTwoObj implements QueueObject {
     public void execute() {
         if (player.drawResourceCard2()) {
             model.endTurn();
+            //System.out.println("PLAYER: " + player.getUsername() + " HAS JUST DRAWN RESOURCE CARD2.");
         }
     }
 

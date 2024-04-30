@@ -67,25 +67,31 @@ public class GameController extends UnicastRemoteObject implements IGameControll
                 .registerTypeAdapter(PlayableCard.class, new PlayableCardAdapter())
                 .create();
 
-        new Thread(this::executor);
+        new Thread(this::executor).start();
     }
 
     private void addQueueObj(QueueObject obj) {
-        synchronized (callsList) {
+        synchronized (this) {
             callsList.add(obj);
+            this.notify();
         }
     }
 
     private void executor() {
-        QueueObject action;
+        QueueObject action = null;
         while (true) {
-            synchronized (callsList) {
-                action = callsList.poll();
-            }
-            if (action != null) {
-                action.execute();
-            }
+            synchronized (this) {
+                try {
+                    if (action==null) this.wait();
+                    action = callsList.poll();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if (action != null) {
+                    action.execute();
+                }
 
+            }
         }
         // TODO ciclo da terminare alla fine del gioco altrimenti diventa demoooone
         // uuuuhhhhh
@@ -316,8 +322,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
     @Override
     public void play(String username, int x, int y) {
-        Player player = playerList.get(username);
-        player.play(new Point(x, y));
+        addQueueObj(new PlayObj(playerList.get(username), model, x, y));
     }
 
     @Override
