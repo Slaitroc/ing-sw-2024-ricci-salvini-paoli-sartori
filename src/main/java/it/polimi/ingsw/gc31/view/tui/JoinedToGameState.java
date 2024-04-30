@@ -24,13 +24,13 @@ public class JoinedToGameState extends TuiState {
         // command's map
         commandsMap = new LinkedHashMap<>();
 
-        commandsMap.put(("commands info").toLowerCase(), this::command_showCommandsInfo);
+        commandsMap.put(("help").toLowerCase(), this::command_showCommandsInfo);
         commandsMap.put("ready", this::command_ready);
 
         // info map
         commandsInfo = new LinkedHashMap<>();
 
-        commandsInfo.put("commands info", "Shows commands info");
+        commandsInfo.put("help", "Shows commands info");
         commandsInfo.put("ready", "your ready to play");
     }
 

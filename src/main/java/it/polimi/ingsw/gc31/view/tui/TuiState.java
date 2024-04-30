@@ -33,7 +33,7 @@ public abstract class TuiState {
         for (Map.Entry<String, String> entry : commandsInfo.entrySet()) {
             String command = entry.getKey();
             String description = entry.getValue();
-            String formattedLine = String.format("%-15s : %s", command, description);
+            String formattedLine = String.format("%-20s : %s", command, description);
             System.out.println(formattedLine);
         }
         System.out.print("> ");

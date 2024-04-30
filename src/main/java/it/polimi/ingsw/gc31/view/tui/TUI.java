@@ -114,11 +114,6 @@ public class TUI extends UI {
                         }
                         builder = new StringBuilder(50);
                     }
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
         } catch (IOException e) {
