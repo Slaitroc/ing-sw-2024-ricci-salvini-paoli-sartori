@@ -85,12 +85,10 @@ public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCa
             if (allowedMove(point)) {
                 placedCards.put(new Point(point), card);
                 updateAvailableRes(card, point);
-
+                lastPlaced.setLocation(point);
                 if (card.getObjective() != null) {
-                    lastPlaced.setLocation(point);
                     return card.getObjective().isObjectiveDone(getPlacedCards(), point, getAchievedResources());
                 }
-                lastPlaced.setLocation(point);
                 return card.getScore();
             }
         }

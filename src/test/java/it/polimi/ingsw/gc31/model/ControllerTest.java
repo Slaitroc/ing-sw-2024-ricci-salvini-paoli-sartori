@@ -3,6 +3,8 @@ package it.polimi.ingsw.gc31.model;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.controller.Controller;
+import it.polimi.ingsw.gc31.controller.GameController;
+import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.model.enumeration.GameState;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,7 +22,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ControllerTest {
     static Controller controller;
     static VirtualClient mockClient;
-    IGameController gameController1, gameController2, gameController3;
+    IGameController gameController2, gameController3;
+    static GameController gameController1;
 
     @BeforeAll
     public static void setUp() {
@@ -41,7 +44,7 @@ public class ControllerTest {
             controller.connect(mockClient, "Pippo");
             controller.connect(mockClient, "Pluto");
 
-            gameController1 = controller.createGame("Krotox", 4);
+            gameController1 = (GameController) controller.createGame("Krotox", 4);
             controller.joinGame("Slaitroc", 0);
             controller.joinGame("SSalvo", 0);
             controller.joinGame("AleSarto", 0);
@@ -66,16 +69,17 @@ public class ControllerTest {
     //NOTE to run this test singularly, make the players connect with idGame = 0
     //      otherwise, connect with idGame = 3
     @Test
-    public void testGameFlow() throws PlayerNicknameAlreadyExistsException, RemoteException {
+    public void testGameFlow() throws PlayerNicknameAlreadyExistsException, RemoteException, IllegalStateOperationException {
         synchronized (controller) {
             controller.connect(mockClient, "Player1");
-            gameController1 = controller.createGame("Player1", 4);
+            gameController1 = (GameController) controller.createGame("Player1", 4);
             controller.connect(mockClient, "Player2");
             controller.joinGame("Player2", 3);
             controller.connect(mockClient, "Player3");
             controller.joinGame("Player3", 3);
             controller.connect(mockClient, "Player4");
             controller.joinGame("Player4", 3);
+            gameController1.initGame();
         }
 
         GameModel gameModel = gameController1.getModel();
@@ -118,6 +122,7 @@ public class ControllerTest {
         }
 
         if (!lastTurn) { //Works only if 4 players are playing
+
             playingPlayer = gameModel.getCurrPlayingPlayer().getUsername();
             System.out.println("It's currently " + playingPlayer + "'s turn");
             gameController1.selectCard(playingPlayer, 0);
@@ -136,7 +141,7 @@ public class ControllerTest {
             System.out.println("Player: " + playingPlayer + " placed a card in (" + count + ", " + count + ")");
             gameController1.drawResourceCard2(playingPlayer);
             System.out.println("Player: " + playingPlayer + " drawn resource card 2\n");
-
+            gameModel.startLastTurn();
 
             playingPlayer = gameModel.getCurrPlayingPlayer().getUsername();
             System.out.println("It's currently " + playingPlayer + "'s turn");
@@ -156,7 +161,7 @@ public class ControllerTest {
             gameController1.drawGoldCard2(playingPlayer);
             System.out.println("Player: " + playingPlayer + " drawn gold card 2\n");
 
-            gameModel.startLastTurn();
+            //gameModel.startLastTurn();
         }
         System.out.println("\n___GAME LAST TURN___\n");
 
@@ -172,7 +177,7 @@ public class ControllerTest {
             System.out.println("Player: " + playingPlayer + " drawn a card \n");
         }
 
-        System.out.println("\n___Checking out players points___\n");
+        /*System.out.println("\n___Checking out players points___\n");
         gameModel.startEndGame();
         for (int i = 0; i < gameModel.getNumOfPlayers(); i++) {
             gameModel.getObjectives(0).getObjective().isObjectiveDone(gameModel.getCurrPlayingPlayer().getPlayArea().getPlacedCards(), null, gameModel.getCurrPlayingPlayer().getPlayArea().getAchievedResources());
@@ -182,7 +187,7 @@ public class ControllerTest {
             playingPlayer = gameModel.getCurrPlayingPlayer().getUsername();
             System.out.println("Player: " + playingPlayer + " scored a total of " + gameModel.getCurrPlayingPlayer().getScore() + " points");
             //assertEquals(0, gameModel.getCurrPlayingPlayer().getScore());
-        }
+        }*/
     }
 
 

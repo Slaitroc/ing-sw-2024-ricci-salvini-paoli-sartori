@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.model;
 
+import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -109,11 +110,16 @@ public class GameModel {
     //GAME STAGES METHODS:
     public void checkStartGame() {
         for (Player player: players) {
-            if (player.getStarterCard() == null) {
+            if (player.getPlayArea().getPlacedCards().get(new Point(0, 0)) == null) {
                 return;
             }
         }
         this.gameState = GameState.RUNNING;
+        System.out.println("Game has started!");
+    }
+
+    public void startShowdown() {
+        this.gameState = GameState.SHOWDOWN;
     }
 
     public void startLastTurn() {
@@ -188,9 +194,22 @@ public class GameModel {
      * This method is used to detect when a player reaches 20 points.
      */
     private void detectEndGame() {
-        if (getCurrPlayingPlayer().getScore() >= 20) {
-            lastTurn = true;
+        if (this.gameState == GameState.RUNNING & getCurrPlayingPlayer().getScore() >= 20) {
+            startShowdown();
+            System.out.println("Someone reached 20 points!");
+        }
+        else if (this.gameState == GameState.SHOWDOWN & getCurrPlayingPlayer() == players.getFirst()) {
             startLastTurn();
+            System.out.println("Players has one more turn to play!");
+        } else if (this.gameState == GameState.LAST_TURN) {
+            startEndGame();
+            System.out.println("Game has ended!");
+            for (Player player : players) {
+                player.calculateObjectiveCard(objective1);
+                player.calculateObjectiveCard(objective2);
+                player.calculateObjectiveCard(player.getObjectiveCard());
+                System.out.println(player.getUsername() + " has " + player.getScore() + " points!");
+            }
         }
     }
 

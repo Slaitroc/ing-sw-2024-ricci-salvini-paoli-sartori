@@ -1,3 +1,4 @@
+/*
 package it.polimi.ingsw.gc31.controller;
 
 import com.google.gson.Gson;
@@ -101,3 +102,4 @@ public class PlayerController extends UnicastRemoteObject implements IPlayerCont
     }
 
 }
+*/
