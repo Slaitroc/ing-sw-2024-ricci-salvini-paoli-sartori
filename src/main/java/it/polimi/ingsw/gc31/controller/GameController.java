@@ -11,6 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.gc31.utility.gsonUtility.PlayableCardAdapter;
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
@@ -20,12 +21,11 @@ import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerStarterCardListener;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerObjectiveCardListener;
 import it.polimi.ingsw.gc31.client_server.queue.*;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.GameModel;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.GameState;
 import it.polimi.ingsw.gc31.model.player.Player;
-import it.polimi.ingsw.gc31.utility.gsonUtility.PlayableCardAdapter;
+import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 
 /**
  * This class is the controller of one single game.
@@ -82,7 +82,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             synchronized (callsList) {
                 action = callsList.poll();
             }
-            action.execute();
+            if (action != null) {
+                action.execute();
+            }
+
         }
         // TODO ciclo da terminare alla fine del gioco altrimenti diventa demoooone
         // uuuuhhhhh
