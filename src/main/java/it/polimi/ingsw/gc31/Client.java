@@ -5,19 +5,19 @@ import java.rmi.RemoteException;
 import java.rmi.NotBoundException;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
-import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 import it.polimi.ingsw.gc31.client_server.rmi.RmiClient;
 import it.polimi.ingsw.gc31.client_server.tcp.TCPClient;
 import it.polimi.ingsw.gc31.utility.CliPrint;
 import it.polimi.ingsw.gc31.view.gui.GUI;
 import it.polimi.ingsw.gc31.view.tui.TUI;
+import org.fusesource.jansi.AnsiConsole;
 
 import static it.polimi.ingsw.gc31.OurScanner.scanner;
 
 public class Client {
-    private static VirtualServer server;
 
     public static void main(String[] args) throws NotBoundException, RemoteException {
+        AnsiConsole.systemInstall();
         // pulisce il terminale
         System.out.print("\033[H\033[2J");
         System.out.flush();

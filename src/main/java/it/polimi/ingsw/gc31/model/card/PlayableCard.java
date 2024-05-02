@@ -113,6 +113,7 @@ public abstract class PlayableCard implements Card {
 
     @Override
     public void changeSide() {
+
         side = !side;
     }
 

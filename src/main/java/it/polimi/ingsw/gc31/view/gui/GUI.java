@@ -32,11 +32,6 @@ public class GUI extends UI {
     }
 
     @Override
-    public void showHand(List<String> hand) throws RemoteException {
-
-    }
-
-    @Override
     public void showListGame(List<String> listGame) throws RemoteException {
 
     }
@@ -55,5 +50,11 @@ public class GUI extends UI {
     public void updateToPlayingState() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateToPlayingState'");
+    }
+
+    @Override
+    public void updateHand(String username, List<String> hand) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateHand'");
     }
 }

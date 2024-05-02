@@ -56,7 +56,7 @@ public abstract class UI {
      * 
      * @Slaitroc
      */
-    public abstract void showHand(List<String> hand) throws RemoteException;
+    public abstract void updateHand(String username, List<String> hand) throws RemoteException;
 
     public abstract void showListGame(List<String> listGame) throws RemoteException;
 

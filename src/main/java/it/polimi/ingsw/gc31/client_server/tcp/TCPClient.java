@@ -203,4 +203,16 @@ public class TCPClient implements ClientCommands {
     public void setReady(boolean ready) throws RemoteException {
         // TODO Auto-generated method stub
     }
+
+    @Override
+    public void drawResource() throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'drawResource'");
+    }
+
+    @Override
+    public String getUsername() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
+    }
 }

@@ -84,6 +84,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
+    public void drawResource() throws RemoteException {
+        gameController.drawResource(username);
+    }
+
+    @Override
     public void joinGame(int idGame) throws RemoteException {
         gameController = controller.joinGame(username, idGame);
     }
@@ -107,9 +112,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public void show_handPlayer(String username, List<String> hand) throws RemoteException {
         // TODO temporaneo
-        // System.out.println("Hand of " + username);
-        ui.showHand(hand);
-        // hand.forEach(System.out::println);
+        ui.updateHand(username, hand);
     }
 
     @Override
@@ -180,6 +183,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public void startGame() throws RemoteException {
         ui.updateToPlayingState();
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
     }
 
     // @Override
