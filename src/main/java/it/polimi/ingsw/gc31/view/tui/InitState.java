@@ -36,21 +36,19 @@ public class InitState extends TuiState {
     }
 
     @Override
-    protected void command_createGame() {
-        tuiWrite("Type the number of players for the game:");
-        System.out.print("> ");
+    protected synchronized void command_createGame() {
+        tui.printToCmdLineOut(tuiWrite("Type the number of players for the game:"));
         int input = Integer.parseInt(scanner.nextLine());
         try {
             tui.getClient().createGame(input);
             tui.setState(new JoinedToGameState(tui));
-            tui.setStateChanged(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    protected void command_showGames() {
+    protected synchronized void command_showGames() {
         try {
             tui.getClient().getGameList();
         } catch (IOException e) {
@@ -61,14 +59,12 @@ public class InitState extends TuiState {
     }
 
     @Override
-    protected void command_joinGame() {
-        tuiWrite("Type gameID:");
-        System.out.print("> ");
+    protected synchronized void command_joinGame() {
+        tui.printToCmdLineOut(tuiWrite("Type gameID:"));
         int input = Integer.parseInt(scanner.nextLine());
         try {
             tui.getClient().joinGame(input);
             tui.setState(new JoinedToGameState(tui));
-            tui.setStateChanged(true);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -91,21 +87,23 @@ public class InitState extends TuiState {
         boolean usernameIsValid = false;
         String input;
         while (!usernameIsValid) {
-            tuiWrite(message);
-            System.out.print("> ");
+            tui.printToCmdLineOut(tuiWrite(message));
             input = scanner.nextLine();
+
             try {
-                tui.getClient().setUsername(input);
+                tui.getClient().setUsername(input.trim());
                 usernameIsValid = true;
+                tui.printToCmdLineOut(tuiWrite("Your name is: " + input.trim()));
 
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (PlayerNicknameAlreadyExistsException e) {
-                message = "Username already exists :,( \n Try another username:";
+                message = "Username already exists :,( -> Try another username:";
             }
         }
 
         tui.getClient().setUI(this.tui);
+
     }
 
     @Override
@@ -117,7 +115,7 @@ public class InitState extends TuiState {
     }
 
     @Override
-    protected void command_initial() {
+    protected synchronized void command_initial() {
         procedure_setUsername();
         command_showCommandsInfo();
     }

@@ -39,7 +39,7 @@ public class JoinedToGameState extends TuiState {
     }
 
     @Override
-    protected void command_showGames() {
+    protected synchronized void command_showGames() {
         try {
             tui.getClient().getGameList();
         } catch (IOException e) {
@@ -54,16 +54,16 @@ public class JoinedToGameState extends TuiState {
     }
 
     @Override
-    protected void command_ready() {
+    protected synchronized void command_ready() {
         ClientCommands client = tui.getClient();
         try {
             if (!ready) {
                 ready = true;
-                tuiWrite("U are ready to play!");
+                tui.printToCmdLineOut(tuiWrite("U are ready to play!"));
                 client.setReady(true);
             } else {
                 ready = false;
-                tuiWrite("U are not ready :`(");
+                tui.printToCmdLineOut(tuiWrite("U are not ready :`("));
                 client.setReady(false);
             }
         } catch (RemoteException e) {
@@ -89,7 +89,7 @@ public class JoinedToGameState extends TuiState {
     }
 
     @Override
-    protected void command_initial() {
+    protected synchronized void command_initial() {
         command_showCommandsInfo();
     }
 

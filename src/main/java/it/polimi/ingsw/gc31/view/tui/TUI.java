@@ -2,53 +2,238 @@ package it.polimi.ingsw.gc31.view.tui;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.client_server.rmi.DebugClient;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.UI;
-
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
-import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.charset.Charset;
-import java.rmi.RemoteException;
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ArrayList;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.Queue;
+import java.util.ArrayDeque;
+import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.nio.charset.Charset;
 import org.fusesource.jansi.AnsiConsole;
-
-import static org.fusesource.jansi.Ansi.Color.GREEN;
+import org.fusesource.jansi.Ansi;
 import static org.fusesource.jansi.Ansi.Color.WHITE;
 import static org.fusesource.jansi.Ansi.Color.YELLOW;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class TUI extends UI {
-
-    private TuiState state;
-    private volatile boolean isStateChanged = true;
-
-    public void setStateChanged(boolean isStateChanged) {
-        this.isStateChanged = isStateChanged;
+    public static void main(String[] args) throws RemoteException, NotBoundException {
+        TUI tui = new TUI(new DebugClient());
+        tui.uiRunUI();
     }
 
-    private final BufferedReader buffer;
-    private String command = null;
-    private final BlockingQueue<String> globalCommands;
-    private volatile boolean isCommandChanged = false;
+    // MODIFICABILI
+    private static final int CMD_LINE_INITIAL_ROW = 1;
+    private static final int CMD_LINE_INITIAL_COLUMN = 1;
+    private static final int CMD_LINE_LINES = 10;
+    private static final int CMD_LINE_WIDTH = 60;
+    private static final int CHAT_BOARD_INITIAL_ROW = 1;
+    private static final int CHAT_BOARD_INITIAL_COLUMN = 61;
+    private static final int CHAT_BOARD_LINES = 10;
+    private static final int CHAT_BOARD_WIDTH = 60;
 
+    // CONSTANTS
+    private static final int CMD_LINE_EFFECTIVE_WIDTH = CMD_LINE_WIDTH - 2;
+    private static final int CMD_LINE_INPUT_ROW = CMD_LINE_INITIAL_ROW + CMD_LINE_LINES;
+    private static final int CMD_LINE_INPUT_COLUMN = CMD_LINE_INITIAL_COLUMN + 1;
+    private static final int CMD_LINE_OUT_LINES = CMD_LINE_LINES - 1;
+    private static final int CHAT_BOARD_EFFECTIVE_WIDTH = CHAT_BOARD_WIDTH - 2;
+    private static final int CHAT_BOARD_INPUT_ROW = CHAT_BOARD_INITIAL_ROW + CHAT_BOARD_LINES;
+    private static final int CHAT_BOARD_INPUT_COLUMN = CHAT_BOARD_INITIAL_COLUMN + 1;
+    private static final int CHAT_BOARD_OUT_LINES = CHAT_BOARD_LINES - 1;
+
+    // DRAWS
+    /**
+     * Draws the borders of the chat board
+     */
+    private void drawChatBorders() {
+        AnsiConsole.out()
+                .print(Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW, CHAT_BOARD_INITIAL_COLUMN)
+                        .a("┌" + "─".repeat(CHAT_BOARD_EFFECTIVE_WIDTH) + "┐"));
+        for (int i = 0; i < CHAT_BOARD_LINES; i++) {
+            AnsiConsole.out().print(
+                    Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW + 1 + i, CHAT_BOARD_INITIAL_COLUMN)
+                            .a("│" + " ".repeat(CHAT_BOARD_EFFECTIVE_WIDTH) + "│"));
+        }
+        AnsiConsole.out().print(
+                Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW + CHAT_BOARD_LINES + 1, CHAT_BOARD_INITIAL_COLUMN)
+                        .a("└" + "─".repeat(CHAT_BOARD_EFFECTIVE_WIDTH) + "┘"));
+    }
+
+    /**
+     * Draws the borders of the command line
+     */
+    private void drawCmdLineBorders() {
+        AnsiConsole.out()
+                .print(Ansi.ansi().cursor(CMD_LINE_INITIAL_ROW, CMD_LINE_INITIAL_COLUMN)
+                        .a("┌" + "─".repeat(CMD_LINE_EFFECTIVE_WIDTH) + "┐"));
+        for (int i = 0; i < CMD_LINE_LINES; i++) {
+            AnsiConsole.out().print(
+                    Ansi.ansi().cursor(CMD_LINE_INITIAL_ROW + 1 + i, CMD_LINE_INITIAL_COLUMN)
+                            .a("│" + " ".repeat(CMD_LINE_EFFECTIVE_WIDTH) + "│"));
+        }
+        AnsiConsole.out().print(Ansi.ansi().cursor(CMD_LINE_INITIAL_ROW + CMD_LINE_LINES + 1, CMD_LINE_INITIAL_COLUMN)
+                .a("└" + "─".repeat(CMD_LINE_EFFECTIVE_WIDTH) + "┘"));
+    }
+
+    /**
+     * Draws the title of the game
+     */
+    public void drawTitle() {
+        new PrintStream(System.out, true, System.console() != null
+                ? System.console().charset()
+                : Charset.defaultCharset()).println(ansi().fg(YELLOW).a("""
+                        █▀▀█  █▀▀█  █▀▀▄  █▀▀▀ █   █
+                        █     █  █  █  █  █▀▀▀ ▀▀▄▀▀
+                        █▄▄█  █▄▄█  █▄▄▀  █▄▄▄ █   █
+                            """).reset());
+    }
+
+    /**
+     * Draws the play area
+     */
+    public void drawPlayArea() {
+        StringBuilder ris = new StringBuilder();
+        int heightPlayArea = 15;
+
+        ris.append(ansi().cursor(DefaultValues.row_playArea, DefaultValues.col_playArea).fg(WHITE).a("┌"));
+        for (int i = 0; i < DefaultValues.col_chat - DefaultValues.col_playArea - 3; i++) {
+            ris.append(ansi().fg(WHITE).a("─"));
+        }
+        ris.append(ansi().fg(WHITE).a("┐"));
+
+        for (int i = 1; i < heightPlayArea; i++) {
+            ris.append(ansi().cursor(DefaultValues.row_playArea + i, DefaultValues.col_playArea).a("│"));
+            ris.append(ansi()
+                    .cursor(DefaultValues.row_playArea + i, DefaultValues.col_chat - DefaultValues.col_playArea - 1)
+                    .a("│"));
+        }
+
+        ris.append(ansi().cursor(DefaultValues.row_playArea + heightPlayArea, DefaultValues.col_playArea).fg(WHITE)
+                .a("└"));
+        for (int i = 0; i < DefaultValues.col_chat - DefaultValues.col_playArea - 3; i++) {
+            ris.append(ansi().fg(WHITE).a("─"));
+        }
+        ris.append(ansi().fg(WHITE).a("┘"));
+
+        System.out.println(ris);
+    }
+
+    /**
+     * State of the TUI (State Design Pattern)
+     * <p>
+     * This variable is used to manage the available commands in the current state
+     */
+    private TuiState state;
+    /**
+     * This volatile boolean variable is used to check if the state has changed
+     * <p>
+     * Knowing if the state has changed is useful to call the command_initial method
+     * of the new state
+     */
+    private volatile boolean isStateChanged = true;
+    /**
+     * This variable is used to manage the chat board avoiding to update it every
+     * time
+     */
+    private volatile boolean needsUpdate = false;
+    /**
+     * This variable is used to manage the chat messages. The ChatReader thread adds
+     * new client's messages to this queue.
+     * <p>
+     * Right now this is the simplest implementation that comes to my mind, but it
+     * would be better to use a specific class for the chat messages.
+     */
+    private final Queue<String> chatMessages;
+    /**
+     * This variable is used to manage the command line output messages.
+     * <p>
+     * Instead of printing the messages directly to the system output, each state
+     * must add its messages to this queue.
+     * <p>
+     * The <code>commandLineOut</code> thread
+     * will print
+     * them to the right position of the console.
+     */
+    protected final Queue<String> cmdLineOut = new ArrayDeque<String>();
+    /**
+     * This variable is used to manage the global commands.
+     * <p>
+     * Global commands are commands sent by the server to the
+     * client. So they are not typed nor managed by the current state.
+     * <p>
+     * The <code>commandLineProcess</code> thread reads the messages from this queue
+     * and processes
+     * them.
+     */
+    private final BlockingQueue<String> globalCommands;
+
+    /**
+     * This variable is used to manage the command line input messages.
+     * <p>
+     * The <code>commandLineReader</code> thread reads the input from the system
+     * input and adds
+     * it to this queue.
+     * <p>
+     * The <code>commandLineProcess</code> thread reads the messages from this
+     * queue and processes them.
+     */
+    private final Queue<String> cmdLineMessages;
+
+    /**
+     * This variable is used to manage the current working area of the terminal.
+     * <p>
+     * 0 = commandline
+     * <p>
+     * 1 = chat
+     * <p>
+     * 3 = playArea
+     */
+    private int terminalAreaSelection = 0;
+    /**
+     * This variable is used to manage the access to the
+     * <code>terminalAreaSelection</code> variable
+     */
+    private Object areaSelectionLock = new Object();
+
+    // GETTERS & SETTERS
+
+    /**
+     * @return the ClientCommands client of the TUI
+     */
+    public ClientCommands getClient() {
+        return this.client;
+    }
+
+    /**
+     * State's command may need to access the TUI to change to a new state
+     * 
+     * @param state
+     */
+    public void setState(TuiState state) {
+        this.state = state;
+        this.isStateChanged = true;
+    }
+
+    // credo sia stata utilizzata solo per debugging
     public TUI(TuiState state, ClientCommands client) {
         this.client = client;
         this.state = state;
 
-        buffer = new BufferedReader(new InputStreamReader(System.in));
         globalCommands = new LinkedBlockingQueue<>();
+
+        chatMessages = new ArrayDeque<String>();
+        cmdLineMessages = new ArrayDeque<String>();
 
     }
 
@@ -58,154 +243,416 @@ public class TUI extends UI {
         this.state = new InitState(this);
         this.client = client;
 
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-        print_title();
-        print_chat();
-        print_playArea();
-
-        buffer = new BufferedReader(new InputStreamReader(System.in));
         globalCommands = new LinkedBlockingQueue<>();
+        chatMessages = new ArrayDeque<String>();
+        cmdLineMessages = new ArrayDeque<String>();
+    }
+
+    // UTILITIES
+
+    /**
+     * This method is used to move the cursor to the command line input area.
+     * <p>
+     * It also clears the command line input area and update the
+     * <code>terminalAreaSelection</code> variable.
+     */
+    private void moveCursorToCmdLine() {
+        AnsiConsole.out().print(
+                Ansi.ansi().cursor(CMD_LINE_INPUT_ROW, CMD_LINE_INPUT_COLUMN).a(" ".repeat(CMD_LINE_EFFECTIVE_WIDTH)));
+        AnsiConsole.out().print(Ansi.ansi().cursor(CMD_LINE_INPUT_ROW, CMD_LINE_INPUT_COLUMN).a("> "));
+        synchronized (areaSelectionLock) {
+            terminalAreaSelection = 0;
+        }
     }
 
     /**
-     * Simply calls System.out.println adding the server tag and printing the text
+     * This method is used to move the cursor to the chat input area.
+     * <p>
+     * It also clears the chat input area and update the
+     * <code>terminalAreaSelection</code> variable.
+     */
+    private void moveCursorToChatLine() {
+        AnsiConsole.out().print(Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW, CHAT_BOARD_INPUT_COLUMN)
+                .a(" ".repeat(CHAT_BOARD_EFFECTIVE_WIDTH)));
+        AnsiConsole.out()
+                .print(Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW, CHAT_BOARD_INPUT_COLUMN).a("> "));
+        synchronized (areaSelectionLock) {
+            terminalAreaSelection = 1;
+        }
+    }
+
+    /**
+     * This method is used to move the cursor to the chat input area.
+     * <p>
+     * It also clears the chat input area and update the
+     * <code>terminalAreaSelection</code> variable.
+     * 
+     * @param prefix the prefix to be printed before the cursor
+     */
+    private void moveCursorToChatLine(String prefix) {
+        AnsiConsole.out().print(Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW, CHAT_BOARD_INPUT_COLUMN)
+                .a(" ".repeat(CHAT_BOARD_WIDTH)));
+        AnsiConsole.out().print(Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW, CHAT_BOARD_INPUT_COLUMN).a(prefix + " "));
+        synchronized (areaSelectionLock) {
+            terminalAreaSelection = 1;
+        }
+    }
+
+    /**
+     * This method is used to reset the cursor to the right area after updating
+     * another area.
+     */
+    protected void resetCursor() {
+        synchronized (areaSelectionLock) {
+            if (terminalAreaSelection == 0) {
+                moveCursorToCmdLine();
+            }
+            if (terminalAreaSelection == 1) {
+                moveCursorToChatLine();
+            }
+        }
+    }
+
+    /**
+     * This method is used to add a message to the <code>commandLineOut</code>
+     * thread's queue.
+     * <p>
+     * State methods must use this method to print their messages.
+     * 
+     * @param message
+     * @param color
+     */
+    protected void printToCmdLineOut(String message, Ansi.Color color) {
+        synchronized (cmdLineOut) {
+            cmdLineOut.add(Ansi.ansi().fg(color).a(message).reset().toString());
+            cmdLineOut.notifyAll();
+        }
+    }
+
+    /**
+     * This method is used to add a message to the <code>commandLineOut</code>
+     * thread's queue.
+     * <p>
+     * State methods must use this method to print their messages.
+     * 
+     * @param message
+     */
+    protected void printToCmdLineOut(String message) {
+        synchronized (cmdLineOut) {
+            cmdLineOut.add(Ansi.ansi().a(message).reset().toString());
+            cmdLineOut.notifyAll();
+        }
+    }
+
+    // probabilmente non necessario al momento ma potrebbe essere utile in futuro
+    protected void printToCmdLineIn(String message) {
+        moveCursorToChatLine(message);
+
+    }
+
+    /**
+     * Format a String as it is printed from the TUI
      * 
      * @param text
-     * 
-     * @Slaitroc
+     * @return the formatted String
      */
-    protected void tuiWrite(String text) {
-        System.out.println(DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_RESET + text);
+    protected String tuiWrite(String text) {
+        return DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_RESET + text;
     }
 
-    protected void tuiWriteGreen(String text) {
-        System.out.println(DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_GREEN + text
-                + DefaultValues.ANSI_RESET);
+    /**
+     * Format a String as it is printed from the TUI in green
+     * 
+     * @param text
+     * @return the formatted String
+     */
+    protected String tuiWriteGreen(String text) {
+        return DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_GREEN + text
+                + DefaultValues.ANSI_RESET;
     }
 
-    protected void tuiWritePurple(String text) {
-        System.out.println(DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_PURPLE + text
-                + DefaultValues.ANSI_RESET);
+    /**
+     * Format a String as it is printed from the TUI in purple
+     * 
+     * @param text
+     * @return the formatted String
+     */
+    protected String tuiWritePurple(String text) {
+        return DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_PURPLE + text
+                + DefaultValues.ANSI_RESET;
     }
 
-    @Override
-    protected void uiRunUI() {
-        new Thread(this::nonBlockingInputReader).start();
-        new Thread(this::processThread).start();
-    }
-
-    public void nonBlockingInputReader() {
-        try {
-            command = "default";
-            String input;
-            StringBuilder builder = new StringBuilder(50);
-            synchronized (this) {
-                try {
-                    this.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+    // THREADS
+    /**
+     * This method starts the <code>commandLineOut</code> thread.
+     * <p>
+     * This thread is used to print the command line output messages the right way
+     * and in the right position.
+     * 
+     */
+    private void commandLineOut() {
+        new Thread(() -> {
             while (true) {
-                while (buffer.ready()) {
-                    char newChar = (char) buffer.read();
-                    if (newChar != '\n')
-                        builder.append(newChar);
-                    else {
-                        if (builder.isEmpty()) {
-                            System.out.print("> ");
-                            continue;
+                synchronized (cmdLineOut) {
+                    if (cmdLineOut.isEmpty()) {
+                        try {
+                            drawCmdLineBorders();
+                            commandLineReader(); // solo al lancio del thread command line out la lista cmdLineOut è
+                                                 // vuota, quindi entra in questo if solo una volta
+                            cmdLineOut.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                        input = builder.toString().trim();
-                        synchronized (this) {
-                            if (!input.isEmpty()) {
-                                command = input;
-                                isCommandChanged = true;
-                            }
-                            try {
-                                this.wait();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                        builder = new StringBuilder(50);
+                    } else {
+                        drawCmdLineBorders();
+                        updateCmdLineOut();
                     }
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 
-    public void processThread() {
-        while (true) {
-            if (isStateChanged) {
-                synchronized (this) {
+    /**
+     * This method starts the <code>commandLineReader</code> thread.
+     * <p>
+     * This thread is used to read the input from the system input and add it to the
+     * <code>cmdLineMessages</code> queue.
+     */
+    private void commandLineReader() {
+        new Thread(() -> {
+            commandLineProcess();
+            Scanner cmdScanner = new Scanner(System.in);
+            while (true) {
+                synchronized (areaSelectionLock) {
+                    // It waits for the command line to be selected to read the input
+                    if (!(terminalAreaSelection == 0)) {
+                        try {
+                            areaSelectionLock.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                moveCursorToCmdLine();
+                String input = "";
+                // if a state is running a command, it waits for the command to be finished
+                // This is necessary to let each command get its input
+                synchronized (state) {
+                    input = cmdScanner.nextLine();
+                }
+
+                // Sends the input to the command line process thread and waits for the command
+                // to be executed
+                if (!input.isEmpty()) {
+                    synchronized (cmdLineMessages) {
+                        cmdLineMessages.add(input.trim());
+                        try {
+                            cmdLineMessages.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }).start();
+
+    }
+
+    /**
+     * This method starts the <code>commandLineProcess</code> thread.
+     * <p>
+     * This thread is used to process the commands in the
+     * <code>cmdLineMessages</code> queue and in the <code>globalCommands</code>
+     * queue.
+     * <p>
+     * If the command is "chat", it moves the cursor to the chat input area.
+     */
+    private void commandLineProcess() {
+        new Thread(() -> {
+            while (true) {
+                if (isStateChanged) {
                     state.command_initial();
                     isStateChanged = false;
-                    this.notify();
                 }
-            }
-            if (isCommandChanged) {
-                synchronized (this) {
-                    execute_command(command);
-                    isCommandChanged = false;
-                    this.notify();
-                }
-            }
-            if (!globalCommands.isEmpty()) {
-                synchronized (this) {
-                    List<String> commands = new ArrayList<>();
-                    globalCommands.drainTo(commands);
-                    for (String command : commands) {
-                        execute_command(command);
+                if (!cmdLineMessages.isEmpty()) {
+                    String cmd = null;
+                    synchronized (cmdLineMessages) {
+                        cmd = cmdLineMessages.poll();
                     }
+                    if (cmd.equals("chat")) {
+                        synchronized (areaSelectionLock) {
+                            printToCmdLineOut("comando " + cmd + " eseguito", Ansi.Color.CYAN);
+                            moveCursorToChatLine();
+                            areaSelectionLock.notify();
+                        }
+                        continue;
+                    } else {
+                        if (!globalCommands.isEmpty()) {
+                            List<String> commands = new ArrayList<>();
+                            globalCommands.drainTo(commands);
+                            for (String command : commands) {
+                                execute_command(command);
+                            }
+                        } else {
+                            synchronized (state) { // commandLineReader could take control of the input before the
+                                                   // command execution... this synchronized should fix the thing
+                                synchronized (cmdLineMessages) {
+                                    execute_command(cmd);
+                                    cmdLineMessages.notify();
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
+        }).start();
 
-        }
     }
 
-    public void execute_command(String command) {
+    /**
+     * This method starts the <code>chatReader</code> thread.
+     * <p>
+     * This thread is used to read the input from the system input and add it to the
+     * <code>chatMessages</code> queue.
+     */
+    private void chatReader() {
+        new Thread(() -> {
+            Scanner chatScanner = new Scanner(System.in);
+            while (true) {
+                synchronized (areaSelectionLock) {
+                    if (!(terminalAreaSelection == 1)) {
+                        try {
+                            areaSelectionLock.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                String input = chatScanner.nextLine();
+                if (input.isEmpty()) {
+                    continue;
+                }
+                if (input.equals("ccc")) {
+                    synchronized (areaSelectionLock) {
+                        moveCursorToCmdLine();
+                        areaSelectionLock.notify();
+                    }
+                } else {
+                    chatMessages.add(input.trim());
+                    needsUpdate = true;
+                }
+            }
 
+        }).start();
+    }
+
+    /**
+     * This method starts the <code>chatBoard</code> thread.
+     * <p>
+     * This thread is used to print the chat board messages the right way and in the
+     * right position.
+     */
+    private void chatBoard() {
+        new Thread(() -> {
+            drawChatBorders();
+            while (true) {
+                if (needsUpdate) {
+                    drawChatBorders();
+                    updateChatBoardOut();
+                }
+            }
+        }).start();
+    }
+
+    // THREADS UTILITIES
+
+    /**
+     * This method searches for the command in the state's commands map and executes
+     * it.
+     * <p>
+     * If the command is not found, it prints "Command not recognized".
+     * 
+     * @param command
+     */
+    public void execute_command(String command) {
         if (state.commandsMap.containsKey(command)) {
             state.commandsMap.get(command).run();
         } else {
-            tuiWrite("Command not recognized");
+            printToCmdLineOut(tuiWrite("Command not recognized"));
         }
     }
 
-    // UTLITIES
-    public ClientCommands getClient() {
-        return this.client;
+    private void updateCmdLineOut() {
+        synchronized (cmdLineOut) {
+            for (int i = 0; i < cmdLineOut.size() && i < CMD_LINE_OUT_LINES; i++) {
+                AnsiConsole.out().print(Ansi.ansi().cursor(CMD_LINE_INPUT_ROW - 1 - i, CMD_LINE_INPUT_COLUMN)
+                        .a(" ".repeat(CMD_LINE_EFFECTIVE_WIDTH)));
+                AnsiConsole.out().print(Ansi.ansi().cursor(CMD_LINE_INPUT_ROW - 1 - i, CMD_LINE_INPUT_COLUMN + 1)
+                        .a(cmdLineOut.toArray()[cmdLineOut.size() - 1 - i]));
+            }
+            if (cmdLineOut.size() > CMD_LINE_OUT_LINES - 1) {
+                int i = cmdLineOut.size() - CMD_LINE_OUT_LINES - 1;
+                for (int j = 0; j < i; j++) {
+                    cmdLineOut.poll();
+                }
+            }
+            resetCursor();
+            try {
+                cmdLineOut.notifyAll();
+                cmdLineOut.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public void setState(TuiState state) {
-        this.state = state;
+    private void updateChatBoardOut() {
+        for (int i = 0; i < chatMessages.size() && i < CHAT_BOARD_OUT_LINES; i++) {
+            AnsiConsole.out()
+                    .print(Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW - 1 - i, CHAT_BOARD_INPUT_COLUMN)
+                            .a(" ".repeat(CHAT_BOARD_EFFECTIVE_WIDTH)));
+            AnsiConsole.out().print(
+                    Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW - 1 - i, CHAT_BOARD_INPUT_COLUMN)
+                            .a(chatMessages.toArray()[chatMessages.size() - 1 - i]));
+        }
+        needsUpdate = false;
+        moveCursorToChatLine();
     }
 
-    public TuiState getState() {
-        return state;
+    // UTILITIES
+
+    @Override
+    protected void uiRunUI() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        AnsiConsole.systemInstall();
+
+        /*
+         * drawTitle();
+         * try {
+         * Thread.sleep(2000);
+         * } catch (InterruptedException e) {
+         * e.printStackTrace();
+         * }
+         */
+
+        commandLineOut();
+        chatBoard();
+        chatReader();
     }
 
-    // UPDATES
-
-    Map<String, List<PlayableCard>> playersHands = new HashMap<>();
+    // UPDATES FIELDS & METHODS
+    private Map<String, List<PlayableCard>> playersHands = new HashMap<>();
 
     public List<PlayableCard> getPlayersHands(String username) {
         return playersHands.get(username);
     }
 
     @Override
-    public void showMessage(String msg) throws RemoteException {
-    }
-
-    @Override
     public void updateToPlayingState() {
         this.state = new PlayingState(this);
-        setStateChanged(true);
+        this.isStateChanged = true;
     }
 
     @Override
@@ -249,63 +696,8 @@ public class TUI extends UI {
         }
     }
 
-    public void print_title() {
-        new PrintStream(System.out, true, System.console() != null
-                ? System.console().charset()
-                : Charset.defaultCharset()).println(ansi().fg(YELLOW).a("""
-                        █▀▀█  █▀▀█  █▀▀▄  █▀▀▀ █   █
-                        █     █  █  █  █  █▀▀▀ ▀▀▄▀▀
-                        █▄▄█  █▄▄█  █▄▄▀  █▄▄▄ █   █
-                            """).reset());
+    @Override
+    public void showMessage(String msg) throws RemoteException {
     }
 
-    public void print_chat() {
-        StringBuilder res = new StringBuilder();
-
-        res.append(ansi().cursor(DefaultValues.row_chat, DefaultValues.col_chat).fg(YELLOW)
-                .a("┌──────────────────────────────────┐"));
-        res.append(ansi().cursor(DefaultValues.row_chat + 1, DefaultValues.col_chat).fg(YELLOW)
-                .a("│         Chat                     │"));
-        res.append(ansi().cursor(DefaultValues.row_chat + 2, DefaultValues.col_chat).fg(YELLOW)
-                .a("│                                  │"));
-        res.append(ansi().cursor(DefaultValues.row_chat + 3, DefaultValues.col_chat).fg(YELLOW)
-                .a("│                                  │"));
-
-        res.append(ansi().cursor(DefaultValues.row_chat + 4, DefaultValues.col_chat).fg(YELLOW)
-                .a("│                                  │"));
-
-        res.append(ansi().cursor(DefaultValues.row_chat + 5, DefaultValues.col_chat).fg(YELLOW)
-                .a("│                                  │"));
-        res.append(ansi().cursor(DefaultValues.row_chat + 6, DefaultValues.col_chat).fg(YELLOW)
-                .a("└──────────────────────────────────┘"));
-
-        System.out.println(res);
-    }
-
-    public void print_playArea() {
-        StringBuilder ris = new StringBuilder();
-        int heightPlayArea = 15;
-
-        ris.append(ansi().cursor(DefaultValues.row_playArea, DefaultValues.col_playArea).fg(WHITE).a("┌"));
-        for (int i = 0; i < DefaultValues.col_chat - DefaultValues.col_playArea - 3; i++) {
-            ris.append(ansi().fg(WHITE).a("─"));
-        }
-        ris.append(ansi().fg(WHITE).a("┐"));
-
-        for (int i = 1; i < heightPlayArea; i++) {
-            ris.append(ansi().cursor(DefaultValues.row_playArea + i, DefaultValues.col_playArea).a("│"));
-            ris.append(ansi()
-                    .cursor(DefaultValues.row_playArea + i, DefaultValues.col_chat - DefaultValues.col_playArea - 1)
-                    .a("│"));
-        }
-
-        ris.append(ansi().cursor(DefaultValues.row_playArea + heightPlayArea, DefaultValues.col_playArea).fg(WHITE)
-                .a("└"));
-        for (int i = 0; i < DefaultValues.col_chat - DefaultValues.col_playArea - 3; i++) {
-            ris.append(ansi().fg(WHITE).a("─"));
-        }
-        ris.append(ansi().fg(WHITE).a("┘"));
-
-        System.out.println(ris);
-    }
 }

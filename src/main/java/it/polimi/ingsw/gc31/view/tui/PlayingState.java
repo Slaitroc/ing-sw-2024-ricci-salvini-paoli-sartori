@@ -40,7 +40,7 @@ public class PlayingState extends TuiState {
     }
 
     @Override
-    protected void command_showGames() {
+    protected synchronized void command_showGames() {
         try {
             tui.getClient().getGameList();
         } catch (IOException e) {
@@ -60,7 +60,7 @@ public class PlayingState extends TuiState {
     }
 
     @Override
-    protected void command_showHand() {
+    protected synchronized void command_showHand() {
         List<CardTUI> temp = new ArrayList<>();
         for (PlayableCard card : tui.getPlayersHands(tui.getClient().getUsername())) {
             temp.add(new CardTUI(card));
@@ -72,11 +72,10 @@ public class PlayingState extends TuiState {
             temp.add(new CardTUI(card));
         }
         CardTUI.showHand(temp);
-
     }
 
     @Override
-    protected void command_drawGold() {
+    protected synchronized void command_drawGold() {
         try {
             tui.getClient().drawGold();
         } catch (RemoteException e) {
@@ -92,7 +91,7 @@ public class PlayingState extends TuiState {
     }
 
     @Override
-    protected void command_drawResource() {
+    protected synchronized void command_drawResource() {
         // TODO qui va aggiunto un metodo che mostri le possibili carte da pescare
         tuiWrite("Which card do you want to draw?");
         try {
@@ -108,7 +107,7 @@ public class PlayingState extends TuiState {
     }
 
     @Override
-    protected void command_initial() {
+    protected synchronized void command_initial() {
         command_showCommandsInfo();
     }
 
