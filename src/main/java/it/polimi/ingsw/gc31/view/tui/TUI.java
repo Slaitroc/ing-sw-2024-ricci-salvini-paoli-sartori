@@ -137,6 +137,7 @@ public class TUI extends UI {
      * of the new state
      */
     private volatile boolean isStateChanged = true;
+    private volatile boolean cmdLineProcessReady = false;
     /**
      * This variable is used to manage the chat board avoiding to update it every
      * time
@@ -416,6 +417,8 @@ public class TUI extends UI {
     private void commandLineReader() {
         new Thread(() -> {
             commandLineProcess();
+            while (!cmdLineProcessReady)
+                ;
             Scanner cmdScanner = new Scanner(System.in);
             while (true) {
                 synchronized (areaSelectionLock) {
@@ -468,6 +471,7 @@ public class TUI extends UI {
                 if (isStateChanged) {
                     state.command_initial();
                     isStateChanged = false;
+                    cmdLineProcessReady = true;
                 }
                 if (!cmdLineMessages.isEmpty()) {
                     String cmd = null;
