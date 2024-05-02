@@ -2,7 +2,6 @@ package it.polimi.ingsw.gc31.view.tui;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
-import it.polimi.ingsw.gc31.client_server.rmi.DebugClient;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.UI;
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
@@ -27,10 +26,6 @@ import static org.fusesource.jansi.Ansi.Color.YELLOW;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class TUI extends UI {
-    public static void main(String[] args) throws RemoteException, NotBoundException {
-        TUI tui = new TUI(new DebugClient());
-        tui.uiRunUI();
-    }
 
     // MODIFICABILI
     private static final int CMD_LINE_INITIAL_ROW = 1;
