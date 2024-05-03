@@ -23,6 +23,7 @@ import java.util.ArrayList;
 public class TCPClient implements ClientCommands {
     private final BufferedReader input;
     private final PrintWriter output;
+    @SuppressWarnings("unused")
     private String username;
     private Integer idGame;
     private UI ui;
@@ -32,6 +33,7 @@ public class TCPClient implements ClientCommands {
      * 
      * @throws IOException
      */
+    @SuppressWarnings("resource")
     public TCPClient() throws IOException {
         this.username = DefaultValues.DEFAULT_USERNAME;
         Socket serverSocket = new Socket("127.0.0.1", 1200);
@@ -62,6 +64,7 @@ public class TCPClient implements ClientCommands {
      * @throws RemoteException
      */
     public void runVirtualServer() throws RemoteException {
+        @SuppressWarnings("resource")
         Scanner scan = new Scanner(input);
         String line;
         while (true) {

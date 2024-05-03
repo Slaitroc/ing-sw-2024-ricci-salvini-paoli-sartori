@@ -2,13 +2,9 @@ package it.polimi.ingsw.gc31.view.tui;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.LinkedHashMap;
 
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
-import it.polimi.ingsw.gc31.model.card.PlayableCard;
-import it.polimi.ingsw.gc31.view.tui.tuiObj.CardTUI;
 
 public class PlayingState extends TuiState {
 
@@ -61,17 +57,7 @@ public class PlayingState extends TuiState {
 
     @Override
     protected synchronized void command_showHand() {
-        List<CardTUI> temp = new ArrayList<>();
-        for (PlayableCard card : tui.getPlayersHands(tui.getClient().getUsername())) {
-            temp.add(new CardTUI(card));
-        }
-        CardTUI.showHand(temp);
-        temp = new ArrayList<>();
-        for (PlayableCard card : tui.getPlayersHands(tui.getClient().getUsername())) {
-            card.changeSide();
-            temp.add(new CardTUI(card));
-        }
-        CardTUI.showHand(temp);
+
     }
 
     @Override

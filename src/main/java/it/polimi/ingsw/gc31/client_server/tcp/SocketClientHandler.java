@@ -1,9 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
-import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
-import it.polimi.ingsw.gc31.client_server.tcp.TCPServer;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 
 import java.io.BufferedReader;
@@ -22,6 +20,7 @@ public class SocketClientHandler implements VirtualClient {
     final IController controller;
     private IGameController gameController;
     private String username;
+    @SuppressWarnings("unused")
     private VirtualClient client;
     private Integer idGame;
     private final TCPServer server;

@@ -2,7 +2,6 @@ package it.polimi.ingsw.gc31.view.tui;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
-import it.polimi.ingsw.gc31.client_server.rmi.DebugClient;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.UI;
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
@@ -27,7 +26,6 @@ import com.google.gson.reflect.TypeToken;
 import org.fusesource.jansi.Ansi;
 
 import static org.fusesource.jansi.Ansi.Color.CYAN;
-import static org.fusesource.jansi.Ansi.Color.WHITE;
 import static org.fusesource.jansi.Ansi.Color.YELLOW;
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -124,36 +122,6 @@ public class TUI extends UI {
                         █     █  █  █  █  █▀▀▀ ▀▀▄▀▀
                         █▄▄█  █▄▄█  █▄▄▀  █▄▄▄ █   █
                             """).reset());
-    }
-
-    /**
-     * Draws the play area
-     */
-    public void drawPlayArea() {
-        StringBuilder ris = new StringBuilder();
-        int heightPlayArea = 15;
-
-        ris.append(ansi().cursor(DefaultValues.row_playArea, DefaultValues.col_playArea).fg(WHITE).a("┌"));
-        for (int i = 0; i < DefaultValues.col_chat - DefaultValues.col_playArea - 3; i++) {
-            ris.append(ansi().fg(WHITE).a("─"));
-        }
-        ris.append(ansi().fg(WHITE).a("┐"));
-
-        for (int i = 1; i < heightPlayArea; i++) {
-            ris.append(ansi().cursor(DefaultValues.row_playArea + i, DefaultValues.col_playArea).a("│"));
-            ris.append(ansi()
-                    .cursor(DefaultValues.row_playArea + i, DefaultValues.col_chat - DefaultValues.col_playArea - 1)
-                    .a("│"));
-        }
-
-        ris.append(ansi().cursor(DefaultValues.row_playArea + heightPlayArea, DefaultValues.col_playArea).fg(WHITE)
-                .a("└"));
-        for (int i = 0; i < DefaultValues.col_chat - DefaultValues.col_playArea - 3; i++) {
-            ris.append(ansi().fg(WHITE).a("─"));
-        }
-        ris.append(ansi().fg(WHITE).a("┘"));
-
-        System.out.println(ris);
     }
 
     /**
@@ -757,6 +725,7 @@ public class TUI extends UI {
 
     @Override
     public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
+        @SuppressWarnings("unused")
         Map<Point, PlayableCard> pA = gsonTranslater.fromJson(playArea, new TypeToken<Map<Point, PlayableCard>>() {
         }.getType());
     }

@@ -28,15 +28,6 @@ public class DefaultValues {
         return "\t[PlayerController " + name + "]: ";
     }
 
-    public final static int row_title = 0;
-    public final static int col_title = 0;
-
-    public final static int row_chat = 4;
-    public final static int col_chat = 100;
-
-    public final static int row_playArea = 4;
-    public final static int col_playArea = 0;
-
     // ANSI color
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_RED = "\u001B[31m";
