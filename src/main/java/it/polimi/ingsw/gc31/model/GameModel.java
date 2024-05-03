@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.model;
 
+import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.enumeration.GameState;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
+import it.polimi.ingsw.gc31.model.player.NotPlaced;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 /**
@@ -106,8 +108,18 @@ public class GameModel {
     }
 
     //GAME STAGES METHODS:
-    public void startGame() {
+    public void checkStartGame() {
+        for (Player player: players) {
+            if (player.getPlayArea().getPlacedCards().get(new Point(0, 0)) == null) {
+                return;
+            }
+        }
         this.gameState = GameState.RUNNING;
+        System.out.println("Game has started!");
+    }
+
+    public void startShowdown() {
+        this.gameState = GameState.SHOWDOWN;
     }
 
     public void startLastTurn() {
@@ -139,6 +151,7 @@ public class GameModel {
         if (this.currPlayingPlayer == this.players.size()) {
             this.currPlayingPlayer = 0;
         }
+        //System.out.println("IT'S NOW ACTUALLY " + getCurrPlayingPlayer().getUsername() + "'S TURN!");
     }
 
     public int getNumOfPlayers() {
@@ -166,6 +179,41 @@ public class GameModel {
 
     public List<Player> getPlayers() {
         return players;
+    }
+
+    /**
+     * This method is used to end the turn of a player.
+     * It also
+     */
+    public void endTurn() {
+        detectEndGame();
+        setNextPlayingPlayer();
+        getCurrPlayingPlayer().setInGameState(new NotPlaced());
+        //System.out.println("PLAYER: " + getCurrPlayingPlayer().getUsername() + " IS NOW READY TO PLAY!");
+    }
+
+    /**
+     * This method is used to detect when a player reaches 20 points.
+     */
+    private void detectEndGame() {
+        synchronized (this){
+            if (this.gameState == GameState.RUNNING & getCurrPlayingPlayer().getScore() >= 20) {
+                startShowdown();
+                System.out.println("Someone reached 20 points!");
+            } else if (this.gameState == GameState.SHOWDOWN & getCurrPlayingPlayer() == players.getFirst()) {
+                startLastTurn();
+                System.out.println("Players has now one more turn to play!");
+            } else if (this.gameState == GameState.LAST_TURN && getCurrPlayingPlayer() == players.getLast()) {
+                startEndGame();
+                System.out.println("\n_____GAME HAS ENDED_____!\n");
+                for (Player player : players) {
+                    player.calculateObjectiveCard(objective1);
+                    player.calculateObjectiveCard(objective2);
+                    player.calculateObjectiveCard(player.getObjectiveCard());
+                    System.out.println(player.getUsername() + " has " + player.getScore() + " points!");
+                }
+            }
+        }
     }
 
 }

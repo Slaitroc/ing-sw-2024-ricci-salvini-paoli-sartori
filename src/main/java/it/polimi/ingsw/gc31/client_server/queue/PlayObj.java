@@ -3,22 +3,23 @@ package it.polimi.ingsw.gc31.client_server.queue;
 import it.polimi.ingsw.gc31.model.GameModel;
 import it.polimi.ingsw.gc31.model.player.Player;
 
-public class DrawGoldObj implements QueueObject {
+import java.awt.*;
+
+public class PlayObj implements QueueObject{
 
     private Player player;
     private GameModel model;
+    private int x,y;
 
-    public DrawGoldObj(Player player, GameModel model) {
+    public PlayObj(Player player, GameModel model, int x, int y) {
         this.player = player;
         this.model = model;
+        this.x=x;
+        this.y=y;
     }
 
     @Override
     public void execute() {
-        if (player.drawGold()) {
-            model.endTurn();
-            //System.out.println("PLAYER: " + player.getUsername() + " HAS JUST DRAWN A GOLD CARD.");
-        }
+        player.play(new Point(x,y));
     }
-
 }
