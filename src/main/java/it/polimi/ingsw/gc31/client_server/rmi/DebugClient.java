@@ -9,6 +9,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.view.UI;
+import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
 public class DebugClient implements VirtualClient, ClientCommands {
 
@@ -133,12 +134,6 @@ public class DebugClient implements VirtualClient, ClientCommands {
     }
 
     @Override
-    public void showMessage(String msg) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showMessage'");
-    }
-
-    @Override
     public boolean isReady() throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'isReady'");
@@ -148,6 +143,12 @@ public class DebugClient implements VirtualClient, ClientCommands {
     public void startGame() throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'startGame'");
+    }
+
+    @Override
+    public ShowUpdate getUI() throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getUI'");
     }
 
 }
