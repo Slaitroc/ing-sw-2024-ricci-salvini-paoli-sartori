@@ -50,6 +50,10 @@ public class Client {
         } else if (uiChoise == 2) {
             new GUI(client).runUI();
         }
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            scanner.close();
+        }));
     }
 
 }

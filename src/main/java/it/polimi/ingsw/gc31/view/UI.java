@@ -4,10 +4,11 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
 //NOTE: i metodi che iniziano con ui (uiNomeMetodo()) sono le implementazioni delle classi che ereditano da UI
 //gli omonimi senza prefisso ui sono quelli da chiamare nei client
-public abstract class UI {
+public abstract class UI implements ShowUpdate {
     /**
      * The client interacting with the UI
      * 
@@ -44,25 +45,36 @@ public abstract class UI {
      */
     protected abstract void uiRunUI();
 
-    /**
-     * Remote controller may want to stop (and typically rerun) the current UI
-     * 
-     * @param bool
-     * 
-     * @throws RemoteException
-     * @see {@link #inGame}
-     * @see #runUI()
-     * @see #isInGame()
-     * 
-     * @Slaitroc
-     */
+    // DA CAPIRE
     public abstract void updateHand(String username, List<String> hand) throws RemoteException;
 
     public abstract void showListGame(List<String> listGame) throws RemoteException;
 
-    public abstract void showMessage(String msg) throws RemoteException;
-
     public abstract void show_gameCreated();
 
     public abstract void updateToPlayingState();
+
+    // SHOW UPDATE
+
+    @Override
+    public abstract void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException;
+
+    @Override
+    public abstract void show_handPlayer(String username, List<String> hand) throws RemoteException;
+
+    @Override
+    public abstract void show_objectiveCard(String objectiveCard) throws RemoteException;
+
+    @Override
+    public abstract void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException;
+
+    @Override
+    public abstract void show_playArea(String username, String playArea, String achievedResources)
+            throws RemoteException;
+
+    @Override
+    public abstract void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException;
+
+    @Override
+    public abstract void show_starterCard(String starterCard) throws RemoteException;
 }

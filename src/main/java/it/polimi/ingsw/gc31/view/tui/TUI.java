@@ -8,6 +8,7 @@ import it.polimi.ingsw.gc31.view.UI;
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
 import java.io.PrintStream;
+import java.awt.Point;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -17,20 +18,20 @@ import java.util.ArrayDeque;
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.nio.charset.Charset;
 import org.fusesource.jansi.AnsiConsole;
+
+import com.google.gson.reflect.TypeToken;
+
 import org.fusesource.jansi.Ansi;
+
+import static org.fusesource.jansi.Ansi.Color.CYAN;
 import static org.fusesource.jansi.Ansi.Color.WHITE;
 import static org.fusesource.jansi.Ansi.Color.YELLOW;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class TUI extends UI {
-    public static void main(String[] args) throws RemoteException, NotBoundException {
-        TUI tui = new TUI(new DebugClient());
-        tui.uiRunUI();
-    }
 
     // MODIFICABILI
     private static final int CMD_LINE_INITIAL_ROW = 1;
@@ -68,6 +69,19 @@ public class TUI extends UI {
         AnsiConsole.out().print(
                 Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW + CHAT_BOARD_LINES + 1, CHAT_BOARD_INITIAL_COLUMN)
                         .a("└" + "─".repeat(CHAT_BOARD_EFFECTIVE_WIDTH) + "┘"));
+        AnsiConsole.out()
+                .print(Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW + CHAT_BOARD_LINES + 2, CHAT_BOARD_INITIAL_COLUMN)
+                        .fg(YELLOW).a("  __ _ _  _ ___ ").reset());
+        AnsiConsole.out()
+                .print(Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW + CHAT_BOARD_LINES + 3, CHAT_BOARD_INITIAL_COLUMN)
+                        .fg(YELLOW).a(" / _| U |/ \\_ _|").reset());
+        AnsiConsole.out()
+                .print(Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW + CHAT_BOARD_LINES + 4, CHAT_BOARD_INITIAL_COLUMN)
+                        .fg(YELLOW).a("( (_|   | o | | ").reset());
+        AnsiConsole.out()
+                .print(Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW + CHAT_BOARD_LINES + 5, CHAT_BOARD_INITIAL_COLUMN)
+                        .fg(YELLOW).a(" \\__|_n_|_n_|_| ").reset());
+
     }
 
     /**
@@ -84,6 +98,19 @@ public class TUI extends UI {
         }
         AnsiConsole.out().print(Ansi.ansi().cursor(CMD_LINE_INITIAL_ROW + CMD_LINE_LINES + 1, CMD_LINE_INITIAL_COLUMN)
                 .a("└" + "─".repeat(CMD_LINE_EFFECTIVE_WIDTH) + "┘"));
+        AnsiConsole.out()
+                .print(Ansi.ansi().cursor(CMD_LINE_INITIAL_ROW + CMD_LINE_LINES + 2, CMD_LINE_INITIAL_COLUMN)
+                        .fg(CYAN).a("  __ _   _ __    _   _ _  _ ___  ").reset());
+        AnsiConsole.out()
+                .print(Ansi.ansi().cursor(CMD_LINE_INITIAL_ROW + CMD_LINE_LINES + 3, CMD_LINE_INITIAL_COLUMN)
+                        .fg(CYAN).a(" / _| \\_/ |  \\  | | | | \\| | __|").reset());
+        AnsiConsole.out()
+                .print(Ansi.ansi().cursor(CMD_LINE_INITIAL_ROW + CMD_LINE_LINES + 4, CMD_LINE_INITIAL_COLUMN)
+                        .fg(CYAN).a("( (_| \\_/ | o )_| |_| | \\\\ | _|  ").reset());
+        AnsiConsole.out()
+                .print(Ansi.ansi().cursor(CMD_LINE_INITIAL_ROW + CMD_LINE_LINES + 5, CMD_LINE_INITIAL_COLUMN)
+                        .fg(CYAN).a(" \\__|_| |_|__/__|___|_|_|\\_|___|").reset());
+
     }
 
     /**
@@ -143,6 +170,13 @@ public class TUI extends UI {
      */
     private volatile boolean isStateChanged = true;
     /**
+     * This variable manage a race condition between the commandLineReader and the
+     * commandLineProcess threads. <code>commandLineReader</code> thread must wait
+     * for the <code>commandLineProcess</code> thread to be ready to process the
+     * input.
+     */
+    private volatile boolean cmdLineProcessReady = false;
+    /**
      * This variable is used to manage the chat board avoiding to update it every
      * time
      */
@@ -193,7 +227,7 @@ public class TUI extends UI {
     /**
      * This variable is used to manage the current working area of the terminal.
      * <p>
-     * 0 = commandline
+     * 0 = command line
      * <p>
      * 1 = chat
      * <p>
@@ -421,7 +455,12 @@ public class TUI extends UI {
     private void commandLineReader() {
         new Thread(() -> {
             commandLineProcess();
+            while (!cmdLineProcessReady)
+                ;
             Scanner cmdScanner = new Scanner(System.in);
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                cmdScanner.close();
+            }));
             while (true) {
                 synchronized (areaSelectionLock) {
                     // It waits for the command line to be selected to read the input
@@ -454,6 +493,7 @@ public class TUI extends UI {
                     }
                 }
             }
+
         }).start();
 
     }
@@ -473,6 +513,7 @@ public class TUI extends UI {
                 if (isStateChanged) {
                     state.command_initial();
                     isStateChanged = false;
+                    cmdLineProcessReady = true;
                 }
                 if (!cmdLineMessages.isEmpty()) {
                     String cmd = null;
@@ -484,6 +525,9 @@ public class TUI extends UI {
                             printToCmdLineOut("comando " + cmd + " eseguito", Ansi.Color.CYAN);
                             moveCursorToChatLine();
                             areaSelectionLock.notify();
+                        }
+                        synchronized (cmdLineMessages) {
+                            cmdLineMessages.notify();
                         }
                         continue;
                     } else {
@@ -519,6 +563,9 @@ public class TUI extends UI {
     private void chatReader() {
         new Thread(() -> {
             Scanner chatScanner = new Scanner(System.in);
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                chatScanner.close();
+            }));
             while (true) {
                 synchronized (areaSelectionLock) {
                     if (!(terminalAreaSelection == 1)) {
@@ -583,6 +630,14 @@ public class TUI extends UI {
         }
     }
 
+    /**
+     * This method is used to update the command line output messages.
+     * <p>
+     * It prints the messages in the right position of the console.
+     * <p>
+     * It also manages the queue of the messages.
+     * 
+     */
     private void updateCmdLineOut() {
         synchronized (cmdLineOut) {
             for (int i = 0; i < cmdLineOut.size() && i < CMD_LINE_OUT_LINES; i++) {
@@ -607,6 +662,12 @@ public class TUI extends UI {
         }
     }
 
+    /**
+     * This method is used to update the chat board output messages.
+     * <p>
+     * It prints the messages in the right position of the console.
+     * 
+     */
     private void updateChatBoardOut() {
         for (int i = 0; i < chatMessages.size() && i < CHAT_BOARD_OUT_LINES; i++) {
             AnsiConsole.out()
@@ -617,7 +678,7 @@ public class TUI extends UI {
                             .a(chatMessages.toArray()[chatMessages.size() - 1 - i]));
         }
         needsUpdate = false;
-        moveCursorToChatLine();
+        resetCursor();
     }
 
     // UTILITIES
@@ -628,14 +689,12 @@ public class TUI extends UI {
         System.out.flush();
         AnsiConsole.systemInstall();
 
-        /*
-         * drawTitle();
-         * try {
-         * Thread.sleep(2000);
-         * } catch (InterruptedException e) {
-         * e.printStackTrace();
-         * }
-         */
+        drawTitle();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         commandLineOut();
         chatBoard();
@@ -697,7 +756,37 @@ public class TUI extends UI {
     }
 
     @Override
-    public void showMessage(String msg) throws RemoteException {
+    public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
+        Map<Point, PlayableCard> pA = gsonTranslater.fromJson(playArea, new TypeToken<Map<Point, PlayableCard>>() {
+        }.getType());
+    }
+
+    @Override
+    public void show_scorePlayer(String key, Integer value) {
+    }
+
+    @Override
+    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+    }
+
+    @Override
+    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
+    }
+
+    @Override
+    public void show_objectiveCard(String objectiveCard) throws RemoteException {
+    }
+
+    @Override
+    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+    }
+
+    @Override
+    public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+    }
+
+    @Override
+    public void show_starterCard(String starterCard) throws RemoteException {
     }
 
 }

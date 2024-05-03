@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.client_server.listeners;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
 import java.awt.*;
 import java.rmi.RemoteException;
@@ -56,14 +57,16 @@ public class RmiClientTemp implements VirtualClient {
                 new TypeToken<Map<Point, PlayableCard>>() {
                 }.getType());
         for (Map.Entry<Point, PlayableCard> entry : playAreaMap.entrySet()) {
-            System.out.println(entry.getKey() + " -> " + gsonTranslater.toJson(entry.getValue(), PlayableCard.class));
+            System.out.println(entry.getKey() + " -> " +
+                    gsonTranslater.toJson(entry.getValue(), PlayableCard.class));
         }
         System.out.println("Achieved resources");
         System.out.println(achievedResources);
     }
 
     @Override
-    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+    public void show_goldDeck(String firstCardDeck, String card1, String card2)
+            throws RemoteException {
         System.out.println("Client of" + this.username);
         System.out.println("Gold Deck");
         System.out.println("Card on top: " + firstCardDeck);
@@ -90,16 +93,6 @@ public class RmiClientTemp implements VirtualClient {
     }
 
     @Override
-    public void showListGame(List<String> listGame) throws RemoteException {
-
-    }
-
-    @Override
-    public void showMessage(String msg) throws RemoteException {
-
-    }
-
-    @Override
     public boolean isReady() throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'isReady'");
@@ -109,5 +102,17 @@ public class RmiClientTemp implements VirtualClient {
     public void startGame() throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'startGame'");
+    }
+
+    @Override
+    public void showListGame(List<String> listGame) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'showListGame'");
+    }
+
+    @Override
+    public ShowUpdate getUI() throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getUI'");
     }
 }

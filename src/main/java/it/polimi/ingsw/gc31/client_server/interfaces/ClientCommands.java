@@ -9,7 +9,7 @@ import java.rmi.RemoteException;
 
 public interface ClientCommands {
 
-    int getGameID() throws RemoteException;
+    void setUI(UI ui);
 
     void setUsername(String username) throws IOException, PlayerNicknameAlreadyExistsException;
 
@@ -23,9 +23,10 @@ public interface ClientCommands {
 
     void getGameList() throws RemoteException, NoGamesException, IOException;
 
-    void setUI(UI ui);
-
     void setReady(boolean ready) throws RemoteException;
 
+    int getGameID() throws RemoteException;
+
     String getUsername();
+
 }
