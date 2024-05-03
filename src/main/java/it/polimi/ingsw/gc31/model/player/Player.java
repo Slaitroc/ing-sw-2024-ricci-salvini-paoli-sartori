@@ -2,7 +2,6 @@ package it.polimi.ingsw.gc31.model.player;
 
 import java.awt.*;
 
-import it.polimi.ingsw.gc31.client_server.listeners.Observable;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerObservable;
 import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.exceptions.FullHandException;
@@ -21,9 +20,10 @@ import java.util.List;
 
 /**
  * This class represents a player in the game.
- * It manages the player's state, hand, score, and other game-related attributes.
+ * It manages the player's state, hand, score, and other game-related
+ * attributes.
  */
-public class Player extends PlayerObservable{
+public class Player extends PlayerObservable {
 
     private final Board board;
     private int selectedCard;
@@ -88,7 +88,8 @@ public class Player extends PlayerObservable{
     // PUBLIC METHODS
 
     /**
-     * Draws a gold card directly from the goldDeck and adds it to the player's hand.
+     * Draws a gold card directly from the goldDeck and adds it to the player's
+     * hand.
      *
      * @throws EmptyDeckException if the deck is empty.
      */
@@ -124,7 +125,8 @@ public class Player extends PlayerObservable{
     }
 
     /**
-     * Draws a resource card directly from the resourceDeck and adds it to the player's hand.
+     * Draws a resource card directly from the resourceDeck and adds it to the
+     * player's hand.
      *
      * @throws EmptyDeckException if the deck is empty.
      */
@@ -180,7 +182,8 @@ public class Player extends PlayerObservable{
     public void play(Point point) {
         try {
             inGameState.play(point, this);
-            notifyPlayAreaListener(new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
+            notifyPlayAreaListener(
+                    new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
         } catch (IllegalStateOperationException e) {
             System.out.println("Player " + username + " not allowed to place cards in current state");
             e.getStackTrace();
@@ -194,7 +197,8 @@ public class Player extends PlayerObservable{
         try {
             inGameState.playStarter(this);
             notifyPlayerScoreListener(new Pair<>(username, score));
-            notifyPlayAreaListener(new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
+            notifyPlayAreaListener(
+                    new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
         } catch (IllegalStateOperationException e) {
             System.out.println("Player" + username + " not allowed to place the starter card in current state");
             e.getStackTrace();
@@ -217,6 +221,15 @@ public class Player extends PlayerObservable{
         }
     }
 
+    /**
+     * Method to calculate ONLY the SECRET objective card of the player
+     * and the COMMON objective card of the game (not the playable objectives)
+     *
+     * @param obj: Objective Card to calculate
+     */
+    public void calculateObjectiveCard(ObjectiveCard obj) {
+        obj.getObjective().isObjectiveDone(playArea.getPlacedCards(), null, playArea.getAchievedResources());
+    }
 
     // GETTERS
 
@@ -256,7 +269,6 @@ public class Player extends PlayerObservable{
         return this.pawnColor;
     }
 
-
     // SETTERS
 
     /**
@@ -273,7 +285,8 @@ public class Player extends PlayerObservable{
         notifyPlayerStarterCardListener(selectedStarterCard);
     }
 
-    //NOTICE: This setter is not supposed to be called from anyone except the Start state of the player
+    // NOTICE: This setter is not supposed to be called from anyone except the Start
+    // state of the player
     protected void setObjectiveCard(ObjectiveCard card) {
         this.objectiveCard = card;
         notifyPlayerObjectiveCardListener(objectiveCard);
@@ -282,4 +295,5 @@ public class Player extends PlayerObservable{
     public void setInGameState(PlayerState inGameState) {
         this.inGameState = inGameState;
     }
+
 }

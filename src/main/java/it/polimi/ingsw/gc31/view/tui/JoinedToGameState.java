@@ -2,7 +2,7 @@ package it.polimi.ingsw.gc31.view.tui;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
@@ -21,23 +21,17 @@ public class JoinedToGameState extends TuiState {
     @Override
     protected void initialize() {
 
-        tuiWrite("Initialize di JoinGameState");
         // command's map
-        commandsMap = new HashMap<>();
+        commandsMap = new LinkedHashMap<>();
 
-        commandsMap.put(("commands info").toLowerCase(), this::command_showCommandsInfo);
+        commandsMap.put(("help").toLowerCase(), this::command_showCommandsInfo);
         commandsMap.put("ready", this::command_ready);
 
         // info map
-        commandsInfo = new HashMap<>();
+        commandsInfo = new LinkedHashMap<>();
 
-        commandsInfo.put("commands info", "Shows this command info");
+        commandsInfo.put("help", "Shows commands info");
         commandsInfo.put("ready", "your ready to play");
-    }
-
-    @Override
-    protected void run() {
-        show_options();
     }
 
     @Override
@@ -45,7 +39,7 @@ public class JoinedToGameState extends TuiState {
     }
 
     @Override
-    protected void command_showGames() {
+    protected synchronized void command_showGames() {
         try {
             tui.getClient().getGameList();
         } catch (IOException e) {
@@ -60,16 +54,16 @@ public class JoinedToGameState extends TuiState {
     }
 
     @Override
-    protected void command_ready() {
+    protected synchronized void command_ready() {
         ClientCommands client = tui.getClient();
         try {
             if (!ready) {
                 ready = true;
-                tuiWrite("U are ready to play!");
+                tui.printToCmdLineOut(tuiWrite("U are ready to play!"));
                 client.setReady(true);
             } else {
                 ready = false;
-                tuiWrite("U are not ready :`(");
+                tui.printToCmdLineOut(tuiWrite("U are not ready :`("));
                 client.setReady(false);
             }
         } catch (RemoteException e) {
@@ -84,6 +78,19 @@ public class JoinedToGameState extends TuiState {
     @Override
     protected void command_drawGold() {
 
+    }
+
+    @Override
+    protected void command_drawResource() {
+    }
+
+    @Override
+    protected void command_showDrawable() {
+    }
+
+    @Override
+    protected synchronized void command_initial() {
+        command_showCommandsInfo();
     }
 
 }

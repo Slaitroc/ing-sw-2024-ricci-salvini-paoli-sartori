@@ -1,6 +1,5 @@
 package it.polimi.ingsw.gc31.model.deck;
 
-
 import com.google.gson.*;
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.listeners.Observable;
@@ -15,7 +14,6 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
-
 
 public class Deck<T extends Card> extends Observable<Deck> {
     // TODO cambiare implementazione con queue
@@ -98,7 +96,8 @@ public class Deck<T extends Card> extends Observable<Deck> {
     }
 
     public T draw() throws EmptyDeckException {
-        if (deck.isEmpty()) throw new EmptyDeckException();
+        if (deck.isEmpty())
+            throw new EmptyDeckException();
         notifyListeners(this);
         return deck.poll();
     }

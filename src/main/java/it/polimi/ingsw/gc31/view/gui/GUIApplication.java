@@ -4,7 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.text.Font;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
+//import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -21,6 +21,7 @@ public class GUIApplication extends Application {
     public static Stage primaryStage;
     private Map<SceneTag, Scene> scenesMap;
     private Map<SceneTag, ViewController> wcMap;
+    @SuppressWarnings("unused")
     private SceneTag activeScene;
 
     @Override

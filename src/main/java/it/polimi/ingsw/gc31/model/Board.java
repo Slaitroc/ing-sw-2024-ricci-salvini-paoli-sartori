@@ -5,8 +5,6 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
 
-import java.util.List;
-
 public class Board implements Cloneable/* , DeepCopy<Board> */ {
 
     private final Deck<PlayableCard> goldDeck;

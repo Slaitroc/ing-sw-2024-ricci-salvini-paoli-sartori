@@ -19,6 +19,7 @@ public class Placed extends PlayerState {
             throws FullHandException, NullPointerException {
         executeAddToHand(card, player);
         player.setInGameState(new Waiting());
+        //System.out.println("PLAYER: " + player.getUsername() + " HAS JUST DRAWN A CARD, IS NOW WAITING.");
     }
 
     @Override

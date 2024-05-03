@@ -32,17 +32,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void showHand(List<String> hand) throws RemoteException {
-
-    }
-
-    @Override
     public void showListGame(List<String> listGame) throws RemoteException {
-
-    }
-
-    @Override
-    public void showMessage(String msg) throws RemoteException {
 
     }
 
@@ -55,5 +45,60 @@ public class GUI extends UI {
     public void updateToPlayingState() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateToPlayingState'");
+    }
+
+    @Override
+    public void updateHand(String username, List<String> hand) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateHand'");
+    }
+
+    // SHOW UPDATE
+    @Override
+    public void show_scorePlayer(String key, Integer value) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_scorePlayer'");
+    }
+
+    @Override
+    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_goldDeck'");
+    }
+
+    @Override
+    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_handPlayer'");
+    }
+
+    @Override
+    public void show_objectiveCard(String objectiveCard) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_objectiveCard'");
+    }
+
+    @Override
+    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_objectiveDeck'");
+    }
+
+    @Override
+    public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_playArea'");
+    }
+
+    @Override
+    public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_resourceDeck'");
+    }
+
+    @Override
+    public void show_starterCard(String starterCard) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_starterCard'");
     }
 }

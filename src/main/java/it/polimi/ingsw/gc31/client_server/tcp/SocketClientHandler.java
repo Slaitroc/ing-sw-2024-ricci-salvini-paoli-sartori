@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.client_server.tcp;
 
 import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.exceptions.*;
+import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 import it.polimi.ingsw.gc31.client_server.tcp.TCPServer;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 
@@ -284,11 +285,6 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     @Override
-    public void showMessage(String msg) throws RemoteException {
-
-    }
-
-    @Override
     public boolean isReady() throws RemoteException {
         return ready;
     }
@@ -297,5 +293,59 @@ public class SocketClientHandler implements VirtualClient {
     public void startGame() throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'startGame'");
+    }
+
+    @Override
+    public ShowUpdate getUI() throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getUI'");
+    }
+
+    @Override
+    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_goldDeck'");
+    }
+
+    @Override
+    public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_resourceDeck'");
+    }
+
+    @Override
+    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_objectiveDeck'");
+    }
+
+    @Override
+    public void show_starterCard(String starterCard) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_starterCard'");
+    }
+
+    @Override
+    public void show_objectiveCard(String objectiveCard) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_objectiveCard'");
+    }
+
+    @Override
+    public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_playArea'");
+    }
+
+    @Override
+    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_handPlayer'");
+    }
+
+    @Override
+    public void show_scorePlayer(String key, Integer value) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_scorePlayer'");
     }
 }

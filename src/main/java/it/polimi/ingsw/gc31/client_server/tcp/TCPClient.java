@@ -21,6 +21,7 @@ public class TCPClient implements ClientCommands {
 
     /**
      * This method is the constructor of the TCPClient
+     * 
      * @throws IOException
      */
     public TCPClient() throws IOException {
