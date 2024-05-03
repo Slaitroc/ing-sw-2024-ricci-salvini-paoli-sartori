@@ -16,6 +16,7 @@ public class TCPClient implements ClientCommands {
     private final PrintWriter output;
     private String username;
     private Integer idGame;
+    private Map<String, Runnable> commandsMap;
     private UI ui;
 
     /**
@@ -27,12 +28,144 @@ public class TCPClient implements ClientCommands {
         Socket serverSocket = new Socket("127.0.0.1", 1200);
         this.input = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
         this.output = new PrintWriter(new OutputStreamWriter(serverSocket.getOutputStream()));
+        initializeMap();
         //run();
     }
 
     /**
-     * Method disabled. It's only purpose was to launch the runVirtualServer method
-     * (below)
+     * Method that initializes the map used to invoke the methods by the server
+     */
+    private void initializeMap(){
+        this.commandsMap = new HashMap<>();
+        this.commandsMap.put("show hand", this::runShowHandPlayer);
+        this.commandsMap.put("show score", this::runShowScorePlayer);
+        this.commandsMap.put("show starter card", this::runShowStarterCard);
+        this.commandsMap.put("show objective card", this::runShowObjectiveCard);
+        this.commandsMap.put("show gold deck", this::runShowGoldDeck);
+        this.commandsMap.put("show resource deck", this::runShowResourceDeck);
+        this.commandsMap.put("show objective deck", this::runShowObjectiveDeck);
+        this.commandsMap.put("show game list", this::runShowGameList);
+    }
+
+    /**
+     * Method invoked by the server that show the player's hand (also the
+     * hands of the other players)
+     */
+    private void runShowHandPlayer(){
+        //username non viene utilizzato
+        //String targetUsername = input.readLine();
+        String line;
+        List<String> hand = new ArrayList<>();
+        try {
+            while (!(line = input.readLine()).equals("end list")) {
+                hand.add(line);
+            }
+            ui.showHand(hand);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Method invoked by the server that shows the player's score
+     */
+    private void runShowScorePlayer() {
+        try {
+            String targetUsername = input.readLine();
+            Integer score = Integer.parseInt(input.readLine());
+            //probabile metodo da implementare all'interno della ui
+            //ui.showScore(targetUsername, score);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Method invoked by the server that shows the starter card
+     */
+    private void runShowStarterCard(){
+        /*
+        try{
+            //ui.showStarterCard(input.readLine());
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+         */
+    }
+
+    /**
+     * Method invoked by the server that shows the objective card
+     */
+    private void runShowObjectiveCard(){
+        /*
+        try {
+            //ui.showObjectiveCard(input.readLine());
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+         */
+    }
+
+    /**
+     * Method invoked by the server that shows the gold deck
+     */
+    private void runShowGoldDeck() {
+        try {
+            System.out.println(input.readLine());
+            System.out.println(input.readLine());
+            System.out.println(input.readLine());
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Method invoked by the server that shows the resource deck
+     */
+    private void runShowResourceDeck(){
+        try{
+            System.out.println(input.readLine());
+            System.out.println(input.readLine());
+            System.out.println(input.readLine());
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Method invoked by the server that shows the objective deck
+     */
+    private void runShowObjectiveDeck(){
+        try{
+            System.out.println(input.readLine());
+            System.out.println(input.readLine());
+            System.out.println(input.readLine());
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Method invoked by the server that shows the list of all the existing game
+     */
+    private void runShowGameList(){
+        String line;
+        List<String> list = new ArrayList<>();
+        try {
+            while (!(line = input.readLine()).equals("game list finised")) {
+                list.add(line);
+            }
+            ui.showListGame(list);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Method invoked at the creation of the class. Create a thread that run
+     * the runVirtualServer method
      */
     public void run() {
         new Thread(() -> {
@@ -45,15 +178,20 @@ public class TCPClient implements ClientCommands {
     }
 
     /**
+     * Shouldn't be a problem anymore
      * This method is disabled because the messages sent by the server are red
      * in every method corresponding with the specific request launched by the client
+     *
+     * This method listen the messages coming from the server and invokes the corresponding
+     * method
      * @throws RemoteException
      */
-    public void runVirtualServer() throws RemoteException {
-        Scanner scan = new Scanner(input);
+    public void runVirtualServer() throws IOException {
         String line;
-        while (true) {
-            line = scan.nextLine();
+        while ((line = input.readLine()) != null) {
+            commandsMap.get(line).run();
+
+            /*
             switch (line) {
                 case "show list game": {
                     List<String> list = new ArrayList<>();
@@ -63,6 +201,7 @@ public class TCPClient implements ClientCommands {
                 //default:
                 //    System.out.println(line);
             }
+             */
         }
     }
 

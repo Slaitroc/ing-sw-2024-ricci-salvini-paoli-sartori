@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.model.strategies;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -101,7 +102,7 @@ public class Count extends Objective {
         if (achievedResources.get(Resources.SCROLL) < found)
             found = achievedResources.get(Resources.SCROLL);
 
-        return 3 * ((found - found % 3) / 3);
+        return 3 * found;
     }
 
     /**

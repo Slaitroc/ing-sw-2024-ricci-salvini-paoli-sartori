@@ -102,7 +102,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     public int getGameID() throws RemoteException {
         return idGame;
     }
-    // Metodi del virtualController
+    // Metodi del virtualClient
 
     @Override
     public void show_handPlayer(String username, List<String> hand) throws RemoteException {

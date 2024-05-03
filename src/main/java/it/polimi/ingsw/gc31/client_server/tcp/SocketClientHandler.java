@@ -112,7 +112,7 @@ public class SocketClientHandler implements VirtualClient {
 
     private void runDrawGold(){
         try{
-            playerController.drawGold();
+            gameController.drawGold(username);
         } catch (RemoteException e){
             e.printStackTrace();
         }
@@ -183,6 +183,7 @@ public class SocketClientHandler implements VirtualClient {
                     break;
                 }
             }
+        */
         }
     }
 
@@ -199,22 +200,37 @@ public class SocketClientHandler implements VirtualClient {
 
     @Override
     public void show_handPlayer(String username, List<String> hand) throws RemoteException {
-
+        output.print("show hand player");
+        // username non viene utilizzato
+        //output.print(username);
+        for(String s : hand){
+            output.println(s);
+        }
+        output.println("end list");
+        output.flush();
     }
 
     @Override
     public void show_scorePlayer(String username, Integer score) throws RemoteException {
-
+        output.println("show score");
+        //username non viene utilizzato
+        output.println(username);
+        output.println(score);
+        output.flush();
     }
 
     @Override
     public void show_starterCard(String starterCard) throws RemoteException {
-
+        output.println("show starter card");
+        output.println(starterCard);
+        output.flush();
     }
 
     @Override
     public void show_objectiveCard(String objectiveCard) throws RemoteException {
-
+        output.println("show objective card");
+        output.println(objectiveCard);
+        output.flush();
     }
 
     @Override
@@ -223,25 +239,30 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     @Override
-    public void showHand(List<String> hand) throws RemoteException {
-        output.println("start of list");
-        for (String s : hand){
-            output.println(s);
-        }
-        output.println("end of list");
-        output.flush();
     public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
-
+        output.println("show gold deck");
+        output.println(firstCardDeck);
+        output.println(card1);
+        output.println(card2);
+        output.flush();
     }
 
     @Override
     public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
-
+        output.println("show resource deck");
+        output.println(firstCardDeck);
+        output.println(card1);
+        output.println(card2);
+        output.flush();
     }
 
     @Override
     public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
-
+        output.println("show objective card");
+        output.println(firstCardDeck);
+        output.println(card1);
+        output.println(card2);
+        output.flush();
     }
 
     /**
@@ -254,7 +275,7 @@ public class SocketClientHandler implements VirtualClient {
      */
     @Override
     public void showListGame(List<String> listGame) throws RemoteException {
-        output.println("ok");
+        output.println("show game list");
         // listGame.forEach(output::println);
         for (String s : listGame)
             output.println(s);

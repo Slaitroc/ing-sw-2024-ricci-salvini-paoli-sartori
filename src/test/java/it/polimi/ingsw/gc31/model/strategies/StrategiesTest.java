@@ -19,11 +19,13 @@ import static org.junit.jupiter.api.Assertions.*;
  * class
  */
 class StrategiesTest {
-    static private PlayArea playArea;
+    private PlayArea playArea;
+    private PlayArea playAreaBis;
     static private Point point;
 
     @BeforeEach
     void initializeModel() {
+
         playArea = new PlayArea();
         point = new Point(0, 0);
         PlayableCard card;
@@ -190,6 +192,72 @@ class StrategiesTest {
         playArea.place(card, new Point(4,2));
         assertEquals(card, playArea.getPlacedCards().get(new Point(4,2)));
 
+        // Initializing the second play area
+        playAreaBis = new PlayArea();
+        point = new Point(0, 0);
+        PlayableCard cardBis;
+
+        cardBis = createStarterCard(Resources.INSECT, Resources.MUSHROOM, Resources.ANIMAL,
+                Resources.PLANT, Resources.EMPTY, Resources.EMPTY, Resources.EMPTY, Resources.EMPTY,
+                Resources.ANIMAL, Resources.INSECT, Resources.EMPTY);
+        cardBis.changeSide();
+        playAreaBis.placeStarter(cardBis);
+
+        cardBis = createResourceCard(Resources.ANIMAL, Resources.HIDDEN, Resources.EMPTY,
+                Resources.ANIMAL, Resources.EMPTY, Resources.EMPTY, Resources.EMPTY, Resources.EMPTY,
+                Resources.ANIMAL);
+        cardBis.changeSide();
+        playAreaBis.place(cardBis, new Point(1,1));
+        assertEquals(cardBis, playAreaBis.getPlacedCards().get(new Point(1,1)));
+        assertTrue(cardBis.getSide());
+
+        cardBis = createResourceCard(Resources.INSECT, Resources.ANIMAL, Resources.INK,
+                Resources.HIDDEN, Resources.EMPTY, Resources.EMPTY, Resources.EMPTY, Resources.EMPTY,
+                Resources.ANIMAL);
+        cardBis.changeSide();
+        playAreaBis.place(cardBis, new Point(0,2));
+        assertEquals(cardBis, playAreaBis.getPlacedCards().get(new Point(0,2)));
+        assertTrue(cardBis.getSide());
+
+        cardBis = createResourceCard(Resources.ANIMAL, Resources.SCROLL, Resources.EMPTY,
+                Resources.PLANT, Resources.EMPTY, Resources.EMPTY, Resources.EMPTY, Resources.EMPTY,
+                Resources.ANIMAL);
+        cardBis.changeSide();
+        playAreaBis.place(cardBis, new Point(1,3));
+        assertEquals(cardBis, playAreaBis.getPlacedCards().get(new Point(1,3)));
+        assertTrue(cardBis.getSide());
+
+        cardBis = createResourceCard(Resources.FEATHER, Resources.MUSHROOM, Resources.PLANT,
+                Resources.EMPTY, Resources.EMPTY, Resources.EMPTY, Resources.EMPTY, Resources.EMPTY,
+                Resources.MUSHROOM);
+        cardBis.changeSide();
+        playAreaBis.place(cardBis, new Point(2,4));
+        assertEquals(cardBis, playAreaBis.getPlacedCards().get(new Point(2,4)));
+        assertTrue(cardBis.getSide());
+
+        cardBis = createResourceCard(Resources.INSECT, Resources.PLANT, Resources.FEATHER,
+                Resources.EMPTY, Resources.EMPTY, Resources.EMPTY, Resources.EMPTY, Resources.EMPTY,
+                Resources.PLANT);
+        cardBis.changeSide();
+        playAreaBis.place(cardBis, new Point(-1,-1));
+        assertEquals(cardBis, playAreaBis.getPlacedCards().get(new Point(-1,-1)));
+        assertTrue(cardBis.getSide());
+
+        cardBis = createResourceCard(Resources.EMPTY, Resources.MUSHROOM, Resources.ANIMAL,
+                Resources.FEATHER, Resources.EMPTY, Resources.EMPTY, Resources.EMPTY, Resources.EMPTY,
+                Resources.ANIMAL);
+        cardBis.changeSide();
+        playAreaBis.place(cardBis, new Point(0,-2));
+        assertEquals(cardBis, playAreaBis.getPlacedCards().get(new Point(0,-2)));
+        assertTrue(cardBis.getSide());
+
+        cardBis = createResourceCard(Resources.PLANT, Resources.HIDDEN, Resources.INK,
+                Resources.INK, Resources.EMPTY, Resources.EMPTY, Resources.EMPTY, Resources.EMPTY,
+                Resources.INSECT);
+        cardBis.changeSide();
+        playAreaBis.place(cardBis, new Point(1,-3));
+        assertEquals(cardBis, playAreaBis.getPlacedCards().get(new Point(1,-3)));
+        assertTrue(cardBis.getSide());
     }
 
     /**
@@ -200,38 +268,67 @@ class StrategiesTest {
      * the result of the ResourceScore class is tested
      */
     @Test
-    void ResourcesCountTest() {
-        System.out.println("ResourcesCountTest Starting:");
+    void CountTest() {
+        System.out.println("CountTest Starting:");
         System.out.println(playArea.getAchievedResources());
 
-        Objective ob = new ResourceScore(Resources.INK);
+        List<Resources> list1 = new ArrayList<>();
+        list1.add(Resources.INK);
+        Objective ob = new Count(list1);
         assertEquals(0, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
-        System.out.println("ResourcesCountTest (INK) SUCCESS");
+        System.out.println("ResourcesScoreTest (INK) SUCCESS");
 
-        ob = new ResourceScore(Resources.SCROLL);
+        List<Resources> list2 = new ArrayList<>();
+        list2.add(Resources.SCROLL);
+        ob = new Count(list2);
         assertEquals(1, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
-        System.out.println("ResourcesCountTest (SCROLL) SUCCESS");
+        System.out.println("ResourcesScoreTest (SCROLL) SUCCESS");
 
-        ob = new ResourceScore(Resources.FEATHER);
+        List<Resources> list3 = new ArrayList<>();
+        list3.add(Resources.FEATHER);
+        list3.add(Resources.FEATHER);
+        ob = new Count(list3);
         assertEquals(2, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
-        System.out.println("ResourcesCountTest (FEATHER) SUCCESS");
+        System.out.println("ResourcesScoreTest (FEATHER) SUCCESS");
 
-        ob = new ResourceScore(Resources.ANIMAL);
-        assertEquals(9, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
-        System.out.println("ResourcesCountTest (ANIMAL) SUCCESS");
+        List<Resources> list4 = new ArrayList<>();
+        list4.add(Resources.ANIMAL);
+        list4.add(Resources.ANIMAL);
+        list4.add(Resources.ANIMAL);
+        ob = new Count(list4);
+        assertEquals(6, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
+        System.out.println("ResourcesScoreTest (ANIMAL) SUCCESS");
 
-        ob = new ResourceScore(Resources.MUSHROOM);
+        List<Resources> list5 = new ArrayList<>();
+        list5.add(Resources.INK);
+        list5.add(Resources.INK);
+        ob = new Count(list5);
+        assertEquals(0, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
+        System.out.println("ResourcesScoreTest (MUSHROOM) SUCCESS");
+
+        List<Resources> list6 = new ArrayList<>();
+        list6.add(Resources.INSECT);
+        list6.add(Resources.INSECT);
+        list6.add(Resources.INSECT);
+        ob = new Count(list6);
         assertEquals(2, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
-        System.out.println("ResourcesCountTest (MUSHROOM) SUCCESS");
+        System.out.println("ResourcesScoreTest (INSECT) SUCCESS");
 
-        ob = new ResourceScore(Resources.INSECT);
-        assertEquals(3, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
-        System.out.println("ResourcesCountTest (INSECT) SUCCESS");
+        List<Resources> list7 = new ArrayList<>();
+        list7.add(Resources.INK);
+        list7.add(Resources.FEATHER);
+        list7.add(Resources.SCROLL);
+        ob = new Count(list7);
+        assertEquals(0, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
+        System.out.println("ResourcesScoreTest (PLANT) SUCCESS");
 
-        ob = new ResourceScore(Resources.PLANT);
-        assertEquals(4, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
-        System.out.println("ResourcesCountTest (PLANT) SUCCESS");
-
+        List<Resources> list8 = new ArrayList<>();
+        list8.add(Resources.INK);
+        list8.add(Resources.FEATHER);
+        list8.add(Resources.SCROLL);
+        ob = new Count(list8);
+        assertEquals(3, ob.isObjectiveDone(playAreaBis.getPlacedCards(), point, playAreaBis.getAchievedResources()));
+        System.out.println("ResourcesScoreTest (PLANT) SUCCESS");
     }
 
     @Test
@@ -260,11 +357,25 @@ class StrategiesTest {
         Objective ob = new SevenReverse();
         assertEquals(0, ob.isObjectiveDone(playArea.getPlacedCards(), point, playArea.getAchievedResources()));
         System.out.println("SevenReverseTest SUCCESS");
+
+        assertEquals(3, ob.isObjectiveDone(playAreaBis.getPlacedCards(), point, playAreaBis.getAchievedResources()));
+        System.out.println("SevenReverseTest SUCCESS");
     }
 
-    @Disabled
+    @Test
     void CoverCornerScore(){
+        Objective ob = new CoverCornerScore();
+        assertEquals(0,ob.isObjectiveDone(playArea.getPlacedCards(), new Point(-4, 0), playArea.getAchievedResources()));
+        System.out.println("CoverCornerScoreTest (0 cover) SUCCESS");
 
+        assertEquals(2, ob.isObjectiveDone(playArea.getPlacedCards(), new Point(-1 , -3), playArea.getAchievedResources()));
+        System.out.println("CoverCornerScoreTest (1 cover) SUCCESS");
+
+        assertEquals(4, ob.isObjectiveDone(playArea.getPlacedCards(), new Point(1 , -3), playArea.getAchievedResources()));
+        System.out.println("CoverCornerScoreTest (2 cover) SUCCESS");
+
+        assertEquals(6, ob.isObjectiveDone(playArea.getPlacedCards(), new Point(3 , 3), playArea.getAchievedResources()));
+        System.out.println("CoverCornerScoreTest (3 cover) SUCCESS");
     }
 
     @Test
