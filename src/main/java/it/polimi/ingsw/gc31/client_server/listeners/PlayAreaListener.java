@@ -31,34 +31,36 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
  * @author christian salvini
  */
 public class PlayAreaListener
-        implements Listener<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> {
-    private VirtualClient client;
+                implements Listener<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> {
+        private VirtualClient client;
 
-    /**
-     * Constructs a PlayAreaListener with the specified VirtualClient.
-     *
-     * @param client The VirtualClient to update with play area information.
-     */
-    public PlayAreaListener(VirtualClient client) {
-        this.client = client;
-    }
+        /**
+         * Constructs a PlayAreaListener with the specified VirtualClient.
+         *
+         * @param client The VirtualClient to update with play area information.
+         */
+        public PlayAreaListener(VirtualClient client) {
+                this.client = client;
+        }
 
-    /**
-     * Receives an update containing play area data and triggers the display on the
-     * associated VirtualClient.
-     *
-     * @param data A pair containing the username, the PlaceCards and the
-     *             achievedResources
-     * @throws RemoteException If there is a communication error,
-     */
-    @Override
-    public void update(Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>> data)
-            throws RemoteException {
-        client.getUI().show_playArea(
-                data.getKey(),
-                gsonTranslater.toJson(data.getValue().getKey(), new TypeToken<Map<Point, PlayableCard>>() {
-                }.getType()),
-                gsonTranslater.toJson(data.getValue().getValue(), new TypeToken<Map<Resources, Integer>>() {
-                }.getType()));
-    }
+        /**
+         * Receives an update containing play area data and triggers the display on the
+         * associated VirtualClient.
+         *
+         * @param data A pair containing the username, the PlaceCards and the
+         *             achievedResources
+         * @throws RemoteException If there is a communication error,
+         */
+        @Override
+        public void update(Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>> data)
+                        throws RemoteException {
+                client.show_playArea(
+                                data.getKey(),
+                                gsonTranslater.toJson(data.getValue().getKey(),
+                                                new TypeToken<Map<Point, PlayableCard>>() {
+                                                }.getType()),
+                                gsonTranslater.toJson(data.getValue().getValue(),
+                                                new TypeToken<Map<Resources, Integer>>() {
+                                                }.getType()));
+        }
 }

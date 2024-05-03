@@ -17,7 +17,7 @@ public class ResourceDeckListener implements Listener<Deck> {
 
     @Override
     public void update(Deck data) throws RemoteException {
-        client.getUI().show_resourceDeck(
+        client.show_resourceDeck(
                 gsonTranslater.toJson(data.peekCard(), PlayableCard.class),
                 gsonTranslater.toJson(data.peekCard1(), PlayableCard.class),
                 gsonTranslater.toJson(data.peekCard2(), PlayableCard.class));

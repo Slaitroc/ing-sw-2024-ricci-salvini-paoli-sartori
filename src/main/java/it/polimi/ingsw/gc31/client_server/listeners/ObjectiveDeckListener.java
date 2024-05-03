@@ -17,7 +17,7 @@ public class ObjectiveDeckListener implements Listener<Deck> {
 
     @Override
     public void update(Deck data) throws RemoteException {
-        client.getUI().show_objectiveDeck(
+        client.show_objectiveDeck(
                 gsonTranslater.toJson(data.peekCard(), ObjectiveCard.class),
                 gsonTranslater.toJson(data.peekCard1(), ObjectiveCard.class),
                 gsonTranslater.toJson(data.peekCard2(), ObjectiveCard.class));

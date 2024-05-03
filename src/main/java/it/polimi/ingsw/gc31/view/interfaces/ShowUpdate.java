@@ -1,9 +1,10 @@
 package it.polimi.ingsw.gc31.view.interfaces;
 
 import java.rmi.RemoteException;
+import java.rmi.Remote;
 import java.util.List;
 
-public interface ShowUpdate {
+public interface ShowUpdate extends Remote {
 
     public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException;
 
@@ -19,6 +20,6 @@ public interface ShowUpdate {
 
     public void show_handPlayer(String username, List<String> hand) throws RemoteException;
 
-    public void show_scorePlayer(String key, Integer value);
+    public void show_scorePlayer(String key, Integer value) throws RemoteException;
 
 }

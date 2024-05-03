@@ -525,6 +525,9 @@ public class TUI extends UI {
                             moveCursorToChatLine();
                             areaSelectionLock.notify();
                         }
+                        synchronized (cmdLineMessages) {
+                            cmdLineMessages.notify();
+                        }
                         continue;
                     } else {
                         if (!globalCommands.isEmpty()) {
@@ -674,7 +677,7 @@ public class TUI extends UI {
                             .a(chatMessages.toArray()[chatMessages.size() - 1 - i]));
         }
         needsUpdate = false;
-        moveCursorToChatLine();
+        resetCursor();
     }
 
     // UTILITIES
@@ -687,7 +690,7 @@ public class TUI extends UI {
 
         drawTitle();
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -759,37 +762,30 @@ public class TUI extends UI {
 
     @Override
     public void show_scorePlayer(String key, Integer value) {
-        throw new UnsupportedOperationException("Unimplemented method 'show_scorePlayer'");
     }
 
     @Override
     public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
-        throw new UnsupportedOperationException("Unimplemented method 'show_goldDeck'");
     }
 
     @Override
     public void show_handPlayer(String username, List<String> hand) throws RemoteException {
-        throw new UnsupportedOperationException("Unimplemented method 'show_handPlayer'");
     }
 
     @Override
     public void show_objectiveCard(String objectiveCard) throws RemoteException {
-        throw new UnsupportedOperationException("Unimplemented method 'show_objectiveCard'");
     }
 
     @Override
     public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
-        throw new UnsupportedOperationException("Unimplemented method 'show_objectiveDeck'");
     }
 
     @Override
     public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
-        throw new UnsupportedOperationException("Unimplemented method 'show_resourceDeck'");
     }
 
     @Override
     public void show_starterCard(String starterCard) throws RemoteException {
-        throw new UnsupportedOperationException("Unimplemented method 'show_starterCard'");
     }
 
 }

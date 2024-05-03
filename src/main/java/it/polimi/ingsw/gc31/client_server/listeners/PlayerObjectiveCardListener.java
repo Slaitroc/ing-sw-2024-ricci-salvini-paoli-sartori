@@ -36,6 +36,6 @@ public class PlayerObjectiveCardListener implements Listener<ObjectiveCard> {
      */
     @Override
     public void update(ObjectiveCard data) throws RemoteException {
-        client.getUI().show_objectiveCard(gsonTranslater.toJson(data, ObjectiveCard.class));
+        client.show_objectiveCard(gsonTranslater.toJson(data, ObjectiveCard.class));
     }
 }

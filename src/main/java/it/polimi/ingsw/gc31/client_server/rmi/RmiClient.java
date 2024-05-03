@@ -128,9 +128,52 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         ui.updateToPlayingState();
     }
 
+    // FIX parlare con christian e eventualmente togliere il metodo anche
+    // dall'interfaccia
     @Override
     public ShowUpdate getUI() throws RemoteException {
         return this.ui;
+    }
+
+    // SHOW UPDATE
+    @Override
+    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+        ui.show_goldDeck(firstCardDeck, card1, card2);
+    }
+
+    @Override
+    public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+        ui.show_resourceDeck(firstCardDeck, card1, card2);
+    }
+
+    @Override
+    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+        ui.show_objectiveDeck(firstCardDeck, card1, card2);
+    }
+
+    @Override
+    public void show_starterCard(String starterCard) throws RemoteException {
+        ui.show_starterCard(starterCard);
+    }
+
+    @Override
+    public void show_objectiveCard(String objectiveCard) throws RemoteException {
+        ui.show_objectiveCard(objectiveCard);
+    }
+
+    @Override
+    public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
+        ui.show_playArea(username, playArea, achievedResources);
+    }
+
+    @Override
+    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
+        ui.show_handPlayer(username, hand);
+    }
+
+    @Override
+    public void show_scorePlayer(String key, Integer value) throws RemoteException {
+        ui.show_scorePlayer(key, value);
     }
 
 }

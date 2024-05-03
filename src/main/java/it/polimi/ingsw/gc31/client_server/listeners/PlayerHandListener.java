@@ -43,11 +43,8 @@ public class PlayerHandListener implements Listener<Pair<String, List<PlayableCa
      */
     @Override
     public void update(Pair<String, List<PlayableCard>> data) throws RemoteException {
-        client.getUI().show_handPlayer(
-                data.getKey(),
-                data.getValue()
-                        .stream()
-                        .map(card -> gsonTranslater.toJson(card, PlayableCard.class))
+        client.show_handPlayer(data.getKey(),
+                data.getValue().stream().map(card -> gsonTranslater.toJson(card, PlayableCard.class))
                         .toList());
     }
 }
