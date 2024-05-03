@@ -15,6 +15,7 @@ import java.util.*;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
+@SuppressWarnings("rawtypes")
 public class Deck<T extends Card> extends Observable<Deck> {
     // TODO cambiare implementazione con queue
     private Queue<T> deck;
@@ -56,7 +57,7 @@ public class Deck<T extends Card> extends Observable<Deck> {
             JsonElement jsonElement = JsonParser.parseReader(fileReader);
             fileReader.close();
 
-            // TODO aggiungere else con expection?
+            // TODO aggiungere else con exception?
             if (jsonElement.isJsonArray()) {
                 JsonArray jsonArray = jsonElement.getAsJsonArray();
 

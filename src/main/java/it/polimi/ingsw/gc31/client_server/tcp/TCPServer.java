@@ -30,13 +30,7 @@ public class TCPServer {
             InputStreamReader socketRx = new InputStreamReader(clientSocket.getInputStream());
             OutputStreamWriter socketTx = new OutputStreamWriter(clientSocket.getOutputStream());
 
-            // Se non sono presenti partite non ho nulla nella mappa e tantomeno i
-            // controller
-            // perciò se la mappa risulta null creo un primo controller da passare al primo
-            // client
-
-            SocketClientHandler handler = new SocketClientHandler(
-                    this.controller, this,
+            SocketClientHandler handler = new SocketClientHandler(this.controller, this,
                     new BufferedReader(socketRx), new PrintWriter(socketTx));
 
             new Thread(() -> {
@@ -49,17 +43,4 @@ public class TCPServer {
         }
 
     }
-
-    /*
-     * // Chiamata dal client come prima cosa appena creato. Così lo posso
-     * aggiungere alla mappa e lista
-     * public void connect(SocketClientHandler client, String username){
-     * usernameList.add(username);
-     * tempClients.put(username, client);
-     *
-     * System.out.println("> Nuovo Client ( " + username +
-     * " ) collegato correttamente");
-     * }
-     */
-
 }

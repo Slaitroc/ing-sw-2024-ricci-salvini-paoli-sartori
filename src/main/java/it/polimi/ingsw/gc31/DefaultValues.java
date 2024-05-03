@@ -18,7 +18,6 @@ public class DefaultValues {
     public final static String RMI_SERVER_TAG = "[RMI server] ";
     public final static String TCP_SERVER_TAG = "[TCP server] ";
     public static final String CONTROLLER_TAG = "\t[Controller]: ";
-    public static final String PLAYER_CONTROLLER_TAG = "\t[PlayerController]: ";
 
     public static String gameControllerTag(String id) {
         return "\t[GameController " + id + "]: ";
@@ -27,15 +26,6 @@ public class DefaultValues {
     public static String playerControllerTag(String name) {
         return "\t[PlayerController " + name + "]: ";
     }
-
-    public final static int row_title = 0;
-    public final static int col_title = 0;
-
-    public final static int row_chat = 4;
-    public final static int col_chat = 100;
-
-    public final static int row_playArea = 4;
-    public final static int col_playArea = 0;
 
     // ANSI color
     public static final String ANSI_RESET = "\u001B[0m";
@@ -50,7 +40,6 @@ public class DefaultValues {
     // TUI
     public final static String TUI_START_LINE_SYMBOL = "> ";
     public final static String TUI_TAG = "[TUI] ";
-    public final static String STOP_CURRENT_TUI_STRING = "quit";
 
     // TUIobj
     public static final int cardHeight = 5;

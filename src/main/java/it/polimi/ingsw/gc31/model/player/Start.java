@@ -44,6 +44,7 @@ public class Start extends PlayerState {
         if (objectiveChosen) {
             player.getPlayArea().placeStarter(player.getStarterCard());
             player.setInGameState(new NotPlaced());
+            System.out.println("Player: " + player.getUsername() + " IS NOW READY TO PLAY.");
         }
         else {
             throw new ObjectiveCardNotChosenException();

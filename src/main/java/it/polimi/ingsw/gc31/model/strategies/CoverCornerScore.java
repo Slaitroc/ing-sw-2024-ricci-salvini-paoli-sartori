@@ -13,7 +13,6 @@ import it.polimi.ingsw.gc31.model.enumeration.Resources;
  * by the played card
  */
 public class CoverCornerScore extends Objective {
-
     /**
      * This method is the constructor of the class
      */

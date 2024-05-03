@@ -221,6 +221,16 @@ public class Player extends PlayerObservable {
         }
     }
 
+    /**
+     * Method to calculate ONLY the SECRET objective card of the player
+     * and the COMMON objective card of the game (not the playable objectives)
+     *
+     * @param obj: Objective Card to calculate
+     */
+    public void calculateObjectiveCard(ObjectiveCard obj) {
+        obj.getObjective().isObjectiveDone(playArea.getPlacedCards(), null, playArea.getAchievedResources());
+    }
+
     // GETTERS
 
     public Board getBoard() {
@@ -285,4 +295,5 @@ public class Player extends PlayerObservable {
     public void setInGameState(PlayerState inGameState) {
         this.inGameState = inGameState;
     }
+
 }

@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
+@SuppressWarnings("rawtypes")
 public class ObjectiveDeckListener implements Listener<Deck> {
     private VirtualClient client;
 

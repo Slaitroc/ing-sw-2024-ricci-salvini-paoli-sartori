@@ -4,12 +4,12 @@ import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
 import java.io.PrintWriter;
-import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.List;
 
 public class VirtualSocketServer implements VirtualClient {
     private final PrintWriter output;
+    @SuppressWarnings("unused")
     private final SocketClientHandler server;
 
     public VirtualSocketServer(PrintWriter output, SocketClientHandler server) {

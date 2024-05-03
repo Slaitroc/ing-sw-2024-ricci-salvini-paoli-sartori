@@ -29,6 +29,7 @@ public class NotPlaced extends PlayerState {
         player.score += player.getPlayArea().place(card, point);
         player.hand.remove(card);
         player.setInGameState(new Placed());
+        System.out.println("Player: "+ player.getUsername() + " HAS JUST PLAYED A CARD IN ("+ point.x +","+ point.y +")");
     }
 
     @Override
