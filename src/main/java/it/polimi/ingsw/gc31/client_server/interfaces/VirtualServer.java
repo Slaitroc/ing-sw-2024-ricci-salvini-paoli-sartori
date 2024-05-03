@@ -6,7 +6,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface VirtualServer extends Remote {
-    public void RMIserverWrite(String text) throws RemoteException;
+    void RMIserverWrite(String text) throws RemoteException;
 
     public IController connect(VirtualClient client, String username)
             throws RemoteException, PlayerNicknameAlreadyExistsException;

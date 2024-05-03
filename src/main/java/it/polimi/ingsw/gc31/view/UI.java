@@ -48,7 +48,8 @@ public abstract class UI implements ShowUpdate {
     // DA CAPIRE
     public abstract void updateHand(String username, List<String> hand) throws RemoteException;
 
-    public abstract void showListGame(List<String> listGame) throws RemoteException;
+    // TODO da aggiungere a ShowUpdate
+    public abstract void show_listGame(List<String> listGame) throws RemoteException;
 
     public abstract void show_gameCreated();
 

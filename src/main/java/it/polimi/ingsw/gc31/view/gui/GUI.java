@@ -32,7 +32,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void showListGame(List<String> listGame) throws RemoteException {
+    public void show_listGame(List<String> listGame) throws RemoteException {
 
     }
 

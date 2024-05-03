@@ -73,7 +73,7 @@ public class TCPClient implements ClientCommands {
                 case "show list game": {
                     List<String> list = new ArrayList<>();
                     list.add("ciao");
-                    ui.showListGame(list);
+                    ui.show_listGame(list);
                 }
                 // default:
                 // System.out.println(line);
@@ -178,7 +178,7 @@ public class TCPClient implements ClientCommands {
             while (!(line = input.readLine()).equals("game list finished"))
                 list.add(line);
         }
-        ui.showListGame(list);
+        ui.show_listGame(list);
     }
 
     /**
