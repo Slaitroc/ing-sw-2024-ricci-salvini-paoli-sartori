@@ -9,7 +9,8 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
 
 /**
  * A listener class that handles updates related to a player's objective card.
- * This listener is designed to update a VirtualClient with the objective card chosen by the player
+ * This listener is designed to update a VirtualClient with the objective card
+ * chosen by the player
  *
  * @author christian salvini
  */
@@ -26,7 +27,8 @@ public class PlayerObjectiveCardListener implements Listener<ObjectiveCard> {
     }
 
     /**
-     * Receives an update containing the objective card and triggers the display on the associated VirtualClient
+     * Receives an update containing the objective card and triggers the display on
+     * the associated VirtualClient
      *
      * @param data The objective card to display.
      * @throws RemoteException If there is a communication error.
@@ -34,6 +36,6 @@ public class PlayerObjectiveCardListener implements Listener<ObjectiveCard> {
      */
     @Override
     public void update(ObjectiveCard data) throws RemoteException {
-        client.show_objectiveCard(gsonTranslater.toJson(data, ObjectiveCard.class));
+        client.getUI().show_objectiveCard(gsonTranslater.toJson(data, ObjectiveCard.class));
     }
 }

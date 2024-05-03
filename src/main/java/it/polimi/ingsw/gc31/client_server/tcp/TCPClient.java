@@ -15,7 +15,7 @@ import it.polimi.ingsw.gc31.view.UI;
 import java.util.ArrayList;
 
 /*
-    La classe TCPClient in maniera simile all'RmiClient dovrebbe implementare i metodi di VirtualClient
+    La classe TCPClient in maniera simile allo RmiClient dovrebbe implementare i metodi di VirtualClient
     che vengono richiamati dalla TUI. Tuttavia, al contrario dell'RmiClient il TCPClient non dovrebbe
     avere il modo di richiamare i metodi del controller ma dovrebbe invece inoltrare il comando richiesto
     al server grazie al VirtualSocketServer

@@ -13,22 +13,25 @@ import java.util.Map;
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
 /**
- * The PlayAreaListener class implements the Listener interface to observe changes in the playArea.
+ * The PlayAreaListener class implements the Listener interface to observe
+ * changes in the playArea.
  * It receives data in the form of a pair containing:
  * <ul>
- *     <li>A String containing the username of the player's playArea</li>
- *     <li>A pair of maps:
- *     <ul>
- *         <li>The first map (Map<Point, PlayableCard>) is the PlacedCards.</li>
- *         <li>The second map (Map<Resources, Integer>) is the achievedResources.</li>
- *     </ul>
- *     </li>
+ * <li>A String containing the username of the player's playArea</li>
+ * <li>A pair of maps:
+ * <ul>
+ * <li>The first map (Map<Point, PlayableCard>) is the PlacedCards.</li>
+ * <li>The second map (Map<Resources, Integer>) is the achievedResources.</li>
  * </ul>
- * This listener is designed to update a VirtualClient with the play area updated.
+ * </li>
+ * </ul>
+ * This listener is designed to update a VirtualClient with the play area
+ * updated.
  *
  * @author christian salvini
  */
-public class PlayAreaListener implements Listener<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> {
+public class PlayAreaListener
+        implements Listener<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> {
     private VirtualClient client;
 
     /**
@@ -41,19 +44,21 @@ public class PlayAreaListener implements Listener<Pair<String, Pair<Map<Point, P
     }
 
     /**
-     * Receives an update containing play area data and triggers the display on the associated VirtualClient.
+     * Receives an update containing play area data and triggers the display on the
+     * associated VirtualClient.
      *
-     * @param data A pair containing the username, the PlaceCards and the achievedResources
+     * @param data A pair containing the username, the PlaceCards and the
+     *             achievedResources
      * @throws RemoteException If there is a communication error,
      */
     @Override
-    public void update(Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>> data) throws RemoteException {
-        client.show_playArea(
+    public void update(Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>> data)
+            throws RemoteException {
+        client.getUI().show_playArea(
                 data.getKey(),
                 gsonTranslater.toJson(data.getValue().getKey(), new TypeToken<Map<Point, PlayableCard>>() {
                 }.getType()),
                 gsonTranslater.toJson(data.getValue().getValue(), new TypeToken<Map<Resources, Integer>>() {
-                }.getType())
-        );
+                }.getType()));
     }
 }

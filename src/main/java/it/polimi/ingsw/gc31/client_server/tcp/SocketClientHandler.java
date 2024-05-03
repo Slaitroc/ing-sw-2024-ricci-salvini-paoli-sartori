@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.client_server.tcp;
 
 import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.exceptions.*;
+import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 import it.polimi.ingsw.gc31.client_server.tcp.TCPServer;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 
@@ -117,46 +118,6 @@ public class SocketClientHandler implements VirtualClient {
         this.idGame = gameID;
     }
 
-    @Override
-    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
-
-    }
-
-    @Override
-    public void show_scorePlayer(String username, Integer score) throws RemoteException {
-
-    }
-
-    @Override
-    public void show_starterCard(String starterCard) throws RemoteException {
-
-    }
-
-    @Override
-    public void show_objectiveCard(String objectiveCard) throws RemoteException {
-
-    }
-
-    @Override
-    public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
-
-    }
-
-    @Override
-    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
-
-    }
-
-    @Override
-    public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
-
-    }
-
-    @Override
-    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
-
-    }
-
     /**
      * This method should send to the tcp client the list of games created.
      * In order to do so the method writes on the socket stream every String
@@ -176,11 +137,6 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     @Override
-    public void showMessage(String msg) throws RemoteException {
-
-    }
-
-    @Override
     public boolean isReady() throws RemoteException {
         return ready;
     }
@@ -189,5 +145,11 @@ public class SocketClientHandler implements VirtualClient {
     public void startGame() throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'startGame'");
+    }
+
+    @Override
+    public ShowUpdate getUI() throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getUI'");
     }
 }
