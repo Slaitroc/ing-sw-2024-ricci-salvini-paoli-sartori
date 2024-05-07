@@ -59,20 +59,16 @@ public class JoinedToGameState extends TuiState {
         try {
             if (!ready) {
                 ready = true;
-                tui.printToCmdLineOut(tuiWrite("U are ready to play!"));
+                tui.printToCmdLineOut(tui.tuiWrite("U are ready to play!"));
                 client.setReady(true);
             } else {
                 ready = false;
-                tui.printToCmdLineOut(tuiWrite("U are not ready :`("));
+                tui.printToCmdLineOut(tui.tuiWrite("U are not ready :`("));
                 client.setReady(false);
             }
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    protected void command_showHand() {
     }
 
     @Override
@@ -82,10 +78,6 @@ public class JoinedToGameState extends TuiState {
 
     @Override
     protected void command_drawResource() {
-    }
-
-    @Override
-    protected void command_showDrawable() {
     }
 
     @Override

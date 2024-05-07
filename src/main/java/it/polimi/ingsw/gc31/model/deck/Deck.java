@@ -8,14 +8,18 @@ import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.*;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
+@SuppressWarnings("rawtypes")
 public class Deck<T extends Card> extends Observable<Deck> {
+
     // TODO cambiare implementazione con queue
     private Queue<T> deck;
     private T card1;
@@ -25,7 +29,8 @@ public class Deck<T extends Card> extends Observable<Deck> {
         List<T> tempDeck = new ArrayList<>();
         this.card1 = null;
         this.card2 = null;
-        FileReader fileReader = null;
+        Reader fileReader = null;
+        InputStream is = null;
         // classe delle carte che formeranno il deck
         Type type = null;
 
@@ -33,19 +38,23 @@ public class Deck<T extends Card> extends Observable<Deck> {
         try {
             switch (cardType) {
                 case GOLD:
-                    fileReader = new FileReader(DefaultValues.DIRJsonGoldCard);
+                    is = getClass().getResourceAsStream(DefaultValues.DIRJsonGoldCard);
+                    fileReader = new InputStreamReader(is);
                     type = GoldCard.class;
                     break;
                 case RESOURCE:
-                    fileReader = new FileReader(DefaultValues.DIRJsonResourceCard);
+                    is = getClass().getResourceAsStream(DefaultValues.DIRJsonResourceCard);
+                    fileReader = new InputStreamReader(is);
                     type = ResourceCard.class;
                     break;
                 case STARTER:
-                    fileReader = new FileReader(DefaultValues.DIRJsonStarterCard);
+                    is = getClass().getResourceAsStream(DefaultValues.DIRJsonStarterCard);
+                    fileReader = new InputStreamReader(is);
                     type = StarterCard.class;
                     break;
                 case OBJECTIVE:
-                    fileReader = new FileReader(DefaultValues.DIRJsonObjectiveCard);
+                    is = getClass().getResourceAsStream(DefaultValues.DIRJsonObjectiveCard);
+                    fileReader = new InputStreamReader(is);
                     type = ObjectiveCard.class;
                     break;
                 default:
@@ -56,7 +65,7 @@ public class Deck<T extends Card> extends Observable<Deck> {
             JsonElement jsonElement = JsonParser.parseReader(fileReader);
             fileReader.close();
 
-            // TODO aggiungere else con expection?
+            // TODO aggiungere else con exception?
             if (jsonElement.isJsonArray()) {
                 JsonArray jsonArray = jsonElement.getAsJsonArray();
 

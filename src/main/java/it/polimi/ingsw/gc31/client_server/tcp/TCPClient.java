@@ -14,6 +14,7 @@ import it.polimi.ingsw.gc31.view.UI;
 public class TCPClient implements ClientCommands {
     private final BufferedReader input;
     private final PrintWriter output;
+    @SuppressWarnings("unused")
     private String username;
     private Integer idGame;
     private Map<String, Runnable> commandsMap;
@@ -24,19 +25,20 @@ public class TCPClient implements ClientCommands {
      * 
      * @throws IOException
      */
+    @SuppressWarnings("resource")
     public TCPClient() throws IOException {
         this.username = DefaultValues.DEFAULT_USERNAME;
         Socket serverSocket = new Socket("127.0.0.1", 1200);
         this.input = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
         this.output = new PrintWriter(new OutputStreamWriter(serverSocket.getOutputStream()));
         initializeMap();
-        //run();
+        // run();
     }
 
     /**
      * Method that initializes the map used to invoke the methods by the server
      */
-    private void initializeMap(){
+    private void initializeMap() {
         this.commandsMap = new HashMap<>();
         this.commandsMap.put("show hand", this::runShowHandPlayer);
         this.commandsMap.put("show score", this::runShowScorePlayer);
@@ -52,17 +54,17 @@ public class TCPClient implements ClientCommands {
      * Method invoked by the server that show the player's hand (also the
      * hands of the other players)
      */
-    private void runShowHandPlayer(){
-        //username non viene utilizzato
-        //String targetUsername = input.readLine();
+    private void runShowHandPlayer() {
+        // username non viene utilizzato
+        // String targetUsername = input.readLine();
         String line;
         List<String> hand = new ArrayList<>();
         try {
             while (!(line = input.readLine()).equals("end list")) {
                 hand.add(line);
             }
-            ui.showHand(hand);
-        } catch (IOException e){
+            // ui.showHand(hand);//TODO da capire
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -70,13 +72,14 @@ public class TCPClient implements ClientCommands {
     /**
      * Method invoked by the server that shows the player's score
      */
+    @SuppressWarnings("unused")
     private void runShowScorePlayer() {
         try {
             String targetUsername = input.readLine();
             Integer score = Integer.parseInt(input.readLine());
-            //probabile metodo da implementare all'interno della ui
-            //ui.showScore(targetUsername, score);
-        } catch (IOException e){
+            // probabile metodo da implementare all'interno della ui
+            // ui.showScore(targetUsername, score);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -84,28 +87,28 @@ public class TCPClient implements ClientCommands {
     /**
      * Method invoked by the server that shows the starter card
      */
-    private void runShowStarterCard(){
+    private void runShowStarterCard() {
         /*
-        try{
-            //ui.showStarterCard(input.readLine());
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-
+         * try{
+         * //ui.showStarterCard(input.readLine());
+         * } catch (IOException e){
+         * e.printStackTrace();
+         * }
+         * 
          */
     }
 
     /**
      * Method invoked by the server that shows the objective card
      */
-    private void runShowObjectiveCard(){
+    private void runShowObjectiveCard() {
         /*
-        try {
-            //ui.showObjectiveCard(input.readLine());
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-
+         * try {
+         * //ui.showObjectiveCard(input.readLine());
+         * } catch (IOException e){
+         * e.printStackTrace();
+         * }
+         * 
          */
     }
 
@@ -117,7 +120,7 @@ public class TCPClient implements ClientCommands {
             System.out.println(input.readLine());
             System.out.println(input.readLine());
             System.out.println(input.readLine());
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -125,12 +128,12 @@ public class TCPClient implements ClientCommands {
     /**
      * Method invoked by the server that shows the resource deck
      */
-    private void runShowResourceDeck(){
-        try{
+    private void runShowResourceDeck() {
+        try {
             System.out.println(input.readLine());
             System.out.println(input.readLine());
             System.out.println(input.readLine());
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -138,12 +141,12 @@ public class TCPClient implements ClientCommands {
     /**
      * Method invoked by the server that shows the objective deck
      */
-    private void runShowObjectiveDeck(){
-        try{
+    private void runShowObjectiveDeck() {
+        try {
             System.out.println(input.readLine());
             System.out.println(input.readLine());
             System.out.println(input.readLine());
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -151,15 +154,15 @@ public class TCPClient implements ClientCommands {
     /**
      * Method invoked by the server that shows the list of all the existing game
      */
-    private void runShowGameList(){
+    private void runShowGameList() {
         String line;
         List<String> list = new ArrayList<>();
         try {
             while (!(line = input.readLine()).equals("game list finised")) {
                 list.add(line);
             }
-            ui.showListGame(list);
-        } catch (IOException e){
+            ui.show_listGame(list);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -181,28 +184,38 @@ public class TCPClient implements ClientCommands {
     /**
      * Shouldn't be a problem anymore
      * This method is disabled because the messages sent by the server are red
-     * in every method corresponding with the specific request launched by the client
+     * in every method corresponding with the specific request launched by the
+     * client
      *
-     * This method listen the messages coming from the server and invokes the corresponding
+     * This method listen the messages coming from the server and invokes the
+     * corresponding
      * method
+     * 
      * @throws RemoteException
      */
-    public void runVirtualServer() throws IOException {
+    public void runVirtualServer() throws RemoteException {
+        @SuppressWarnings("unused")
+        Scanner scan = new Scanner(input);
         String line;
-        while ((line = input.readLine()) != null) {
-            commandsMap.get(line).run();
+        try {
+            while ((line = input.readLine()) != null) {
+                commandsMap.get(line).run();
 
-            /*
-            switch (line) {
-                case "show list game": {
-                    List<String> list = new ArrayList<>();
-                    list.add("ciao");
-                    ui.showListGame(list);
-                }
-                //default:
-                //    System.out.println(line);
+                /*
+                 * switch (line) {
+                 * case "show list game": {
+                 * List<String> list = new ArrayList<>();
+                 * list.add("ciao");
+                 * ui.show_listGame(list);
+                 * }
+                 * //default:
+                 * // System.out.println(line);
+                 * }
+                 */
             }
-             */
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
@@ -210,10 +223,14 @@ public class TCPClient implements ClientCommands {
      * This method is the first called by the client, it sends the client handler
      * the request to execute the "connect" method. If the server has already this
      * username ane exception is launched
+     * 
      * @param username is the username set by the client
-     * @throws IOException if there is an error reading the client handler messages
-     * @throws PlayerNicknameAlreadyExistsException if the username wrote by the client
-     * is already in the server database
+     * @throws IOException                          if there is an error reading the
+     *                                              client handler messages
+     * @throws PlayerNicknameAlreadyExistsException if the username wrote by the
+     *                                              client
+     *                                              is already in the server
+     *                                              database
      */
     @Override
     public void setUsername(String username) throws IOException, PlayerNicknameAlreadyExistsException {
@@ -231,6 +248,7 @@ public class TCPClient implements ClientCommands {
     /**
      * This method sends to the client handler the string corresponding with the
      * create game request
+     * 
      * @param maxNumberPlayer is the max number of the players for the new game
      * @throws IOException if there is an error reading the server messages
      */
@@ -257,6 +275,7 @@ public class TCPClient implements ClientCommands {
     /**
      * This method send the string that identifies the join game request made
      * by the player
+     * 
      * @param gameId is the gameId of the particular game the player wants to join
      * @throws RemoteException
      */
@@ -268,13 +287,20 @@ public class TCPClient implements ClientCommands {
     }
 
     /**
-     * This method should write on the user terminal the list of games already created
-     * Firstly it send to the client handler the request to execute the specified method.
-     * After that the method waits for the client handler's response, the response can be an exception
-     * (in this case the method launches the exception to the TUI) or the message "ok" otherwise.
-     * In this case the method reads every String sent by the client handler, collect every
+     * This method should write on the user terminal the list of games already
+     * created
+     * Firstly it send to the client handler the request to execute the specified
+     * method.
+     * After that the method waits for the client handler's response, the response
+     * can be an exception
+     * (in this case the method launches the exception to the TUI) or the message
+     * "ok" otherwise.
+     * In this case the method reads every String sent by the client handler,
+     * collect every
      * String in "list" and then call the method of the ui.
-     * @throws IOException is launched if an error is occurred in the readLine method
+     * 
+     * @throws IOException      is launched if an error is occurred in the readLine
+     *                          method
      * @throws NoGamesException is launched if there are no created games
      */
     @Override
@@ -284,17 +310,18 @@ public class TCPClient implements ClientCommands {
         output.flush();
 
         String line = input.readLine();
-        if(line.equals("no game exception"))
+        if (line.equals("no game exception"))
             throw new NoGamesException();
-        else if (line.equals("ok")){
-            while( !(line = input.readLine()).equals("game list finished"))
+        else if (line.equals("ok")) {
+            while (!(line = input.readLine()).equals("game list finished"))
                 list.add(line);
         }
-        ui.showListGame(list);
+        ui.show_listGame(list);
     }
 
     /**
      * This method returns the player's game idGame
+     * 
      * @return the idGame of the game
      * @throws RemoteException
      */
@@ -305,6 +332,7 @@ public class TCPClient implements ClientCommands {
 
     /**
      * This method set the UI for the TCPClient
+     * 
      * @param ui is the concrete UI that needs to be assigned for this TCPClient
      */
     @Override

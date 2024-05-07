@@ -1,9 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
-import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
-import it.polimi.ingsw.gc31.client_server.tcp.TCPServer;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 
 import java.io.BufferedReader;
@@ -24,6 +22,7 @@ public class SocketClientHandler implements VirtualClient {
     final IController controller;
     private IGameController gameController;
     private String username;
+    @SuppressWarnings("unused")
     private VirtualClient client;
     private Integer idGame;
     private Map<String, Runnable> commandsMap;
@@ -51,7 +50,7 @@ public class SocketClientHandler implements VirtualClient {
         initializeMap();
     }
 
-    private void initializeMap(){
+    private void initializeMap() {
         this.commandsMap = new HashMap<>();
         this.commandsMap.put("connect", this::runConnect);
         this.commandsMap.put("create game", this::runCreateGame);
@@ -60,9 +59,9 @@ public class SocketClientHandler implements VirtualClient {
         this.commandsMap.put("draw gold", this::runDrawGold);
     }
 
-    private void runConnect(){
+    private void runConnect() {
         String line = null;
-        try{
+        try {
             line = input.readLine();
             controller.connect(this, line);
             this.username = line;
@@ -70,51 +69,51 @@ public class SocketClientHandler implements VirtualClient {
             output.flush();
             server.TCPserverWrite("New client connected: " + username);
 
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-        } catch (PlayerNicknameAlreadyExistsException p){
+        } catch (PlayerNicknameAlreadyExistsException p) {
             output.println("Username already exists!");
             output.flush();
         }
     }
 
-    private void runCreateGame(){
-        try{
+    private void runCreateGame() {
+        try {
             int maxNumberPlayer = Integer.parseInt(input.readLine());
             gameController = controller.createGame(username, maxNumberPlayer);
             output.println(this.idGame);
             output.flush();
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void runGetGameList(){
+    private void runGetGameList() {
         try {
             controller.getGameList(username);
         } catch (NoGamesException e) {
             output.println("no game exception");
             output.flush();
-        } catch (RemoteException e){
+        } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
-    private void runJoinGame(){
+    private void runJoinGame() {
         Integer idGame = null;
         try {
             idGame = Integer.parseInt(input.readLine());
             gameController = controller.joinGame(username, idGame);
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    private void runDrawGold(){
-        try{
+    private void runDrawGold() {
+        try {
             gameController.drawGold(username);
-        } catch (RemoteException e){
+        } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
@@ -132,59 +131,59 @@ public class SocketClientHandler implements VirtualClient {
         while ((line = input.readLine()) != null) {
             commandsMap.get(line).run();
             /*
-            switch (line) {
-                case "connect": {
-                    commandsMap.get("connect");
-
-                    line = input.readLine();
-                    try {
-                        controller.connect(this, line);
-                        this.username = line;
-                        output.println("username set");
-                        output.flush();
-                        server.TCPserverWrite("New client connected: " + username);
-                    } catch (PlayerNicknameAlreadyExistsException e) {
-                        output.println("username already exists");
-                        output.flush();
-                    }
-                    break;
-                }
-                case "create game": {
-                    commandsMap.get("create game");
-
-                    int maxNumberPlayer = Integer.parseInt(input.readLine());
-                    gameController = controller.createGame(username, maxNumberPlayer);
-                    output.println(this.idGame);
-                    output.flush();
-                    break;
-                }
-                case "get game list": {
-                    commandsMap.get("get game list");
-
-                    try {
-                        controller.getGameList(username);
-                    } catch (NoGamesException e) {
-                        output.println("no game exception");
-                        output.flush();
-                    }
-                    break;
-                }
-                case "join game": {
-                    commandsMap.get("join game");
-
-                    int idGame = Integer.parseInt(input.readLine());
-
-                    gameController = controller.joinGame(username, idGame);
-
-                    break;
-                }
-                case "draw gold": {
-                    gameController.drawGold(username);
-                    commandsMap.get("draw gold");
-                    break;
-                }
-            }
-        */
+             * switch (line) {
+             * case "connect": {
+             * commandsMap.get("connect");
+             * 
+             * line = input.readLine();
+             * try {
+             * controller.connect(this, line);
+             * this.username = line;
+             * output.println("username set");
+             * output.flush();
+             * server.TCPserverWrite("New client connected: " + username);
+             * } catch (PlayerNicknameAlreadyExistsException e) {
+             * output.println("username already exists");
+             * output.flush();
+             * }
+             * break;
+             * }
+             * case "create game": {
+             * commandsMap.get("create game");
+             * 
+             * int maxNumberPlayer = Integer.parseInt(input.readLine());
+             * gameController = controller.createGame(username, maxNumberPlayer);
+             * output.println(this.idGame);
+             * output.flush();
+             * break;
+             * }
+             * case "get game list": {
+             * commandsMap.get("get game list");
+             * 
+             * try {
+             * controller.getGameList(username);
+             * } catch (NoGamesException e) {
+             * output.println("no game exception");
+             * output.flush();
+             * }
+             * break;
+             * }
+             * case "join game": {
+             * commandsMap.get("join game");
+             * 
+             * int idGame = Integer.parseInt(input.readLine());
+             * 
+             * gameController = controller.joinGame(username, idGame);
+             * 
+             * break;
+             * }
+             * case "draw gold": {
+             * gameController.drawGold(username);
+             * commandsMap.get("draw gold");
+             * break;
+             * }
+             * }
+             */
         }
     }
 
@@ -203,8 +202,8 @@ public class SocketClientHandler implements VirtualClient {
     public void show_handPlayer(String username, List<String> hand) throws RemoteException {
         output.print("show hand player");
         // username non viene utilizzato
-        //output.print(username);
-        for(String s : hand){
+        // output.print(username);
+        for (String s : hand) {
             output.println(s);
         }
         output.println("end list");
@@ -214,7 +213,7 @@ public class SocketClientHandler implements VirtualClient {
     @Override
     public void show_scorePlayer(String username, Integer score) throws RemoteException {
         output.println("show score");
-        //username non viene utilizzato
+        // username non viene utilizzato
         output.println(username);
         output.println(score);
         output.flush();

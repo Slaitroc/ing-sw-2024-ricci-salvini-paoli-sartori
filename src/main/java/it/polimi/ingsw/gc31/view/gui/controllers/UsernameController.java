@@ -20,8 +20,6 @@ public class UsernameController extends ViewController {
         getUsername.setText(nickname);
     }
 
-    // da capire se posso mettere la tag fxml nella classe padre o se devo metterlo
-    // nelle figlie insieme all'override (per ora lascio al caso)
     /**
      * This method allows to initialize the fxml's attributes defined in the code
      * and used in the .fxml file. It must be
@@ -40,5 +38,10 @@ public class UsernameController extends ViewController {
     @FXML
     private void loadStartScene() {
         app.loadScene(SceneTag.START);
+    }
+
+    @FXML
+    private void loadLobbyScene() {
+        app.loadScene(SceneTag.LOBBY);
     }
 }

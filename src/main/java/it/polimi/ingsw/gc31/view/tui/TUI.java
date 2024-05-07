@@ -2,7 +2,6 @@ package it.polimi.ingsw.gc31.view.tui;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
-import it.polimi.ingsw.gc31.client_server.rmi.DebugClient;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.UI;
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
@@ -10,7 +9,6 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
 import java.io.PrintStream;
 import java.awt.Point;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Queue;
@@ -27,7 +25,6 @@ import com.google.gson.reflect.TypeToken;
 import org.fusesource.jansi.Ansi;
 
 import static org.fusesource.jansi.Ansi.Color.CYAN;
-import static org.fusesource.jansi.Ansi.Color.WHITE;
 import static org.fusesource.jansi.Ansi.Color.YELLOW;
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -116,7 +113,7 @@ public class TUI extends UI {
     /**
      * Draws the title of the game
      */
-    public void drawTitle() {
+    private void drawTitle() {
         new PrintStream(System.out, true, System.console() != null
                 ? System.console().charset()
                 : Charset.defaultCharset()).println(ansi().fg(YELLOW).a("""
@@ -124,36 +121,6 @@ public class TUI extends UI {
                         █     █  █  █  █  █▀▀▀ ▀▀▄▀▀
                         █▄▄█  █▄▄█  █▄▄▀  █▄▄▄ █   █
                             """).reset());
-    }
-
-    /**
-     * Draws the play area
-     */
-    public void drawPlayArea() {
-        StringBuilder ris = new StringBuilder();
-        int heightPlayArea = 15;
-
-        ris.append(ansi().cursor(DefaultValues.row_playArea, DefaultValues.col_playArea).fg(WHITE).a("┌"));
-        for (int i = 0; i < DefaultValues.col_chat - DefaultValues.col_playArea - 3; i++) {
-            ris.append(ansi().fg(WHITE).a("─"));
-        }
-        ris.append(ansi().fg(WHITE).a("┐"));
-
-        for (int i = 1; i < heightPlayArea; i++) {
-            ris.append(ansi().cursor(DefaultValues.row_playArea + i, DefaultValues.col_playArea).a("│"));
-            ris.append(ansi()
-                    .cursor(DefaultValues.row_playArea + i, DefaultValues.col_chat - DefaultValues.col_playArea - 1)
-                    .a("│"));
-        }
-
-        ris.append(ansi().cursor(DefaultValues.row_playArea + heightPlayArea, DefaultValues.col_playArea).fg(WHITE)
-                .a("└"));
-        for (int i = 0; i < DefaultValues.col_chat - DefaultValues.col_playArea - 3; i++) {
-            ris.append(ansi().fg(WHITE).a("─"));
-        }
-        ris.append(ansi().fg(WHITE).a("┘"));
-
-        System.out.println(ris);
     }
 
     /**
@@ -180,7 +147,7 @@ public class TUI extends UI {
      * This variable is used to manage the chat board avoiding to update it every
      * time
      */
-    private volatile boolean needsUpdate = false;
+    private volatile boolean chatNeedsUpdate = false;
     /**
      * This variable is used to manage the chat messages. The ChatReader thread adds
      * new client's messages to this queue.
@@ -199,7 +166,7 @@ public class TUI extends UI {
      * will print
      * them to the right position of the console.
      */
-    protected final Queue<String> cmdLineOut = new ArrayDeque<String>();
+    private final Queue<String> cmdLineOut = new ArrayDeque<String>();
     /**
      * This variable is used to manage the global commands.
      * <p>
@@ -587,7 +554,7 @@ public class TUI extends UI {
                     }
                 } else {
                     chatMessages.add(input.trim());
-                    needsUpdate = true;
+                    chatNeedsUpdate = true;
                 }
             }
 
@@ -604,7 +571,7 @@ public class TUI extends UI {
         new Thread(() -> {
             drawChatBorders();
             while (true) {
-                if (needsUpdate) {
+                if (chatNeedsUpdate) {
                     drawChatBorders();
                     updateChatBoardOut();
                 }
@@ -622,7 +589,7 @@ public class TUI extends UI {
      * 
      * @param command
      */
-    public void execute_command(String command) {
+    private void execute_command(String command) {
         if (state.commandsMap.containsKey(command)) {
             state.commandsMap.get(command).run();
         } else {
@@ -677,7 +644,7 @@ public class TUI extends UI {
                     Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW - 1 - i, CHAT_BOARD_INPUT_COLUMN)
                             .a(chatMessages.toArray()[chatMessages.size() - 1 - i]));
         }
-        needsUpdate = false;
+        chatNeedsUpdate = false;
         resetCursor();
     }
 
@@ -702,11 +669,6 @@ public class TUI extends UI {
     }
 
     // UPDATES FIELDS & METHODS
-    private Map<String, List<PlayableCard>> playersHands = new HashMap<>();
-
-    public List<PlayableCard> getPlayersHands(String username) {
-        return playersHands.get(username);
-    }
 
     @Override
     public void updateToPlayingState() {
@@ -716,10 +678,6 @@ public class TUI extends UI {
 
     @Override
     public void updateHand(String username, List<String> hand) {
-        List<PlayableCard> temp = new ArrayList<>();
-        for (String line : hand)
-            temp.add(gsonTranslater.fromJson(line, PlayableCard.class));
-        playersHands.put(username, temp);
 
     }
 
@@ -748,7 +706,7 @@ public class TUI extends UI {
      * @Slaitroc
      */
     @Override
-    public void showListGame(List<String> listGame) throws RemoteException {
+    public void show_listGame(List<String> listGame) throws RemoteException {
         tuiWrite(">>Game List<<");
         for (String string : listGame) {
             System.out.println(string);
@@ -757,6 +715,7 @@ public class TUI extends UI {
 
     @Override
     public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
+        @SuppressWarnings("unused")
         Map<Point, PlayableCard> pA = gsonTranslater.fromJson(playArea, new TypeToken<Map<Point, PlayableCard>>() {
         }.getType());
     }

@@ -121,7 +121,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void showListGame(List<String> listGame) throws RemoteException {
-        ui.showListGame(listGame);
+        ui.show_listGame(listGame);
     }
 
     @Override

@@ -4,6 +4,7 @@ package it.polimi.ingsw.gc31.view.gui;
 import java.rmi.RemoteException;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import javafx.application.Application;
 import javafx.application.Platform;
 import it.polimi.ingsw.gc31.view.UI;
 
@@ -28,11 +29,11 @@ public class GUI extends UI {
 
     @Override
     protected void uiRunUI() {
-
+        Application.launch(GUIApplication.class);
     }
 
     @Override
-    public void showListGame(List<String> listGame) throws RemoteException {
+    public void show_listGame(List<String> listGame) throws RemoteException {
 
     }
 

@@ -37,7 +37,7 @@ public class InitState extends TuiState {
 
     @Override
     protected synchronized void command_createGame() {
-        tui.printToCmdLineOut(tuiWrite("Type the number of players for the game:"));
+        tui.printToCmdLineOut(tui.tuiWrite("Type the number of players for the game:"));
         int input = Integer.parseInt(scanner.nextLine());
         try {
             tui.getClient().createGame(input);
@@ -60,7 +60,7 @@ public class InitState extends TuiState {
 
     @Override
     protected synchronized void command_joinGame() {
-        tui.printToCmdLineOut(tuiWrite("Type gameID:"));
+        tui.printToCmdLineOut(tui.tuiWrite("Type gameID:"));
         int input = Integer.parseInt(scanner.nextLine());
         try {
             tui.getClient().joinGame(input);
@@ -75,10 +75,6 @@ public class InitState extends TuiState {
     }
 
     @Override
-    protected void command_showHand() {
-    }
-
-    @Override
     protected void command_drawGold() {
     }
 
@@ -87,13 +83,13 @@ public class InitState extends TuiState {
         boolean usernameIsValid = false;
         String input;
         while (!usernameIsValid) {
-            tui.printToCmdLineOut(tuiWrite(message));
+            tui.printToCmdLineOut(tui.tuiWrite(message));
             input = scanner.nextLine();
 
             try {
                 tui.getClient().setUsername(input.trim());
                 usernameIsValid = true;
-                tui.printToCmdLineOut(tuiWrite("Your name is: " + input.trim()));
+                tui.printToCmdLineOut(tui.tuiWrite("Your name is: " + input.trim()));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -108,10 +104,6 @@ public class InitState extends TuiState {
 
     @Override
     protected void command_drawResource() {
-    }
-
-    @Override
-    protected void command_showDrawable() {
     }
 
     @Override

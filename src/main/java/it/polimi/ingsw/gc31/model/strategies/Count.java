@@ -1,7 +1,6 @@
 package it.polimi.ingsw.gc31.model.strategies;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,18 +10,21 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
 /**
- * This class represents the objective that gives points based on how many resources are held by a player
+ * This class represents the objective that gives points based on how many
+ * resources are held by a player
  */
 public class Count extends Objective {
     /**
-     * This attribute represents the resources the player needs to hold to obtain points
+     * This attribute represents the resources the player needs to hold to obtain
+     * points
      */
     private final List<Resources> resources;
 
     /**
      * This method is the constructor of the class
      *
-     * @param resources is the list of resources the player needs to hold to obtain points
+     * @param resources is the list of resources the player needs to hold to obtain
+     *                  points
      */
     public Count(List<Resources> resources) {
         super();
@@ -30,13 +32,15 @@ public class Count extends Objective {
     }
 
     /**
-     * This method check if this particular objective is done and return the number of points obtained by the player
+     * This method check if this particular objective is done and return the number
+     * of points obtained by the player
      *
      * @param placedCard is the map that contains all the card on the player's board
      * @return the number of points obtained by the player
      */
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint, Map<Resources, Integer> achievedResources) {
-        if(resources.size() == 1) {
+    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint,
+            Map<Resources, Integer> achievedResources) {
+        if (resources.size() == 1) {
             return goldenCount(achievedResources);
         }
         if (resources.get(0) == Resources.ANIMAL || resources.get(0) == Resources.PLANT ||
@@ -51,7 +55,7 @@ public class Count extends Objective {
         JsonObject jsonObject = new JsonObject();
 
         JsonArray resourcesArray = new JsonArray();
-        for (Resources res: this.resources) {
+        for (Resources res : this.resources) {
             resourcesArray.add(res.toString());
         }
         jsonObject.add("resources", resourcesArray);
@@ -60,29 +64,34 @@ public class Count extends Objective {
     }
 
     /**
-     * This method check the objective in the particular case where the list of resources contains only Animal,
+     * This method check the objective in the particular case where the list of
+     * resources contains only Animal,
      * Plants, Insects and Mushrooms
      *
-     * @param placedCard is the map that contains all the card on the player's board (it's useless if I get the
+     * @param placedCard is the map that contains all the card on the player's board
+     *                   (it's useless if I get the
      *                   attribute achievedResources)
      * @return the number of points obtained by the player
      */
-    private int countAPIM( Map<Point, PlayableCard> placedCard, Map<Resources, Integer> achievedResources) {
+    private int countAPIM(Map<Point, PlayableCard> placedCard, Map<Resources, Integer> achievedResources) {
         Resources seed = resources.get(0);
         int found = achievedResources.get(seed);
         return 2 * ((found - found % 3) / 3);
 
-        /* useless after achievedResources as a parameter
-            int found = searchOnBoard(placedCard, seed);
-            return 2 * ((found - found % 3) / 3);
-        */
+        /*
+         * useless after achievedResources as a parameter
+         * int found = searchOnBoard(placedCard, seed);
+         * return 2 * ((found - found % 3) / 3);
+         */
     }
 
     /**
-     * This method check the objective in the particular case where the list of resources contains only Feathers, Ink
+     * This method check the objective in the particular case where the list of
+     * resources contains only Feathers, Ink
      * or Scrolls
      *
-     * @param placedCard is the map that contains all the card on the player's board (it's useless if I get the
+     * @param placedCard is the map that contains all the card on the player's board
+     *                   (it's useless if I get the
      *                   attribute achievedResources)
      * @return the number of points obtained by the player
      */
@@ -106,14 +115,18 @@ public class Count extends Objective {
     }
 
     /**
-     * This method is invoked only if the number of resources to gain points is 1. In this particular case
-     * the objective is of a golden card, and the player gains 1 point for every resource of the spicified
+     * This method is invoked only if the number of resources to gain points is 1.
+     * In this particular case
+     * the objective is of a golden card, and the player gains 1 point for every
+     * resource of the spicified
      * type is possessed by the player.
-     * @param achievedResources is the map that contains the resource as a key and the number of occurrences
+     * 
+     * @param achievedResources is the map that contains the resource as a key and
+     *                          the number of occurrences
      *                          of that resources
      * @return the number of points gained by the player
      */
-    private int goldenCount(Map<Resources, Integer> achievedResources){
+    private int goldenCount(Map<Resources, Integer> achievedResources) {
         return achievedResources.get(resources.get(0));
     }
 }

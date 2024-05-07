@@ -1,6 +1,5 @@
 package it.polimi.ingsw.gc31.controller;
 
-import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -36,6 +35,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     private final GameModel model;
     private Map<String, Player> playerList;
     private final Map<String, VirtualClient> clientList;
+    @SuppressWarnings("unused")
     private final Gson gsonCard/* , gsonObjective */;
     private final int maxNumberPlayers;
     private final int idGame;
@@ -95,8 +95,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
             }
         }
-        // TODO ciclo da terminare alla fine del gioco altrimenti diventa demoooone
-        // uuuuhhhhh
     }
 
     /**
