@@ -66,7 +66,8 @@ public class GUIApplication extends Application {
                 wc.setGUIApplication(this);
                 wcMap.put(entry.getKey(), wc);
             } catch (IOException e) {
-                throw new GUISceneInitializationException();
+                e.printStackTrace();
+                // throw new GUISceneInitializationException();
             }
         }
 

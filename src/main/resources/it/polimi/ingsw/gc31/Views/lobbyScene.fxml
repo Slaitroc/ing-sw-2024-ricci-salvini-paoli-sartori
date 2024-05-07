@@ -10,7 +10,7 @@
 
 <VBox alignment="CENTER" spacing="20" xmlns="http://javafx.com/javafx/17"
     xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.StartController"
+    fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.LobbyController"
     stylesheets="@stilefxml.css" styleClass="vbox">
     <children>
         <ImageView>

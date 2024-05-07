@@ -9,10 +9,10 @@ import java.util.HashMap;
 public class DefaultValues {
 
     // JSON directories
-    public static final String DIRJsonGoldCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/GoldCard.json";
-    public static final String DIRJsonResourceCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/ResourceCard.json";
-    public static final String DIRJsonStarterCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/StarterCard.json";
-    public static final String DIRJsonObjectiveCard = "src/main/resources/it/polimi/ingsw/gc31/CardsJson/ObjectiveCard.json";
+    public static final String DIRJsonGoldCard = "/it/polimi/ingsw/gc31/CardsJson/GoldCard.json";
+    public static final String DIRJsonResourceCard = "/it/polimi/ingsw/gc31/CardsJson/ResourceCard.json";
+    public static final String DIRJsonStarterCard = "/it/polimi/ingsw/gc31/CardsJson/StarterCard.json";
+    public static final String DIRJsonObjectiveCard = "/it/polimi/ingsw/gc31/CardsJson/ObjectiveCard.json";
 
     // Server Log
     public final static String RMI_SERVER_TAG = "[RMI server] ";
@@ -54,11 +54,13 @@ public class DefaultValues {
     // GUI
     public final static String GUI_SCENE_startScene = "/it/polimi/ingsw/gc31/Views/startScene.fxml";
     public final static String GUI_SCENE_usernameScene = "/it/polimi/ingsw/gc31/Views/usernameScene.fxml";
+    public final static String GUI_SCENE_lobbyScene = "/it/polimi/ingsw/gc31/Views/lobbyScene.fxml";
 
     public static Map<SceneTag, String> getGuiFxmlScenes() {
         Map<SceneTag, String> sceneList = new HashMap<>();
         sceneList.put(SceneTag.START, GUI_SCENE_startScene);
         sceneList.put(SceneTag.USERNAME, GUI_SCENE_usernameScene);
+        sceneList.put(SceneTag.LOBBY, GUI_SCENE_lobbyScene);
 
         return sceneList;
     }
