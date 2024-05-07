@@ -1,7 +1,6 @@
 package it.polimi.ingsw.gc31.view.tui;
 
 import java.util.Map;
-import it.polimi.ingsw.gc31.DefaultValues;
 
 public abstract class TuiState {
     // debug
@@ -12,37 +11,19 @@ public abstract class TuiState {
     // protected ClientCommands client;
     protected TUI tui;
 
-    protected void tuiWrite(String text) {
-        System.out.println(DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_RESET + text);
-    }
-
-    protected void tuiWriteGreen(String text) {
-        System.out.println(DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_GREEN + text
-                + DefaultValues.ANSI_RESET);
-    }
-
-    protected void tuiWritePurple(String text) {
-        System.out.println(DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_PURPLE + text
-                + DefaultValues.ANSI_RESET);
-    }
-
-    protected abstract void run();
-
     protected abstract void initialize();
 
-    protected void show_options() {
-        tuiWriteGreen(">>Commands List<< ");
+    protected synchronized void command_showCommandsInfo() {
+        tui.printToCmdLineOut(tui.tuiWriteGreen(">>Commands List<< "));
         for (Map.Entry<String, String> entry : commandsInfo.entrySet()) {
             String command = entry.getKey();
             String description = entry.getValue();
-            String formattedLine = String.format("%-15s : %s", command, description);
-            System.out.println(formattedLine);
+            String formattedLine = String.format("%-20s : %s", command, description);
+            tui.printToCmdLineOut(formattedLine);
         }
     }
 
-    protected void command_showCommandsInfo() {
-        show_options();
-    }
+    protected abstract void command_initial();
 
     protected abstract void command_createGame();
 
@@ -52,8 +33,8 @@ public abstract class TuiState {
 
     protected abstract void command_ready();
 
-    protected abstract void command_showHand();
-
     protected abstract void command_drawGold();
+
+    protected abstract void command_drawResource();
 
 }

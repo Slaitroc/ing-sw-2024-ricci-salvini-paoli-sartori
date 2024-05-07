@@ -8,17 +8,19 @@ import java.rmi.RemoteException;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
+@SuppressWarnings("rawtypes")
 public class ObjectiveDeckListener implements Listener<Deck> {
     private VirtualClient client;
+
     public ObjectiveDeckListener(VirtualClient client) {
         this.client = client;
     }
+
     @Override
     public void update(Deck data) throws RemoteException {
         client.show_objectiveDeck(
                 gsonTranslater.toJson(data.peekCard(), ObjectiveCard.class),
                 gsonTranslater.toJson(data.peekCard1(), ObjectiveCard.class),
-                gsonTranslater.toJson(data.peekCard2(), ObjectiveCard.class)
-        );
+                gsonTranslater.toJson(data.peekCard2(), ObjectiveCard.class));
     }
 }

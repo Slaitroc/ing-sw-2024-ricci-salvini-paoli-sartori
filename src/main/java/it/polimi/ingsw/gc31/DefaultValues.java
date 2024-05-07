@@ -18,7 +18,6 @@ public class DefaultValues {
     public final static String RMI_SERVER_TAG = "[RMI server] ";
     public final static String TCP_SERVER_TAG = "[TCP server] ";
     public static final String CONTROLLER_TAG = "\t[Controller]: ";
-    public static final String PLAYER_CONTROLLER_TAG = "\t[PlayerController]: ";
 
     public static String gameControllerTag(String id) {
         return "\t[GameController " + id + "]: ";
@@ -41,7 +40,6 @@ public class DefaultValues {
     // TUI
     public final static String TUI_START_LINE_SYMBOL = "> ";
     public final static String TUI_TAG = "[TUI] ";
-    public final static String STOP_CURRENT_TUI_STRING = "quit";
 
     // TUIobj
     public static final int cardHeight = 5;
