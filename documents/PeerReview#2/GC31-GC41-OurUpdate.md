@@ -1,3 +1,7 @@
+# Aggiornamento per il gruppo 41
+
+**Gruppo 31**: Lorenzo Ricci, Christian Salvini, Matteo Paoli, Alessandro Sartori
+
 ## model
 
 Il model è stato aggiornato seguendo alcuni dei consigli della precedente revisione:
