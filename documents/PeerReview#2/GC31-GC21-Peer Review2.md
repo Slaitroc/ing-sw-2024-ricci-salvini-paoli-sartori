@@ -9,7 +9,7 @@ Valutazione del diagramma UML delle classi del gruppo 21.
 ## Lati positivi
 
 Vediamo che sono stati seguiti alcuni dei consigli della precedente revisione: ora lo strategy pattern è più intuitivo e speriamo anche efficace; notiamo anche il package per la serializzazione con Json sebbene non sia chiaro se viene utilizzata una libreria esterna o meno.
-Apprezzata la decisione di rendere sincrono tcp nelle fasi di lobbying e asincrono rmi durante la partita. <br>
+Apprezzata la decisione di rendere sincrono tcp nelle fasi iniziali e asincrono rmi durante la partita. <br>
 Interessante l'utilizzo di oggetti immutabili bean per non esporre il model. <br>
 Ottima la creazione di canali di comunicazioni tcp diversi tra fasi iniziali e la partita. <br>
 Apprezzata anche la suddivisione del class diagram in packages.
