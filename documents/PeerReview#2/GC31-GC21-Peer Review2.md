@@ -34,7 +34,7 @@ Solo dal class diagram risulta complicato fare un'analisi più approfondita per 
 #### Punti in comune
 
 Come voi abbiamo implementato il pattern Observer-Observable tra model e vista per aggiornare quest'ultima.<br>
-Prendendo ispirazione dalla vostra implementazione probabilmente creeremo connessioni separate tcp per lobbying e game.
+Prendendo ispirazione dalla vostra implementazione probabilmente creeremo connessioni separate tcp per le fasi di creazione della lobby e game.
 
 #### Differenze
 
