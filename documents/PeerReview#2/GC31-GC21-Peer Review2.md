@@ -45,4 +45,4 @@ Il nostro progetto prevede due eseguibili differenti per client e server.
 
 ## Conclusioni
 
-Abbiamo cercato di evidenziare tutto quello che ci sembrava poco chiaro avendo come unico schema l'UML e eventuali differenze. A prescindere dallo stato dell'implementazione la struttura ci sembra corretta e, seppure un po' complicata in certi punti, efficace.b
+Abbiamo cercato di evidenziare tutto quello che ci sembrava poco chiaro avendo come unico schema l'UML e eventuali differenze. A prescindere dallo stato dell'implementazione la struttura ci sembra corretta e, seppure un po' complicata in certi punti, efficace.
