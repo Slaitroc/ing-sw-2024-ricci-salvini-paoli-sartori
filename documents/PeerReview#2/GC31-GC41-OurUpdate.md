@@ -39,7 +39,7 @@ La stessa interfaccia viene implementata da <code>RMIClient</code> e da <code>So
 
 L'interfaccia <code>ClientCommands</code> definisce i metodi che l'utente può chiamare interagendo con la propria <code>UI</code>.
 
-L'interfaccia <code>VirtualServer</code> permette di gestire la prima connessione di rmi. Il metodo <code>RMIServerWrite</code> e l'analogo <code>TCPServerWrite</code> presente in <code>TCPServer</code> servono semplicemente per formattare correttamente una stringa da stampare sul server che vi è una nuova connessione.
+L'interfaccia <code>VirtualServer</code> permette di gestire la prima connessione di rmi. Il metodo <code>RMIServerWrite</code> e l'analogo <code>TCPServerWrite</code> presente in <code>TCPServer</code> servono semplicemente per formattare correttamente una stringa da stampare sul server che notifica una nuova connessione.
 
 #### tcp
 
@@ -60,11 +60,11 @@ Il package queue contiene le classi che rappresentano i metodi della partita che
 
 ## view
 
-Nel package è presente l'interfaccia <code>UI</code> con le concretizzazioni <code>TUI</code> e <code>GUI</code>.
-L'interfaccia <code>ShowUpdate</code> viene implementata da <code>UI</code> e da <code>VirtualClient</code> e contiene i metodi per aggiornare la view. A questo punto dell'implementazione stiamo valutando di rimuovere l'implementazione da <code>VirtualClient</code> e rendere la <code>UI</code> un RemoteObject per saltare una passaggio di chiamate, che per il momento abbiamo lasciato per valutarne l'utilità.
-La catena di chiamate al momento è la seguente:
-Model->VirtualClient->UI
-e potrebbe diventare direttamente Model->UI.
+Nel package è presente la classe astratta <code>UI</code> estesa da <code>TUI</code> e <code>GUI</code>.
+L'interfaccia <code>ShowUpdate</code> viene implementata da <code>UI</code> e da <code>VirtualClient</code> e contiene i metodi per aggiornare la view. A questo punto dello sviluppo stiamo valutando di rimuoverne l'implementazione da <code>VirtualClient</code> e rendere la <code>UI</code> un RemoteObject per saltare una passaggio di chiamate, che per il momento abbiamo lasciato per valutarne l'utilità.
+La catena di chiamate ora è la seguente: <br>
+Model->VirtualClient->UI <br>
+e potrebbe diventare: <br> Model->UI.
 
 L'implementazione della <code>TUI</code> utilizza cinque threads per gestire le relative area dell'interfaccia utente:
 
