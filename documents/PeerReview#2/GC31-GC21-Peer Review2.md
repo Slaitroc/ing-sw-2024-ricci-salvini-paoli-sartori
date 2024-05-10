@@ -38,7 +38,7 @@ Prendendo ispirazione dalla vostra implementazione probabilmente creeremo connes
 
 #### Differenze
 
-Per mantenere evidente l'analogia tra tcp e rmi il nostro package relativo al networking, oltre alla classe RMIClient, contiene TCPClient si comporta da anche da VirtualSocketServer.
+Per mantenere evidente l'analogia tra tcp e rmi il nostro package relativo al networking, oltre alla classe RMIClient, contiene TCPClient che si comporta anche da VirtualSocketServer.
 In generale le concretizzazioni di client gestiscono le diverse tipologie di connessioni e viste. In generale abbiamo deciso di collassare layer di classi che seppur favoriscano l'incapsulamento ci sembra complichino senza benefici significativi la struttura del progetto.
 
 Il nostro progetto prevede due eseguibili differenti per client e server.
