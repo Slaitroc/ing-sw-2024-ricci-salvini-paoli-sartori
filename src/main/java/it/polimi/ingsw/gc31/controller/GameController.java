@@ -304,12 +304,16 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
     @Override
     public void chooseSecretObjective1(String username) {
-        model.setPlayerObjective(username, 1);
+        if (model.getGameState() == GameState.SETUP) {
+            addQueueObj(new ChooseSecretObjectiveObj(username, model, 1));
+        } else gameControllerWrite("The game is not in the right state to choose secret objective");
     }
 
     @Override
     public void chooseSecretObjective2(String username) {
-        model.setPlayerObjective(username, 2);
+        if (model.getGameState() == GameState.SETUP) {
+            addQueueObj(new ChooseSecretObjectiveObj(username, model, 2));
+        } else gameControllerWrite("The game is not in the right state to choose secret objective");
     }
 
     @Override
@@ -325,21 +329,26 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
     @Override
     public void playStarter(String username) {
-        Player player = playerList.get(username);
-        player.playStarter();
-        model.checkStartGame();
+        if (model.getGameState() == GameState.SETUP) {
+            addQueueObj(new PlayStarterObj(playerList.get(username), model));
+        } else {
+            gameControllerWrite("The game is not in the right state to play starter");
+        }
     }
 
     @Override
     public void changeSide(String username) {
-        Player player = playerList.get(username);
-        player.getSelectedCard().changeSide();
+        addQueueObj(new FlipCardObj(playerList.get(username)));
+    }
+
+    @Override
+    public void changeStarterSide(String username) {
+        addQueueObj(new FlipStarterCardObj(playerList.get(username)));
     }
 
     @Override
     public void selectCard(String username, int index) {
-        Player player = playerList.get(username);
-        player.setSelectedCard(index);
+        addQueueObj(new SelectCardObj(playerList.get(username), index));
     }
 
     /*

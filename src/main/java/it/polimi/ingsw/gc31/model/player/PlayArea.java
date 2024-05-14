@@ -95,7 +95,7 @@ public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCa
                 }
                 return card.getScore();
             }
-            else throw new IllegalArgumentException("Illegal move");
+            else System.out.println("Illegal placement of card");
         }
         return 0;
     }
