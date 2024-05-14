@@ -31,7 +31,7 @@ public class TCPServer {
             OutputStreamWriter socketTx = new OutputStreamWriter(clientSocket.getOutputStream());
 
             SocketClientHandler handler = new SocketClientHandler(this.controller, this,
-                    new BufferedReader(socketRx), new PrintWriter(socketTx));
+                    new BufferedReader(socketRx), new PrintWriter(socketTx), new ObjectInputStream(clientSocket.getInputStream()));
 
             new Thread(() -> {
                 try {
