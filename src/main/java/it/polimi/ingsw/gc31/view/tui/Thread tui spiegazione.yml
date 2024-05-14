@@ -1,0 +1,105 @@
+commandLineOut:
+    - printa i bordi di playArea
+    - printa i bordi della cmdLine 
+    - Starta il thread commandLineReader
+    while true:
+        synch (cmdLineOut){
+            se la lista cmdLineOut è vuota:
+            - va in wait
+
+            se la lista cmdLineOut non è vuota:
+            - printa i border della cmdLine
+            - aggiorna la command line [UPDATE_CMD_LINE_OUT]
+        }
+        Nota: sembra printare quella roba all'infinito a parte quando la lista è vuota
+
+
+commmandLineReader:
+    - starta il thread commandLineProcess
+    - aspetta che il thread commandLineProcess sia pronto a ricevere input
+    while true:
+        synch(areaSelectionLock){ 
+            - se la cmdLine non è l'area selezionata va in wait
+        }
+        - muove il cursore alla command line
+        synch(state){ //solo se non c'è un comando che sta eseguendo
+            - legge l'input da tastiera (bloccante)
+        }
+        se l'input è vuoto:
+            - prosegue
+        se l'input non è vuoto:
+            synch(cmdLineMessages){
+                - aggiunge l'input alla lista cmdLineMessages
+                - va in wait()
+            }
+
+commandLineProcess:
+    while true:
+        se lo stato è cambiato:
+            - esegue l'initial_command
+            - cambia il boolean volatile cmdLineProcessReady su true 
+                -> significa che il thread è pronto a ricevere l'input
+        se la lista di messaggi non è vuota:
+            synch(cmdLineMessages){
+                - fa il poll di un messaggio dalla lista
+            }
+            se il comando è "chat":
+                synch(areaSelectionLock){
+                    - muove il cursore e cambia l'area selezionata
+                    - sveglia il thread chatReader che è in attesa di essere l'area selezionata
+                }
+                synch(cmdLineMessages){
+                    - sveglia i thread in attesa di accedere a cmdLineMessages
+                    NON HO CAPITO A COSA SERVE
+                }
+                - ritorna all'inizio del while
+            altrimenti: 
+                se ci sono globalCommands:
+                    - esegue il comando
+                altrimenti:
+                    synch(state){
+                        synch(cmdLineMessages){
+                            - esegue il comando
+                            - svelgia i thread in attesa di accedere a cmdLineMessages
+                        }
+                    }
+
+chatReader:
+    while true:
+        synch(areaSelectionLock){
+            - se l'area selezionata non è quella del chatReader va in wait
+        }
+        se l'input è vuoto:
+            - va all'inizio del while
+        se l'input è "ccc":
+            synch(areaSelectionLock){
+                - muove il cursore alla command Line e cambia l'area selezionata
+                - sveglia i thread in attesa di essere l'area selezionata
+            }
+        altrimenti:
+            - aggiunge l'input alla lista chatMessages
+            - avvisa la chat Board che ha bisogno di essere aggiornata
+
+chatBoard:
+    - printa i bordi della chat
+    - muove il cursore alla commandLine
+    while true:
+        se la chat ha bisogno di essere aggiornata:
+            synch(chatMessages){
+                - printa i bordi della chat
+                - aggiorna i messaggi della chat [UPDATE_CHAT_BOARD_OUT]
+            }   
+
+
+[UPDATE_CHAT_BOARD_OUT]
+- aggiorna la chat board
+- imposta chatNeedsUpdate a false
+- risposta il cursore nell'area selezionata
+
+[UPDATE_CMD_LINE_OUT]
+synch(cmdLineOut){
+  - printa la command line 
+  - resiza la lista di messaggi di cmdLineOut se supera lo spazio disponibile
+  - resetta il cursore
+  - 
+}

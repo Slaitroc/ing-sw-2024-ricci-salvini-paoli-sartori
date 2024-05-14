@@ -84,6 +84,7 @@ public class InitState extends TuiState {
         String input;
         while (!usernameIsValid) {
             tui.printToCmdLineOut(tui.tuiWrite(message));
+            tui.moveCursorToCmdLine();
             input = scanner.nextLine();
 
             try {
@@ -98,6 +99,7 @@ public class InitState extends TuiState {
             }
         }
 
+        // fidati va bene qui
         tui.getClient().setUI(this.tui);
 
     }

@@ -38,7 +38,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     // CLIENT COMMANDS
-    @Override
     public void setUI(UI ui) {
         this.ui = ui;
     }

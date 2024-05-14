@@ -32,6 +32,13 @@ public interface IGameController extends Remote {
 
     void selectCard(String username, int index) throws RemoteException;
 
+    /**
+     * Use this for test purposes only
+     * 
+     * @deprecated
+     * @return the GameModel
+     * @throws RemoteException
+     */
     GameModel getModel() throws RemoteException;
 
     void checkReady() throws RemoteException, IllegalStateOperationException;

@@ -9,6 +9,7 @@ import static org.fusesource.jansi.Ansi.Color.YELLOW;
 import java.awt.Point;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import com.google.gson.reflect.TypeToken;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.client_server.rmi.RmiClient;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
@@ -76,6 +78,11 @@ public class TUI extends UI {
     // TODO colori non definitivi, aggiungere altri tre colori delle carte
     private static final int[] RGB_COLOR_RED_CARD = { 190, 29, 44 };
     private static final int[] RGB_COLOR_CORNER = { 133, 128, 104 };
+
+    public static void main(String[] args) throws RemoteException, NotBoundException {
+        TUI tui = new TUI(new RmiClient());
+        tui.runUI();
+    }
 
     // PRINT METHODS
     /**
@@ -659,7 +666,7 @@ public class TUI extends UI {
      * It also clears the command line input area and update the
      * <code>terminalAreaSelection</code> variable.
      */
-    private void moveCursorToCmdLine() {
+    protected void moveCursorToCmdLine() {
         AnsiConsole.out().print(
                 Ansi.ansi().cursor(CMD_LINE_INPUT_ROW, CMD_LINE_INPUT_COLUMN).a(" ".repeat(CMD_LINE_EFFECTIVE_WIDTH)));
         AnsiConsole.out().print(Ansi.ansi().cursor(CMD_LINE_INPUT_ROW, CMD_LINE_INPUT_COLUMN).a("> "));
@@ -795,21 +802,20 @@ public class TUI extends UI {
      */
     private void commandLineOut() {
         new Thread(() -> {
+            print_PlayAreaBorders();
+            print_CmdLineBorders();
+            commandLineReader();
             while (true) {
                 synchronized (cmdLineOut) {
                     if (cmdLineOut.isEmpty()) {
                         try {
-                            print_CmdLineBorders();
-                            print_PlayAreaBorders();
-                            commandLineReader(); // solo al lancio del thread command line out la lista cmdLineOut è
-                                                 // vuota, quindi entra in questo if solo una volta
                             cmdLineOut.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     } else {
                         print_CmdLineBorders();
-                        updateCmdLineOut();
+                        updateCmdLineOut(); // sembra looppare all'infinito
                     }
                 }
             }
@@ -842,8 +848,8 @@ public class TUI extends UI {
                         }
                     }
                 }
-                moveCursorToCmdLine();
                 String input = "";
+                moveCursorToCmdLine();
                 // if a state is running a command, it waits for the command to be finished
                 // This is necessary to let each command get its input
                 synchronized (state) {
@@ -940,6 +946,7 @@ public class TUI extends UI {
                 synchronized (areaSelectionLock) {
                     if (!(terminalAreaSelection == 1)) {
                         try {
+                            moveCursorToCmdLine();
                             areaSelectionLock.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -965,6 +972,8 @@ public class TUI extends UI {
     }
 
     /**
+     * cmdLineOut.notifyAll();
+     * 
      * This method starts the <code>chatBoard</code> thread.
      * <p>
      * This thread is used to print the chat board messages the right way and in the
@@ -1025,7 +1034,6 @@ public class TUI extends UI {
             }
             resetCursor();
             try {
-                cmdLineOut.notifyAll();
                 cmdLineOut.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -1067,16 +1075,16 @@ public class TUI extends UI {
             e.printStackTrace();
         }
 
-        commandLineOut();
         chatBoard();
         chatReader();
+        commandLineOut();
 
         // TODO temporaneo per la prova
         Deck<PlayableCard> deck = new Deck<>(CardType.RESOURCE);
         Map<Point, PlayableCard> placedCards = new HashMap<>();
         placedCards.put(new Point(0, 0), deck.draw());
         placedCards.put(new Point(1, 1), deck.draw());
-        print_PlacedCards(placedCards);
+        // print_PlacedCards(placedCards);
     }
 
     // UPDATES FIELDS & METHODS
