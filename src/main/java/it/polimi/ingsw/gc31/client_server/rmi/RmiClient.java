@@ -102,16 +102,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
-    public void drawGold() throws RemoteException {
-        gameController.drawGold(username);
-    }
-
-    @Override
-    public void drawResource() throws RemoteException {
-        gameController.drawResource(username);
-    }
-
-    @Override
     public void joinGame(int idGame) throws RemoteException {
         gameController = controller.joinGame(username, idGame);
     }
@@ -131,6 +121,46 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void drawGold() throws RemoteException {
+        gameController.drawGold(username);
+    }
+
+    @Override
+    public void drawGoldCard1() throws RemoteException {
+        gameController.drawGoldCard1(username);
+    }
+
+    @Override
+    public void drawGoldCard2() throws RemoteException {
+        gameController.drawGoldCard2(username);
+    }
+
+    @Override
+    public void drawResource() throws RemoteException {
+        gameController.drawResource(username);
+    }
+
+    @Override
+    public void drawResourceCard1() throws RemoteException {
+        gameController.drawResourceCard1(username);
+    }
+
+    @Override
+    public void drawResourceCard2() throws RemoteException {
+        gameController.drawResourceCard2(username);
+    }
+
+    @Override
+    public void chooseSecretObjective1() throws RemoteException {
+        gameController.chooseSecretObjective1(username);
+    }
+
+    @Override
+    public void chooseSecretObjective2() throws RemoteException {
+        gameController.chooseSecretObjective2(username);
     }
 
     @Override

@@ -220,6 +220,16 @@ public class TCPClient implements ClientCommands {
     }
 
     /**
+     * This method set the UI for the TCPClient
+     *
+     * @param ui is the concrete UI that needs to be assigned for this TCPClient
+     */
+    @Override
+    public void setUI(UI ui) {
+        this.ui = ui;
+    }
+
+    /**
      * This method is the first called by the client, it sends the client handler
      * the request to execute the "connect" method. If the server has already this
      * username ane exception is launched
@@ -266,12 +276,6 @@ public class TCPClient implements ClientCommands {
         ui.show_gameCreated();
     }
 
-    @Override
-    public void drawGold() throws RemoteException {
-        output.println("draw gold");
-        output.flush();
-    }
-
     /**
      * This method send the string that identifies the join game request made
      * by the player
@@ -298,7 +302,7 @@ public class TCPClient implements ClientCommands {
      * In this case the method reads every String sent by the client handler,
      * collect every
      * String in "list" and then call the method of the ui.
-     * 
+     *
      * @throws IOException      is launched if an error is occurred in the readLine
      *                          method
      * @throws NoGamesException is launched if there are no created games
@@ -319,36 +323,68 @@ public class TCPClient implements ClientCommands {
         ui.show_listGame(list);
     }
 
-    /**
-     * This method returns the player's game idGame
-     * 
-     * @return the idGame of the game
-     * @throws RemoteException
-     */
-    @Override
-    public int getGameID() throws RemoteException {
-        return idGame;
-    }
-
-    /**
-     * This method set the UI for the TCPClient
-     * 
-     * @param ui is the concrete UI that needs to be assigned for this TCPClient
-     */
-    @Override
-    public void setUI(UI ui) {
-        this.ui = ui;
-    }
-
     @Override
     public void setReady(boolean ready) throws RemoteException {
         // TODO Auto-generated method stub
     }
 
     @Override
+    public void drawGold() throws RemoteException {
+        output.println("draw gold");
+        output.flush();
+    }
+
+    @Override
+    public void drawGoldCard1() throws RemoteException {
+        output.println("draw gold card 1");
+        output.flush();
+    }
+
+    @Override
+    public void drawGoldCard2() throws RemoteException {
+        output.println("draw gold card 2");
+        output.flush();
+    }
+
+    @Override
     public void drawResource() throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'drawResource'");
+    }
+
+    @Override
+    public void drawResourceCard1() throws RemoteException {
+        output.println("draw resource card 1");
+        output.flush();
+    }
+
+    @Override
+    public void drawResourceCard2() throws RemoteException {
+        output.println("draw resource card 2");
+        output.flush();
+    }
+
+    @Override
+    public void chooseSecretObjective1() throws RemoteException {
+        output.println("choose secret objective 1");
+        output.flush();
+    }
+
+    @Override
+    public void chooseSecretObjective2() throws RemoteException {
+        output.println("choose secret objective 2");
+        output.flush();
+    }
+
+    /**
+     * This method returns the player's game idGame
+     *
+     * @return the idGame of the game
+     * @throws RemoteException
+     */
+    @Override
+    public int getGameID() throws RemoteException {
+        return idGame;
     }
 
     @Override
