@@ -1,5 +1,7 @@
 package it.polimi.ingsw.gc31.view.interfaces;
 
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
+
 import java.rmi.RemoteException;
 import java.rmi.Remote;
 import java.util.List;
@@ -18,7 +20,7 @@ public interface ShowUpdate extends Remote {
 
     public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException;
 
-    public void show_handPlayer(String username, List<String> hand) throws RemoteException;
+    public void show_handPlayer(String username, List<PlayableCard> hand) throws RemoteException;
 
     public void show_scorePlayer(String key, Integer value) throws RemoteException;
 

@@ -4,6 +4,7 @@ package it.polimi.ingsw.gc31.view.gui;
 import java.rmi.RemoteException;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import javafx.application.Application;
 import javafx.application.Platform;
 import it.polimi.ingsw.gc31.view.UI;
@@ -68,7 +69,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
+    public void show_handPlayer(String username, List<PlayableCard> hand){
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_handPlayer'");
     }

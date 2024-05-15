@@ -1,6 +1,8 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
+import it.polimi.ingsw.gc31.client_server.queue.clientSide.ClientQueueObject;
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
 import java.io.PrintWriter;
@@ -45,6 +47,11 @@ public class VirtualSocketServer implements VirtualClient {
     }
 
     @Override
+    public void sendCommand(ClientQueueObject obj) throws RemoteException {
+
+    }
+
+    @Override
     public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_goldDeck'");
@@ -81,10 +88,10 @@ public class VirtualSocketServer implements VirtualClient {
     }
 
     @Override
-    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_handPlayer'");
+    public void show_handPlayer(String username, List<PlayableCard> hand) throws RemoteException {
+
     }
+
 
     @Override
     public void show_scorePlayer(String key, Integer value) throws RemoteException {

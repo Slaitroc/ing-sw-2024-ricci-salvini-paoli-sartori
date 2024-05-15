@@ -6,8 +6,10 @@ import java.util.List;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientSide.ClientQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.UI;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
@@ -80,7 +82,7 @@ public class DebugClient implements VirtualClient, ClientCommands {
     }
 
     @Override
-    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
+    public void show_handPlayer(String username, List<PlayableCard> hand) throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_handPlayer'");
     }
@@ -149,6 +151,11 @@ public class DebugClient implements VirtualClient, ClientCommands {
     public ShowUpdate getUI() throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getUI'");
+    }
+
+    @Override
+    public void sendCommand(ClientQueueObject obj) throws RemoteException {
+
     }
 
 }

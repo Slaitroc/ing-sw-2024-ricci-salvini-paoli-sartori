@@ -1337,11 +1337,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_handPlayer(String username, List<String> handString) throws RemoteException {
-        List<PlayableCard> hand = new ArrayList<>();
-        for (String entry: handString) {
-            hand.add(gsonTranslater.fromJson(entry, PlayableCard.class));
-        }
+    public void show_handPlayer(String username, List<PlayableCard> hand){
         print_Hand(hand);
         resetCursor();
     }
