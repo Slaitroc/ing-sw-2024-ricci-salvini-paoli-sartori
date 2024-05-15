@@ -144,6 +144,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             model.setObjectives(); // Here the common goals are initialized
             model.initSecretObj(); // Here the secret goals are drawn
 
+            createAllListeners();
             for (Player player : playerList.values()) {
                 player.setStarterCard(); // Here the starter cards are drawn
                 player.drawResource();

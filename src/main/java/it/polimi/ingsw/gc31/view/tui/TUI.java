@@ -10,16 +10,11 @@ import java.awt.Point;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.rmi.RemoteException;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import it.polimi.ingsw.gc31.model.strategies.Objective;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -47,15 +42,19 @@ public class TUI extends UI {
     private static final int CHAT_BOARD_WIDTH = 60;
     private static final int PLAYAREA_INITIAL_ROW = 1;
     private static final int PLAYAREA_INITIAL_COLUMN = 61;
-    private static final int PLAYAREA_END_ROW = 30;
+    private static final int PLAYAREA_END_ROW = 29;
     private static final int PLAYAREA_END_COLUMN = 160;
-    private static final int CARD_LENGTH = 23;
+    private static final int CARD_LENGTH = 21;
     private static final int CARD_HEIGHT = 7;
-    private static final int CARD_CORNER_LENGTH = 4;
+    private static final int CARD_CORNER_LENGTH = 5;
     // the misalignment along x between two cards
-    private static final int CARD_X_OFFSET = 17;
+    private static final int CARD_X_OFFSET = 15;
     // the misalignment along y between two cards
-    private static final int CARD_Y_OFFSET = 5;
+    private static final int CARD_Y_OFFSET = 4;
+    private static final int HAND_INITIAL_ROW = 30;
+    private static final int HAND_INITIAL_COLUMN = 61;
+    private static final int HAND_END_ROW = 38;
+    private static final int HAND_END_COLUMN = 127;
 
     // CONSTANTS
     private static final int CMD_LINE_EFFECTIVE_WIDTH = CMD_LINE_WIDTH - 2;
@@ -74,10 +73,16 @@ public class TUI extends UI {
     private int OFFSET_Y_PLAYAREA = 0;
     // RGB COLORS
     // TODO colori non definitivi, aggiungere altri tre colori delle carte
-    private static final int[] RGB_COLOR_RED_CARD = { 190, 29, 44 };
-    private static final int[] RGB_COLOR_CORNER = { 133, 128, 104 };
+    private final int[] RGB_COLOR_RED_CARD = {204, 76, 67};
+    private final int[] RGB_COLOR_GREEN_CARD = {73, 184, 105};
+    private final int[] RGB_COLOR_BLUE_CARD = {114, 202, 203};
+    private final int[] RBG_COLOR_PURPLE_CARD = {165, 85, 158};
+    private final int[] RGB_COLOR_CORNER = {223, 215, 176};
+
+    private final int[] RGB_COLOR_GOLD = {181, 148, 16};
 
     // PRINT METHODS
+
     /**
      * Draws the borders of the chat board
      */
@@ -145,12 +150,13 @@ public class TUI extends UI {
 
     }
 
+    // TODO fare una sola funzione
+
     /**
      * Draws the play area
      */
     public void print_PlayAreaBorders() {
         StringBuilder res = new StringBuilder();
-
         res.append(ansi().cursor(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN).fg(WHITE).a("┌")
                 .a(String.valueOf("─").repeat(PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN - 1)).a("┐"));
 
@@ -160,9 +166,46 @@ public class TUI extends UI {
         }
         res.append(ansi().cursor(PLAYAREA_END_ROW, PLAYAREA_INITIAL_COLUMN).fg(WHITE).a("└")
                 .a(String.valueOf("─").repeat(PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN - 1)).a("┘"));
-
         System.out.println(res);
     }
+
+    public void print_HandAreaBorders() {
+        StringBuilder res = new StringBuilder();
+        res.append(ansi().cursor(HAND_INITIAL_ROW, HAND_INITIAL_COLUMN).fg(WHITE).a("┌")
+                .a(String.valueOf("─").repeat(HAND_END_COLUMN - HAND_INITIAL_COLUMN - 1)).a("┐"));
+
+        for (int i = 1; i < HAND_END_ROW - HAND_INITIAL_ROW; i++) {
+            res.append(ansi().cursor(HAND_INITIAL_ROW + i, HAND_INITIAL_COLUMN).a("│"));
+            res.append(ansi().cursor(HAND_INITIAL_ROW + i, HAND_END_COLUMN).a("│"));
+        }
+        res.append(ansi().cursor(HAND_END_ROW, HAND_INITIAL_COLUMN).fg(WHITE).a("└")
+                .a(String.valueOf("─").repeat(HAND_END_COLUMN - HAND_INITIAL_COLUMN - 1)).a("┘"));
+        System.out.println(res);
+    }
+
+    public void print_Hand(List<PlayableCard> hand) {
+        StringBuilder res = new StringBuilder();
+
+        print_PlayableCard(
+                hand.get(0),
+                HAND_INITIAL_COLUMN + 1,
+                HAND_INITIAL_ROW + 1,
+                HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN
+        );
+        print_PlayableCard(
+                hand.get(0),
+                HAND_INITIAL_COLUMN + 1 + (CARD_LENGTH+1),
+                HAND_INITIAL_ROW + 1,
+                HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN
+        );
+        print_PlayableCard(
+                hand.get(0),
+                HAND_INITIAL_COLUMN + 1 + (CARD_LENGTH+1)*2,
+                HAND_INITIAL_ROW + 1,
+                HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN
+        );
+    }
+
 
     /**
      * Print the cards of PlacedCards in the playArea
@@ -175,10 +218,12 @@ public class TUI extends UI {
 
         for (Point point : placeHolders) {
             print_PlaceHolder(
+                    point,
                     PLAYAREA_INITIAL_COLUMN + (PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN) / 2
                             + (CARD_X_OFFSET * point.x) + OFFSET_X_PLAYAREA,
                     PLAYAREA_INITIAL_ROW + (PLAYAREA_END_ROW - PLAYAREA_INITIAL_ROW) / 2
-                            - (CARD_Y_OFFSET * point.y) + OFFSET_Y_PLAYAREA);
+                            - (CARD_Y_OFFSET * point.y) + OFFSET_Y_PLAYAREA,
+                    PLAYAREA_INITIAL_ROW, PLAYAREA_END_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_COLUMN);
         }
 
         for (Map.Entry<Point, PlayableCard> entry : placedCards.entrySet()) {
@@ -187,9 +232,10 @@ public class TUI extends UI {
             print_PlayableCard(
                     entry.getValue(),
                     PLAYAREA_INITIAL_COLUMN + (PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN) / 2
-                            + (CARD_X_OFFSET * entry.getKey().x) + OFFSET_X_PLAYAREA,
+                            + (CARD_X_OFFSET * entry.getKey().x) + OFFSET_X_PLAYAREA - (CARD_LENGTH - 1) / 2,
                     PLAYAREA_INITIAL_ROW + (PLAYAREA_END_ROW - PLAYAREA_INITIAL_ROW) / 2
-                            - (CARD_Y_OFFSET * entry.getKey().y) + OFFSET_Y_PLAYAREA);
+                            - (CARD_Y_OFFSET * entry.getKey().y) + OFFSET_Y_PLAYAREA - ((CARD_HEIGHT - 1) / 2),
+                    PLAYAREA_INITIAL_ROW, PLAYAREA_END_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_COLUMN);
         }
     }
 
@@ -197,122 +243,208 @@ public class TUI extends UI {
      * Draws a card centered in X and Y
      * x and y are relative to the board where the cards are drawn
      */
-    private void print_PlayableCard(PlayableCard card, int x, int y) {
+    private void print_PlayableCard(PlayableCard card, int relative_x, int relative_y, int overFlowUp, int overFlowDown, int overFlowLeft, int overFlowRight) {
         // the card is printed starting from the top left corner
-        // the coordinate x from which to start printing the card
-        int relative_x = x - (CARD_LENGTH - 1) / 2;
-        // the coordinate y from which to start printing the card
-        int relative_y = y - ((CARD_HEIGHT - 1) / 2);
 
         // limits of the playArea beyond which parts of the cards or entire cards are
         // not printed
-        int overflowUp = PLAYAREA_INITIAL_ROW;
-        int overflowDown = PLAYAREA_END_ROW;
-        int overflowLeft = PLAYAREA_INITIAL_COLUMN;
-        int overflowRight = PLAYAREA_END_COLUMN;
 
         // TODO implementare il resto degli elementi della carta
-        int[] cardColor = getRgbColor(card.getColor());
+        int score = card.getScore();
         List<Resources> resources = card.getCorners();
+        List<Resources> requirements = new ArrayList<>();
+        for (Map.Entry<Resources, Integer> entry : card.getRequirements().entrySet()) {
+            for (int i = 0; i < entry.getValue(); i++) {
+                requirements.add(entry.getKey());
+            }
+        }
+
+        Objective ob = card.getObjective();
+        int[] cardColor = getRgbColor(card.getColor());
+        int[] cornerUpSxColor;
+        int[] cornerUpDxColor;
+        int[] cornerDownSxColor;
+        int[] cornerDownDxColor;
+
+        if (!resources.get(0).equals(Resources.HIDDEN)) {
+            cornerUpDxColor = RGB_COLOR_CORNER;
+        } else {
+            cornerUpDxColor = cardColor;
+        }
+        if (!resources.get(1).equals(Resources.HIDDEN)) {
+            cornerDownDxColor = RGB_COLOR_CORNER;
+        } else {
+            cornerDownDxColor = cardColor;
+        }
+        if (!resources.get(2).equals(Resources.HIDDEN)) {
+            cornerDownSxColor = RGB_COLOR_CORNER;
+        } else {
+            cornerDownSxColor = cardColor;
+        }
+        if (!resources.get(3).equals(Resources.HIDDEN)) {
+            cornerUpSxColor = RGB_COLOR_CORNER;
+        } else {
+            cornerUpSxColor = cardColor;
+        }
 
         // if the card entirely exceeds the limits of the playArea it is not printed
-        if (overflowLeft - (relative_x + CARD_LENGTH - 1) < 0 && (overflowRight - relative_x) > 0
-                && (overflowDown - relative_y) > 0 && overflowUp - (relative_y + CARD_HEIGHT - 1) < 0) {
+        if (overFlowLeft - (relative_x + CARD_LENGTH - 1) < 0 && (overFlowRight - relative_x) > 0
+                && (overFlowDown - relative_y) > 0 && overFlowUp - (relative_y + CARD_HEIGHT - 1) < 0) {
             StringBuilder res = new StringBuilder();
             String preLine;
             String centerLine;
             String postLine;
 
+            // FIRST LINE
             // if the first line of the card exceeds the upper or lower limit the line is
             // not printed
-            if (relative_y > overflowUp && relative_y < overflowDown) {
-                preLine = "▏   ";
+            if (relative_y > overFlowUp && relative_y < overFlowDown) {
+                preLine = "▏" + String.valueOf(" ").repeat(CARD_CORNER_LENGTH - 1);
                 centerLine = String.valueOf("▔").repeat(CARD_LENGTH - 2 * CARD_CORNER_LENGTH);
-                postLine = "   ▕";
+                postLine = String.valueOf(" ").repeat(CARD_CORNER_LENGTH - 1) + "▕";
                 // if part of the line exceeds the right limit, the excess part is cut off
-                if (relative_x + CARD_LENGTH > overflowRight) {
-
-                    if (overflowRight - relative_x - (CARD_LENGTH - CARD_CORNER_LENGTH) > 0) {
+                if (relative_x + CARD_LENGTH > overFlowRight) {
+                    if (overFlowRight - relative_x - (CARD_LENGTH - CARD_CORNER_LENGTH) > 0) {
                         postLine = postLine.substring(0,
-                                overflowRight - relative_x - (CARD_LENGTH - CARD_CORNER_LENGTH));
+                                overFlowRight - relative_x - (CARD_LENGTH - CARD_CORNER_LENGTH));
                         res.append(ansi().cursor(relative_y, relative_x)
-                                .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(preLine)
+                                .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine)
                                 .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
-                                .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(postLine));
-                    } else if (relative_x + CARD_CORNER_LENGTH >= overflowRight) {
-                        preLine = preLine.substring(0, overflowRight - relative_x);
+                                .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine));
+                    } else if (relative_x + CARD_CORNER_LENGTH >= overFlowRight) {
+                        preLine = preLine.substring(0, overFlowRight - relative_x);
                         res.append(ansi().cursor(relative_y, relative_x)
-                                .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(preLine));
+                                .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine));
                     } else {
-                        centerLine = centerLine.substring(0, overflowRight - relative_x - CARD_CORNER_LENGTH);
+                        centerLine = centerLine.substring(0, overFlowRight - relative_x - CARD_CORNER_LENGTH);
                         res.append(ansi().cursor(relative_y, relative_x)
-                                .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(preLine)
+                                .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine)
                                 .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine));
                     }
 
                 }
                 // If part of the line exceeds the left limit, the excess part is cut off, and
                 // the x-coordinate changes
-                else if (overflowLeft - relative_x >= 0) {
-
-                    if (CARD_CORNER_LENGTH - (overflowLeft - relative_x) - 1 > 0) {
-                        preLine = preLine.substring(overflowLeft - relative_x + 1, CARD_CORNER_LENGTH);
-                        res.append(ansi().cursor(relative_y, overflowLeft + 1)
-                                .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(preLine)
+                else if (overFlowLeft - relative_x >= 0) {
+                    if (CARD_CORNER_LENGTH - (overFlowLeft - relative_x) - 1 > 0) {
+                        preLine = preLine.substring(overFlowLeft - relative_x + 1, CARD_CORNER_LENGTH);
+                        res.append(ansi().cursor(relative_y, overFlowLeft + 1)
+                                .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine)
                                 .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
-                                .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(postLine));
-                    } else if ((relative_x + CARD_LENGTH - CARD_CORNER_LENGTH) - overflowLeft - 1 < 0) {
+                                .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine));
+                    } else if ((relative_x + CARD_LENGTH - CARD_CORNER_LENGTH) - overFlowLeft - 1 < 0) {
                         postLine = postLine.substring(
-                                overflowLeft + 1 - (relative_x + CARD_LENGTH - CARD_CORNER_LENGTH), CARD_CORNER_LENGTH);
-                        res.append(ansi().cursor(relative_y, overflowLeft + 1)
-                                .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(postLine));
+                                overFlowLeft + 1 - (relative_x + CARD_LENGTH - CARD_CORNER_LENGTH), CARD_CORNER_LENGTH);
+                        res.append(ansi().cursor(relative_y, overFlowLeft + 1)
+                                .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine));
                     } else {
-                        centerLine = centerLine.substring(overflowLeft - relative_x + 1 - CARD_CORNER_LENGTH,
+                        centerLine = centerLine.substring(overFlowLeft - relative_x + 1 - CARD_CORNER_LENGTH,
                                 CARD_LENGTH - 2 * CARD_CORNER_LENGTH);
-                        res.append(ansi().cursor(relative_y, overflowLeft + 1)
+                        res.append(ansi().cursor(relative_y, overFlowLeft + 1)
                                 .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
-                                .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(postLine));
+                                .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine));
                     }
 
                 } else {
                     res.append(ansi().cursor(relative_y, relative_x)
-                            .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(preLine)
+                            .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine)
                             .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
-                            .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(postLine));
+                            .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine));
+                }
+            }
+
+            // SECOND LINE
+            if (relative_y + 1 > overFlowUp && relative_y + 1 < overFlowDown) {
+                preLine = "▏" + String.valueOf(" ").repeat(CARD_CORNER_LENGTH - 1);
+                centerLine = String.valueOf(" ").repeat(CARD_LENGTH - 2 * CARD_CORNER_LENGTH);
+                postLine = String.valueOf(" ").repeat(CARD_CORNER_LENGTH - 1) + "▕";
+                // if part of the line exceeds the right limit, the excess part is cut off
+                if (relative_x + CARD_LENGTH > overFlowRight) {
+                    if (overFlowRight - relative_x - (CARD_LENGTH - CARD_CORNER_LENGTH) > 0) {
+                        postLine = postLine.substring(0,
+                                overFlowRight - relative_x - (CARD_LENGTH - CARD_CORNER_LENGTH));
+                        res.append(ansi().cursor(relative_y + 1, relative_x)
+                                .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine)
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
+                                .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine));
+                    } else if (relative_x + CARD_CORNER_LENGTH >= overFlowRight) {
+                        preLine = preLine.substring(0, overFlowRight - relative_x);
+                        res.append(ansi().cursor(relative_y + 1, relative_x)
+                                .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine));
+                    } else {
+                        centerLine = centerLine.substring(0, overFlowRight - relative_x - CARD_CORNER_LENGTH);
+                        res.append(ansi().cursor(relative_y + 1, relative_x)
+                                .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine)
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine));
+                    }
+
+                }
+                // If part of the line exceeds the left limit, the excess part is cut off, and
+                // the x-coordinate changes
+                else if (overFlowLeft - relative_x >= 0) {
+                    if (CARD_CORNER_LENGTH - (overFlowLeft - relative_x) - 1 > 0) {
+                        preLine = preLine.substring(overFlowLeft - relative_x + 1, CARD_CORNER_LENGTH);
+                        res.append(ansi().cursor(relative_y + 1, overFlowLeft + 1)
+                                .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine)
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
+                                .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine));
+                    } else if ((relative_x + CARD_LENGTH - CARD_CORNER_LENGTH) - overFlowLeft - 1 < 0) {
+                        postLine = postLine.substring(
+                                overFlowLeft + 1 - (relative_x + CARD_LENGTH - CARD_CORNER_LENGTH), CARD_CORNER_LENGTH);
+                        res.append(ansi().cursor(relative_y + 1, overFlowLeft + 1)
+                                .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine));
+                    } else {
+                        centerLine = centerLine.substring(overFlowLeft - relative_x + 1 - CARD_CORNER_LENGTH,
+                                CARD_LENGTH - 2 * CARD_CORNER_LENGTH);
+                        res.append(ansi().cursor(relative_y + 1, overFlowLeft + 1)
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
+                                .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine));
+                    }
+
+                } else {
+                    res.append(ansi().cursor(relative_y + 1, relative_x)
+                            .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine)
+                            .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
+                            .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine));
                 }
 
-                // corner up sx
-                if (relative_x + 2 < overflowRight && relative_x + 2 > overflowLeft + 1) {
-                    res.append(ansi().cursor(relative_y, relative_x + 1)
-                            .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
-                            .a(resources.get(3).getSymbol()));
+                // CORNER UP SX
+                if (!resources.get(3).equals(Resources.HIDDEN) && relative_x + 2 < overFlowRight && relative_x + 2 > overFlowLeft + 1) {
+                    res.append(ansi().cursor(relative_y + 1, relative_x + 1).bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(resources.get(3).getSymbol()));
                 }
-                // corner up dx
-                if (relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 2 < overflowRight
-                        && relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 2 > overflowLeft + 1) {
-                    res.append(ansi().cursor(relative_y, relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 1)
-                            .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
-                            .a(resources.get(0).getSymbol()));
+                // CORNER UP DX
+                if (!resources.get(0).equals(Resources.HIDDEN) && relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 2 < overFlowRight && relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 2 > overFlowLeft + 1) {
+                    res.append(ansi().cursor(relative_y + 1, relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 1).bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(resources.get(0).getSymbol()));
+                }
+
+                // OBJECTIVE AREA
+                // TODO aggiungere limiti
+                if (score != 0 && ob != null) {
+                    res.append(ansi().cursor(relative_y + 1, relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) / 2).bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(String.valueOf(" ").repeat(CARD_CORNER_LENGTH)));
+                    res.append(ansi().cursor(relative_y + 1, relative_x + CARD_LENGTH / 2 - 1).bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(score + "│" + ob.toString()));
+                } else if (score != 0) {
+                    res.append(ansi().cursor(relative_y + 1, relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) / 2).bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(String.valueOf(" ").repeat(CARD_CORNER_LENGTH)));
+                    res.append(ansi().cursor(relative_y + 1, relative_x + CARD_LENGTH / 2).bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(score));
                 }
 
             }
 
             // creates the center lines of the paper
-            for (int i = 1; i <= CARD_HEIGHT - 2; i++) {
+            for (int i = 2; i <= CARD_HEIGHT - 3; i++) {
                 // if a center line of the card exceeds the upper or lower limit the line is not
                 // printed
-                if (relative_y + i > overflowUp && relative_y + i < overflowDown) {
+                if (relative_y + i > overFlowUp && relative_y + i < overFlowDown) {
                     String line = "▏" + String.valueOf(" ").repeat(CARD_LENGTH - 2) + "▕";
                     // if part of the line exceeds the right limit, the excess part is cut off
-                    if (relative_x + line.length() > overflowRight) {
-                        line = line.substring(0, overflowRight - relative_x);
+                    if (relative_x + line.length() > overFlowRight) {
+                        line = line.substring(0, overFlowRight - relative_x);
                         res.append(ansi().cursor(relative_y + i, relative_x)
                                 .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
                     }
                     // If part of the line exceeds the left limit, the excess part is cut off
-                    else if (overflowLeft - relative_x >= 0) {
-                        line = line.substring(overflowLeft - relative_x + 1, line.length());
-                        res.append(ansi().cursor(relative_y + i, overflowLeft + 1)
+                    else if (overFlowLeft - relative_x >= 0) {
+                        line = line.substring(overFlowLeft - relative_x + 1);
+                        res.append(ansi().cursor(relative_y + i, overFlowLeft + 1)
                                 .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
                     } else {
                         res.append(ansi().cursor(relative_y + i, relative_x)
@@ -321,70 +453,126 @@ public class TUI extends UI {
                 }
             }
 
-            // if the last line of the card exceeds the upper or lower limit the line is not
-            // printed
-            if (relative_y + CARD_HEIGHT - 1 > overflowUp && relative_y + CARD_HEIGHT - 1 < overflowDown) {
+            // SECOND-LAST LINE
+            if (relative_y - 1 + CARD_HEIGHT - 1 > overFlowUp && relative_y - 1 + CARD_HEIGHT - 1 < overFlowDown) {
                 // if part of the line exceeds the right limit, the excess part is cut off
-                preLine = "▏   ";
-                centerLine = String.valueOf("▁").repeat(CARD_LENGTH - 2 * CARD_CORNER_LENGTH);
-                postLine = "   ▕";
-                if (relative_x + CARD_LENGTH > overflowRight) {
-                    if (overflowRight - relative_x - (CARD_LENGTH - CARD_CORNER_LENGTH) > 0) {
+                preLine = "▏" + String.valueOf(" ").repeat(CARD_CORNER_LENGTH - 1);
+                centerLine = String.valueOf(" ").repeat(CARD_LENGTH - 2 * CARD_CORNER_LENGTH);
+                postLine = String.valueOf(" ").repeat(CARD_CORNER_LENGTH - 1) + "▕";
+                if (relative_x + CARD_LENGTH > overFlowRight) {
+                    if (overFlowRight - relative_x - (CARD_LENGTH - CARD_CORNER_LENGTH) > 0) {
                         postLine = postLine.substring(0,
-                                overflowRight - relative_x - (CARD_LENGTH - CARD_CORNER_LENGTH));
-                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
-                                .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(preLine)
+                                overFlowRight - relative_x - (CARD_LENGTH - CARD_CORNER_LENGTH));
+                        res.append(ansi().cursor(relative_y - 1 + CARD_HEIGHT - 1, relative_x)
+                                .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine)
                                 .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
-                                .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(postLine));
-                    } else if (relative_x + CARD_CORNER_LENGTH >= overflowRight) {
-                        preLine = preLine.substring(0, overflowRight - relative_x);
-                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
-                                .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(preLine));
+                                .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(postLine));
+                    } else if (relative_x + CARD_CORNER_LENGTH >= overFlowRight) {
+                        preLine = preLine.substring(0, overFlowRight - relative_x);
+                        res.append(ansi().cursor(relative_y - 1 + CARD_HEIGHT - 1, relative_x)
+                                .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine));
                     } else {
-                        centerLine = centerLine.substring(0, overflowRight - relative_x - CARD_CORNER_LENGTH);
-                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
-                                .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(preLine)
+                        centerLine = centerLine.substring(0, overFlowRight - relative_x - CARD_CORNER_LENGTH);
+                        res.append(ansi().cursor(relative_y - 1 + CARD_HEIGHT - 1, relative_x)
+                                .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine)
                                 .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine));
                     }
-                } else if (overflowLeft - relative_x >= 0) {
-                    if (CARD_CORNER_LENGTH - (overflowLeft - relative_x) - 1 > 0) {
-                        preLine = preLine.substring(overflowLeft - relative_x + 1, CARD_CORNER_LENGTH);
-                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, overflowLeft + 1)
-                                .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(preLine)
+                } else if (overFlowLeft - relative_x >= 0) {
+                    if (CARD_CORNER_LENGTH - (overFlowLeft - relative_x) - 1 > 0) {
+                        preLine = preLine.substring(overFlowLeft - relative_x + 1, CARD_CORNER_LENGTH);
+                        res.append(ansi().cursor(relative_y - 1 + CARD_HEIGHT - 1, overFlowLeft + 1)
+                                .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine)
                                 .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
-                                .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(postLine));
-                    } else if ((relative_x + CARD_LENGTH - CARD_CORNER_LENGTH) - overflowLeft - 1 < 0) {
+                                .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine));
+                    } else if ((relative_x + CARD_LENGTH - CARD_CORNER_LENGTH) - overFlowLeft - 1 < 0) {
                         postLine = postLine.substring(
-                                overflowLeft + 1 - (relative_x + CARD_LENGTH - CARD_CORNER_LENGTH), CARD_CORNER_LENGTH);
-                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, overflowLeft + 1)
-                                .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(postLine));
+                                overFlowLeft + 1 - (relative_x + CARD_LENGTH - CARD_CORNER_LENGTH), CARD_CORNER_LENGTH);
+                        res.append(ansi().cursor(relative_y - 1 + CARD_HEIGHT - 1, overFlowLeft + 1)
+                                .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine));
                     } else {
-                        centerLine = centerLine.substring(overflowLeft - relative_x + 1 - CARD_CORNER_LENGTH,
+                        centerLine = centerLine.substring(overFlowLeft - relative_x + 1 - CARD_CORNER_LENGTH,
                                 CARD_LENGTH - 2 * CARD_CORNER_LENGTH);
-                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, overflowLeft + 1)
+                        res.append(ansi().cursor(relative_y - 1 + CARD_HEIGHT - 1, overFlowLeft + 1)
                                 .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
-                                .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(postLine));
+                                .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine));
+                    }
+                } else {
+                    res.append(ansi().cursor(relative_y - 1 + CARD_HEIGHT - 1, relative_x)
+                            .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine)
+                            .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
+                            .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine));
+                }
+
+                // CORNER DOWN SX
+                if (relative_x + 2 < overFlowRight && relative_x + 2 > overFlowLeft + 1) {
+                    res.append(ansi().cursor(relative_y - 1 + CARD_HEIGHT - 1, relative_x + 1).bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(resources.get(1).getSymbol()));
+                }
+
+                // CORNER DOWN DX
+                if (relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 2 < overFlowRight && relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 2 > overFlowLeft + 1) {
+                    res.append(ansi().cursor(relative_y - 1 + CARD_HEIGHT - 1, relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 1).bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(resources.get(1).getSymbol()));
+                }
+
+                // REQUIREMENTS
+                if (!requirements.equals(Collections.emptyMap())) {
+                    StringBuilder requirementsLine = new StringBuilder();
+                    for (Resources resource : requirements) {
+                        requirementsLine.append(resource.getSymbol());
+                    }
+                    res.append(ansi().cursor(relative_y - 1 + CARD_HEIGHT - 1, relative_x + (CARD_LENGTH - requirementsLine.length()) / 2).bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(requirementsLine.toString()));
+                }
+            }
+
+            // LAST LINE
+            // if the last line of the card exceeds the upper or lower limit the line is not
+            // printed
+            if (relative_y + CARD_HEIGHT - 1 > overFlowUp && relative_y + CARD_HEIGHT - 1 < overFlowDown) {
+                // if part of the line exceeds the right limit, the excess part is cut off
+                preLine = "▏" + String.valueOf(" ").repeat(CARD_CORNER_LENGTH - 1);
+                centerLine = String.valueOf("▁").repeat(CARD_LENGTH - 2 * CARD_CORNER_LENGTH);
+                postLine = String.valueOf(" ").repeat(CARD_CORNER_LENGTH - 1) + "▕";
+                if (relative_x + CARD_LENGTH > overFlowRight) {
+                    if (overFlowRight - relative_x - (CARD_LENGTH - CARD_CORNER_LENGTH) > 0) {
+                        postLine = postLine.substring(0,
+                                overFlowRight - relative_x - (CARD_LENGTH - CARD_CORNER_LENGTH));
+                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
+                                .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine)
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
+                                .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(postLine));
+                    } else if (relative_x + CARD_CORNER_LENGTH >= overFlowRight) {
+                        preLine = preLine.substring(0, overFlowRight - relative_x);
+                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
+                                .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine));
+                    } else {
+                        centerLine = centerLine.substring(0, overFlowRight - relative_x - CARD_CORNER_LENGTH);
+                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
+                                .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine)
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine));
+                    }
+                } else if (overFlowLeft - relative_x >= 0) {
+                    if (CARD_CORNER_LENGTH - (overFlowLeft - relative_x) - 1 > 0) {
+                        preLine = preLine.substring(overFlowLeft - relative_x + 1, CARD_CORNER_LENGTH);
+                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, overFlowLeft + 1)
+                                .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine)
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
+                                .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine));
+                    } else if ((relative_x + CARD_LENGTH - CARD_CORNER_LENGTH) - overFlowLeft - 1 < 0) {
+                        postLine = postLine.substring(
+                                overFlowLeft + 1 - (relative_x + CARD_LENGTH - CARD_CORNER_LENGTH), CARD_CORNER_LENGTH);
+                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, overFlowLeft + 1)
+                                .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine));
+                    } else {
+                        centerLine = centerLine.substring(overFlowLeft - relative_x + 1 - CARD_CORNER_LENGTH,
+                                CARD_LENGTH - 2 * CARD_CORNER_LENGTH);
+                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, overFlowLeft + 1)
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
+                                .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine));
                     }
                 } else {
                     res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
-                            .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(preLine)
+                            .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine)
                             .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
-                            .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(postLine));
-                }
-
-                // corner up sx
-                if (relative_x + 2 < overflowRight && relative_x + 2 > overflowLeft + 1) {
-                    res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x + 1)
-                            .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
-                            .a(resources.get(2).getSymbol()));
-                }
-                // corner up dx
-                if (relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 2 < overflowRight
-                        && relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 2 > overflowLeft + 1) {
-                    res.append(ansi()
-                            .cursor(relative_y + CARD_HEIGHT - 1, relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 1)
-                            .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
-                            .a(resources.get(1).getSymbol()));
+                            .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine));
                 }
             }
 
@@ -393,65 +581,60 @@ public class TUI extends UI {
         }
     }
 
-    private void print_PlaceHolder(int x, int y) {
+    private void print_PlaceHolder(Point point, int x, int y, int overFlowUp, int overFlowDown, int overFlowLeft, int overFlowRight) {
         int relative_x = x - (CARD_LENGTH - 1) / 2;
         int relative_y = y - (CARD_HEIGHT - 1) / 2;
 
-        int overflowUp = PLAYAREA_INITIAL_ROW;
-        int overflowDown = PLAYAREA_END_ROW;
-        int overflowLeft = PLAYAREA_INITIAL_COLUMN;
-        int overflowRight = PLAYAREA_END_COLUMN;
-
         StringBuilder res = new StringBuilder();
-        if (overflowLeft - (relative_x + CARD_LENGTH - 1) < 0 && (overflowRight - relative_x) > 0
-                && (overflowDown - relative_y) > 0 && overflowUp - (relative_y + CARD_HEIGHT - 1) < 0) {
+        if (overFlowLeft - (relative_x + CARD_LENGTH - 1) < 0 && (overFlowRight - relative_x) > 0
+                && (overFlowDown - relative_y) > 0 && overFlowUp - (relative_y + CARD_HEIGHT - 1) < 0) {
             String line;
-            if (relative_y > overflowUp && relative_y < overflowDown) {
+            if (relative_y > overFlowUp && relative_y < overFlowDown) {
                 line = "┌" + String.valueOf("─").repeat(CARD_LENGTH - 2) + "┐";
-                if (relative_x + CARD_LENGTH > overflowRight) {
-                    line = line.substring(0, overflowRight - relative_x);
+                if (relative_x + CARD_LENGTH > overFlowRight) {
+                    line = line.substring(0, overFlowRight - relative_x);
                     res.append(ansi().cursor(relative_y, relative_x).a(line));
-                } else if (overflowLeft - relative_x >= 0) {
-                    line = line.substring(overflowLeft - relative_x + 1, line.length());
-                    res.append(ansi().cursor(relative_y, overflowLeft + 1).a(line));
+                } else if (overFlowLeft - relative_x >= 0) {
+                    line = line.substring(overFlowLeft - relative_x + 1, line.length());
+                    res.append(ansi().cursor(relative_y, overFlowLeft + 1).a(line));
                 } else {
                     res.append(ansi().cursor(relative_y, relative_x).a(line));
                 }
             }
 
             for (int i = 1; i <= CARD_HEIGHT - 2; i++) {
-                if (relative_y + i > overflowUp && relative_y + i < overflowDown) {
+                if (relative_y + i > overFlowUp && relative_y + i < overFlowDown) {
                     line = "│" + String.valueOf(" ").repeat(CARD_LENGTH - 2) + "│";
-                    if (relative_x + CARD_LENGTH > overflowRight) {
-                        line = line.substring(0, overflowRight - relative_x);
+                    if (relative_x + CARD_LENGTH > overFlowRight) {
+                        line = line.substring(0, overFlowRight - relative_x);
                         res.append(ansi().cursor(relative_y + i, relative_x).a(line));
-                    } else if (overflowLeft - relative_x >= 0) {
-                        line = line.substring(overflowLeft - relative_x + 1, CARD_LENGTH);
-                        res.append(ansi().cursor(relative_y + i, overflowLeft + 1).a(line));
+                    } else if (overFlowLeft - relative_x >= 0) {
+                        line = line.substring(overFlowLeft - relative_x + 1, CARD_LENGTH);
+                        res.append(ansi().cursor(relative_y + i, overFlowLeft + 1).a(line));
                     } else {
                         res.append(ansi().cursor(relative_y + i, relative_x).a(line));
                     }
                 }
             }
 
-            if (relative_y + CARD_HEIGHT - 1 > overflowUp && relative_y + CARD_HEIGHT - 1 < overflowDown) {
+            if (relative_y + CARD_HEIGHT - 1 > overFlowUp && relative_y + CARD_HEIGHT - 1 < overFlowDown) {
                 line = "└" + String.valueOf("─").repeat(CARD_LENGTH - 2) + "┘";
-                if (relative_x + CARD_LENGTH > overflowRight) {
-                    line = line.substring(0, overflowRight - relative_x);
+                if (relative_x + CARD_LENGTH > overFlowRight) {
+                    line = line.substring(0, overFlowRight - relative_x);
                     res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x).a(line));
-                } else if (overflowLeft - relative_x >= 0) {
-                    line = line.substring(overflowLeft - relative_x + 1, CARD_LENGTH);
-                    res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, overflowLeft + 1).a(line));
+                } else if (overFlowLeft - relative_x >= 0) {
+                    line = line.substring(overFlowLeft - relative_x + 1, CARD_LENGTH);
+                    res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, overFlowLeft + 1).a(line));
                 } else {
                     res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x).a(line));
                 }
             }
 
-            if (relative_y + CARD_HEIGHT / 2 > overflowUp && relative_y + CARD_HEIGHT / 2 < overflowDown) {
-                if (relative_x + CARD_LENGTH / 2 + 3 < overflowRight && relative_x + CARD_LENGTH / 2 > overflowLeft) {
+            if (relative_y + CARD_HEIGHT / 2 > overFlowUp && relative_y + CARD_HEIGHT / 2 < overFlowDown) {
+                if (relative_x + CARD_LENGTH / 2 + 3 < overFlowRight && relative_x + CARD_LENGTH / 2 > overFlowLeft) {
                     res.append(
                             ansi().cursor(relative_y + CARD_HEIGHT / 2, relative_x + CARD_LENGTH / 2)
-                                    .a(x + "," + y));
+                                    .a(point.x + "," + point.y));
                 }
             }
         }
@@ -465,20 +648,30 @@ public class TUI extends UI {
         new PrintStream(System.out, true, System.console() != null
                 ? System.console().charset()
                 : Charset.defaultCharset()).println(ansi().fg(YELLOW).a("""
-                        █▀▀█  █▀▀█  █▀▀▄  █▀▀▀ █   █
-                        █     █  █  █  █  █▀▀▀ ▀▀▄▀▀
-                        █▄▄█  █▄▄█  █▄▄▀  █▄▄▄ █   █
-                            """).reset());
+                █▀▀█  █▀▀█  █▀▀▄  █▀▀▀ █   █
+                █     █  █  █  █  █▀▀▀ ▀▀▄▀▀
+                █▄▄█  █▄▄█  █▄▄▀  █▄▄▄ █   █
+                    """).reset());
     }
 
     // PRINT UTILITIES
     private int[] getRgbColor(CardColor color) {
         switch (color) {
-            case CardColor.RED:
+            case CardColor.RED: {
                 return RGB_COLOR_RED_CARD;
+            }
+            case CardColor.GREEN: {
+                return RGB_COLOR_GREEN_CARD;
+            }
+            case CardColor.BLUE: {
+                return RGB_COLOR_BLUE_CARD;
+            }
+            case CardColor.PURPLE: {
+                return RBG_COLOR_PURPLE_CARD;
+            }
             default:
-                // TODO in teoria non si entra mai nel ramo default
-                return RGB_COLOR_RED_CARD;
+                // if a card does not have a color then returns the same color as the corners
+                return RGB_COLOR_CORNER;
         }
     }
 
@@ -620,7 +813,7 @@ public class TUI extends UI {
 
     /**
      * State's command may need to access the TUI to change to a new state
-     * 
+     *
      * @param state
      */
     public void setState(TuiState state) {
@@ -689,7 +882,7 @@ public class TUI extends UI {
      * <p>
      * It also clears the chat input area and update the
      * <code>terminalAreaSelection</code> variable.
-     * 
+     *
      * @param prefix the prefix to be printed before the cursor
      */
     private void moveCursorToChatLine(String prefix) {
@@ -721,7 +914,7 @@ public class TUI extends UI {
      * thread's queue.
      * <p>
      * State methods must use this method to print their messages.
-     * 
+     *
      * @param message
      * @param color
      */
@@ -737,7 +930,7 @@ public class TUI extends UI {
      * thread's queue.
      * <p>
      * State methods must use this method to print their messages.
-     * 
+     *
      * @param message
      */
     protected void printToCmdLineOut(String message) {
@@ -755,7 +948,7 @@ public class TUI extends UI {
 
     /**
      * Format a String as it is printed from the TUI
-     * 
+     *
      * @param text
      * @return the formatted String
      */
@@ -765,7 +958,7 @@ public class TUI extends UI {
 
     /**
      * Format a String as it is printed from the TUI in green
-     * 
+     *
      * @param text
      * @return the formatted String
      */
@@ -776,7 +969,7 @@ public class TUI extends UI {
 
     /**
      * Format a String as it is printed from the TUI in purple
-     * 
+     *
      * @param text
      * @return the formatted String
      */
@@ -786,12 +979,12 @@ public class TUI extends UI {
     }
 
     // THREADS
+
     /**
      * This method starts the <code>commandLineOut</code> thread.
      * <p>
      * This thread is used to print the command line output messages the right way
      * and in the right position.
-     * 
      */
     private void commandLineOut() {
         new Thread(() -> {
@@ -801,8 +994,19 @@ public class TUI extends UI {
                         try {
                             print_CmdLineBorders();
                             print_PlayAreaBorders();
+                            print_HandAreaBorders();
+                            // TODO temporaneo per la prova
+                            Deck<PlayableCard> deck = new Deck<>(CardType.GOLD);
+                            Map<Point, PlayableCard> placedCards = new HashMap<>();
+                            PlayableCard card = deck.draw();
+                            card.changeSide();
+                            placedCards.put(new Point(0, 0), card);
+                            card = deck.draw();
+                            card.changeSide();
+                            placedCards.put(new Point(1, 1), deck.draw());
+                            print_PlacedCards(placedCards);
                             commandLineReader(); // solo al lancio del thread command line out la lista cmdLineOut è
-                                                 // vuota, quindi entra in questo if solo una volta
+                            // vuota, quindi entra in questo if solo una volta
                             cmdLineOut.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -909,7 +1113,7 @@ public class TUI extends UI {
                             }
                         } else {
                             synchronized (state) { // commandLineReader could take control of the input before the
-                                                   // command execution... this synchronized should fix the thing
+                                // command execution... this synchronized should fix the thing
                                 synchronized (cmdLineMessages) {
                                     execute_command(cmd);
                                     cmdLineMessages.notify();
@@ -990,7 +1194,7 @@ public class TUI extends UI {
      * it.
      * <p>
      * If the command is not found, it prints "Command not recognized".
-     * 
+     *
      * @param command
      */
     private void execute_command(String command) {
@@ -1007,7 +1211,6 @@ public class TUI extends UI {
      * It prints the messages in the right position of the console.
      * <p>
      * It also manages the queue of the messages.
-     * 
      */
     private void updateCmdLineOut() {
         synchronized (cmdLineOut) {
@@ -1037,7 +1240,6 @@ public class TUI extends UI {
      * This method is used to update the chat board output messages.
      * <p>
      * It prints the messages in the right position of the console.
-     * 
      */
     private void updateChatBoardOut() {
         for (int i = 0; i < chatMessages.size() && i < CHAT_BOARD_OUT_LINES; i++) {
@@ -1071,12 +1273,7 @@ public class TUI extends UI {
         chatBoard();
         chatReader();
 
-        // TODO temporaneo per la prova
-        Deck<PlayableCard> deck = new Deck<>(CardType.RESOURCE);
-        Map<Point, PlayableCard> placedCards = new HashMap<>();
-        placedCards.put(new Point(0, 0), deck.draw());
-        placedCards.put(new Point(1, 1), deck.draw());
-        print_PlacedCards(placedCards);
+
     }
 
     // UPDATES FIELDS & METHODS
@@ -1113,7 +1310,7 @@ public class TUI extends UI {
      * <code>client.shoListGame(List gameList)</code> ->
      * <p>
      * <code>ui.showListGame(List gameList)</code>
-     * 
+     *
      * @Slaitroc
      */
     @Override
@@ -1140,7 +1337,13 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
+    public void show_handPlayer(String username, List<String> handString) throws RemoteException {
+        List<PlayableCard> hand = new ArrayList<>();
+        for (String entry: handString) {
+            hand.add(gsonTranslater.fromJson(entry, PlayableCard.class));
+        }
+        print_Hand(hand);
+        resetCursor();
     }
 
     @Override
