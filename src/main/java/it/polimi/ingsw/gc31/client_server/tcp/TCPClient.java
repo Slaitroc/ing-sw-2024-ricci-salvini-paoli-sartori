@@ -158,7 +158,7 @@ public class TCPClient implements ClientCommands {
         String line;
         List<String> list = new ArrayList<>();
         try {
-            while (!(line = input.readLine()).equals("game list finised")) {
+            while (!(line = input.readLine()).equals("game list finished")) {
                 list.add(line);
             }
             ui.show_listGame(list);
