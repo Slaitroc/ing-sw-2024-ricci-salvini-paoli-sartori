@@ -19,6 +19,7 @@ public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCa
     private final Map<Point, PlayableCard> placedCards;
     private final Map<Resources, Integer> achievedResources;
     private final Point lastPlaced = new Point(0, 0);
+    private final List<Point> cardOrder;
 
     /**
      * Constructor for the PlayArea class.
@@ -27,6 +28,8 @@ public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCa
     public PlayArea() {
         this.placedCards = new HashMap<>();
         this.achievedResources = new HashMap<>();
+        this.cardOrder = new ArrayList<>();
+        cardOrder.add(new Point(0, 0));
         achievedResources.put(Resources.ANIMAL, 0);
         achievedResources.put(Resources.INSECT, 0);
         achievedResources.put(Resources.INK, 0);
@@ -86,11 +89,13 @@ public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCa
                 placedCards.put(new Point(point), card);
                 updateAvailableRes(card, point);
                 lastPlaced.setLocation(point);
+                cardOrder.add(new Point(point));
                 if (card.getObjective() != null) {
                     return card.getObjective().isObjectiveDone(getPlacedCards(), point, getAchievedResources());
                 }
                 return card.getScore();
             }
+            else System.out.println("Illegal placement of card");
         }
         return 0;
     }
@@ -164,7 +169,7 @@ public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCa
      * @param card the card that is placed.
      * @param point the point where the card is placed.
      */
-    protected void updateAvailableRes(PlayableCard card, Point point) {
+    private void updateAvailableRes(PlayableCard card, Point point) {
         // Adding Resources
         for (Resources newRes : card.getResources()) {
             achievedResources.put(newRes, achievedResources.get(newRes) + 1);
@@ -224,6 +229,10 @@ public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCa
      */
     public Map<Resources, Integer> getAchievedResources() {
         return new HashMap<>(achievedResources);
+    }
+
+    public List<Point> getCardOrder() {
+        return new ArrayList<>(cardOrder);
     }
 
 }

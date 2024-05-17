@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import it.polimi.ingsw.gc31.view.UI;
 
+import javax.xml.datatype.DatatypeFactory;
 import java.util.List;
 
 public class GUI extends UI {
@@ -30,7 +31,11 @@ public class GUI extends UI {
 
     @Override
     protected void uiRunUI() {
-        Application.launch(GUIApplication.class);
+        //Application.launch(GUIApplication.class);
+
+        GUIApplication GUIApplication = new GUIApplication();
+        GUIApplication.setClient(client);
+        GUIApplication.run();
     }
 
     @Override
@@ -103,4 +108,8 @@ public class GUI extends UI {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_starterCard'");
     }
+
+
+
+
 }

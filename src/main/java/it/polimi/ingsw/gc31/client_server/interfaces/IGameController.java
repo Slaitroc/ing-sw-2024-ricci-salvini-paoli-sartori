@@ -30,6 +30,8 @@ public interface IGameController extends Remote {
 
     void changeSide(String username) throws RemoteException;
 
+    void changeStarterSide(String username) throws RemoteException;
+
     void selectCard(String username, int index) throws RemoteException;
 
     /**

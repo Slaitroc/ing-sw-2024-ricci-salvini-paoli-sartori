@@ -40,9 +40,44 @@ public class DebugClient implements VirtualClient, ClientCommands {
     }
 
     @Override
+    public void drawGoldCard1() throws RemoteException {
+
+    }
+
+    @Override
+    public void drawGoldCard2() throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'drawGoldCard2'");
+    }
+
+    @Override
     public void drawResource() throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'drawResource'");
+    }
+
+    @Override
+    public void drawResourceCard1() throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'drawResourceCard1'");
+    }
+
+    @Override
+    public void drawResourceCard2() throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'drawResourceCard2'");
+    }
+
+    @Override
+    public void chooseSecretObjective1() throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'chooseSecretObjective1'");
+    }
+
+    @Override
+    public void chooseSecretObjective2() throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'chooseSecretObjective2'");
     }
 
     @Override

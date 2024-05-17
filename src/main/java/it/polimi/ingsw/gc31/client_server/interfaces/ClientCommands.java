@@ -15,15 +15,27 @@ public interface ClientCommands {
 
     void createGame(int maxNumberPlayer) throws RemoteException, IOException;
 
-    void drawGold() throws RemoteException;
-
-    void drawResource() throws RemoteException;
-
     void joinGame(int gameId) throws RemoteException;
 
     void getGameList() throws RemoteException, NoGamesException, IOException;
 
     void setReady(boolean ready) throws RemoteException;
+
+    void drawGold() throws RemoteException;
+
+    void drawGoldCard1() throws RemoteException;
+
+    void drawGoldCard2() throws RemoteException;
+
+    void drawResource() throws RemoteException;
+
+    void drawResourceCard1() throws RemoteException;
+
+    void drawResourceCard2() throws RemoteException;
+
+    void chooseSecretObjective1() throws RemoteException;
+
+    void chooseSecretObjective2() throws RemoteException;
 
     int getGameID() throws RemoteException;
 
