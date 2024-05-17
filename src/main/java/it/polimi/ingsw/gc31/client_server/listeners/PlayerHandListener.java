@@ -1,7 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.listeners;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.client_server.queue.clientSide.ShowHandPlayerObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowHandPlayerObj;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import javafx.util.Pair;
 
@@ -47,7 +47,6 @@ public class PlayerHandListener implements Listener<Pair<String, List<PlayableCa
         client.sendCommand(new ShowHandPlayerObj(
                 data.getKey(),
                 data.getValue().stream().map(card -> gsonTranslater.toJson(card, PlayableCard.class))
-                        .toList()
-        ));
+                        .toList()));
     }
 }

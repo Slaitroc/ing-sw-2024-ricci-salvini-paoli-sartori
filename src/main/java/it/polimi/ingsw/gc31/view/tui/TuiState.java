@@ -25,6 +25,8 @@ public abstract class TuiState {
 
     protected abstract void command_initial();
 
+    protected abstract void setUsername();
+
     protected abstract void command_createGame();
 
     protected abstract void command_showGames();

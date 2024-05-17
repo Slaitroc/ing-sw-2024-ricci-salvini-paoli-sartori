@@ -1,10 +1,10 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
-import it.polimi.ingsw.gc31.client_server.queue.clientSide.ClientQueueObject;
 import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -203,15 +203,15 @@ public class SocketClientHandler implements VirtualClient {
     @Override
     public void show_handPlayer(String username, List<PlayableCard> hand) throws RemoteException {
         /*
-        output.print("show hand player");
-        // username non viene utilizzato
-        // output.print(username);
-        for (String s : hand) {
-            output.println(s);
-        }
-        output.println("end list");
-        output.flush();
-        */
+         * output.print("show hand player");
+         * // username non viene utilizzato
+         * // output.print(username);
+         * for (String s : hand) {
+         * output.println(s);
+         * }
+         * output.println("end list");
+         * output.flush();
+         */
     }
 
     @Override

@@ -8,6 +8,8 @@ import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ValidUsernameObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongUsernameObj;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
@@ -17,9 +19,12 @@ import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 // Manages interaction with clients
 
 /**
- * This class represents the main controller of all the games that ar currently running.
- * It manages the interaction with the clients and the creation of game controllers for each match.
- * It implements the IController interface and extends the UnicastRemoteObject to allow remote method invocation.
+ * This class represents the main controller of all the games that ar currently
+ * running.
+ * It manages the interaction with the clients and the creation of game
+ * controllers for each match.
+ * It implements the IController interface and extends the UnicastRemoteObject
+ * to allow remote method invocation.
  */
 public class Controller extends UnicastRemoteObject implements IController {
     private static final Controller singleton;
@@ -65,22 +70,26 @@ public class Controller extends UnicastRemoteObject implements IController {
      *
      * @param client   the client to connect.
      * @param username the username of the client.
-     * @throws PlayerNicknameAlreadyExistsException if the username is already in use.
+     * @throws PlayerNicknameAlreadyExistsException if the username is already in
+     *                                              use.
+     * @throws RemoteException
      */
     @Override
-    public void connect(VirtualClient client, String username) throws PlayerNicknameAlreadyExistsException {
-        if (!nicknames.add(username)) {
+    public void connect(VirtualClient client, String username)
+            throws RemoteException, PlayerNicknameAlreadyExistsException {
+        if (nicknames.add(username)) {
+            tempClients.put(username, client);
+            client.sendCommand(new ValidUsernameObj());
+        } else {
+            client.sendCommand(new WrongUsernameObj());
             throw new PlayerNicknameAlreadyExistsException();
         }
-        tempClients.put(username, client);
-
-        // TODO mandare un messaggio di conferma al client
     }
 
     /**
      * Creates a new game and adds it to the game control list.
      *
-     * @param username the username of the client creating the game.
+     * @param username         the username of the client creating the game.
      * @param maxNumberPlayers the maximum number of players for the game.
      * @return the game controller for the newly created game.
      * @throws RemoteException if an RMI error occurs.
@@ -91,7 +100,7 @@ public class Controller extends UnicastRemoteObject implements IController {
         gameControlList.add(new GameController(username, client, maxNumberPlayers, gameControlList.size() - 1));
         client.setGameID(gameControlList.size() - 1);
         tempClients.remove(username);
-        controllerWrite("New Game Created with ID: " + (gameControlList.size()-1));
+        controllerWrite("New Game Created with ID: " + (gameControlList.size() - 1));
         return gameControlList.getLast();
     }
 
@@ -99,7 +108,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * Allows a client to join an existing game.
      *
      * @param username the username of the client joining the game.
-     * @param idGame the ID of the game to join.
+     * @param idGame   the ID of the game to join.
      * @return the game controller for the joined game.
      * @throws RemoteException if an RMI error occurs.
      */
@@ -111,7 +120,7 @@ public class Controller extends UnicastRemoteObject implements IController {
         return gameControlList.get(idGame);
     }
 
-    //GETTERS
+    // GETTERS
 
     /**
      * @return the singleton instance.

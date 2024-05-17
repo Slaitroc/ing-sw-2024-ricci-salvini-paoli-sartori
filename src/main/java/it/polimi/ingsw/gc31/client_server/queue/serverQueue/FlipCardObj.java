@@ -1,8 +1,8 @@
-package it.polimi.ingsw.gc31.client_server.queue;
+package it.polimi.ingsw.gc31.client_server.queue.serverQueue;
 
 import it.polimi.ingsw.gc31.model.player.Player;
 
-public class FlipCardObj implements QueueObject{
+public class FlipCardObj implements QueueObject {
 
     Player player;
 

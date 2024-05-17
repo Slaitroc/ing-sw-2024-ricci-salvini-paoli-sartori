@@ -6,7 +6,6 @@ import java.util.LinkedHashMap;
 import static it.polimi.ingsw.gc31.OurScanner.scanner;
 
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
-import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
 public class InitState extends TuiState {
 
@@ -78,40 +77,30 @@ public class InitState extends TuiState {
     protected void command_drawGold() {
     }
 
-    private void procedure_setUsername() {
-        String message = "Type your username:";
-        boolean usernameIsValid = false;
-        String input;
-        while (!usernameIsValid) {
-            tui.printToCmdLineOut(tui.tuiWrite(message));
-            tui.moveCursorToCmdLine();
-            input = scanner.nextLine();
-
-            try {
-                tui.getClient().setUsername(input.trim());
-                usernameIsValid = true;
-                tui.printToCmdLineOut(tui.tuiWrite("Your name is: " + input.trim()));
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (PlayerNicknameAlreadyExistsException e) {
-                message = "Username already exists :,( -> Try another username:";
-            }
-        }
-
-        // fidati va bene qui
-        tui.getClient().setUI(this.tui);
-
-    }
-
     @Override
     protected void command_drawResource() {
     }
 
     @Override
     protected synchronized void command_initial() {
-        procedure_setUsername();
-        command_showCommandsInfo();
+        setUsername();
+    }
+
+    @Override
+    protected synchronized void setUsername() {
+        tui.getClient().setUI(this.tui);
+        String message = "Type your username:";
+        String input;
+        tui.printToCmdLineOut(tui.tuiWrite(message));
+        tui.moveCursorToCmdLine();
+        input = scanner.nextLine();
+        try {
+            tui.getClient().setUsername(input.trim());
+            tui.printToCmdLineOut(tui.tuiWrite("Your name is: " + input.trim()));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

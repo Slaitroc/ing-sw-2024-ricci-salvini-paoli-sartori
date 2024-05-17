@@ -3,7 +3,7 @@ package it.polimi.ingsw.gc31.client_server.interfaces;
 import java.rmi.RemoteException;
 import java.util.List;
 
-import it.polimi.ingsw.gc31.client_server.queue.clientSide.ClientQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
 public interface VirtualClient extends ShowUpdate {

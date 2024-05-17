@@ -20,7 +20,19 @@ import it.polimi.ingsw.gc31.client_server.listeners.PlayAreaListener;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerStarterCardListener;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerObjectiveCardListener;
-import it.polimi.ingsw.gc31.client_server.queue.*;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChooseSecretObjectiveObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawGoldObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawGoldOneObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawGoldTwoObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResOneObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResTwoObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.FlipCardObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.FlipStarterCardObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.PlayObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.PlayStarterObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.QueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.SelectCardObj;
 import it.polimi.ingsw.gc31.model.GameModel;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.GameState;
@@ -307,14 +319,16 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void chooseSecretObjective1(String username) {
         if (model.getGameState() == GameState.SETUP) {
             addQueueObj(new ChooseSecretObjectiveObj(username, model, 1));
-        } else gameControllerWrite("The game is not in the right state to choose secret objective");
+        } else
+            gameControllerWrite("The game is not in the right state to choose secret objective");
     }
 
     @Override
     public void chooseSecretObjective2(String username) {
         if (model.getGameState() == GameState.SETUP) {
             addQueueObj(new ChooseSecretObjectiveObj(username, model, 2));
-        } else gameControllerWrite("The game is not in the right state to choose secret objective");
+        } else
+            gameControllerWrite("The game is not in the right state to choose secret objective");
     }
 
     @Override

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.gc31.client_server.queue;
+package it.polimi.ingsw.gc31.client_server.queue.serverQueue;
 
 import it.polimi.ingsw.gc31.model.player.Player;
 
@@ -12,9 +12,9 @@ public class FlipStarterCardObj implements QueueObject {
 
     @Override
     public void execute() {
-        if(player.getPlayArea().getPlacedCards().isEmpty()){
+        if (player.getPlayArea().getPlacedCards().isEmpty()) {
             player.getStarterCard().changeSide();
-        }
-        else System.out.println("Cannot flip already placed Starter Card");
+        } else
+            System.out.println("Cannot flip already placed Starter Card");
     }
 }

@@ -2,10 +2,9 @@ package it.polimi.ingsw.gc31.client_server.rmi;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
-import it.polimi.ingsw.gc31.client_server.queue.clientSide.ClientQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
-import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.UI;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
@@ -44,7 +43,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
-    public void sendCommand(ClientQueueObject obj) throws RemoteException{
+    public void sendCommand(ClientQueueObject obj) throws RemoteException {
         addQueueObj(obj);
     }
 
@@ -63,6 +62,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
                 try {
                     if (action == null)
                         this.wait();
+
                     action = callsList.poll();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
@@ -81,7 +81,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
-    public void setUsername(String username) throws RemoteException, PlayerNicknameAlreadyExistsException {
+    public void setUsername(String username) throws RemoteException {
         if (controller == null) {
             controller = server.connect(this, username);
         }
@@ -230,7 +230,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
-        //ui.show_playArea(username, playArea, achievedResources);
+        // ui.show_playArea(username, playArea, achievedResources);
     }
 
     @Override

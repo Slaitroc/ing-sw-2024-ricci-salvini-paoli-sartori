@@ -1,4 +1,4 @@
-package it.polimi.ingsw.gc31.client_server.queue;
+package it.polimi.ingsw.gc31.client_server.queue.serverQueue;
 
 import it.polimi.ingsw.gc31.model.GameModel;
 import it.polimi.ingsw.gc31.model.player.Player;
@@ -17,7 +17,8 @@ public class DrawGoldOneObj implements QueueObject {
     public void execute() {
         if (player.drawGoldCard1()) {
             model.endTurn();
-            //System.out.println("PLAYER: " + player.getUsername() + " HAS JUST DRAWN GOLD CARD1.");
+            // System.out.println("PLAYER: " + player.getUsername() + " HAS JUST DRAWN GOLD
+            // CARD1.");
         }
     }
 
