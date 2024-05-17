@@ -12,17 +12,15 @@ import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.view.UI;
 
+import javax.swing.*;
+
 public class TCPClient implements ClientCommands {
     private final BufferedReader input;
     private final PrintWriter output;
-    @SuppressWarnings("unused")
     private String username;
     private Integer idGame;
     private Map<String, Runnable> commandsMap;
     private UI ui;
-
-    // attributes used for the serialization of the QueueObject
-    ObjectOutputStream outputObject;
 
     //Classic setup methods
 
@@ -38,10 +36,7 @@ public class TCPClient implements ClientCommands {
         this.output = new PrintWriter(new OutputStreamWriter(serverSocket.getOutputStream()));
         initializeMap();
 
-        // initialization of the specific object output stream used for the QueueObject
-        this.outputObject = new ObjectOutputStream(serverSocket.getOutputStream());
-
-        //run();
+        run();
     }
 
     /**
@@ -49,6 +44,7 @@ public class TCPClient implements ClientCommands {
      */
     private void initializeMap(){
         this.commandsMap = new HashMap<>();
+        //methods invoked by the client handler
         this.commandsMap.put("show hand player", this::runShowHandPlayer);
         this.commandsMap.put("show score player", this::runShowScorePlayer);
         this.commandsMap.put("show starter card", this::runShowStarterCard);
@@ -60,9 +56,14 @@ public class TCPClient implements ClientCommands {
         this.commandsMap.put("start game", this::runStartGame);
         this.commandsMap.put("show play area", this::runShowPlayArea);
 
-        //TODO metodo aggiuntivo riferito al metodo di socketClientHandler "getui",
-        // non implementato perchè non sicuro che venga mantenuto così come è, inoltre problema
-        // riguardante il fatto che il metodo sia di tipo showUpdate ma clientHandler non ritorna nulla
+        //method invoked by the client handler when an exception occurs. Maybe this method can be implemented in the
+        // "response methods" as a corner cases.
+        this.commandsMap.put("username already exists", this::runUsernameAlreadyExists);
+
+        //method invoked by the client handler as a response of a previous method request by the client
+        this.commandsMap.put("create game response", this::runcreateGameResponse);
+        this.commandsMap.put("set username response", this::runSetUsernameResponse);
+        this.commandsMap.put("get game list response", this::runGetGameListResponse);
     }
 
 
@@ -70,7 +71,7 @@ public class TCPClient implements ClientCommands {
      * Method invoked at the creation of the class. Create a thread that run
      * the runVirtualServer method. Activate it in the constructor method
      */
-    public void run() {
+    private void run() {
         new Thread(() -> {
             try {
                 runVirtualServer();
@@ -96,19 +97,6 @@ public class TCPClient implements ClientCommands {
         String line;
         while ((line = input.readLine()) != null) {
             commandsMap.get(line).run();
-
-            /*
-                 * switch (line) {
-                 * case "show list game": {
-                 * List<String> list = new ArrayList<>();
-                 * list.add("ciao");
-                 * ui.show_listGame(list);
-                 * }
-                 * //default:
-                 * // System.out.println(line);
-                 * }
-            }
-            */
         }
     }
 
@@ -260,6 +248,61 @@ public class TCPClient implements ClientCommands {
         */
     }
 
+    private void runUsernameAlreadyExists(){
+//        ask username again...
+//        setUsername();
+    }
+
+
+    //method invoked by the client handler as a response of a previous method request by the client
+
+    private void runcreateGameResponse(){
+        try {
+            idGame = Integer.parseInt(input.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ui.show_gameCreated();
+    }
+
+    private void runSetUsernameResponse(){
+        String line = null;
+        try {
+            line = input.readLine();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        if(line.equals("username already exists")){
+            // invoco metodo della ui per l'eccezione
+            runUsernameAlreadyExists();
+        } else {
+            try {
+                line = input.readLine();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+            this.username = line;
+        }
+    }
+
+    private void runGetGameListResponse(){
+        String line = null;
+        List<String> list = new ArrayList<>();
+        try {
+            line = input.readLine();
+            if(line.equals("no game exception")){
+                //invoco metodo della ui opportuno o un metodo del client
+
+            } else {
+                while (!(line = input.readLine()).equals("game list finished"))
+                    list.add(line);
+            }
+            ui.show_listGame(list);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     //Method invoked by the UI, client-side
 
     /**
@@ -276,13 +319,16 @@ public class TCPClient implements ClientCommands {
         output.println("connect");
         output.println(username);
         output.flush();
-
+        /*
         String line = input.readLine();
         if (line.equals("username already exists"))
             throw new PlayerNicknameAlreadyExistsException();
         else if (line.equals("username set"))
             this.username = username;
+        */
     }
+
+
 
     /**
      * This method sends to the client handler the string corresponding with the
@@ -291,7 +337,7 @@ public class TCPClient implements ClientCommands {
      * @throws IOException if there is an error reading the server messages
      */
     @Override
-    public void createGame(int maxNumberPlayer) throws IOException {
+    public void createGame(int maxNumberPlayer){
         output.println("create game");
         output.println(maxNumberPlayer);
         output.flush();
@@ -299,9 +345,9 @@ public class TCPClient implements ClientCommands {
         // Se non dovesse ricevere la stringa corretta/ci fosse un errore lato server
         // cosa dovrei fare?
         // Leggo dal server il game ID della partita appena creata
-        String line = input.readLine();
-        this.idGame = Integer.parseInt(line);
-        ui.show_gameCreated();
+//        String line = input.readLine();
+//        this.idGame = Integer.parseInt(line);
+//        ui.show_gameCreated();
     }
 
     /**
@@ -358,14 +404,14 @@ public class TCPClient implements ClientCommands {
         output.println("get game list");
         output.flush();
 
-        String line = input.readLine();
-        if (line.equals("no game exception"))
-            throw new NoGamesException();
-        else if (line.equals("ok")) {
-            while (!(line = input.readLine()).equals("game list finished"))
-                list.add(line);
-        }
-        ui.show_listGame(list);
+//        String line = input.readLine();
+//        if (line.equals("no game exception"))
+//            throw new NoGamesException();
+//        else if (line.equals("ok")) {
+//            while (!(line = input.readLine()).equals("game list finished"))
+//                list.add(line);
+//        }
+//        ui.show_listGame(list);
     }
 
     /**

@@ -44,7 +44,7 @@ public class SocketClientHandler implements VirtualClient {
      * @param output     is the reference to the output stream of the socket
      *                   connection
      */
-    public SocketClientHandler(IController controller, TCPServer server, BufferedReader input, PrintWriter output, ObjectInputStream inputObject) {
+    public SocketClientHandler(IController controller, TCPServer server, BufferedReader input, PrintWriter output) {
         this.controller = controller;
         this.server = server;
         this.input = input;
@@ -77,14 +77,16 @@ public class SocketClientHandler implements VirtualClient {
             line = input.readLine();
             controller.connect(this, line);
             this.username = line;
+            output.println("set username response");
             output.println("username set");
+            output.println(username);
             output.flush();
             server.TCPserverWrite("New client connected: " + username);
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch (PlayerNicknameAlreadyExistsException p) {
-            output.println("Username already exists!");
+            output.println("username already exists");
             output.flush();
         }
     }
@@ -97,6 +99,7 @@ public class SocketClientHandler implements VirtualClient {
         try {
             int maxNumberPlayer = Integer.parseInt(input.readLine());
             gameController = controller.createGame(username, maxNumberPlayer);
+            output.println("create game response");
             output.println(this.idGame);
             output.flush();
         } catch (IOException e) {
@@ -109,8 +112,10 @@ public class SocketClientHandler implements VirtualClient {
      */
     private void runGetGameList() {
         try {
+            output.println("get game list response");
+            output.flush();
             controller.getGameList(username);
-        } catch (NoGamesException e) {
+        } catch (NoGamesException e) {;
             output.println("no game exception");
             output.flush();
         } catch (RemoteException e) {
