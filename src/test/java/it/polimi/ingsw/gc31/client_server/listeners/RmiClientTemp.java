@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.client_server.listeners;
 
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientSide.ClientQueueObject;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
@@ -25,10 +26,7 @@ public class RmiClientTemp implements VirtualClient {
     }
 
     @Override
-    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
-        System.out.println("Client of " + this.username);
-        System.out.println("Hand of " + username);
-        hand.forEach(System.out::println);
+    public void show_handPlayer(String username, List<PlayableCard> hand) throws RemoteException {
     }
 
     @Override
@@ -115,4 +113,10 @@ public class RmiClientTemp implements VirtualClient {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getUI'");
     }
+
+    @Override
+    public void sendCommand(ClientQueueObject obj) throws RemoteException {
+
+    }
+
 }

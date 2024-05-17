@@ -1,6 +1,8 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
+import it.polimi.ingsw.gc31.client_server.queue.clientSide.ClientQueueObject;
 import it.polimi.ingsw.gc31.exceptions.*;
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 
@@ -199,7 +201,8 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     @Override
-    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
+    public void show_handPlayer(String username, List<PlayableCard> hand) throws RemoteException {
+        /*
         output.print("show hand player");
         // username non viene utilizzato
         // output.print(username);
@@ -208,6 +211,7 @@ public class SocketClientHandler implements VirtualClient {
         }
         output.println("end list");
         output.flush();
+        */
     }
 
     @Override
@@ -298,5 +302,10 @@ public class SocketClientHandler implements VirtualClient {
     public ShowUpdate getUI() throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getUI'");
+    }
+
+    @Override
+    public void sendCommand(ClientQueueObject obj) throws RemoteException {
+
     }
 }

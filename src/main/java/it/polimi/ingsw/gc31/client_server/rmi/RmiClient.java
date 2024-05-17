@@ -2,9 +2,11 @@ package it.polimi.ingsw.gc31.client_server.rmi;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
+import it.polimi.ingsw.gc31.client_server.queue.clientSide.ClientQueueObject;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.UI;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
@@ -13,6 +15,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class RmiClient extends UnicastRemoteObject implements VirtualClient, ClientCommands {
     private IController controller;
@@ -21,6 +24,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     private Integer idGame;
     private String username;
     private UI ui;
+    private final LinkedBlockingQueue<ClientQueueObject> callsList;
 
     /**
      * Creates a client with a default name and calls inner procedures to:
@@ -35,6 +39,40 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         this.server.RMIserverWrite("New connection detected...");
         this.username = DefaultValues.DEFAULT_USERNAME;
         this.controller = null;
+        this.callsList = new LinkedBlockingQueue<>();
+        new Thread(this::executor).start();
+    }
+
+    @Override
+    public void sendCommand(ClientQueueObject obj) throws RemoteException{
+        addQueueObj(obj);
+    }
+
+    // QUEUE
+    private void addQueueObj(ClientQueueObject obj) {
+        synchronized (this) {
+            callsList.add(obj);
+            this.notify();
+        }
+    }
+
+    private void executor() {
+        ClientQueueObject action = null;
+        while (true) {
+            synchronized (this) {
+                try {
+                    if (action == null)
+                        this.wait();
+                    action = callsList.poll();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if (action != null) {
+                    action.execute(ui);
+                }
+
+            }
+        }
     }
 
     // CLIENT COMMANDS
@@ -162,12 +200,12 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
-        ui.show_playArea(username, playArea, achievedResources);
+        //ui.show_playArea(username, playArea, achievedResources);
     }
 
     @Override
-    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
-        ui.show_handPlayer(username, hand);
+    public void show_handPlayer(String username, List<PlayableCard> hand) throws RemoteException {
+
     }
 
     @Override
