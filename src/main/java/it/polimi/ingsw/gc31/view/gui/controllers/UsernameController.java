@@ -2,46 +2,50 @@ package it.polimi.ingsw.gc31.view.gui.controllers;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
-import it.polimi.ingsw.gc31.Client;
-import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
-import it.polimi.ingsw.gc31.view.UI;
-import it.polimi.ingsw.gc31.view.gui.GUI;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 
 import java.io.IOException;
 
-import static it.polimi.ingsw.gc31.OurScanner.scanner;
+//import static it.polimi.ingsw.gc31.OurScanner.scanner;
 // import javafx.scene.image.Image;
 // import javafx.scene.image.ImageView;
 
 public class UsernameController extends ViewController {
 
-    private GUI gui;
-
     @FXML
     private MFXButton getUsername;
     @FXML
     private MFXTextField username;
+    @FXML
+    private Label warningLabel;
 
     @FXML
-    private void getUsername() {
+    private void login() {
         String nickname = username.getText();
 
-        /*boolean usernameIsValid = false;
-        while (!usernameIsValid) {
+        boolean usernameIsValid = false;
+
+        if (nickname.isEmpty()) {
+            System.out.println("Username cannot be empty!");
+            warningLabel.setVisible(true);
+            warningLabel.setText("Username cannot be empty!");
+        } else {
             try {
-                app.getClient().setUsername(nickname);
-                usernameIsValid = true;
+                client.setUsername(nickname);
+                System.out.println("Username set to: " + nickname);
+                System.out.println("Switching to MainMenu scene...");
+                loadMainMenuScene();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (PlayerNicknameAlreadyExistsException e) {
-                getUsername.setText("Username already taken. Try again");
+                warningLabel.setVisible(true);
+                warningLabel.setText("Username already exists!");
             }
-        }*/
-
-        getUsername.setText(nickname);
+        }
     }
 
     /**
@@ -52,11 +56,12 @@ public class UsernameController extends ViewController {
     @Override
     @FXML
     public void initialize() {
-        /* example */
-        // Image image = new
-        // Image(getClass().getResource("/it/polimi/ingsw/gc31/Images/Misc/Misc1.jpg").toExternalForm());
-        // image1.setImage(image);
 
+    }
+
+    @FXML
+    private void loadMainMenuScene() {
+        app.loadScene(SceneTag.MAINMENU);
     }
 
     @FXML
@@ -64,14 +69,4 @@ public class UsernameController extends ViewController {
         app.loadScene(SceneTag.START);
     }
 
-
-/*    @FXML
-    private void loadLobbyScene() {
-        app.loadScene(SceneTag.LOBBY);
-    }
-
-    @FXML
-    private void loadLoginScene() {
-        app.loadScene(SceneTag.LOBBY);
-    }*/
 }

@@ -32,9 +32,9 @@ public class GUI extends UI {
     protected void uiRunUI() {
         //Application.launch(GUIApplication.class);
 
-        GUIApplication GUIApplication = new GUIApplication();
-        GUIApplication.setClient(client);
-        GUIApplication.run();
+        GUIApplication app = new GUIApplication();
+        app.setClient(client);
+        app.run();
     }
 
     @Override

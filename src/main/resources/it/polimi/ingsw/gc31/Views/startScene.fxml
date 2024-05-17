@@ -11,7 +11,7 @@
 <VBox alignment="CENTER" spacing="20" xmlns="http://javafx.com/javafx/17"
     xmlns:fx="http://javafx.com/fxml/1"
     fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.StartController"
-    stylesheets="@stilefxml.css" styleClass="vbox">
+    stylesheets="@stilefxml.css" styleClass="stackpane-ruleBook">
     <children>
         <ImageView>
             <image>

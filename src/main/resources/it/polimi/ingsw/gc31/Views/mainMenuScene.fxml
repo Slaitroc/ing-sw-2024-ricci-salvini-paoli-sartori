@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+
+
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.MainMenuController"
+           stylesheets="@stilefxml.css" styleClass="stackpane-mainMenu">
+    <padding>
+        <Insets top="10" right="20" bottom="10" left="20"/>
+    </padding>
+    <HBox spacing="20" alignment="CENTER">
+        <ImageView fitWidth="381" fitHeight="250">
+            <Image url="@../Images/Misc/CodexLogo.png"/>
+        </ImageView>
+        <VBox alignment="CENTER" spacing="20" styleClass="vbox">
+            <MFXButton layoutX="188.0" layoutY="349.0" text="New Game"
+                       styleClass="rounded-button" prefWidth="400"
+                       onAction="#createGame"/>
+            <MFXButton layoutX="188.0" layoutY="349.0" text="Enter Game"
+                       styleClass="rounded-button" prefWidth="400"
+                       onAction="#joinGame"/>
+            <MFXButton layoutX="188.0" layoutY="349.0" text="Show Games"
+                       styleClass="rounded-button" prefWidth="400"
+                       onAction="#showGames"/>
+            <MFXButton layoutX="188.0" layoutY="349.0" text="Rule Book"
+                       styleClass="rounded-button" prefWidth="400"
+                       onAction="#showRules"/>
+        </VBox>
+    </HBox>
+</StackPane>

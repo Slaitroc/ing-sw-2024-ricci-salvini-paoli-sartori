@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.view.gui;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.text.Font;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -20,7 +21,7 @@ import java.util.HashMap;
 
 public class GUIApplication extends Application {
 
-    private ClientCommands client;
+    private static ClientCommands client;
     public static Stage primaryStage;
     private Map<SceneTag, Scene> scenesMap;
     private Map<SceneTag, ViewController> wcMap;
@@ -35,6 +36,8 @@ public class GUIApplication extends Application {
     public void start(Stage stage) throws IOException {
         initializeGUIResources();
         try {
+            System.out.println("Initializing scenes...");
+            //System.out.println("Client is set to " + client.toString());
             initializeScenesFXML();
         } catch (GUISceneInitializationException e) {
             e.printStackTrace();
@@ -46,8 +49,8 @@ public class GUIApplication extends Application {
         loadScene(SceneTag.START);
 
         // Imposta le dimensioni della finestra
-        primaryStage.setWidth(640);
-        primaryStage.setHeight(480);
+
+        setDefaultSize();
         //primaryStage.setFullScreen(true);
 
         // Imposta il titolo e l'icona della finestra
@@ -55,6 +58,7 @@ public class GUIApplication extends Application {
 
         Image icon = new Image(getClass().getResource("/it/polimi/ingsw/gc31/AppIcons/icon.png").toExternalForm());
         primaryStage.getIcons().add(icon);
+        //primaryStage.resizableProperty().setValue(Boolean.FALSE);
 
         // Mostra la finestra
         primaryStage.show();
@@ -66,13 +70,17 @@ public class GUIApplication extends Application {
         FXMLLoader loader;
         // Carica i file FXML
         for (Map.Entry<SceneTag, String> entry : DefaultValues.getGuiFxmlScenes().entrySet()) {
-            loader = new FXMLLoader(getClass().getResource(entry.getValue()));
             System.out.println("Loading " + entry.getValue() + "...");
+            loader = new FXMLLoader(getClass().getResource(entry.getValue()));
             try {
+                System.out.println("Loaded " + entry.getValue());
                 Scene scene = new Scene(loader.load());
+                System.out.println("Scene loaded");
                 scenesMap.put(entry.getKey(), scene);
                 ViewController wc = loader.getController();
+                System.out.println("Controller loaded");
                 wc.setGUIApplication(this);
+                wc.setClient(client);
                 wcMap.put(entry.getKey(), wc);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -105,7 +113,22 @@ public class GUIApplication extends Application {
 
     public void setClient (ClientCommands client) {
         this.client = client;
+        //System.out.println("Client set to " + client.toString());
     }
 
+    public void setRuleBookSize() {
+        primaryStage.setWidth(1400);
+        primaryStage.setHeight(900);
+        primaryStage.setMinWidth(1400);
+        primaryStage.setMinHeight(900);
+        primaryStage.centerOnScreen();
+    }
 
+    public void setDefaultSize() {
+        primaryStage.setWidth(720);
+        primaryStage.setHeight(540);
+        primaryStage.setMinWidth(720);
+        primaryStage.setMinHeight(540);
+        primaryStage.centerOnScreen();
+    }
 }

@@ -59,3 +59,21 @@
   -fx-background-color: #000000fb;
   -fx-cursor: hand;
 }
+
+.stackpane-mainMenu {
+  -fx-background-color: #fffefffb;
+  -fx-cursor: hand;
+}
+
+.warning-label {
+  -fx-text-fill: #ff0000;
+  -fx-font: 20px "glimmer of light";
+  -fx-text-alignment: center;
+}
+
+.stackpane-ruleBook{
+  -fx-background-image: url(/it/polimi/ingsw/gc31/Images/Misc/Codex-Copertina.jpg);
+  -fx-cursor: hand;
+  -fx-font: 36px "FrakturNo2";
+  -fx-text-alignment: center;
+}
