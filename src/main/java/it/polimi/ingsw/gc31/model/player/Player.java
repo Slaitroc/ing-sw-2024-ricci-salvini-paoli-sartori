@@ -215,6 +215,7 @@ public class Player extends PlayerObservable {
     public void addObjectiveCard(ObjectiveCard card) {
         try {
             inGameState.addObjectiveCard(card, this);
+            notifyPlayerObjectiveCardListener(card);
         } catch (IllegalStateOperationException e) {
             System.out.println("Player " + username + " not allowed to draw objective card in current state");
             e.getStackTrace();

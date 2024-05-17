@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
@@ -65,7 +66,7 @@ public abstract class UI implements ShowUpdate {
     public abstract void show_handPlayer(String username, List<PlayableCard> hand);
 
     @Override
-    public abstract void show_objectiveCard(String objectiveCard) throws RemoteException;
+    public abstract void show_objectiveCard(ObjectiveCard objectiveCard);
 
     @Override
     public abstract void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException;

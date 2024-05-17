@@ -107,6 +107,11 @@ public class InitState extends TuiState {
     }
 
     @Override
+    protected void command_chooseSecreteObjective() {
+
+    }
+
+    @Override
     protected synchronized void command_initial() {
         procedure_setUsername();
         command_showCommandsInfo();
