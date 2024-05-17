@@ -39,4 +39,6 @@ public abstract class TuiState {
 
     protected abstract void command_drawResource();
 
+    protected abstract void command_chooseSecreteObjective();
+
 }

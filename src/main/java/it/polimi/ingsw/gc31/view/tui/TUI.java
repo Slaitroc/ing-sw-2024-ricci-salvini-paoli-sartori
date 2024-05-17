@@ -15,7 +15,9 @@ import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
+import it.polimi.ingsw.gc31.model.strategies.StairUp;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -34,39 +36,39 @@ import it.polimi.ingsw.gc31.view.UI;
 public class TUI extends UI {
 
     // MODIFICABILI
-    private static final int CMD_LINE_INITIAL_ROW = 1;
-    private static final int CMD_LINE_INITIAL_COLUMN = 1;
-    private static final int CMD_LINE_LINES = 10;
-    private static final int CMD_LINE_WIDTH = 60;
-    private static final int CHAT_BOARD_INITIAL_ROW = 16;
-    private static final int CHAT_BOARD_INITIAL_COLUMN = 1;
-    private static final int CHAT_BOARD_LINES = 10;
-    private static final int CHAT_BOARD_WIDTH = 60;
-    private static final int PLAYAREA_INITIAL_ROW = 1;
-    private static final int PLAYAREA_INITIAL_COLUMN = 61;
-    private static final int PLAYAREA_END_ROW = 29;
-    private static final int PLAYAREA_END_COLUMN = 160;
-    private static final int CARD_LENGTH = 21;
-    private static final int CARD_HEIGHT = 7;
-    private static final int CARD_CORNER_LENGTH = 5;
+    private final int CMD_LINE_INITIAL_ROW = 1;
+    private final int CMD_LINE_INITIAL_COLUMN = 1;
+    private final int CMD_LINE_LINES = 10;
+    private final int CMD_LINE_WIDTH = 60;
+    private final int CHAT_BOARD_INITIAL_ROW = 16;
+    private final int CHAT_BOARD_INITIAL_COLUMN = 1;
+    private final int CHAT_BOARD_LINES = 10;
+    private final int CHAT_BOARD_WIDTH = 60;
+    private final int PLAYAREA_INITIAL_ROW = 1;
+    private final int PLAYAREA_INITIAL_COLUMN = 61;
+    private final int PLAYAREA_END_ROW = 29;
+    private final int PLAYAREA_END_COLUMN = 160;
+    private final int CARD_LENGTH = 21;
+    private final int CARD_HEIGHT = 7;
+    private final int CARD_CORNER_LENGTH = 5;
     // the misalignment along x between two cards
-    private static final int CARD_X_OFFSET = 15;
+    private final int CARD_X_OFFSET = 15;
     // the misalignment along y between two cards
-    private static final int CARD_Y_OFFSET = 4;
-    private static final int HAND_INITIAL_ROW = 30;
-    private static final int HAND_INITIAL_COLUMN = 61;
-    private static final int HAND_END_ROW = 38;
-    private static final int HAND_END_COLUMN = 127;
+    private final int CARD_Y_OFFSET = 4;
+    private final int HAND_INITIAL_ROW = 30;
+    private final int HAND_INITIAL_COLUMN = 61;
+    private final int HAND_END_ROW = 38;
+    private final int HAND_END_COLUMN = 150;
 
     // CONSTANTS
-    private static final int CMD_LINE_EFFECTIVE_WIDTH = CMD_LINE_WIDTH - 2;
-    private static final int CMD_LINE_INPUT_ROW = CMD_LINE_INITIAL_ROW + CMD_LINE_LINES;
-    private static final int CMD_LINE_INPUT_COLUMN = CMD_LINE_INITIAL_COLUMN + 1;
-    private static final int CMD_LINE_OUT_LINES = CMD_LINE_LINES - 1;
-    private static final int CHAT_BOARD_EFFECTIVE_WIDTH = CHAT_BOARD_WIDTH - 2;
-    private static final int CHAT_BOARD_INPUT_ROW = CHAT_BOARD_INITIAL_ROW + CHAT_BOARD_LINES;
-    private static final int CHAT_BOARD_INPUT_COLUMN = CHAT_BOARD_INITIAL_COLUMN + 1;
-    private static final int CHAT_BOARD_OUT_LINES = CHAT_BOARD_LINES - 1;
+    private final int CMD_LINE_EFFECTIVE_WIDTH = CMD_LINE_WIDTH - 2;
+    private final int CMD_LINE_INPUT_ROW = CMD_LINE_INITIAL_ROW + CMD_LINE_LINES;
+    private final int CMD_LINE_INPUT_COLUMN = CMD_LINE_INITIAL_COLUMN + 1;
+    private final int CMD_LINE_OUT_LINES = CMD_LINE_LINES - 1;
+    private final int CHAT_BOARD_EFFECTIVE_WIDTH = CHAT_BOARD_WIDTH - 2;
+    private final int CHAT_BOARD_INPUT_ROW = CHAT_BOARD_INITIAL_ROW + CHAT_BOARD_LINES;
+    private final int CHAT_BOARD_INPUT_COLUMN = CHAT_BOARD_INITIAL_COLUMN + 1;
+    private final int CHAT_BOARD_OUT_LINES = CHAT_BOARD_LINES - 1;
 
     // PLAY AREA
     // shift of the StarterCard along the x-axis relative to the center
@@ -185,26 +187,6 @@ public class TUI extends UI {
         System.out.println(res);
     }
 
-    public void print_Hand(List<PlayableCard> hand) {
-        StringBuilder res = new StringBuilder();
-
-        print_PlayableCard(
-                hand.get(0),
-                HAND_INITIAL_COLUMN + 1,
-                HAND_INITIAL_ROW + 1,
-                HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN);
-        print_PlayableCard(
-                hand.get(0),
-                HAND_INITIAL_COLUMN + 1 + (CARD_LENGTH + 1),
-                HAND_INITIAL_ROW + 1,
-                HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN);
-        print_PlayableCard(
-                hand.get(0),
-                HAND_INITIAL_COLUMN + 1 + (CARD_LENGTH + 1) * 2,
-                HAND_INITIAL_ROW + 1,
-                HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN);
-    }
-
     /**
      * Print the cards of PlacedCards in the playArea
      */
@@ -241,6 +223,87 @@ public class TUI extends UI {
      * Draws a card centered in X and Y
      * x and y are relative to the board where the cards are drawn
      */
+    private void print_ObjectiveCard(ObjectiveCard card, int relative_x, int relative_y, int overFlowUp,
+            int overFlowDown, int overFlowLeft, int overFlowRight) {
+        int[] cardColor = RGB_COLOR_RED_CARD;
+        // if the card entirely exceeds the limits of the playArea it is not printed
+        if (overFlowLeft - (relative_x + CARD_LENGTH - 1) < 0 && (overFlowRight - relative_x) > 0
+                && (overFlowDown - relative_y) > 0 && overFlowUp - (relative_y + CARD_HEIGHT - 1) < 0) {
+            StringBuilder res = new StringBuilder();
+            String line;
+
+            // FIRST LINE
+            // if the first line of the card exceeds the upper or lower limit the line is
+            // not printed
+            if (relative_y > overFlowUp && relative_y < overFlowDown) {
+                line = "▏" + String.valueOf("▔").repeat(CARD_LENGTH - 2) + "▕";
+                if (relative_x + line.length() > overFlowRight) {
+                    line = line.substring(0, overFlowRight - relative_x);
+                    res.append(ansi().cursor(relative_y, relative_x)
+                            .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
+                } else if (overFlowLeft - relative_x >= 0) {
+                    line = line.substring(overFlowLeft - relative_x + 1);
+                    res.append(ansi().cursor(relative_y, overFlowLeft + 1)
+                            .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
+                } else {
+                    res.append(ansi().cursor(relative_y, relative_x)
+                            .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
+                }
+            }
+
+            // creates the center lines of the paper
+            for (int i = 1; i <= CARD_HEIGHT - 2; i++) {
+                // if a center line of the card exceeds the upper or lower limit the line is not
+                // printed
+                if (relative_y + i > overFlowUp && relative_y + i < overFlowDown) {
+                    line = "▏" + String.valueOf(" ").repeat(CARD_LENGTH - 2) + "▕";
+                    // if part of the line exceeds the right limit, the excess part is cut off
+                    if (relative_x + line.length() > overFlowRight) {
+                        line = line.substring(0, overFlowRight - relative_x);
+                        res.append(ansi().cursor(relative_y + i, relative_x)
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
+                    }
+                    // If part of the line exceeds the left limit, the excess part is cut off
+                    else if (overFlowLeft - relative_x >= 0) {
+                        line = line.substring(overFlowLeft - relative_x + 1);
+                        res.append(ansi().cursor(relative_y + i, overFlowLeft + 1)
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
+                    } else {
+                        res.append(ansi().cursor(relative_y + i, relative_x)
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
+                    }
+                }
+            }
+
+            // LAST LINE
+            // if the last line of the card exceeds the upper or lower limit the line is not
+            // printed
+            if (relative_y + CARD_HEIGHT - 1 > overFlowUp && relative_y + CARD_HEIGHT - 1 < overFlowDown) {
+                if (relative_y + CARD_HEIGHT - 1 > overFlowUp && relative_y + CARD_HEIGHT - 1 < overFlowDown) {
+                    line = "▏" + String.valueOf("▁").repeat(CARD_LENGTH - 2) + "▕";
+                    // if part of the line exceeds the right limit, the excess part is cut off
+                    if (relative_x + line.length() > overFlowRight) {
+                        line = line.substring(0, overFlowRight - relative_x);
+                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
+                    }
+                    // If part of the line exceeds the left limit, the excess part is cut off
+                    else if (overFlowLeft - relative_x >= 0) {
+                        line = line.substring(overFlowLeft - relative_x + 1);
+                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, overFlowLeft + 1)
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
+                    } else {
+                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
+                    }
+                }
+            }
+
+            System.out.println(res);
+            System.out.println(ansi().reset());
+        }
+    }
+
     private void print_PlayableCard(PlayableCard card, int relative_x, int relative_y, int overFlowUp, int overFlowDown,
             int overFlowLeft, int overFlowRight) {
         // the card is printed starting from the top left corner
@@ -1010,7 +1073,6 @@ public class TUI extends UI {
                         try {
                             print_CmdLineBorders();
                             print_PlayAreaBorders();
-                            print_HandAreaBorders();
                             // TODO temporaneo per la prova
                             Deck<PlayableCard> deck = new Deck<>(CardType.GOLD);
                             Map<Point, PlayableCard> placedCards = new HashMap<>();
@@ -1360,12 +1422,33 @@ public class TUI extends UI {
 
     @Override
     public void show_handPlayer(String username, List<PlayableCard> hand) {
-        print_Hand(hand);
+        int index = 0;
+        print_HandAreaBorders();
+        for (PlayableCard card : hand) {
+            print_PlayableCard(
+                    card,
+                    HAND_INITIAL_COLUMN + 1 + (CARD_LENGTH + 1) * index,
+                    HAND_INITIAL_ROW + 1,
+                    HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN);
+            index++;
+        }
+        print_ObjectiveCard(
+                new ObjectiveCard(2, new StairUp(CardColor.RED), null, null),
+                HAND_INITIAL_ROW + 1 + (CARD_LENGTH + 1) * 3,
+                HAND_INITIAL_ROW + 1,
+                HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN);
         resetCursor();
     }
 
     @Override
-    public void show_objectiveCard(String objectiveCard) throws RemoteException {
+    public void show_objectiveCard(ObjectiveCard objectiveCard) {
+        System.out.println(ansi().cursor(HAND_INITIAL_ROW, HAND_INITIAL_COLUMN).a("ok"));
+        resetCursor();
+    }
+
+    @Override
+    public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
+        System.out.println(ansi().cursor(HAND_INITIAL_ROW, HAND_INITIAL_COLUMN + 3).a("Ok"));
     }
 
     @Override

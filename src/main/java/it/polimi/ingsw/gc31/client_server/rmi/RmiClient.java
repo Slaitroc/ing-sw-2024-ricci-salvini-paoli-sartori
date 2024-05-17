@@ -5,6 +5,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.UI;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
@@ -224,8 +225,12 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
-    public void show_objectiveCard(String objectiveCard) throws RemoteException {
-        ui.show_objectiveCard(objectiveCard);
+    public void show_objectiveCard(ObjectiveCard objectiveCard) {
+    }
+
+    @Override
+    public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
+
     }
 
     @Override

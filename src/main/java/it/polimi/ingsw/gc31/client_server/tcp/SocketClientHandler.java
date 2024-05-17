@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
 import it.polimi.ingsw.gc31.exceptions.*;
+import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
@@ -231,10 +232,15 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     @Override
-    public void show_objectiveCard(String objectiveCard) throws RemoteException {
+    public void show_objectiveCard(ObjectiveCard objectiveCard){
         output.println("show objective card");
         output.println(objectiveCard);
         output.flush();
+    }
+
+    @Override
+    public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
+
     }
 
     @Override

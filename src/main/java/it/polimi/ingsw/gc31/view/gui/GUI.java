@@ -4,6 +4,7 @@ package it.polimi.ingsw.gc31.view.gui;
 import java.rmi.RemoteException;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -80,9 +81,14 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_objectiveCard(String objectiveCard) throws RemoteException {
+    public void show_objectiveCard(ObjectiveCard objectiveCard){
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_objectiveCard'");
+    }
+
+    @Override
+    public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
+
     }
 
     @Override

@@ -1,12 +1,13 @@
 package it.polimi.ingsw.gc31.view.interfaces;
 
+import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 
 import java.rmi.RemoteException;
 import java.rmi.Remote;
 import java.util.List;
 
-public interface ShowUpdate extends Remote {
+public interface ShowUpdate extends Remote{
 
     public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException;
 
@@ -16,7 +17,9 @@ public interface ShowUpdate extends Remote {
 
     public void show_starterCard(String starterCard) throws RemoteException;
 
-    public void show_objectiveCard(String objectiveCard) throws RemoteException;
+    void show_objectiveCard(ObjectiveCard objectiveCard) throws RemoteException;
+
+    void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) throws RemoteException;
 
     public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException;
 

@@ -4,6 +4,8 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
 //NOTE: i metodi che iniziano con ui (uiNomeMetodo()) sono le implementazioni delle classi che ereditano da UI
