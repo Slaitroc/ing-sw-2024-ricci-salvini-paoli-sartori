@@ -13,6 +13,7 @@ public class InitState extends TuiState {
         this.tui = tui;
         initialize();
         stateName = "Init State";
+
     }
 
     @Override
@@ -24,6 +25,7 @@ public class InitState extends TuiState {
         commandsMap.put(("create game").toLowerCase(), this::command_createGame);
         commandsMap.put("show games", this::command_showGames);
         commandsMap.put("join game", this::command_joinGame);
+        commandsMap.put("invalid", this::command_invalidCommand);
 
         // info map
         commandsInfo = new LinkedHashMap<>();
@@ -40,7 +42,6 @@ public class InitState extends TuiState {
         int input = Integer.parseInt(scanner.nextLine());
         try {
             tui.getClient().createGame(input);
-            tui.setState(new JoinedToGameState(tui));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,7 +64,6 @@ public class InitState extends TuiState {
         int input = Integer.parseInt(scanner.nextLine());
         try {
             tui.getClient().joinGame(input);
-            tui.setState(new JoinedToGameState(tui));
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -88,12 +88,12 @@ public class InitState extends TuiState {
 
     @Override
     protected synchronized void command_initial() {
+        tui.getClient().setUI(this.tui);
         setUsername();
     }
 
     @Override
     protected synchronized void setUsername() {
-        tui.getClient().setUI(this.tui);
         String message = "Type your username:";
         String input;
         tui.printToCmdLineOut(tui.tuiWrite(message));
@@ -101,8 +101,6 @@ public class InitState extends TuiState {
         input = scanner.nextLine();
         try {
             tui.getClient().setUsername(input.trim());
-            tui.printToCmdLineOut(tui.tuiWrite("Your name is: " + input.trim()));
-
         } catch (IOException e) {
             e.printStackTrace();
         }

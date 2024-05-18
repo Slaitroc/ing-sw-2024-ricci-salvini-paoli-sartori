@@ -2,7 +2,7 @@ package it.polimi.ingsw.gc31.client_server.queue.serverQueue;
 
 import it.polimi.ingsw.gc31.model.GameModel;
 
-public class ChooseSecretObjectiveObj implements QueueObject {
+public class ChooseSecretObjectiveObj implements ServerQueueObject {
 
     private final GameModel model;
     int choice;

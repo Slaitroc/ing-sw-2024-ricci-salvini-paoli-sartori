@@ -3,10 +3,8 @@ package it.polimi.ingsw.gc31.client_server.rmi;
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ReadyStatusObj;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
-import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
-import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.UI;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
@@ -50,28 +48,27 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     // QUEUE
     private void addQueueObj(ClientQueueObject obj) {
-        synchronized (this) {
+        synchronized (callsList) {
             callsList.add(obj);
-            this.notify();
+            callsList.notify();
         }
     }
 
     private void executor() {
-        ClientQueueObject action = null;
         while (true) {
-            synchronized (this) {
-                try {
-                    if (action == null)
-                        this.wait();
-
-                    action = callsList.poll();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+            ClientQueueObject action;
+            synchronized (callsList) {
+                while (callsList.isEmpty()) {
+                    try {
+                        callsList.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-                if (action != null) {
-                    action.execute(ui);
-                }
-
+                action = callsList.poll();
+            }
+            if (action != null) {
+                action.execute(ui);
             }
         }
     }
@@ -85,10 +82,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     public void setUsername(String username) throws RemoteException {
         if (controller == null) {
             controller = server.connect(this, username);
-        }
-
-        if (this.username.equals(DefaultValues.DEFAULT_USERNAME)) {
-            this.username = username;
+            this.username = username; // FIX sarebbe meglio fosse final ma complica molto le cose
         }
 
     }
@@ -96,9 +90,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public void createGame(int maxNumberPlayer) throws RemoteException {
         gameController = controller.createGame(username, maxNumberPlayer);
-        if (gameController != null) {
-            ui.show_gameCreated();
-        }
     }
 
     @Override
@@ -112,15 +103,17 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
-    public void setReady(boolean ready) {
-        this.ready = ready;
-        if (ready) {
-            try {
-                gameController.checkReady();
-            } catch (RemoteException | IllegalStateOperationException e) {
-                e.printStackTrace();
-            }
-        }
+    public void setReady(boolean ready) throws RemoteException {
+        gameController.sendCommand(new ReadyStatusObj(ready, username));
+
+        // this.ready = ready;
+        // if (ready) {
+        // try {
+        // gameController.checkReady();
+        // } catch (RemoteException | IllegalStateOperationException e) {
+        // e.printStackTrace();
+        // }
+        // }
     }
 
     @Override
@@ -191,61 +184,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         ui.show_listGame(listGame);
     }
 
-    @Override
-    public void startGame() throws RemoteException {
-        ui.updateToPlayingState();
-    }
-
     // FIX parlare con christian e eventualmente togliere il metodo anche
     // dall'interfaccia
     @Override
     public ShowUpdate getUI() throws RemoteException {
         return this.ui;
-    }
-
-    // SHOW UPDATE
-    @Override
-    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
-        ui.show_goldDeck(firstCardDeck, card1, card2);
-    }
-
-    @Override
-    public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
-        ui.show_resourceDeck(firstCardDeck, card1, card2);
-    }
-
-    @Override
-    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
-        ui.show_objectiveDeck(firstCardDeck, card1, card2);
-    }
-
-    @Override
-    public void show_starterCard(String starterCard) throws RemoteException {
-        ui.show_starterCard(starterCard);
-    }
-
-    @Override
-    public void show_objectiveCard(ObjectiveCard objectiveCard) {
-    }
-
-    @Override
-    public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
-
-    }
-
-    @Override
-    public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
-        // ui.show_playArea(username, playArea, achievedResources);
-    }
-
-    @Override
-    public void show_handPlayer(String username, List<PlayableCard> hand) throws RemoteException {
-
-    }
-
-    @Override
-    public void show_scorePlayer(String key, Integer value) throws RemoteException {
-        ui.show_scorePlayer(key, value);
     }
 
 }

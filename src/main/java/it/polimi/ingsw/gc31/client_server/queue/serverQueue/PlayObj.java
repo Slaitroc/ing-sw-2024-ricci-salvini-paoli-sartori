@@ -5,7 +5,7 @@ import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
 
-public class PlayObj implements QueueObject {
+public class PlayObj implements ServerQueueObject {
 
     private Player player;
     @SuppressWarnings("unused")

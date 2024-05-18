@@ -2,18 +2,14 @@ package it.polimi.ingsw.gc31.view.tui;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 import static org.fusesource.jansi.Ansi.ansi;
-import static org.fusesource.jansi.Ansi.Color.CYAN;
+//import static org.fusesource.jansi.Ansi.Color.CYAN;
 import static org.fusesource.jansi.Ansi.Color.WHITE;
 import static org.fusesource.jansi.Ansi.Color.YELLOW;
 
 import java.awt.Point;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.util.*;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
@@ -25,7 +21,6 @@ import com.google.gson.reflect.TypeToken;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
-import it.polimi.ingsw.gc31.client_server.rmi.RmiClient;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
@@ -83,7 +78,7 @@ public class TUI extends UI {
     private final int[] RBG_COLOR_PURPLE_CARD = { 165, 85, 158 };
     private final int[] RGB_COLOR_CORNER = { 223, 215, 176 };
 
-    private final int[] RGB_COLOR_GOLD = { 181, 148, 16 };
+    // private final int[] RGB_COLOR_GOLD = { 181, 148, 16 };
 
     // PRINT METHODS
 
@@ -812,22 +807,9 @@ public class TUI extends UI {
      * This variable is used to manage the available commands in the current state
      */
     private TuiState state;
-    /**
-     * This volatile boolean variable is used to check if the state has changed
-     * <p>
-     * Knowing if the state has changed is useful to call the command_initial method
-     * of the new state
-     */
-    private volatile boolean isStateChanged = true;
-    private Object isStateChangedLock = new Object();
 
-    /**
-     * This variable manage a race condition between the commandLineReader and the
-     * commandLineProcess threads. <code>commandLineReader</code> thread must wait
-     * for the <code>commandLineProcess</code> thread to be ready to process the
-     * input.
-     */
-    private volatile boolean cmdLineProcessReady = false;
+    protected Object stateLock = new Object();
+
     /**
      * This variable is used to manage the chat board avoiding to update it every
      * time
@@ -841,6 +823,8 @@ public class TUI extends UI {
      * would be better to use a specific class for the chat messages.
      */
     private final Queue<String> chatMessages;
+
+    protected volatile boolean isInputLocked = false;
     /**
      * This variable is used to manage the command line output messages.
      * <p>
@@ -862,7 +846,7 @@ public class TUI extends UI {
      * The <code>commandLineProcess</code> thread reads the messages from this
      * queue and processes them.
      */
-    private final Queue<String> cmdLineMessages;
+    protected final Queue<String> cmdLineMessages;
 
     /**
      * This variable is used to manage the current working area of the terminal.
@@ -889,17 +873,17 @@ public class TUI extends UI {
         return this.client;
     }
 
-    /**
-     * State's command may need to access the TUI to change to a new state
-     *
-     * @param state
-     */
-    public void setState(TuiState state) {
-        this.state = state;
-        synchronized (isStateChangedLock) {
-            this.isStateChanged = true;
-        }
-    }
+    // /**
+    // * State's command may need to access the TUI to change to a new state
+    // *
+    // * @param state
+    // */
+    // public void setState(TuiState state) {
+    // this.state = state;
+    // synchronized (isStateChangedLock) {
+    // this.isStateChanged = true;
+    // }
+    // }
 
     // credo sia stata utilizzata solo per debugging
     public TUI(TuiState state, ClientCommands client) {
@@ -1054,6 +1038,10 @@ public class TUI extends UI {
                 + DefaultValues.ANSI_RESET;
     }
 
+    protected String serverWrite(String text) {
+        return DefaultValues.ANSI_PURPLE + DefaultValues.SERVER_TAG + DefaultValues.ANSI_RESET + text;
+    }
+
     // THREADS
 
     /**
@@ -1066,7 +1054,6 @@ public class TUI extends UI {
         new Thread(() -> {
             print_PlayAreaBorders();
             print_CmdLineBorders();
-            // commandLineReader();
             while (true) {
                 synchronized (cmdLineOut) {
                     if (cmdLineOut.isEmpty()) {
@@ -1098,6 +1085,8 @@ public class TUI extends UI {
         }).start();
     }
 
+    volatile boolean cmdLineProcessReady = false;
+
     /**
      * This method starts the <code>commandLineReader</code> thread.
      * <p>
@@ -1107,7 +1096,9 @@ public class TUI extends UI {
     private void commandLineReader() {
         new Thread(() -> {
             commandLineProcess();
-            while (!cmdLineProcessReady)
+            while (!cmdLineProcessReady)// se il reader prende il lock su state prima che il process esegua il primo
+                                        // comando si va in deadlock...quindi aspettiamo che abbia terminato di eseguire
+                                        // quel comando prima di proseguire
                 ;
             Scanner cmdScanner = new Scanner(System.in);
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -1124,28 +1115,27 @@ public class TUI extends UI {
                         }
                     }
                 }
+                // if a is running a command, it waits for the command to be finished
+                // This is necessary to let each command get its input
+                synchronized (stateLock) {
+                    isInputLocked = true;
+                    try {
+                        stateLock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
                 String input = null;
                 moveCursorToCmdLine();
-                // if a state is running a command, it waits for the command to be finished
-                // This is necessary to let each command get its input
-                synchronized (state) {
-                    input = cmdScanner.nextLine();
-                }
 
+                input = cmdScanner.nextLine();
                 // Sends the input to the command line process thread and waits for the command
                 // to be executed
-                if (!input.isEmpty() && input != null) {
+                if (input != null) {
 
                     synchronized (cmdLineMessages) {
                         cmdLineMessages.add(input.trim());
                         cmdLineMessages.notify();
-                    }
-                    synchronized (cmdLineMessages) {
-                        try {
-                            cmdLineMessages.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
                     }
                 }
             }
@@ -1164,16 +1154,11 @@ public class TUI extends UI {
      */
     private void commandLineProcess() {
         new Thread(() -> {
+            state.command_initial();
             while (true) {
-                synchronized (isStateChangedLock) {
-                    if (isStateChanged == true) {
-                        isStateChanged = false;
-                        state.command_initial();
-                    }
-                    cmdLineProcessReady = true;
-                }
                 String cmd = null;
                 synchronized (cmdLineMessages) {
+                    cmdLineProcessReady = true;
                     while (cmdLineMessages.isEmpty()) {
                         try {
                             cmdLineMessages.wait(); // Attendi che ci sia un nuovo comando
@@ -1182,22 +1167,16 @@ public class TUI extends UI {
                         }
                     }
                     cmd = cmdLineMessages.poll();
-                }
-                if (cmd != null) {
-                    if (cmd.equals("chat")) {
-                        synchronized (areaSelectionLock) {
-                            printToCmdLineOut("comando " + cmd + " eseguito", Ansi.Color.CYAN);
-                            moveCursorToChatLine();
-                            areaSelectionLock.notify();
-                        }
-                        continue;
-                    } else {
-                        synchronized (state) { // commandLineReader could take control of the input before the
-                            // command execution... this synchronized should fix the thing
-                            synchronized (cmdLineMessages) {
-                                execute_command(cmd);
-                                cmdLineMessages.notify();
+                    if (cmd != null) {
+                        if (cmd.equals("chat")) {
+                            synchronized (areaSelectionLock) {
+                                printToCmdLineOut("comando " + cmd + " eseguito", Ansi.Color.CYAN);
+                                moveCursorToChatLine();
+                                areaSelectionLock.notify();
                             }
+                            continue;
+                        } else {
+                            execute_command(cmd);
                         }
                     }
                 }
@@ -1284,8 +1263,11 @@ public class TUI extends UI {
     private void execute_command(String command) {
         if (state.commandsMap.containsKey(command)) {
             state.commandsMap.get(command).run();
+            // state.stateNotify();
+        } else if (command.isEmpty()) {
+            state.stateNotify();
         } else {
-            printToCmdLineOut(tuiWrite("Command not recognized"));
+            state.commandsMap.get("invalid").run();
         }
     }
 
@@ -1361,25 +1343,16 @@ public class TUI extends UI {
     // UPDATES FIELDS & METHODS
 
     @Override
-    public void updateToPlayingState() {
+    public void update_ToPlayingState() {
         this.state = new PlayingState(this);
-        synchronized (isStateChangedLock) {
-            this.isStateChanged = true;
-        }
+        state.command_showCommandsInfo();
+        state.stateNotify();
+
     }
 
     @Override
     public void updateHand(String username, List<String> hand) {
 
-    }
-
-    @Override
-    public void show_gameCreated() {
-        try {
-            tuiWrite("New game created with ID: " + client.getGameID());
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -1398,7 +1371,7 @@ public class TUI extends UI {
      * @Slaitroc
      */
     @Override
-    public void show_listGame(List<String> listGame) throws RemoteException {
+    public void show_listGame(List<String> listGame) {
         tuiWrite(">>Game List<<");
         for (String string : listGame) {
             System.out.println(string);
@@ -1406,7 +1379,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
+    public void show_playArea(String username, String playArea, String achievedResources) {
         @SuppressWarnings("unused")
         Map<Point, PlayableCard> pA = gsonTranslater.fromJson(playArea, new TypeToken<Map<Point, PlayableCard>>() {
         }.getType());
@@ -1417,7 +1390,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+    public void show_goldDeck(String firstCardDeck, String card1, String card2) {
     }
 
     @Override
@@ -1452,27 +1425,69 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) {
     }
 
     @Override
-    public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+    public void show_resourceDeck(String firstCardDeck, String card1, String card2) {
     }
 
     @Override
-    public void show_starterCard(String starterCard) throws RemoteException {
+    public void show_starterCard(String starterCard) {
     }
 
     @Override
-    public void wrongUsername() {
-        printToCmdLineOut("Username already taken, try again");
+    public void show_validUsername(String username) {
+        printToCmdLineOut(serverWrite("Username accepted"));
+        printToCmdLineOut(tuiWrite("Your name is: " + username));
+        while (!isInputLocked)
+            ;
+        state.command_showCommandsInfo();
+        state.stateNotify();// sblocca l'input del reader
+
+    }
+
+    @Override
+    public void show_wrongUsername(String username) {
+        printToCmdLineOut(serverWrite("Username " + username + " already taken, try again"));
+        while (!isInputLocked)// aspettiamo che il reader si blocchi per essere sicuri di poterlo svegliare
+                              // con il prossimo comando
+            ;
         state.setUsername();
     }
 
     @Override
-    public void validUsername() {
-        printToCmdLineOut("Username accepted");
+    public void show_joinedToGame(int id) {
+        printToCmdLineOut(serverWrite(serverWrite("Joined to game: " + id)));
+        state = new JoinedToGameState(this);
         state.command_showCommandsInfo();
+        state.stateNotify();
+    }
+
+    @Override
+    public void show_gameIsFull(int id) {
+        printToCmdLineOut(serverWrite(serverWrite("Game " + id + " is full")));
+        state.stateNotify();
+
+    }
+
+    @Override
+    public void show_gameCreated(int gameID) {
+        printToCmdLineOut(serverWrite("New game created with ID: " + gameID));
+        state = new JoinedToGameState(this);
+        state.command_showCommandsInfo();
+        state.stateNotify();
+    }
+
+    @Override
+    public void show_readyStatus(boolean status) {
+        if (status) {
+            printToCmdLineOut(serverWrite("You are ready"));
+        } else {
+            printToCmdLineOut(serverWrite("You are not ready"));
+        }
+        state.stateNotify();
+
     }
 
 }

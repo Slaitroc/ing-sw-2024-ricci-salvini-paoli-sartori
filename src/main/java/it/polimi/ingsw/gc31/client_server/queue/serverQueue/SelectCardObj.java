@@ -2,7 +2,7 @@ package it.polimi.ingsw.gc31.client_server.queue.serverQueue;
 
 import it.polimi.ingsw.gc31.model.player.Player;
 
-public class SelectCardObj implements QueueObject {
+public class SelectCardObj implements ServerQueueObject {
 
     Player player;
     int i;

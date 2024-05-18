@@ -21,6 +21,7 @@ public class PlayingState extends TuiState {
         commandsMap.put("dg", this::command_drawGold);
         commandsMap.put("dr", this::command_drawResource);
         commandsMap.put("cs", this::command_chooseSecreteObjective);
+        commandsMap.put("invalid", this::command_invalidCommand);
 
         commandsInfo = new LinkedHashMap<>();
         commandsInfo.put("help", "Shows commands info");
@@ -77,7 +78,7 @@ public class PlayingState extends TuiState {
     }
 
     @Override
-    protected void command_chooseSecreteObjective() {
+    protected synchronized void command_chooseSecreteObjective() {
         tui.tuiWrite("Choose secrete objective 1");
         try {
             tui.getClient().chooseSecretObjective1();
@@ -89,6 +90,16 @@ public class PlayingState extends TuiState {
     @Override
     protected synchronized void command_initial() {
         command_showCommandsInfo();
+    }
+
+    @Override
+    protected void setUsername() {
+    }
+
+    @Override
+    protected synchronized void command_invalidCommand() {
+        tui.printToCmdLineOut(tui.tuiWrite("Invalid command"));
+        stateNotify();
     }
 
 }

@@ -25,6 +25,29 @@ public abstract class TuiState {
 
     protected abstract void command_initial();
 
+    /**
+     * Si assicura che il Reader Thread sia in attesa del termine dell'esecuzione di
+     * un comando. Se non lo fosse entrerebbe in attesa di essere risvegliato senza
+     * che alcun comando lo possa risvegliare.
+     * Questo è necessario per far si che la lettura input del comando e del Reader
+     * non entrino in conflitto
+     */
+    protected void stateNotify() {
+        ;
+        while (!tui.isInputLocked) {
+            ;
+        }
+        synchronized (tui.stateLock) {
+            tui.isInputLocked = false;
+            tui.stateLock.notify();
+        }
+    }
+
+    protected void command_invalidCommand() {
+        tui.printToCmdLineOut(tui.tuiWrite("Invalid command"));
+        stateNotify();
+    }
+
     protected abstract void setUsername();
 
     protected abstract void command_createGame();

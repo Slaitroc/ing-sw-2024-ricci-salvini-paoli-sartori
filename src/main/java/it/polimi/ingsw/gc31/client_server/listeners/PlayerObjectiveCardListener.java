@@ -1,7 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.listeners;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.client_server.queue.clientSide.ShowSecretObjectiveCardObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowSecretObjectiveCardObj;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 
 import java.rmi.RemoteException;

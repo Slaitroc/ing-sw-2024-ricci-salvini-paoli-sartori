@@ -3,7 +3,7 @@ package it.polimi.ingsw.gc31.client_server.queue.serverQueue;
 import it.polimi.ingsw.gc31.model.GameModel;
 import it.polimi.ingsw.gc31.model.player.Player;
 
-public class DrawResOneObj implements QueueObject {
+public class DrawResOneObj implements ServerQueueObject {
     private Player player;
     private GameModel model;
 

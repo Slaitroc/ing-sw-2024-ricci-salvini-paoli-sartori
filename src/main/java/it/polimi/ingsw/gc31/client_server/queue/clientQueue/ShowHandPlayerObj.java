@@ -1,11 +1,8 @@
 package it.polimi.ingsw.gc31.client_server.queue.clientQueue;
 
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.QueueObject;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.UI;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;

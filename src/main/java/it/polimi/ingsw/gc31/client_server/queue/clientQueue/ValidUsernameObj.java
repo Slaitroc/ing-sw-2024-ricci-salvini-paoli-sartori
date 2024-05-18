@@ -4,9 +4,15 @@ import it.polimi.ingsw.gc31.view.UI;
 
 public class ValidUsernameObj implements ClientQueueObject {
 
+    String username;
+
+    public ValidUsernameObj(String username) {
+        this.username = username;
+    }
+
     @Override
     public void execute(UI ui) {
-        ui.validUsername();
+        ui.show_validUsername(username);
     }
 
 }

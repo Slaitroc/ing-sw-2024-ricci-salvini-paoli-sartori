@@ -8,10 +8,15 @@ import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameCreatedObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsFullObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.JoinedToGameObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ValidUsernameObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongUsernameObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
+import java.util.concurrent.LinkedBlockingQueue;
 
 //NOTE creation of GameController for match creation
 // Does the GameController related to the first match get created immediately after the first player has logged in?
@@ -42,6 +47,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     private final List<GameController> gameControlList;
     private Map<String, VirtualClient> tempClients;
     private final Set<String> nicknames;
+    private final LinkedBlockingQueue<ServerQueueObject> callsList;
 
     /**
      * Private constructor for the Controller class.
@@ -53,6 +59,34 @@ public class Controller extends UnicastRemoteObject implements IController {
         tempClients = new HashMap<>();
         nicknames = new HashSet<>();
         gameControlList = new ArrayList<>();
+        callsList = new LinkedBlockingQueue<>();
+        new Thread(this::executor).start();
+    }
+
+    public void addQueueObj(ServerQueueObject obj) {
+        synchronized (this) {
+            callsList.add(obj);
+            this.notify();
+        }
+    }
+
+    private void executor() {
+        ServerQueueObject action = null;
+        while (true) {
+            synchronized (this) {
+                try {
+                    if (action == null)
+                        this.wait();
+                    action = callsList.poll();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if (action != null) {
+                    action.execute(this);
+                }
+
+            }
+        }
     }
 
     /**
@@ -60,7 +94,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      *
      * @param text the message to print.
      */
-    private void controllerWrite(String text) {
+    public void controllerWrite(String text) {
         System.out.println(DefaultValues.ANSI_GREEN + DefaultValues.RMI_SERVER_TAG + DefaultValues.ANSI_BLUE
                 + DefaultValues.CONTROLLER_TAG + DefaultValues.ANSI_RESET + text);
     }
@@ -79,9 +113,9 @@ public class Controller extends UnicastRemoteObject implements IController {
             throws RemoteException, PlayerNicknameAlreadyExistsException {
         if (nicknames.add(username)) {
             tempClients.put(username, client);
-            client.sendCommand(new ValidUsernameObj());
+            client.sendCommand(new ValidUsernameObj(username));
         } else {
-            client.sendCommand(new WrongUsernameObj());
+            client.sendCommand(new WrongUsernameObj(username));
             throw new PlayerNicknameAlreadyExistsException();
         }
     }
@@ -95,13 +129,19 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @throws RemoteException if an RMI error occurs.
      */
     @Override
-    public IGameController createGame(String username, int maxNumberPlayers) throws RemoteException {
+    public IGameController createGame(String username, int maxNumPlayer) throws RemoteException {
         VirtualClient client = tempClients.get(username);
-        gameControlList.add(new GameController(username, client, maxNumberPlayers, gameControlList.size() - 1));
-        client.setGameID(gameControlList.size() - 1);
+        try {
+            gameControlList.add(new GameController(username, client, maxNumPlayer,
+                    gameControlList.size()));
+            client.setGameID(gameControlList.size() - 1);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         tempClients.remove(username);
-        controllerWrite("New Game Created with ID: " + (gameControlList.size() - 1));
-        return gameControlList.getLast();
+        client.sendCommand(new GameCreatedObj(gameControlList.size() - 1));
+        return gameControlList.get(gameControlList.size() - 1);
+
     }
 
     /**
@@ -114,10 +154,21 @@ public class Controller extends UnicastRemoteObject implements IController {
      */
     @Override
     public IGameController joinGame(String username, int idGame) throws RemoteException {
-        gameControlList.get(idGame).joinGame(username, tempClients.get(username));
-        tempClients.remove(username);
 
-        return gameControlList.get(idGame);
+        if (gameControlList.get(idGame).getCurrentNumberPlayers() != gameControlList.get(idGame)
+                .getMaxNumberPlayers()) {
+            gameControlList.get(idGame).joinGame(username, tempClients.get(username));
+            tempClients.get(username).sendCommand(new JoinedToGameObj(idGame));
+            tempClients.remove(username);
+            return gameControlList.get(idGame);
+        }
+
+        else {
+            tempClients.get(username).sendCommand(new GameIsFullObj(idGame));
+            return null;
+
+        }
+
     }
 
     // GETTERS
