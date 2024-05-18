@@ -1,11 +1,11 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
-import it.polimi.ingsw.gc31.client_server.queue.clientSide.ClientQueueObject;
 import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -202,21 +202,21 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     @Override
-    public void show_handPlayer(String username, List<PlayableCard> hand) throws RemoteException {
+    public void show_handPlayer(String username, List<PlayableCard> hand) {
         /*
-        output.print("show hand player");
-        // username non viene utilizzato
-        // output.print(username);
-        for (String s : hand) {
-            output.println(s);
-        }
-        output.println("end list");
-        output.flush();
-        */
+         * output.print("show hand player");
+         * // username non viene utilizzato
+         * // output.print(username);
+         * for (String s : hand) {
+         * output.println(s);
+         * }
+         * output.println("end list");
+         * output.flush();
+         */
     }
 
     @Override
-    public void show_scorePlayer(String username, Integer score) throws RemoteException {
+    public void show_scorePlayer(String username, Integer score) {
         output.println("show score");
         // username non viene utilizzato
         output.println(username);
@@ -225,14 +225,14 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     @Override
-    public void show_starterCard(String starterCard) throws RemoteException {
+    public void show_starterCard(String starterCard) {
         output.println("show starter card");
         output.println(starterCard);
         output.flush();
     }
 
     @Override
-    public void show_objectiveCard(ObjectiveCard objectiveCard){
+    public void show_objectiveCard(ObjectiveCard objectiveCard) {
         output.println("show objective card");
         output.println(objectiveCard);
         output.flush();
@@ -244,12 +244,12 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     @Override
-    public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
+    public void show_playArea(String username, String playArea, String achievedResources) {
 
     }
 
     @Override
-    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+    public void show_goldDeck(String firstCardDeck, String card1, String card2) {
         output.println("show gold deck");
         output.println(firstCardDeck);
         output.println(card1);
@@ -258,7 +258,7 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     @Override
-    public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+    public void show_resourceDeck(String firstCardDeck, String card1, String card2) {
         output.println("show resource deck");
         output.println(firstCardDeck);
         output.println(card1);
@@ -267,7 +267,7 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     @Override
-    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) {
         output.println("show objective card");
         output.println(firstCardDeck);
         output.println(card1);
@@ -313,5 +313,17 @@ public class SocketClientHandler implements VirtualClient {
     @Override
     public void sendCommand(ClientQueueObject obj) throws RemoteException {
 
+    }
+
+    @Override
+    public void show_listGame(List<String> listGame) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_listGame'");
+    }
+
+    @Override
+    public void show_gameCreated() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_gameCreated'");
     }
 }

@@ -1,11 +1,8 @@
-package it.polimi.ingsw.gc31.client_server.queue.clientSide;
+package it.polimi.ingsw.gc31.client_server.queue.clientQueue;
 
-import it.polimi.ingsw.gc31.client_server.queue.QueueObject;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.UI;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
@@ -23,7 +20,6 @@ public class ShowHandPlayerObj implements ClientQueueObject {
     public void execute(UI ui) {
         ui.show_handPlayer(
                 username,
-                hand.stream().map(card -> gsonTranslater.fromJson(card, PlayableCard.class)).toList()
-                );
+                hand.stream().map(card -> gsonTranslater.fromJson(card, PlayableCard.class)).toList());
     }
 }

@@ -25,11 +25,14 @@ public class RmiServer implements VirtualServer {
 
     @Override
     public IController connect(VirtualClient client, String username)
-            throws RemoteException, PlayerNicknameAlreadyExistsException {
-        controller.connect(client, username);
-
-        serverWrite("New client connected: " + username);
-        return controller;
+            throws RemoteException {
+        try {
+            controller.connect(client, username);
+            serverWrite("New client connected: " + username);
+            return controller;
+        } catch (PlayerNicknameAlreadyExistsException e) {
+            return null;
+        }
     }
 
     @Override

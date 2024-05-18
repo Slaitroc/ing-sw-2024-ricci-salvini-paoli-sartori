@@ -1,7 +1,6 @@
 package it.polimi.ingsw.gc31.client_server.interfaces;
 
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
-import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.view.UI;
 
 import java.io.IOException;
@@ -11,7 +10,7 @@ public interface ClientCommands {
 
     void setUI(UI ui);
 
-    void setUsername(String username) throws IOException, PlayerNicknameAlreadyExistsException;
+    void setUsername(String username) throws IOException;
 
     void createGame(int maxNumberPlayer) throws RemoteException, IOException;
 

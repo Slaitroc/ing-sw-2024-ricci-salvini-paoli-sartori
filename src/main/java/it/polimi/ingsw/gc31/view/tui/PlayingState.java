@@ -21,6 +21,7 @@ public class PlayingState extends TuiState {
         commandsMap.put("dg", this::command_drawGold);
         commandsMap.put("dr", this::command_drawResource);
         commandsMap.put("cs", this::command_chooseSecreteObjective);
+        commandsMap.put("invalid", this::command_invalidCommand);
 
         commandsInfo = new LinkedHashMap<>();
         commandsInfo.put("help", "Shows commands info");
@@ -34,7 +35,7 @@ public class PlayingState extends TuiState {
     }
 
     @Override
-    protected synchronized void command_showGames() {
+    protected void command_showGames() {
         try {
             tui.getClient().getGameList();
         } catch (IOException e) {
@@ -54,7 +55,7 @@ public class PlayingState extends TuiState {
     }
 
     @Override
-    protected synchronized void command_drawGold() {
+    protected void command_drawGold() {
         tui.tuiWrite("Which card do you want to draw?");
         try {
             tui.getClient().drawGold();
@@ -65,7 +66,7 @@ public class PlayingState extends TuiState {
     }
 
     @Override
-    protected synchronized void command_drawResource() {
+    protected void command_drawResource() {
         // TODO qui va aggiunto un metodo che mostri le possibili carte da pescare
         tui.tuiWrite("Which card do you want to draw?");
         try {
@@ -87,8 +88,18 @@ public class PlayingState extends TuiState {
     }
 
     @Override
-    protected synchronized void command_initial() {
+    protected void command_initial() {
         command_showCommandsInfo();
+    }
+
+    @Override
+    protected void setUsername() {
+    }
+
+    @Override
+    protected void command_invalidCommand() {
+        tui.printToCmdLineOut(tui.tuiWrite("Invalid command"));
+        stateNotify();
     }
 
 }

@@ -158,7 +158,7 @@ public class TCPClient implements ClientCommands {
         String line;
         List<String> list = new ArrayList<>();
         try {
-            while (!(line = input.readLine()).equals("game list finised")) {
+            while (!(line = input.readLine()).equals("game list finished")) {
                 list.add(line);
             }
             ui.show_listGame(list);
@@ -243,14 +243,14 @@ public class TCPClient implements ClientCommands {
      *                                              database
      */
     @Override
-    public void setUsername(String username) throws IOException, PlayerNicknameAlreadyExistsException {
+    public void setUsername(String username) throws IOException {
         output.println("connect");
         output.println(username);
         output.flush();
 
         String line = input.readLine();
         if (line.equals("username already exists"))
-            throw new PlayerNicknameAlreadyExistsException();
+            ;// FIX
         else if (line.equals("username set"))
             this.username = username;
     }

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.gc31.client_server.queue.clientSide;
+package it.polimi.ingsw.gc31.client_server.queue.clientQueue;
 
 import it.polimi.ingsw.gc31.view.UI;
 

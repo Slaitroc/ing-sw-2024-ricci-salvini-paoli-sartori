@@ -16,10 +16,7 @@ import static it.polimi.ingsw.gc31.DefaultValues.getRgbColor;
 import java.awt.Point;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
-import java.rmi.RemoteException;
 import java.util.*;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.strategies.*;
@@ -791,103 +788,6 @@ public class TUI extends UI {
         return placeHolders;
     }
 
-    /**
-     * Remove every characters inside the playArea
-     */
-    public void clearPlayArea() {
-        StringBuilder res = new StringBuilder();
-        for (int i = 1; i < PLAYAREA_END_ROW - PLAYAREA_INITIAL_ROW; i++) {
-            for (int j = 1; j < PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN; j++) {
-                res.append(ansi().cursor(PLAYAREA_INITIAL_ROW + i, PLAYAREA_INITIAL_COLUMN + j).a(" "));
-            }
-        }
-        System.out.println(res);
-    }
-
-    /**
-     * State of the TUI (State Design Pattern)
-     * <p>
-     * This variable is used to manage the available commands in the current state
-     */
-    private TuiState state;
-    /**
-     * This volatile boolean variable is used to check if the state has changed
-     * <p>
-     * Knowing if the state has changed is useful to call the command_initial method
-     * of the new state
-     */
-    private volatile boolean isStateChanged = true;
-    /**
-     * This variable manage a race condition between the commandLineReader and the
-     * commandLineProcess threads. <code>commandLineReader</code> thread must wait
-     * for the <code>commandLineProcess</code> thread to be ready to process the
-     * input.
-     */
-    private volatile boolean cmdLineProcessReady = false;
-    /**
-     * This variable is used to manage the chat board avoiding to update it every
-     * time
-     */
-    private volatile boolean chatNeedsUpdate = false;
-    /**
-     * This variable is used to manage the chat messages. The ChatReader thread adds
-     * new client's messages to this queue.
-     * <p>
-     * Right now this is the simplest implementation that comes to my mind, but it
-     * would be better to use a specific class for the chat messages.
-     */
-    private final Queue<String> chatMessages;
-    /**
-     * This variable is used to manage the command line output messages.
-     * <p>
-     * Instead of printing the messages directly to the system output, each state
-     * must add its messages to this queue.
-     * <p>
-     * The <code>commandLineOut</code> thread
-     * will print
-     * them to the right position of the console.
-     */
-    private final Queue<String> cmdLineOut = new ArrayDeque<String>();
-    /**
-     * This variable is used to manage the global commands.
-     * <p>
-     * Global commands are commands sent by the server to the
-     * client. So they are not typed nor managed by the current state.
-     * <p>
-     * The <code>commandLineProcess</code> thread reads the messages from this queue
-     * and processes
-     * them.
-     */
-    private final BlockingQueue<String> globalCommands;
-
-    /**
-     * This variable is used to manage the command line input messages.
-     * <p>
-     * The <code>commandLineReader</code> thread reads the input from the system
-     * input and adds
-     * it to this queue.
-     * <p>
-     * The <code>commandLineProcess</code> thread reads the messages from this
-     * queue and processes them.
-     */
-    private final Queue<String> cmdLineMessages;
-
-    /**
-     * This variable is used to manage the current working area of the terminal.
-     * <p>
-     * 0 = command line
-     * <p>
-     * 1 = chat
-     * <p>
-     * 3 = playArea
-     */
-    private int terminalAreaSelection = 0;
-    /**
-     * This variable is used to manage the access to the
-     * <code>terminalAreaSelection</code> variable
-     */
-    private Object areaSelectionLock = new Object();
-
     // GETTERS & SETTERS
 
     /**
@@ -897,23 +797,22 @@ public class TUI extends UI {
         return this.client;
     }
 
-    /**
-     * State's command may need to access the TUI to change to a new state
-     *
-     * @param state
-     */
-    public void setState(TuiState state) {
-        this.state = state;
-        this.isStateChanged = true;
-    }
+    // /**
+    // * State's command may need to access the TUI to change to a new state
+    // *
+    // * @param state
+    // */
+    // public void setState(TuiState state) {
+    // this.state = state;
+    // synchronized (isStateChangedLock) {
+    // this.isStateChanged = true;
+    // }
+    // }
 
     // credo sia stata utilizzata solo per debugging
     public TUI(TuiState state, ClientCommands client) {
         this.client = client;
         this.state = state;
-
-        globalCommands = new LinkedBlockingQueue<>();
-
         chatMessages = new ArrayDeque<String>();
         cmdLineMessages = new ArrayDeque<String>();
 
@@ -924,8 +823,6 @@ public class TUI extends UI {
 
         this.state = new InitState(this);
         this.client = client;
-
-        globalCommands = new LinkedBlockingQueue<>();
         chatMessages = new ArrayDeque<String>();
         cmdLineMessages = new ArrayDeque<String>();
     }
@@ -938,7 +835,7 @@ public class TUI extends UI {
      * It also clears the command line input area and update the
      * <code>terminalAreaSelection</code> variable.
      */
-    private void moveCursorToCmdLine() {
+    protected void moveCursorToCmdLine() {
         AnsiConsole.out().print(
                 Ansi.ansi().cursor(CMD_LINE_INPUT_ROW, CMD_LINE_INPUT_COLUMN).a(" ".repeat(CMD_LINE_EFFECTIVE_WIDTH)));
         AnsiConsole.out().print(Ansi.ansi().cursor(CMD_LINE_INPUT_ROW, CMD_LINE_INPUT_COLUMN).a("> "));
@@ -1024,6 +921,7 @@ public class TUI extends UI {
             cmdLineOut.add(Ansi.ansi().a(message).reset().toString());
             cmdLineOut.notifyAll();
         }
+        resetCursor();
     }
 
     // probabilmente non necessario al momento ma potrebbe essere utile in futuro
@@ -1064,7 +962,102 @@ public class TUI extends UI {
                 + DefaultValues.ANSI_RESET;
     }
 
+    protected String serverWrite(String text) {
+        return DefaultValues.ANSI_PURPLE + DefaultValues.SERVER_TAG + DefaultValues.ANSI_RESET + text;
+    }
+
+    /**
+     * Remove every characters inside the playArea
+     */
+    public void clearPlayArea() {
+        StringBuilder res = new StringBuilder();
+        for (int i = 1; i < PLAYAREA_END_ROW - PLAYAREA_INITIAL_ROW; i++) {
+            for (int j = 1; j < PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN; j++) {
+                res.append(ansi().cursor(PLAYAREA_INITIAL_ROW + i, PLAYAREA_INITIAL_COLUMN + j).a(" "));
+            }
+        }
+        System.out.println(res);
+    }
     // THREADS
+
+    /**
+     * State of the TUI (State Design Pattern)
+     * <p>
+     * This variable is used to manage the available commands in the current state
+     */
+    private TuiState state;
+
+    protected Object stateLock = new Object();
+    protected Queue<Integer> stateLockQueue = new ArrayDeque<Integer>();
+
+    protected void addToStateLockQueue() {
+        synchronized (stateLockQueue) {
+            stateLockQueue.add(0);
+            stateLockQueue.notify();
+        }
+    }
+
+    protected void removeFromStateLockQueue() {
+        synchronized (stateLockQueue) {
+            if (stateLockQueue.isEmpty())
+                return;
+            stateLockQueue.poll();
+        }
+    }
+
+    /**
+     * This variable is used to manage the current working area of the terminal.
+     * <p>
+     * 0 = command line
+     * <p>
+     * 1 = chat
+     * <p>
+     * 3 = playArea
+     */
+    private int terminalAreaSelection = 0;
+    private Queue<Integer> cmdLineAreaSelection = new ArrayDeque<Integer>();
+    private Queue<Integer> chatAreaSelection = new ArrayDeque<Integer>();
+    /**
+     * This variable is used to manage the access to the
+     * <code>terminalAreaSelection</code> variable
+     */
+    private Object areaSelectionLock = new Object();
+    /**
+     * This variable is used to manage the chat board avoiding to update it every
+     * time
+     */
+    private volatile boolean chatNeedsUpdate = false;
+
+    /**
+     * This variable is used to manage the chat messages. The ChatReader thread adds
+     * new client's messages to this queue.
+     * <p>
+     * Right now this is the simplest implementation that comes to my mind, but it
+     * would be better to use a specific class for the chat messages.
+     */
+    private final Queue<String> chatMessages;
+    /**
+     * This variable is used to manage the command line output messages.
+     * <p>
+     * Instead of printing the messages directly to the system output, each state
+     * must add its messages to this queue.
+     * <p>
+     * The <code>commandLineOut</code> thread
+     * will print
+     * them to the right position of the console.
+     */
+    private final Queue<String> cmdLineOut = new ArrayDeque<String>();
+    /**
+     * This variable is used to manage the command line input messages.
+     * <p>
+     * The <code>commandLineReader</code> thread reads the input from the system
+     * input and adds
+     * it to this queue.
+     * <p>
+     * The <code>commandLineProcess</code> thread reads the messages from this
+     * queue and processes them.
+     */
+    protected final Queue<String> cmdLineMessages;
 
     /**
      * This method starts the <code>commandLineOut</code> thread.
@@ -1099,7 +1092,7 @@ public class TUI extends UI {
                         }
                     } else {
                         print_CmdLineBorders();
-                        updateCmdLineOut();
+                        updateCmdLineOut(); // sembra looppare all'infinito
                     }
                 }
             }
@@ -1115,8 +1108,6 @@ public class TUI extends UI {
     private void commandLineReader() {
         new Thread(() -> {
             commandLineProcess();
-            while (!cmdLineProcessReady)
-                ;
             Scanner cmdScanner = new Scanner(System.in);
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 cmdScanner.close();
@@ -1132,23 +1123,30 @@ public class TUI extends UI {
                         }
                     }
                 }
-                moveCursorToCmdLine();
-                String input = "";
-                // if a state is running a command, it waits for the command to be finished
+                // if a is running a command, it waits for the command to be finished
                 // This is necessary to let each command get its input
-                synchronized (state) {
-                    input = cmdScanner.nextLine();
+                synchronized (stateLock) {
+                    addToStateLockQueue();
+                    try {
+                        stateLock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+                String input = null;
+                moveCursorToCmdLine();
 
+                input = cmdScanner.nextLine();
                 // Sends the input to the command line process thread and waits for the command
                 // to be executed
-                if (!input.isEmpty()) {
-                    synchronized (cmdLineMessages) {
-                        cmdLineMessages.add(input.trim());
-                        try {
-                            cmdLineMessages.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                if (input != null) {
+                    if (input.equals("chat")) {
+                        printToCmdLineOut("comando " + input + " eseguito", Ansi.Color.CYAN);
+                        moveCursorToChatLine();
+                    } else {
+                        synchronized (cmdLineMessages) {
+                            cmdLineMessages.add(input.trim());
+                            cmdLineMessages.notify();
                         }
                     }
                 }
@@ -1162,52 +1160,27 @@ public class TUI extends UI {
      * This method starts the <code>commandLineProcess</code> thread.
      * <p>
      * This thread is used to process the commands in the
-     * <code>cmdLineMessages</code> queue and in the <code>globalCommands</code>
-     * queue.
+     * <code>cmdLineMessages</code> queue.
      * <p>
      * If the command is "chat", it moves the cursor to the chat input area.
      */
     private void commandLineProcess() {
         new Thread(() -> {
+            state.command_initial();
             while (true) {
-                if (isStateChanged) {
-                    state.command_initial();
-                    isStateChanged = false;
-                    cmdLineProcessReady = true;
-                }
-                if (!cmdLineMessages.isEmpty()) {
-                    String cmd = null;
-                    synchronized (cmdLineMessages) {
-                        cmd = cmdLineMessages.poll();
-                    }
-                    if (cmd.equals("chat")) {
-                        synchronized (areaSelectionLock) {
-                            printToCmdLineOut("comando " + cmd + " eseguito", Ansi.Color.CYAN);
-                            moveCursorToChatLine();
-                            areaSelectionLock.notify();
-                        }
-                        synchronized (cmdLineMessages) {
-                            cmdLineMessages.notify();
-                        }
-                        continue;
-                    } else {
-                        if (!globalCommands.isEmpty()) {
-                            List<String> commands = new ArrayList<>();
-                            globalCommands.drainTo(commands);
-                            for (String command : commands) {
-                                execute_command(command);
-                            }
-                        } else {
-                            synchronized (state) { // commandLineReader could take control of the input before the
-                                // command execution... this synchronized should fix the thing
-                                synchronized (cmdLineMessages) {
-                                    execute_command(cmd);
-                                    cmdLineMessages.notify();
-                                }
-                            }
+                String cmd = null;
+                synchronized (cmdLineMessages) {
+                    while (cmdLineMessages.isEmpty()) {
+                        try {
+                            cmdLineMessages.wait(); // Attendi che ci sia un nuovo comando
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
                     }
-
+                    cmd = cmdLineMessages.poll();
+                    if (cmd != null) {
+                        execute_command(cmd);
+                    }
                 }
             }
         }).start();
@@ -1230,6 +1203,7 @@ public class TUI extends UI {
                 synchronized (areaSelectionLock) {
                     if (!(terminalAreaSelection == 1)) {
                         try {
+                            moveCursorToCmdLine();
                             areaSelectionLock.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -1241,6 +1215,9 @@ public class TUI extends UI {
                     continue;
                 }
                 if (input.equals("ccc")) {
+                    synchronized (cmdLineMessages) {
+                        cmdLineMessages.notify();
+                    }
                     synchronized (areaSelectionLock) {
                         moveCursorToCmdLine();
                         areaSelectionLock.notify();
@@ -1255,6 +1232,8 @@ public class TUI extends UI {
     }
 
     /**
+     * cmdLineOut.notifyAll();
+     *
      * This method starts the <code>chatBoard</code> thread.
      * <p>
      * This thread is used to print the chat board messages the right way and in the
@@ -1286,8 +1265,10 @@ public class TUI extends UI {
     private void execute_command(String command) {
         if (state.commandsMap.containsKey(command)) {
             state.commandsMap.get(command).run();
+        } else if (command.isEmpty()) {
+            state.stateNotify();
         } else {
-            printToCmdLineOut(tuiWrite("Command not recognized"));
+            state.commandsMap.get("invalid").run();
         }
     }
 
@@ -1300,12 +1281,14 @@ public class TUI extends UI {
      */
     private void updateCmdLineOut() {
         synchronized (cmdLineOut) {
+            // printa i messaggi
             for (int i = 0; i < cmdLineOut.size() && i < CMD_LINE_OUT_LINES; i++) {
                 AnsiConsole.out().print(Ansi.ansi().cursor(CMD_LINE_INPUT_ROW - 1 - i, CMD_LINE_INPUT_COLUMN)
                         .a(" ".repeat(CMD_LINE_EFFECTIVE_WIDTH)));
                 AnsiConsole.out().print(Ansi.ansi().cursor(CMD_LINE_INPUT_ROW - 1 - i, CMD_LINE_INPUT_COLUMN + 1)
                         .a(cmdLineOut.toArray()[cmdLineOut.size() - 1 - i]));
             }
+            // rimuove i messaggi più vecchi
             if (cmdLineOut.size() > CMD_LINE_OUT_LINES - 1) {
                 int i = cmdLineOut.size() - CMD_LINE_OUT_LINES - 1;
                 for (int j = 0; j < i; j++) {
@@ -1314,7 +1297,6 @@ public class TUI extends UI {
             }
             resetCursor();
             try {
-                cmdLineOut.notifyAll();
                 cmdLineOut.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -1355,32 +1337,25 @@ public class TUI extends UI {
             e.printStackTrace();
         }
 
-        commandLineOut();
         chatBoard();
         chatReader();
+        commandLineOut();
 
     }
 
     // UPDATES FIELDS & METHODS
 
     @Override
-    public void updateToPlayingState() {
+    public void update_ToPlayingState() {
         this.state = new PlayingState(this);
-        this.isStateChanged = true;
+        state.command_showCommandsInfo();
+        state.stateNotify();
+
     }
 
     @Override
     public void updateHand(String username, List<String> hand) {
 
-    }
-
-    @Override
-    public void show_gameCreated() {
-        try {
-            tuiWrite("New game created with ID: " + client.getGameID());
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -1399,7 +1374,7 @@ public class TUI extends UI {
      * @Slaitroc
      */
     @Override
-    public void show_listGame(List<String> listGame) throws RemoteException {
+    public void show_listGame(List<String> listGame) {
         tuiWrite(">>Game List<<");
         for (String string : listGame) {
             System.out.println(string);
@@ -1407,7 +1382,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
+    public void show_playArea(String username, String playArea, String achievedResources) {
         @SuppressWarnings("unused")
         Map<Point, PlayableCard> pA = gsonTranslater.fromJson(playArea, new TypeToken<Map<Point, PlayableCard>>() {
         }.getType());
@@ -1418,7 +1393,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+    public void show_goldDeck(String firstCardDeck, String card1, String card2) {
     }
 
     @Override
@@ -1453,14 +1428,64 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) {
     }
 
     @Override
-    public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+    public void show_resourceDeck(String firstCardDeck, String card1, String card2) {
     }
 
     @Override
-    public void show_starterCard(String starterCard) throws RemoteException {
+    public void show_starterCard(String starterCard) {
     }
+
+    @Override
+    public void show_validUsername(String username) {
+        printToCmdLineOut(serverWrite("Username accepted"));
+        printToCmdLineOut(tuiWrite("Your name is: " + username));
+        state.command_showCommandsInfo();
+        state.stateNotify();// sblocca l'input del reader
+
+    }
+
+    @Override
+    public void show_wrongUsername(String username) {
+        printToCmdLineOut(serverWrite("Username " + username + " already taken, try again"));
+        state.setUsername();
+    }
+
+    @Override
+    public void show_joinedToGame(int id) {
+        printToCmdLineOut(serverWrite(serverWrite("Joined to game: " + id)));
+        state = new JoinedToGameState(this);
+        state.command_showCommandsInfo();
+        state.stateNotify();
+    }
+
+    @Override
+    public void show_gameIsFull(int id) {
+        printToCmdLineOut(serverWrite(serverWrite("Game " + id + " is full")));
+        state.stateNotify();
+
+    }
+
+    @Override
+    public void show_gameCreated(int gameID) {
+        printToCmdLineOut(serverWrite("New game created with ID: " + gameID));
+        state = new JoinedToGameState(this);
+        state.command_showCommandsInfo();
+        state.stateNotify();
+    }
+
+    @Override
+    public void show_readyStatus(boolean status) {
+        if (status) {
+            printToCmdLineOut(serverWrite("You are ready"));
+        } else {
+            printToCmdLineOut(serverWrite("You are not ready"));
+        }
+        state.stateNotify();
+
+    }
+
 }
