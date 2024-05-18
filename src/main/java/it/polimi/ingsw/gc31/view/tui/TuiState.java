@@ -33,12 +33,17 @@ public abstract class TuiState {
      * non entrino in conflitto
      */
     protected void stateNotify() {
-        ;
-        while (!tui.isInputLocked) {
-            ;
+        synchronized (tui.stateLockQueue) {
+            if (tui.stateLockQueue.isEmpty()) {
+                try {
+                    tui.stateLockQueue.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+        tui.removeFromStateLockQueue();
         synchronized (tui.stateLock) {
-            tui.isInputLocked = false;
             tui.stateLock.notify();
         }
     }
