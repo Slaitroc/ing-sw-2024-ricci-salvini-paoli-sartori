@@ -1379,7 +1379,6 @@ public class TUI extends UI {
     public void update_ToPlayingState() {
         this.state = new PlayingState(this);
         state.command_showCommandsInfo();
-        state.stateNotify();
 
     }
 
@@ -1405,10 +1404,12 @@ public class TUI extends UI {
      */
     @Override
     public void show_listGame(List<String> listGame) {
-        tuiWrite(">>Game List<<");
+        printToCmdLineOut(serverWrite(">>Game List<<"));
         for (String string : listGame) {
-            System.out.println(string);
+            printToCmdLineOut(string);
         }
+        state.stateNotify();
+
     }
 
     @Override
@@ -1474,7 +1475,6 @@ public class TUI extends UI {
         printToCmdLineOut(serverWrite("Username accepted"));
         printToCmdLineOut(tuiWrite("Your name is: " + username));
         state.command_showCommandsInfo();
-        state.stateNotify();// sblocca l'input del reader
 
     }
 
@@ -1489,7 +1489,6 @@ public class TUI extends UI {
         printToCmdLineOut(serverWrite("Joined to game: " + id));
         state = new JoinedToGameState(this);
         state.command_showCommandsInfo();
-        state.stateNotify();
     }
 
     @Override
@@ -1504,7 +1503,6 @@ public class TUI extends UI {
         printToCmdLineOut(serverWrite("New game created with ID: " + gameID));
         state = new JoinedToGameState(this);
         state.command_showCommandsInfo();
-        state.stateNotify();
     }
 
     @Override
@@ -1516,6 +1514,18 @@ public class TUI extends UI {
         }
         state.stateNotify();
 
+    }
+
+    @Override
+    public void show_gameDoesNotExist() {
+        printToCmdLineOut(serverWrite("Game does not exist"));
+        state.stateNotify();
+    }
+
+    @Override
+    public void show_wrongGameSize() {
+        printToCmdLineOut(serverWrite("Game size must be between 2 and 4"));
+        state.stateNotify();
     }
 
 }

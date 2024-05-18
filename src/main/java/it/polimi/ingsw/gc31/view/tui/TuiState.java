@@ -21,6 +21,7 @@ public abstract class TuiState {
             String formattedLine = String.format("%-20s : %s", command, description);
             tui.printToCmdLineOut(formattedLine);
         }
+        stateNotify();
     }
 
     protected abstract void command_initial();

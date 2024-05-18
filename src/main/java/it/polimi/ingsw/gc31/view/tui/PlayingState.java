@@ -27,7 +27,7 @@ public class PlayingState extends TuiState {
         commandsInfo.put("help", "Shows commands info");
         commandsInfo.put("dg -> draw gold", "Draw a gold card");
         commandsInfo.put("dr -> draw resource", "Draw a resource card");
-        commandsInfo.put("cs -> choose secrete objective 1", "Choose secrete objective 1");
+        commandsInfo.put("cs1 ->", "Choose secrete objective 1");
     }
 
     @Override
