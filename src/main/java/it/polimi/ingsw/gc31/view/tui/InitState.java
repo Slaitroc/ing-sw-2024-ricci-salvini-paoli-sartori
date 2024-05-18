@@ -37,7 +37,7 @@ public class InitState extends TuiState {
     }
 
     @Override
-    protected synchronized void command_createGame() {
+    protected void command_createGame() {
         tui.printToCmdLineOut(tui.tuiWrite("Type the number of players for the game:"));
         int input = Integer.parseInt(scanner.nextLine());
         try {
@@ -48,7 +48,7 @@ public class InitState extends TuiState {
     }
 
     @Override
-    protected synchronized void command_showGames() {
+    protected void command_showGames() {
         try {
             tui.getClient().getGameList();
         } catch (IOException e) {
@@ -59,7 +59,7 @@ public class InitState extends TuiState {
     }
 
     @Override
-    protected synchronized void command_joinGame() {
+    protected void command_joinGame() {
         tui.printToCmdLineOut(tui.tuiWrite("Type gameID:"));
         int input = Integer.parseInt(scanner.nextLine());
         try {
@@ -87,13 +87,13 @@ public class InitState extends TuiState {
     }
 
     @Override
-    protected synchronized void command_initial() {
+    protected void command_initial() {
         tui.getClient().setUI(this.tui);
         setUsername();
     }
 
     @Override
-    protected synchronized void setUsername() {
+    protected void setUsername() {
         String message = "Type your username:";
         String input;
         tui.printToCmdLineOut(tui.tuiWrite(message));

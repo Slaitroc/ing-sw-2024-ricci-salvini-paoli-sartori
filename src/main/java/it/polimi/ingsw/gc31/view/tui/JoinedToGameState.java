@@ -40,7 +40,7 @@ public class JoinedToGameState extends TuiState {
     }
 
     @Override
-    protected synchronized void command_showGames() {
+    protected void command_showGames() {
         try {
             tui.getClient().getGameList();
         } catch (IOException e) {
@@ -55,7 +55,7 @@ public class JoinedToGameState extends TuiState {
     }
 
     @Override
-    protected synchronized void command_ready() {
+    protected void command_ready() {
         ClientCommands client = tui.getClient();
         try {
             if (!ready) {
@@ -82,7 +82,7 @@ public class JoinedToGameState extends TuiState {
     }
 
     @Override
-    protected synchronized void command_initial() {
+    protected void command_initial() {
         command_showCommandsInfo();
     }
 
