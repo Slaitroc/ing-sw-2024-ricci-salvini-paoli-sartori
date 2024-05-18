@@ -30,7 +30,10 @@ public abstract class TuiState {
      * un comando. Se non lo fosse entrerebbe in attesa di essere risvegliato senza
      * che alcun comando lo possa risvegliare.
      * Questo è necessario per far si che la lettura input del comando e del Reader
-     * non entrino in conflitto
+     * non entrino in conflitto.
+     * <p>
+     * Potrebbe essere nella tui ma visto che riguarda principalmente la concorrenza
+     * con gli stati per ora lo lascio qui
      */
     protected void stateNotify() {
         synchronized (tui.stateLockQueue) {

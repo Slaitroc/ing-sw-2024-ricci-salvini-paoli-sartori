@@ -20,6 +20,7 @@ import it.polimi.ingsw.gc31.client_server.listeners.PlayAreaListener;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerStarterCardListener;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerObjectiveCardListener;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.NewChatMessage;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowReadyStatusObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.StartGameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChooseSecretObjectiveObj;
@@ -190,6 +191,17 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         // for (VirtualClient player: clientList.values()) {
         // player.sendMessage("[GameController] la partita è iniziata");
         // }
+    }
+
+    public void sendChatMessage(NewChatMessage message) {
+        for (VirtualClient client : clientList.values()) {
+            try {
+                client.sendCommand(message);
+            } catch (RemoteException e) {
+                e.printStackTrace(); // TODO da gestire
+            }
+
+        }
     }
 
     /*

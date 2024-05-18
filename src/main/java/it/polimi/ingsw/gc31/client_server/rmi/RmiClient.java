@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.client_server.rmi;
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChatMessage;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ReadyStatusObj;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.view.UI;
@@ -189,6 +190,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public ShowUpdate getUI() throws RemoteException {
         return this.ui;
+    }
+
+    @Override
+    public void sendChatMessage(String username, String message) throws RemoteException {
+        gameController.sendCommand(new ChatMessage(username, message));
     }
 
 }
