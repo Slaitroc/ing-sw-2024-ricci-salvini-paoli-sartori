@@ -20,7 +20,22 @@ import it.polimi.ingsw.gc31.client_server.listeners.PlayAreaListener;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerStarterCardListener;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerObjectiveCardListener;
-import it.polimi.ingsw.gc31.client_server.queue.*;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.NewChatMessage;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowReadyStatusObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.StartGameObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChooseSecretObjectiveObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawGoldObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawGoldOneObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawGoldTwoObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResOneObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResTwoObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.FlipCardObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.FlipStarterCardObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.PlayObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.PlayStarterObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.SelectCardObj;
 import it.polimi.ingsw.gc31.model.GameModel;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.GameState;
@@ -39,7 +54,8 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     private final Gson gsonCard/* , gsonObjective */;
     private final int maxNumberPlayers;
     private final int idGame;
-    private final LinkedBlockingQueue<QueueObject> callsList;
+    private final LinkedBlockingQueue<ServerQueueObject> callsList;
+    private final Map<String, Boolean> readyStatus;
 
     /**
      * Constructor for the GameController class.
@@ -59,6 +75,8 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         this.playerList = new HashMap<>();
         this.clientList = new HashMap<>();
         this.clientList.put(username, client);
+        this.readyStatus = new HashMap<>();
+        this.readyStatus.put(username, false);
         /*
          * gsonObjective = new GsonBuilder()
          * .registerTypeAdapter(ObjectiveCard.class, new ObjectiveCardAdapter())
@@ -71,28 +89,33 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         new Thread(this::executor).start();
     }
 
-    private void addQueueObj(QueueObject obj) {
-        synchronized (this) {
+    @Override
+    public void sendCommand(ServerQueueObject obj) throws RemoteException {
+        addQueueObj(obj);
+    }
+
+    private void addQueueObj(ServerQueueObject obj) {
+        synchronized (callsList) {
             callsList.add(obj);
-            this.notify();
+            callsList.notify();
         }
     }
 
     private void executor() {
-        QueueObject action = null;
         while (true) {
-            synchronized (this) {
-                try {
-                    if (action == null)
-                        this.wait();
-                    action = callsList.poll();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+            ServerQueueObject action;
+            synchronized (callsList) {
+                while (callsList.isEmpty()) {
+                    try {
+                        callsList.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-                if (action != null) {
-                    action.execute();
-                }
-
+                action = callsList.poll();
+            }
+            if (action != null) {
+                action.execute(this);
             }
         }
     }
@@ -105,29 +128,31 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      */
     public void joinGame(String username, VirtualClient client) throws RemoteException {
         clientList.put(username, client);
-        // TODO mandare messaggio al client di connessione al server
+        readyStatus.put(username, false);
         if (maxNumberPlayers == this.clientList.size()) {
             gameControllerWrite("The number of players for the game " + maxNumberPlayers + " has been reached");
-            // try {
-            // // initGame(); // somewhere it's supposed to start the game
-            // } catch (IllegalStateOperationException e) {
-            // e.printStackTrace();
-            // throw new RuntimeException(e);
-            // }
         }
+    }
+
+    @Override
+    public void setReadyStatus(boolean ready, String username) throws RemoteException, IllegalStateOperationException {
+        readyStatus.replace(username, ready);
+        clientList.get(username).sendCommand(new ShowReadyStatusObj(ready));
+        checkReady();
+
     }
 
     @Override
     public void checkReady() throws RemoteException, IllegalStateOperationException {
         int counter = 0;
-        for (VirtualClient clients : clientList.values()) {
-            if (clients.isReady()) {
+        for (Boolean status : readyStatus.values()) {
+            if (status == true) {
                 counter++;
             }
         }
         if (counter == maxNumberPlayers) {
             for (VirtualClient clients : clientList.values()) {
-                clients.startGame();
+                clients.sendCommand(new StartGameObj());
             }
             initGame();
         }
@@ -144,6 +169,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             model.setObjectives(); // Here the common goals are initialized
             model.initSecretObj(); // Here the secret goals are drawn
 
+            createAllListeners();
             for (Player player : playerList.values()) {
                 player.setStarterCard(); // Here the starter cards are drawn
                 player.drawResource();
@@ -165,6 +191,17 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         // for (VirtualClient player: clientList.values()) {
         // player.sendMessage("[GameController] la partita è iniziata");
         // }
+    }
+
+    public void sendChatMessage(NewChatMessage message) {
+        for (VirtualClient client : clientList.values()) {
+            try {
+                client.sendCommand(message);
+            } catch (RemoteException e) {
+                e.printStackTrace(); // TODO da gestire
+            }
+
+        }
     }
 
     /*
@@ -304,12 +341,18 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
     @Override
     public void chooseSecretObjective1(String username) {
-        model.setPlayerObjective(username, 1);
+        if (model.getGameState() == GameState.SETUP) {
+            addQueueObj(new ChooseSecretObjectiveObj(username, model, 1));
+        } else
+            gameControllerWrite("The game is not in the right state to choose secret objective");
     }
 
     @Override
     public void chooseSecretObjective2(String username) {
-        model.setPlayerObjective(username, 2);
+        if (model.getGameState() == GameState.SETUP) {
+            addQueueObj(new ChooseSecretObjectiveObj(username, model, 2));
+        } else
+            gameControllerWrite("The game is not in the right state to choose secret objective");
     }
 
     @Override
@@ -325,21 +368,26 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
     @Override
     public void playStarter(String username) {
-        Player player = playerList.get(username);
-        player.playStarter();
-        model.checkStartGame();
+        if (model.getGameState() == GameState.SETUP) {
+            addQueueObj(new PlayStarterObj(playerList.get(username), model));
+        } else {
+            gameControllerWrite("The game is not in the right state to play starter");
+        }
     }
 
     @Override
     public void changeSide(String username) {
-        Player player = playerList.get(username);
-        player.getSelectedCard().changeSide();
+        addQueueObj(new FlipCardObj(playerList.get(username)));
+    }
+
+    @Override
+    public void changeStarterSide(String username) {
+        addQueueObj(new FlipStarterCardObj(playerList.get(username)));
     }
 
     @Override
     public void selectCard(String username, int index) {
-        Player player = playerList.get(username);
-        player.setSelectedCard(index);
+        addQueueObj(new SelectCardObj(playerList.get(username), index));
     }
 
     /*

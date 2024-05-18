@@ -91,5 +91,6 @@ public abstract class Objective {
         return minY;
     }
 
+    public abstract String toString();
     public abstract JsonObject serializeToJson();
 }

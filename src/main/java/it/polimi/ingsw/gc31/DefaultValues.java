@@ -16,6 +16,7 @@ public class DefaultValues {
 
     // Server Log
     public final static String RMI_SERVER_TAG = "[RMI server] ";
+    public final static String SERVER_TAG = "[Server] ";
     public final static String TCP_SERVER_TAG = "[TCP server] ";
     public static final String CONTROLLER_TAG = "\t[Controller]: ";
 

@@ -2,9 +2,10 @@ package it.polimi.ingsw.gc31.client_server.rmi;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChatMessage;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ReadyStatusObj;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
-import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.view.UI;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
@@ -13,6 +14,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class RmiClient extends UnicastRemoteObject implements VirtualClient, ClientCommands {
     private IController controller;
@@ -21,6 +23,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     private Integer idGame;
     private String username;
     private UI ui;
+    private final LinkedBlockingQueue<ClientQueueObject> callsList;
 
     /**
      * Creates a client with a default name and calls inner procedures to:
@@ -35,22 +38,52 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         this.server.RMIserverWrite("New connection detected...");
         this.username = DefaultValues.DEFAULT_USERNAME;
         this.controller = null;
+        this.callsList = new LinkedBlockingQueue<>();
+        new Thread(this::executor).start();
+    }
+
+    @Override
+    public void sendCommand(ClientQueueObject obj) throws RemoteException {
+        addQueueObj(obj);
+    }
+
+    // QUEUE
+    private void addQueueObj(ClientQueueObject obj) {
+        synchronized (callsList) {
+            callsList.add(obj);
+            callsList.notify();
+        }
+    }
+
+    private void executor() {
+        while (true) {
+            ClientQueueObject action;
+            synchronized (callsList) {
+                while (callsList.isEmpty()) {
+                    try {
+                        callsList.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                action = callsList.poll();
+            }
+            if (action != null) {
+                action.execute(ui);
+            }
+        }
     }
 
     // CLIENT COMMANDS
-    @Override
     public void setUI(UI ui) {
         this.ui = ui;
     }
 
     @Override
-    public void setUsername(String username) throws RemoteException, PlayerNicknameAlreadyExistsException {
+    public void setUsername(String username) throws RemoteException {
         if (controller == null) {
             controller = server.connect(this, username);
-        }
-
-        if (this.username.equals(DefaultValues.DEFAULT_USERNAME)) {
-            this.username = username;
+            this.username = username; // FIX sarebbe meglio fosse final ma complica molto le cose
         }
 
     }
@@ -58,19 +91,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public void createGame(int maxNumberPlayer) throws RemoteException {
         gameController = controller.createGame(username, maxNumberPlayer);
-        if (gameController != null) {
-            ui.show_gameCreated();
-        }
-    }
-
-    @Override
-    public void drawGold() throws RemoteException {
-        gameController.drawGold(username);
-    }
-
-    @Override
-    public void drawResource() throws RemoteException {
-        gameController.drawResource(username);
     }
 
     @Override
@@ -84,15 +104,57 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
-    public void setReady(boolean ready) {
-        this.ready = ready;
-        if (ready) {
-            try {
-                gameController.checkReady();
-            } catch (RemoteException | IllegalStateOperationException e) {
-                e.printStackTrace();
-            }
-        }
+    public void setReady(boolean ready) throws RemoteException {
+        gameController.sendCommand(new ReadyStatusObj(ready, username));
+
+        // this.ready = ready;
+        // if (ready) {
+        // try {
+        // gameController.checkReady();
+        // } catch (RemoteException | IllegalStateOperationException e) {
+        // e.printStackTrace();
+        // }
+        // }
+    }
+
+    @Override
+    public void drawGold() throws RemoteException {
+        gameController.drawGold(username);
+    }
+
+    @Override
+    public void drawGoldCard1() throws RemoteException {
+        gameController.drawGoldCard1(username);
+    }
+
+    @Override
+    public void drawGoldCard2() throws RemoteException {
+        gameController.drawGoldCard2(username);
+    }
+
+    @Override
+    public void drawResource() throws RemoteException {
+        gameController.drawResource(username);
+    }
+
+    @Override
+    public void drawResourceCard1() throws RemoteException {
+        gameController.drawResourceCard1(username);
+    }
+
+    @Override
+    public void drawResourceCard2() throws RemoteException {
+        gameController.drawResourceCard2(username);
+    }
+
+    @Override
+    public void chooseSecretObjective1() throws RemoteException {
+        gameController.chooseSecretObjective1(username);
+    }
+
+    @Override
+    public void chooseSecretObjective2() throws RemoteException {
+        gameController.chooseSecretObjective2(username);
     }
 
     @Override
@@ -123,11 +185,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         ui.show_listGame(listGame);
     }
 
-    @Override
-    public void startGame() throws RemoteException {
-        ui.updateToPlayingState();
-    }
-
     // FIX parlare con christian e eventualmente togliere il metodo anche
     // dall'interfaccia
     @Override
@@ -135,45 +192,9 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         return this.ui;
     }
 
-    // SHOW UPDATE
     @Override
-    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
-        ui.show_goldDeck(firstCardDeck, card1, card2);
-    }
-
-    @Override
-    public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
-        ui.show_resourceDeck(firstCardDeck, card1, card2);
-    }
-
-    @Override
-    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
-        ui.show_objectiveDeck(firstCardDeck, card1, card2);
-    }
-
-    @Override
-    public void show_starterCard(String starterCard) throws RemoteException {
-        ui.show_starterCard(starterCard);
-    }
-
-    @Override
-    public void show_objectiveCard(String objectiveCard) throws RemoteException {
-        ui.show_objectiveCard(objectiveCard);
-    }
-
-    @Override
-    public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
-        ui.show_playArea(username, playArea, achievedResources);
-    }
-
-    @Override
-    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
-        ui.show_handPlayer(username, hand);
-    }
-
-    @Override
-    public void show_scorePlayer(String key, Integer value) throws RemoteException {
-        ui.show_scorePlayer(key, value);
+    public void sendChatMessage(String username, String message) throws RemoteException {
+        gameController.sendCommand(new ChatMessage(username, message));
     }
 
 }

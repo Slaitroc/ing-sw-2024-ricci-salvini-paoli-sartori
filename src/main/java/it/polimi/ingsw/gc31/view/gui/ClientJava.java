@@ -37,7 +37,8 @@ public class ClientJava extends Application {
         primaryStage.setWidth(640);
         primaryStage.setHeight(480);
         primaryStage.setTitle("CODEX Naturalis");
-        primaryStage.getIcons().add(new Image(GUIApplication.class.getResourceAsStream("AppIcons/icon.png")));
+        Image icon = new Image(getClass().getResource("/it/polimi/ingsw/gc31/AppIcons/icon.png").toExternalForm());
+        primaryStage.getIcons().add(icon);
         primaryStage.show();
 
         // Imposta il controller se necessario
@@ -91,7 +92,7 @@ public class ClientJava extends Application {
         root.setAlignment(Pos.CENTER);
 
         // applico lo stile desiderato al nodo radice
-        root.getStylesheets().add(getClass().getResource("/it/polimi/ingsw/gc31/Views/stile1.css").toExternalForm());
+        //root.getStylesheets().add(getClass().getResource("/it/polimi/ingsw/gc31/Views/stile1.css").toExternalForm());
 
         // immagine principale
         ImageView mainImage = new ImageView(startImg_codexLogo);

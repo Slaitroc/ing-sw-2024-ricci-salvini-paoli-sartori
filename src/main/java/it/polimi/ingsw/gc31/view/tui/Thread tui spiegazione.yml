@@ -1,0 +1,114 @@
+Thread:
+
+Reader, Process, CmdOut, ChatReader, ChatBoard
+
+Lock:
+
+stateLock, stateLockQueue, cmdLineAreaSelection, chatAreaSelection, cmdLineMessages, cmdLineOut, chatNeedsUpdate
+
+Boolean: 
+ comingFromChat = false
+
+
+CmdOut:
+    while true:
+        synch (cmdLineOut):
+            se la lista cmdLineOut è vuota: (solo alla prima iterazione)
+            - printa i bordi della cmdLine
+            - printa i bordi di playArea
+            - starta il thread Reader
+            - va in wait *1*
+
+            se la lista cmdLineOut non è vuota:
+            - printa i border della cmdLine
+            - updateCmdLineOut:
+                synch(cmdLineOut):
+                    - printa la command line 
+                    - resiza la lista di messaggi di cmdLineOut se supera lo spazio disponibile
+                    - va in wait *1*
+
+    *Nota: chiunque scriva qualcosa sulla command line, lo scrive in cmdLineOut e poi sveglia il thread cmdOut *1*
+
+Reader:
+    - starta il thread Process
+    while true:
+        synch(cmdLineAreaSelection):
+            - se la cmdLine non è l'area selezionata va in wait *5*
+        se comingFromChat = false:
+            synch(stateLock):
+                - aggiunge un'oggetto alla coda stateLockQueue e fa notify sulla coda *4*
+                *nota: il metodo state.stateNotify() se la coda è vuota va in wait *4*, altrimenti termina il comando. Questo serve per garantire che il reader possa essere svegliato e che sia lui a prendere l'input una volta terminato il comando.
+                *nota: non chiamando il metodo state.stateNotify() il reader non può prendere l'input. Questo è utile quando si aspetta una risposta da parte del server e non si vuole che l'utente possa scrivere sulla command line
+                - va in wait *3*
+                *nota: sempre state.stateNotify() sveglia il reader e lo fa prendere l'input con un notify *3*
+        - imposta comingFromChat = false
+        - muove il cursore alla command line
+        - legge l'input da tastiera (bloccante)
+        se l'input non è vuoto:
+            se l'input è "chat":
+                - synch(cmdLineAreaSelection):
+                    - rimuove l'oggetto dalla coda cmdLineAreaSelection
+                    - aggiunge l'oggetto alla coda chatAreaSelection (notify *6*)
+                    - muove il cursore alla chat
+                    - imposta comingFromChat = true
+            synch(cmdLineMessages):
+                - aggiunge l'input alla lista cmdLineMessages
+                - sveglia i thread in attesa di accedere a cmdLineMessages
+
+
+Process: 
+    - esegue il comando iniziale dell' InitState (setUsername)
+    synch (cmdLineMessages):
+        - prende il lock su cmdLineMessages
+        - cambia cmdLineProcessReady a true
+        se cmdLineMessages è vuota:
+            - va in wait *2*
+        se cmdLineMessages non è vuota:
+            - fa il poll di un messaggio dalla lista
+            se il comando non è null:
+                se il comando è "chat":
+                    synch(areaSelectionLock):
+                        - muove il cursore e cambia l'area selezionata
+                        - ritorna all'inizio del while
+                altrimenti:
+                    - execute_command:
+                        se il comando esiste nello stato:
+                            - esegue il comando
+                            *nota: se necessario sarà il comando o la risposta del server a chiamare state.stateNotify() (wait *4*)
+                        se il comando è vuoto:
+                            - state.stateNotify() (wait *4*)
+                        se il comando non esiste nello stato:
+                            - esegue il comando command_invalid che chiama state.stateNotify() (wait *4*)
+
+ChatReader:
+    while true:
+        synch(chatAreaSelection):
+            - se l'area selezionata non è quella del chatReader va in wait *7*
+        - legge l'input da tastiera (bloccante)
+        se l'input è vuoto:
+            - va all'inizio del while
+        altrimeni:
+            se l'input è "ccc":
+                - synch(chatAreaSelection):
+                    - rimuove l'oggetto dalla coda chatAreaSelection
+                    - aggiunge l'oggetto alla coda cmdLineAreaSelection (notify *5*)
+                    - muove il cursore alla command Line
+            altrimenti:
+                - aggiunge l'input alla lista chatMessages
+                synch(chatNeesUpdate):
+                    - notify *8*
+
+ChatBoard:
+    - printa i bordi della chat
+    - muove il cursore alla commandLine
+    while true:
+            synch(chatNeedsUpdate):
+                - va in wait di nuovi messaggi *8*
+                - printa i bordi della chat
+                - aggiorna i messaggi della chat
+
+
+        
+                    
+        
+

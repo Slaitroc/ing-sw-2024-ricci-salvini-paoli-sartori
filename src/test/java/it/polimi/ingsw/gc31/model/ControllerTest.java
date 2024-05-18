@@ -94,7 +94,10 @@ public class ControllerTest {
         // System.out.println(playingPlayer);
         playerList.add(gameModel.getCurrPlayingPlayer().getUsername());
         gameController1.chooseSecretObjective2(gameModel.getCurrPlayingPlayer().getUsername());
+        gameController1.changeStarterSide(gameModel.getCurrPlayingPlayer().getUsername());
+        gameController1.changeStarterSide(gameModel.getCurrPlayingPlayer().getUsername());
         gameController1.playStarter(gameModel.getCurrPlayingPlayer().getUsername());
+        gameController1.changeStarterSide(gameModel.getCurrPlayingPlayer().getUsername());
         gameModel.setNextPlayingPlayer();
 
         @SuppressWarnings("unused")

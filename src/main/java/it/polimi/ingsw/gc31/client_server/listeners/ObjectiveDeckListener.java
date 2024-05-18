@@ -18,6 +18,7 @@ public class ObjectiveDeckListener implements Listener<Deck> {
 
     @Override
     public void update(Deck data) throws RemoteException {
+        // serve il riferimento a game controller per creare il queue obj corrispondente
         client.show_objectiveDeck(
                 gsonTranslater.toJson(data.peekCard(), ObjectiveCard.class),
                 gsonTranslater.toJson(data.peekCard1(), ObjectiveCard.class),

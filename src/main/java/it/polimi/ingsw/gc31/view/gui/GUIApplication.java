@@ -1,15 +1,17 @@
 package it.polimi.ingsw.gc31.view.gui;
 
+import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.text.Font;
 import javafx.scene.Scene;
-//import javafx.scene.image.Image;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 import it.polimi.ingsw.gc31.DefaultValues;
+import it.polimi.ingsw.gc31.view.UI;
 import it.polimi.ingsw.gc31.exceptions.GUISceneInitializationException;
 import it.polimi.ingsw.gc31.view.gui.controllers.ViewController;
 
@@ -18,11 +20,16 @@ import java.util.HashMap;
 
 public class GUIApplication extends Application {
 
+    private ClientCommands client;
     public static Stage primaryStage;
     private Map<SceneTag, Scene> scenesMap;
     private Map<SceneTag, ViewController> wcMap;
     @SuppressWarnings("unused")
     private SceneTag activeScene;
+
+    public void run() {
+        launch();
+    }
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -36,17 +43,18 @@ public class GUIApplication extends Application {
 
         // Imposta la scena
         primaryStage = stage;
-        primaryStage.setScene(choseScene(SceneTag.START));
+        loadScene(SceneTag.START);
 
         // Imposta le dimensioni della finestra
         primaryStage.setWidth(640);
         primaryStage.setHeight(480);
-        // primaryStage.setFullScreen(true);
+        //primaryStage.setFullScreen(true);
 
         // Imposta il titolo e l'icona della finestra
         primaryStage.setTitle("CODEX Naturalis");
-        // primaryStage.getIcons().add(new
-        // Image(ClientFxml.class.getResourceAsStream("AppIcons/icon.png")));
+
+        Image icon = new Image(getClass().getResource("/it/polimi/ingsw/gc31/AppIcons/icon.png").toExternalForm());
+        primaryStage.getIcons().add(icon);
 
         // Mostra la finestra
         primaryStage.show();
@@ -56,9 +64,10 @@ public class GUIApplication extends Application {
         scenesMap = new HashMap<>();
         wcMap = new HashMap<>();
         FXMLLoader loader;
-        // Carica il file FXML
+        // Carica i file FXML
         for (Map.Entry<SceneTag, String> entry : DefaultValues.getGuiFxmlScenes().entrySet()) {
             loader = new FXMLLoader(getClass().getResource(entry.getValue()));
+            System.out.println("Loading " + entry.getValue() + "...");
             try {
                 Scene scene = new Scene(loader.load());
                 scenesMap.put(entry.getKey(), scene);
@@ -84,11 +93,19 @@ public class GUIApplication extends Application {
     private Scene choseScene(SceneTag tag) {
         activeScene = tag;
         return scenesMap.get(tag);
-
     }
 
     public void loadScene(SceneTag tag) {
         primaryStage.setScene(choseScene(tag));
     }
+
+    public ClientCommands getClient() {
+        return client;
+    }
+
+    public void setClient (ClientCommands client) {
+        this.client = client;
+    }
+
 
 }
