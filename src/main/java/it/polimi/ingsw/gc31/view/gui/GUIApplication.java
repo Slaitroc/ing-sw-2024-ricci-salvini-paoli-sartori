@@ -73,18 +73,14 @@ public class GUIApplication extends Application {
             System.out.println("Loading " + entry.getValue() + "...");
             loader = new FXMLLoader(getClass().getResource(entry.getValue()));
             try {
-                System.out.println("Loaded " + entry.getValue());
                 Scene scene = new Scene(loader.load());
-                System.out.println("Scene loaded");
                 scenesMap.put(entry.getKey(), scene);
                 ViewController wc = loader.getController();
-                System.out.println("Controller loaded");
                 wc.setGUIApplication(this);
                 wc.setClient(client);
                 wcMap.put(entry.getKey(), wc);
             } catch (IOException e) {
                 e.printStackTrace();
-                // throw new GUISceneInitializationException();
             }
         }
 
@@ -95,7 +91,6 @@ public class GUIApplication extends Application {
                 10);
         Font.loadFont(getClass().getResource("/it/polimi/ingsw/gc31/Fonts/glimmer of light.otf").toExternalForm(),
                 10);
-
     }
 
     private Scene choseScene(SceneTag tag) {
@@ -104,6 +99,7 @@ public class GUIApplication extends Application {
     }
 
     public void loadScene(SceneTag tag) {
+        System.out.println("Loading scene " + tag.toString());
         primaryStage.setScene(choseScene(tag));
     }
 

@@ -1,25 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.text.Font?>
-<?import javafx.fxml.FXML?>
+<?import javafx.geometry.Insets?>
 
-<VBox alignment="CENTER" spacing="20" xmlns="http://javafx.com/javafx/17"
-    xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.LobbyController"
-    stylesheets="@stilefxml.css" styleClass="vbox">
-    <children>
-        <ImageView>
-            <image>
-                <Image url="@../Images/Misc/CodexLogo.png" />
-            </image>
-        </ImageView>
-        <MFXButton layoutX="188.0" layoutY="349.0" text="Play The Game"
-            styleClass="rounded-button"
-            onAction="#loadLoginScene" />
-    </children>
-</VBox>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
+
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.LobbyController"
+           stylesheets="@stilefxml.css" styleClass="stackpane-default">
+
+    <padding>
+        <Insets top="10" right="20" bottom="10" left="20"/>
+    </padding>
+
+    <HBox spacing="50" alignment="CENTER">
+        <StackPane stylesheets="@stilefxml.css" styleClass="stackpane-playerSlot1" maxWidth="180" maxHeight="326">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="10"/>
+            </padding>
+            <VBox>
+                <MFXTextField styleClass="player-text-field" text="Player1"/>
+                <ImageView>
+                    <image/>
+                </ImageView>
+                <MFXToggleButton styleClass="mfx-button">
+                </MFXToggleButton>
+            </VBox>
+        </StackPane>
+        <StackPane stylesheets="@stilefxml.css" styleClass="stackpane-playerSlot2" maxWidth="180" maxHeight="326">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="10"/>
+            </padding>
+            <VBox spacing="70">
+                <MFXTextField styleClass="player-text-field" text="Player2"/>
+                <ImageView>
+                    <image/>
+                </ImageView>
+                <MFXToggleButton styleClass="mfx-button">
+                </MFXToggleButton>
+            </VBox>
+        </StackPane>
+        <StackPane stylesheets="@stilefxml.css" styleClass="stackpane-playerSlot3" maxWidth="180" maxHeight="326">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="10"/>
+            </padding>
+            <VBox spacing="70">
+                <MFXTextField styleClass="player-text-field" text="Player3"/>
+                <ImageView>
+                    <image/>
+                </ImageView>
+                <MFXToggleButton styleClass="mfx-button">
+                </MFXToggleButton>
+            </VBox>
+
+        </StackPane>
+        <StackPane stylesheets="@stilefxml.css" styleClass="stackpane-playerSlot4" maxWidth="180" maxHeight="326">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="10"/>
+            </padding>
+            <VBox spacing="70">
+                <MFXTextField styleClass="player-text-field" text="Player4"/>
+                <ImageView>
+                    <image/>
+                </ImageView>
+                <MFXToggleButton styleClass="mfx-button">
+                </MFXToggleButton>
+            </VBox>
+        </StackPane>
+    </HBox>
+
+</StackPane>

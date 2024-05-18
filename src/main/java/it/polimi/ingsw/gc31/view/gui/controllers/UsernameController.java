@@ -36,8 +36,6 @@ public class UsernameController extends ViewController {
         } else {
             try {
                 client.setUsername(nickname);
-                System.out.println("Username set to: " + nickname);
-                System.out.println("Switching to MainMenu scene...");
                 loadMainMenuScene();
             } catch (IOException e) {
                 e.printStackTrace();

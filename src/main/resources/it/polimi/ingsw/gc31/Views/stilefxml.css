@@ -60,7 +60,7 @@
   -fx-cursor: hand;
 }
 
-.stackpane-mainMenu {
+.stackpane-default {
   -fx-background-color: #fffefffb;
   -fx-cursor: hand;
 }
@@ -72,8 +72,48 @@
 }
 
 .stackpane-ruleBook{
-  -fx-background-image: url(/it/polimi/ingsw/gc31/Images/Misc/Codex-Copertina.jpg);
+  -fx-background-image: url(../Images/Misc/Codex_esploso.png);
+  -fx-background-repeat: no-repeat;
+  -fx-background-size: stretch;
   -fx-cursor: hand;
   -fx-font: 36px "FrakturNo2";
   -fx-text-alignment: center;
+}
+
+.stackpane-playerSlot1{
+  -fx-background-image: url(../Images/LobbyPlayerSlot/WiseMan1.png);
+  -fx-background-repeat: no-repeat;
+  -fx-background-size: stretch;
+  -fx-background-radius: 40;
+  -fx-border-color: #000000fb;
+}
+.stackpane-playerSlot2{
+  -fx-background-image: url(../Images/LobbyPlayerSlot/WiseMan2.png);
+  -fx-background-repeat: no-repeat;
+  -fx-background-size: stretch;
+  -fx-background-radius: 40;
+  -fx-border-color: #000000fb;
+}
+.stackpane-playerSlot3{
+  -fx-background-image: url(../Images/LobbyPlayerSlot/WiseMan3.png);
+  -fx-background-repeat: no-repeat;
+  -fx-background-size: stretch;
+  -fx-background-radius: 40;
+  -fx-border-color: #000000fb;
+}
+.stackpane-playerSlot4{
+  -fx-background-image: url(../Images/LobbyPlayerSlot/WiseMan4.png);
+  -fx-background-repeat: no-repeat;
+  -fx-background-size: stretch;
+  -fx-background-radius: 40;
+  -fx-border-color: #000000fb;
+}
+
+.player-text-field {
+  -mfx-editable: false;
+  -mfx-animated: true;
+  -mfx-caret-visible: true;
+  -mfx-float-mode: BORDER;
+  -fx-text-fill: black;
+  -fx-font: 15px "glimmer of light";
 }

@@ -9,47 +9,45 @@
 
 <?import javafx.scene.image.ImageView?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.RuleBookController"
-      stylesheets="@stilefxml.css" styleClass="stackpane-mainMenu" alignment="CENTER" spacing="20" >
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.RuleBookController"
+           stylesheets="@stilefxml.css" styleClass="stackpane-ruleBook">
 
-    <StackPane>
-        <padding>
-            <Insets top="10" right="20" bottom="10" left="20"/>
-        </padding>
-
-        <ImageView fx:id="imageView1" fitWidth="1200" fitHeight="600">
-            <Image url="@../Images/RuleBookImages/pag1.jpg"/>
-        </ImageView>
-        <ImageView fx:id="imageView2" visible="false" fitWidth="1200" fitHeight="600">
-            <Image url="@../Images/RuleBookImages/pag2.jpg"/>
-        </ImageView>
-        <ImageView fx:id="imageView3" visible="false" fitWidth="1200" fitHeight="600">
-            <Image url="@../Images/RuleBookImages/pag3.jpg"/>
-        </ImageView>
-        <ImageView fx:id="imageView4" visible="false" fitWidth="1200" fitHeight="600">
-            <Image url="@../Images/RuleBookImages/pag4.jpg"/>
-        </ImageView>
-        <ImageView fx:id="imageView5" visible="false" fitWidth="1200" fitHeight="600">
-            <Image url="@../Images/RuleBookImages/pag5.jpg"/>
-        </ImageView>
-        <ImageView fx:id="imageView6" visible="false" fitWidth="1200" fitHeight="600">
-            <Image url="@../Images/RuleBookImages/pag6.jpg"/>
-        </ImageView>
-    </StackPane>
-
-    <HBox alignment="BOTTOM_CENTER" spacing="400" styleClass="vbox">
-        <MFXButton fx:id="prevButton" layoutX="100.0" layoutY="200.0"
-                   text="Prev" styleClass="rounded-button, small-button" prefWidth="150"
-                   onAction="#prevImage"/>
-        <MFXButton fx:id="nextButton" layoutX="100.0" layoutY="200.0"
-                   text="Next" styleClass="rounded-button, small-button" prefWidth="150"
-                   onAction="#nextImage"/>
-    </HBox>
-
-    <MFXButton fx:id="backButton" layoutX="100.0" layoutY="200.0"
-               text="Back" styleClass="rounded-button, small-button" prefWidth="150"
-               onAction="#loadMainMenuScene"/>
-
-</VBox>
+    <VBox  alignment="CENTER" spacing="20">
+        <StackPane>
+            <padding>
+                <Insets top="10" right="20" bottom="10" left="20"/>
+            </padding>
+            <ImageView fx:id="imageView1" fitWidth="1200" fitHeight="600">
+                <Image url="@../Images/RuleBookImages/pag1.jpg"/>
+            </ImageView>
+            <ImageView fx:id="imageView2" visible="false" fitWidth="1200" fitHeight="600">
+                <Image url="@../Images/RuleBookImages/pag2.jpg"/>
+            </ImageView>
+            <ImageView fx:id="imageView3" visible="false" fitWidth="1200" fitHeight="600">
+                <Image url="@../Images/RuleBookImages/pag3.jpg"/>
+            </ImageView>
+            <ImageView fx:id="imageView4" visible="false" fitWidth="1200" fitHeight="600">
+                <Image url="@../Images/RuleBookImages/pag4.jpg"/>
+            </ImageView>
+            <ImageView fx:id="imageView5" visible="false" fitWidth="1200" fitHeight="600">
+                <Image url="@../Images/RuleBookImages/pag5.jpg"/>
+            </ImageView>
+            <ImageView fx:id="imageView6" visible="false" fitWidth="1200" fitHeight="600">
+                <Image url="@../Images/RuleBookImages/pag6.jpg"/>
+            </ImageView>
+        </StackPane>
+        <HBox alignment="BOTTOM_CENTER" spacing="400">
+            <MFXButton fx:id="prevButton" layoutX="100.0" layoutY="200.0"
+                       text="Prev" styleClass="rounded-button, small-button" prefWidth="150"
+                       onAction="#prevImage"/>
+            <MFXButton fx:id="nextButton" layoutX="100.0" layoutY="200.0"
+                       text="Next" styleClass="rounded-button, small-button" prefWidth="150"
+                       onAction="#nextImage"/>
+        </HBox>
+        <MFXButton fx:id="backButton" layoutX="100.0" layoutY="200.0"
+                   text="Back" styleClass="rounded-button, small-button" prefWidth="150"
+                   onAction="#loadMainMenuScene"/>
+    </VBox>
+</StackPane>

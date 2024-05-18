@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-
-
-
 <?import javafx.scene.layout.HBox?>
 <?import javafx.geometry.Insets?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+
 <StackPane xmlns="http://javafx.com/javafx/17"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.MainMenuController"
-           stylesheets="@stilefxml.css" styleClass="stackpane-mainMenu">
+           stylesheets="@stilefxml.css" styleClass="stackpane-default">
     <padding>
         <Insets top="10" right="20" bottom="10" left="20"/>
     </padding>
@@ -22,18 +21,40 @@
             <Image url="@../Images/Misc/CodexLogo.png"/>
         </ImageView>
         <VBox alignment="CENTER" spacing="20" styleClass="vbox">
-            <MFXButton layoutX="188.0" layoutY="349.0" text="New Game"
-                       styleClass="rounded-button" prefWidth="400"
-                       onAction="#createGame"/>
-            <MFXButton layoutX="188.0" layoutY="349.0" text="Enter Game"
-                       styleClass="rounded-button" prefWidth="400"
-                       onAction="#joinGame"/>
-            <MFXButton layoutX="188.0" layoutY="349.0" text="Show Games"
-                       styleClass="rounded-button" prefWidth="400"
-                       onAction="#showGames"/>
-            <MFXButton layoutX="188.0" layoutY="349.0" text="Rule Book"
-                       styleClass="rounded-button" prefWidth="400"
-                       onAction="#showRules"/>
+            <HBox>
+                <MFXButton layoutX="188.0" layoutY="349.0" text="New Game"
+                           styleClass="rounded-button" prefWidth="250"
+                           onAction="#createGame" onMouseEntered="#showPointer1" onMouseExited="#hidePointer1"/>
+                <ImageView fx:id="imageView1" visible="false" fitWidth="50" fitHeight="50">
+                    <Image url="@../AppIcons/iconPlant.png"/>
+                </ImageView>
+            </HBox>
+            <HBox>
+                <MFXButton layoutX="188.0" layoutY="349.0" text="Enter Game"
+                           styleClass="rounded-button" prefWidth="250"
+                           onAction="#joinGame" onMouseEntered="#showPointer2" onMouseExited="#hidePointer2"/>
+                <ImageView fx:id="imageView2" visible="false" fitWidth="50" fitHeight="50">
+                    <Image url="@../AppIcons/iconMushroom.png"/>
+                </ImageView>
+            </HBox>
+            <HBox>
+                <MFXButton layoutX="188.0" layoutY="349.0" text="Show Games"
+                           styleClass="rounded-button" prefWidth="250"
+                           onAction="#showGames" onMouseEntered="#showPointer3" onMouseExited="#hidePointer3"/>
+                <ImageView fx:id="imageView3" visible="false" fitWidth="50" fitHeight="50">
+                    <Image url="@../AppIcons/iconInsect.png"/>
+                </ImageView>
+            </HBox>
+
+            <HBox>
+                <MFXButton layoutX="188.0" layoutY="349.0" text="Rule Book"
+                           styleClass="rounded-button" prefWidth="250"
+                           onAction="#showRules" onMouseEntered="#showPointer4" onMouseExited="#hidePointer4"/>
+                <ImageView fx:id="imageView4" visible="false" fitWidth="50" fitHeight="50">
+                    <Image url="@../AppIcons/iconAnimal.png"/>
+                </ImageView>
+            </HBox>
+
         </VBox>
     </HBox>
 </StackPane>

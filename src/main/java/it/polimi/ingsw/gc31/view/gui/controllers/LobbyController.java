@@ -7,9 +7,6 @@ public class LobbyController extends ViewController {
 
     @Override
     protected void initialize() {
-        throw new UnsupportedOperationException("Unimplemented method 'initialize'");
     }
 
-    public void loadLoginScene(ActionEvent actionEvent) {
-    }
 }
