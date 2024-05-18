@@ -6,10 +6,7 @@ import static org.fusesource.jansi.Ansi.Color.WHITE;
 import static org.fusesource.jansi.Ansi.Color.YELLOW;
 
 import static org.fusesource.jansi.Ansi.Color.BLACK;
-import static it.polimi.ingsw.gc31.DefaultValues.RGB_COLOR_BLUE;
 import static it.polimi.ingsw.gc31.DefaultValues.RGB_COLOR_RED;
-import static it.polimi.ingsw.gc31.DefaultValues.RGB_COLOR_GREEN;
-import static it.polimi.ingsw.gc31.DefaultValues.RBG_COLOR_PURPLE;
 import static it.polimi.ingsw.gc31.DefaultValues.RGB_COLOR_CORNER;
 import static it.polimi.ingsw.gc31.DefaultValues.getRgbColor;
 
@@ -29,7 +26,6 @@ import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
-import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.view.UI;

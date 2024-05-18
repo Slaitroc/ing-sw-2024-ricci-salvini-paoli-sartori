@@ -273,7 +273,7 @@ public class TCPClient implements ClientCommands {
         // Leggo dal server il game ID della partita appena creata
         String line = input.readLine();
         this.idGame = Integer.parseInt(line);
-        ui.show_gameCreated();
+        //ui.show_gameCreated();
     }
 
     /**

@@ -201,7 +201,6 @@ public class SocketClientHandler implements VirtualClient {
         this.idGame = gameID;
     }
 
-    @Override
     public void show_handPlayer(String username, List<PlayableCard> hand) {
         /*
          * output.print("show hand player");
@@ -215,7 +214,6 @@ public class SocketClientHandler implements VirtualClient {
          */
     }
 
-    @Override
     public void show_scorePlayer(String username, Integer score) {
         output.println("show score");
         // username non viene utilizzato
@@ -224,31 +222,26 @@ public class SocketClientHandler implements VirtualClient {
         output.flush();
     }
 
-    @Override
     public void show_starterCard(String starterCard) {
         output.println("show starter card");
         output.println(starterCard);
         output.flush();
     }
 
-    @Override
     public void show_objectiveCard(ObjectiveCard objectiveCard) {
         output.println("show objective card");
         output.println(objectiveCard);
         output.flush();
     }
 
-    @Override
     public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
 
     }
 
-    @Override
     public void show_playArea(String username, String playArea, String achievedResources) {
 
     }
 
-    @Override
     public void show_goldDeck(String firstCardDeck, String card1, String card2) {
         output.println("show gold deck");
         output.println(firstCardDeck);
@@ -257,7 +250,6 @@ public class SocketClientHandler implements VirtualClient {
         output.flush();
     }
 
-    @Override
     public void show_resourceDeck(String firstCardDeck, String card1, String card2) {
         output.println("show resource deck");
         output.println(firstCardDeck);
@@ -266,7 +258,6 @@ public class SocketClientHandler implements VirtualClient {
         output.flush();
     }
 
-    @Override
     public void show_objectiveDeck(String firstCardDeck, String card1, String card2) {
         output.println("show objective card");
         output.println(firstCardDeck);
@@ -298,7 +289,6 @@ public class SocketClientHandler implements VirtualClient {
         return ready;
     }
 
-    @Override
     public void startGame() throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'startGame'");
@@ -315,13 +305,11 @@ public class SocketClientHandler implements VirtualClient {
 
     }
 
-    @Override
     public void show_listGame(List<String> listGame) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_listGame'");
     }
 
-    @Override
     public void show_gameCreated() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_gameCreated'");
