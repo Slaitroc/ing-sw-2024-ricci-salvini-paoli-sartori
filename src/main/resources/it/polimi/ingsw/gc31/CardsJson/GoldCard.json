@@ -108,7 +108,7 @@
             ],
             "requirements": {
                 "MUSHROOM": 3,
-                "PLANT": 1
+                "ANIMAL": 1
             },
             "dirImg": null,
             "objective": {
@@ -278,9 +278,9 @@
         "front": {
             "score": 5,
             "resources": [
-                "EMPTY",
-                "EMPTY",
                 "HIDDEN",
+                "HIDDEN",
+                "EMPTY",
                 "EMPTY"
             ],
             "requirements": {
@@ -886,7 +886,7 @@
                 "HIDDEN"
             ],
             "requirements": {
-                "ANIMAL": 3
+                "ANIMAL": 5
             },
             "dirImg": null,
             "objective": null
@@ -1187,7 +1187,7 @@
                 "HIDDEN"
             ],
             "requirements": {
-                "INSECT": 3
+                "INSECT": 5
             },
             "dirImg": null,
             "objective": null

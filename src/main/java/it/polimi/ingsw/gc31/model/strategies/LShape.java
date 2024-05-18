@@ -8,6 +8,10 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
+import static org.fusesource.jansi.Ansi.ansi;
+import static org.fusesource.jansi.Ansi.Color.WHITE;
+import static it.polimi.ingsw.gc31.DefaultValues.getRgbColor;
+
 /**
  * This class represents the Objective where the player needs to have 3 cards placed as an L's shape
  */
@@ -15,12 +19,12 @@ public class LShape extends Objective {
     /**
      * color1 represents the color with more occurrences (2)
      */
-    private static final CardColor color1 = CardColor.RED;
+    private final CardColor color1 = CardColor.RED;
 
     /**
      * color2 represents the color with fewer occurrences(1)
      */
-    private static final CardColor color2 = CardColor.GREEN;
+    private final CardColor color2 = CardColor.GREEN;
 
     /**
      * This method is the constructor. Changed one line in ObjectiveAdapter (32)
@@ -69,7 +73,24 @@ public class LShape extends Objective {
 
     @Override
     public String toString() {
-        return "";
+        StringBuilder res = new StringBuilder();
+        int[] color1 = getRgbColor(this.color1);
+        int[] color2 = getRgbColor(this.color2);
+        res.append(
+                ansi().restoreCursorPosition().fgRgb(color1[0],color1[1],color1[2]).a("┌──┐"));
+        res.append(
+                ansi().restoreCursorPosition().cursorDown(1)
+                        .fgRgb(color1[0],color1[1],color1[2]).a("└──┘"));
+        res.append(
+                ansi().restoreCursorPosition().cursorDown(2)
+                        .fgRgb(color1[0],color1[1],color1[2]).a("┌──┐"));
+        res.append(
+                ansi().restoreCursorPosition().cursorDown(3)
+                        .fgRgb(color1[0],color1[1],color1[2]).a("└──").fg(WHITE).a("⊠").fgRgb(color2[0],color2[1],color2[2]).a("──┐"));
+        res.append(
+                ansi().restoreCursorPosition().cursorDown(4)
+                        .fgRgb(color2[0],color2[1],color2[2]).a("   └──┘"));
+        return res.toString();
     }
 
     @Override

@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31;
 
 import java.util.Map;
 
+import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
 
 import java.util.HashMap;
@@ -63,6 +64,23 @@ public class DefaultValues {
         sceneList.put(SceneTag.LOBBY, GUI_SCENE_lobbyScene);
 
         return sceneList;
+    }
+
+    public final static int[] RGB_COLOR_RED = { 204, 76, 67 };
+    public final static int[] RGB_COLOR_GREEN = { 73, 184, 105 };
+    public final static int[] RGB_COLOR_BLUE = { 114, 202, 203 };
+    public final static int[] RBG_COLOR_PURPLE = { 165, 85, 158 };
+    public final static int[] RGB_COLOR_CORNER = { 223, 215, 176 };
+    public final static int[] RGB_COLOR_STARTER = {189,175,127};
+
+    public static int[] getRgbColor(CardColor color) {
+        switch (color) {
+            case RED: return RGB_COLOR_RED;
+            case GREEN: return RGB_COLOR_GREEN;
+            case BLUE: return RGB_COLOR_BLUE;
+            case PURPLE: return RBG_COLOR_PURPLE;
+            default: return RGB_COLOR_STARTER;
+        }
     }
 
     // Model
