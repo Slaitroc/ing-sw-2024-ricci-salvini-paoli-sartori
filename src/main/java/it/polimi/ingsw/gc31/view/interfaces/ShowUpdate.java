@@ -39,4 +39,10 @@ public interface ShowUpdate {
 
     public void show_readyStatus(boolean status);
 
+    public void show_chatMessage(String username, String message);
+
+    public void show_gameDoesNotExist();
+
+    public void show_wrongGameSize();
+
 }

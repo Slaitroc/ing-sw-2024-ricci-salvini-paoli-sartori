@@ -13,6 +13,7 @@ import static it.polimi.ingsw.gc31.DefaultValues.getRgbColor;
 import java.awt.Point;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
+import java.rmi.RemoteException;
 import java.util.*;
 
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
@@ -837,9 +838,6 @@ public class TUI extends UI {
         AnsiConsole.out().print(
                 Ansi.ansi().cursor(CMD_LINE_INPUT_ROW, CMD_LINE_INPUT_COLUMN).a(" ".repeat(CMD_LINE_EFFECTIVE_WIDTH)));
         AnsiConsole.out().print(Ansi.ansi().cursor(CMD_LINE_INPUT_ROW, CMD_LINE_INPUT_COLUMN).a("> "));
-        synchronized (areaSelectionLock) {
-            terminalAreaSelection = 0;
-        }
     }
 
     /**
@@ -853,9 +851,6 @@ public class TUI extends UI {
                 .a(" ".repeat(CHAT_BOARD_EFFECTIVE_WIDTH)));
         AnsiConsole.out()
                 .print(Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW, CHAT_BOARD_INPUT_COLUMN).a("> "));
-        synchronized (areaSelectionLock) {
-            terminalAreaSelection = 1;
-        }
     }
 
     /**
@@ -870,9 +865,6 @@ public class TUI extends UI {
         AnsiConsole.out().print(Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW, CHAT_BOARD_INPUT_COLUMN)
                 .a(" ".repeat(CHAT_BOARD_WIDTH)));
         AnsiConsole.out().print(Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW, CHAT_BOARD_INPUT_COLUMN).a(prefix + " "));
-        synchronized (areaSelectionLock) {
-            terminalAreaSelection = 1;
-        }
     }
 
     /**
@@ -880,11 +872,13 @@ public class TUI extends UI {
      * another area.
      */
     protected void resetCursor() {
-        synchronized (areaSelectionLock) {
-            if (terminalAreaSelection == 0) {
+        synchronized (cmdLineAreaSelection) {
+            if (!cmdLineAreaSelection.isEmpty()) {
                 moveCursorToCmdLine();
             }
-            if (terminalAreaSelection == 1) {
+        }
+        synchronized (chatAreaSelection) {
+            if (!chatAreaSelection.isEmpty()) {
                 moveCursorToChatLine();
             }
         }
@@ -1003,28 +997,47 @@ public class TUI extends UI {
         }
     }
 
-    /**
-     * This variable is used to manage the current working area of the terminal.
-     * <p>
-     * 0 = command line
-     * <p>
-     * 1 = chat
-     * <p>
-     * 3 = playArea
-     */
-    private int terminalAreaSelection = 0;
     private Queue<Integer> cmdLineAreaSelection = new ArrayDeque<Integer>();
+
+    private void addToCmdLineAreaSelection() {
+        synchronized (cmdLineAreaSelection) {
+            cmdLineAreaSelection.add(0);
+            cmdLineAreaSelection.notify();
+        }
+    }
+
+    private void removeFromCmdLineAreaSelection() {
+        synchronized (cmdLineAreaSelection) {
+            if (cmdLineAreaSelection.isEmpty())
+                return;
+            cmdLineAreaSelection.poll();
+        }
+    }
+
     private Queue<Integer> chatAreaSelection = new ArrayDeque<Integer>();
-    /**
-     * This variable is used to manage the access to the
-     * <code>terminalAreaSelection</code> variable
-     */
-    private Object areaSelectionLock = new Object();
+
+    private void addToChatAreaSelection() {
+        synchronized (chatAreaSelection) {
+            chatAreaSelection.add(0);
+            chatAreaSelection.notify();
+        }
+    }
+
+    private void removeFromChatAreaSelection() {
+        synchronized (chatAreaSelection) {
+            if (chatAreaSelection.isEmpty())
+                return;
+            chatAreaSelection.poll();
+        }
+    }
+
     /**
      * This variable is used to manage the chat board avoiding to update it every
      * time
      */
-    private volatile boolean chatNeedsUpdate = false;
+    private Object chatNeedsUpdate = new Object();
+
+    private volatile boolean comingFromChat = false;
 
     /**
      * This variable is used to manage the chat messages. The ChatReader thread adds
@@ -1094,6 +1107,7 @@ public class TUI extends UI {
      * <code>cmdLineMessages</code> queue.
      */
     private void commandLineReader() {
+        cmdLineAreaSelection.add(0);
         new Thread(() -> {
             commandLineProcess();
             Scanner cmdScanner = new Scanner(System.in);
@@ -1101,26 +1115,29 @@ public class TUI extends UI {
                 cmdScanner.close();
             }));
             while (true) {
-                synchronized (areaSelectionLock) {
-                    // It waits for the command line to be selected to read the input
-                    if (!(terminalAreaSelection == 0)) {
+                synchronized (cmdLineAreaSelection) {
+                    if (cmdLineAreaSelection.isEmpty()) {
                         try {
-                            areaSelectionLock.wait();
+                            cmdLineAreaSelection.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
                 }
-                // if a is running a command, it waits for the command to be finished
-                // This is necessary to let each command get its input
-                synchronized (stateLock) {
-                    addToStateLockQueue();
-                    try {
-                        stateLock.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+
+                if (comingFromChat == false) {
+                    // if a is running a command, it waits for the command to be finished
+                    // This is necessary to let each command get its input
+                    synchronized (stateLock) {
+                        addToStateLockQueue();
+                        try {
+                            stateLock.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+                comingFromChat = false;
                 String input = null;
                 moveCursorToCmdLine();
 
@@ -1130,7 +1147,10 @@ public class TUI extends UI {
                 if (input != null) {
                     if (input.equals("chat")) {
                         printToCmdLineOut("comando " + input + " eseguito", Ansi.Color.CYAN);
+                        removeFromCmdLineAreaSelection();
+                        addToChatAreaSelection();
                         moveCursorToChatLine();
+                        comingFromChat = true;
                     } else {
                         synchronized (cmdLineMessages) {
                             cmdLineMessages.add(input.trim());
@@ -1188,11 +1208,10 @@ public class TUI extends UI {
                 chatScanner.close();
             }));
             while (true) {
-                synchronized (areaSelectionLock) {
-                    if (!(terminalAreaSelection == 1)) {
+                synchronized (chatAreaSelection) {
+                    if (chatAreaSelection.isEmpty()) {
                         try {
-                            moveCursorToCmdLine();
-                            areaSelectionLock.wait();
+                            chatAreaSelection.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -1203,19 +1222,18 @@ public class TUI extends UI {
                     continue;
                 }
                 if (input.equals("ccc")) {
-                    synchronized (cmdLineMessages) {
-                        cmdLineMessages.notify();
-                    }
-                    synchronized (areaSelectionLock) {
-                        moveCursorToCmdLine();
-                        areaSelectionLock.notify();
-                    }
+                    removeFromChatAreaSelection();
+                    addToCmdLineAreaSelection();
+                    moveCursorToCmdLine();
+
                 } else {
-                    chatMessages.add(input.trim());
-                    chatNeedsUpdate = true;
+                    try {
+                        client.sendChatMessage(getClient().getUsername(), input.trim());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-
         }).start();
     }
 
@@ -1232,12 +1250,25 @@ public class TUI extends UI {
             print_ChatBorders();
             moveCursorToCmdLine();
             while (true) {
-                if (chatNeedsUpdate) {
-                    print_ChatBorders();
-                    updateChatBoardOut();
+                synchronized (chatNeedsUpdate) {
+                    try {
+                        chatNeedsUpdate.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+                print_ChatBorders();
+                updateChatBoardOut();
             }
         }).start();
+    }
+
+    @Override
+    public void show_chatMessage(String username, String message) {
+        chatMessages.add(username + ": " + message);
+        synchronized (chatNeedsUpdate) {
+            chatNeedsUpdate.notify();
+        }
     }
 
     // THREADS UTILITIES
@@ -1337,7 +1368,6 @@ public class TUI extends UI {
     public void update_ToPlayingState() {
         this.state = new PlayingState(this);
         state.command_showCommandsInfo();
-        state.stateNotify();
 
     }
 
@@ -1363,10 +1393,12 @@ public class TUI extends UI {
      */
     @Override
     public void show_listGame(List<String> listGame) {
-        tuiWrite(">>Game List<<");
+        printToCmdLineOut(serverWrite(">>Game List<<"));
         for (String string : listGame) {
-            System.out.println(string);
+            printToCmdLineOut(string);
         }
+        state.stateNotify();
+
     }
 
     @Override
@@ -1428,7 +1460,6 @@ public class TUI extends UI {
         printToCmdLineOut(serverWrite("Username accepted"));
         printToCmdLineOut(tuiWrite("Your name is: " + username));
         state.command_showCommandsInfo();
-        state.stateNotify();// sblocca l'input del reader
 
     }
 
@@ -1440,10 +1471,9 @@ public class TUI extends UI {
 
     @Override
     public void show_joinedToGame(int id) {
-        printToCmdLineOut(serverWrite(serverWrite("Joined to game: " + id)));
+        printToCmdLineOut(serverWrite("Joined to game: " + id));
         state = new JoinedToGameState(this);
         state.command_showCommandsInfo();
-        state.stateNotify();
     }
 
     @Override
@@ -1458,7 +1488,6 @@ public class TUI extends UI {
         printToCmdLineOut(serverWrite("New game created with ID: " + gameID));
         state = new JoinedToGameState(this);
         state.command_showCommandsInfo();
-        state.stateNotify();
     }
 
     @Override
@@ -1470,6 +1499,18 @@ public class TUI extends UI {
         }
         state.stateNotify();
 
+    }
+
+    @Override
+    public void show_gameDoesNotExist() {
+        printToCmdLineOut(serverWrite("Game does not exist"));
+        state.stateNotify();
+    }
+
+    @Override
+    public void show_wrongGameSize() {
+        printToCmdLineOut(serverWrite("Game size must be between 2 and 4"));
+        state.stateNotify();
     }
 
 }

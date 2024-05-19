@@ -3,6 +3,8 @@ package it.polimi.ingsw.gc31.client_server.rmi;
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChatMessage;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.GetGameListObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChooseSecretObjectiveObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawGoldObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ReadyStatusObj;
@@ -14,7 +16,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class RmiClient extends UnicastRemoteObject implements VirtualClient, ClientCommands {
@@ -101,7 +102,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void getGameList() throws RemoteException, NoGamesException {
-        controller.getGameList(username);
+        controller.sendCommand(new GetGameListObj(username));
     }
 
     @Override
@@ -181,16 +182,16 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         this.idGame = i;
     }
 
-    @Override
-    public void showListGame(List<String> listGame) throws RemoteException {
-        ui.show_listGame(listGame);
-    }
-
     // FIX parlare con christian e eventualmente togliere il metodo anche
     // dall'interfaccia
     @Override
     public ShowUpdate getUI() throws RemoteException {
         return this.ui;
+    }
+
+    @Override
+    public void sendChatMessage(String username, String message) throws RemoteException {
+        gameController.sendCommand(new ChatMessage(username, message));
     }
 
 }

@@ -9,9 +9,12 @@ import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameCreatedObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameDoesNotExistObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsFullObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.JoinedToGameObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowGamesObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ValidUsernameObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongGameSizeObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongUsernameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
@@ -63,28 +66,33 @@ public class Controller extends UnicastRemoteObject implements IController {
         new Thread(this::executor).start();
     }
 
-    public void addQueueObj(ServerQueueObject obj) {
-        synchronized (this) {
+    @Override
+    public void sendCommand(ServerQueueObject obj) throws RemoteException {
+        addQueueObj(obj);
+    }
+
+    private void addQueueObj(ServerQueueObject obj) {
+        synchronized (callsList) {
             callsList.add(obj);
-            this.notify();
+            callsList.notify();
         }
     }
 
     private void executor() {
-        ServerQueueObject action = null;
         while (true) {
-            synchronized (this) {
-                try {
-                    if (action == null)
-                        this.wait();
-                    action = callsList.poll();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+            ServerQueueObject action;
+            synchronized (callsList) {
+                while (callsList.isEmpty()) {
+                    try {
+                        callsList.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-                if (action != null) {
-                    action.execute(this);
-                }
-
+                action = callsList.poll();
+            }
+            if (action != null) {
+                action.execute(this);
             }
         }
     }
@@ -131,16 +139,21 @@ public class Controller extends UnicastRemoteObject implements IController {
     @Override
     public IGameController createGame(String username, int maxNumPlayer) throws RemoteException {
         VirtualClient client = tempClients.get(username);
-        try {
-            gameControlList.add(new GameController(username, client, maxNumPlayer,
-                    gameControlList.size()));
-            client.setGameID(gameControlList.size() - 1);
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        if (maxNumPlayer < 2 || maxNumPlayer > 4) {
+            client.sendCommand(new WrongGameSizeObj());
+            return null;
+        } else {
+            try {
+                gameControlList.add(new GameController(username, client, maxNumPlayer,
+                        gameControlList.size()));
+                client.setGameID(gameControlList.size() - 1);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            tempClients.remove(username);
+            client.sendCommand(new GameCreatedObj(gameControlList.size() - 1));
+            return gameControlList.get(gameControlList.size() - 1);
         }
-        tempClients.remove(username);
-        client.sendCommand(new GameCreatedObj(gameControlList.size() - 1));
-        return gameControlList.get(gameControlList.size() - 1);
 
     }
 
@@ -155,20 +168,22 @@ public class Controller extends UnicastRemoteObject implements IController {
     @Override
     public IGameController joinGame(String username, int idGame) throws RemoteException {
 
-        if (gameControlList.get(idGame).getCurrentNumberPlayers() != gameControlList.get(idGame)
-                .getMaxNumberPlayers()) {
-            gameControlList.get(idGame).joinGame(username, tempClients.get(username));
-            tempClients.get(username).sendCommand(new JoinedToGameObj(idGame));
-            tempClients.remove(username);
-            return gameControlList.get(idGame);
-        }
-
-        else {
-            tempClients.get(username).sendCommand(new GameIsFullObj(idGame));
+        if (idGame >= gameControlList.size() || idGame < 0) {
+            tempClients.get(username).sendCommand(new GameDoesNotExistObj());
             return null;
+        } else {
 
+            if (gameControlList.get(idGame).getCurrentNumberPlayers() != gameControlList.get(idGame)
+                    .getMaxNumberPlayers()) {
+                gameControlList.get(idGame).joinGame(username, tempClients.get(username));
+                tempClients.get(username).sendCommand(new JoinedToGameObj(idGame));
+                tempClients.remove(username);
+                return gameControlList.get(idGame);
+            } else {
+                tempClients.get(username).sendCommand(new GameIsFullObj(idGame));
+                return null;
+            }
         }
-
     }
 
     // GETTERS
@@ -189,17 +204,18 @@ public class Controller extends UnicastRemoteObject implements IController {
     @Override
     public void getGameList(String username) throws RemoteException, NoGamesException {
         if (gameControlList.isEmpty()) {
-            throw new NoGamesException();
+            List<String> res = new ArrayList<>();
+            res.add("NO GAMES AVAILABLE");
+            tempClients.get(username).sendCommand(new ShowGamesObj(res));
         } else {
             List<String> res = new ArrayList<>();
             for (int i = 0; i < gameControlList.size(); i++) {
                 res.add(
                         i + " "
-                                + gameControlList.get(i).getMaxNumberPlayers() + " / "
-                                + gameControlList.get(i).getCurrentNumberPlayers());
+                                + gameControlList.get(i).getCurrentNumberPlayers() + " / "
+                                + gameControlList.get(i).getMaxNumberPlayers());
             }
-            // TODO gestire qua l'eccezione?
-            tempClients.get(username).showListGame(res);
+            tempClients.get(username).sendCommand(new ShowGamesObj(res));
         }
     }
 }

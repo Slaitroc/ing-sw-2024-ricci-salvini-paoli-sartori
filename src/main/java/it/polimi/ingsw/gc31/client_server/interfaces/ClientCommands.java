@@ -40,4 +40,6 @@ public interface ClientCommands {
 
     String getUsername();
 
+    void sendChatMessage(String username, String message) throws RemoteException;
+
 }

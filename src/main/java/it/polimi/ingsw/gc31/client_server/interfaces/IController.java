@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.client_server.interfaces;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
@@ -15,4 +16,6 @@ public interface IController extends Remote {
     IGameController joinGame(String username, int idGame) throws RemoteException;
 
     void getGameList(String username) throws RemoteException, NoGamesException;
+
+    void sendCommand(ServerQueueObject obj) throws RemoteException;
 }
