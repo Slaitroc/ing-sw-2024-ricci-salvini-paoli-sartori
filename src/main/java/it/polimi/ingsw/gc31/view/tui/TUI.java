@@ -41,7 +41,7 @@ public class TUI extends UI {
     private final int CHAT_BOARD_INITIAL_COLUMN = 1;
     private final int CHAT_BOARD_LINES = 10;
     private final int CHAT_BOARD_WIDTH = 60;
-    private final int PLAYAREA_INITIAL_ROW = 1;
+    private final int PLAYAREA_INITIAL_ROW = 2;
     private final int PLAYAREA_INITIAL_COLUMN = 61;
     private final int PLAYAREA_END_ROW = 29;
     private final int PLAYAREA_END_COLUMN = 160;
@@ -52,10 +52,10 @@ public class TUI extends UI {
     private final int CARD_X_OFFSET = 15;
     // the misalignment along y between two cards
     private final int CARD_Y_OFFSET = 4;
-    private final int HAND_INITIAL_ROW = 30;
+    private final int HAND_INITIAL_ROW = 32;
     private final int HAND_INITIAL_COLUMN = 61;
-    private final int HAND_END_ROW = 38;
-    private final int HAND_END_COLUMN = 150;
+    private final int HAND_END_ROW = 41;
+    private final int HAND_END_COLUMN = 160;
 
     // CONSTANTS
     private final int CMD_LINE_EFFECTIVE_WIDTH = CMD_LINE_WIDTH - 2;
@@ -160,6 +160,7 @@ public class TUI extends UI {
         }
         res.append(ansi().cursor(PLAYAREA_END_ROW, PLAYAREA_INITIAL_COLUMN).fg(WHITE).a("└")
                 .a(String.valueOf("─").repeat(PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN - 1)).a("┘"));
+        res.append(ansi().cursor(PLAYAREA_INITIAL_ROW-1, PLAYAREA_INITIAL_COLUMN+1).a("PLAY AREA"));
         System.out.println(res);
     }
 
@@ -174,6 +175,7 @@ public class TUI extends UI {
         }
         res.append(ansi().cursor(HAND_END_ROW, HAND_INITIAL_COLUMN).fg(WHITE).a("└")
                 .a(String.valueOf("─").repeat(HAND_END_COLUMN - HAND_INITIAL_COLUMN - 1)).a("┘"));
+        res.append(ansi().cursor(HAND_INITIAL_ROW-1, HAND_INITIAL_COLUMN+1).a("HAND"));
         System.out.println(res);
     }
 
@@ -1069,17 +1071,7 @@ public class TUI extends UI {
                         try {
                             print_CmdLineBorders();
                             print_PlayAreaBorders();
-                            // TODO temporaneo per la prova
-                            Deck<PlayableCard> deck = new Deck<>(CardType.GOLD);
-                            Map<Point, PlayableCard> placedCards = new HashMap<>();
-                            PlayableCard card = deck.draw();
-                            card.changeSide();
-                            placedCards.put(new Point(0, 0), card);
-                            card = deck.draw();
-                            card.changeSide();
-                            placedCards.put(new Point(1, 1), deck.draw());
-                            print_PlacedCards(placedCards);
-
+                            print_HandAreaBorders();
                             commandLineReader(); // solo al lancio del thread command line out la lista cmdLineOut è
                             // vuota, quindi entra in questo if solo una volta
                             cmdLineOut.wait();
@@ -1402,13 +1394,9 @@ public class TUI extends UI {
                     HAND_INITIAL_COLUMN + 1 + (CARD_LENGTH + 1) * index,
                     HAND_INITIAL_ROW + 1,
                     HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN);
+            System.out.println(ansi().cursor(HAND_END_ROW-1, HAND_INITIAL_COLUMN+1+CARD_LENGTH/2+(CARD_LENGTH+1)*index).a("1"));
             index++;
         }
-        print_ObjectiveCard(
-                new ObjectiveCard(2, new Seven(), null, null),
-                HAND_INITIAL_ROW + 1 + (CARD_LENGTH + 1) * 3,
-                HAND_INITIAL_ROW + 1,
-                HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN);
         resetCursor();
     }
 

@@ -5,6 +5,8 @@ import java.rmi.RemoteException;
 import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.model.GameModel;
+import it.polimi.ingsw.gc31.model.player.Player;
 
 public class ReadyStatusObj implements ServerQueueObject {
     boolean ready;

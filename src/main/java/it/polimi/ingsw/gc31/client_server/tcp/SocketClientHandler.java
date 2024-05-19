@@ -114,11 +114,11 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     private void runDrawGold() {
-        try {
-            gameController.drawGold(username);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            gameController.drawGold(username);
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**

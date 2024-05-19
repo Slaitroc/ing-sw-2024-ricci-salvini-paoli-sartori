@@ -1,5 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.queue.serverQueue;
 
+import it.polimi.ingsw.gc31.controller.Controller;
+import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.model.GameModel;
 import it.polimi.ingsw.gc31.model.player.Player;
 
@@ -20,7 +22,13 @@ public class PlayObj implements ServerQueueObject {
     }
 
     @Override
-    public void execute() {
-        player.play(new Point(x, y));
+    public void execute(GameController gameController) {
+
     }
+
+    @Override
+    public void execute(Controller controller) {
+
+    }
+
 }

@@ -237,13 +237,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * Draws a gold card from the deck for the player and then shows the player's
      * hand.
      *
-     * @throws RemoteException If a remote invocation error occurs.
      */
-    @Override
-    public void drawGold(String username) throws RemoteException {
-        if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
-                || model.getGameState() == GameState.SHOWDOWN) {
-            addQueueObj(new DrawGoldObj(playerList.get(username), model));
+    public void drawGold(String username){
+        if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN || model.getGameState() == GameState.SHOWDOWN) {
+            if (playerList.get(username).drawGold()) {
+                model.endTurn();
+            }
         } else {
             gameControllerWrite("The game is not in the right state to draw");
         }
@@ -258,7 +257,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void drawGoldCard1(String username) throws RemoteException {
         if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
                 || model.getGameState() == GameState.SHOWDOWN) {
-            addQueueObj(new DrawGoldOneObj(playerList.get(username), model));
+            //addQueueObj(new DrawGoldOneObj(playerList.get(username), model));
         } else {
             gameControllerWrite("The game is not in the right state to draw");
         }
@@ -327,18 +326,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         }
     }
 
-    @Override
-    public void chooseSecretObjective1(String username) {
+    public void chooseSecretObjective(String username, Integer index) {
         if (model.getGameState() == GameState.SETUP) {
-            addQueueObj(new ChooseSecretObjectiveObj(username, model, 1));
-        } else
-            gameControllerWrite("The game is not in the right state to choose secret objective");
-    }
-
-    @Override
-    public void chooseSecretObjective2(String username) {
-        if (model.getGameState() == GameState.SETUP) {
-            addQueueObj(new ChooseSecretObjectiveObj(username, model, 2));
+            model.setPlayerObjective(username, index);
         } else
             gameControllerWrite("The game is not in the right state to choose secret objective");
     }
