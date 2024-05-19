@@ -4,11 +4,9 @@ package it.polimi.ingsw.gc31.view.gui;
 import java.rmi.RemoteException;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
-import javafx.application.Application;
 import javafx.application.Platform;
 import it.polimi.ingsw.gc31.view.UI;
 
-import javax.xml.datatype.DatatypeFactory;
 import java.util.List;
 
 public class GUI extends UI {
@@ -33,6 +31,7 @@ public class GUI extends UI {
         //Application.launch(GUIApplication.class);
 
         GUIApplication app = new GUIApplication();
+        client.setUI(this);
         app.setClient(client);
         app.run();
     }

@@ -26,7 +26,7 @@ public class ClientJava extends Application {
 
         Font.loadFont(getClass().getResource("/it/polimi/ingsw/gc31/Fonts/FrakturNo2.ttf").toExternalForm(),
                 30);
-        Font.loadFont(getClass().getResource("/it/polimi/ingsw/gc31/Fonts/glimmer of light.otf").toExternalForm(),
+        Font.loadFont(getClass().getResource("/it/polimi/ingsw/gc31/Fonts/glimmerOfLight.otf").toExternalForm(),
                 30);
 
         this.primaryStage = primaryStage;
@@ -37,7 +37,7 @@ public class ClientJava extends Application {
         primaryStage.setWidth(640);
         primaryStage.setHeight(480);
         primaryStage.setTitle("CODEX Naturalis");
-        Image icon = new Image(getClass().getResource("/it/polimi/ingsw/gc31/AppIcons/icon.png").toExternalForm());
+        Image icon = new Image(getClass().getResource("/it/polimi/ingsw/gc31/Images/AppIcons/icon.png").toExternalForm());
         primaryStage.getIcons().add(icon);
         primaryStage.show();
 
@@ -60,7 +60,7 @@ public class ClientJava extends Application {
         root.setAlignment(Pos.CENTER);
 
         // applico lo stile desiderato al nodo radice
-        root.getStylesheets().add(getClass().getResource("/it/polimi/ingsw/gc31/Views/stilefxml.css").toExternalForm());
+        root.getStylesheets().add(getClass().getResource("/it/polimi/ingsw/gc31/css/stilefxml.css").toExternalForm());
 
         // immagine principale
         ImageView mainImage = new ImageView(startImg_codexLogo);

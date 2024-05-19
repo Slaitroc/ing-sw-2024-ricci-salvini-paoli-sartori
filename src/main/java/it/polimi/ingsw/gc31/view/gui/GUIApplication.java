@@ -3,7 +3,6 @@ package it.polimi.ingsw.gc31.view.gui;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.text.Font;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -12,7 +11,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 import it.polimi.ingsw.gc31.DefaultValues;
-import it.polimi.ingsw.gc31.view.UI;
 import it.polimi.ingsw.gc31.exceptions.GUISceneInitializationException;
 import it.polimi.ingsw.gc31.view.gui.controllers.ViewController;
 
@@ -26,7 +24,6 @@ public class GUIApplication extends Application {
     private Map<SceneTag, Scene> scenesMap;
     private Map<SceneTag, ViewController> wcMap;
     @SuppressWarnings("unused")
-    private SceneTag activeScene;
 
     public void run() {
         launch();
@@ -56,7 +53,7 @@ public class GUIApplication extends Application {
         // Imposta il titolo e l'icona della finestra
         primaryStage.setTitle("CODEX Naturalis");
 
-        Image icon = new Image(getClass().getResource("/it/polimi/ingsw/gc31/AppIcons/icon.png").toExternalForm());
+        Image icon = new Image(getClass().getResource("/it/polimi/ingsw/gc31/Images/AppIcons/icon.png").toExternalForm());
         primaryStage.getIcons().add(icon);
         //primaryStage.resizableProperty().setValue(Boolean.FALSE);
 
@@ -89,18 +86,13 @@ public class GUIApplication extends Application {
     private void initializeGUIResources() {
         Font.loadFont(getClass().getResource("/it/polimi/ingsw/gc31/Fonts/FrakturNo2.ttf").toExternalForm(),
                 10);
-        Font.loadFont(getClass().getResource("/it/polimi/ingsw/gc31/Fonts/glimmer of light.otf").toExternalForm(),
+        Font.loadFont(getClass().getResource("/it/polimi/ingsw/gc31/Fonts/glimmerOfLight.otf").toExternalForm(),
                 10);
-    }
-
-    private Scene choseScene(SceneTag tag) {
-        activeScene = tag;
-        return scenesMap.get(tag);
     }
 
     public void loadScene(SceneTag tag) {
         System.out.println("Loading scene " + tag.toString());
-        primaryStage.setScene(choseScene(tag));
+        primaryStage.setScene(scenesMap.get(tag));
     }
 
     public ClientCommands getClient() {

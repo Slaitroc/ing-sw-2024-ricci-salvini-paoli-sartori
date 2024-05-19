@@ -1,0 +1,38 @@
+
+.stackPane-ruleBook{
+    -fx-background-image: url(../Images/Misc/NaturalisBackground.gif);
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: stretch;
+    -fx-cursor: hand;
+    -fx-font: 36px "FrakturNo2";
+    -fx-text-alignment: center;
+}
+
+.stackPane-playerSlot1{
+    -fx-background-image: url(../Images/LobbyPlayerSlot/WiseMan1.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: stretch;
+    -fx-background-radius: 40;
+    -fx-border-color: -text-he;
+}
+.stackPane-playerSlot2{
+    -fx-background-image: url(../Images/LobbyPlayerSlot/WiseMan2.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: stretch;
+    -fx-background-radius: 40;
+    -fx-border-color: -text-he;
+}
+.stackPane-playerSlot3{
+    -fx-background-image: url(../Images/LobbyPlayerSlot/WiseMan3.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: stretch;
+    -fx-background-radius: 40;
+    -fx-border-color: -text-he;
+}
+.stackPane-playerSlot4{
+    -fx-background-image: url(../Images/LobbyPlayerSlot/WiseMan4.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: stretch;
+    -fx-background-radius: 40;
+    -fx-border-color: -text-he;
+}

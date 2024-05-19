@@ -1,0 +1,12 @@
+.warning {
+    -fx-text-fill: -red;
+    -fx-font-family: Arial;
+    -fx-font-size: 15px;
+    -fx-text-alignment: center;
+}
+
+.text-label {
+    -fx-text-fill: -black;
+    -fx-font: 20px 'glimmer of light';
+    -fx-text-alignment: center;
+}

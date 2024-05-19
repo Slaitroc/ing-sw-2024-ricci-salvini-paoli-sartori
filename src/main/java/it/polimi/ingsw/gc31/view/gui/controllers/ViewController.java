@@ -7,6 +7,7 @@ public abstract class ViewController {
 
     protected GUIApplication app;
     protected ClientCommands client;
+    protected Integer numberOfPlayers;
 
     protected abstract void initialize();
 

@@ -1,0 +1,59 @@
+@import 'Colors.css';
+
+.mfx-button {
+    -fx-background-color: -dark-green;
+    -fx-font: 30px 'glimmer of light';
+    -fx-text-fill: -white;
+    -fx-cursor: hand;
+    -fx-text-alignment: center;
+    -mfx-button-type: RAISED;
+}
+
+.small-button {
+    -fx-background-color: -dark-green;
+    -fx-font: 20px 'glimmer of light';
+    -fx-text-fill: -white;
+    -fx-cursor: hand;
+    -fx-text-alignment: center;
+    -mfx-button-type: RAISED;
+    -mfx-depth-level: LEVEL5;
+}
+
+.rounded-button{
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-width: 20;
+}
+
+.title-button {
+    -fx-background-color: -dark-green;
+    -fx-font: 30px "FrakturNo2";
+    -fx-text-fill: -white;
+    -fx-cursor: hand;
+    -fx-text-alignment: center;
+    -mfx-button-type: RAISED;
+}
+
+.mfx-combo-box {
+    -fx-background-color: -dark-green;
+    -fx-border-color: transparent;
+    -fx-border-radius: 0;
+    -fx-font: 18px 'glimmer of light';
+    -fx-text-fill: -white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-text-alignment: left;
+    -mfx-button-type: RAISED;
+}
+.mfx-combo-box .floating-text {
+    -fx-background-color: transparent;
+    -fx-text-fill: -white;
+}
+
+.mfx-combo-box .caret .mfx-font-icon {
+    -mfx-color: -white;
+}
+
+.mfx-combo-box .caret .mfx-ripple-generator {
+    -mfx-ripple-color: rgba(255, 255, 255, 0.5);
+}

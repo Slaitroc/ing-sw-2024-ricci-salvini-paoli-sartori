@@ -1,0 +1,21 @@
+@import 'Colors.css';
+@import 'Buttons.css';
+@import 'Texts.css';
+@import 'Panes.css';
+@import 'Labels.css';
+
+
+.vbox {
+  -fx-background-color: -white;
+  -fx-cursor: hand;
+  -fx-font: 36px "FrakturNo2";
+  -fx-text-alignment: center;
+}
+
+.stackPane-black {
+  -fx-background-color: -black;
+}
+
+.stackPane-default {
+  -fx-background-color: -white;
+}

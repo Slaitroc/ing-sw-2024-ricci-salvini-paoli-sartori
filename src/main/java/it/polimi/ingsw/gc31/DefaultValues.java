@@ -52,12 +52,12 @@ public class DefaultValues {
     public static final int width_shift = cardWidth - width_intersect;
 
     // GUI
-    public final static String GUI_SCENE_startScene = "/it/polimi/ingsw/gc31/Views/startScene.fxml";
-    public final static String GUI_SCENE_usernameScene = "/it/polimi/ingsw/gc31/Views/usernameScene.fxml";
-    public final static String GUI_SCENE_lobbyScene = "/it/polimi/ingsw/gc31/Views/lobbyScene.fxml";
-    public final static String GUI_SCENE_mainMenuScene = "/it/polimi/ingsw/gc31/Views/mainMenuScene.fxml";
-    public final static String GUI_SCENE_ruleBookScene = "/it/polimi/ingsw/gc31/Views/ruleBookScene.fxml";
-    public final static String GUI_SCENE_gameListScene = "/it/polimi/ingsw/gc31/Views/gameListScene.fxml";
+    public final static String GUI_SCENE_startScene = "/it/polimi/ingsw/gc31/fxml/startScene.fxml";
+    public final static String GUI_SCENE_usernameScene = "/it/polimi/ingsw/gc31/fxml/usernameScene.fxml";
+    public final static String GUI_SCENE_lobbyScene = "/it/polimi/ingsw/gc31/fxml/lobbyScene.fxml";
+    public final static String GUI_SCENE_mainMenuScene = "/it/polimi/ingsw/gc31/fxml/mainMenuScene.fxml";
+    public final static String GUI_SCENE_ruleBookScene = "/it/polimi/ingsw/gc31/fxml/ruleBookScene.fxml";
+    public final static String GUI_SCENE_gameListScene = "/it/polimi/ingsw/gc31/fxml/gameListScene.fxml";
 
     public static Map<SceneTag, String> getGuiFxmlScenes() {
         Map<SceneTag, String> sceneList = new HashMap<>();
