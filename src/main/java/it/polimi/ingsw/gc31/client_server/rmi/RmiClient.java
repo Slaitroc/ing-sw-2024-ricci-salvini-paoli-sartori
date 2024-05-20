@@ -4,11 +4,11 @@ import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChatMessage;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.GetGameListObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ReadyStatusObj;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.view.UI;
-import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -70,6 +70,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
             }
             if (action != null) {
                 action.execute(ui);
+
             }
         }
     }
@@ -80,11 +81,17 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
-    public void setUsername(String username) throws RemoteException {
+    public void setUsernameCall(String username) throws RemoteException {
         if (controller == null) {
-            controller = server.connect(this, username);
-            this.username = username; // FIX sarebbe meglio fosse final ma complica molto le cose
+            server.setVirtualClient(this);
+            server.sendCommand(new ConnectObj(username));
         }
+
+    }
+
+    @Override
+    public void setUsernameResponse(String username) {
+        this.username = username;
 
     }
 
@@ -180,16 +187,14 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         this.idGame = i;
     }
 
-    // FIX parlare con christian e eventualmente togliere il metodo anche
-    // dall'interfaccia
-    @Override
-    public ShowUpdate getUI() throws RemoteException {
-        return this.ui;
-    }
-
     @Override
     public void sendChatMessage(String username, String message) throws RemoteException {
         gameController.sendCommand(new ChatMessage(username, message));
+    }
+
+    @Override
+    public void setController(IController controller) throws RemoteException {
+        this.controller = controller;
     }
 
 }

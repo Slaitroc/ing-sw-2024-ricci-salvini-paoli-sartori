@@ -2,7 +2,7 @@ package it.polimi.ingsw.gc31.client_server.queue.clientQueue;
 
 import it.polimi.ingsw.gc31.view.UI;
 
-public class JoinedToGameObj implements ClientQueueObject {
+public class JoinedToGameObj extends ClientQueueObject {
 
     int idGame;
 

@@ -51,6 +51,11 @@ public class Controller extends UnicastRemoteObject implements IController {
     private Map<String, VirtualClient> tempClients;
     private final Set<String> nicknames;
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
+    private VirtualClient newConnection;
+
+    public void setNewConnection(VirtualClient newConnection) {
+        this.newConnection = newConnection;
+    }
 
     /**
      * Private constructor for the Controller class.
@@ -63,7 +68,7 @@ public class Controller extends UnicastRemoteObject implements IController {
         nicknames = new HashSet<>();
         gameControlList = new ArrayList<>();
         callsList = new LinkedBlockingQueue<>();
-        new Thread(this::executor).start();
+        executor();
     }
 
     @Override
@@ -79,22 +84,24 @@ public class Controller extends UnicastRemoteObject implements IController {
     }
 
     private void executor() {
-        while (true) {
-            ServerQueueObject action;
-            synchronized (callsList) {
-                while (callsList.isEmpty()) {
-                    try {
-                        callsList.wait();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+        new Thread(() -> {
+            while (true) {
+                ServerQueueObject action;
+                synchronized (callsList) {
+                    while (callsList.isEmpty()) {
+                        try {
+                            callsList.wait();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
+                    action = callsList.poll();
                 }
-                action = callsList.poll();
+                if (action != null) {
+                    action.execute(this);
+                }
             }
-            if (action != null) {
-                action.execute(this);
-            }
-        }
+        }).start();
     }
 
     /**
@@ -118,13 +125,14 @@ public class Controller extends UnicastRemoteObject implements IController {
      */
     @Override
     public void connect(VirtualClient client, String username)
-            throws RemoteException, PlayerNicknameAlreadyExistsException {
+            throws RemoteException {
         if (nicknames.add(username)) {
             tempClients.put(username, client);
-            client.sendCommand(new ValidUsernameObj(username));
+            client.setController(this);
+            client.sendCommand((new ValidUsernameObj(username)));
         } else {
             client.sendCommand(new WrongUsernameObj(username));
-            throw new PlayerNicknameAlreadyExistsException();
+            // FIX PlayerAlreadyExistsException non più necessaria (da verificare)
         }
     }
 
@@ -217,5 +225,10 @@ public class Controller extends UnicastRemoteObject implements IController {
             }
             tempClients.get(username).sendCommand(new ShowGamesObj(res));
         }
+    }
+
+    @Override
+    public VirtualClient getNewConnection() {
+        return newConnection;
     }
 }

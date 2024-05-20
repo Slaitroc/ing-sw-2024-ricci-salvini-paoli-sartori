@@ -4,7 +4,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
-import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
 public interface VirtualClient extends Remote {
 
@@ -12,10 +11,8 @@ public interface VirtualClient extends Remote {
 
     public void setGameID(int gameID) throws RemoteException;
 
-    // public void startGame() throws RemoteException;
-
-    public ShowUpdate getUI() throws RemoteException;
-
     public void sendCommand(ClientQueueObject obj) throws RemoteException;
+
+    public void setController(IController controller) throws RemoteException;
 
 }

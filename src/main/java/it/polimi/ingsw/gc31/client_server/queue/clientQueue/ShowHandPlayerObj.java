@@ -7,7 +7,7 @@ import java.util.List;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
-public class ShowHandPlayerObj implements ClientQueueObject {
+public class ShowHandPlayerObj extends ClientQueueObject {
     private final String username;
     private final List<String> hand;
 

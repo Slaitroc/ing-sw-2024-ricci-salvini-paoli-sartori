@@ -100,7 +100,7 @@ public class InitState extends TuiState {
         tui.moveCursorToCmdLine();
         input = scanner.nextLine();
         try {
-            tui.getClient().setUsername(input.trim());
+            tui.getClient().setUsernameCall(input.trim());
         } catch (IOException e) {
             e.printStackTrace();
         }

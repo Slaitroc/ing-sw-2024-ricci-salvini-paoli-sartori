@@ -10,7 +10,9 @@ public interface ClientCommands {
 
     void setUI(UI ui);
 
-    void setUsername(String username) throws IOException;
+    void setUsernameCall(String username) throws IOException;
+
+    void setUsernameResponse(String username);
 
     void createGame(int maxNumberPlayer) throws RemoteException, IOException;
 
