@@ -19,20 +19,15 @@ import java.io.ObjectOutputStream;
  * server
  */
 public class SocketClientHandler implements VirtualClient {
-    @SuppressWarnings("unused")
     private IController controller;
-    @SuppressWarnings("unused")
     private IGameController gameController;
-    @SuppressWarnings("unused")
     private String username;
 
-    @SuppressWarnings("unused")
     private Integer idGame;
 
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
 
-    @SuppressWarnings("unused")
     private boolean ready = false;
 
     /**
@@ -52,6 +47,15 @@ public class SocketClientHandler implements VirtualClient {
         this.input = input;
         this.output = output;
         tcpClient_reader();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                input.close();
+                output.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }));
 
     }
 
@@ -124,6 +128,11 @@ public class SocketClientHandler implements VirtualClient {
     @Override
     public void setController(IController controller) throws RemoteException {
         this.controller = controller;
+    }
+
+    @Override
+    public void setGameController(IGameController gameController) throws RemoteException {
+        this.gameController = gameController;
     }
 
 }

@@ -45,7 +45,8 @@ public class TCPServer {
                 }
 
             }
-        }).start();
+            // FIX chiudere clientSocket e input e output
 
+        }).start();
     }
 }

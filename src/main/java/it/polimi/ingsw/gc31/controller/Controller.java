@@ -145,11 +145,10 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @throws RemoteException if an RMI error occurs.
      */
     @Override
-    public IGameController createGame(String username, int maxNumPlayer) throws RemoteException {
+    public void createGame(String username, int maxNumPlayer) throws RemoteException {
         VirtualClient client = tempClients.get(username);
         if (maxNumPlayer < 2 || maxNumPlayer > 4) {
             client.sendCommand(new WrongGameSizeObj());
-            return null;
         } else {
             try {
                 gameControlList.add(new GameController(username, client, maxNumPlayer,
@@ -160,7 +159,7 @@ public class Controller extends UnicastRemoteObject implements IController {
             }
             tempClients.remove(username);
             client.sendCommand(new GameCreatedObj(gameControlList.size() - 1));
-            return gameControlList.get(gameControlList.size() - 1);
+            client.setGameController(gameControlList.get(gameControlList.size() - 1));
         }
 
     }
@@ -174,22 +173,22 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @throws RemoteException if an RMI error occurs.
      */
     @Override
-    public IGameController joinGame(String username, int idGame) throws RemoteException {
+    public void joinGame(String username, int idGame) throws RemoteException {
 
+        VirtualClient client = tempClients.get(username);
         if (idGame >= gameControlList.size() || idGame < 0) {
-            tempClients.get(username).sendCommand(new GameDoesNotExistObj());
-            return null;
+            client.sendCommand(new GameDoesNotExistObj());
         } else {
 
             if (gameControlList.get(idGame).getCurrentNumberPlayers() != gameControlList.get(idGame)
                     .getMaxNumberPlayers()) {
-                gameControlList.get(idGame).joinGame(username, tempClients.get(username));
-                tempClients.get(username).sendCommand(new JoinedToGameObj(idGame));
+                gameControlList.get(idGame).joinGame(username, client);
+                client.setGameController(gameControlList.get(idGame));
+                client.sendCommand(new JoinedToGameObj(idGame));
                 tempClients.remove(username);
-                return gameControlList.get(idGame);
+                gameControlList.get(idGame);
             } else {
-                tempClients.get(username).sendCommand(new GameIsFullObj(idGame));
-                return null;
+                client.sendCommand(new GameIsFullObj(idGame));
             }
         }
     }

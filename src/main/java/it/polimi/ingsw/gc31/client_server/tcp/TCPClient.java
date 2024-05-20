@@ -10,6 +10,8 @@ import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.CreateGameObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.JoinGameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
@@ -38,6 +40,7 @@ public class TCPClient implements ClientCommands {
         this.callsList = new LinkedBlockingQueue<>();
         clientHandler_reader();
         executor();
+
     }
 
     @SuppressWarnings("unused")
@@ -137,16 +140,7 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void createGame(int maxNumberPlayer) throws IOException {
-
-        // output.writeObject(new Cre);
-        // output.flush();
-
-        // Se non dovesse ricevere la stringa corretta/ci fosse un errore lato server
-        // cosa dovrei fare?
-        // Leggo dal server il game ID della partita appena creata
-        // String line = input.readLine();
-        // this.idGame = Integer.parseInt(line);
-        // // ui.show_gameCreated();
+        tcp_sendCommand(new CreateGameObj(username, maxNumberPlayer), DefaultValues.RECIPIENT_CONTROLLER);
     }
 
     /**
@@ -158,9 +152,7 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void joinGame(int gameId) throws RemoteException {
-        // output.println("join game");
-        // output.println(gameId);
-        // output.flush();
+        tcp_sendCommand(new JoinGameObj(username, gameId), DefaultValues.RECIPIENT_CONTROLLER);
     }
 
     /**

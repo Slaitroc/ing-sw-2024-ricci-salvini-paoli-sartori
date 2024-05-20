@@ -5,7 +5,9 @@ import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChatMessage;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.CreateGameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.GetGameListObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.JoinGameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ReadyStatusObj;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.view.UI;
@@ -97,12 +99,12 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void createGame(int maxNumberPlayer) throws RemoteException {
-        gameController = controller.createGame(username, maxNumberPlayer);
+        controller.sendCommand(new CreateGameObj(username, maxNumberPlayer));
     }
 
     @Override
     public void joinGame(int idGame) throws RemoteException {
-        gameController = controller.joinGame(username, idGame);
+        controller.sendCommand(new JoinGameObj(username, idGame));
     }
 
     @Override
@@ -195,6 +197,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public void setController(IController controller) throws RemoteException {
         this.controller = controller;
+    }
+
+    @Override
+    public void setGameController(IGameController gameController) throws RemoteException {
+        this.gameController = gameController;
     }
 
 }
