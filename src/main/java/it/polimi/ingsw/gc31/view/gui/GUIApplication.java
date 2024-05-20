@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 import it.polimi.ingsw.gc31.DefaultValues;
-import it.polimi.ingsw.gc31.exceptions.GUISceneInitializationException;
 import it.polimi.ingsw.gc31.view.gui.controllers.ViewController;
 
 import java.util.Map;
@@ -21,8 +20,9 @@ public class GUIApplication extends Application {
 
     private static ClientCommands client;
     public static Stage primaryStage;
-    private Map<SceneTag, Scene> scenesMap;
-    private Map<SceneTag, ViewController> wcMap;
+    private String username;
+    private Integer numberOfPlayers;
+
     @SuppressWarnings("unused")
 
     public void run() {
@@ -32,42 +32,40 @@ public class GUIApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         initializeGUIResources();
-        try {
+        /*try {
             System.out.println("Initializing scenes...");
             //System.out.println("Client is set to " + client.toString());
             initializeScenesFXML();
         } catch (GUISceneInitializationException e) {
             e.printStackTrace();
             System.err.println("GUI Scene Initialization Error! Wrong path...");
-        }
+        }*/
 
-        // Imposta la scena
+        // Set the scene
         primaryStage = stage;
         loadScene(SceneTag.START);
 
-        // Imposta le dimensioni della finestra
-
+        // Set window size
         setDefaultSize();
         //primaryStage.setFullScreen(true);
 
-        // Imposta il titolo e l'icona della finestra
+        // Set Title and AppIcon
         primaryStage.setTitle("CODEX Naturalis");
-
         Image icon = new Image(getClass().getResource("/it/polimi/ingsw/gc31/Images/AppIcons/icon.png").toExternalForm());
         primaryStage.getIcons().add(icon);
         //primaryStage.resizableProperty().setValue(Boolean.FALSE);
 
-        // Mostra la finestra
+        // Show window
         primaryStage.show();
     }
 
-    private void initializeScenesFXML() throws GUISceneInitializationException {
+    /*private void initializeScenesFXML() throws GUISceneInitializationException {
         scenesMap = new HashMap<>();
         wcMap = new HashMap<>();
         FXMLLoader loader;
         // Carica i file FXML
         for (Map.Entry<SceneTag, String> entry : DefaultValues.getGuiFxmlScenes().entrySet()) {
-            System.out.println("Loading " + entry.getValue() + "...");
+            System.out.println("Loading " + entry.getValue() + " ...");
             loader = new FXMLLoader(getClass().getResource(entry.getValue()));
             try {
                 Scene scene = new Scene(loader.load());
@@ -80,8 +78,7 @@ public class GUIApplication extends Application {
                 e.printStackTrace();
             }
         }
-
-    }
+    }*/
 
     private void initializeGUIResources() {
         Font.loadFont(getClass().getResource("/it/polimi/ingsw/gc31/Fonts/FrakturNo2.ttf").toExternalForm(),
@@ -90,9 +87,26 @@ public class GUIApplication extends Application {
                 10);
     }
 
-    public void loadScene(SceneTag tag) {
+    /*public void loadScene(SceneTag tag) {
         System.out.println("Loading scene " + tag.toString());
         primaryStage.setScene(scenesMap.get(tag));
+        currentScene = tag;
+    }*/
+
+    public void loadScene(SceneTag tag) {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(DefaultValues.getGuiFxmlScenes().get(tag)));
+        System.out.println("Loading scene " + DefaultValues.getGuiFxmlScenes().get(tag) + " ...");
+        try {
+            Scene scene = new Scene(loader.load());
+            ViewController wc = loader.getController();
+            wc.setGUIApplication(this);
+            wc.setClient(client);
+            wc.setUp();
+            primaryStage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public ClientCommands getClient() {
@@ -118,5 +132,21 @@ public class GUIApplication extends Application {
         primaryStage.setMinWidth(720);
         primaryStage.setMinHeight(540);
         primaryStage.centerOnScreen();
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Integer getNumberOfPlayers() {
+        return numberOfPlayers;
+    }
+
+    public void setNumberOfPlayers(Integer numberOfPlayers) {
+        this.numberOfPlayers = numberOfPlayers;
     }
 }

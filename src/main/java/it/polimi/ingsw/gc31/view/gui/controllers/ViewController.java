@@ -7,7 +7,6 @@ public abstract class ViewController {
 
     protected GUIApplication app;
     protected ClientCommands client;
-    protected Integer numberOfPlayers;
 
     protected abstract void initialize();
 
@@ -20,4 +19,5 @@ public abstract class ViewController {
     public ClientCommands getClient() {
         return this.client;
     }
+    public void setUp(){};
 }

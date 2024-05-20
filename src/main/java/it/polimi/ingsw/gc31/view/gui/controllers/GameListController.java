@@ -6,7 +6,7 @@ public class GameListController extends ViewController{
 
     @Override
     @FXML
-    public void initialize() {
+    protected void initialize() {
     }
 
 }

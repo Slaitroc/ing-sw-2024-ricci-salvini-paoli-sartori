@@ -11,6 +11,8 @@ import java.util.List;
 
 public class GUI extends UI {
 
+    GUIApplication app;
+
     public GUI(ClientCommands client) {
         this.client = client;
     }
@@ -30,7 +32,7 @@ public class GUI extends UI {
     protected void uiRunUI() {
         //Application.launch(GUIApplication.class);
 
-        GUIApplication app = new GUIApplication();
+        app = new GUIApplication();
         client.setUI(this);
         app.setClient(client);
         app.run();
@@ -43,7 +45,7 @@ public class GUI extends UI {
 
     @Override
     public void show_gameCreated() {
-        throw new UnsupportedOperationException("Unimplemented method 'show_gameCreated'");
+        //app.loadScene(SceneTag.LOBBY);
     }
 
     @Override

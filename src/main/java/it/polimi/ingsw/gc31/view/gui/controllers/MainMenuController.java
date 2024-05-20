@@ -4,12 +4,18 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
 import javafx.collections.FXCollections;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 
@@ -17,6 +23,10 @@ public class MainMenuController extends ViewController{
 
 
     boolean step1 = true;
+    private Stage stage;
+    private Parent root;
+    private Scene scene;
+
 
     @FXML
     public ImageView imageView1;
@@ -49,26 +59,31 @@ public class MainMenuController extends ViewController{
      */
     @Override
     @FXML
-    public void initialize() {
+    protected void initialize() {
         comboBox.setItems(FXCollections.observableArrayList(2, 3, 4));
-        comboBox.setValue(2);
+        System.out.println("HELP");
     }
 
 
     public void createGame() {
-        numberOfPlayers = comboBox.getValue();
-        try {
-            app.getClient().createGame(numberOfPlayers);
-            app.loadScene(SceneTag.LOBBY);
-        } catch (IOException e) {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error 505");
-            alert.setHeaderText("Server Error");
-            alert.setContentText("Server has crashed. Try again later.");
+        app.setNumberOfPlayers(comboBox.getValue());
+        if(app.getNumberOfPlayers() != null) {
+            try {
+                System.out.println("USERNAME IS:" + app.getUsername());
+                app.getClient().createGame(app.getNumberOfPlayers());
+                /*scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();*/
+                app.loadScene(SceneTag.LOBBY);
+            } catch (IOException e) {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error 505");
+                alert.setHeaderText("Server Error");
+                alert.setContentText("Server has crashed. Try again later.");
 
-            alert.showAndWait();
+                alert.showAndWait();
+            }
         }
-
     }
 
     public void showLoginMenu() {

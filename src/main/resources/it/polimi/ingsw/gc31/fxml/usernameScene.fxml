@@ -17,7 +17,7 @@
     <VBox alignment="CENTER" spacing="20">
         <Label alignment="CENTER" text="Type your username here" styleClass="text-label" />
 
-        <MFXTextField fx:id="username" floatingText="Username" styleClass="text-field" prefWidth="330"
+        <MFXTextField fx:id="usernameField" floatingText="Username" styleClass="text-field" prefWidth="330"
         onKeyPressed="#handleEnterKeyPressed"/>
 
         <Label fx:id="warningLabel" visible="false" styleClass="warning"/>

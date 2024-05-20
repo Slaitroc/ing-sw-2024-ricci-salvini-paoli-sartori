@@ -5,10 +5,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
 <?import javafx.geometry.Insets?>
 
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
+
 
 <StackPane xmlns="http://javafx.com/javafx/17"
            xmlns:fx="http://javafx.com/fxml/1"
@@ -20,12 +23,13 @@
     </padding>
 
     <HBox spacing="50" alignment="CENTER">
-        <StackPane stylesheets="@../css/stilefxml.css" styleClass="stackPane-playerSlot1" maxWidth="180" maxHeight="326">
+        <StackPane stylesheets="@../css/stilefxml.css" styleClass="stackPane-playerSlot, player1"
+                   maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
             <padding>
                 <Insets top="20" right="10" bottom="20" left="10"/>
             </padding>
             <VBox>
-                <MFXTextField styleClass="player-text-field" text="Player1"/>
+                <MFXTextField fx:id="mainPlayer" styleClass="player-text-field"/>
                 <ImageView>
                     <image/>
                 </ImageView>
@@ -33,7 +37,8 @@
                 </MFXToggleButton>
             </VBox>
         </StackPane>
-        <StackPane stylesheets="@../css/stilefxml.css" styleClass="stackPane-playerSlot2" maxWidth="180" maxHeight="326">
+        <StackPane stylesheets="@../css/stilefxml.css" styleClass="stackPane-playerSlot, player2"
+                   maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
             <padding>
                 <Insets top="20" right="10" bottom="20" left="10"/>
             </padding>
@@ -46,7 +51,9 @@
                 </MFXToggleButton>
             </VBox>
         </StackPane>
-        <StackPane stylesheets="@../css/stilefxml.css" styleClass="stackPane-playerSlot3" maxWidth="180" maxHeight="326">
+        <StackPane stylesheets="@../css/stilefxml.css" styleClass="stackPane-playerSlot"
+                   maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
+            <StackPane fx:id="inGamePlayer3" styleClass="player3" visible="false">
             <padding>
                 <Insets top="20" right="10" bottom="20" left="10"/>
             </padding>
@@ -58,20 +65,34 @@
                 <MFXToggleButton styleClass="mfx-button">
                 </MFXToggleButton>
             </VBox>
-
-        </StackPane>
-        <StackPane stylesheets="@../css/stilefxml.css" styleClass="stackPane-playerSlot4" maxWidth="180" maxHeight="326">
-            <padding>
-                <Insets top="20" right="10" bottom="20" left="10"/>
-            </padding>
-            <VBox spacing="70">
-                <MFXTextField styleClass="player-text-field" text="Player4"/>
-                <ImageView>
-                    <image/>
+            </StackPane>
+            <StackPane fx:id="lockPlayer3" styleClass="lockedPlayerSlot" visible="true">
+                <ImageView fitHeight="100" fitWidth="100">
+                    <Image url="@../Images/AppIcons/LockIcon.png"/>
                 </ImageView>
-                <MFXToggleButton styleClass="mfx-button">
-                </MFXToggleButton>
-            </VBox>
+            </StackPane>
+        </StackPane>
+
+        <StackPane stylesheets="@../css/stilefxml.css" styleClass="stackPane-playerSlot"
+                   maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
+            <StackPane fx:id="inGamePlayer4" styleClass="player4" visible="false">
+                <padding>
+                    <Insets top="20" right="10" bottom="20" left="10"/>
+                </padding>
+                <VBox spacing="70">
+                    <MFXTextField styleClass="player-text-field" text="Player4"/>
+                    <ImageView >
+                        <image/>
+                    </ImageView>
+                    <MFXToggleButton styleClass="mfx-button">
+                    </MFXToggleButton>
+                </VBox>
+            </StackPane>
+            <StackPane fx:id="lockPlayer4" styleClass="lockedPlayerSlot" visible="true">
+                <ImageView fitHeight="100" fitWidth="100">
+                    <Image url="@../Images/AppIcons/LockIcon.png"/>
+                </ImageView>
+            </StackPane>
         </StackPane>
     </HBox>
 

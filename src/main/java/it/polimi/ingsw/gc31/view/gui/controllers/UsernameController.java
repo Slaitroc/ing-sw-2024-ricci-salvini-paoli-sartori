@@ -18,24 +18,25 @@ import java.io.IOException;
 public class UsernameController extends ViewController {
 
     @FXML
-    private MFXTextField username;
+    private MFXTextField usernameField;
     @FXML
     private Label warningLabel;
 
     @FXML
     private void login() {
-        String nickname = username.getText();
+        app.setUsername(usernameField.getText());
 
-        if (nickname.isEmpty()) {
+        if (app.getUsername().isEmpty()) {
             System.out.println("Username cannot be empty!");
             warningLabel.setVisible(true);
             warningLabel.setText("Username cannot be empty!");
         } else {
             try {
-                client.setUsername(nickname);
+                client.setUsername(app.getUsername());
                 loadMainMenuScene();
             } catch (IOException e) {
-                warningLabel.setText("Server Error! Try again later.");
+                warningLabel.setVisible(true);
+                warningLabel.setText("Server Error! Please restart the app.");
             } catch (PlayerNicknameAlreadyExistsException e) {
                 warningLabel.setVisible(true);
                 warningLabel.setText("Username already exists!");
@@ -50,7 +51,7 @@ public class UsernameController extends ViewController {
      */
     @Override
     @FXML
-    public void initialize() {
+    protected void initialize() {
     }
 
     @FXML

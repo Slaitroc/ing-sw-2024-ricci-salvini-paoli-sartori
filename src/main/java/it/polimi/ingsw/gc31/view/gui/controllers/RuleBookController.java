@@ -39,7 +39,7 @@ public class RuleBookController extends ViewController{
 
     @Override
     @FXML
-    public void initialize() {
+    protected void initialize() {
     }
 
     @FXML
