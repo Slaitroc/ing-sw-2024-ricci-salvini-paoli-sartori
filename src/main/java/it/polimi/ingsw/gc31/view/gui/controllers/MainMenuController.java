@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 
-public class MainMenuController extends ViewController{
+public class MainMenuController extends ViewController {
 
 
     boolean step1 = true;
@@ -61,15 +61,13 @@ public class MainMenuController extends ViewController{
     @FXML
     protected void initialize() {
         comboBox.setItems(FXCollections.observableArrayList(2, 3, 4));
-        System.out.println("HELP");
     }
 
 
     public void createGame() {
         app.setNumberOfPlayers(comboBox.getValue());
-        if(app.getNumberOfPlayers() != null) {
+        if (app.getNumberOfPlayers() != null) {
             try {
-                System.out.println("USERNAME IS:" + app.getUsername());
                 app.getClient().createGame(app.getNumberOfPlayers());
                 /*scene = new Scene(root);
                 stage.setScene(scene);
@@ -79,7 +77,7 @@ public class MainMenuController extends ViewController{
                 Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error 505");
                 alert.setHeaderText("Server Error");
-                alert.setContentText("Server has crashed. Try again later.");
+                alert.setContentText("Server has crashed. Restart application");
 
                 alert.showAndWait();
             }
@@ -87,20 +85,32 @@ public class MainMenuController extends ViewController{
     }
 
     public void showLoginMenu() {
-        if(step1) {
+        if (step1) {
             loginMenu.setVisible(true);
+            loginMenu.setManaged(true);
+
             generalMenu.setVisible(false);
+            generalMenu.setManaged(false);
+
             createGameButton.setText("Back");
+
             imageView1.setVisible(false);
             imageView6.setVisible(true);
+
             step1 = false;
-        }
-        else {
+        } else {
             loginMenu.setVisible(false);
+            loginMenu.setManaged(false);
+
             generalMenu.setVisible(true);
+            generalMenu.setManaged(true);
+
             createGameButton.setText("Create Game");
+
             imageView6.setVisible(false);
+
             imageView1.setVisible(true);
+
             step1 = true;
         }
     }
@@ -125,48 +135,61 @@ public class MainMenuController extends ViewController{
 
     @FXML
     private void showPointer1() {
-        if(step1) imageView1.setVisible(true);
-        if(!step1) imageView6.setVisible(true);
+        if (step1) imageView1.setVisible(true);
+        if (!step1) imageView6.setVisible(true);
     }
+
     @FXML
     private void showPointer2() {
         imageView2.setVisible(true);
     }
+
     @FXML
     private void showPointer3() {
         imageView3.setVisible(true);
     }
+
     @FXML
     private void showPointer4() {
         imageView4.setVisible(true);
     }
+
     @FXML
-    public void showPointer5() { imageView5.setVisible(true);
+    public void showPointer5() {
+        imageView5.setVisible(true);
     }
+
     @FXML
     public void showPointer7() {
         imageView7.setVisible(true);
     }
+
     @FXML
     private void hidePointer1() {
-        if(step1) imageView1.setVisible(false);
-        if(!step1) imageView6.setVisible(false);
+        if (step1) imageView1.setVisible(false);
+        if (!step1) imageView6.setVisible(false);
     }
+
     @FXML
     private void hidePointer2() {
         imageView2.setVisible(false);
     }
+
     @FXML
     private void hidePointer3() {
         imageView3.setVisible(false);
     }
+
     @FXML
     private void hidePointer4() {
         imageView4.setVisible(false);
     }
+
     @FXML
-    public void hidePointer5() { imageView5.setVisible(false);
+    public void hidePointer5() {
+        imageView5.setVisible(false);
     }
+
     @FXML
     public void hidePointer7() {
         imageView7.setVisible(false);

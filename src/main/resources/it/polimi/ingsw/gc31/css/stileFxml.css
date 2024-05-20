@@ -1,13 +1,12 @@
 @import 'Colors.css';
-@import 'Buttons.css';
 @import 'Texts.css';
+@import 'Buttons.css';
 @import 'Panes.css';
 @import 'Labels.css';
 
 
 .vbox {
   -fx-background-color: -white;
-  -fx-cursor: hand;
   -fx-font: 36px "FrakturNo2";
   -fx-text-alignment: center;
 }

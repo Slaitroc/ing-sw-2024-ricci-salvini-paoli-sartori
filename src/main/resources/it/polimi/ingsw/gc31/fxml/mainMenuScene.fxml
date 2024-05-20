@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import io.github.palexdev.materialfx.controls.MFXComboBox?>
-<StackPane stylesheets="@../css/stilefxml.css" styleClass="stackPane-default" xmlns="http://javafx.com/javafx/21"
+<StackPane stylesheets="@../css/stileFxml.css" styleClass="stackPane-default" xmlns="http://javafx.com/javafx/21"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.MainMenuController">
     <padding>
@@ -34,7 +34,7 @@
 
             </HBox>
             <StackPane>
-                <StackPane fx:id="loginMenu" visible="false">
+                <StackPane fx:id="loginMenu" visible="false" managed="false">
                     <VBox spacing="60" >
                         <HBox>
                             <MFXComboBox fx:id="comboBox" prefWidth="150.0" floatingText="Players"

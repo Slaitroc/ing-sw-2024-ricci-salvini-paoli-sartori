@@ -10,3 +10,9 @@
     -fx-font: 20px 'glimmer of light';
     -fx-text-alignment: center;
 }
+
+.small-text-label{
+    -fx-text-fill: -black;
+    -fx-font: 12px 'glimmer of light';
+    -fx-text-alignment: center;
+}

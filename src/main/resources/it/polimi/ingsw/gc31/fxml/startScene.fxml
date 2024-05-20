@@ -8,7 +8,7 @@
 <VBox alignment="CENTER" spacing="20" xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.StartController"
-      stylesheets="@../css/stilefxml.css" styleClass="stackPane-default">
+      stylesheets="@../css/stileFxml.css" styleClass="stackPane-default">
     <ImageView>
         <Image url="@../Images/Misc/CodexLogo.png"/>
     </ImageView>

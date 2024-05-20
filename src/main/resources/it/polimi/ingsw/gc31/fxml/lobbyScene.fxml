@@ -10,86 +10,174 @@
 <?import javafx.geometry.Insets?>
 
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
-<?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
 
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextArea?>
 <StackPane xmlns="http://javafx.com/javafx/17"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.LobbyController"
-           stylesheets="@../css/stilefxml.css" styleClass="stackPane-default">
+           stylesheets="@../css/stileFxml.css" styleClass="stackPane-default">
 
     <padding>
         <Insets top="10" right="20" bottom="10" left="20"/>
     </padding>
 
     <HBox spacing="50" alignment="CENTER">
-        <StackPane stylesheets="@../css/stilefxml.css" styleClass="stackPane-playerSlot, player1"
+
+        <!-- StackPane for GENERAL_PLAYER -->
+        <!-- StackPane for PLAYER_IN_LOBBY  -->
+        <StackPane stylesheets="@../css/stileFxml.css" styleClass="stackPane-playerSlot, player1"
                    maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
-            <padding>
-                <Insets top="20" right="10" bottom="20" left="10"/>
-            </padding>
-            <VBox>
-                <MFXTextField fx:id="mainPlayer" styleClass="player-text-field"/>
-                <ImageView>
-                    <image/>
-                </ImageView>
-                <MFXToggleButton styleClass="mfx-button">
-                </MFXToggleButton>
+            <VBox spacing="70">
+                <padding>
+                    <Insets top="20" right="10" bottom="20" left="10"/>
+                </padding>
+                <StackPane>
+                    <MFXTextField fx:id="mainPlayer" styleClass="player-text-field"/>
+                </StackPane>
+                <StackPane>
+                    <ImageView fitHeight="100" fitWidth="100">
+                        <Image url="@../Images/Board/CODEX_pion_vert.png"/>
+                    </ImageView>
+                </StackPane>
+                <StackPane>
+                    <Button styleClass="rounded-button, small-button" text="Ready">
+                    </Button>
+                </StackPane>
             </VBox>
         </StackPane>
-        <StackPane stylesheets="@../css/stilefxml.css" styleClass="stackPane-playerSlot, player2"
+
+        <!-- StackPane for GENERAL_PLAYER -->
+        <StackPane stylesheets="@../css/stileFxml.css" styleClass="stackPane-playerSlot"
                    maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
-            <padding>
-                <Insets top="20" right="10" bottom="20" left="10"/>
-            </padding>
-            <VBox spacing="70">
-                <MFXTextField styleClass="player-text-field" text="Player2"/>
-                <ImageView>
-                    <image/>
-                </ImageView>
-                <MFXToggleButton styleClass="mfx-button">
-                </MFXToggleButton>
-            </VBox>
-        </StackPane>
-        <StackPane stylesheets="@../css/stilefxml.css" styleClass="stackPane-playerSlot"
-                   maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
-            <StackPane fx:id="inGamePlayer3" styleClass="player3" visible="false">
-            <padding>
-                <Insets top="20" right="10" bottom="20" left="10"/>
-            </padding>
-            <VBox spacing="70">
-                <MFXTextField styleClass="player-text-field" text="Player3"/>
-                <ImageView>
-                    <image/>
-                </ImageView>
-                <MFXToggleButton styleClass="mfx-button">
-                </MFXToggleButton>
-            </VBox>
+
+            <!-- StackPane for PLAYER_IN_LOBBY  -->
+            <StackPane fx:id="inGamePlayer2" styleClass="stackPane-playerSlot, player3">
+                <VBox spacing="70">
+                    <padding>
+                        <Insets top="20" right="10" bottom="20" left="10"/>
+                    </padding>
+                    <StackPane>
+                        <MFXTextField styleClass="player-text-field" text="Player2"/>
+                    </StackPane>
+                    <StackPane>
+                        <ImageView fitHeight="100" fitWidth="100">
+                            <Image url="@../Images/Board/CODEX_pion_jaune.png"/>
+                        </ImageView>
+                    </StackPane>
+                    <StackPane>
+                        <Button styleClass="rounded-button, small-button" text="Ready">
+                        </Button>
+                    </StackPane>
+                </VBox>
+            </StackPane >
+
+            <!-- StackPane for WAITING_PLAYER  -->
+            <StackPane fx:id="waitingPlayer2" stylesheets="@../css/stileFxml.css" styleClass="stackPane-playerSlot, lockedPlayerSlot"
+                       maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
+                <VBox spacing="40" alignment="BOTTOM_CENTER">
+                    <ImageView fitHeight="80" fitWidth="80">
+                        <Image url="@../Images/AppIcons/waiting_player.gif"/>
+                    </ImageView>
+                    <TextArea styleClass="small-text-label" wrapText="true" maxHeight="60" minHeight="60" editable="false" mouseTransparent="true">
+                        Waiting for
+                        Player
+                    </TextArea>
+                </VBox>
             </StackPane>
-            <StackPane fx:id="lockPlayer3" styleClass="lockedPlayerSlot" visible="true">
-                <ImageView fitHeight="100" fitWidth="100">
+        </StackPane>
+
+        <!-- StackPane for GENERAL_PLAYER -->
+        <StackPane stylesheets="@../css/stileFxml.css" styleClass="stackPane-playerSlot"
+                   maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
+
+            <!-- StackPane for PLAYER_IN_LOBBY  -->
+            <StackPane fx:id="inGamePlayer3" styleClass="stackPane-playerSlot, player3">
+                <VBox spacing="70">
+                    <padding>
+                        <Insets top="20" right="10" bottom="20" left="10"/>
+                    </padding>
+                    <StackPane>
+                        <MFXTextField styleClass="player-text-field" text="Player3"/>
+                    </StackPane>
+                    <StackPane>
+                        <ImageView fitHeight="100" fitWidth="100">
+                            <Image url="@../Images/Board/CODEX_pion_rouge.png"/>
+                        </ImageView>
+                    </StackPane>
+                    <StackPane>
+                        <Button styleClass="rounded-button, small-button" text="Ready">
+                        </Button>
+                    </StackPane>
+                </VBox>
+            </StackPane>
+
+            <!-- StackPane for WAITING_PLAYER  -->
+            <StackPane fx:id="waitingPlayer3" stylesheets="@../css/stileFxml.css" styleClass="stackPane-playerSlot, lockedPlayerSlot"
+                       maxWidth="135" maxHeight="360" minWidth="135" minHeight="360" >
+                <VBox spacing="40" alignment="BOTTOM_CENTER">
+                    <ImageView fitHeight="80" fitWidth="80">
+                        <Image url="@../Images/AppIcons/waiting_player.gif"/>
+                    </ImageView>
+                    <TextArea styleClass="small-text-label" wrapText="true" maxHeight="60" minHeight="60" editable="false" mouseTransparent="true">
+                        Waiting for
+                        Player
+                    </TextArea>
+                </VBox>
+            </StackPane>
+
+            <!-- StackPane for LOCKED_PLAYER_SLOT  -->
+            <StackPane fx:id="lockPlayer3" styleClass="stackPane-playerSlot, lockedPlayerSlot">
+                <ImageView fitHeight="80" fitWidth="80">
                     <Image url="@../Images/AppIcons/LockIcon.png"/>
                 </ImageView>
             </StackPane>
         </StackPane>
 
-        <StackPane stylesheets="@../css/stilefxml.css" styleClass="stackPane-playerSlot"
+        <!-- StackPane for GENERAL_PLAYER -->
+        <StackPane stylesheets="@../css/stileFxml.css"
                    maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
-            <StackPane fx:id="inGamePlayer4" styleClass="player4" visible="false">
-                <padding>
-                    <Insets top="20" right="10" bottom="20" left="10"/>
-                </padding>
+
+            <!-- StackPane for PLAYER_IN_LOBBY  -->
+            <StackPane fx:id="inGamePlayer4" styleClass="stackPane-playerSlot, player4">
                 <VBox spacing="70">
-                    <MFXTextField styleClass="player-text-field" text="Player4"/>
-                    <ImageView >
-                        <image/>
-                    </ImageView>
-                    <MFXToggleButton styleClass="mfx-button">
-                    </MFXToggleButton>
+                    <padding>
+                        <Insets top="20" right="10" bottom="20" left="10"/>
+                    </padding>
+                    <StackPane>
+                        <MFXTextField styleClass="player-text-field" text="Player4"/>
+                    </StackPane>
+                    <StackPane>
+                        <ImageView fitHeight="100" fitWidth="100">
+                            <Image url="@../Images/Board/CODEX_pion_bleu.png"/>
+                        </ImageView>
+                    </StackPane>
+                    <StackPane>
+                        <Button styleClass="rounded-button, small-button" text="Ready">
+                        </Button>
+                    </StackPane>
                 </VBox>
             </StackPane>
-            <StackPane fx:id="lockPlayer4" styleClass="lockedPlayerSlot" visible="true">
-                <ImageView fitHeight="100" fitWidth="100">
+
+            <!-- StackPane for WAITING_PLAYER  -->
+            <StackPane fx:id="waitingPlayer4" stylesheets="@../css/stileFxml.css" styleClass="stackPane-playerSlot, lockedPlayerSlot"
+                       maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
+                <VBox spacing="40" alignment="BOTTOM_CENTER">
+                    <ImageView fitHeight="80" fitWidth="80">
+                        <Image url="@../Images/AppIcons/waiting_player.gif"/>
+                    </ImageView>
+                    <TextArea styleClass="small-text-label" wrapText="true" maxHeight="60" minHeight="60" editable="false" mouseTransparent="true">
+                        Waiting for
+                        Player
+                    </TextArea>
+                </VBox>
+            </StackPane>
+
+            <!-- StackPane for LOCKED_PLAYER_SLOT  -->
+            <StackPane fx:id="lockPlayer4" styleClass="stackPane-playerSlot, lockedPlayerSlot">
+                <ImageView fitHeight="80" fitWidth="80">
                     <Image url="@../Images/AppIcons/LockIcon.png"/>
                 </ImageView>
             </StackPane>
