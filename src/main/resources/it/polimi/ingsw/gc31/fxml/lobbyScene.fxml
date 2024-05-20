@@ -81,7 +81,7 @@
                     <ImageView fitHeight="80" fitWidth="80">
                         <Image url="@../Images/AppIcons/waiting_player.gif"/>
                     </ImageView>
-                    <TextArea styleClass="small-text-label" wrapText="true" maxHeight="60" minHeight="60" editable="false" mouseTransparent="true">
+                    <TextArea styleClass="player-text-field" wrapText="true" maxHeight="60" minHeight="60" editable="false" mouseTransparent="true">
                         Waiting for
                         Player
                     </TextArea>
@@ -121,7 +121,7 @@
                     <ImageView fitHeight="80" fitWidth="80">
                         <Image url="@../Images/AppIcons/waiting_player.gif"/>
                     </ImageView>
-                    <TextArea styleClass="small-text-label" wrapText="true" maxHeight="60" minHeight="60" editable="false" mouseTransparent="true">
+                    <TextArea styleClass="player-text-field" wrapText="true" maxHeight="60" minHeight="60" editable="false" mouseTransparent="true">
                         Waiting for
                         Player
                     </TextArea>
@@ -168,7 +168,7 @@
                     <ImageView fitHeight="80" fitWidth="80">
                         <Image url="@../Images/AppIcons/waiting_player.gif"/>
                     </ImageView>
-                    <TextArea styleClass="small-text-label" wrapText="true" maxHeight="60" minHeight="60" editable="false" mouseTransparent="true">
+                    <TextArea styleClass="player-text-field" wrapText="true" maxHeight="60" minHeight="60" editable="false" mouseTransparent="true">
                         Waiting for
                         Player
                     </TextArea>

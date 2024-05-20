@@ -1,15 +1,19 @@
 
 package it.polimi.ingsw.gc31.view.gui;
 
+import java.io.Reader;
 import java.rmi.RemoteException;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import javafx.application.Platform;
 import it.polimi.ingsw.gc31.view.UI;
-
+import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
+import com.google.gson.reflect.TypeToken;
 import java.util.List;
+import java.util.Map;
 
 public class GUI extends UI {
+
 
     GUIApplication app;
 
@@ -40,12 +44,22 @@ public class GUI extends UI {
 
     @Override
     public void show_listGame(List<String> listGame) throws RemoteException {
-
+        //gsonTranslater.fromJson((Reader) listGame, new TypeToken<List<String>>(){}.getType());??
+        for (String string : listGame) {
+            System.out.println(string);
+        }
     }
 
     @Override
     public void show_gameCreated() {
-        //app.loadScene(SceneTag.LOBBY);
+        /*try {
+            app.setCurrentGameID(client.getGameID());
+            app.setNumberOfPlayers(3);
+            //TODO app.setNumberOfPlayers(client.getNumOfPlayers);
+            app.loadScene(SceneTag.LOBBY);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }*/
     }
 
     @Override
@@ -111,5 +125,9 @@ public class GUI extends UI {
 
 
 
-
 }
+
+//TODO client.getReady()
+//TODO client.getGamePlayerList or directly client.getClients
+//TODO client.getNumOfPlayers
+//TODO client.get

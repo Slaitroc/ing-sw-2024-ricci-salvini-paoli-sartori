@@ -22,6 +22,7 @@ public class GUIApplication extends Application {
     public static Stage primaryStage;
     private String username;
     private Integer numberOfPlayers;
+    private Integer currentGameID;
 
     @SuppressWarnings("unused")
 
@@ -31,15 +32,8 @@ public class GUIApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+
         initializeGUIResources();
-        /*try {
-            System.out.println("Initializing scenes...");
-            //System.out.println("Client is set to " + client.toString());
-            initializeScenesFXML();
-        } catch (GUISceneInitializationException e) {
-            e.printStackTrace();
-            System.err.println("GUI Scene Initialization Error! Wrong path...");
-        }*/
 
         // Set the scene
         primaryStage = stage;
@@ -59,39 +53,12 @@ public class GUIApplication extends Application {
         primaryStage.show();
     }
 
-    /*private void initializeScenesFXML() throws GUISceneInitializationException {
-        scenesMap = new HashMap<>();
-        wcMap = new HashMap<>();
-        FXMLLoader loader;
-        // Carica i file FXML
-        for (Map.Entry<SceneTag, String> entry : DefaultValues.getGuiFxmlScenes().entrySet()) {
-            System.out.println("Loading " + entry.getValue() + " ...");
-            loader = new FXMLLoader(getClass().getResource(entry.getValue()));
-            try {
-                Scene scene = new Scene(loader.load());
-                scenesMap.put(entry.getKey(), scene);
-                ViewController wc = loader.getController();
-                wc.setGUIApplication(this);
-                wc.setClient(client);
-                wcMap.put(entry.getKey(), wc);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
-
     private void initializeGUIResources() {
         Font.loadFont(getClass().getResource("/it/polimi/ingsw/gc31/Fonts/FrakturNo2.ttf").toExternalForm(),
                 10);
         Font.loadFont(getClass().getResource("/it/polimi/ingsw/gc31/Fonts/glimmerOfLight.otf").toExternalForm(),
                 10);
     }
-
-    /*public void loadScene(SceneTag tag) {
-        System.out.println("Loading scene " + tag.toString());
-        primaryStage.setScene(scenesMap.get(tag));
-        currentScene = tag;
-    }*/
 
     public void loadScene(SceneTag tag) {
 
@@ -148,5 +115,13 @@ public class GUIApplication extends Application {
 
     public void setNumberOfPlayers(Integer numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
+    }
+
+    public void setCurrentGameID(int gameID) {
+        this.currentGameID = gameID;
+    }
+
+    public int getCurrentGameID() {
+        return currentGameID;
     }
 }

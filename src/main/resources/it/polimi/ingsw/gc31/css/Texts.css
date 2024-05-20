@@ -1,24 +1,30 @@
-@import 'Colors.css';
 
-.text-field {
-    -mfx-editable: true;
-    -mfx-animated: true;
-    -mfx-caret-visible: true;
-    -mfx-float-mode: BORDER;
+.mfx-text-field {
     -fx-text-fill: -black;
     -mfx-text-limit: 20;
-    -fx-font: 20px "glimmerOfLight";
+    -fx-font: 20px "glimmer of light";
 }
 
-.small-text-field {
-    -mfx-editable: true;
-    -mfx-animated: true;
-    -mfx-caret-visible: true;
-    -mfx-float-mode: BORDER;
+
+.mfx-text-field .floating-text {
     -fx-text-fill: -black;
     -mfx-text-limit: 20;
-    -fx-font: 12px "glimmerOfLight";
+    -fx-font: 20px "glimmer of light";
 }
+
+
+.mfx-small-text-field {
+    -fx-text-fill: -black;
+    -mfx-text-limit: 10;
+    -fx-font: 12px "glimmer of light";
+}
+
+.mfx-small-text-field .floating-text {
+    -fx-text-fill: -black;
+    -mfx-text-limit: 10;
+    -fx-font: 12px "glimmer of light";
+}
+
 
 .player-text-field {
     -mfx-editable: false;
@@ -26,6 +32,6 @@
     -mfx-caret-visible: true;
     -mfx-float-mode: BORDER;
     -fx-text-fill: -black;
-    -fx-font-family:"glimmerOfLight";
-    -fx-font-size: 15px;
+    -fx-font-family:"glimmer of light";
+    -fx-font-size: 12px;
 }

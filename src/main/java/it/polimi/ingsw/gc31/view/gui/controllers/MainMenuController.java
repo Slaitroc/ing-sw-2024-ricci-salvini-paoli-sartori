@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.view.gui.controllers;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +13,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -21,12 +24,7 @@ import java.io.IOException;
 
 public class MainMenuController extends ViewController {
 
-
     boolean step1 = true;
-    private Stage stage;
-    private Parent root;
-    private Scene scene;
-
 
     @FXML
     public ImageView imageView1;
@@ -42,52 +40,53 @@ public class MainMenuController extends ViewController {
     public ImageView imageView6;
     @FXML
     public ImageView imageView7;
+    @FXML
+    public ImageView imageView8;
+    @FXML
+    public ImageView imageView9;
 
     @FXML
-    public StackPane loginMenu;
+    public StackPane createGameMenu;
     @FXML
     public StackPane generalMenu;
+    @FXML
+    public StackPane joinGameMenu;
     @FXML
     public MFXComboBox<Integer> comboBox;
     @FXML
     public MFXButton createGameButton;
+    @FXML
+    public MFXTextField gameID;
 
-    /**
-     * This method allows to initialize the fxml's attributes defined in the code
-     * and used in the .fxml file. It must be
-     * named initialize()...javafx needs it this way
-     */
     @Override
     @FXML
     protected void initialize() {
         comboBox.setItems(FXCollections.observableArrayList(2, 3, 4));
     }
 
-
     public void createGame() {
         app.setNumberOfPlayers(comboBox.getValue());
         if (app.getNumberOfPlayers() != null) {
             try {
                 app.getClient().createGame(app.getNumberOfPlayers());
-                /*scene = new Scene(root);
-                stage.setScene(scene);
-                stage.show();*/
+                app.setCurrentGameID(app.getClient().getGameID());
+                System.out.println("GameID: " + app.getCurrentGameID());
                 app.loadScene(SceneTag.LOBBY);
             } catch (IOException e) {
                 Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error 505");
                 alert.setHeaderText("Server Error");
-                alert.setContentText("Server has crashed. Restart application");
+                alert.setContentText("Server has crashed. Please restart application");
 
                 alert.showAndWait();
             }
         }
     }
 
-    public void showLoginMenu() {
+    public void showCreateGameMenu() {
         if (step1) {
-            loginMenu.setVisible(true);
-            loginMenu.setManaged(true);
+            createGameMenu.setVisible(true);
+            createGameMenu.setManaged(true);
 
             generalMenu.setVisible(false);
             generalMenu.setManaged(false);
@@ -99,8 +98,10 @@ public class MainMenuController extends ViewController {
 
             step1 = false;
         } else {
-            loginMenu.setVisible(false);
-            loginMenu.setManaged(false);
+            createGameMenu.setVisible(false);
+            createGameMenu.setManaged(false);
+            joinGameMenu.setVisible(false);
+            joinGameMenu.setManaged(false);
 
             generalMenu.setVisible(true);
             generalMenu.setManaged(true);
@@ -115,12 +116,37 @@ public class MainMenuController extends ViewController {
         }
     }
 
+    public void showJoinGameMenu() {
+        joinGameMenu.setVisible(true);
+        joinGameMenu.setManaged(true);
+
+        generalMenu.setVisible(false);
+        generalMenu.setManaged(false);
+
+        createGameButton.setText("Back");
+
+        imageView2.setVisible(false);
+
+        step1=false;
+    }
+
     public void joinGame() {
-        // TODO
+        System.out.println("Joining game with ID: " + gameID.getText());
+        try {
+            app.getClient().joinGame(Integer.parseInt(gameID.getText()));
+            app.loadScene(SceneTag.LOBBY);
+        } catch (IOException e) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error 505");
+            alert.setHeaderText("Server Error");
+            alert.setContentText("Server has crashed. Please restart application");
+
+            alert.showAndWait();
+        }
     }
 
     public void showGames() {
-        // TODO
+
     }
 
     public void showRules() {
@@ -165,6 +191,17 @@ public class MainMenuController extends ViewController {
     }
 
     @FXML
+    public void showPointer8() {
+        imageView8.setVisible(true);
+    }
+
+    @FXML
+    public void showPointer9() {
+        imageView9.setVisible(true);
+    }
+
+
+    @FXML
     private void hidePointer1() {
         if (step1) imageView1.setVisible(false);
         if (!step1) imageView6.setVisible(false);
@@ -195,5 +232,20 @@ public class MainMenuController extends ViewController {
         imageView7.setVisible(false);
     }
 
+    @FXML
+    public void hidePointer8() {
+        imageView8.setVisible(false);
+    }
 
+    @FXML
+    public void hidePointer9() {
+        imageView9.setVisible(false);
+    }
+
+    @FXML
+    public void handleEnterKeyPressed(KeyEvent keyEvent) {
+        if (keyEvent.getCode().getName().equals("Enter")) {
+            joinGame();
+        }
+    }
 }

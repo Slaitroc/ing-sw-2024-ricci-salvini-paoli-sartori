@@ -11,4 +11,11 @@
             fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.GameListController"
             prefHeight="400.0" prefWidth="600.0">
 
+    <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0">
+        <columns>
+            <TableColumn fx:id="nameColumn" prefWidth="100.0" text="Name" />
+            <TableColumn fx:id="ageColumn" prefWidth="100.0" text="Age" />
+        </columns>
+    </TableView>
+
 </AnchorPane>
