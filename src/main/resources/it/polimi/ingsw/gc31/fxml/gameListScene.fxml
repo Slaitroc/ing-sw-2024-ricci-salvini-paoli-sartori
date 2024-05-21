@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.GameListController"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/stileFxml.css">
 
-    <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0">
-        <columns>
-            <TableColumn fx:id="nameColumn" prefWidth="100.0" text="Name" />
-            <TableColumn fx:id="ageColumn" prefWidth="100.0" text="Age" />
-        </columns>
-    </TableView>
+    <padding>
+        <Insets bottom="20" left="30" right="30" top="20"/>
+    </padding>
+
+    <VBox alignment="CENTER" spacing="30">
+        <MFXButton layoutX="188.0" layoutY="349.0" onAction="#goMainMenu" prefWidth="250"
+                   styleClass="small-button, rounded-button" text="Back"/>
+        <TableView fx:id="tableView" styleClass="mfx-table-view, rounded-button, column-header">
+            <columns>
+                <TableColumn fx:id="gameIDColumn" prefWidth="150.0" text="Game ID" />
+                <TableColumn fx:id="playersColumn" prefWidth="150.0" text="Players in Game" />
+                <TableColumn fx:id="joinButtonsColumn" prefWidth="150.0" text="Enter Game" />
+            </columns>
+        </TableView>
+    </VBox>
 
 </AnchorPane>

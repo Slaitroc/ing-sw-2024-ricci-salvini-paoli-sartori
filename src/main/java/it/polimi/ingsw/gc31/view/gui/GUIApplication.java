@@ -13,6 +13,7 @@ import java.io.IOException;
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.view.gui.controllers.ViewController;
 
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -23,6 +24,7 @@ public class GUIApplication extends Application {
     private String username;
     private Integer numberOfPlayers;
     private Integer currentGameID;
+    private List<String> listGames;
 
     @SuppressWarnings("unused")
 
@@ -123,5 +125,13 @@ public class GUIApplication extends Application {
 
     public int getCurrentGameID() {
         return currentGameID;
+    }
+
+    public void setListGames(List<String> listGames){
+                this.listGames = listGames;
+    }
+
+    public List<String> getListGames(){
+        return this.listGames;
     }
 }
