@@ -4,7 +4,7 @@ import java.util.List;
 
 import it.polimi.ingsw.gc31.view.UI;
 
-public class ShowGamesObj implements ClientQueueObject {
+public class ShowGamesObj extends ClientQueueObject {
 
     private final List<String> gameList;
 

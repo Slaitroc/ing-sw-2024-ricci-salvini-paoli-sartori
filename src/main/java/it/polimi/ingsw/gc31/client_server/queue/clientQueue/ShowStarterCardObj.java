@@ -2,7 +2,7 @@ package it.polimi.ingsw.gc31.client_server.queue.clientQueue;
 
 import it.polimi.ingsw.gc31.view.UI;
 
-public class ShowStarterCardObj implements ClientQueueObject{
+public class ShowStarterCardObj extends ClientQueueObject {
     private final String starterCard;
 
     public ShowStarterCardObj(String starterCard) {

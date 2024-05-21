@@ -140,9 +140,8 @@ public class GUI extends UI {
         throw new UnsupportedOperationException("Unimplemented method 'show_resourceDeck'");
     }
 
-
     @Override
-    public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2){
+    public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_chooseObjectiveCard'");
     }
@@ -151,6 +150,24 @@ public class GUI extends UI {
     public void show_objectiveCard(ObjectiveCard objectiveCard) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_objectiveCard'");
+    }
+
+    @Override
+    public void show_chatMessage(String username, String message) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_chatMessage'");
+    }
+
+    @Override
+    public void show_gameDoesNotExist() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_gameDoesNotExist'");
+    }
+
+    @Override
+    public void show_wrongGameSize() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_wrongGameSize'");
     }
 
 }

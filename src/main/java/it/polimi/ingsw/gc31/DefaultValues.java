@@ -87,4 +87,11 @@ public class DefaultValues {
     // Model
     public final static String DEFAULT_USERNAME = "New User";
 
+    // NETWORK
+    public final static String RECIPIENT_CONTROLLER = "controller";
+    public final static String RECIPIENT_GAME_CONTROLLER = "gameController";
+    public final static String RECIPIENT_UI = "ui";
+    public final static String RECIPIENT_VC = "virtualClient";
+    public final static String RECIPIENT_CC = "clientCommands";
+
 }

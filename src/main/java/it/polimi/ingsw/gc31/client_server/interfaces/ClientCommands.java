@@ -10,7 +10,9 @@ public interface ClientCommands {
 
     void setUI(UI ui);
 
-    void setUsername(String username) throws IOException;
+    void setUsernameCall(String username) throws IOException;
+
+    void setUsernameResponse(String username);
 
     void createGame(int maxNumberPlayer) throws RemoteException, IOException;
 
@@ -36,9 +38,9 @@ public interface ClientCommands {
 
     void chooseSecretObjective2() throws RemoteException;
 
-    int getGameID() throws RemoteException;
+    int getGameID() throws RemoteException; // FIX serve?
 
-    String getUsername();
+    String getUsername();// FIX serve?
 
     void sendChatMessage(String username, String message) throws RemoteException;
 

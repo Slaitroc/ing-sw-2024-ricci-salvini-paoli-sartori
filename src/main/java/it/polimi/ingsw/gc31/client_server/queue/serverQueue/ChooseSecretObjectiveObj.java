@@ -1,13 +1,15 @@
 package it.polimi.ingsw.gc31.client_server.queue.serverQueue;
 
+import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
 import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.model.GameModel;
 import it.polimi.ingsw.gc31.model.player.Player;
 
-public class ChooseSecretObjectiveObj implements ServerQueueObject {
-    private final Integer choice;
-    private final String username;
+public class ChooseSecretObjectiveObj extends ServerQueueObject {
+
+    int choice;
+    String username;
 
     public ChooseSecretObjectiveObj(String username, int index) {
         this.username = username;
@@ -22,4 +24,11 @@ public class ChooseSecretObjectiveObj implements ServerQueueObject {
     @Override
     public void execute(Controller controller) {
     }
+
+    @Override
+    public void execute(RmiServer server) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'execute'");
+    }
+
 }

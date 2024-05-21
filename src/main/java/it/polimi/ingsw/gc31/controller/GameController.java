@@ -19,9 +19,6 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.NewChatMessage;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowReadyStatusObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.StartGameObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChooseSecretObjectiveObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawGoldObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawGoldOneObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawGoldTwoObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResOneObj;
@@ -251,8 +248,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * hand.
      *
      */
-    public void drawGold(String username){
-        if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN || model.getGameState() == GameState.SHOWDOWN) {
+    public void drawGold(String username) {
+        if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
+                || model.getGameState() == GameState.SHOWDOWN) {
             if (playerList.get(username).drawGold()) {
                 model.endTurn();
             }
@@ -270,7 +268,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void drawGoldCard1(String username) throws RemoteException {
         if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
                 || model.getGameState() == GameState.SHOWDOWN) {
-            //addQueueObj(new DrawGoldOneObj(playerList.get(username), model));
+            // addQueueObj(new DrawGoldOneObj(playerList.get(username), model));
         } else {
             gameControllerWrite("The game is not in the right state to draw");
         }
@@ -301,7 +299,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void drawResource(String username) throws RemoteException {
         if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
                 || model.getGameState() == GameState.SHOWDOWN) {
-            addQueueObj(new DrawResObj(playerList.get(username), model));
+            addQueueObj(new DrawResObj(username));
         } else {
             gameControllerWrite("The game is not in the right state to draw");
         }
@@ -317,7 +315,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void drawResourceCard1(String username) throws RemoteException {
         if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
                 || model.getGameState() == GameState.SHOWDOWN) {
-            addQueueObj(new DrawResOneObj(playerList.get(username), model));
+            addQueueObj(new DrawResOneObj(username));
         } else {
             gameControllerWrite("The game is not in the right state to draw");
         }
@@ -333,7 +331,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void drawResourceCard2(String username) throws RemoteException {
         if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
                 || model.getGameState() == GameState.SHOWDOWN) {
-            addQueueObj(new DrawResTwoObj(playerList.get(username), model));
+            addQueueObj(new DrawResTwoObj(username));
         } else {
             gameControllerWrite("The game is not in the right state to draw");
         }
@@ -350,7 +348,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void play(String username, int x, int y) {
         if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
                 || model.getGameState() == GameState.SHOWDOWN) {
-            addQueueObj(new PlayObj(playerList.get(username), model, x, y));
+            addQueueObj(new PlayObj(username, x, y));
         } else {
             gameControllerWrite("The game is not in the right state to play");
         }
@@ -360,7 +358,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     @Override
     public void playStarter(String username) {
         if (model.getGameState() == GameState.SETUP) {
-            addQueueObj(new PlayStarterObj(playerList.get(username), model));
+            addQueueObj(new PlayStarterObj(username));
         } else {
             gameControllerWrite("The game is not in the right state to play starter");
         }

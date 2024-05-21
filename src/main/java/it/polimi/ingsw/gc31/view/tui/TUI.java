@@ -168,7 +168,7 @@ public class TUI extends UI {
         }
         res.append(ansi().cursor(endRow, initialColumn).fg(WHITE).a("└")
                 .a(String.valueOf("─").repeat(endColumn - initialColumn - 1)).a("┘"));
-        res.append(ansi().cursor(initialRow-1, initialColumn+1).a(titleArea.toUpperCase()));
+        res.append(ansi().cursor(initialRow - 1, initialColumn + 1).a(titleArea.toUpperCase()));
         System.out.println(res);
     }
 
@@ -222,20 +222,20 @@ public class TUI extends UI {
             // not printed
             if (relative_y > overFlowUp && relative_y < overFlowDown) {
                 line = "┌" + String.valueOf("─").repeat(CARD_LENGTH - 2) + "┐";
-//                line = "▏" + String.valueOf("▔").repeat(CARD_LENGTH - 2) + "▕";
+                // line = "▏" + String.valueOf("▔").repeat(CARD_LENGTH - 2) + "▕";
                 if (relative_x + line.length() > overFlowRight) {
                     line = line.substring(0, overFlowRight - relative_x);
                     res.append(ansi().cursor(relative_y, relative_x)
-                            //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                            // .bgRgb(cardColor[0], cardColor[1], cardColor[2])
                             .a(line).reset());
                 } else if (overFlowLeft - relative_x >= 0) {
                     line = line.substring(overFlowLeft - relative_x + 1);
                     res.append(ansi().cursor(relative_y, overFlowLeft + 1)
-                            //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                            // .bgRgb(cardColor[0], cardColor[1], cardColor[2])
                             .a(line).reset());
                 } else {
                     res.append(ansi().cursor(relative_y, relative_x)
-                            //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                            // .bgRgb(cardColor[0], cardColor[1], cardColor[2])
                             .a(line).reset());
                 }
             }
@@ -246,23 +246,23 @@ public class TUI extends UI {
                 // printed
                 if (relative_y + i > overFlowUp && relative_y + i < overFlowDown) {
                     line = "│" + String.valueOf(" ").repeat(CARD_LENGTH - 2) + "│";
-//                    line = "▏" + String.valueOf(" ").repeat(CARD_LENGTH - 2) + "▕";
+                    // line = "▏" + String.valueOf(" ").repeat(CARD_LENGTH - 2) + "▕";
                     // if part of the line exceeds the right limit, the excess part is cut off
                     if (relative_x + line.length() > overFlowRight) {
                         line = line.substring(0, overFlowRight - relative_x);
                         res.append(ansi().cursor(relative_y + i, relative_x)
-                                //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                                // .bgRgb(cardColor[0], cardColor[1], cardColor[2])
                                 .a(line).reset());
                     }
                     // If part of the line exceeds the left limit, the excess part is cut off
                     else if (overFlowLeft - relative_x >= 0) {
                         line = line.substring(overFlowLeft - relative_x + 1);
                         res.append(ansi().cursor(relative_y + i, overFlowLeft + 1)
-                                //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                                // .bgRgb(cardColor[0], cardColor[1], cardColor[2])
                                 .a(line).reset());
                     } else {
                         res.append(ansi().cursor(relative_y + i, relative_x)
-                                //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                                // .bgRgb(cardColor[0], cardColor[1], cardColor[2])
                                 .a(line).reset());
                     }
                 }
@@ -273,29 +273,28 @@ public class TUI extends UI {
             // printed
             if (relative_y + CARD_HEIGHT - 1 > overFlowUp && relative_y + CARD_HEIGHT - 1 < overFlowDown) {
                 line = "└" + String.valueOf("─").repeat(CARD_LENGTH - 2) + "┘";
-//                line = "▏" + String.valueOf("▁").repeat(CARD_LENGTH - 2) + "▕";
+                // line = "▏" + String.valueOf("▁").repeat(CARD_LENGTH - 2) + "▕";
                 // if part of the line exceeds the right limit, the excess part is cut off
                 if (relative_x + line.length() > overFlowRight) {
                     line = line.substring(0, overFlowRight - relative_x);
                     res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
-                            //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                            // .bgRgb(cardColor[0], cardColor[1], cardColor[2])
                             .a(line).reset());
                 }
                 // If part of the line exceeds the left limit, the excess part is cut off
                 else if (overFlowLeft - relative_x >= 0) {
                     line = line.substring(overFlowLeft - relative_x + 1);
                     res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, overFlowLeft + 1)
-                            //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                            // .bgRgb(cardColor[0], cardColor[1], cardColor[2])
                             .a(line).reset());
                 } else {
                     res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
-                            //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                            // .bgRgb(cardColor[0], cardColor[1], cardColor[2])
                             .a(line).reset());
                 }
             }
 
-
-            res.append(ansi().cursor(relative_y+CARD_HEIGHT/2, relative_x+CARD_LENGTH/4).a(card.getScore()));
+            res.append(ansi().cursor(relative_y + CARD_HEIGHT / 2, relative_x + CARD_LENGTH / 4).a(card.getScore()));
             res.append(
                     ansi().cursor(relative_y + CARD_HEIGHT / 2 - 2, relative_x + CARD_LENGTH / 2).saveCursorPosition());
             res.append(card.getObjective().print());
@@ -305,7 +304,8 @@ public class TUI extends UI {
         }
     }
 
-    protected void print_PlayableCard(PlayableCard card, int relative_x, int relative_y, int overFlowUp, int overFlowDown,
+    protected void print_PlayableCard(PlayableCard card, int relative_x, int relative_y, int overFlowUp,
+            int overFlowDown,
             int overFlowLeft, int overFlowRight) {
         // the card is printed starting from the top left corner
 
@@ -491,7 +491,7 @@ public class TUI extends UI {
                 // TODO aggiungere limiti
                 if (score != 0 && ob != null) {
                     res.append(ansi().cursor(relative_y + 1, relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) / 2)
-                                    .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
+                            .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
                             .a(String.valueOf(" ").repeat(CARD_CORNER_LENGTH)));
                     res.append(ansi().cursor(relative_y + 1, relative_x + CARD_LENGTH / 2 - 1)
                             .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
@@ -501,7 +501,8 @@ public class TUI extends UI {
                             .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
                             .a(String.valueOf(" ").repeat(CARD_CORNER_LENGTH)));
                     res.append(ansi().cursor(relative_y + 1, relative_x + CARD_LENGTH / 2)
-                            .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).fg(BLACK).a(score).reset());
+                            .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).fg(BLACK).a(score)
+                            .reset());
                 }
 
             }
@@ -665,8 +666,9 @@ public class TUI extends UI {
             }
 
             if (resources.size() > 4) {
-                res.append(ansi().cursor(relative_y+CARD_HEIGHT/2, relative_x+CARD_LENGTH/2-1)
-                        .bgRgb(RGB_COLOR_CORNER[0],RGB_COLOR_CORNER[1],RGB_COLOR_CORNER[2]).a(" "+resources.get(4).getSymbol()+" "));
+                res.append(ansi().cursor(relative_y + CARD_HEIGHT / 2, relative_x + CARD_LENGTH / 2 - 1)
+                        .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
+                        .a(" " + resources.get(4).getSymbol() + " "));
             }
 
             System.out.println(res);
@@ -1253,6 +1255,27 @@ public class TUI extends UI {
         }).start();
     }
 
+    private Queue<StringBuilder> playViewUpdate = new ArrayDeque<StringBuilder>();
+
+    private void playView() {
+        new Thread(() -> {
+            while (true) {
+                synchronized (playViewUpdate) {
+                    if (playViewUpdate.isEmpty()) {
+                        try {
+                            playViewUpdate.wait();
+                            System.out.println(playViewUpdate.poll());
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                resetCursor();
+            }
+
+        }).start();
+    }
+
     @Override
     public void show_chatMessage(String username, String message) {
         chatMessages.add(username + ": " + message);
@@ -1348,6 +1371,7 @@ public class TUI extends UI {
 
         chatBoard();
         chatReader();
+        playView();
         commandLineOut();
 
     }
@@ -1404,55 +1428,83 @@ public class TUI extends UI {
 
     @Override
     public void show_goldDeck(String firstCardDeck, String card1, String card2) {
+        synchronized (playViewUpdate) {
+            playViewUpdate.add(new StringBuilder("Update Deck"));
+            playViewUpdate.notify();
+        }
     }
 
     @Override
     public void show_handPlayer(String username, List<PlayableCard> hand) {
-        int index = 0;
-        //print_HandAreaBorders();
-        for (PlayableCard card : hand) {
-            print_PlayableCard(
-                    card,
-                    HAND_INITIAL_COLUMN + 1 + (CARD_LENGTH + 1) * index,
-                    HAND_INITIAL_ROW + 1,
-                    HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN);
-            System.out.println(ansi().cursor(HAND_END_ROW-1, HAND_INITIAL_COLUMN+1+CARD_LENGTH/2+(CARD_LENGTH+1)*index).a(index+1));
-            index++;
+        synchronized (playViewUpdate) {
+            playViewUpdate.add(new StringBuilder()
+                    .append(Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW, CHAT_BOARD_INITIAL_COLUMN).a("Update Hand")));
+            playViewUpdate.notify();
         }
-        resetCursor();
+
+        // int index = 0;
+        // // print_HandAreaBorders();
+        // for (PlayableCard card : hand) {
+        // print_PlayableCard(
+        // card,
+        // HAND_INITIAL_COLUMN + 1 + (CARD_LENGTH + 1) * index,
+        // HAND_INITIAL_ROW + 1,
+        // HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN);
+        // System.out.println(ansi()
+        // .cursor(HAND_END_ROW - 1, HAND_INITIAL_COLUMN + 1 + CARD_LENGTH / 2 +
+        // (CARD_LENGTH + 1) * index)
+        // .a(index + 1));
+        // index++;
+        // }
+        // resetCursor();
     }
 
     @Override
     public void show_objectiveCard(ObjectiveCard objectiveCard) {
-        clearArea(CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN, CHOOSE_OBJECTIVE_END_ROW, CHOOSE_OBJECTIVE_END_COLUMN);
-        System.out.print(ansi().cursor(OBJECTIVE_INITIAL_ROW-1, OBJECTIVE_INITIAL_COLUMN).a("Your Objective Card"));
-        print_ObjectiveCard(
-                objectiveCard,
-                OBJECTIVE_INITIAL_COLUMN+1,
-                OBJECTIVE_INITIAL_ROW+1,
-                OBJECTIVE_INITIAL_ROW, OBJECTIVE_END_ROW, OBJECTIVE_INITIAL_COLUMN, OBJECTIVE_END_COLUMN
-        );
+        // clearArea(CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN,
+        // CHOOSE_OBJECTIVE_END_ROW,
+        // CHOOSE_OBJECTIVE_END_COLUMN);
+        // System.out.print(ansi().cursor(OBJECTIVE_INITIAL_ROW - 1,
+        // OBJECTIVE_INITIAL_COLUMN).a("Your Objective Card"));
+        // print_ObjectiveCard(
+        // objectiveCard,
+        // OBJECTIVE_INITIAL_COLUMN + 1,
+        // OBJECTIVE_INITIAL_ROW + 1,
+        // OBJECTIVE_INITIAL_ROW, OBJECTIVE_END_ROW, OBJECTIVE_INITIAL_COLUMN,
+        // OBJECTIVE_END_COLUMN);
     }
 
     @Override
     public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
-        clearArea(CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN, CHOOSE_OBJECTIVE_END_ROW, CHOOSE_OBJECTIVE_END_COLUMN);
-        print_Borders("Choose Objective Card: ", CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN, CHOOSE_OBJECTIVE_END_ROW, CHOOSE_OBJECTIVE_END_COLUMN);
-        print_ObjectiveCard(
-                objectiveCard1,
-                CHOOSE_OBJECTIVE_INITIAL_COLUMN+1,
-                CHOOSE_OBJECTIVE_INITIAL_ROW+1,
-                CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_END_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN, CHOOSE_OBJECTIVE_END_COLUMN
-        );
-        System.out.println(ansi().cursor(CHOOSE_OBJECTIVE_INITIAL_ROW+1+CARD_HEIGHT,CHOOSE_OBJECTIVE_INITIAL_COLUMN+2).a("Objective Card 1"));
-        print_ObjectiveCard(
-                objectiveCard2,
-                CHOOSE_OBJECTIVE_INITIAL_COLUMN+1,
-                CHOOSE_OBJECTIVE_INITIAL_ROW+2+CARD_HEIGHT,
-                CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_END_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN, CHOOSE_OBJECTIVE_END_COLUMN
-        );
-        System.out.println(ansi().cursor(CHOOSE_OBJECTIVE_INITIAL_ROW+2+CARD_HEIGHT*2,CHOOSE_OBJECTIVE_INITIAL_COLUMN+2).a("Objective Card 2"));
-        resetCursor();
+        // clearArea(CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN,
+        // CHOOSE_OBJECTIVE_END_ROW,
+        // CHOOSE_OBJECTIVE_END_COLUMN);
+        // print_Borders("Choose Objective Card: ", CHOOSE_OBJECTIVE_INITIAL_ROW,
+        // CHOOSE_OBJECTIVE_INITIAL_COLUMN,
+        // CHOOSE_OBJECTIVE_END_ROW, CHOOSE_OBJECTIVE_END_COLUMN);
+        // print_ObjectiveCard(
+        // objectiveCard1,
+        // CHOOSE_OBJECTIVE_INITIAL_COLUMN + 1,
+        // CHOOSE_OBJECTIVE_INITIAL_ROW + 1,
+        // CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_END_ROW,
+        // CHOOSE_OBJECTIVE_INITIAL_COLUMN,
+        // CHOOSE_OBJECTIVE_END_COLUMN);
+        // System.out.println(
+        // ansi().cursor(CHOOSE_OBJECTIVE_INITIAL_ROW + 1 + CARD_HEIGHT,
+        // CHOOSE_OBJECTIVE_INITIAL_COLUMN + 2)
+        // .a("Objective Card 1"));
+        // print_ObjectiveCard(
+        // objectiveCard2,
+        // CHOOSE_OBJECTIVE_INITIAL_COLUMN + 1,
+        // CHOOSE_OBJECTIVE_INITIAL_ROW + 2 + CARD_HEIGHT,
+        // CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_END_ROW,
+        // CHOOSE_OBJECTIVE_INITIAL_COLUMN,
+        // CHOOSE_OBJECTIVE_END_COLUMN);
+        // System.out.println(
+        // ansi().cursor(CHOOSE_OBJECTIVE_INITIAL_ROW + 2 + CARD_HEIGHT * 2,
+        // CHOOSE_OBJECTIVE_INITIAL_COLUMN + 2)
+        // .a("Objective Card 2"));
+        // resetCursor();
     }
 
     @Override
@@ -1471,7 +1523,9 @@ public class TUI extends UI {
     public void show_validUsername(String username) {
         printToCmdLineOut(serverWrite("Username accepted"));
         printToCmdLineOut(tuiWrite("Your name is: " + username));
+        client.setUsernameResponse(username);
         state.command_showCommandsInfo();
+        state.stateNotify();
 
     }
 
@@ -1486,6 +1540,8 @@ public class TUI extends UI {
         printToCmdLineOut(serverWrite("Joined to game: " + id));
         state = new JoinedToGameState(this);
         state.command_showCommandsInfo();
+        state.stateNotify();
+
     }
 
     @Override
@@ -1500,6 +1556,7 @@ public class TUI extends UI {
         printToCmdLineOut(serverWrite("New game created with ID: " + gameID));
         state = new JoinedToGameState(this);
         state.command_showCommandsInfo();
+        state.stateNotify();
     }
 
     @Override

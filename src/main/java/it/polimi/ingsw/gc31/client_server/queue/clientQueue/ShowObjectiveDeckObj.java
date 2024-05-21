@@ -2,7 +2,7 @@ package it.polimi.ingsw.gc31.client_server.queue.clientQueue;
 
 import it.polimi.ingsw.gc31.view.UI;
 
-public class ShowObjectiveDeckObj implements ClientQueueObject{
+public class ShowObjectiveDeckObj extends ClientQueueObject {
     private final String firstCardDeck;
     private final String card1;
     private final String card2;

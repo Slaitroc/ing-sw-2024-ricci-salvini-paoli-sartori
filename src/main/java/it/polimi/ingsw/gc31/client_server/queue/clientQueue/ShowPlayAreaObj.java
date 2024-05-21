@@ -2,7 +2,7 @@ package it.polimi.ingsw.gc31.client_server.queue.clientQueue;
 
 import it.polimi.ingsw.gc31.view.UI;
 
-public class ShowPlayAreaObj implements ClientQueueObject{
+public class ShowPlayAreaObj extends ClientQueueObject {
     private final String username;
     private final String playArea;
     private final String achievedResources;
