@@ -9,8 +9,6 @@ import java.rmi.RemoteException;
 
 public interface IGameController extends Remote {
 
-    void drawGold(String username) throws RemoteException;
-
     void drawGoldCard1(String username) throws RemoteException;
 
     void drawGoldCard2(String username) throws RemoteException;
@@ -20,10 +18,6 @@ public interface IGameController extends Remote {
     void drawResourceCard1(String username) throws RemoteException;
 
     void drawResourceCard2(String username) throws RemoteException;
-
-    void chooseSecretObjective1(String username) throws RemoteException;
-
-    void chooseSecretObjective2(String username) throws RemoteException;
 
     void play(String username, int x, int y) throws RemoteException;
 

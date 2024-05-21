@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.listeners;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowObjectiveDeckObj;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 
@@ -19,9 +20,10 @@ public class ObjectiveDeckListener implements Listener<Deck> {
     @Override
     public void update(Deck data) throws RemoteException {
         // serve il riferimento a game controller per creare il queue obj corrispondente
-        client.show_objectiveDeck(
-                gsonTranslater.toJson(data.peekCard(), ObjectiveCard.class),
+        client.sendCommand(new ShowObjectiveDeckObj(
+                gsonTranslater.toJson(data.peekCard(),ObjectiveCard.class),
                 gsonTranslater.toJson(data.peekCard1(), ObjectiveCard.class),
-                gsonTranslater.toJson(data.peekCard2(), ObjectiveCard.class));
+                gsonTranslater.toJson(data.peekCard2(), ObjectiveCard.class)
+        ));
     }
 }

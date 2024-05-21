@@ -60,7 +60,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testSameUsernames() throws PlayerNicknameAlreadyExistsException {
+    public void testSameUsernames() throws PlayerNicknameAlreadyExistsException, RemoteException {
         controller.connect(mockClient, "Player");
         assertThrows(PlayerNicknameAlreadyExistsException.class, () -> controller.connect(mockClient, "Player"));
     }
@@ -87,13 +87,13 @@ public class ControllerTest {
         System.out.println("Current Game Cycle is: ");
         for (int i = 0; i < gameModel.getNumOfPlayers() - 1; i++) {
             playerList.add(gameModel.getCurrPlayingPlayer().getUsername());
-            gameController1.chooseSecretObjective1(gameModel.getCurrPlayingPlayer().getUsername());
+            gameController1.chooseSecretObjective(gameModel.getCurrPlayingPlayer().getUsername(), 1);
             gameController1.playStarter(gameModel.getCurrPlayingPlayer().getUsername());
             gameModel.setNextPlayingPlayer();
         }
         // System.out.println(playingPlayer);
         playerList.add(gameModel.getCurrPlayingPlayer().getUsername());
-        gameController1.chooseSecretObjective2(gameModel.getCurrPlayingPlayer().getUsername());
+        gameController1.chooseSecretObjective(gameModel.getCurrPlayingPlayer().getUsername(), 2);
         gameController1.changeStarterSide(gameModel.getCurrPlayingPlayer().getUsername());
         gameController1.changeStarterSide(gameModel.getCurrPlayingPlayer().getUsername());
         gameController1.playStarter(gameModel.getCurrPlayingPlayer().getUsername());

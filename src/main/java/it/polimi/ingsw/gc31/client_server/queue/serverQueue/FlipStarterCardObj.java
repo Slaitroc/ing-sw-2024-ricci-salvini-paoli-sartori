@@ -15,10 +15,6 @@ public class FlipStarterCardObj extends ServerQueueObject {
 
     @Override
     public void execute(GameController gameController) {
-        if (player.getPlayArea().getPlacedCards().isEmpty()) {
-            player.getStarterCard().changeSide();
-        } else
-            System.out.println("Cannot flip already placed Starter Card");
     }
 
     @Override
