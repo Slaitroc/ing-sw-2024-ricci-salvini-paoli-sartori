@@ -1,9 +1,4 @@
 @import 'Colors.css';
-@import 'Texts.css';
-@import 'Buttons.css';
-@import 'Panes.css';
-@import 'Labels.css';
-
 
 .vbox {
   -fx-background-color: -white;

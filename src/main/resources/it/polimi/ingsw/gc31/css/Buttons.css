@@ -59,6 +59,10 @@
     -mfx-ripple-color: rgba(255, 255, 255, 0.5);
 }
 
+.mfx-combo-box .text-field {
+    -fx-background-radius: 20;
+}
+
 .mfx-combo-box-cell {
     -mfx-main: -mfx-purple;
     -mfx-hover: rgba(98, 0, 238, 0.1);

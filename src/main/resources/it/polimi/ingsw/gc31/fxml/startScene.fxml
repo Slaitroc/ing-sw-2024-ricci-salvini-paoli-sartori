@@ -8,11 +8,11 @@
 <VBox alignment="CENTER" spacing="20" xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.StartController"
-      stylesheets="@../css/stileFxml.css" styleClass="stackPane-default">
+      stylesheets="@../css/Commons.css" styleClass="stackPane-default">
     <ImageView>
         <Image url="@../Images/Misc/CodexLogo.png"/>
     </ImageView>
     <MFXButton layoutX="188.0" layoutY="349.0" text="Play The Game"
-               styleClass="title-button, rounded-button"
+               stylesheets="@../css/Buttons.css" styleClass="title-button, rounded-button"
                onAction="#loadLoginScene"/>
 </VBox>

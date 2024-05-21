@@ -21,13 +21,13 @@ public class GameListController extends ViewController{
     protected void initialize() {
     }
 
-    @Override
+    /*@Override
     public void setUp(){
         for(String game : app.getListGames()){
             gameIDColumn.setText("Game: " + game.charAt(0));
             playersColumn.setText(game.substring(1,game.length()-1));
         }
-    }
+    }*/
 
     public void goMainMenu() {
         app.loadScene(SceneTag.MAINMENU);

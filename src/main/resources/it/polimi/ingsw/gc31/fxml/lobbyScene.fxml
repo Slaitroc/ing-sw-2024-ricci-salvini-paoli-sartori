@@ -18,7 +18,7 @@
 <StackPane xmlns="http://javafx.com/javafx/17"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.LobbyController"
-           stylesheets="@../css/stileFxml.css" styleClass="stackPane-default">
+           stylesheets="@../css/Commons.css" styleClass="stackPane-default">
 
     <padding>
         <Insets top="10" right="20" bottom="10" left="20"/>
@@ -28,14 +28,14 @@
 
         <!-- StackPane for GENERAL_PLAYER -->
         <!-- StackPane for PLAYER_IN_LOBBY  -->
-        <StackPane stylesheets="@../css/stileFxml.css" styleClass="stackPane-playerSlot, player1"
+        <StackPane stylesheets="@../css/Commons.css, @../css/PlayerNames.css, @../css/Panes.css, @../css/Buttons.css, @../css/" styleClass="stackPane-playerSlot, player1"
                    maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
             <VBox spacing="70">
                 <padding>
                     <Insets top="20" right="10" bottom="20" left="10"/>
                 </padding>
                 <StackPane>
-                    <MFXTextField fx:id="mainPlayer" styleClass="player-text-field"/>
+                    <MFXTextField fx:id="mainPlayer" stylesheets="@../css/PlayerNames.css" styleClass="player-text-field"/>
                 </StackPane>
                 <StackPane>
                     <ImageView fitHeight="100" fitWidth="100">
@@ -50,7 +50,7 @@
         </StackPane>
 
         <!-- StackPane for GENERAL_PLAYER -->
-        <StackPane stylesheets="@../css/stileFxml.css" styleClass="stackPane-playerSlot"
+        <StackPane styleClass="stackPane-playerSlot"
                    maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
 
             <!-- StackPane for PLAYER_IN_LOBBY  -->
@@ -75,7 +75,7 @@
             </StackPane >
 
             <!-- StackPane for WAITING_PLAYER  -->
-            <StackPane fx:id="waitingPlayer2" stylesheets="@../css/stileFxml.css" styleClass="stackPane-playerSlot, lockedPlayerSlot"
+            <StackPane fx:id="waitingPlayer2" styleClass="stackPane-playerSlot, lockedPlayerSlot"
                        maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
                 <VBox spacing="40" alignment="BOTTOM_CENTER">
                     <ImageView fitHeight="80" fitWidth="80">
@@ -90,7 +90,7 @@
         </StackPane>
 
         <!-- StackPane for GENERAL_PLAYER -->
-        <StackPane stylesheets="@../css/stileFxml.css" styleClass="stackPane-playerSlot"
+        <StackPane styleClass="stackPane-playerSlot"
                    maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
 
             <!-- StackPane for PLAYER_IN_LOBBY  -->
@@ -115,7 +115,7 @@
             </StackPane>
 
             <!-- StackPane for WAITING_PLAYER  -->
-            <StackPane fx:id="waitingPlayer3" stylesheets="@../css/stileFxml.css" styleClass="stackPane-playerSlot, lockedPlayerSlot"
+            <StackPane fx:id="waitingPlayer3" styleClass="stackPane-playerSlot, lockedPlayerSlot"
                        maxWidth="135" maxHeight="360" minWidth="135" minHeight="360" >
                 <VBox spacing="40" alignment="BOTTOM_CENTER">
                     <ImageView fitHeight="80" fitWidth="80">
@@ -137,7 +137,7 @@
         </StackPane>
 
         <!-- StackPane for GENERAL_PLAYER -->
-        <StackPane stylesheets="@../css/stileFxml.css"
+        <StackPane
                    maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
 
             <!-- StackPane for PLAYER_IN_LOBBY  -->
@@ -162,7 +162,7 @@
             </StackPane>
 
             <!-- StackPane for WAITING_PLAYER  -->
-            <StackPane fx:id="waitingPlayer4" stylesheets="@../css/stileFxml.css" styleClass="stackPane-playerSlot, lockedPlayerSlot"
+            <StackPane fx:id="waitingPlayer4" styleClass="stackPane-playerSlot, lockedPlayerSlot"
                        maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
                 <VBox spacing="40" alignment="BOTTOM_CENTER">
                     <ImageView fitHeight="80" fitWidth="80">
