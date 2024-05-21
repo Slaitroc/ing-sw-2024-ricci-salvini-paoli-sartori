@@ -21,9 +21,43 @@ public abstract class TuiState {
             String formattedLine = String.format("%-20s : %s", command, description);
             tui.printToCmdLineOut(formattedLine);
         }
+        stateNotify();
     }
 
     protected abstract void command_initial();
+
+    /**
+     * Si assicura che il Reader Thread sia in attesa del termine dell'esecuzione di
+     * un comando. Se non lo fosse entrerebbe in attesa di essere risvegliato senza
+     * che alcun comando lo possa risvegliare.
+     * Questo è necessario per far si che la lettura input del comando e del Reader
+     * non entrino in conflitto.
+     * <p>
+     * Potrebbe essere nella tui ma visto che riguarda principalmente la concorrenza
+     * con gli stati per ora lo lascio qui
+     */
+    protected void stateNotify() {
+        synchronized (tui.stateLockQueue) {
+            if (tui.stateLockQueue.isEmpty()) {
+                try {
+                    tui.stateLockQueue.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        tui.removeFromStateLockQueue();
+        synchronized (tui.stateLock) {
+            tui.stateLock.notify();
+        }
+    }
+
+    protected void command_invalidCommand() {
+        tui.printToCmdLineOut(tui.tuiWrite("Invalid command"));
+        stateNotify();
+    }
+
+    protected abstract void setUsername();
 
     protected abstract void command_createGame();
 
@@ -36,5 +70,7 @@ public abstract class TuiState {
     protected abstract void command_drawGold();
 
     protected abstract void command_drawResource();
+
+    protected abstract void command_chooseSecreteObjective();
 
 }

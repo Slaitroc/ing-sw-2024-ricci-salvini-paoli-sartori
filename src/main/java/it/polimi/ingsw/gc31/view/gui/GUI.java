@@ -1,16 +1,15 @@
 
 package it.polimi.ingsw.gc31.view.gui;
 
-import java.io.Reader;
 import java.rmi.RemoteException;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import javafx.application.Application;
 import javafx.application.Platform;
 import it.polimi.ingsw.gc31.view.UI;
-import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
-import com.google.gson.reflect.TypeToken;
+
+import javax.xml.datatype.DatatypeFactory;
 import java.util.List;
-import java.util.Map;
 
 public class GUI extends UI {
 
@@ -88,15 +87,9 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
+    public void show_handPlayer(String username, List<PlayableCard> hand) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_handPlayer'");
-    }
-
-    @Override
-    public void show_objectiveCard(String objectiveCard) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_objectiveCard'");
     }
 
     @Override
@@ -123,7 +116,30 @@ public class GUI extends UI {
         throw new UnsupportedOperationException("Unimplemented method 'show_starterCard'");
     }
 
+    @Override
+    public void wrongUsername() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'wrongUsername'");
+    }
 
+    @Override
+    public void validUsername() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'validUsername'");
+    }
+
+    @Override
+    public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2)
+            throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_chooseObjectiveCard'");
+    }
+
+    @Override
+    public void show_objectiveCard(ObjectiveCard objectiveCard) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_objectiveCard'");
+    }
 
 }
 

@@ -8,8 +8,18 @@ import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameCreatedObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameDoesNotExistObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsFullObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.JoinedToGameObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowGamesObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ValidUsernameObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongGameSizeObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongUsernameObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
+import java.util.concurrent.LinkedBlockingQueue;
 
 //NOTE creation of GameController for match creation
 // Does the GameController related to the first match get created immediately after the first player has logged in?
@@ -17,9 +27,12 @@ import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 // Manages interaction with clients
 
 /**
- * This class represents the main controller of all the games that ar currently running.
- * It manages the interaction with the clients and the creation of game controllers for each match.
- * It implements the IController interface and extends the UnicastRemoteObject to allow remote method invocation.
+ * This class represents the main controller of all the games that ar currently
+ * running.
+ * It manages the interaction with the clients and the creation of game
+ * controllers for each match.
+ * It implements the IController interface and extends the UnicastRemoteObject
+ * to allow remote method invocation.
  */
 public class Controller extends UnicastRemoteObject implements IController {
     private static final Controller singleton;
@@ -37,6 +50,12 @@ public class Controller extends UnicastRemoteObject implements IController {
     private final List<GameController> gameControlList;
     private Map<String, VirtualClient> tempClients;
     private final Set<String> nicknames;
+    private final LinkedBlockingQueue<ServerQueueObject> callsList;
+    private VirtualClient newConnection;
+
+    public void setNewConnection(VirtualClient newConnection) {
+        this.newConnection = newConnection;
+    }
 
     /**
      * Private constructor for the Controller class.
@@ -48,6 +67,41 @@ public class Controller extends UnicastRemoteObject implements IController {
         tempClients = new HashMap<>();
         nicknames = new HashSet<>();
         gameControlList = new ArrayList<>();
+        callsList = new LinkedBlockingQueue<>();
+        executor();
+    }
+
+    @Override
+    public void sendCommand(ServerQueueObject obj) throws RemoteException {
+        addQueueObj(obj);
+    }
+
+    private void addQueueObj(ServerQueueObject obj) {
+        synchronized (callsList) {
+            callsList.add(obj);
+            callsList.notify();
+        }
+    }
+
+    private void executor() {
+        new Thread(() -> {
+            while (true) {
+                ServerQueueObject action;
+                synchronized (callsList) {
+                    while (callsList.isEmpty()) {
+                        try {
+                            callsList.wait();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    action = callsList.poll();
+                }
+                if (action != null) {
+                    action.execute(this);
+                }
+            }
+        }).start();
     }
 
     /**
@@ -55,7 +109,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      *
      * @param text the message to print.
      */
-    private void controllerWrite(String text) {
+    public void controllerWrite(String text) {
         System.out.println(DefaultValues.ANSI_GREEN + DefaultValues.RMI_SERVER_TAG + DefaultValues.ANSI_BLUE
                 + DefaultValues.CONTROLLER_TAG + DefaultValues.ANSI_RESET + text);
     }
@@ -65,53 +119,81 @@ public class Controller extends UnicastRemoteObject implements IController {
      *
      * @param client   the client to connect.
      * @param username the username of the client.
-     * @throws PlayerNicknameAlreadyExistsException if the username is already in use.
+     * @throws PlayerNicknameAlreadyExistsException if the username is already in
+     *                                              use.
+     * @throws RemoteException
      */
     @Override
-    public void connect(VirtualClient client, String username) throws PlayerNicknameAlreadyExistsException {
-        if (!nicknames.add(username)) {
-            throw new PlayerNicknameAlreadyExistsException();
+    public void connect(VirtualClient client, String username)
+            throws RemoteException {
+        if (nicknames.add(username)) {
+            tempClients.put(username, client);
+            client.setController(this);
+            client.sendCommand((new ValidUsernameObj(username)));
+        } else {
+            client.sendCommand(new WrongUsernameObj(username));
+            // FIX PlayerAlreadyExistsException non più necessaria (da verificare)
         }
-        tempClients.put(username, client);
-
-        // TODO mandare un messaggio di conferma al client
     }
 
     /**
      * Creates a new game and adds it to the game control list.
      *
-     * @param username the username of the client creating the game.
+     * @param username         the username of the client creating the game.
      * @param maxNumberPlayers the maximum number of players for the game.
      * @return the game controller for the newly created game.
      * @throws RemoteException if an RMI error occurs.
      */
     @Override
-    public IGameController createGame(String username, int maxNumberPlayers) throws RemoteException {
+    public void createGame(String username, int maxNumPlayer) throws RemoteException {
         VirtualClient client = tempClients.get(username);
-        gameControlList.add(new GameController(username, client, maxNumberPlayers, gameControlList.size() - 1));
-        client.setGameID(gameControlList.size() - 1);
-        tempClients.remove(username);
-        controllerWrite("New Game Created with ID: " + (gameControlList.size()-1));
-        return gameControlList.getLast();
+        if (maxNumPlayer < 2 || maxNumPlayer > 4) {
+            client.sendCommand(new WrongGameSizeObj());
+        } else {
+            try {
+                gameControlList.add(new GameController(username, client, maxNumPlayer,
+                        gameControlList.size()));
+                client.setGameID(gameControlList.size() - 1);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            tempClients.remove(username);
+            client.sendCommand(new GameCreatedObj(gameControlList.size() - 1));
+            client.setGameController(gameControlList.get(gameControlList.size() - 1));
+        }
+
     }
 
     /**
      * Allows a client to join an existing game.
      *
      * @param username the username of the client joining the game.
-     * @param idGame the ID of the game to join.
+     * @param idGame   the ID of the game to join.
      * @return the game controller for the joined game.
      * @throws RemoteException if an RMI error occurs.
      */
     @Override
-    public IGameController joinGame(String username, int idGame) throws RemoteException {
-        gameControlList.get(idGame).joinGame(username, tempClients.get(username));
-        tempClients.remove(username);
+    public void joinGame(String username, int idGame) throws RemoteException {
 
-        return gameControlList.get(idGame);
+        VirtualClient client = tempClients.get(username);
+        if (idGame >= gameControlList.size() || idGame < 0) {
+            client.sendCommand(new GameDoesNotExistObj());
+        } else {
+
+            if (gameControlList.get(idGame).getCurrentNumberPlayers() != gameControlList.get(idGame)
+                    .getMaxNumberPlayers()) {
+                gameControlList.get(idGame).joinGame(username, client);
+                client.setGameController(gameControlList.get(idGame));
+                client.sendCommand(new JoinedToGameObj(idGame));
+                tempClients.remove(username);
+                gameControlList.get(idGame);
+            } else {
+                client.sendCommand(new GameIsFullObj(idGame));
+            }
+        }
     }
 
-    //GETTERS
+    // GETTERS
 
     /**
      * @return the singleton instance.
@@ -129,17 +211,23 @@ public class Controller extends UnicastRemoteObject implements IController {
     @Override
     public void getGameList(String username) throws RemoteException, NoGamesException {
         if (gameControlList.isEmpty()) {
-            throw new NoGamesException();
+            List<String> res = new ArrayList<>();
+            res.add("NO GAMES AVAILABLE");
+            tempClients.get(username).sendCommand(new ShowGamesObj(res));
         } else {
             List<String> res = new ArrayList<>();
             for (int i = 0; i < gameControlList.size(); i++) {
                 res.add(
                         i + " "
-                                + gameControlList.get(i).getMaxNumberPlayers() + " / "
-                                + gameControlList.get(i).getCurrentNumberPlayers());
+                                + gameControlList.get(i).getCurrentNumberPlayers() + " / "
+                                + gameControlList.get(i).getMaxNumberPlayers());
             }
-            // TODO gestire qua l'eccezione?
-            tempClients.get(username).showListGame(res);
+            tempClients.get(username).sendCommand(new ShowGamesObj(res));
         }
+    }
+
+    @Override
+    public VirtualClient getNewConnection() {
+        return newConnection;
     }
 }

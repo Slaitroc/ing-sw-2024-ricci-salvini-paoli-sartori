@@ -21,7 +21,8 @@ module it.polimi.ingsw.gc31 {
     exports it.polimi.ingsw.gc31.view.gui;
     exports it.polimi.ingsw.gc31.view.gui.controllers;
     exports it.polimi.ingsw.gc31.client_server.interfaces;
-    exports it.polimi.ingsw.gc31.client_server.queue;
+    exports it.polimi.ingsw.gc31.client_server.queue.clientQueue;
+    exports it.polimi.ingsw.gc31.client_server.queue.serverQueue;
     exports it.polimi.ingsw.gc31.client_server.tcp;
     exports it.polimi.ingsw.gc31.client_server.rmi;
     exports it.polimi.ingsw.gc31.model;
