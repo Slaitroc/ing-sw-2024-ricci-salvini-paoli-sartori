@@ -151,23 +151,4 @@ public class GUI extends UI {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_objectiveCard'");
     }
-
-    @Override
-    public void show_chatMessage(String username, String message) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_chatMessage'");
-    }
-
-    @Override
-    public void show_gameDoesNotExist() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_gameDoesNotExist'");
-    }
-
-    @Override
-    public void show_wrongGameSize() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_wrongGameSize'");
-    }
-
 }

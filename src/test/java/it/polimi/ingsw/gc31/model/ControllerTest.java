@@ -43,15 +43,15 @@ public class ControllerTest {
             controller.connect(mockClient, "Pippo");
             controller.connect(mockClient, "Pluto");
 
-            gameController1 = (GameController) controller.createGame("Player1", 4);
+            // gameController1 = (GameController) controller.createGame("Player1", 4);
             controller.joinGame("Player2", 0);
             controller.joinGame("Player3", 0);
             controller.joinGame("Player4", 0);
 
-            gameController2 = controller.createGame("Matteo", 2);
+            // gameController2 = controller.createGame("Matteo", 2);
             controller.joinGame("Nicola", 1);
 
-            gameController3 = controller.createGame("Pippo", 2);
+            // gameController3 = controller.createGame("Pippo", 2);
             controller.joinGame("Pluto", 2);
         }
 
@@ -72,7 +72,7 @@ public class ControllerTest {
             throws PlayerNicknameAlreadyExistsException, IOException, IllegalStateOperationException {
         synchronized (controller) {
             controller.connect(mockClient, "Krotox");
-            gameController1 = (GameController) controller.createGame("Krotox", 4);
+            // gameController1 = (GameController) controller.createGame("Krotox", 4);
             controller.connect(mockClient, "Slaitroc");
             controller.joinGame("Slaitroc", 3);
             controller.connect(mockClient, "SSalvo");

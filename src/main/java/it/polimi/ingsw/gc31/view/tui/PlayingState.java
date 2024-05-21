@@ -83,6 +83,7 @@ public class PlayingState extends TuiState {
         tui.tuiWrite("Choose secrete objective 1");
         try {
             tui.getClient().chooseSecretObjective1();
+            tui.tuiWrite("Secrete objective 1 selected");
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -93,6 +94,7 @@ public class PlayingState extends TuiState {
         tui.tuiWrite("Choose secrete objective 2");
         try {
             tui.getClient().chooseSecretObjective2();
+            tui.tuiWrite("Secrete objective 2 selected");
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
