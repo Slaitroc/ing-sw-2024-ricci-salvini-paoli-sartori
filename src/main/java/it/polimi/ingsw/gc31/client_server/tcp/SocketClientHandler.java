@@ -44,7 +44,7 @@ public class SocketClientHandler implements VirtualClient {
      * @param output     is the reference to the output stream of the socket
      *                   connection
      */
-    public SocketClientHandler(IController controller, TCPServer server, BufferedReader input, PrintWriter output) {
+    public SocketClientHandler(IController controller, TCPServer server, BufferedReader input, PrintWriter output, ObjectInputStream inputObject) {
         this.controller = controller;
         this.server = server;
         this.input = input;
