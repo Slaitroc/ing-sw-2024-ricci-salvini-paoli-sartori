@@ -82,16 +82,22 @@ public class JoinedToGameState extends TuiState {
     }
 
     @Override
+    protected void command_chooseSecreteObjective1() {
+
+    }
+
+    @Override
+    protected void command_chooseSecreteObjective2() {
+
+    }
+
+    @Override
     protected void command_initial() {
         command_showCommandsInfo();
     }
 
     @Override
     protected void setUsername() {
-    }
-
-    @Override
-    protected void command_chooseSecreteObjective() {
     }
 
 }

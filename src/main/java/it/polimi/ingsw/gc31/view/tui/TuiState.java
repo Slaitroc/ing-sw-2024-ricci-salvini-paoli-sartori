@@ -71,6 +71,7 @@ public abstract class TuiState {
 
     protected abstract void command_drawResource();
 
-    protected abstract void command_chooseSecreteObjective();
+    protected abstract void command_chooseSecreteObjective1();
+    protected abstract void command_chooseSecreteObjective2();
 
 }

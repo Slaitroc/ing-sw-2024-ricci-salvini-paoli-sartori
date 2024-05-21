@@ -18,7 +18,7 @@ public class StairUp extends Objective {
     /**
      * This attribute represents the color requested by the objective to be done
      */
-    private final CardColor color;
+    private final CardColor cardColor;
 
     /**
      * This method is the constructor of the class
@@ -26,7 +26,7 @@ public class StairUp extends Objective {
      */
     public StairUp(CardColor color) {
         super();
-        this.color = color;
+        this.cardColor = color;
     }
 
     /**
@@ -44,11 +44,11 @@ public class StairUp extends Objective {
             for (int i = minX; i <= maxX - 2; i++) {
                 point.move(i, j);
 
-                if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color)) {
+                if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(cardColor)) {
                     point.move(i + 1, j + 1);
-                    if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color)) {
+                    if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(cardColor)) {
                         point.move(i + 2, j + 2);
-                        if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(color)) {
+                        if (placedCard.containsKey(point) && placedCard.get(point).getColor().equals(cardColor)) {
                             count += 2;
 
                             placedCard.remove(point);
@@ -66,8 +66,8 @@ public class StairUp extends Objective {
     }
 
     @Override
-    public String toString() {
-        int[] cardColor = getRgbColor(this.color);
+    public String print() {
+        int[] cardColor = getRgbColor(this.cardColor);
         StringBuilder res = new StringBuilder();
         res.append(
                 ansi().restoreCursorPosition().fgRgb(cardColor[0], cardColor[1], cardColor[2]).a("      ┌──┐"));
@@ -86,7 +86,7 @@ public class StairUp extends Objective {
     @Override
     public JsonObject serializeToJson() {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("color1", color.toString());
+        jsonObject.addProperty("color1", cardColor.toString());
         jsonObject.addProperty("type", "STAIRUP");
         return jsonObject;
     }

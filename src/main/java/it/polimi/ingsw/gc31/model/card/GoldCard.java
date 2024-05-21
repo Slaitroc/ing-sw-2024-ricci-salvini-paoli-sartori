@@ -15,12 +15,4 @@ public class GoldCard extends PlayableCard {
         else return null;
     }
 
-    @Override
-    public GoldCard deepCopy() {
-        return new GoldCard(
-                cardColor,
-                front.deepCopy(),
-                back.deepCopy()
-        );
-    }
 }

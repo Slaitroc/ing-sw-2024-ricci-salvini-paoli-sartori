@@ -29,6 +29,7 @@ public class Player extends PlayerObservable {
     private int selectedCard;
     private PlayableCard selectedStarterCard;
     private ObjectiveCard objectiveCard;
+    private List<ObjectiveCard> objectiveCardToChoose;
     private final String username;
     private final PlayArea playArea;
     private final PawnColor pawnColor;
@@ -209,17 +210,24 @@ public class Player extends PlayerObservable {
     }
 
     /**
-     * @param card: Objective Card to assign to the player (called secret obj in
-     *              game)
+     *
      */
-    public void addObjectiveCard(ObjectiveCard card) {
+    public void chooseSecretObjective(int index) {
         try {
-            inGameState.addObjectiveCard(card, this);
-            notifyPlayerObjectiveCardListener(card);
+            inGameState.chooseSecretObjective(objectiveCardToChoose.get(index), this);
+            //notifyPlayerObjectiveCardListener(card);
         } catch (IllegalStateOperationException e) {
             System.out.println("Player " + username + " not allowed to draw objective card in current state");
             e.getStackTrace();
         }
+    }
+
+    /**
+     *
+     */
+    public void addObjectiveCardToChoose(List<ObjectiveCard> cards) {
+        objectiveCardToChoose = cards;
+        notifyPlayerChooseObjectiveCardListener(new Pair<>(objectiveCardToChoose.get(0),this.objectiveCardToChoose.get(1)));
     }
 
     /**

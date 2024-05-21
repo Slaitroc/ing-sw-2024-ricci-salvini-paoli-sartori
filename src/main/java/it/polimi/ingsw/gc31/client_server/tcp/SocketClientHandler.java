@@ -274,14 +274,13 @@ public class SocketClientHandler implements VirtualClient {
      * @param listGame is the list with every String representing a game
      * @throws RemoteException
      */
-    @Override
     public void showListGame(List<String> listGame) throws RemoteException {
-        output.println("show game list");
-        // listGame.forEach(output::println);
-        for (String s : listGame)
-            output.println(s);
-        output.println("game list finished");
-        output.flush();
+//        output.println("show game list");
+//        // listGame.forEach(output::println);
+//        for (String s : listGame)
+//            output.println(s);
+//        output.println("game list finished");
+//        output.flush();
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.awt.*;
 public class NotPlaced extends PlayerState {
 
     @Override
-    public void addObjectiveCard(ObjectiveCard card, Player player) throws IllegalStateOperationException {
+    public void chooseSecretObjective(ObjectiveCard card, Player player) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 

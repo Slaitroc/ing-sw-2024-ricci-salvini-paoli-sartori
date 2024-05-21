@@ -82,7 +82,12 @@ public class InitState extends TuiState {
     }
 
     @Override
-    protected void command_chooseSecreteObjective() {
+    protected void command_chooseSecreteObjective1() {
+
+    }
+
+    @Override
+    protected void command_chooseSecreteObjective2() {
 
     }
 

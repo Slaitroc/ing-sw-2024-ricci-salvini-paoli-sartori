@@ -176,16 +176,16 @@ public class GameModel {
         return gameState;
     }
 
-    public void setPlayerObjective(String username, int index) {
-        index--;
-        for (Player player : players) {
-            if (player.getUsername().equals(username)) {
-                player.addObjectiveCard(secretObjectives.get(index));
-                return;
-            } else
-                index += 2;
-        }
-    }
+//    public void setPlayerObjective(String username, int index) {
+//        index--;
+//        for (Player player : players) {
+//            if (player.getUsername().equals(username)) {
+//                player.addObjectiveCard(secretObjectives.get(index));
+//                return;
+//            } else
+//                index += 2;
+//        }
+//    }
 
     public List<Player> getPlayers() {
         return players;

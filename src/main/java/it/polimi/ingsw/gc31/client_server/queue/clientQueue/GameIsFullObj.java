@@ -4,7 +4,7 @@ import it.polimi.ingsw.gc31.view.UI;
 
 public class GameIsFullObj implements ClientQueueObject {
 
-    int gameID;
+    private final int gameID;
 
     public GameIsFullObj(int gameID) {
         this.gameID = gameID;

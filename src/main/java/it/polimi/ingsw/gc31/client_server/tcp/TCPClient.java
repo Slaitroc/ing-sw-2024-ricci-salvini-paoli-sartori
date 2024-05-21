@@ -392,4 +392,9 @@ public class TCPClient implements ClientCommands {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
     }
+
+    @Override
+    public void sendChatMessage(String username, String message) throws RemoteException {
+
+    }
 }

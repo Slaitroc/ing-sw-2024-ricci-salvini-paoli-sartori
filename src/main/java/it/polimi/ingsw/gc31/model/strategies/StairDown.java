@@ -67,7 +67,7 @@ public class StairDown extends Objective {
     }
 
     @Override
-    public String toString() {
+    public String print() {
         int[] cardColor = getRgbColor(this.cardColor);
         StringBuilder res = new StringBuilder();
         res.append(

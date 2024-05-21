@@ -51,7 +51,7 @@ public class ResourceScore extends Objective {
     }
 
     @Override
-    public String toString() {
+    public String print() {
         return resource.getSymbol();
     }
 

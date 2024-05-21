@@ -29,7 +29,8 @@ public class GameTest {
         System.out.println("Current Game Cycle is: ");
         for (int i = 0; i < gameModel.getNumOfPlayers(); i++) {
             System.out.println(gameModel.getCurrPlayingPlayer().getUsername());
-            gameModel.getCurrPlayingPlayer().addObjectiveCard(gameModel.getBoard().getDeckObjective().draw());
+            // TODO da riguardare
+            // gameModel.getCurrPlayingPlayer().addObjectiveCard(gameModel.getBoard().getDeckObjective().draw());
             gameModel.getCurrPlayingPlayer().playStarter();
             gameModel.setNextPlayingPlayer();
         }
