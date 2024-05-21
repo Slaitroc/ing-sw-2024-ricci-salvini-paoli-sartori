@@ -32,15 +32,15 @@ public class UsernameController extends ViewController {
             warningLabel.setText("Username cannot be empty!");
         } else {
             try {
-                client.setUsername(app.getUsername());
+                client.setUsernameCall(usernameField.getText());
                 loadMainMenuScene();
             } catch (IOException e) {
                 warningLabel.setVisible(true);
                 warningLabel.setText("Server Error! Please restart the app.");
-            } catch (PlayerNicknameAlreadyExistsException e) {
+            }/* catch (PlayerNicknameAlreadyExistsException e) {
                 warningLabel.setVisible(true);
                 warningLabel.setText("Username already exists!");
-            }
+            }*/
         }
     }
 

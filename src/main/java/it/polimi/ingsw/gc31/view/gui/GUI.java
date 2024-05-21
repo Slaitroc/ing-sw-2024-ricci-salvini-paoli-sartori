@@ -13,6 +13,8 @@ import java.util.List;
 
 public class GUI extends UI {
 
+    GUIApplication app;
+
     public GUI(ClientCommands client) {
         this.client = client;
     }
@@ -32,8 +34,8 @@ public class GUI extends UI {
     protected void uiRunUI() {
         // Application.launch(GUIApplication.class);
 
-        GUIApplication GUIApplication = new GUIApplication();
-        GUIApplication.setClient(client);
+        app = new GUIApplication();
+        app.setClient(client);
         GUIApplication.run();
     }
 
@@ -69,21 +71,6 @@ public class GUI extends UI {
 
     @Override
     public void show_readyStatus(boolean status) {
-
-    }
-
-    @Override
-    public void show_chatMessage(String username, String message) {
-
-    }
-
-    @Override
-    public void show_gameDoesNotExist() {
-
-    }
-
-    @Override
-    public void show_wrongGameSize() {
 
     }
 

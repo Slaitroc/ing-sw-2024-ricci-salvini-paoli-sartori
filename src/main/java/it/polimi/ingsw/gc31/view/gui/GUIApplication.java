@@ -28,7 +28,7 @@ public class GUIApplication extends Application {
 
     @SuppressWarnings("unused")
 
-    public void run() {
+    public static void run() {
         launch();
     }
 
