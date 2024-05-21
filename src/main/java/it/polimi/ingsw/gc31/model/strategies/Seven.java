@@ -67,6 +67,11 @@ public class Seven extends Objective {
     }
 
     @Override
+    public String toString() {
+        return "";
+    }
+
+    @Override
     public JsonObject serializeToJson() {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("type", "SEVEN");

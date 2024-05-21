@@ -1,7 +1,6 @@
 package it.polimi.ingsw.gc31.client_server.interfaces;
 
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
-import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.view.UI;
 
 import java.io.IOException;
@@ -11,13 +10,11 @@ public interface ClientCommands {
 
     void setUI(UI ui);
 
-    void setUsername(String username) throws IOException, PlayerNicknameAlreadyExistsException;
+    void setUsernameCall(String username) throws IOException;
+
+    void setUsernameResponse(String username);
 
     void createGame(int maxNumberPlayer) throws RemoteException, IOException;
-
-    void drawGold() throws RemoteException;
-
-    void drawResource() throws RemoteException;
 
     void joinGame(int gameId) throws RemoteException;
 
@@ -25,8 +22,26 @@ public interface ClientCommands {
 
     void setReady(boolean ready) throws RemoteException;
 
+    void drawGold() throws RemoteException;
+
+    void drawGoldCard1() throws RemoteException;
+
+    void drawGoldCard2() throws RemoteException;
+
+    void drawResource() throws RemoteException;
+
+    void drawResourceCard1() throws RemoteException;
+
+    void drawResourceCard2() throws RemoteException;
+
+    void chooseSecretObjective1() throws RemoteException;
+
+    void chooseSecretObjective2() throws RemoteException;
+
     int getGameID() throws RemoteException;
 
     String getUsername();
+
+    void sendChatMessage(String username, String message) throws RemoteException;
 
 }

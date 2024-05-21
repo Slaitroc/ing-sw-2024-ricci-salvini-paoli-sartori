@@ -4,7 +4,8 @@ package it.polimi.ingsw.gc31.view.gui;
 import java.rmi.RemoteException;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
-import javafx.application.Application;
+import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import javafx.application.Platform;
 import it.polimi.ingsw.gc31.view.UI;
 
@@ -29,7 +30,11 @@ public class GUI extends UI {
 
     @Override
     protected void uiRunUI() {
-        Application.launch(GUIApplication.class);
+        // Application.launch(GUIApplication.class);
+
+        GUIApplication GUIApplication = new GUIApplication();
+        GUIApplication.setClient(client);
+        GUIApplication.run();
     }
 
     @Override
@@ -68,15 +73,9 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_handPlayer(String username, List<String> hand) throws RemoteException {
+    public void show_handPlayer(String username, List<PlayableCard> hand) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_handPlayer'");
-    }
-
-    @Override
-    public void show_objectiveCard(String objectiveCard) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_objectiveCard'");
     }
 
     @Override
@@ -102,4 +101,30 @@ public class GUI extends UI {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_starterCard'");
     }
+
+    @Override
+    public void wrongUsername() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'wrongUsername'");
+    }
+
+    @Override
+    public void validUsername() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'validUsername'");
+    }
+
+    @Override
+    public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2)
+            throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_chooseObjectiveCard'");
+    }
+
+    @Override
+    public void show_objectiveCard(ObjectiveCard objectiveCard) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_objectiveCard'");
+    }
+
 }

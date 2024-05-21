@@ -16,6 +16,7 @@ public class DefaultValues {
 
     // Server Log
     public final static String RMI_SERVER_TAG = "[RMI server] ";
+    public final static String SERVER_TAG = "[Server] ";
     public final static String TCP_SERVER_TAG = "[TCP server] ";
     public static final String CONTROLLER_TAG = "\t[Controller]: ";
 
@@ -67,5 +68,12 @@ public class DefaultValues {
 
     // Model
     public final static String DEFAULT_USERNAME = "New User";
+
+    // NETWORK
+    public final static String RECIPIENT_CONTROLLER = "controller";
+    public final static String RECIPIENT_GAME_CONTROLLER = "gameController";
+    public final static String RECIPIENT_UI = "ui";
+    public final static String RECIPIENT_VC = "virtualClient";
+    public final static String RECIPIENT_CC = "clientCommands";
 
 }
