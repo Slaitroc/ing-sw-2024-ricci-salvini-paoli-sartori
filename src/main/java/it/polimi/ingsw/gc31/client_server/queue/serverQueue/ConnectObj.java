@@ -32,7 +32,7 @@ public class ConnectObj extends ServerQueueObject {
     public void execute(RmiServer server) {
         try {
 
-            server.connect(server.getVirtualClient(), recipient);
+            server.connect(server.getVirtualClient(), username);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

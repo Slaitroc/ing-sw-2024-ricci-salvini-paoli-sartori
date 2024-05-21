@@ -48,16 +48,6 @@ public class SocketClientHandler implements VirtualClient {
         this.input = input;
         this.output = output;
         tcpClient_reader();
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                input.close();
-                output.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }));
-
     }
 
     /**
@@ -88,7 +78,7 @@ public class SocketClientHandler implements VirtualClient {
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException("Connection lost");
                 }
                 if (obj != null) {
                     if (obj.getRecipient().equals(DefaultValues.RECIPIENT_CONTROLLER)) {

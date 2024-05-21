@@ -38,9 +38,9 @@ public interface ClientCommands {
 
     void chooseSecretObjective2() throws RemoteException;
 
-    int getGameID() throws RemoteException;
+    int getGameID() throws RemoteException; // FIX serve?
 
-    String getUsername();
+    String getUsername();// FIX serve?
 
     void sendChatMessage(String username, String message) throws RemoteException;
 
