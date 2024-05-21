@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.view.gui.controllers;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
@@ -146,7 +147,19 @@ public class MainMenuController extends ViewController {
     }
 
     public void showGames() {
+        try {
+            app.getClient().getGameList();
+        } catch (NoGamesException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error 505");
+            alert.setHeaderText("Server Error");
+            alert.setContentText("Server has crashed. Please restart application");
 
+            alert.showAndWait();
+        }
+        app.loadScene(SceneTag.GAMELIST);
     }
 
     public void showRules() {
