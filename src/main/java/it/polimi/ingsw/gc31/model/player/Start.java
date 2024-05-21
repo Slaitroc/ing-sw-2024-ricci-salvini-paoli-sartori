@@ -13,7 +13,7 @@ public class Start extends PlayerState {
     private boolean objectiveChosen = false;
 
     @Override
-    public void addObjectiveCard(ObjectiveCard card, Player player) {
+    public void chooseSecretObjective(ObjectiveCard card, Player player) {
         player.setObjectiveCard(card);
         objectiveChosen = true;
     }

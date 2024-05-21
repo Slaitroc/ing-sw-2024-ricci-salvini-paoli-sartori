@@ -53,7 +53,7 @@ public class Count extends Objective {
     }
 
     @Override
-    public String toString() {
+    public String print() {
         StringBuilder res = new StringBuilder();
         res.append(ansi().restoreCursorPosition().cursorMove(2,3).a(resources.get(0).getSymbol()));
         res.append(ansi().restoreCursorPosition().cursorMove(6,3).a(resources.get(1).getSymbol()));

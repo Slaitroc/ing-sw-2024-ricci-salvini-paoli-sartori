@@ -13,6 +13,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.serializePrivateFields;
+
 // TODO implementare exception, dirImg non può essere nulla, resources non può essere nulla
 // TODO riguardare eccezione
 
@@ -24,7 +26,7 @@ import java.util.Map;
  * Gson gson = new GsonBuilder().registerTypeAdapter(CardFront.class, new
  * FrontClassAdapter()).create();
  */
-public class FrontClassAdapter implements JsonDeserializer<CardFront> {
+public class FrontClassAdapter implements JsonDeserializer<CardFront>, JsonSerializer<CardFront> {
 
     /**
      * Method that deserialize an object of the {@link CardFront} class.
@@ -82,5 +84,12 @@ public class FrontClassAdapter implements JsonDeserializer<CardFront> {
         CardFront front = null;
         front = new CardFront(score, resources, requirements, dirImg, ob);
         return front;
+    }
+
+    @Override
+    public JsonElement serialize(CardFront src, Type typeOfSrc, JsonSerializationContext context) {
+        JsonObject jsonObject = new JsonObject();
+        serializePrivateFields(src, jsonObject, context);
+        return jsonObject;
     }
 }

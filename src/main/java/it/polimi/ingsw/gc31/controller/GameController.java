@@ -10,16 +10,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.gc31.client_server.listeners.*;
+import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.utility.gsonUtility.PlayableCardAdapter;
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.client_server.listeners.PlayerHandListener;
-import it.polimi.ingsw.gc31.client_server.listeners.GoldDeckListener;
-import it.polimi.ingsw.gc31.client_server.listeners.PlayAreaListener;
-import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
-import it.polimi.ingsw.gc31.client_server.listeners.PlayerStarterCardListener;
-import it.polimi.ingsw.gc31.client_server.listeners.PlayerObjectiveCardListener;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.NewChatMessage;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowReadyStatusObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.StartGameObj;
@@ -172,6 +168,11 @@ public class GameController extends UnicastRemoteObject implements IGameControll
                 player.drawResource();
                 player.drawResource();
                 player.drawGold(); // Here the player hands are initialized
+
+                List<ObjectiveCard> objectiveCards = new ArrayList<>();
+                objectiveCards.add(model.getBoard().getDeckObjective().draw());
+                objectiveCards.add(model.getBoard().getDeckObjective().draw());
+                player.addObjectiveCardToChoose(objectiveCards);
                 // showHand(player); // Here the player's hands are shown
                 // showObjectives(playerList.get(player)); // Here the common goals are supposed
                 // to be shown :)
@@ -338,7 +339,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
     public void chooseSecretObjective(String username, Integer index) {
         if (model.getGameState() == GameState.SETUP) {
-            model.setPlayerObjective(username, index);
+            playerList.get(username).chooseSecretObjective(index);
         } else
             gameControllerWrite("The game is not in the right state to choose secret objective");
     }
@@ -407,7 +408,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
         List<GoldDeckListener> goldDeckListeners = new ArrayList<>();
 
-        // TODO creare funzione per la creazione di tutti i listener
         for (String username : playerList.keySet()) {
             // create playerHandListener for all players
             playerHandListenersList.add(new PlayerHandListener(clientList.get(username)));
@@ -415,13 +415,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             playerScoreListeners.add(new PlayerScoreListener(clientList.get(username)));
             // create playAreaListener for all players
             playAreaListenerList.add(new PlayAreaListener(clientList.get(username)));
-
             goldDeckListeners.add(new GoldDeckListener(clientList.get(username)));
         }
 
         for (Player player : playerList.values()) {
             // add all playerHandListener to all player
-            for (PlayerHandListener listener : playerHandListenersList) {
+            for (PlayerHandListener listener : playerHandListenersList) {        // TODO creare funzione per la creazione di tutti i listener
                 player.addPlayerHandListener(listener);
             }
             // add all playerScoreListener to all player
@@ -434,6 +433,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             }
             // add to the player its own playerStarterCardListener
             player.addPlayerStarterCardListener(new PlayerStarterCardListener(clientList.get(player.getUsername())));
+
+            // add to the player its own playerChooseObjectiveCardListener
+            player.addPlayerChooseObjectiveCardListener(new PlayerChooseObjectiveCardListener(clientList.get(player.getUsername())));
 
             // add to the player its own playerObjectiveCardListener
             player.addPlayerObjectiveCardListener(

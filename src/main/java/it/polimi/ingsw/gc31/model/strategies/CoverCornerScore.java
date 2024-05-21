@@ -53,7 +53,7 @@ public class CoverCornerScore extends Objective {
     }
 
     @Override
-    public String toString() {
+    public String print() {
         return "⟔";
     }
 

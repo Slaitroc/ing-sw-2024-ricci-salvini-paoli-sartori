@@ -73,6 +73,21 @@ public class GUI extends UI {
     }
 
     @Override
+    public void show_chatMessage(String username, String message) {
+
+    }
+
+    @Override
+    public void show_gameDoesNotExist() {
+
+    }
+
+    @Override
+    public void show_wrongGameSize() {
+
+    }
+
+    @Override
     public void updateHand(String username, List<String> hand) throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateHand'");

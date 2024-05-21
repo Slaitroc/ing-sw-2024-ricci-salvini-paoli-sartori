@@ -58,6 +58,16 @@ public class TUI extends UI {
     private final int HAND_END_ROW = 41;
     private final int HAND_END_COLUMN = 160;
 
+    private final int CHOOSE_OBJECTIVE_INITIAL_ROW = 2;
+    private final int CHOOSE_OBJECTIVE_INITIAL_COLUMN = 161;
+    private final int CHOOSE_OBJECTIVE_END_ROW = 19;
+    private final int CHOOSE_OBJECTIVE_END_COLUMN = 185;
+
+    private final int OBJECTIVE_INITIAL_ROW = 2;
+    private final int OBJECTIVE_INITIAL_COLUMN = 161;
+    private final int OBJECTIVE_END_ROW = 10;
+    private final int OBJECTIVE_END_COLUMN = 185;
+
     // CONSTANTS
     private final int CMD_LINE_EFFECTIVE_WIDTH = CMD_LINE_WIDTH - 2;
     private final int CMD_LINE_INPUT_ROW = CMD_LINE_INITIAL_ROW + CMD_LINE_LINES;
@@ -147,36 +157,18 @@ public class TUI extends UI {
 
     // TODO fare una sola funzione
 
-    /**
-     * Draws the play area
-     */
-    public void print_PlayAreaBorders() {
+    private void print_Borders(String titleArea, int initialRow, int initialColumn, int endRow, int endColumn) {
         StringBuilder res = new StringBuilder();
-        res.append(ansi().cursor(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN).fg(WHITE).a("┌")
-                .a(String.valueOf("─").repeat(PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN - 1)).a("┐"));
+        res.append(ansi().cursor(initialRow, initialColumn).fg(WHITE).a("┌")
+                .a(String.valueOf("─").repeat(endColumn - initialColumn - 1)).a("┐"));
 
-        for (int i = 1; i < PLAYAREA_END_ROW - PLAYAREA_INITIAL_ROW; i++) {
-            res.append(ansi().cursor(PLAYAREA_INITIAL_ROW + i, PLAYAREA_INITIAL_COLUMN).a("│"));
-            res.append(ansi().cursor(PLAYAREA_INITIAL_ROW + i, PLAYAREA_END_COLUMN).a("│"));
+        for (int i = 1; i < endRow - initialRow; i++) {
+            res.append(ansi().cursor(initialRow + i, initialColumn).a("│"));
+            res.append(ansi().cursor(initialRow + i, endColumn).a("│"));
         }
-        res.append(ansi().cursor(PLAYAREA_END_ROW, PLAYAREA_INITIAL_COLUMN).fg(WHITE).a("└")
-                .a(String.valueOf("─").repeat(PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN - 1)).a("┘"));
-        res.append(ansi().cursor(PLAYAREA_INITIAL_ROW-1, PLAYAREA_INITIAL_COLUMN+1).a("PLAY AREA"));
-        System.out.println(res);
-    }
-
-    public void print_HandAreaBorders() {
-        StringBuilder res = new StringBuilder();
-        res.append(ansi().cursor(HAND_INITIAL_ROW, HAND_INITIAL_COLUMN).fg(WHITE).a("┌")
-                .a(String.valueOf("─").repeat(HAND_END_COLUMN - HAND_INITIAL_COLUMN - 1)).a("┐"));
-
-        for (int i = 1; i < HAND_END_ROW - HAND_INITIAL_ROW; i++) {
-            res.append(ansi().cursor(HAND_INITIAL_ROW + i, HAND_INITIAL_COLUMN).a("│"));
-            res.append(ansi().cursor(HAND_INITIAL_ROW + i, HAND_END_COLUMN).a("│"));
-        }
-        res.append(ansi().cursor(HAND_END_ROW, HAND_INITIAL_COLUMN).fg(WHITE).a("└")
-                .a(String.valueOf("─").repeat(HAND_END_COLUMN - HAND_INITIAL_COLUMN - 1)).a("┘"));
-        res.append(ansi().cursor(HAND_INITIAL_ROW-1, HAND_INITIAL_COLUMN+1).a("HAND"));
+        res.append(ansi().cursor(endRow, initialColumn).fg(WHITE).a("└")
+                .a(String.valueOf("─").repeat(endColumn - initialColumn - 1)).a("┘"));
+        res.append(ansi().cursor(initialRow-1, initialColumn+1).a(titleArea.toUpperCase()));
         System.out.println(res);
     }
 
@@ -184,7 +176,7 @@ public class TUI extends UI {
      * Print the cards of PlacedCards in the playArea
      */
     private void print_PlacedCards(Map<Point, PlayableCard> placedCards) {
-        clearPlayArea();
+        clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN);
         // TODO questo metodo deve stampare anche i pivot. I pivot saranno stampati come
         // carte con bordo tratteggiato, vuote e con al centro stampata la coordinata
         List<Point> placeHolders = createPlaceHolder(placedCards);
@@ -306,7 +298,7 @@ public class TUI extends UI {
             res.append(ansi().cursor(relative_y+CARD_HEIGHT/2, relative_x+CARD_LENGTH/4).a(card.getScore()));
             res.append(
                     ansi().cursor(relative_y + CARD_HEIGHT / 2 - 2, relative_x + CARD_LENGTH / 2).saveCursorPosition());
-            res.append(card.getObjective().toString());
+            res.append(card.getObjective().print());
 
             System.out.println(res);
             System.out.println(ansi().reset());
@@ -503,7 +495,7 @@ public class TUI extends UI {
                             .a(String.valueOf(" ").repeat(CARD_CORNER_LENGTH)));
                     res.append(ansi().cursor(relative_y + 1, relative_x + CARD_LENGTH / 2 - 1)
                             .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
-                            .fg(BLACK).a(score + "│" + ob.toString()).reset());
+                            .fg(BLACK).a(score + "│" + ob.print()).reset());
                 } else if (score != 0) {
                     res.append(ansi().cursor(relative_y + 1, relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) / 2)
                             .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
@@ -961,11 +953,11 @@ public class TUI extends UI {
     /**
      * Remove every characters inside the playArea
      */
-    public void clearPlayArea() {
+    public void clearArea(int initialRow, int initialCol, int endRow, int endCol) {
         StringBuilder res = new StringBuilder();
-        for (int i = 1; i < PLAYAREA_END_ROW - PLAYAREA_INITIAL_ROW; i++) {
-            for (int j = 1; j < PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN; j++) {
-                res.append(ansi().cursor(PLAYAREA_INITIAL_ROW + i, PLAYAREA_INITIAL_COLUMN + j).a(" "));
+        for (int i = -1; i <= endRow - initialRow; i++) {
+            for (int j = 0; j <= endCol - initialCol; j++) {
+                res.append(ansi().cursor(initialRow + i, initialCol + j).a(" "));
             }
         }
         System.out.println(res);
@@ -1083,8 +1075,6 @@ public class TUI extends UI {
                     if (cmdLineOut.isEmpty()) {
                         try {
                             print_CmdLineBorders();
-                            print_PlayAreaBorders();
-                            print_HandAreaBorders();
                             commandLineReader(); // solo al lancio del thread command line out la lista cmdLineOut è
                             // vuota, quindi entra in questo if solo una volta
                             cmdLineOut.wait();
@@ -1419,14 +1409,14 @@ public class TUI extends UI {
     @Override
     public void show_handPlayer(String username, List<PlayableCard> hand) {
         int index = 0;
-        print_HandAreaBorders();
+        //print_HandAreaBorders();
         for (PlayableCard card : hand) {
             print_PlayableCard(
                     card,
                     HAND_INITIAL_COLUMN + 1 + (CARD_LENGTH + 1) * index,
                     HAND_INITIAL_ROW + 1,
                     HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN);
-            System.out.println(ansi().cursor(HAND_END_ROW-1, HAND_INITIAL_COLUMN+1+CARD_LENGTH/2+(CARD_LENGTH+1)*index).a("1"));
+            System.out.println(ansi().cursor(HAND_END_ROW-1, HAND_INITIAL_COLUMN+1+CARD_LENGTH/2+(CARD_LENGTH+1)*index).a(index+1));
             index++;
         }
         resetCursor();
@@ -1434,13 +1424,35 @@ public class TUI extends UI {
 
     @Override
     public void show_objectiveCard(ObjectiveCard objectiveCard) {
-        System.out.println(ansi().cursor(HAND_INITIAL_ROW, HAND_INITIAL_COLUMN).a("ok"));
-        resetCursor();
+        clearArea(CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN, CHOOSE_OBJECTIVE_END_ROW, CHOOSE_OBJECTIVE_END_COLUMN);
+        System.out.print(ansi().cursor(OBJECTIVE_INITIAL_ROW-1, OBJECTIVE_INITIAL_COLUMN).a("Your Objective Card"));
+        print_ObjectiveCard(
+                objectiveCard,
+                OBJECTIVE_INITIAL_COLUMN+1,
+                OBJECTIVE_INITIAL_ROW+1,
+                OBJECTIVE_INITIAL_ROW, OBJECTIVE_END_ROW, OBJECTIVE_INITIAL_COLUMN, OBJECTIVE_END_COLUMN
+        );
     }
 
     @Override
     public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
-        System.out.println(ansi().cursor(HAND_INITIAL_ROW, HAND_INITIAL_COLUMN + 3).a("Ok"));
+        clearArea(CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN, CHOOSE_OBJECTIVE_END_ROW, CHOOSE_OBJECTIVE_END_COLUMN);
+        print_Borders("Choose Objective Card: ", CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN, CHOOSE_OBJECTIVE_END_ROW, CHOOSE_OBJECTIVE_END_COLUMN);
+        print_ObjectiveCard(
+                objectiveCard1,
+                CHOOSE_OBJECTIVE_INITIAL_COLUMN+1,
+                CHOOSE_OBJECTIVE_INITIAL_ROW+1,
+                CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_END_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN, CHOOSE_OBJECTIVE_END_COLUMN
+        );
+        System.out.println(ansi().cursor(CHOOSE_OBJECTIVE_INITIAL_ROW+1+CARD_HEIGHT,CHOOSE_OBJECTIVE_INITIAL_COLUMN+2).a("Objective Card 1"));
+        print_ObjectiveCard(
+                objectiveCard2,
+                CHOOSE_OBJECTIVE_INITIAL_COLUMN+1,
+                CHOOSE_OBJECTIVE_INITIAL_ROW+2+CARD_HEIGHT,
+                CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_END_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN, CHOOSE_OBJECTIVE_END_COLUMN
+        );
+        System.out.println(ansi().cursor(CHOOSE_OBJECTIVE_INITIAL_ROW+2+CARD_HEIGHT*2,CHOOSE_OBJECTIVE_INITIAL_COLUMN+2).a("Objective Card 2"));
+        resetCursor();
     }
 
     @Override

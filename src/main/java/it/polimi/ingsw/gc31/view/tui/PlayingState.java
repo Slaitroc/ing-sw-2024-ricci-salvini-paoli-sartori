@@ -20,7 +20,8 @@ public class PlayingState extends TuiState {
         commandsMap.put(("help").toLowerCase(), this::command_showCommandsInfo);
         commandsMap.put("dg", this::command_drawGold);
         commandsMap.put("dr", this::command_drawResource);
-        commandsMap.put("cs", this::command_chooseSecreteObjective);
+        commandsMap.put("cs1", this::command_chooseSecreteObjective1);
+        commandsMap.put("cs2", this::command_chooseSecreteObjective2);
         commandsMap.put("invalid", this::command_invalidCommand);
 
         commandsInfo = new LinkedHashMap<>();
@@ -78,10 +79,20 @@ public class PlayingState extends TuiState {
     }
 
     @Override
-    protected void command_chooseSecreteObjective() {
+    protected void command_chooseSecreteObjective1() {
         tui.tuiWrite("Choose secrete objective 1");
         try {
             tui.getClient().chooseSecretObjective1();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    protected void command_chooseSecreteObjective2() {
+        tui.tuiWrite("Choose secrete objective 2");
+        try {
+            tui.getClient().chooseSecretObjective2();
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
