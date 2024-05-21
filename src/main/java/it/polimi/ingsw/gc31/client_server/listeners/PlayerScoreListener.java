@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.listeners;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowScorePlayerObj;
 import javafx.util.Pair;
 
 import java.rmi.RemoteException;
@@ -36,6 +37,6 @@ public class PlayerScoreListener implements Listener<Pair<String, Integer>> {
      */
     @Override
     public void update(Pair<String, Integer> data) throws RemoteException {
-        client.show_scorePlayer(data.getKey(), data.getValue());
+        client.sendCommand(new ShowScorePlayerObj(data.getKey(), data.getValue()));
     }
 }

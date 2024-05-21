@@ -2,9 +2,13 @@ package it.polimi.ingsw.gc31.view.tui;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 import static org.fusesource.jansi.Ansi.ansi;
-//import static org.fusesource.jansi.Ansi.Color.CYAN;
 import static org.fusesource.jansi.Ansi.Color.WHITE;
 import static org.fusesource.jansi.Ansi.Color.YELLOW;
+
+import static org.fusesource.jansi.Ansi.Color.BLACK;
+import static it.polimi.ingsw.gc31.DefaultValues.RGB_COLOR_RED;
+import static it.polimi.ingsw.gc31.DefaultValues.RGB_COLOR_CORNER;
+import static it.polimi.ingsw.gc31.DefaultValues.getRgbColor;
 
 import java.awt.Point;
 import java.io.PrintStream;
@@ -13,8 +17,7 @@ import java.rmi.RemoteException;
 import java.util.*;
 
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
-import it.polimi.ingsw.gc31.model.strategies.Objective;
-import it.polimi.ingsw.gc31.model.strategies.StairUp;
+import it.polimi.ingsw.gc31.model.strategies.*;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -24,7 +27,6 @@ import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
-import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.view.UI;
@@ -40,7 +42,7 @@ public class TUI extends UI {
     private final int CHAT_BOARD_INITIAL_COLUMN = 1;
     private final int CHAT_BOARD_LINES = 10;
     private final int CHAT_BOARD_WIDTH = 60;
-    private final int PLAYAREA_INITIAL_ROW = 1;
+    private final int PLAYAREA_INITIAL_ROW = 2;
     private final int PLAYAREA_INITIAL_COLUMN = 61;
     private final int PLAYAREA_END_ROW = 29;
     private final int PLAYAREA_END_COLUMN = 160;
@@ -51,10 +53,10 @@ public class TUI extends UI {
     private final int CARD_X_OFFSET = 15;
     // the misalignment along y between two cards
     private final int CARD_Y_OFFSET = 4;
-    private final int HAND_INITIAL_ROW = 30;
+    private final int HAND_INITIAL_ROW = 32;
     private final int HAND_INITIAL_COLUMN = 61;
-    private final int HAND_END_ROW = 38;
-    private final int HAND_END_COLUMN = 150;
+    private final int HAND_END_ROW = 41;
+    private final int HAND_END_COLUMN = 160;
 
     // CONSTANTS
     private final int CMD_LINE_EFFECTIVE_WIDTH = CMD_LINE_WIDTH - 2;
@@ -71,15 +73,8 @@ public class TUI extends UI {
     private int OFFSET_X_PLAYAREA = 0;
     // shift of the StarterCard along the y-axis relative to the center
     private int OFFSET_Y_PLAYAREA = 0;
-    // RGB COLORS
-    // TODO colori non definitivi, aggiungere altri tre colori delle carte
-    private final int[] RGB_COLOR_RED_CARD = { 204, 76, 67 };
-    private final int[] RGB_COLOR_GREEN_CARD = { 73, 184, 105 };
-    private final int[] RGB_COLOR_BLUE_CARD = { 114, 202, 203 };
-    private final int[] RBG_COLOR_PURPLE_CARD = { 165, 85, 158 };
-    private final int[] RGB_COLOR_CORNER = { 223, 215, 176 };
 
-    // private final int[] RGB_COLOR_GOLD = { 181, 148, 16 };
+    private final int[] RGB_COLOR_GOLD = { 181, 148, 16 };
 
     // PRINT METHODS
 
@@ -166,6 +161,7 @@ public class TUI extends UI {
         }
         res.append(ansi().cursor(PLAYAREA_END_ROW, PLAYAREA_INITIAL_COLUMN).fg(WHITE).a("└")
                 .a(String.valueOf("─").repeat(PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN - 1)).a("┘"));
+        res.append(ansi().cursor(PLAYAREA_INITIAL_ROW-1, PLAYAREA_INITIAL_COLUMN+1).a("PLAY AREA"));
         System.out.println(res);
     }
 
@@ -180,6 +176,7 @@ public class TUI extends UI {
         }
         res.append(ansi().cursor(HAND_END_ROW, HAND_INITIAL_COLUMN).fg(WHITE).a("└")
                 .a(String.valueOf("─").repeat(HAND_END_COLUMN - HAND_INITIAL_COLUMN - 1)).a("┘"));
+        res.append(ansi().cursor(HAND_INITIAL_ROW-1, HAND_INITIAL_COLUMN+1).a("HAND"));
         System.out.println(res);
     }
 
@@ -219,9 +216,9 @@ public class TUI extends UI {
      * Draws a card centered in X and Y
      * x and y are relative to the board where the cards are drawn
      */
-    private void print_ObjectiveCard(ObjectiveCard card, int relative_x, int relative_y, int overFlowUp,
+    protected void print_ObjectiveCard(ObjectiveCard card, int relative_x, int relative_y, int overFlowUp,
             int overFlowDown, int overFlowLeft, int overFlowRight) {
-        int[] cardColor = RGB_COLOR_RED_CARD;
+        int[] cardColor = RGB_COLOR_RED;
         // if the card entirely exceeds the limits of the playArea it is not printed
         if (overFlowLeft - (relative_x + CARD_LENGTH - 1) < 0 && (overFlowRight - relative_x) > 0
                 && (overFlowDown - relative_y) > 0 && overFlowUp - (relative_y + CARD_HEIGHT - 1) < 0) {
@@ -232,18 +229,22 @@ public class TUI extends UI {
             // if the first line of the card exceeds the upper or lower limit the line is
             // not printed
             if (relative_y > overFlowUp && relative_y < overFlowDown) {
-                line = "▏" + String.valueOf("▔").repeat(CARD_LENGTH - 2) + "▕";
+                line = "┌" + String.valueOf("─").repeat(CARD_LENGTH - 2) + "┐";
+//                line = "▏" + String.valueOf("▔").repeat(CARD_LENGTH - 2) + "▕";
                 if (relative_x + line.length() > overFlowRight) {
                     line = line.substring(0, overFlowRight - relative_x);
                     res.append(ansi().cursor(relative_y, relative_x)
-                            .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
+                            //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                            .a(line).reset());
                 } else if (overFlowLeft - relative_x >= 0) {
                     line = line.substring(overFlowLeft - relative_x + 1);
                     res.append(ansi().cursor(relative_y, overFlowLeft + 1)
-                            .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
+                            //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                            .a(line).reset());
                 } else {
                     res.append(ansi().cursor(relative_y, relative_x)
-                            .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
+                            //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                            .a(line).reset());
                 }
             }
 
@@ -252,21 +253,25 @@ public class TUI extends UI {
                 // if a center line of the card exceeds the upper or lower limit the line is not
                 // printed
                 if (relative_y + i > overFlowUp && relative_y + i < overFlowDown) {
-                    line = "▏" + String.valueOf(" ").repeat(CARD_LENGTH - 2) + "▕";
+                    line = "│" + String.valueOf(" ").repeat(CARD_LENGTH - 2) + "│";
+//                    line = "▏" + String.valueOf(" ").repeat(CARD_LENGTH - 2) + "▕";
                     // if part of the line exceeds the right limit, the excess part is cut off
                     if (relative_x + line.length() > overFlowRight) {
                         line = line.substring(0, overFlowRight - relative_x);
                         res.append(ansi().cursor(relative_y + i, relative_x)
-                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
+                                //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                                .a(line).reset());
                     }
                     // If part of the line exceeds the left limit, the excess part is cut off
                     else if (overFlowLeft - relative_x >= 0) {
                         line = line.substring(overFlowLeft - relative_x + 1);
                         res.append(ansi().cursor(relative_y + i, overFlowLeft + 1)
-                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
+                                //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                                .a(line).reset());
                     } else {
                         res.append(ansi().cursor(relative_y + i, relative_x)
-                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
+                                //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                                .a(line).reset());
                     }
                 }
             }
@@ -275,32 +280,40 @@ public class TUI extends UI {
             // if the last line of the card exceeds the upper or lower limit the line is not
             // printed
             if (relative_y + CARD_HEIGHT - 1 > overFlowUp && relative_y + CARD_HEIGHT - 1 < overFlowDown) {
-                if (relative_y + CARD_HEIGHT - 1 > overFlowUp && relative_y + CARD_HEIGHT - 1 < overFlowDown) {
-                    line = "▏" + String.valueOf("▁").repeat(CARD_LENGTH - 2) + "▕";
-                    // if part of the line exceeds the right limit, the excess part is cut off
-                    if (relative_x + line.length() > overFlowRight) {
-                        line = line.substring(0, overFlowRight - relative_x);
-                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
-                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
-                    }
-                    // If part of the line exceeds the left limit, the excess part is cut off
-                    else if (overFlowLeft - relative_x >= 0) {
-                        line = line.substring(overFlowLeft - relative_x + 1);
-                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, overFlowLeft + 1)
-                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
-                    } else {
-                        res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
-                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(line).reset());
-                    }
+                line = "└" + String.valueOf("─").repeat(CARD_LENGTH - 2) + "┘";
+//                line = "▏" + String.valueOf("▁").repeat(CARD_LENGTH - 2) + "▕";
+                // if part of the line exceeds the right limit, the excess part is cut off
+                if (relative_x + line.length() > overFlowRight) {
+                    line = line.substring(0, overFlowRight - relative_x);
+                    res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
+                            //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                            .a(line).reset());
+                }
+                // If part of the line exceeds the left limit, the excess part is cut off
+                else if (overFlowLeft - relative_x >= 0) {
+                    line = line.substring(overFlowLeft - relative_x + 1);
+                    res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, overFlowLeft + 1)
+                            //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                            .a(line).reset());
+                } else {
+                    res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
+                            //.bgRgb(cardColor[0], cardColor[1], cardColor[2])
+                            .a(line).reset());
                 }
             }
+
+
+            res.append(ansi().cursor(relative_y+CARD_HEIGHT/2, relative_x+CARD_LENGTH/4).a(card.getScore()));
+            res.append(
+                    ansi().cursor(relative_y + CARD_HEIGHT / 2 - 2, relative_x + CARD_LENGTH / 2).saveCursorPosition());
+            res.append(card.getObjective().toString());
 
             System.out.println(res);
             System.out.println(ansi().reset());
         }
     }
 
-    private void print_PlayableCard(PlayableCard card, int relative_x, int relative_y, int overFlowUp, int overFlowDown,
+    protected void print_PlayableCard(PlayableCard card, int relative_x, int relative_y, int overFlowUp, int overFlowDown,
             int overFlowLeft, int overFlowRight) {
         // the card is printed starting from the top left corner
 
@@ -486,17 +499,17 @@ public class TUI extends UI {
                 // TODO aggiungere limiti
                 if (score != 0 && ob != null) {
                     res.append(ansi().cursor(relative_y + 1, relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) / 2)
-                            .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
+                                    .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
                             .a(String.valueOf(" ").repeat(CARD_CORNER_LENGTH)));
                     res.append(ansi().cursor(relative_y + 1, relative_x + CARD_LENGTH / 2 - 1)
                             .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
-                            .a(score + "│" + ob.toString()));
+                            .fg(BLACK).a(score + "│" + ob.toString()).reset());
                 } else if (score != 0) {
                     res.append(ansi().cursor(relative_y + 1, relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) / 2)
                             .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
                             .a(String.valueOf(" ").repeat(CARD_CORNER_LENGTH)));
                     res.append(ansi().cursor(relative_y + 1, relative_x + CARD_LENGTH / 2)
-                            .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).a(score));
+                            .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2]).fg(BLACK).a(score).reset());
                 }
 
             }
@@ -579,7 +592,7 @@ public class TUI extends UI {
                 if (relative_x + 2 < overFlowRight && relative_x + 2 > overFlowLeft + 1) {
                     res.append(ansi().cursor(relative_y - 1 + CARD_HEIGHT - 1, relative_x + 1)
                             .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2])
-                            .a(resources.get(1).getSymbol()));
+                            .a(resources.get(2).getSymbol()));
                 }
 
                 // CORNER DOWN DX
@@ -657,6 +670,11 @@ public class TUI extends UI {
                             .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
                             .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine));
                 }
+            }
+
+            if (resources.size() > 4) {
+                res.append(ansi().cursor(relative_y+CARD_HEIGHT/2, relative_x+CARD_LENGTH/2-1)
+                        .bgRgb(RGB_COLOR_CORNER[0],RGB_COLOR_CORNER[1],RGB_COLOR_CORNER[2]).a(" "+resources.get(4).getSymbol()+" "));
             }
 
             System.out.println(res);
@@ -739,26 +757,6 @@ public class TUI extends UI {
     }
 
     // PRINT UTILITIES
-    private int[] getRgbColor(CardColor color) {
-        switch (color) {
-            case CardColor.RED: {
-                return RGB_COLOR_RED_CARD;
-            }
-            case CardColor.GREEN: {
-                return RGB_COLOR_GREEN_CARD;
-            }
-            case CardColor.BLUE: {
-                return RGB_COLOR_BLUE_CARD;
-            }
-            case CardColor.PURPLE: {
-                return RBG_COLOR_PURPLE_CARD;
-            }
-            default:
-                // if a card does not have a color then returns the same color as the corners
-                return RGB_COLOR_CORNER;
-        }
-    }
-
     private List<Point> createPlaceHolder(Map<Point, PlayableCard> cards) {
         List<Point> placeHolders = new ArrayList<>();
         Point upDx;
@@ -1086,16 +1084,7 @@ public class TUI extends UI {
                         try {
                             print_CmdLineBorders();
                             print_PlayAreaBorders();
-                            // TODO temporaneo per la prova
-                            Deck<PlayableCard> deck = new Deck<>(CardType.GOLD);
-                            Map<Point, PlayableCard> placedCards = new HashMap<>();
-                            PlayableCard card = deck.draw();
-                            card.changeSide();
-                            placedCards.put(new Point(0, 0), card);
-                            card = deck.draw();
-                            card.changeSide();
-                            placedCards.put(new Point(1, 1), deck.draw());
-                            print_PlacedCards(placedCards);
+                            print_HandAreaBorders();
                             commandLineReader(); // solo al lancio del thread command line out la lista cmdLineOut è
                             // vuota, quindi entra in questo if solo una volta
                             cmdLineOut.wait();
@@ -1250,7 +1239,7 @@ public class TUI extends UI {
 
     /**
      * cmdLineOut.notifyAll();
-     * 
+     *
      * This method starts the <code>chatBoard</code> thread.
      * <p>
      * This thread is used to print the chat board messages the right way and in the
@@ -1437,13 +1426,9 @@ public class TUI extends UI {
                     HAND_INITIAL_COLUMN + 1 + (CARD_LENGTH + 1) * index,
                     HAND_INITIAL_ROW + 1,
                     HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN);
+            System.out.println(ansi().cursor(HAND_END_ROW-1, HAND_INITIAL_COLUMN+1+CARD_LENGTH/2+(CARD_LENGTH+1)*index).a("1"));
             index++;
         }
-        print_ObjectiveCard(
-                new ObjectiveCard(2, new StairUp(CardColor.RED), null, null),
-                HAND_INITIAL_ROW + 1 + (CARD_LENGTH + 1) * 3,
-                HAND_INITIAL_ROW + 1,
-                HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN);
         resetCursor();
     }
 

@@ -10,6 +10,7 @@ import it.polimi.ingsw.gc31.controller.Controller;
 import java.io.IOException;
 
 import java.rmi.RemoteException;
+import java.util.List;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.*;

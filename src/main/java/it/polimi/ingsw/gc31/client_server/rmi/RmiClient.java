@@ -8,6 +8,8 @@ import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.CreateGameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.GetGameListObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.JoinGameObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChooseSecretObjectiveObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawGoldObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ReadyStatusObj;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.view.UI;
@@ -128,7 +130,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void drawGold() throws RemoteException {
-        gameController.drawGold(username);
+        gameController.sendCommand(new DrawGoldObj(username));
     }
 
     @Override
@@ -158,12 +160,12 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void chooseSecretObjective1() throws RemoteException {
-        gameController.chooseSecretObjective1(username);
+        gameController.sendCommand(new ChooseSecretObjectiveObj(username, 1));
     }
 
     @Override
     public void chooseSecretObjective2() throws RemoteException {
-        gameController.chooseSecretObjective2(username);
+        gameController.sendCommand(new ChooseSecretObjectiveObj(username, 2));
     }
 
     @Override

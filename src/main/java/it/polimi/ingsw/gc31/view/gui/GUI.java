@@ -38,25 +38,49 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_listGame(List<String> listGame) throws RemoteException {
+    public void show_listGame(List<String> listGame) {
 
     }
 
     @Override
-    public void show_gameCreated() {
-        throw new UnsupportedOperationException("Unimplemented method 'show_gameCreated'");
+    public void show_gameCreated(int gameID) {
+
     }
 
     @Override
-    public void updateToPlayingState() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateToPlayingState'");
+    public void show_validUsername(String username) {
+
+    }
+
+    @Override
+    public void show_wrongUsername(String username) {
+
+    }
+
+    @Override
+    public void show_joinedToGame(int id) {
+
+    }
+
+    @Override
+    public void show_gameIsFull(int id) {
+
+    }
+
+    @Override
+    public void show_readyStatus(boolean status) {
+
     }
 
     @Override
     public void updateHand(String username, List<String> hand) throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateHand'");
+    }
+
+    @Override
+    public void update_ToPlayingState() {
+
     }
 
     // SHOW UPDATE
@@ -67,7 +91,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_goldDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+    public void show_goldDeck(String firstCardDeck, String card1, String card2) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_goldDeck'");
     }
@@ -79,44 +103,30 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_objectiveDeck'");
     }
 
     @Override
-    public void show_playArea(String username, String playArea, String achievedResources) throws RemoteException {
+    public void show_starterCard(String starterCard) {
+
+    }
+
+    @Override
+    public void show_playArea(String username, String playArea, String achievedResources) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_playArea'");
     }
 
     @Override
-    public void show_resourceDeck(String firstCardDeck, String card1, String card2) throws RemoteException {
+    public void show_resourceDeck(String firstCardDeck, String card1, String card2) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_resourceDeck'");
     }
 
     @Override
-    public void show_starterCard(String starterCard) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_starterCard'");
-    }
-
-    @Override
-    public void wrongUsername() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'wrongUsername'");
-    }
-
-    @Override
-    public void validUsername() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'validUsername'");
-    }
-
-    @Override
-    public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2)
-            throws RemoteException {
+    public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_chooseObjectiveCard'");
     }
@@ -125,6 +135,24 @@ public class GUI extends UI {
     public void show_objectiveCard(ObjectiveCard objectiveCard) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_objectiveCard'");
+    }
+
+    @Override
+    public void show_chatMessage(String username, String message) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_chatMessage'");
+    }
+
+    @Override
+    public void show_gameDoesNotExist() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_gameDoesNotExist'");
+    }
+
+    @Override
+    public void show_wrongGameSize() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_wrongGameSize'");
     }
 
 }
