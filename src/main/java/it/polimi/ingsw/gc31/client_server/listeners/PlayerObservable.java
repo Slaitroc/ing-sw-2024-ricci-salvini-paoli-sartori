@@ -28,6 +28,7 @@ public abstract class PlayerObservable {
     Observable<ObjectiveCard> playerObjectiveCardListener = new Observable<>();
     Observable<Pair<String, Integer>> playerScoreListeners = new Observable<>();
     Observable<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> playAreaListeners = new Observable<>();
+    Observable<Pair<ObjectiveCard, ObjectiveCard>> playerChooseObjectiveCardListener = new Observable<>();
 
     /**
      * Adds a listener for receiving updates of the player's hand.
@@ -74,6 +75,9 @@ public abstract class PlayerObservable {
     public void addPlayAreaListener(Listener<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> listener) {
         playAreaListeners.addListener(listener);
     }
+    public void addPlayerChooseObjectiveCardListener(Listener<Pair<ObjectiveCard, ObjectiveCard>> listener) {
+        playerChooseObjectiveCardListener.addListener(listener);
+    }
 
     /**
      * Removes a listener for receiving updates to the player's hand.
@@ -116,8 +120,12 @@ public abstract class PlayerObservable {
      *
      * @param listener the listener to be removed.
      */
-    public void remvePlayAreaListener(Listener<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> listener) {
+    public void removePlayAreaListener(Listener<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> listener) {
         playAreaListeners.removeListener(listener);
+    }
+
+    public void removePlayerChooseObjectiveCardListener(Listener<Pair<ObjectiveCard, ObjectiveCard>> listener) {
+        playerChooseObjectiveCardListener.removeListener(listener);
     }
 
     /**
@@ -163,5 +171,9 @@ public abstract class PlayerObservable {
      */
     public void notifyPlayAreaListener(Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>> data) {
         playAreaListeners.notifyListeners(data);
+    }
+
+    public void notifyPlayerChooseObjectiveCardListener(Pair<ObjectiveCard, ObjectiveCard> data) {
+        playerChooseObjectiveCardListener.notifyListeners(data);
     }
 }

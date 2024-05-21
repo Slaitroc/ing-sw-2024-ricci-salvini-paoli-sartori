@@ -6,7 +6,6 @@ import java.util.LinkedHashMap;
 import static it.polimi.ingsw.gc31.OurScanner.scanner;
 
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
-import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
 public class InitState extends TuiState {
 
@@ -14,6 +13,7 @@ public class InitState extends TuiState {
         this.tui = tui;
         initialize();
         stateName = "Init State";
+
     }
 
     @Override
@@ -25,6 +25,7 @@ public class InitState extends TuiState {
         commandsMap.put(("create game").toLowerCase(), this::command_createGame);
         commandsMap.put("show games", this::command_showGames);
         commandsMap.put("join game", this::command_joinGame);
+        commandsMap.put("invalid", this::command_invalidCommand);
 
         // info map
         commandsInfo = new LinkedHashMap<>();
@@ -36,19 +37,18 @@ public class InitState extends TuiState {
     }
 
     @Override
-    protected synchronized void command_createGame() {
+    protected void command_createGame() {
         tui.printToCmdLineOut(tui.tuiWrite("Type the number of players for the game:"));
         int input = Integer.parseInt(scanner.nextLine());
         try {
             tui.getClient().createGame(input);
-            tui.setState(new JoinedToGameState(tui));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    protected synchronized void command_showGames() {
+    protected void command_showGames() {
         try {
             tui.getClient().getGameList();
         } catch (IOException e) {
@@ -59,12 +59,11 @@ public class InitState extends TuiState {
     }
 
     @Override
-    protected synchronized void command_joinGame() {
+    protected void command_joinGame() {
         tui.printToCmdLineOut(tui.tuiWrite("Type gameID:"));
         int input = Integer.parseInt(scanner.nextLine());
         try {
             tui.getClient().joinGame(input);
-            tui.setState(new JoinedToGameState(tui));
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -78,38 +77,38 @@ public class InitState extends TuiState {
     protected void command_drawGold() {
     }
 
-    private void procedure_setUsername() {
-        String message = "Type your username:";
-        boolean usernameIsValid = false;
-        String input;
-        while (!usernameIsValid) {
-            tui.printToCmdLineOut(tui.tuiWrite(message));
-            input = scanner.nextLine();
-
-            try {
-                tui.getClient().setUsername(input.trim());
-                usernameIsValid = true;
-                tui.printToCmdLineOut(tui.tuiWrite("Your name is: " + input.trim()));
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (PlayerNicknameAlreadyExistsException e) {
-                message = "Username already exists :,( -> Try another username:";
-            }
-        }
-
-        tui.getClient().setUI(this.tui);
-
-    }
-
     @Override
     protected void command_drawResource() {
     }
 
     @Override
-    protected synchronized void command_initial() {
-        procedure_setUsername();
-        command_showCommandsInfo();
+    protected void command_chooseSecreteObjective1() {
+
+    }
+
+    @Override
+    protected void command_chooseSecreteObjective2() {
+
+    }
+
+    @Override
+    protected void command_initial() {
+        tui.getClient().setUI(this.tui);
+        setUsername();
+    }
+
+    @Override
+    protected void setUsername() {
+        String message = "Type your username:";
+        String input;
+        tui.printToCmdLineOut(tui.tuiWrite(message));
+        tui.moveCursorToCmdLine();
+        input = scanner.nextLine();
+        try {
+            tui.getClient().setUsernameCall(input.trim());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

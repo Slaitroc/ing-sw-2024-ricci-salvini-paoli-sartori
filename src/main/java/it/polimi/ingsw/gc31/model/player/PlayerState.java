@@ -23,7 +23,7 @@ public abstract class PlayerState {
      * @param player the player to add the card to.
      * @throws IllegalStateOperationException if the operation is not allowed in the current state.
      */
-    public abstract void addObjectiveCard(ObjectiveCard card, Player player) throws IllegalStateOperationException;
+    public abstract void chooseSecretObjective(ObjectiveCard card, Player player) throws IllegalStateOperationException;
 
     /**
      * Adds a card to the player's hand.

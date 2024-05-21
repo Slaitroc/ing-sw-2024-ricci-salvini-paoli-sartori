@@ -9,6 +9,8 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
+import static org.fusesource.jansi.Ansi.ansi;
+
 /**
  * This class represents the objective that gives points based on how many
  * resources are held by a player
@@ -48,6 +50,15 @@ public class Count extends Objective {
             return countAPIM(placedCard, achievedResources);
         }
         return countFIS(placedCard, achievedResources);
+    }
+
+    @Override
+    public String print() {
+        StringBuilder res = new StringBuilder();
+        res.append(ansi().restoreCursorPosition().cursorMove(2,3).a(resources.get(0).getSymbol()));
+        res.append(ansi().restoreCursorPosition().cursorMove(6,3).a(resources.get(1).getSymbol()));
+        if (resources.size() == 3) res.append(ansi().restoreCursorPosition().cursorMove(4,2).a(resources.get(2).getSymbol()));
+        return res.toString();
     }
 
     @Override

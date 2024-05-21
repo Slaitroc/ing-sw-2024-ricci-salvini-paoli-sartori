@@ -8,6 +8,9 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
+import static org.fusesource.jansi.Ansi.ansi;
+import static it.polimi.ingsw.gc31.DefaultValues.getRgbColor;
+
 /**
  * This Class represents the Objective where the player needs to have 3 cards placed diagonally (towards the bottom)
  */
@@ -61,6 +64,24 @@ public class StairDown extends Objective {
         }
 
         return count;
+    }
+
+    @Override
+    public String print() {
+        int[] cardColor = getRgbColor(this.cardColor);
+        StringBuilder res = new StringBuilder();
+        res.append(
+                ansi().restoreCursorPosition().fgRgb(cardColor[0],cardColor[1],cardColor[2]).a("┌──┐"));
+        res.append(
+                ansi().restoreCursorPosition().cursorDown(1)
+                        .fgRgb(cardColor[0],cardColor[1],cardColor[2]).a("└──⊠──┐"));
+        res.append(
+                ansi().restoreCursorPosition().cursorDown(2)
+                        .fgRgb(cardColor[0],cardColor[1],cardColor[2]).a("   └──⊠──┐"));
+        res.append(
+                ansi().restoreCursorPosition().cursorDown(3)
+                        .fgRgb(cardColor[0],cardColor[1],cardColor[2]).a("      └──┘"));
+        return res.toString();
     }
 
     @Override
