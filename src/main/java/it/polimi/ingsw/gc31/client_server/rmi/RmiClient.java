@@ -128,28 +128,8 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
-    public void drawGoldCard1() throws RemoteException {
-        gameController.drawGoldCard1(username);
-    }
-
-    @Override
-    public void drawGoldCard2() throws RemoteException {
-        gameController.drawGoldCard2(username);
-    }
-
-    @Override
-    public void drawResource() throws RemoteException {
-        gameController.drawResource(username);
-    }
-
-    @Override
-    public void drawResourceCard1() throws RemoteException {
-        gameController.drawResourceCard1(username);
-    }
-
-    @Override
-    public void drawResourceCard2() throws RemoteException {
-        gameController.drawResourceCard2(username);
+    public void drawResource(int index) throws RemoteException {
+//        gameController.drawResource(username);
     }
 
     @Override

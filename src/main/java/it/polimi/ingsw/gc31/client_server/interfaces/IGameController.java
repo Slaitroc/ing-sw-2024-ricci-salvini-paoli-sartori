@@ -9,16 +9,6 @@ import java.rmi.RemoteException;
 
 public interface IGameController extends Remote {
 
-    void drawGoldCard1(String username) throws RemoteException;
-
-    void drawGoldCard2(String username) throws RemoteException;
-
-    void drawResource(String username) throws RemoteException;
-
-    void drawResourceCard1(String username) throws RemoteException;
-
-    void drawResourceCard2(String username) throws RemoteException;
-
     void changeSide(String username) throws RemoteException;
 
     void changeStarterSide(String username) throws RemoteException;

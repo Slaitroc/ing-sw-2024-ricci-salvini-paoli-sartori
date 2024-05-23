@@ -81,13 +81,6 @@ public class PlayingState extends TuiState {
 
     @Override
     protected void command_drawResource() {
-        // TODO qui va aggiunto un metodo che mostri le possibili carte da pescare
-        try {
-            tui.getClient().drawResource();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        stateNotify();
     }
 
     @Override

@@ -234,7 +234,7 @@ public class TCPClient implements ClientCommands {
      * select = 2 : drawing the second resource card on the board.
      */
     @Override
-    public void drawResource() {
+    public void drawResource(int index) {
         tcp_sendCommand(new DrawResObj(this.username, 0), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
