@@ -1,13 +1,14 @@
 package it.polimi.ingsw.gc31.view.gui.controllers;
 
+import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.view.gui.GUIApplication;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.List;
 
 public class GameListController extends ViewController {
 
@@ -23,6 +24,7 @@ public class GameListController extends ViewController {
     @Override
     @FXML
     protected void initialize() {
+
         gameIDColumn.setCellValueFactory(cellData -> cellData.getValue().gameIDProperty());
         playersColumn.setCellValueFactory(cellData -> cellData.getValue().playersProperty());
 
@@ -34,9 +36,10 @@ public class GameListController extends ViewController {
 
                     {
                         btn.getStyleClass().add("small-button");
+                        btn.getStyleClass().add("rounded-button");
                         btn.setOnAction(event -> {
                             app.setNumberOfPlayers(Integer.parseInt(getTableView().getItems().get(getIndex()).getPlayers().charAt(2) + ""));
-                            for(int i = 0; i<Integer.parseInt(getTableView().getItems().get(getIndex()).getPlayers().charAt(0) + ""); i++){
+                            for (int i = 0; i < Integer.parseInt(getTableView().getItems().get(getIndex()).getPlayers().charAt(0) + ""); i++) {
                                 GUIApplication.getPlayerList().add("Player" + i);
                             }
                             app.setCurrentGameID(Integer.parseInt(getTableView().getItems().get(getIndex()).getGameID()));
@@ -60,7 +63,7 @@ public class GameListController extends ViewController {
         });
     }
 
-    private void joinGame(GameInstance gameInstance){
+    private void joinGame(GameInstance gameInstance) {
 
         try {
             client.joinGame(Integer.parseInt(gameInstance.getGameID()));
@@ -79,4 +82,20 @@ public class GameListController extends ViewController {
     public void goMainMenu() {
         app.loadScene(SceneTag.MAINMENU);
     }
+
+    public void refresh() {
+        try {
+            app.getClient().getGameList();
+        } catch (NoGamesException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error 505");
+            alert.setHeaderText("Server Error");
+            alert.setContentText("Server has crashed. Please restart application");
+
+            alert.showAndWait();
+        }
+    }
 }
+

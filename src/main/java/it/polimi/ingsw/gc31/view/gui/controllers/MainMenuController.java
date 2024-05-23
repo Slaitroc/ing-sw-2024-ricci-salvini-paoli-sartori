@@ -166,7 +166,6 @@ public class MainMenuController extends ViewController {
 
             alert.showAndWait();
         }
-        app.loadScene(SceneTag.GAMELIST);
     }
 
     public void showRules() {

@@ -28,9 +28,14 @@
                              styleClass="table-view, table-cell" minWidth="200"/>
             </columns>
         </TableView>
-        <MFXButton layoutX="188.0" layoutY="349.0" onAction="#goMainMenu" prefWidth="250"
-                   styleClass="small-button, rounded-button" text="Back"
-                   GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <HBox GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <MFXButton layoutX="188.0" layoutY="349.0" onAction="#goMainMenu" prefWidth="250"
+                       styleClass="small-button, rounded-button" text="Back"/>
+            <MFXButton layoutX="188.0" layoutY="349.0" onAction="#refresh" prefWidth="250"
+                       styleClass="small-button, rounded-button" text="Refresh" translateX="100"/>
+        </HBox>
+
+
     </GridPane>
 
 </StackPane>

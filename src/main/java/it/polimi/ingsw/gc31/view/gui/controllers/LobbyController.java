@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
@@ -13,6 +14,15 @@ import javafx.scene.layout.StackPane;
 import java.rmi.RemoteException;
 
 public class LobbyController extends ViewController {
+
+    @FXML
+    public ImageView iconPlayer1;
+    @FXML
+    public ImageView iconPlayer2;
+    @FXML
+    public ImageView iconPlayer3;
+    @FXML
+    public ImageView iconPlayer4;
 
     @FXML
     public TextField ready1;
@@ -24,6 +34,7 @@ public class LobbyController extends ViewController {
     public TextField ready4;
     @FXML
     public Label gameIDLabel;
+
 
     @FXML
     MFXTextField namePlayer1;
@@ -98,6 +109,7 @@ public class LobbyController extends ViewController {
             case 2:
                 if (GUIApplication.getPlayerList().isEmpty()) {
                     imPlayerNumber = 1;
+                    iconPlayer1.setVisible(true);
                     namePlayer1.setText(app.getUsername());
 
                     waitingPlayer2.setVisible(true);
@@ -105,11 +117,12 @@ public class LobbyController extends ViewController {
 
                 } else {
                     imPlayerNumber = 2;
+                    iconPlayer2.setVisible(true);
                     namePlayer1.setText(GUIApplication.getPlayerList().getFirst());
 
                     inGamePlayer2.setVisible(true);
                     inGamePlayer2.setManaged(true);
-                    namePlayer2.setText(GUIApplication.getPlayerList().get(1));
+                    namePlayer2.setText(app.getUsername());
                 }
 
                 lockPlayer3.setVisible(true);
@@ -124,6 +137,7 @@ public class LobbyController extends ViewController {
 
                 if (GUIApplication.getPlayerList().isEmpty()) {
                     imPlayerNumber = 1;
+                    iconPlayer1.setVisible(true);
                     namePlayer1.setText(app.getUsername());
 
                     waitingPlayer2.setVisible(true);
@@ -133,6 +147,7 @@ public class LobbyController extends ViewController {
                     waitingPlayer3.setManaged(true);
                 } else if (GUIApplication.getPlayerList().size() == 1) {
                     imPlayerNumber = 2;
+                    iconPlayer2.setVisible(true);
                     namePlayer1.setText(GUIApplication.getPlayerList().getFirst());
 
                     inGamePlayer2.setVisible(true);
@@ -143,6 +158,7 @@ public class LobbyController extends ViewController {
                     waitingPlayer3.setManaged(true);
                 } else {
                     imPlayerNumber = 3;
+                    iconPlayer3.setVisible(true);
                     namePlayer1.setText(GUIApplication.getPlayerList().getFirst());
 
                     inGamePlayer2.setVisible(true);
@@ -161,6 +177,7 @@ public class LobbyController extends ViewController {
             case 4:
                 if (GUIApplication.getPlayerList().isEmpty()) {
                     imPlayerNumber = 1;
+                    iconPlayer1.setVisible(true);
                     namePlayer1.setText(app.getUsername());
 
                     waitingPlayer2.setVisible(true);
@@ -174,6 +191,7 @@ public class LobbyController extends ViewController {
 
                 } else if (GUIApplication.getPlayerList().size() == 1) {
                     imPlayerNumber = 2;
+                    iconPlayer2.setVisible(true);
                     namePlayer1.setText(GUIApplication.getPlayerList().getFirst());
 
                     inGamePlayer2.setVisible(true);
@@ -188,6 +206,7 @@ public class LobbyController extends ViewController {
 
                 } else if (GUIApplication.getPlayerList().size() == 2) {
                     imPlayerNumber = 3;
+                    iconPlayer3.setVisible(true);
                     namePlayer1.setText(GUIApplication.getPlayerList().getFirst());
 
                     inGamePlayer2.setVisible(true);
@@ -202,6 +221,7 @@ public class LobbyController extends ViewController {
                     waitingPlayer4.setManaged(true);
                 } else {
                     imPlayerNumber = 4;
+                    iconPlayer4.setVisible(true);
                     namePlayer1.setText(GUIApplication.getPlayerList().getFirst());
 
                     inGamePlayer2.setVisible(true);

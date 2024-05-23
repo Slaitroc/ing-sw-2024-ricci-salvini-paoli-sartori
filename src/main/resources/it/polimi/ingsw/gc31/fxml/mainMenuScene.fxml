@@ -21,7 +21,7 @@
         <ImageView fitHeight="250" fitWidth="381">
             <Image url="@../Images/Misc/CodexLogo.png"/>
         </ImageView>
-        <VBox alignment="CENTER" spacing="30" styleClass="vbox">
+        <VBox alignment="CENTER" spacing="30" styleClass="stackPane-default">
             <HBox alignment="CENTER">
                 <MFXButton fx:id="createGameButton" layoutX="188.0" layoutY="349.0" onAction="#showCreateGameMenu"
                            onMouseEntered="#showPointer1"
@@ -87,7 +87,7 @@
 
                 <!-- GENERAL MENU-->
                 <StackPane fx:id="generalMenu">
-                    <VBox spacing="20" styleClass="vbox">
+                    <VBox spacing="20" styleClass="stackPane-default">
                         <HBox alignment="CENTER">
                             <MFXButton layoutX="188.0" layoutY="349.0" onAction="#showJoinGameMenu"
                                        onMouseEntered="#showPointer2" onMouseExited="#hidePointer2" prefWidth="250"

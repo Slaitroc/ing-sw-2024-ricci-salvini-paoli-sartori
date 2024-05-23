@@ -16,7 +16,24 @@
         <Insets top="10" right="20" bottom="10" left="20"/>
     </padding>
 
-    <GridPane hgap="50" alignment="CENTER">
+    <GridPane  alignment="CENTER" hgap="50">
+
+        <ImageView fx:id="iconPlayer1" GridPane.rowIndex="0" GridPane.columnIndex="0" fitHeight="100" fitWidth="100" visible="false" GridPane.halignment="CENTER">
+            <Image url="@../Images/AppIcons/iconMushroom.png"/>
+        </ImageView>
+
+        <ImageView fx:id="iconPlayer2" GridPane.rowIndex="0" GridPane.columnIndex="1" fitHeight="100" fitWidth="100" visible="false" GridPane.halignment="CENTER">
+            <Image url="@../Images/AppIcons/iconAnimal.png"/>
+        </ImageView>
+
+        <ImageView fx:id="iconPlayer3" GridPane.rowIndex="0" GridPane.columnIndex="2" fitHeight="100" fitWidth="100" visible="false" GridPane.halignment="CENTER">
+            <Image url="@../Images/AppIcons/iconPlant.png"/>
+        </ImageView>
+
+        <ImageView fx:id="iconPlayer4" GridPane.rowIndex="0" GridPane.columnIndex="3" fitHeight="100" fitWidth="100" visible="false" GridPane.halignment="CENTER">
+            <Image url="@../Images/AppIcons/iconInsect.png"/>
+        </ImageView>
+
 
         <!-- StackPane for GENERAL_PLAYER1 -->
         <!-- StackPane for PLAYER1_IN_LOBBY  -->

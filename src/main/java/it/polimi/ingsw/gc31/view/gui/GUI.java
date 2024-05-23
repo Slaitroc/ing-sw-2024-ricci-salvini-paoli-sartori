@@ -81,13 +81,16 @@ public class GUI extends UI {
     @Override
     public void show_joinedToGame(int id) {
         Platform.runLater(() -> {
+            app.setLobbySize();
             app.loadScene(SceneTag.LOBBY);
         });
     }
 
     @Override
     public void show_gameIsFull(int id) {
-
+        Platform.runLater(() -> {
+            app.getCurrentController().setMessage("Username already taken!");
+        });
     }
 
     @Override
@@ -97,7 +100,8 @@ public class GUI extends UI {
 
     @Override
     public void show_playerTurn(String username, String info) {
-
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateHand'");
     }
 
     @Override
@@ -108,7 +112,8 @@ public class GUI extends UI {
 
     @Override
     public void update_ToPlayingState() {
-
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateHand'");
     }
 
     // SHOW UPDATE
