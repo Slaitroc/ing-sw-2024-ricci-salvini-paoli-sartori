@@ -11,6 +11,6 @@ public class ShowStarterCardObj extends ClientQueueObject {
 
     @Override
     public void execute(UI ui) {
-
+        ui.show_starterCard(starterCard);
     }
 }

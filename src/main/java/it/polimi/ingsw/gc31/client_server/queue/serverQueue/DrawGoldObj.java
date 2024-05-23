@@ -9,9 +9,11 @@ import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
 public class DrawGoldObj extends ServerQueueObject {
 
     private final String username;
+    private final int select;
 
-    public DrawGoldObj(String username) {
+    public DrawGoldObj(String username, int select) {
         this.username = username;
+        this.select = select;
     }
 
     @Override
@@ -26,6 +28,8 @@ public class DrawGoldObj extends ServerQueueObject {
         throw new UnsupportedOperationException("Unimplemented method 'execute'");
     }
 
+    //FIXME Modificare il metodo in modo che drawGold accetti anche il valore "select"
+    // unico metodo per tutti e 3 i casi, modificare metodo di gameController
     public void execute(GameController gameController) {
         gameController.drawGold(username);
     }

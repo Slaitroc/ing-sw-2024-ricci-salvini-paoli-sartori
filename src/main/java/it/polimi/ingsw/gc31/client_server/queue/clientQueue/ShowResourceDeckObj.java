@@ -15,6 +15,6 @@ public class ShowResourceDeckObj extends ClientQueueObject {
 
     @Override
     public void execute(UI ui) {
-
+        ui.show_resourceDeck(firstCardDeck, card1, card2);
     }
 }

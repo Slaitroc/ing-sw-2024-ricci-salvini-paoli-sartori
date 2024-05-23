@@ -15,6 +15,6 @@ public class ShowGoldDeckObj extends ClientQueueObject {
 
     @Override
     public void execute(UI ui) {
-
+        ui.show_goldDeck(firstCardDeck, card1, card2);
     }
 }

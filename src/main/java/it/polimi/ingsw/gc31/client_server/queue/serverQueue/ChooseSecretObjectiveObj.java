@@ -23,6 +23,7 @@ public class ChooseSecretObjectiveObj extends ServerQueueObject {
 
     @Override
     public void execute(Controller controller) {
+        throw new UnsupportedOperationException("Unimplemented method 'execute'");
     }
 
     @Override

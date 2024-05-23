@@ -15,6 +15,6 @@ public class ShowPlayAreaObj extends ClientQueueObject {
 
     @Override
     public void execute(UI ui) {
-
+        ui.show_playArea(username, playArea, achievedResources);
     }
 }

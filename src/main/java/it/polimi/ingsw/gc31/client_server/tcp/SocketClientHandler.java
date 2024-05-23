@@ -17,7 +17,14 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+/*
+ricevo
+deserializzo
+getto e check il recipient
+a seconda chiamo gamecontroller o controller sendobject
 
+eseguito da loro
+ */
 /**
  * This class receives the inputs from the virtual socket server, executes the
  * methods requested by the client
@@ -39,15 +46,12 @@ public class SocketClientHandler implements VirtualClient {
     /**
      * This method is the constructor of the client handler
      *
-     * @param controller is the IController of the specific client
-     * @param server     is the TCPServer linked to that client handler
      * @param input      is the reference to the input stream of the socket
      *                   connection
      * @param output     is the reference to the output stream of the socket
      *                   connection
      */
-    public SocketClientHandler(ObjectInputStream input,
-            ObjectOutputStream output) {
+    public SocketClientHandler(ObjectInputStream input, ObjectOutputStream output) {
         this.controller = Controller.getController();
         Controller.getController().setNewConnection(this);
         this.input = input;
@@ -62,7 +66,6 @@ public class SocketClientHandler implements VirtualClient {
                 e.printStackTrace();
             }
         }));
-
     }
 
     /**
@@ -73,6 +76,7 @@ public class SocketClientHandler implements VirtualClient {
     public void sendCommand(ClientQueueObject obj) throws RemoteException {
         try {
             output.writeObject(obj);
+            output.reset();
             output.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -80,7 +84,7 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     /**
-     * This method reads the object from the objectInputStream and sends it to the
+     * This method reads the object from the  and sends it to the
      * right controller
      * based on the recipient of the object
      */
@@ -90,9 +94,7 @@ public class SocketClientHandler implements VirtualClient {
             while (true) {
                 try {
                     obj = (ServerQueueObject) input.readObject();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
+                } catch (ClassNotFoundException | IOException e) {
                     e.printStackTrace();
                 }
                 if (obj != null) {

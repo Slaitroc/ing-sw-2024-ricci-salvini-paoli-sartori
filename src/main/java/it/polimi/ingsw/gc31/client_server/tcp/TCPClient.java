@@ -9,18 +9,15 @@ import java.util.concurrent.LinkedBlockingQueue;
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.CreateGameObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.JoinGameObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
-import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.view.UI;
+
+import javax.swing.*;
 
 public class TCPClient implements ClientCommands {
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
-    @SuppressWarnings("unused")
     private String username;
     private Integer idGame;
     private UI ui;
@@ -28,8 +25,6 @@ public class TCPClient implements ClientCommands {
 
     /**
      * This method is the constructor of the TCPClient
-     * 
-     * @throws IOException
      */
     @SuppressWarnings("resource")
     public TCPClient() throws IOException {
@@ -43,11 +38,11 @@ public class TCPClient implements ClientCommands {
 
     }
 
-    @SuppressWarnings("unused")
     private void tcp_sendCommand(ServerQueueObject obj, String recipient) {
         try {
             obj.setRecipient(recipient);
             output.writeObject(obj);
+            output.reset();
             output.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -59,12 +54,8 @@ public class TCPClient implements ClientCommands {
             ClientQueueObject obj = null;
             while (true) {
                 try {
-                    try {
                         obj = (ClientQueueObject) input.readObject();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                } catch (IOException e) {
+                } catch (ClassNotFoundException | IOException e) {
                     e.printStackTrace();
                 }
                 if (obj != null) {
@@ -109,50 +100,69 @@ public class TCPClient implements ClientCommands {
     }
 
     /**
-     * This method is the first called by the client, it sends the client handler
-     * the request to execute the "connect" method. If the server has already this
-     * username ane exception is launched
-     * 
-     * @param username is the username set by the client
-     * @throws IOException                          if there is an error reading the
-     *                                              client handler messages
-     * @throws PlayerNicknameAlreadyExistsException if the username wrote by the
-     *                                              client
-     *                                              is already in the server
-     *                                              database
+     * This method is invoked after the server send the result of the setUsername method
+     *
+     * @param username is the username set for the player server-side
      */
-    @Override
-    public void setUsernameCall(String username) throws IOException {
-        tcp_sendCommand(new ConnectObj(username), DefaultValues.RECIPIENT_CONTROLLER);
-    }
-
     @Override
     public void setUsernameResponse(String username) {
         this.username = username;
     }
 
     /**
+     * This method returns the player's game idGame
+     *
+     * @return the idGame of the game
+     */
+    @Override
+    public int getGameID() {
+        return idGame;
+    }
+
+    /**
+     * This method return the player's username
+     * @return the player's username
+     */
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
+
+    /**
+     * This method is the first called by the client, it sends the client handler
+     * the request to execute the "connect" method. If the server has already this
+     * username ane exception is launched
+     *
+     * @param username is the username set by the client
+     * @throws IOException                          if there is an error reading the
+     *                                              client handler messages
+     */
+    @Override
+    public void setUsernameCall(String username) throws IOException {
+        tcp_sendCommand(new ConnectObj(username), DefaultValues.RECIPIENT_CONTROLLER);
+    }
+
+    /**
      * This method sends to the client handler the string corresponding with the
      * create game request
-     * 
+     *
      * @param maxNumberPlayer is the max number of the players for the new game
      * @throws IOException if there is an error reading the server messages
      */
     @Override
     public void createGame(int maxNumberPlayer) throws IOException {
-        tcp_sendCommand(new CreateGameObj(username, maxNumberPlayer), DefaultValues.RECIPIENT_CONTROLLER);
+        tcp_sendCommand(new CreateGameObj(this.username, maxNumberPlayer), DefaultValues.RECIPIENT_CONTROLLER);
     }
 
     /**
      * This method send the string that identifies the join game request made
      * by the player
-     * 
+     *
      * @param gameId is the gameId of the particular game the player wants to join
-     * @throws RemoteException
      */
     @Override
-    public void joinGame(int gameId) throws RemoteException {
-        tcp_sendCommand(new JoinGameObj(username, gameId), DefaultValues.RECIPIENT_CONTROLLER);
+    public void joinGame(int gameId) {
+        tcp_sendCommand(new JoinGameObj(this.username, gameId), DefaultValues.RECIPIENT_CONTROLLER);
     }
 
     /**
@@ -174,93 +184,62 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void getGameList() throws IOException, NoGamesException {
-        // List<String> list = new ArrayList<>();
-        // output.println("get game list");
-        // output.flush();
-
-        // String line = input.readLine();
-        // if (line.equals("no game exception"))
-        // throw new NoGamesException();
-        // else if (line.equals("ok")) {
-        // while (!(line = input.readLine()).equals("game list finished"))
-        // list.add(line);
-        // }
-        // ui.show_listGame(list);
+            tcp_sendCommand(new GetGameListObj(this.username), DefaultValues.RECIPIENT_CONTROLLER);
     }
 
+
     @Override
-    public void setReady(boolean ready) throws RemoteException {
-        // TODO Auto-generated method stub
+    public void setReady(boolean ready) {
+        tcp_sendCommand(new ReadyStatusObj(ready, this.username), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
     @Override
     public void drawGold() throws RemoteException {
-        // output.println("draw gold");
-        // output.flush();
+        tcp_sendCommand(new DrawGoldObj(this.username, 0), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
     @Override
     public void drawGoldCard1() throws RemoteException {
-        // output.println("draw gold card 1");
-        // output.flush();
+        tcp_sendCommand(new DrawGoldObj(this.username, 1), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
     @Override
     public void drawGoldCard2() throws RemoteException {
-        // output.println("draw gold card 2");
-        // output.flush();
+        tcp_sendCommand(new DrawGoldObj(this.username, 2), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
     @Override
     public void drawResource() throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'drawResource'");
+        tcp_sendCommand(new DrawResObj(this.username, 0), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
     @Override
     public void drawResourceCard1() throws RemoteException {
-        // output.println("draw resource card 1");
-        // output.flush();
+        tcp_sendCommand(new DrawResObj(this.username, 1), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
     @Override
     public void drawResourceCard2() throws RemoteException {
-        // output.println("draw resource card 2");
-        // output.flush();
+        tcp_sendCommand(new DrawResObj(this.username, 2), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
     @Override
-    public void chooseSecretObjective1() throws RemoteException {
-        // output.println("choose secret objective 1");
-        // output.flush();
+    public void chooseSecretObjective1() {
+        tcp_sendCommand(new ChooseSecretObjectiveObj(this.username, 0), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
     @Override
-    public void chooseSecretObjective2() throws RemoteException {
-        // output.println("choose secret objective 2");
-        // output.flush();
+    public void chooseSecretObjective2() {
+        tcp_sendCommand(new ChooseSecretObjectiveObj(this.username, 1), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
     /**
-     * This method returns the player's game idGame
-     *
-     * @return the idGame of the game
-     * @throws RemoteException
+     * This method sends the object that sends a message in the chat
+     * @param username is the username of the player sending the message
+     * @param message is the String the player wants to send in the chat
      */
     @Override
-    public int getGameID() throws RemoteException {
-        return idGame;
-    }
-
-    @Override
-    public String getUsername() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
-    }
-
-    @Override
-    public void sendChatMessage(String username, String message) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'sendChatMessage'");
+    public void sendChatMessage(String username, String message) {
+        tcp_sendCommand(new ChatMessage(this.username, message), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 }

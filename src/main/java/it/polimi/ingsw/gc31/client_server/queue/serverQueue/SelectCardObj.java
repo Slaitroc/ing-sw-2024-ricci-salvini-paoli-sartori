@@ -12,6 +12,7 @@ public class SelectCardObj extends ServerQueueObject {
 
     public SelectCardObj(Player player, int i) {
         this.player = player;
+        this.i = i;
     }
 
     @Override

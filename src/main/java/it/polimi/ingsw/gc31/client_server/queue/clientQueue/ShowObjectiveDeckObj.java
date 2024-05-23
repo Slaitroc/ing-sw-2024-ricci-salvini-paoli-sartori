@@ -15,6 +15,6 @@ public class ShowObjectiveDeckObj extends ClientQueueObject {
 
     @Override
     public void execute(UI ui) {
-
+        ui.show_objectiveDeck(firstCardDeck, card1, card2);
     }
 }

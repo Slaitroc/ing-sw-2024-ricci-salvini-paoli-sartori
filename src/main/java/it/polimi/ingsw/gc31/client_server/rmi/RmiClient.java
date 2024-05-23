@@ -130,7 +130,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void drawGold() throws RemoteException {
-        gameController.sendCommand(new DrawGoldObj(username));
+        gameController.sendCommand(new DrawGoldObj(username, 0));
     }
 
     @Override
