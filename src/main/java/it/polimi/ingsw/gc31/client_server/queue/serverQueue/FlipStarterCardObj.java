@@ -7,10 +7,10 @@ import it.polimi.ingsw.gc31.model.player.Player;
 
 public class FlipStarterCardObj extends ServerQueueObject {
 
-    Player player;
+    private final String username;
 
-    public FlipStarterCardObj(Player player) {
-        this.player = player;
+    public FlipStarterCardObj(String username) {
+        this.username = username;
     }
 
     @Override

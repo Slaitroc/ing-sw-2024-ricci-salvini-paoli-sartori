@@ -8,8 +8,8 @@ import it.polimi.ingsw.gc31.controller.GameController;
 
 public class CreateGameObj extends ServerQueueObject {
 
-    String username;
-    int maxNumPlayer;
+    private final String username;
+    private final int maxNumPlayer;
 
     public CreateGameObj(String username, int maxNumberPlayer) {
         this.username = username;

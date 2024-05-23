@@ -8,7 +8,7 @@ import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 
 public class GetGameListObj extends ServerQueueObject {
-    String username;
+    private final String username;
 
     public GetGameListObj(String username) {
         this.username = username;
@@ -16,6 +16,7 @@ public class GetGameListObj extends ServerQueueObject {
 
     @Override
     public void execute(GameController gameController) {
+        throw new UnsupportedOperationException("Unimplemented method 'execute'");
     }
 
     @Override

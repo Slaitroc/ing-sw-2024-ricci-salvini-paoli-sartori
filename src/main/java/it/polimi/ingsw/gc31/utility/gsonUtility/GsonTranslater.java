@@ -7,6 +7,8 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsFullObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.strategies.*;
@@ -35,6 +37,8 @@ public class GsonTranslater {
             .registerTypeAdapter(SevenReverse.class, new ObjectiveAdapter())
             .registerTypeAdapter(StairDown.class, new ObjectiveAdapter())
             .registerTypeAdapter(StairUp.class, new ObjectiveAdapter())
+            .registerTypeAdapter(ServerQueueObject.class, new ServerQueueObjAdapter())
+            .registerTypeAdapter(DrawResObj.class, new ServerQueueObjAdapter())
             .registerTypeAdapter(new TypeToken<Map<Resources, Integer>>(){}.getType(), new MapRequirementsAdapter())
             .registerTypeAdapter(new TypeToken<Map<Point, PlayableCard>>(){}.getType(), new PlayAreaAdapter())
             .registerTypeAdapter(ClientQueueObject.class, new ClientQueueObjAdapter())

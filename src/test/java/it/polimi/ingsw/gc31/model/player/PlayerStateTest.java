@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.model.player;
 
 import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
+import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
@@ -30,11 +31,11 @@ public class PlayerStateTest {
             player2.drawResource();
             player3.drawResource();
         }
-        player1.drawGold();
+//        player1.drawGold();
         player1.drawGoldCard1(); // Error message supposed to be thrown here
         player1.drawResource(); // Error message supposed to be thrown here
-        player2.drawGold();
-        player3.drawGold();
+//        player2.drawGold();
+//        player3.drawGold();
 
         player1.setStarterCard();
         player2.setStarterCard();
@@ -60,7 +61,7 @@ public class PlayerStateTest {
     }
 
     @Test
-    public void testGameTurns() throws EmptyDeckException {
+    public void testGameTurns() throws EmptyDeckException, IllegalStateOperationException {
         // System.out.println("Start testGameTurns");
         PlayableCard verifyCard;
 

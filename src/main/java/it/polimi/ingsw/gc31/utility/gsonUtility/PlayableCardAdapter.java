@@ -69,6 +69,10 @@ public class PlayableCardAdapter implements JsonSerializer<PlayableCard>, JsonDe
                 card = new StarterCard(cardColor, front, back);
             }
         }
+
+        if (jsonObject.has("side") && jsonObject.get("side").getAsBoolean()) {
+            card.changeSide();
+        }
         return card;
     }
 }

@@ -7,11 +7,12 @@ import it.polimi.ingsw.gc31.model.player.Player;
 
 public class SelectCardObj extends ServerQueueObject {
 
-    Player player;
-    int i;
+    private String username;
+    private int index;
 
-    public SelectCardObj(Player player, int i) {
-        this.player = player;
+    public SelectCardObj(String username, int index) {
+        this.username = username;
+        this.index = index;
     }
 
     @Override

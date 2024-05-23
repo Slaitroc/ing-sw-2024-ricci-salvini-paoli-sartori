@@ -13,6 +13,6 @@ public class ShowScorePlayerObj extends ClientQueueObject {
 
     @Override
     public void execute(UI ui) {
-
+        ui.show_scorePlayer(username, score);
     }
 }

@@ -33,4 +33,9 @@ public class Waiting extends PlayerState {
         throw new IllegalStateOperationException();
     }
 
+    @Override
+    public String stateInfo()    {
+        return "waiting";
+    }
+
 }

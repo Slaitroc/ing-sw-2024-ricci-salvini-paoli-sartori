@@ -5,12 +5,10 @@ import java.io.Serializable;
 import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
 import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.controller.GameController;
-import it.polimi.ingsw.gc31.model.GameModel;
-import it.polimi.ingsw.gc31.model.player.Player;
 
 public abstract class ServerQueueObject implements Serializable {
 
-    String recipient;
+    private String recipient;
 
     public abstract void execute(GameController gameController);
 

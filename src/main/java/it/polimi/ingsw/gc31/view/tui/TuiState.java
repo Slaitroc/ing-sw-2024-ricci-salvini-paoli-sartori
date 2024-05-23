@@ -74,4 +74,7 @@ public abstract class TuiState {
 
     protected abstract void command_chooseSecreteObjective2();
 
+    protected abstract void command_playStarter();
+    protected abstract void command_play();
+
 }

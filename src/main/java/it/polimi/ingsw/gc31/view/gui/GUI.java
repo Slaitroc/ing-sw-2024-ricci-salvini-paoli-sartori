@@ -1,7 +1,7 @@
 
 package it.polimi.ingsw.gc31.view.gui;
 
-import java.io.IOException;
+import java.awt.*;
 import java.rmi.RemoteException;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
@@ -13,6 +13,7 @@ import it.polimi.ingsw.gc31.view.UI;
 import javafx.scene.control.Alert;
 
 import java.util.List;
+import java.util.Map;
 
 public class GUI extends UI {
 
@@ -95,6 +96,11 @@ public class GUI extends UI {
     }
 
     @Override
+    public void show_playerTurn(String username, String info) {
+
+    }
+
+    @Override
     public void updateHand(String username, List<String> hand) throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateHand'");
@@ -131,12 +137,12 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_starterCard(String starterCard) {
+    public void show_starterCard(PlayableCard starterCard) {
 
     }
 
     @Override
-    public void show_playArea(String username, String playArea, String achievedResources) {
+    public void show_playArea(String username, Map<Point, PlayableCard> playArea, String achievedResources) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_playArea'");
     }
