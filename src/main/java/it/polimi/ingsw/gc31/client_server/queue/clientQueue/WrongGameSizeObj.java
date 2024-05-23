@@ -4,6 +4,9 @@ import it.polimi.ingsw.gc31.view.UI;
 
 public class WrongGameSizeObj extends ClientQueueObject {
 
+    public WrongGameSizeObj(){
+
+    }
     @Override
     public void execute(UI ui) {
         ui.show_wrongGameSize();

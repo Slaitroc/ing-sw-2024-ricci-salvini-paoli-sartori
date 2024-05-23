@@ -2,19 +2,16 @@ package it.polimi.ingsw.gc31.client_server.queue.serverQueue;
 
 import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.controller.GameController;
-import it.polimi.ingsw.gc31.model.enumeration.GameState;
-import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
-import org.jline.terminal.impl.LineDisciplineTerminal;
 
 public class DrawGoldObj extends ServerQueueObject {
 
     private final String username;
-    private final Integer index;
+    private final int select;
 
-    public DrawGoldObj(String username, Integer index) {
+    public DrawGoldObj(String username, int select) {
         this.username = username;
-        this.index = index;
+        this.select = select;
     }
 
     @Override
@@ -30,7 +27,7 @@ public class DrawGoldObj extends ServerQueueObject {
     }
 
     public void execute(GameController gameController) {
-        gameController.drawGold(username, index);
+        gameController.drawGold(username, select);
     }
 
 }

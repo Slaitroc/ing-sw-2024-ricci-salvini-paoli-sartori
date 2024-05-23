@@ -14,9 +14,9 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.NewChatMessage;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowReadyStatusObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.StartGameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResOneObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResTwoObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.PlayObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.FlipCardObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.FlipStarterCardObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 import it.polimi.ingsw.gc31.model.enumeration.GameState;
@@ -27,8 +27,8 @@ import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
  * This class is the controller of one single game.
  * It manages the gameModel and the game states.
  */
-public class  GameController extends UnicastRemoteObject implements IGameController {
-    private GameModel model;
+public class GameController extends UnicastRemoteObject implements IGameController {
+    private final GameModel model;
     private Map<String, Player> playerList;
     private final Map<String, VirtualClient> clientList;
     @SuppressWarnings("unused")
@@ -189,36 +189,6 @@ public class  GameController extends UnicastRemoteObject implements IGameControl
     }
 
     /**
-     * Draws the first gold card for the player and then shows the player's hand.
-     *
-     * @throws RemoteException If a remote invocation error occurs.
-     */
-    @Override
-    public void drawGoldCard1(String username) throws RemoteException {
-//        if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
-//                || model.getGameState() == GameState.SHOWDOWN) {
-//            // addQueueObj(new DrawGoldOneObj(playerList.get(username), model));
-//        } else {
-//            gameControllerWrite("The game is not in the right state to draw");
-//        }
-    }
-
-    /**
-     * Draws the second gold card for the player and then shows the player's hand.
-     *
-     * @throws RemoteException If a remote invocation error occurs.
-     */
-    @Override
-    public void drawGoldCard2(String username) throws RemoteException {
-//        if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
-//                || model.getGameState() == GameState.SHOWDOWN) {
-//            //addQueueObj(new DrawGoldTwoObj(playerList.get(username), model));
-//        } else {
-//            gameControllerWrite("The game is not in the right state to draw");
-//        }
-    }
-
-    /**
      * Draws a resource card from the deck for the player and then shows the
      * player's hand.
      *
@@ -226,44 +196,6 @@ public class  GameController extends UnicastRemoteObject implements IGameControl
      */
     @Override
     public void drawResource(String username) throws RemoteException {
-//        if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
-//                || model.getGameState() == GameState.SHOWDOWN) {
-//            addQueueObj(new DrawResObj(username));
-//        } else {
-//            gameControllerWrite("The game is not in the right state to draw");
-//        }
-    }
-
-    /**
-     * Draws the first resource card for the player and then shows the player's
-     * hand.
-     *
-     * @throws RemoteException If a remote invocation error occurs.
-     */
-    @Override
-    public void drawResourceCard1(String username) throws RemoteException {
-//        if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
-//                || model.getGameState() == GameState.SHOWDOWN) {
-//            addQueueObj(new DrawResOneObj(username));
-//        } else {
-//            gameControllerWrite("The game is not in the right state to draw");
-//        }
-    }
-
-    /**
-     * Draws the second resource card for the player and then shows the player's
-     * hand.
-     *
-     * @throws RemoteException If a remote invocation error occurs.
-     */
-    @Override
-    public void drawResourceCard2(String username) throws RemoteException {
-//        if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
-//                || model.getGameState() == GameState.SHOWDOWN) {
-//            addQueueObj(new DrawResTwoObj(username));
-//        } else {
-//            gameControllerWrite("The game is not in the right state to draw");
-//        }
     }
 
     public void chooseSecretObjective(String username, Integer index) {
