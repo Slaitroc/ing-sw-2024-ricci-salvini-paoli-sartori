@@ -5,25 +5,32 @@
 <?import javafx.scene.layout.*?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<AnchorPane xmlns="http://javafx.com/javafx"
+<?import io.github.palexdev.materialfx.controls.MFXTableView?>
+<StackPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.GameListController"
-            prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/Commons.css">
+            stylesheets="@../css/Commons.css, @../css/TableView.css, @../css/Buttons.css, @../css/Panes.css"
+            styleClass="codex-background">
 
     <padding>
         <Insets bottom="20" left="30" right="30" top="20"/>
     </padding>
 
-    <VBox alignment="CENTER" spacing="30">
-        <MFXButton layoutX="188.0" layoutY="349.0" onAction="#goMainMenu" prefWidth="250"
-                   styleClass="small-button, rounded-button" text="Back"/>
-        <TableView fx:id="tableView" styleClass="mfx-table-view, rounded-button, column-header">
+    <GridPane alignment="CENTER" vgap="30">
+        <TableView fx:id="tableView" styleClass="table-view, column-header"
+                   prefWidth="600" GridPane.columnIndex="0" GridPane.rowIndex="0">
             <columns>
-                <TableColumn fx:id="gameIDColumn" prefWidth="150.0" text="Game ID" />
-                <TableColumn fx:id="playersColumn" prefWidth="150.0" text="Players in Game" />
-                <TableColumn fx:id="joinButtonsColumn" prefWidth="150.0" text="Enter Game" />
+                <TableColumn fx:id="gameIDColumn" prefWidth="150.0" text="Game ID"
+                             styleClass="table-view,table-cell" minWidth="200"/>
+                <TableColumn fx:id="playersColumn" prefWidth="150.0" text="Players in Game"
+                             styleClass="table-view, table-cell" minWidth="200"/>
+                <TableColumn fx:id="actionColumn" prefWidth="150.0" text="Enter Game"
+                             styleClass="table-view, table-cell" minWidth="200"/>
             </columns>
         </TableView>
-    </VBox>
+        <MFXButton layoutX="188.0" layoutY="349.0" onAction="#goMainMenu" prefWidth="250"
+                   styleClass="small-button, rounded-button" text="Back"
+                   GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    </GridPane>
 
-</AnchorPane>
+</StackPane>

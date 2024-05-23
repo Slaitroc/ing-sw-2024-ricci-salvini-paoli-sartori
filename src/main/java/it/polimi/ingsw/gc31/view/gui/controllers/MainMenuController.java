@@ -5,6 +5,7 @@ import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -13,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -58,6 +60,8 @@ public class MainMenuController extends ViewController {
     public MFXButton createGameButton;
     @FXML
     public MFXTextField gameID;
+    @FXML
+    public Label warningLabel;
 
     @Override
     @FXML
@@ -70,16 +74,12 @@ public class MainMenuController extends ViewController {
         if (app.getNumberOfPlayers() != null) {
             try {
                 app.getClient().createGame(app.getNumberOfPlayers());
-                app.setCurrentGameID(app.getClient().getGameID());
-                System.out.println("GameID: " + app.getCurrentGameID());
-                app.loadScene(SceneTag.LOBBY);
-            } catch (IOException e) {
-                Alert alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Error 505");
-                alert.setHeaderText("Server Error");
-                alert.setContentText("Server has crashed. Please restart application");
+                /*app.setCurrentGameID(app.getClient().getGameID());
+                System.out.println("GameID: " + app.getCurrentGameID());*/
+                /*app.loadScene(SceneTag.LOBBY);*/ //DOES NOT WORK LIKE THIS
 
-                alert.showAndWait();
+            } catch (IOException e) {
+                show_ServerCrashWarning();
             }
         }
     }
@@ -115,6 +115,7 @@ public class MainMenuController extends ViewController {
 
             step1 = true;
         }
+        warningLabel.setVisible(false);
     }
 
     public void showJoinGameMenu() {
@@ -129,20 +130,26 @@ public class MainMenuController extends ViewController {
         imageView2.setVisible(false);
 
         step1=false;
+        warningLabel.setVisible(false);
     }
 
     public void joinGame() {
-        System.out.println("Joining game with ID: " + gameID.getText());
-        try {
-            app.getClient().joinGame(Integer.parseInt(gameID.getText()));
-            app.loadScene(SceneTag.LOBBY);
-        } catch (IOException e) {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error 505");
-            alert.setHeaderText("Server Error");
-            alert.setContentText("Server has crashed. Please restart application");
+        if (gameID.getText().matches("\\d+")){
+            try {
+                app.getClient().joinGame(Integer.parseInt(gameID.getText()));
 
-            alert.showAndWait();
+            } catch (IOException e) {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error 505");
+                alert.setHeaderText("Server Error");
+                alert.setContentText("Server has crashed. Please restart application");
+
+                alert.showAndWait();
+            }
+        }
+        else {
+            warningLabel.setText("Please type only numbers!");
+            warningLabel.setVisible(true);
         }
     }
 
@@ -164,6 +171,12 @@ public class MainMenuController extends ViewController {
 
     public void showRules() {
         loadRuleBookScene();
+    }
+
+    @Override
+    public void setMessage(String message){
+        warningLabel.setText(message);
+        warningLabel.setVisible(true);
     }
 
     @FXML

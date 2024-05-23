@@ -10,6 +10,7 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.scene.control.Label?>
 <StackPane stylesheets="@../css/Commons.css, @../css/Buttons.css, @../css/Panes.css" styleClass="stackPane-default" xmlns="http://javafx.com/javafx/21"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.MainMenuController">
@@ -63,7 +64,7 @@
 
                 <!-- JOIN GAME MENU-->
                 <StackPane fx:id="joinGameMenu" visible="false" managed="false">
-                    <VBox spacing="60">
+                    <VBox spacing="30">
                         <HBox>
                             <MFXTextField fx:id="gameID" prefWidth="150.0" floatingText="Game ID"
                                           stylesheets="@../css/TextField.css" styleClass="rounded-button, mfx-text-field, floating-text"
@@ -73,6 +74,7 @@
                                 <Image url="@../Images/AppIcons/iconScroll.png"/>
                             </ImageView>
                         </HBox>
+                        <Label fx:id="warningLabel" visible="false" stylesheets="@../css/WarningLabels.css" styleClass="warning"/>
                         <HBox alignment="CENTER_RIGHT">
                             <MFXButton text="Join" onAction="#joinGame" styleClass="small-button, rounded-button"
                                        onMouseEntered="#showPointer9" onMouseExited="#hidePointer9"/>

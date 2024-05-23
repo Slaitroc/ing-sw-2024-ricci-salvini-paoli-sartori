@@ -1,7 +1,12 @@
 package it.polimi.ingsw.gc31.view.gui;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.client_server.listeners.Observable;
+import it.polimi.ingsw.gc31.view.gui.controllers.GameInstance;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.text.Font;
 import javafx.scene.Scene;
@@ -13,18 +18,21 @@ import java.io.IOException;
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.view.gui.controllers.ViewController;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 public class GUIApplication extends Application {
 
-    private static ClientCommands client;
     public static Stage primaryStage;
-    private String username;
-    private Integer numberOfPlayers;
-    private Integer currentGameID;
-    private List<String> listGames;
+
+    private static ClientCommands client;
+
+    private static String username;
+    private static Integer numberOfPlayers;
+    private static Integer currentGameID;
+    private static ObservableList<GameInstance> gameInstances = FXCollections.observableArrayList();
+    private static ViewController currentController;
+    private static final List<String> playerList = new ArrayList<>();
 
     @SuppressWarnings("unused")
 
@@ -68,10 +76,10 @@ public class GUIApplication extends Application {
         System.out.println("Loading scene " + DefaultValues.getGuiFxmlScenes().get(tag) + " ...");
         try {
             Scene scene = new Scene(loader.load());
-            ViewController wc = loader.getController();
-            wc.setGUIApplication(this);
-            wc.setClient(client);
-            wc.setUp();
+            currentController = loader.getController();
+            currentController.setGUIApplication(this);
+            currentController.setClient(client);
+            currentController.setUp();
             primaryStage.setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();
@@ -103,12 +111,20 @@ public class GUIApplication extends Application {
         primaryStage.centerOnScreen();
     }
 
+    public void setLobbySize() {
+        primaryStage.setWidth(1095);
+        primaryStage.setHeight(540);
+        primaryStage.setMinWidth(1095);
+        primaryStage.setMinHeight(540);
+        primaryStage.centerOnScreen();
+    }
+
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        GUIApplication.username = username;
     }
 
     public Integer getNumberOfPlayers() {
@@ -116,22 +132,36 @@ public class GUIApplication extends Application {
     }
 
     public void setNumberOfPlayers(Integer numberOfPlayers) {
-        this.numberOfPlayers = numberOfPlayers;
-    }
-
-    public void setCurrentGameID(int gameID) {
-        this.currentGameID = gameID;
+        GUIApplication.numberOfPlayers = numberOfPlayers;
     }
 
     public int getCurrentGameID() {
         return currentGameID;
     }
 
-    public void setListGames(List<String> listGames){
-                this.listGames = listGames;
+    public void setCurrentGameID(int gameID) {
+        currentGameID = gameID;
     }
 
-    public List<String> getListGames(){
-        return this.listGames;
+    public ObservableList<GameInstance> getListGames(){
+        return gameInstances;
     }
+
+    public void setListGames(List<String> gamesList){
+        gameInstances.clear();
+        for (String game : gamesList) {
+            String gameID = game.split(" ")[0];
+            String players = game.split(" ")[1] + game.split(" ")[2] + game.split(" ")[3];
+            gameInstances.add(new GameInstance(gameID, players));
+        }
+    }
+
+    public ViewController getCurrentController() {
+        return currentController;
+    }
+
+    public static List<String> getPlayerList() {
+        return playerList;
+    }
+
 }

@@ -1,0 +1,35 @@
+@import "Colors.css";
+
+.table-view {
+    -fx-font: 18px 'glimmer of light';
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+    -fx-background-radius: 20;
+}
+
+.table-view .column-header, .table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-background-color: -dark-green;
+    -fx-cursor: hand;
+    -fx-text-alignment: center;
+    -mfx-button-type: RAISED;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+}
+
+.table-row-cell:hover{
+    -fx-background-color: -light-green;
+    -fx-border-color: -black;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+}
+
+
+
+.table-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -black;
+    -fx-text-alignment: center;
+    -fx-padding: 5px;
+}

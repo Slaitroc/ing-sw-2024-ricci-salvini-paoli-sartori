@@ -1,13 +1,16 @@
 
 package it.polimi.ingsw.gc31.view.gui;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import javafx.application.Platform;
 import it.polimi.ingsw.gc31.view.UI;
+import javafx.scene.control.Alert;
 
 import java.util.List;
 
@@ -21,9 +24,8 @@ public class GUI extends UI {
 
     /**
      * This method allows to call a Runnable inside the GUI thread
-     * 
+     *
      * @param r
-     * 
      * @Slaitroc
      */
     public void runInGuiApp(Runnable r) {
@@ -36,32 +38,50 @@ public class GUI extends UI {
 
         app = new GUIApplication();
         app.setClient(client);
+        client.setUI(this);
         GUIApplication.run();
     }
 
     @Override
     public void show_listGame(List<String> listGame) {
-
+        Platform.runLater(() -> {
+            app.setListGames(listGame);
+            app.loadScene(SceneTag.GAMELIST);
+        });
     }
 
     @Override
     public void show_gameCreated(int gameID) {
-
+        Platform.runLater(() -> {
+            try {
+                app.setCurrentGameID(app.getClient().getGameID());
+                app.setLobbySize();
+                app.loadScene(SceneTag.LOBBY);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @Override
     public void show_validUsername(String username) {
-
+        Platform.runLater(() -> {
+            app.loadScene(SceneTag.MAINMENU);
+        });
     }
 
     @Override
     public void show_wrongUsername(String username) {
-
+        Platform.runLater(() -> {
+            app.getCurrentController().setMessage("Username already taken!");
+        });
     }
 
     @Override
     public void show_joinedToGame(int id) {
-
+        Platform.runLater(() -> {
+            app.loadScene(SceneTag.LOBBY);
+        });
     }
 
     @Override
@@ -71,7 +91,7 @@ public class GUI extends UI {
 
     @Override
     public void show_readyStatus(boolean status) {
-
+        System.out.println("Status set to" + status);
     }
 
     @Override
@@ -141,14 +161,15 @@ public class GUI extends UI {
 
     @Override
     public void show_chatMessage(String username, String message) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_chatMessage'");
+        //System.out.println(username + "said:" + message);
+        app.getCurrentController().updateChat(username, message);
     }
 
     @Override
     public void show_gameDoesNotExist() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_gameDoesNotExist'");
+        Platform.runLater(() -> {
+            app.getCurrentController().setMessage("Game does not exist!");
+        });
     }
 
     @Override
@@ -158,3 +179,7 @@ public class GUI extends UI {
     }
 
 }
+
+
+//TODO show_inGamePlayers (when i join a match lobby I want to know the string of player currently in the game)
+//TODO show_PlayerJoined (when i am in a match lobby I want to know who entered my lobby)

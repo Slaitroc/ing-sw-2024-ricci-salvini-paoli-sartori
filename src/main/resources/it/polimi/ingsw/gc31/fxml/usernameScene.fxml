@@ -20,7 +20,7 @@
         <MFXTextField fx:id="usernameField" floatingText="Username" stylesheets="@../css/SimpleTextField.css" styleClass="mfx-simple-text-field, text-label" prefWidth="330"
         onKeyPressed="#handleEnterKeyPressed"/>
 
-        <Label fx:id="warningLabel" visible="false" styleClass="warning"/>
+        <Label fx:id="warningLabel" visible="false" stylesheets="@../css/WarningLabels.css" styleClass="warning"/>
 
         <HBox alignment="CENTER" spacing="30" styleClass="vbox">
 

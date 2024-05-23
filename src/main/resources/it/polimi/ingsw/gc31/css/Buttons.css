@@ -82,24 +82,9 @@
     -fx-background-color: -light-green;
 }
 
-.mfx-table-view {
-    -fx-background-color: -light-green;
-    -fx-font: 18px 'glimmer of light';
-    -fx-font-weight: bold;
-    -fx-text-alignment: left;
-    -fx-background-radius: 20;
-    -fx-border-radius: 20;
-    -fx-border-width: 2;
-    -fx-border-color: -black;
-}
-
-.mfx-table-view .column-header {
+.mfx-toggle-button{
     -fx-background-color: -dark-green;
     -fx-cursor: hand;
-    -fx-text-fill: -white;
-    -fx-text-alignment: center;
     -mfx-button-type: RAISED;
-    -fx-background-radius: 20;
-    -fx-border-radius: 20;
-    -fx-border-width: 2;
+    -mfx-depth-level: LEVEL5;
 }
