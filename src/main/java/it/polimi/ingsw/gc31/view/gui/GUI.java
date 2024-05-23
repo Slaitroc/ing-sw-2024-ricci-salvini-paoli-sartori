@@ -1,6 +1,7 @@
 
 package it.polimi.ingsw.gc31.view.gui;
 
+import java.awt.*;
 import java.rmi.RemoteException;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
@@ -10,6 +11,7 @@ import javafx.application.Platform;
 import it.polimi.ingsw.gc31.view.UI;
 
 import java.util.List;
+import java.util.Map;
 
 public class GUI extends UI {
 
@@ -73,6 +75,26 @@ public class GUI extends UI {
     }
 
     @Override
+    public void show_chatMessage(String username, String message) {
+
+    }
+
+    @Override
+    public void show_gameDoesNotExist() {
+
+    }
+
+    @Override
+    public void show_wrongGameSize() {
+
+    }
+
+    @Override
+    public void show_playerTurn(String username, String info) {
+
+    }
+
+    @Override
     public void updateHand(String username, List<String> hand) throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateHand'");
@@ -109,12 +131,12 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_starterCard(String starterCard) {
+    public void show_starterCard(PlayableCard starterCard) {
 
     }
 
     @Override
-    public void show_playArea(String username, String playArea, String achievedResources) {
+    public void show_playArea(String username, Map<Point, PlayableCard> playArea, String achievedResources) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_playArea'");
     }
@@ -136,23 +158,4 @@ public class GUI extends UI {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_objectiveCard'");
     }
-
-    @Override
-    public void show_chatMessage(String username, String message) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_chatMessage'");
-    }
-
-    @Override
-    public void show_gameDoesNotExist() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_gameDoesNotExist'");
-    }
-
-    @Override
-    public void show_wrongGameSize() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_wrongGameSize'");
-    }
-
 }

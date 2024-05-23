@@ -4,7 +4,7 @@
     "dirImgFront": null,
     "objective": {
       "color1": "RED",
-      "type": "STAIRUP"
+      "typeObjective": "STAIRUP"
     },
     "dirImgBack": null
   },
@@ -13,7 +13,7 @@
     "dirImgFront": null,
     "objective": {
       "color1": "GREEN",
-      "type": "STAIRDOWN"
+      "typeObjective": "STAIRDOWN"
     },
     "dirImgBack": null
   },
@@ -22,7 +22,7 @@
     "dirImgFront": null,
     "objective": {
       "color1": "BLUE",
-      "type": "STAIRUP"
+      "typeObjective": "STAIRUP"
     },
     "dirImgBack": null
   },
@@ -31,7 +31,7 @@
     "dirImgFront": null,
     "objective": {
       "color1": "PURPLE",
-      "type": "STAIRDOWN"
+      "typeObjective": "STAIRDOWN"
     },
     "dirImgBack": null
   },
@@ -41,7 +41,7 @@
     "objective": {
       "color1": "RED",
       "color2": "GREEN",
-      "type": "LSHAPE"
+      "typeObjective": "LSHAPE"
     },
     "dirImgBack": null
   },
@@ -51,7 +51,7 @@
     "objective": {
       "color1": "GREEN",
       "color2": "PURPLE",
-      "type": "LSHAPEREVERSE"
+      "typeObjective": "LSHAPEREVERSE"
     },
     "dirImgBack": null
   },
@@ -61,7 +61,7 @@
     "objective": {
       "color1": "BLUE",
       "color2": "RED",
-      "type": "SEVENREVERSE"
+      "typeObjective": "SEVENREVERSE"
     },
     "dirImgBack": null
   },
@@ -71,7 +71,7 @@
     "objective": {
       "color1": "PURPLE",
       "color2": "BLUE",
-      "type": "SEVEN"
+      "typeObjective": "SEVEN"
     },
     "dirImgBack": null
   },
@@ -80,7 +80,7 @@
     "dirImgFront": null,
     "objective": {
       "resources": ["MUSHROOM","MUSHROOM","MUSHROOM"],
-      "type": "COUNT"
+      "typeObjective": "COUNT"
     },
     "dirImgBack": null
   },
@@ -89,7 +89,7 @@
     "dirImgFront": null,
     "objective": {
       "resources": ["PLANT","PLANT","PLANT"],
-      "type": "COUNT"
+      "typeObjective": "COUNT"
     },
     "dirImgBack": null
   },
@@ -98,7 +98,7 @@
     "dirImgFront": null,
     "objective": {
       "resources": ["ANIMAL","ANIMAL","ANIMAL"],
-      "type": "COUNT"
+      "typeObjective": "COUNT"
     },
     "dirImgBack": null
   },
@@ -107,7 +107,7 @@
     "dirImgFront": null,
     "objective": {
       "resources": ["INSECT","INSECT","INSECT"],
-      "type": "COUNT"
+      "typeObjective": "COUNT"
     },
     "dirImgBack": null
   },
@@ -116,7 +116,7 @@
     "dirImgFront": null,
     "objective": {
       "resources": ["FEATHER","INK","SCROLL"],
-      "type": "COUNT"
+      "typeObjective": "COUNT"
     },
     "dirImgBack": null
   },
@@ -125,7 +125,7 @@
     "dirImgFront": null,
     "objective": {
       "resources": ["SCROLL","SCROLL"],
-      "type": "COUNT"
+      "typeObjective": "COUNT"
     },
     "dirImgBack": null
   },
@@ -134,7 +134,7 @@
     "dirImgFront": null,
     "objective": {
       "resources": ["INK","INK"],
-      "type": "COUNT"
+      "typeObjective": "COUNT"
     },
     "dirImgBack": null
   },
@@ -143,7 +143,7 @@
     "dirImgFront": null,
     "objective": {
       "resources": ["FEATHER", "FEATHER"],
-      "type": "COUNT"
+      "typeObjective": "COUNT"
     },
     "dirImgBack": null
   }

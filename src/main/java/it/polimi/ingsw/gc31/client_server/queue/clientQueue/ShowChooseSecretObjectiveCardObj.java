@@ -15,7 +15,6 @@ public class ShowChooseSecretObjectiveCardObj extends ClientQueueObject {
 
     @Override
     public void execute(UI ui) {
-
         ui.show_chooseObjectiveCard(
                 gsonTranslater.fromJson(objectiveCard1, ObjectiveCard.class),
                 gsonTranslater.fromJson(objectiveCard2, ObjectiveCard.class));

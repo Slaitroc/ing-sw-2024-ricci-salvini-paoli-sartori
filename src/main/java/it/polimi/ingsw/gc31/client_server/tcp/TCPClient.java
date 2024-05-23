@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
+import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.rmi.RemoteException;
@@ -220,34 +221,8 @@ public class TCPClient implements ClientCommands {
      * select = 2 : drawing the second gold card on the board.
      */
     @Override
-    public void drawGold() {
-        tcp_sendCommand(new DrawGoldObj(this.username, 0), DefaultValues.RECIPIENT_GAME_CONTROLLER);
-    }
-
-    /**
-     * This method sends to the server a new DrawGoldObj object and the game controller as a recipient
-     * using the tcp_sendCommand method.
-     *
-     * select = 0 : drawing from the gold deck.
-     * select = 1 : drawing the first gold card on the board.
-     * select = 2 : drawing the second gold card on the board.
-     */
-    @Override
-    public void drawGoldCard1() {
-        tcp_sendCommand(new DrawGoldObj(this.username, 1), DefaultValues.RECIPIENT_GAME_CONTROLLER);
-    }
-
-    /**
-     * This method sends to the server a new DrawGoldObj object and the game controller as a recipient
-     * using the tcp_sendCommand method.
-     *
-     * select = 0 : drawing from the gold deck.
-     * select = 1 : drawing the first gold card on the board.
-     * select = 2 : drawing the second gold card on the board.
-     */
-    @Override
-    public void drawGoldCard2() {
-        tcp_sendCommand(new DrawGoldObj(this.username, 2), DefaultValues.RECIPIENT_GAME_CONTROLLER);
+    public void drawGold(int index) throws RemoteException {
+        tcp_sendCommand(new DrawGoldObj(this.username, index), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
     /**
@@ -263,45 +238,27 @@ public class TCPClient implements ClientCommands {
         tcp_sendCommand(new DrawResObj(this.username, 0), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
-    /**
-     * This method sends to the server a new DrawResObj object and the game controller as a recipient
-     * using the tcp_sendCommand method.
-     *
-     * select = 0 : drawing from the resource deck.
-     * select = 1 : drawing the first resource card on the board.
-     * select = 2 : drawing the second resource card on the board.
-     */
-    @Override
-    public void drawResourceCard1() {
-        tcp_sendCommand(new DrawResObj(this.username, 1), DefaultValues.RECIPIENT_GAME_CONTROLLER);
-    }
-
-    /**
-     * This method sends to the server a new DrawResObj object and the game controller as a recipient
-     * using the tcp_sendCommand method.
-     *
-     * select = 0 : drawing from the resource deck.
-     * select = 1 : drawing the first resource card on the board.
-     * select = 2 : drawing the second resource card on the board.
-     */
-    @Override
-    public void drawResourceCard2() {
-        tcp_sendCommand(new DrawResObj(this.username, 2), DefaultValues.RECIPIENT_GAME_CONTROLLER);
-    }
-
-    /**
-     * This method sends to the server a new ChooseSecretObjectiveObj object and the game controller as a recipient
-     * using the tcp_sendCommand method.
-     * The index parameter specify if the objective card to choose is the first one or the second one.
-     *
-     * index = 0 : choose first secret objective card.
-     * index = 1 : choose second secret objective card.
-     */
     @Override
     public void chooseSecretObjective1() {
         tcp_sendCommand(new ChooseSecretObjectiveObj(this.username, 0), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
+    @Override
+    public void playStarter() throws RemoteException {
+
+    }
+
+    @Override
+    public void play(Point point) throws RemoteException {
+
+    }
+
+    /**
+     * This method returns the player's game idGame
+     *
+     * @return the idGame of the game
+     * @throws RemoteException
+     */
     /**
      * This method sends to the server a new ChooseSecretObjectiveObj object and the game controller as a recipient
      * using the tcp_sendCommand method.

@@ -29,6 +29,7 @@ public class Player extends PlayerObservable {
     private int selectedCard;
     private PlayableCard selectedStarterCard;
     private ObjectiveCard objectiveCard;
+    private List<ObjectiveCard> objectiveCardToChoose;
     private final String username;
     private final PlayArea playArea;
     private final PawnColor pawnColor;
@@ -50,6 +51,7 @@ public class Player extends PlayerObservable {
         this.playArea = new PlayArea();
         this.inGameState = new Start();
         this.pawnColor = pawnColor;
+        this.objectiveCardToChoose = new ArrayList<>();
         hand = new ArrayList<>();
         score = 0;
     }
@@ -93,12 +95,19 @@ public class Player extends PlayerObservable {
      *
      * @throws EmptyDeckException if the deck is empty.
      */
-    public boolean drawGold() throws EmptyDeckException {
+
+    // FIXME potrebbe esserci un problema perchè se addToHand non va a buon fine la carta pesccata finisce in un buco nero
+    public boolean drawGold(int index) throws EmptyDeckException {
         Deck<PlayableCard> deck = board.getDeckGold();
-        if (deck.peekCard() == null) {
+        if (deck.peekCard() == null || deck.peekCard1() == null || deck.peekCard2() == null) {
             deck.replaceDeck(board.getDeckResource().getQueueDeck());
         }
-        return addToHand(deck.draw(), true);
+
+        if (index == 0) return addToHand(deck.draw(), true);
+        else if (index == 1) return addToHand(deck.getCard1(), false);
+        else if (index == 2) return addToHand(deck.getCard2(), false);
+
+        return false;
     }
 
     /**
@@ -179,14 +188,16 @@ public class Player extends PlayerObservable {
      *
      * @param point: coordinate of where in the map to place the card
      */
-    public void play(Point point) {
+    public void play(Point point) throws IllegalStateOperationException {
         try {
             inGameState.play(point, this);
             notifyPlayAreaListener(
                     new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
+            notifyPlayerHandListener(
+                    new Pair<>(username, hand));
         } catch (IllegalStateOperationException e) {
             System.out.println("Player " + username + " not allowed to place cards in current state");
-            e.getStackTrace();
+            throw new IllegalStateOperationException();
         }
     }
 
@@ -209,17 +220,26 @@ public class Player extends PlayerObservable {
     }
 
     /**
-     * @param card: Objective Card to assign to the player (called secret obj in
-     *              game)
+     *
      */
-    public void addObjectiveCard(ObjectiveCard card) {
-        try {
-            inGameState.addObjectiveCard(card, this);
-            notifyPlayerObjectiveCardListener(card);
-        } catch (IllegalStateOperationException e) {
-            System.out.println("Player " + username + " not allowed to draw objective card in current state");
-            e.getStackTrace();
-        }
+    public void chooseSecretObjective(int index) throws IllegalStateOperationException {
+        inGameState.chooseSecretObjective(objectiveCardToChoose.get(index), this);
+    }
+
+    /**
+     *
+     */
+    public void drawChooseObjectiveCards() {
+        objectiveCardToChoose.add(board.getDeckObjective().draw());
+        objectiveCardToChoose.add(board.getDeckObjective().draw());
+        notifyPlayerChooseObjectiveCardListener(new Pair<>(objectiveCardToChoose.get(0),this.objectiveCardToChoose.get(1)));
+    }
+
+    /**
+     *
+     */
+    public void addObjectiveCardToChoose(List<ObjectiveCard> cards) {
+        objectiveCardToChoose = cards;
     }
 
     /**
@@ -295,6 +315,11 @@ public class Player extends PlayerObservable {
 
     public void setInGameState(PlayerState inGameState) {
         this.inGameState = inGameState;
+        notifyPlayerTurnListener(new Pair<>(username, infoState()));
+    }
+
+    public String infoState() {
+        return this.inGameState.stateInfo();
     }
 
 }

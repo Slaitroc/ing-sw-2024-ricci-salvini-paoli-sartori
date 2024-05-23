@@ -7,8 +7,8 @@ import it.polimi.ingsw.gc31.controller.GameController;
 
 public class ChatMessage extends ServerQueueObject {
 
-    String message;
-    String username;
+    private final String message;
+    private final String username;
 
     public ChatMessage(String username, String message) {
         this.message = message;

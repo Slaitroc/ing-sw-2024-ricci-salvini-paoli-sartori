@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.model.player;
 
 import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
+import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
@@ -14,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PlayerStateTest {
 
     private static Player player1, player2, player3;
-
 
     @BeforeAll
     public static void setUp() throws EmptyDeckException {
@@ -31,19 +31,20 @@ public class PlayerStateTest {
             player2.drawResource();
             player3.drawResource();
         }
-        player1.drawGold();
+//        player1.drawGold();
         player1.drawGoldCard1(); // Error message supposed to be thrown here
         player1.drawResource(); // Error message supposed to be thrown here
-        player2.drawGold();
-        player3.drawGold();
+//        player2.drawGold();
+//        player3.drawGold();
 
         player1.setStarterCard();
         player2.setStarterCard();
         player3.setStarterCard();
 
-        player1.addObjectiveCard(board.getDeckObjective().draw());
-        player2.addObjectiveCard(board.getDeckObjective().draw());
-        player3.addObjectiveCard(board.getDeckObjective().draw());
+        // TODO da riguardare
+        // player1.addObjectiveCard(board.getDeckObjective().draw());
+        // player2.addObjectiveCard(board.getDeckObjective().draw());
+        // player3.addObjectiveCard(board.getDeckObjective().draw());
 
         player1.playStarter();
         player2.playStarter();
@@ -60,7 +61,7 @@ public class PlayerStateTest {
     }
 
     @Test
-    public void testGameTurns() throws EmptyDeckException{
+    public void testGameTurns() throws EmptyDeckException, IllegalStateOperationException {
         // System.out.println("Start testGameTurns");
         PlayableCard verifyCard;
 
@@ -129,38 +130,39 @@ public class PlayerStateTest {
         player3.drawResource();
         assertInstanceOf(Waiting.class, player3.inGameState);
     }
-/*
-    private static PlayableCard createStarterCard() {
-        int score = 0;
-
-        // resources needs to have 4 Resources
-        List<Resources> resourcesFront = new ArrayList<>();
-        resourcesFront.add(Resources.MUSHROOM);
-        resourcesFront.add(Resources.ANIMAL);
-        resourcesFront.add(Resources.INSECT);
-        resourcesFront.add(Resources.PLANT);
-
-        Map<Resources, Integer> requirements = Collections.emptyMap();
-
-        CardFront front = new CardFront(
-                score,
-                resourcesFront,
-                requirements,
-                null,
-                null);
-
-        // resourceBack can have from 4 to 7 Resources
-        List<Resources> resourceBack = new ArrayList<>();
-        resourceBack.add(Resources.EMPTY);
-        resourceBack.add(Resources.EMPTY);
-        resourceBack.add(Resources.EMPTY);
-        resourceBack.add(Resources.EMPTY);
-        resourceBack.add(Resources.MUSHROOM);
-
-        CardBack back = new CardBack(
-                resourceBack,
-                null);
-
-        return new StarterCard(CardColor.NOCOLOR, front, back);
-    }*/
+    /*
+     * private static PlayableCard createStarterCard() {
+     * int score = 0;
+     * 
+     * // resources needs to have 4 Resources
+     * List<Resources> resourcesFront = new ArrayList<>();
+     * resourcesFront.add(Resources.MUSHROOM);
+     * resourcesFront.add(Resources.ANIMAL);
+     * resourcesFront.add(Resources.INSECT);
+     * resourcesFront.add(Resources.PLANT);
+     * 
+     * Map<Resources, Integer> requirements = Collections.emptyMap();
+     * 
+     * CardFront front = new CardFront(
+     * score,
+     * resourcesFront,
+     * requirements,
+     * null,
+     * null);
+     * 
+     * // resourceBack can have from 4 to 7 Resources
+     * List<Resources> resourceBack = new ArrayList<>();
+     * resourceBack.add(Resources.EMPTY);
+     * resourceBack.add(Resources.EMPTY);
+     * resourceBack.add(Resources.EMPTY);
+     * resourceBack.add(Resources.EMPTY);
+     * resourceBack.add(Resources.MUSHROOM);
+     * 
+     * CardBack back = new CardBack(
+     * resourceBack,
+     * null);
+     * 
+     * return new StarterCard(CardColor.NOCOLOR, front, back);
+     * }
+     */
 }

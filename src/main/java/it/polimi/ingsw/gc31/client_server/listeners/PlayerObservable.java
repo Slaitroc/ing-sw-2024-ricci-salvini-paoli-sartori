@@ -28,6 +28,8 @@ public abstract class PlayerObservable {
     Observable<ObjectiveCard> playerObjectiveCardListener = new Observable<>();
     Observable<Pair<String, Integer>> playerScoreListeners = new Observable<>();
     Observable<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> playAreaListeners = new Observable<>();
+    Observable<Pair<ObjectiveCard, ObjectiveCard>> playerChooseObjectiveCardListener = new Observable<>();
+    Observable<Pair<String, String>> playerTurnListener = new Observable<>();
 
     /**
      * Adds a listener for receiving updates of the player's hand.
@@ -74,51 +76,62 @@ public abstract class PlayerObservable {
     public void addPlayAreaListener(Listener<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> listener) {
         playAreaListeners.addListener(listener);
     }
-
-    /**
-     * Removes a listener for receiving updates to the player's hand.
-     *
-     * @param listener the listener to be removed.
-     */
-    public void removePlayerHandListener(Listener<Pair<String, List<PlayableCard>>> listener) {
-        playerHandListeners.removeListener(listener);
+    public void addPlayerChooseObjectiveCardListener(Listener<Pair<ObjectiveCard, ObjectiveCard>> listener) {
+        playerChooseObjectiveCardListener.addListener(listener);
+    }
+    public void addPlayerTurnListener(Listener<Pair<String, String>> listener) {
+        playerTurnListener.addListener(listener);
     }
 
-    /**
-     * Removes a listener for receiving updates to the player's starter card.
-     *
-     * @param listener the listener to be removed.
-     */
-    public void removePlayerStarterCardListener(Listener<PlayableCard> listener) {
-        playerStarterCardListener.removeListener(listener);
-    }
-
-    /**
-     * Removes a listener for receiving updates to the player's objective card.
-     *
-     * @param listener the listener to be removed.
-     */
-    public void removePlayerObjectiveCardListener(Listener<ObjectiveCard> listener) {
-        playerObjectiveCardListener.removeListener(listener);
-    }
-
-    /**
-     * Removes a listener for receiving updates to the player's score.
-     *
-     * @param listener the listener to be removed.
-     */
-    public void removePlayerScoreListener(Listener<Pair<String, Integer>> listener) {
-        playerScoreListeners.removeListener(listener);
-    }
-
-    /**
-     * Removes a listener for receiving updates to the player's play area.
-     *
-     * @param listener the listener to be removed.
-     */
-    public void remvePlayAreaListener(Listener<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> listener) {
-        playAreaListeners.removeListener(listener);
-    }
+    // FIXME servono?
+//    /**
+//     * Removes a listener for receiving updates to the player's hand.
+//     *
+//     * @param listener the listener to be removed.
+//     */
+//    public void removePlayerHandListener(Listener<Pair<String, List<PlayableCard>>> listener) {
+//        playerHandListeners.removeListener(listener);
+//    }
+//
+//    /**
+//     * Removes a listener for receiving updates to the player's starter card.
+//     *
+//     * @param listener the listener to be removed.
+//     */
+//    public void removePlayerStarterCardListener(Listener<PlayableCard> listener) {
+//        playerStarterCardListener.removeListener(listener);
+//    }
+//
+//    /**
+//     * Removes a listener for receiving updates to the player's objective card.
+//     *
+//     * @param listener the listener to be removed.
+//     */
+//    public void removePlayerObjectiveCardListener(Listener<ObjectiveCard> listener) {
+//        playerObjectiveCardListener.removeListener(listener);
+//    }
+//
+//    /**
+//     * Removes a listener for receiving updates to the player's score.
+//     *
+//     * @param listener the listener to be removed.
+//     */
+//    public void removePlayerScoreListener(Listener<Pair<String, Integer>> listener) {
+//        playerScoreListeners.removeListener(listener);
+//    }
+//
+//    /**
+//     * Removes a listener for receiving updates to the player's play area.
+//     *
+//     * @param listener the listener to be removed.
+//     */
+//    public void removePlayAreaListener(Listener<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> listener) {
+//        playAreaListeners.removeListener(listener);
+//    }
+//
+//    public void removePlayerChooseObjectiveCardListener(Listener<Pair<ObjectiveCard, ObjectiveCard>> listener) {
+//        playerChooseObjectiveCardListener.removeListener(listener);
+//    }
 
     /**
      * Notifies all registered listeners about an update to the player's hand.
@@ -163,5 +176,21 @@ public abstract class PlayerObservable {
      */
     public void notifyPlayAreaListener(Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>> data) {
         playAreaListeners.notifyListeners(data);
+    }
+
+    /**
+     *
+     * @param data
+     */
+    public void notifyPlayerChooseObjectiveCardListener(Pair<ObjectiveCard, ObjectiveCard> data) {
+        playerChooseObjectiveCardListener.notifyListeners(data);
+    }
+
+    /**
+     *
+     * @param data
+     */
+    public void notifyPlayerTurnListener(Pair<String, String> data) {
+        playerTurnListener.notifyListeners(data);
     }
 }

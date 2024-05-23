@@ -70,7 +70,7 @@ public class LShapeReverse extends Objective {
     }
 
     @Override
-    public String toString() {
+    public String print() {
         StringBuilder res = new StringBuilder();
         int[] color1 = getRgbColor(this.color1);
         int[] color2 = getRgbColor(this.color2);

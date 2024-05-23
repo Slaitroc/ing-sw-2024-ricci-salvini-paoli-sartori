@@ -15,22 +15,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static it.polimi.ingsw.gc31.OurScanner.scanner;
+
 public class PrintProvca extends TUI {
     public PrintProvca(ClientCommands client) {
         super(client);
         System.out.print("\033[H\033[2J");
         System.out.flush();
         AnsiConsole.systemInstall();
-        //printAllObjectiveCard();
-        //printAllGoldCards();
-        //printAllResourceCards();
-        printAllStarterCards();
+        printAllObjectiveCard();
+        // printAllGoldCards();
+        // printAllResourceCards();
+        // printAllStarterCards();
     }
 
     public void printAllObjectiveCard() {
         Deck<ObjectiveCard> deck = new Deck<>(CardType.OBJECTIVE);
         print_ObjectiveCard(
-                deck.draw(),65,2,0,300, 0, 300);
+                deck.draw(), 65, 2, 0, 300, 0, 300);
 
         print_ObjectiveCard(
                 deck.draw(), 88, 2, 0, 300, 0, 300);
@@ -74,6 +75,7 @@ public class PrintProvca extends TUI {
         print_ObjectiveCard(
                 deck.draw(), 134, 30, 0, 300, 0, 300);
     }
+
     public void printAllGoldCards() {
         Deck<PlayableCard> deck = new Deck<>(CardType.GOLD);
         List<PlayableCard> redCard = new ArrayList<>();
@@ -81,24 +83,28 @@ public class PrintProvca extends TUI {
         List<PlayableCard> blueCard = new ArrayList<>();
         List<PlayableCard> purpleCard = new ArrayList<>();
 
-        for (int i=0; i<40; i++) {
+        for (int i = 0; i < 40; i++) {
             PlayableCard card = deck.draw();
             card.changeSide();
-            if (card.getColor() == CardColor.RED) redCard.add(card);
-            else if (card.getColor() == CardColor.BLUE) blueCard.add(card);
-            else if (card.getColor() == CardColor.GREEN) greenCard.add(card);
-            else if (card.getColor() == CardColor.PURPLE) purpleCard.add(card);
+            if (card.getColor() == CardColor.RED)
+                redCard.add(card);
+            else if (card.getColor() == CardColor.BLUE)
+                blueCard.add(card);
+            else if (card.getColor() == CardColor.GREEN)
+                greenCard.add(card);
+            else if (card.getColor() == CardColor.PURPLE)
+                purpleCard.add(card);
         }
 
         int row = 1;
         int col = 1;
 
-        for (PlayableCard card: redCard) {
+        for (PlayableCard card : redCard) {
             print_PlayableCard(
                     card,
                     col,
                     row,
-                    0,300,0,300
+                    0, 300, 0, 300
 
             );
 
@@ -108,12 +114,12 @@ public class PrintProvca extends TUI {
                 row += 9;
             }
         }
-        for (PlayableCard card: blueCard) {
+        for (PlayableCard card : blueCard) {
             print_PlayableCard(
                     card,
                     col,
                     row,
-                    0,300,0,300
+                    0, 300, 0, 300
 
             );
 
@@ -123,12 +129,12 @@ public class PrintProvca extends TUI {
                 row += 9;
             }
         }
-        for (PlayableCard card: greenCard) {
+        for (PlayableCard card : greenCard) {
             print_PlayableCard(
                     card,
                     col,
                     row,
-                    0,300,0,300
+                    0, 300, 0, 300
 
             );
 
@@ -138,12 +144,12 @@ public class PrintProvca extends TUI {
                 row += 9;
             }
         }
-        for (PlayableCard card: purpleCard) {
+        for (PlayableCard card : purpleCard) {
             print_PlayableCard(
                     card,
                     col,
                     row,
-                    0,300,0,300
+                    0, 300, 0, 300
 
             );
 
@@ -154,6 +160,7 @@ public class PrintProvca extends TUI {
             }
         }
     }
+
     public void printAllResourceCards() {
         Deck<PlayableCard> deck = new Deck<>(CardType.RESOURCE);
         List<PlayableCard> redCard = new ArrayList<>();
@@ -161,24 +168,28 @@ public class PrintProvca extends TUI {
         List<PlayableCard> blueCard = new ArrayList<>();
         List<PlayableCard> purpleCard = new ArrayList<>();
 
-        for (int i=0; i<40; i++) {
+        for (int i = 0; i < 40; i++) {
             PlayableCard card = deck.draw();
             card.changeSide();
-            if (card.getColor() == CardColor.RED) redCard.add(card);
-            else if (card.getColor() == CardColor.BLUE) blueCard.add(card);
-            else if (card.getColor() == CardColor.GREEN) greenCard.add(card);
-            else if (card.getColor() == CardColor.PURPLE) purpleCard.add(card);
+            if (card.getColor() == CardColor.RED)
+                redCard.add(card);
+            else if (card.getColor() == CardColor.BLUE)
+                blueCard.add(card);
+            else if (card.getColor() == CardColor.GREEN)
+                greenCard.add(card);
+            else if (card.getColor() == CardColor.PURPLE)
+                purpleCard.add(card);
         }
 
         int row = 1;
         int col = 1;
 
-        for (PlayableCard card: redCard) {
+        for (PlayableCard card : redCard) {
             print_PlayableCard(
                     card,
                     col,
                     row,
-                    0,300,0,300
+                    0, 300, 0, 300
 
             );
 
@@ -188,12 +199,12 @@ public class PrintProvca extends TUI {
                 row += 9;
             }
         }
-        for (PlayableCard card: blueCard) {
+        for (PlayableCard card : blueCard) {
             print_PlayableCard(
                     card,
                     col,
                     row,
-                    0,300,0,300
+                    0, 300, 0, 300
 
             );
 
@@ -203,12 +214,12 @@ public class PrintProvca extends TUI {
                 row += 9;
             }
         }
-        for (PlayableCard card: greenCard) {
+        for (PlayableCard card : greenCard) {
             print_PlayableCard(
                     card,
                     col,
                     row,
-                    0,300,0,300
+                    0, 300, 0, 300
 
             );
 
@@ -218,12 +229,12 @@ public class PrintProvca extends TUI {
                 row += 9;
             }
         }
-        for (PlayableCard card: purpleCard) {
+        for (PlayableCard card : purpleCard) {
             print_PlayableCard(
                     card,
                     col,
                     row,
-                    0,300,0,300
+                    0, 300, 0, 300
 
             );
 
@@ -240,14 +251,14 @@ public class PrintProvca extends TUI {
         int row = 1;
         int col = 1;
 
-        for (int i=0; i<6; i++) {
+        for (int i = 0; i < 6; i++) {
             PlayableCard card = deck.draw();
-//            card.changeSide();
+            // card.changeSide();
             print_PlayableCard(
                     card,
                     col,
                     row,
-                    0,300,0,300
+                    0, 300, 0, 300
 
             );
             col += 23;

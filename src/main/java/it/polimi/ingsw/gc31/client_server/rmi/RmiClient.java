@@ -3,17 +3,11 @@ package it.polimi.ingsw.gc31.client_server.rmi;
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChatMessage;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.CreateGameObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.GetGameListObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.JoinGameObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChooseSecretObjectiveObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawGoldObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ReadyStatusObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.view.UI;
 
+import java.awt.*;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -129,8 +123,8 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
-    public void drawGold() throws RemoteException {
-        gameController.sendCommand(new DrawGoldObj(username, 0));
+    public void drawGold(int index) throws RemoteException {
+        gameController.sendCommand(new DrawGoldObj(username, index));
     }
 
     @Override
@@ -160,19 +154,28 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void chooseSecretObjective1() throws RemoteException {
-        gameController.sendCommand(new ChooseSecretObjectiveObj(username, 1));
+        gameController.sendCommand(new ChooseSecretObjectiveObj(username, 0));
     }
 
     @Override
     public void chooseSecretObjective2() throws RemoteException {
-        gameController.sendCommand(new ChooseSecretObjectiveObj(username, 2));
+        gameController.sendCommand(new ChooseSecretObjectiveObj(username, 1));
+    }
+
+    @Override
+    public void playStarter() throws RemoteException {
+        gameController.sendCommand(new PlayStarterObj(username));
+    }
+
+    @Override
+    public void play(Point point) throws RemoteException {
+        gameController.sendCommand(new PlayObj(username, point.x, point.y));
     }
 
     @Override
     public int getGameID() throws RemoteException {
         return idGame;
     }
-    // Metodi del virtualClient
 
     @Override
     public String getUsername() {
