@@ -1,6 +1,5 @@
 package it.polimi.ingsw.gc31.view.tui;
 
-import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 import static org.fusesource.jansi.Ansi.ansi;
 import static org.fusesource.jansi.Ansi.Color.WHITE;
 import static org.fusesource.jansi.Ansi.Color.YELLOW;
@@ -21,13 +20,9 @@ import it.polimi.ingsw.gc31.model.strategies.*;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
-import com.google.gson.reflect.TypeToken;
-
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
-import it.polimi.ingsw.gc31.model.deck.Deck;
-import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.view.UI;
 
@@ -56,7 +51,12 @@ public class TUI extends UI {
     private final int HAND_INITIAL_ROW = 32;
     private final int HAND_INITIAL_COLUMN = 61;
     private final int HAND_END_ROW = 41;
-    private final int HAND_END_COLUMN = 160;
+    private final int HAND_END_COLUMN = 128;
+
+    private final int STARTER_CARD_INITIAL_ROW = 32;
+    private final int STARTER_CARD_INITIAL_COLUMN = 129;
+    private final int STARTER_CARD_END_ROW = 41;
+    private final int STARTER_CARD_END_COLUMN = 160;
 
     private final int CHOOSE_OBJECTIVE_INITIAL_ROW = 2;
     private final int CHOOSE_OBJECTIVE_INITIAL_COLUMN = 161;
@@ -176,33 +176,32 @@ public class TUI extends UI {
     /**
      * Print the cards of PlacedCards in the playArea
      */
-    private void print_PlacedCards(Map<Point, PlayableCard> placedCards) {
-        clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN);
-        // TODO questo metodo deve stampare anche i pivot. I pivot saranno stampati come
-        // carte con bordo tratteggiato, vuote e con al centro stampata la coordinata
+    private StringBuilder print_PlacedCards(Map<Point, PlayableCard> placedCards) {
+        StringBuilder res = new StringBuilder();
+        res.append(clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
         List<Point> placeHolders = createPlaceHolder(placedCards);
 
-        for (Point point : placeHolders) {
-            print_PlaceHolder(
-                    point,
-                    PLAYAREA_INITIAL_COLUMN + (PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN) / 2
-                            + (CARD_X_OFFSET * point.x) + OFFSET_X_PLAYAREA,
-                    PLAYAREA_INITIAL_ROW + (PLAYAREA_END_ROW - PLAYAREA_INITIAL_ROW) / 2
-                            - (CARD_Y_OFFSET * point.y) + OFFSET_Y_PLAYAREA,
-                    PLAYAREA_INITIAL_ROW, PLAYAREA_END_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_COLUMN);
-        }
+//        for (Point point : placeHolders) {
+//            print_PlaceHolder(
+//                    point,
+//                    PLAYAREA_INITIAL_COLUMN + (PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN) / 2
+//                            + (CARD_X_OFFSET * point.x) + OFFSET_X_PLAYAREA,
+//                    PLAYAREA_INITIAL_ROW + (PLAYAREA_END_ROW - PLAYAREA_INITIAL_ROW) / 2
+//                            - (CARD_Y_OFFSET * point.y) + OFFSET_Y_PLAYAREA,
+//                    PLAYAREA_INITIAL_ROW, PLAYAREA_END_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_COLUMN);
+//        }
 
         for (Map.Entry<Point, PlayableCard> entry : placedCards.entrySet()) {
             PlayableCard card = entry.getValue();
-            card.changeSide();
-            print_PlayableCard(
+            res.append(print_PlayableCard(
                     entry.getValue(),
                     PLAYAREA_INITIAL_COLUMN + (PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN) / 2
                             + (CARD_X_OFFSET * entry.getKey().x) + OFFSET_X_PLAYAREA - (CARD_LENGTH - 1) / 2,
                     PLAYAREA_INITIAL_ROW + (PLAYAREA_END_ROW - PLAYAREA_INITIAL_ROW) / 2
                             - (CARD_Y_OFFSET * entry.getKey().y) + OFFSET_Y_PLAYAREA - ((CARD_HEIGHT - 1) / 2),
-                    PLAYAREA_INITIAL_ROW, PLAYAREA_END_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_COLUMN);
+                    PLAYAREA_INITIAL_ROW, PLAYAREA_END_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_COLUMN));
         }
+        return res;
     }
 
     /**
@@ -1419,14 +1418,30 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_playArea(String username, String playArea, String achievedResources) {
-        @SuppressWarnings("unused")
-        Map<Point, PlayableCard> pA = gsonTranslater.fromJson(playArea, new TypeToken<Map<Point, PlayableCard>>() {
-        }.getType());
+    public void show_playArea(String username, Map<Point, PlayableCard> playArea, String achievedResources) {
+        if (client.getUsername().equals(username)) {
+            StringBuilder res = new StringBuilder();
+            res.append(print_PlacedCards(playArea));
+
+            synchronized (playViewUpdate) {
+                playViewUpdate.add(res);
+                playViewUpdate.notify();
+            }
+        }
     }
 
     @Override
-    public void show_scorePlayer(String key, Integer value) {
+    public void show_scorePlayer(String username, Integer score) {
+        if (client.getUsername().equals(username)) {
+            StringBuilder res = new StringBuilder();
+            res.append(ansi().cursor(OBJECTIVE_END_ROW+1, OBJECTIVE_INITIAL_COLUMN).a("               "));
+            res.append(ansi().cursor(OBJECTIVE_END_ROW, OBJECTIVE_INITIAL_COLUMN).a("Your score: "+score));
+
+            synchronized (playViewUpdate) {
+                playViewUpdate.add(res);
+                playViewUpdate.notify();
+            }
+        }
     }
 
     @Override
@@ -1439,42 +1454,39 @@ public class TUI extends UI {
 
     @Override
     public void show_handPlayer(String username, List<PlayableCard> hand) {
-        int index = 0;
-        StringBuilder res = new StringBuilder();
-        // print_HandAreaBorders();
-        for (PlayableCard card : hand) {
-            res.append(print_PlayableCard(card, HAND_INITIAL_COLUMN + 1 + (CARD_LENGTH + 1) * index,
-                    HAND_INITIAL_ROW + 1, HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN));
-            res.append(ansi()
-                    .cursor(HAND_END_ROW - 1, HAND_INITIAL_COLUMN + 1 + CARD_LENGTH / 2 + (CARD_LENGTH + 1) * index)
-                    .a(index + 1));
-            index++;
-        }
-        synchronized (playViewUpdate) {
-            playViewUpdate.add(res);
-            playViewUpdate.notify();
+        if (client.getUsername().equals(username)) {
+            StringBuilder res = new StringBuilder();
+            int index = 0;
+            res.append(clearArea(HAND_INITIAL_ROW, HAND_INITIAL_COLUMN, HAND_END_ROW, HAND_END_COLUMN));
+            res.append(print_Borders("HAND: "+username, HAND_INITIAL_ROW, HAND_INITIAL_COLUMN, HAND_END_ROW, HAND_END_COLUMN));
+            for (PlayableCard card : hand) {
+                res.append(print_PlayableCard(card, HAND_INITIAL_COLUMN + 1 + (CARD_LENGTH + 1) * index,
+                        HAND_INITIAL_ROW + 1, HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN));
+                res.append(ansi()
+                        .cursor(HAND_END_ROW - 1, HAND_INITIAL_COLUMN + 1 + CARD_LENGTH / 2 + (CARD_LENGTH + 1) * index)
+                        .a(index + 1));
+                index++;
+            }
+            synchronized (playViewUpdate) {
+                playViewUpdate.add(res);
+                playViewUpdate.notify();
+            }
         }
     }
 
     @Override
     public void show_objectiveCard(ObjectiveCard objectiveCard) {
         StringBuilder res = new StringBuilder();
-        res.append(ansi().cursor(10, 10).a("okokokoko"));
+
+        res.append(clearArea(CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN, CHOOSE_OBJECTIVE_END_ROW,
+                CHOOSE_OBJECTIVE_END_COLUMN));
+        res.append(ansi().cursor(OBJECTIVE_INITIAL_ROW - 1, OBJECTIVE_INITIAL_COLUMN).a("Your Objective Card"));
+        res.append(print_ObjectiveCard(objectiveCard, OBJECTIVE_INITIAL_COLUMN + 1, OBJECTIVE_INITIAL_ROW + 1,
+                OBJECTIVE_INITIAL_ROW, OBJECTIVE_END_ROW, OBJECTIVE_INITIAL_COLUMN, OBJECTIVE_END_COLUMN));
         synchronized (playViewUpdate) {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
-        // clearArea(CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN,
-        // CHOOSE_OBJECTIVE_END_ROW,
-        // CHOOSE_OBJECTIVE_END_COLUMN);
-        // System.out.print(ansi().cursor(OBJECTIVE_INITIAL_ROW - 1,
-        // OBJECTIVE_INITIAL_COLUMN).a("Your Objective Card"));
-        // print_ObjectiveCard(
-        // objectiveCard,
-        // OBJECTIVE_INITIAL_COLUMN + 1,
-        // OBJECTIVE_INITIAL_ROW + 1,
-        // OBJECTIVE_INITIAL_ROW, OBJECTIVE_END_ROW, OBJECTIVE_INITIAL_COLUMN,
-        // OBJECTIVE_END_COLUMN);
     }
 
     @Override
@@ -1510,7 +1522,17 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_starterCard(String starterCard) {
+    public void show_starterCard(PlayableCard starterCard) {
+        StringBuilder res = new StringBuilder();
+        res.append(clearArea(STARTER_CARD_INITIAL_ROW, STARTER_CARD_INITIAL_COLUMN, STARTER_CARD_END_ROW, STARTER_CARD_END_ROW));
+        res.append(print_Borders("STARTER CARD", STARTER_CARD_INITIAL_ROW, STARTER_CARD_INITIAL_COLUMN, STARTER_CARD_END_ROW, STARTER_CARD_END_COLUMN));
+        res.append(print_PlayableCard(starterCard, STARTER_CARD_INITIAL_COLUMN + 1,
+                STARTER_CARD_INITIAL_ROW + 1, STARTER_CARD_INITIAL_ROW, STARTER_CARD_END_ROW, STARTER_CARD_INITIAL_COLUMN, STARTER_CARD_END_COLUMN));
+
+        synchronized (playViewUpdate) {
+            playViewUpdate.add(res);
+            playViewUpdate.notify();
+        }
     }
 
     @Override
@@ -1574,6 +1596,20 @@ public class TUI extends UI {
     public void show_wrongGameSize() {
         printToCmdLineOut(serverWrite("Game size must be between 2 and 4"));
         state.stateNotify();
+    }
+
+    @Override
+    public void show_playerTurn(String username, String info) {
+        if (client.getUsername().equals(username)) {
+            StringBuilder res = new StringBuilder();
+            res.append(ansi().cursor(HAND_END_ROW+1, HAND_INITIAL_COLUMN).a("                            "));
+            res.append(ansi().cursor(HAND_END_ROW + 1, HAND_INITIAL_COLUMN).a("Player state: "+info));
+
+            synchronized (playViewUpdate) {
+                playViewUpdate.add(res);
+                playViewUpdate.notify();
+            }
+        }
     }
 
 }

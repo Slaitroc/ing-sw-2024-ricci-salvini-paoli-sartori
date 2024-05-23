@@ -4,6 +4,8 @@ import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
 import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.controller.GameController;
 
+import java.awt.*;
+
 public class PlayObj extends ServerQueueObject {
 
     private String username;
@@ -17,6 +19,7 @@ public class PlayObj extends ServerQueueObject {
 
     @Override
     public void execute(GameController gameController) {
+        gameController.play(username, new Point(x, y));
     }
 
     @Override

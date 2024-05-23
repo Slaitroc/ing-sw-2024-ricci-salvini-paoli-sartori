@@ -8,7 +8,7 @@ import it.polimi.ingsw.gc31.controller.GameController;
 
 public class ConnectObj extends ServerQueueObject {
 
-    String username;
+    private final String username;
 
     public ConnectObj(String username) {
         this.username = username;

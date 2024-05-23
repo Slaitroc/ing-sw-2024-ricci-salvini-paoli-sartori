@@ -8,6 +8,8 @@ module it.polimi.ingsw.gc31 {
     requires java.rmi;
     requires MaterialFX;
     requires org.fusesource.jansi;
+    requires jdk.compiler;
+    requires org.jline;
 
     opens it.polimi.ingsw.gc31.view.gui to javafx.fxml;
     opens it.polimi.ingsw.gc31.view.gui.controllers to javafx.fxml;
@@ -30,5 +32,6 @@ module it.polimi.ingsw.gc31 {
     exports it.polimi.ingsw.gc31.model.card;
     exports it.polimi.ingsw.gc31.model.strategies;
     exports it.polimi.ingsw.gc31.model.player;
+    exports it.polimi.ingsw.gc31.model.gameModel;
 
 }

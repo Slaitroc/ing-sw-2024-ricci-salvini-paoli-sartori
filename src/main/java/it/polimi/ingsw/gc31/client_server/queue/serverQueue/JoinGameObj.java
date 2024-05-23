@@ -8,8 +8,8 @@ import it.polimi.ingsw.gc31.controller.GameController;
 
 public class JoinGameObj extends ServerQueueObject {
 
-    String username;
-    int idGame;
+    private final String username;
+    private final int idGame;
 
     public JoinGameObj(String username, int idGame) {
         this.username = username;

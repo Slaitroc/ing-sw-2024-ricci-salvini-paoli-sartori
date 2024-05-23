@@ -62,6 +62,8 @@ public abstract class PlayerState {
      * @throws IllegalStateOperationException if the operation is not allowed in the current state.
      */
     public abstract void playStarter(Player player) throws IllegalStateOperationException, ObjectiveCardNotChosenException;
+
+    public abstract String stateInfo();
     /*
      * public void drawResource(Player player) throws
      * IllegalStateOperationException;
@@ -123,5 +125,4 @@ public abstract class PlayerState {
             e.getStackTrace();
         }
     }
-
 }

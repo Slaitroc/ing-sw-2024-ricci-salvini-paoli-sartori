@@ -6,7 +6,7 @@ import it.polimi.ingsw.gc31.controller.GameController;
 
 public class DrawResObj extends ServerQueueObject {
 
-    private String username;
+    private final String username;
 
     public DrawResObj(String username) {
         this.username = username;

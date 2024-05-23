@@ -92,6 +92,16 @@ public class JoinedToGameState extends TuiState {
     }
 
     @Override
+    protected void command_playStarter() {
+
+    }
+
+    @Override
+    protected void command_play() {
+
+    }
+
+    @Override
     protected void command_initial() {
         command_showCommandsInfo();
     }

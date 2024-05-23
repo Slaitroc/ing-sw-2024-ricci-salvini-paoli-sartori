@@ -36,4 +36,9 @@ public class Placed extends PlayerState {
     public void playStarter(Player player) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
+
+    @Override
+    public String stateInfo() {
+        return "placed";
+    }
 }

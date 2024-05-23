@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.model.player;
 
 import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
+import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
@@ -38,7 +39,7 @@ class PlayAreaTest {
          */
         @Test
         @DisplayName("Placing overlapping Cards Test")
-        public void testPlaceOnRight() throws EmptyDeckException{
+        public void testPlaceOnRight() throws EmptyDeckException, IllegalPlaceCardException {
 
                 System.out.println("testPlace (1,1)):");
                 PlayableCard playableCard = board.getDeckResource().draw();
@@ -105,7 +106,7 @@ class PlayAreaTest {
          * @author Matteo Paoli
          */
         @Disabled
-        public void testCheckRequirements() throws EmptyDeckException {
+        public void testCheckRequirements() throws EmptyDeckException, IllegalPlaceCardException {
 
                 PlayableCard resourceCard = board.getDeckResource().draw();
                 playArea.place(resourceCard, new Point(1, 1));
@@ -137,7 +138,7 @@ class PlayAreaTest {
          */
         @Test
         @DisplayName("Placing goldCards Test")
-        public void testGoldCards() {
+        public void testGoldCards() throws IllegalPlaceCardException {
 
                 System.out.println("resourceCard in (1,1))");
                 PlayableCard resourceCard = createResourceCard(

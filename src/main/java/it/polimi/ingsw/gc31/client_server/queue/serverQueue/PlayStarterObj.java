@@ -14,6 +14,7 @@ public class PlayStarterObj extends ServerQueueObject {
 
     @Override
     public void execute(GameController gameController) {
+        gameController.playStarter(username);
     }
 
     @Override

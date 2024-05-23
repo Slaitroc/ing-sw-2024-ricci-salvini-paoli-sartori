@@ -8,6 +8,7 @@ import it.polimi.ingsw.gc31.exceptions.InvalidCardDraw;
 import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import javafx.util.Pair;
 
 public class Start extends PlayerState {
     private boolean objectiveChosen = false;
@@ -43,12 +44,17 @@ public class Start extends PlayerState {
     public void playStarter(Player player) throws ObjectiveCardNotChosenException {
         if (objectiveChosen) {
             player.getPlayArea().placeStarter(player.getStarterCard());
-            player.setInGameState(new NotPlaced());
-            System.out.println("Player: " + player.getUsername() + " IS NOW READY TO PLAY.");
+            // the players are all put in the waiting state, waiting for all the other players to finish their setup phase
+            player.setInGameState(new Waiting());
         }
         else {
             throw new ObjectiveCardNotChosenException();
         }
+    }
+
+    @Override
+    public String stateInfo(){
+        return "start";
     }
 
 }

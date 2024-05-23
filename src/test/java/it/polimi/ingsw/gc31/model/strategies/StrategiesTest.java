@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.model.strategies;
 
+import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
@@ -23,7 +24,7 @@ class StrategiesTest {
         static private Point point;
 
         @BeforeEach
-        void initializeModel() {
+        void initializeModel() throws IllegalPlaceCardException {
 
                 playArea = new PlayArea();
                 point = new Point(0, 0);

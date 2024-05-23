@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.client_server.interfaces;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.view.UI;
 
+import java.awt.*;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
@@ -22,7 +23,7 @@ public interface ClientCommands {
 
     void setReady(boolean ready) throws RemoteException;
 
-    void drawGold() throws RemoteException;
+    void drawGold(int index) throws RemoteException;
 
     void drawGoldCard1() throws RemoteException;
 
@@ -38,9 +39,13 @@ public interface ClientCommands {
 
     void chooseSecretObjective2() throws RemoteException;
 
+    void playStarter() throws RemoteException;
+
+    void play(Point point) throws RemoteException;
+
     int getGameID() throws RemoteException; // FIX serve?
 
-    String getUsername();// FIX serve?
+    String getUsername();// FIX serve? TODO penso di si
 
     void sendChatMessage(String username, String message) throws RemoteException;
 

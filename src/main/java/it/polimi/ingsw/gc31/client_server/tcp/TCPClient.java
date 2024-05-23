@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
+import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.rmi.RemoteException;
@@ -194,9 +195,8 @@ public class TCPClient implements ClientCommands {
     }
 
     @Override
-    public void drawGold() throws RemoteException {
-        // output.println("draw gold");
-        // output.flush();
+    public void drawGold(int index) throws RemoteException {
+
     }
 
     @Override
@@ -239,6 +239,16 @@ public class TCPClient implements ClientCommands {
     public void chooseSecretObjective2() throws RemoteException {
         // output.println("choose secret objective 2");
         // output.flush();
+    }
+
+    @Override
+    public void playStarter() throws RemoteException {
+
+    }
+
+    @Override
+    public void play(Point point) throws RemoteException {
+
     }
 
     /**
