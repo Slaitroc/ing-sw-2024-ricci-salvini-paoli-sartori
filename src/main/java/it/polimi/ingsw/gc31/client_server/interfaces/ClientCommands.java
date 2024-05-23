@@ -25,15 +25,7 @@ public interface ClientCommands {
 
     void drawGold(int index) throws RemoteException;
 
-    void drawGoldCard1() throws RemoteException;
-
-    void drawGoldCard2() throws RemoteException;
-
-    void drawResource() throws RemoteException;
-
-    void drawResourceCard1() throws RemoteException;
-
-    void drawResourceCard2() throws RemoteException;
+    void drawResource(int index) throws RemoteException;
 
     void chooseSecretObjective1() throws RemoteException;
 

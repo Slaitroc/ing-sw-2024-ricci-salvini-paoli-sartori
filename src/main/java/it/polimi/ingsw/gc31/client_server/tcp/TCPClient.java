@@ -200,7 +200,7 @@ public class TCPClient implements ClientCommands {
     }
 
     @Override
-    public void drawResource() throws RemoteException {
+    public void drawResource(int index) throws RemoteException {
         tcp_sendCommand(new DrawResObj(this.username, 0), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
