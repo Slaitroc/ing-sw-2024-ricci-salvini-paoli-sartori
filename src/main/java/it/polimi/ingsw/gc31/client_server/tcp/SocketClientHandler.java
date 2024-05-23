@@ -84,7 +84,7 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     /**
-     * This method reads the object from the  and sends it to the
+     * This method reads the object from the client and sends it to the
      * right controller
      * based on the recipient of the object
      */
@@ -119,6 +119,7 @@ public class SocketClientHandler implements VirtualClient {
 
     /**
      * This method sets the gameID
+     *
      * @param gameID is the value that needs to be set
      */
     @Override
@@ -126,18 +127,33 @@ public class SocketClientHandler implements VirtualClient {
         this.idGame = gameID;
     }
 
+    /**
+     * This method returns the value of the attribute ready.
+     *
+     * @return the value of the ready attribute
+     */
     @Override
-    public boolean isReady() throws RemoteException {
-        return false;
+    public boolean isReady() {
+        return ready;
     }
 
+    /**
+     * This method set the controller attribute to the one taken as a parameter.
+     *
+     * @param controller is the new reference to the controller that needs to be set to the attribute
+     */
     @Override
-    public void setController(IController controller) throws RemoteException {
+    public void setController(IController controller) {
         this.controller = controller;
     }
 
+    /**
+     * This method set the gameController attribute to the one taken as a parameter.
+     *
+     * @param gameController is the new reference to the gameController that needs to be set to the attribute
+     */
     @Override
-    public void setGameController(IGameController gameController) throws RemoteException {
+    public void setGameController(IGameController gameController) {
         this.gameController = gameController;
     }
 

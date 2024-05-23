@@ -13,8 +13,6 @@ import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.view.UI;
 
-import javax.swing.*;
-
 public class TCPClient implements ClientCommands {
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
@@ -38,6 +36,12 @@ public class TCPClient implements ClientCommands {
 
     }
 
+    /**
+     * This method writes the object taken as parameter after setting the right recipient for it
+     *
+     * @param obj is the object that needs to be sent to the server
+     * @param recipient is the controller or the gameController based on who has to execute the particular object
+     */
     private void tcp_sendCommand(ServerQueueObject obj, String recipient) {
         try {
             obj.setRecipient(recipient);
@@ -49,6 +53,11 @@ public class TCPClient implements ClientCommands {
         }
     }
 
+    /**
+     * This method checks continuously if there are object sent to the reader. If an object is found
+     * the method adds the object red in the callsList, after the object is added the method notify that
+     * an object has been added
+     */
     private void clientHandler_reader() {
         new Thread(() -> {
             ClientQueueObject obj = null;
@@ -68,6 +77,10 @@ public class TCPClient implements ClientCommands {
         }).start();
     }
 
+    /**
+     * This method takes the object in the callsList (acquiring the lock) and invokes the execute method of the object.
+     * If there are no object in the list the thread wait for a new one
+     */
     private void executor() {
         new Thread(() -> {
             while (true) {
@@ -187,47 +200,115 @@ public class TCPClient implements ClientCommands {
             tcp_sendCommand(new GetGameListObj(this.username), DefaultValues.RECIPIENT_CONTROLLER);
     }
 
-
+    /**
+     * This method sends to the server a new ReadyStatusObj object and the game controller as a recipient
+     * using the tcp_sendCommand method.
+     *
+     * @param ready is the new ready value of the player
+     */
     @Override
     public void setReady(boolean ready) {
         tcp_sendCommand(new ReadyStatusObj(ready, this.username), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method sends to the server a new DrawGoldObj object and the game controller as a recipient
+     * using the tcp_sendCommand method.
+     *
+     * select = 0 : drawing from the gold deck.
+     * select = 1 : drawing the first gold card on the board.
+     * select = 2 : drawing the second gold card on the board.
+     */
     @Override
-    public void drawGold() throws RemoteException {
+    public void drawGold() {
         tcp_sendCommand(new DrawGoldObj(this.username, 0), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method sends to the server a new DrawGoldObj object and the game controller as a recipient
+     * using the tcp_sendCommand method.
+     *
+     * select = 0 : drawing from the gold deck.
+     * select = 1 : drawing the first gold card on the board.
+     * select = 2 : drawing the second gold card on the board.
+     */
     @Override
-    public void drawGoldCard1() throws RemoteException {
+    public void drawGoldCard1() {
         tcp_sendCommand(new DrawGoldObj(this.username, 1), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method sends to the server a new DrawGoldObj object and the game controller as a recipient
+     * using the tcp_sendCommand method.
+     *
+     * select = 0 : drawing from the gold deck.
+     * select = 1 : drawing the first gold card on the board.
+     * select = 2 : drawing the second gold card on the board.
+     */
     @Override
-    public void drawGoldCard2() throws RemoteException {
+    public void drawGoldCard2() {
         tcp_sendCommand(new DrawGoldObj(this.username, 2), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method sends to the server a new DrawResObj object and the game controller as a recipient
+     * using the tcp_sendCommand method.
+     *
+     * select = 0 : drawing from the resource deck.
+     * select = 1 : drawing the first resource card on the board.
+     * select = 2 : drawing the second resource card on the board.
+     */
     @Override
-    public void drawResource() throws RemoteException {
+    public void drawResource() {
         tcp_sendCommand(new DrawResObj(this.username, 0), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method sends to the server a new DrawResObj object and the game controller as a recipient
+     * using the tcp_sendCommand method.
+     *
+     * select = 0 : drawing from the resource deck.
+     * select = 1 : drawing the first resource card on the board.
+     * select = 2 : drawing the second resource card on the board.
+     */
     @Override
-    public void drawResourceCard1() throws RemoteException {
+    public void drawResourceCard1() {
         tcp_sendCommand(new DrawResObj(this.username, 1), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method sends to the server a new DrawResObj object and the game controller as a recipient
+     * using the tcp_sendCommand method.
+     *
+     * select = 0 : drawing from the resource deck.
+     * select = 1 : drawing the first resource card on the board.
+     * select = 2 : drawing the second resource card on the board.
+     */
     @Override
-    public void drawResourceCard2() throws RemoteException {
+    public void drawResourceCard2() {
         tcp_sendCommand(new DrawResObj(this.username, 2), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method sends to the server a new ChooseSecretObjectiveObj object and the game controller as a recipient
+     * using the tcp_sendCommand method.
+     * The index parameter specify if the objective card to choose is the first one or the second one.
+     *
+     * index = 0 : choose first secret objective card.
+     * index = 1 : choose second secret objective card.
+     */
     @Override
     public void chooseSecretObjective1() {
         tcp_sendCommand(new ChooseSecretObjectiveObj(this.username, 0), DefaultValues.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method sends to the server a new ChooseSecretObjectiveObj object and the game controller as a recipient
+     * using the tcp_sendCommand method.
+     *
+     * index = 0 : choose first secret objective card.
+     * index = 1 : choose second secret objective card.
+     */
     @Override
     public void chooseSecretObjective2() {
         tcp_sendCommand(new ChooseSecretObjectiveObj(this.username, 1), DefaultValues.RECIPIENT_GAME_CONTROLLER);
