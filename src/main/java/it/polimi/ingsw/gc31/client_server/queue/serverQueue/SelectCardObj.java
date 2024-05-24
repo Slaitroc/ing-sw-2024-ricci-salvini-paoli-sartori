@@ -17,8 +17,7 @@ public class SelectCardObj extends ServerQueueObject {
 
     @Override
     public void execute(GameController gameController) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'execute'");
+        gameController.selectCard(username, index);
     }
 
     @Override

@@ -68,6 +68,11 @@ public class TUI extends UI {
     private final int OBJECTIVE_END_ROW = 10;
     private final int OBJECTIVE_END_COLUMN = 185;
 
+    private final int PLAYERS_INFO_INITIAL_ROW = 15;
+    private final int PLAYERS_INFO_INITIAL_COLUMN = 1;
+    private final int PLAYERS_INFO_END_ROW = 25;
+    private final int PLAYERS_INFO_END_COLUMN = 60;
+
     // CONSTANTS
     private final int CMD_LINE_EFFECTIVE_WIDTH = CMD_LINE_WIDTH - 2;
     private final int CMD_LINE_INPUT_ROW = CMD_LINE_INITIAL_ROW + CMD_LINE_LINES;
@@ -1583,7 +1588,6 @@ public class TUI extends UI {
             printToCmdLineOut(serverWrite("You are not ready"));
         }
         state.stateNotify();
-
     }
 
     @Override
@@ -1609,6 +1613,24 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+        }
+    }
+
+    @Override
+    public void show_inGamePlayers(List<String> players) {
+        StringBuilder res = new StringBuilder();
+
+        res.append(clearArea(PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN, PLAYERS_INFO_END_ROW, PLAYERS_INFO_END_COLUMN));
+        res.append(print_Borders("", PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN, PLAYERS_INFO_END_ROW, PLAYERS_INFO_END_COLUMN));
+        int index = 1;
+        for (String player : players) {
+            res.append(ansi().cursor(PLAYERS_INFO_INITIAL_ROW+index, PLAYERS_INFO_INITIAL_COLUMN+1).a(player));
+            index++;
+        }
+
+        synchronized (playViewUpdate) {
+            playViewUpdate.add(res);
+            playViewUpdate.notify();
         }
     }
 

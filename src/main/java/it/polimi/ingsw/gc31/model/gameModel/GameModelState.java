@@ -13,4 +13,9 @@ public interface GameModelState {
     void playStarter(GameModel model, String username) throws IllegalStateOperationException;
     void play(GameModel model, String username, Point point) throws IllegalStateOperationException;
     void drawGold(GameModel model, String username, int index) throws IllegalStateOperationException;
+    void drawResource(GameModel model, String username, int index) throws IllegalStateOperationException;
+    void setSelectCard(GameModel model, String username, int index) throws IllegalStateOperationException;
+    void changeSide(GameModel model, String username) throws IllegalStateOperationException;
+    void changeStarterSide(GameModel model, String username) throws IllegalStateOperationException;
+    void detectEndGame(GameModel model) throws IllegalStateOperationException;
 }

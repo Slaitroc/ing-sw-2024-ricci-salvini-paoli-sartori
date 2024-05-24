@@ -46,6 +46,9 @@ public interface ShowUpdate {
     void show_gameDoesNotExist();
 
     void show_wrongGameSize();
+
     void show_playerTurn(String username, String info);
+
+    void show_inGamePlayers(List<String> players);
 
 }

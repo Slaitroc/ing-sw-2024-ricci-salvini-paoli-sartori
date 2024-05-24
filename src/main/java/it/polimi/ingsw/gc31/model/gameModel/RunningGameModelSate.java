@@ -34,7 +34,36 @@ public class RunningGameModelSate implements GameModelState {
     @Override
     public void drawGold(GameModel model, String username, int index) throws IllegalStateOperationException {
         if (model.getPlayers().get(username).drawGold(index)) {
-            model.setNextPlayingPlayer();
+            model.endTurn();
+        }
+    }
+
+    @Override
+    public void drawResource(GameModel model, String username, int index) throws IllegalStateOperationException {
+        if (model.getPlayers().get(username).drawResource(index)) {
+            model.endTurn();
+        }
+    }
+
+    @Override
+    public void setSelectCard(GameModel model, String username, int index) throws IllegalStateOperationException {
+        model.getPlayers().get(username).setSelectedCard(index);
+    }
+
+    @Override
+    public void changeSide(GameModel model, String username) throws IllegalStateOperationException {
+        model.getPlayers().get(username).changeSide();
+    }
+
+    @Override
+    public void changeStarterSide(GameModel model, String username) throws IllegalStateOperationException {
+        model.getPlayers().get(username).changeStarterSide();
+    }
+
+    @Override
+    public void detectEndGame(GameModel model) throws IllegalStateOperationException {
+        if (model.getCurrPlayer().getScore() >= 2) {
+            model.setGameState(new ShowDownGameModelState());
         }
     }
 }

@@ -95,6 +95,11 @@ public class GUI extends UI {
     }
 
     @Override
+    public void show_inGamePlayers(List<String> players) {
+
+    }
+
+    @Override
     public void updateHand(String username, List<String> hand) throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateHand'");

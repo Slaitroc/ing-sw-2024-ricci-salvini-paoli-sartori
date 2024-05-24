@@ -15,6 +15,7 @@ public class FlipStarterCardObj extends ServerQueueObject {
 
     @Override
     public void execute(GameController gameController) {
+        gameController.changeStarterSide(username);
     }
 
     @Override

@@ -4,9 +4,11 @@ import it.polimi.ingsw.gc31.view.UI;
 
 public class ShowReadyStatusObj extends ClientQueueObject {
 
-    boolean status;
+    private final String username;
+    private final boolean status;
 
-    public ShowReadyStatusObj(boolean status) {
+    public ShowReadyStatusObj(String username, boolean status) {
+        this.username = username;
         this.status = status;
     }
 

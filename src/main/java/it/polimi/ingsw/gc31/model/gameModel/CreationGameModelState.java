@@ -9,7 +9,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class CreationpGameModelState implements GameModelState {
+public class CreationGameModelState implements GameModelState {
     @Override
     public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients) throws IllegalStateOperationException {
         Map<String, Player> players = createPlayers(model, clients.keySet());
@@ -18,8 +18,8 @@ public class CreationpGameModelState implements GameModelState {
         for (Player player : players.values()) {
             player.setStarterCard();
             player.drawGold(0);
-            player.drawResource();
-            player.drawResource();
+            player.drawResource(0);
+            player.drawResource(0);
 
             player.drawChooseObjectiveCards();
         }
@@ -53,6 +53,31 @@ public class CreationpGameModelState implements GameModelState {
 
     @Override
     public void drawGold(GameModel model, String username, int index) throws IllegalStateOperationException {
+        throw new IllegalStateOperationException();
+    }
+
+    @Override
+    public void drawResource(GameModel model, String username, int index) throws IllegalStateOperationException {
+        throw new IllegalStateOperationException();
+    }
+
+    @Override
+    public void setSelectCard(GameModel model, String username, int index) throws IllegalStateOperationException {
+        throw new IllegalStateOperationException();
+    }
+
+    @Override
+    public void changeSide(GameModel model, String username) throws IllegalStateOperationException {
+        throw new IllegalStateOperationException();
+    }
+
+    @Override
+    public void changeStarterSide(GameModel model, String username) throws IllegalStateOperationException {
+        throw new IllegalStateOperationException();
+    }
+
+    @Override
+    public void detectEndGame(GameModel model) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
