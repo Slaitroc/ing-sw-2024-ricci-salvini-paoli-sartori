@@ -219,6 +219,21 @@ public class TCPClient implements ClientCommands {
 
     }
 
+    @Override
+    public void selectCard(int index) throws RemoteException {
+
+    }
+
+    @Override
+    public void changeSide() throws RemoteException {
+
+    }
+
+    @Override
+    public void changeStarterSide() throws RemoteException {
+
+    }
+
     /**
      * This method returns the player's game idGame
      *

@@ -15,7 +15,7 @@ public class FlipCardObj extends ServerQueueObject {
 
     @Override
     public void execute(GameController gameController) {
-
+        gameController.changeSide(username);
     }
 
     @Override

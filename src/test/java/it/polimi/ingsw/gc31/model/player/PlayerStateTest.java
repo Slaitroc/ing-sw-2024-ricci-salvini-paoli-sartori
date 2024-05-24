@@ -26,14 +26,14 @@ public class PlayerStateTest {
         player3 = new Player(PawnColor.YELLOW, "Lorenzo", board);
 
         for (int j = 0; j < 2; j++) {
-            player2.drawResourceCard1(); // Error message supposed to be thrown here
-            player1.drawResource();
-            player2.drawResource();
-            player3.drawResource();
+//            player2.drawResourceCard1(); // Error message supposed to be thrown here
+//            player1.drawResource();
+//            player2.drawResource();
+//            player3.drawResource();
         }
 //        player1.drawGold();
-        player1.drawGoldCard1(); // Error message supposed to be thrown here
-        player1.drawResource(); // Error message supposed to be thrown here
+//        player1.drawGoldCard1(); // Error message supposed to be thrown here
+//        player1.drawResource(); // Error message supposed to be thrown here
 //        player2.drawGold();
 //        player3.drawGold();
 
@@ -81,17 +81,17 @@ public class PlayerStateTest {
         player1.play(new Point(1, 1));
         assertInstanceOf(Placed.class, player1.inGameState);
         assertEquals(verifyCard, player1.getPlayArea().getPlacedCards().get(new Point(1, 1)));
-        player1.drawResourceCard1();
+//        player1.drawResourceCard1();
         assertInstanceOf(Waiting.class, player1.inGameState);
 
-        player1.drawResource();
+//        player1.drawResource();
         player1.play(new Point(1, 1));
         player2.setInGameState(new NotPlaced());
 
         assertInstanceOf(NotPlaced.class, player2.inGameState);
         player2.play(new Point(1, 1));
         assertInstanceOf(Placed.class, player2.inGameState);
-        player2.drawResource();
+//        player2.drawResource();
         assertInstanceOf(Waiting.class, player2.inGameState);
         assertNotEquals(player1.getPlayArea().getPlacedCards().get(new Point(1, 1)),
                 player2.getPlayArea().getPlacedCards().get(new Point(1, 1)));
@@ -101,7 +101,7 @@ public class PlayerStateTest {
         assertInstanceOf(NotPlaced.class, player3.inGameState);
         player3.play(new Point(1, 1));
         assertInstanceOf(Placed.class, player3.inGameState);
-        player3.drawResource();
+//        player3.drawResource();
         assertInstanceOf(Waiting.class, player3.inGameState);
 
         player1.setInGameState(new NotPlaced());
@@ -111,14 +111,14 @@ public class PlayerStateTest {
 
         player1.play(new Point(1, 1));
         assertInstanceOf(Placed.class, player1.inGameState);
-        player1.drawResourceCard1();
+//        player1.drawResourceCard1();
         assertInstanceOf(Waiting.class, player1.inGameState);
         player2.setInGameState(new NotPlaced());
 
         assertInstanceOf(NotPlaced.class, player2.inGameState);
         player2.play(new Point(1, 1));
         assertInstanceOf(Placed.class, player2.inGameState);
-        player2.drawResourceCard2();
+//        player2.drawResourceCard2();
         assertInstanceOf(Waiting.class, player2.inGameState);
         assertNotEquals(player1.getPlayArea().getPlacedCards().get(new Point(1, 1)),
                 player2.getPlayArea().getPlacedCards().get(new Point(1, 1)));
@@ -127,7 +127,7 @@ public class PlayerStateTest {
         assertInstanceOf(NotPlaced.class, player3.inGameState);
         player3.play(new Point(1, 1));
         assertInstanceOf(Placed.class, player3.inGameState);
-        player3.drawResource();
+//        player3.drawResource();
         assertInstanceOf(Waiting.class, player3.inGameState);
     }
     /*

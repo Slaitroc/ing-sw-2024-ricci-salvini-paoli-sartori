@@ -102,6 +102,21 @@ public class JoinedToGameState extends TuiState {
     }
 
     @Override
+    protected void command_selectCard() {
+
+    }
+
+    @Override
+    protected void command_changeSide() {
+
+    }
+
+    @Override
+    protected void command_changeStarterSide() {
+
+    }
+
+    @Override
     protected void command_initial() {
         command_showCommandsInfo();
     }

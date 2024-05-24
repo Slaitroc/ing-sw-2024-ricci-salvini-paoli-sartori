@@ -107,31 +107,32 @@ public class Player extends PlayerObservable {
         else if (index == 1) return addToHand(deck.getCard1(), false);
         else if (index == 2) return addToHand(deck.getCard2(), false);
 
+        // if index is wrong return false
         return false;
     }
 
-    /**
-     * Draws the first gold card and adds it to the player's hand.
-     */
-    public boolean drawGoldCard1() {
-        Deck<PlayableCard> deck = board.getDeckGold();
-        if (deck.peekCard1() == null) {
-            deck.replaceDeck(board.getDeckResource().getQueueDeck());
-        }
-        return addToHand(deck.getCard1(), false);
-    }
-
-    /**
-     * Draws the second gold card and adds it to the player's hand.
-     */
-    public boolean drawGoldCard2() {
-        Deck<PlayableCard> deck = board.getDeckGold();
-        if (deck.peekCard2() == null) {
-            deck.replaceDeck(board.getDeckResource().getQueueDeck());
-        }
-        return addToHand(deck.getCard2(), false);
-
-    }
+//    /**
+//     * Draws the first gold card and adds it to the player's hand.
+//     */
+//    public boolean drawGoldCard1() {
+//        Deck<PlayableCard> deck = board.getDeckGold();
+//        if (deck.peekCard1() == null) {
+//            deck.replaceDeck(board.getDeckResource().getQueueDeck());
+//        }
+//        return addToHand(deck.getCard1(), false);
+//    }
+//
+//    /**
+//     * Draws the second gold card and adds it to the player's hand.
+//     */
+//    public boolean drawGoldCard2() {
+//        Deck<PlayableCard> deck = board.getDeckGold();
+//        if (deck.peekCard2() == null) {
+//            deck.replaceDeck(board.getDeckResource().getQueueDeck());
+//        }
+//        return addToHand(deck.getCard2(), false);
+//
+//    }
 
     /**
      * Draws a resource card directly from the resourceDeck and adds it to the
@@ -139,35 +140,40 @@ public class Player extends PlayerObservable {
      *
      * @throws EmptyDeckException if the deck is empty.
      */
-    public boolean drawResource() throws EmptyDeckException {
+    public boolean drawResource(int index) throws EmptyDeckException {
         Deck<PlayableCard> deck = board.getDeckResource();
         if (deck.peekCard() == null) {
             deck.replaceDeck(board.getDeckGold().getQueueDeck());
         }
-        return addToHand(deck.draw(), true);
+
+        if (index == 0) return addToHand(deck.draw(), true);
+        else if (index == 1) return addToHand(deck.getCard1(), false);
+        else if (index == 2) return addToHand(deck.getCard2(), false);
+
+        return false;
     }
 
-    /**
-     * Draws the first resource card and adds it to the player's hand.
-     */
-    public boolean drawResourceCard1() {
-        Deck<PlayableCard> deck = board.getDeckResource();
-        if (deck.peekCard1() == null) {
-            deck.replaceDeck(board.getDeckGold().getQueueDeck());
-        }
-        return addToHand(deck.getCard1(), false);
-    }
-
-    /**
-     * Draws the second resource card and adds it to the player's hand.
-     */
-    public boolean drawResourceCard2() {
-        Deck<PlayableCard> deck = board.getDeckResource();
-        if (deck.peekCard2() == null) {
-            deck.replaceDeck(board.getDeckGold().getQueueDeck());
-        }
-        return addToHand(deck.getCard2(), false);
-    }
+//    /**
+//     * Draws the first resource card and adds it to the player's hand.
+//     */
+//    public boolean drawResourceCard1() {
+//        Deck<PlayableCard> deck = board.getDeckResource();
+//        if (deck.peekCard1() == null) {
+//            deck.replaceDeck(board.getDeckGold().getQueueDeck());
+//        }
+//        return addToHand(deck.getCard1(), false);
+//    }
+//
+//    /**
+//     * Draws the second resource card and adds it to the player's hand.
+//     */
+//    public boolean drawResourceCard2() {
+//        Deck<PlayableCard> deck = board.getDeckResource();
+//        if (deck.peekCard2() == null) {
+//            deck.replaceDeck(board.getDeckGold().getQueueDeck());
+//        }
+//        return addToHand(deck.getCard2(), false);
+//    }
 
     /**
      * Basic repositioning of the card in hand temporarily implemented
@@ -303,6 +309,15 @@ public class Player extends PlayerObservable {
 
     public void setStarterCard() throws EmptyDeckException {
         this.selectedStarterCard = board.getDeckStarter().draw();
+        notifyPlayerStarterCardListener(selectedStarterCard);
+    }
+
+    public void changeSide() {
+        hand.get(selectedCard).changeSide();
+        notifyPlayerHandListener(new Pair<>(username, hand));
+    }
+    public void changeStarterSide() {
+        selectedStarterCard.changeSide();
         notifyPlayerStarterCardListener(selectedStarterCard);
     }
 

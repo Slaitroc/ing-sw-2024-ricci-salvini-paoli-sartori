@@ -94,7 +94,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_readyStatus(boolean status) {
+    public void show_readyStatus(String username,  boolean status) {
         System.out.println("Status set to" + status);
     }
 
@@ -102,6 +102,11 @@ public class GUI extends UI {
     public void show_playerTurn(String username, String info) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateHand'");
+    }
+
+    @Override
+    public void show_inGamePlayers(List<String> players) {
+
     }
 
     @Override

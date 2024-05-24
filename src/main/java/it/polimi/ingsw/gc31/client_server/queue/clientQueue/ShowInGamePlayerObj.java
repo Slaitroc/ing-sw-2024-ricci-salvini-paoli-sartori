@@ -4,15 +4,15 @@ import it.polimi.ingsw.gc31.view.UI;
 
 import java.util.List;
 
-public class show_inGamePlayersObj extends ClientQueueObject {
+public class ShowInGamePlayerObj extends ClientQueueObject{
     private final List<String> players;
 
-    public show_inGamePlayersObj(List<String> players) {
+    public ShowInGamePlayerObj(List<String> players) {
         this.players = players;
     }
 
     @Override
     public void execute(UI ui) {
-
+        ui.show_inGamePlayers(players);
     }
 }

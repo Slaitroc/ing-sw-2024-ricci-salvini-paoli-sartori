@@ -11,6 +11,7 @@ import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.NewChatMessage;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowInGamePlayerObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowReadyStatusObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.StartGameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResObj;
@@ -29,7 +30,6 @@ import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
  */
 public class GameController extends UnicastRemoteObject implements IGameController {
     private final GameModel model;
-    private Map<String, Player> playerList;
     private final Map<String, VirtualClient> clientList;
     @SuppressWarnings("unused")
     private final int maxNumberPlayers;
@@ -51,13 +51,14 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         this.callsList = new LinkedBlockingQueue<>();
         this.maxNumberPlayers = maxNumberPlayers;
         this.idGame = idGame;
-        this.playerList = new HashMap<>();
         this.clientList = new HashMap<>();
         this.clientList.put(username, client);
         this.readyStatus = new HashMap<>();
         this.readyStatus.put(username, false);
         this.model = new GameModel();
         new Thread(this::executor).start();
+
+        notifyListPlayers();
     }
 
     @Override
@@ -103,14 +104,18 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         if (maxNumberPlayers == this.clientList.size()) {
             gameControllerWrite("The number of players for the game " + maxNumberPlayers + " has been reached");
         }
+
+        notifyListPlayers();
     }
 
     @Override
     public void setReadyStatus(boolean ready, String username) throws RemoteException, IllegalStateOperationException {
         readyStatus.replace(username, ready);
-        clientList.get(username).sendCommand(new ShowReadyStatusObj(ready));
-        checkReady();
 
+        for (String client: clientList.keySet()) {
+            clientList.get(client).sendCommand(new ShowReadyStatusObj(client, readyStatus.get(client)));
+        }
+        checkReady();
     }
 
     // FIXME occuparsi di RemoteException
@@ -195,6 +200,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * @throws RemoteException If a remote invocation error occurs.
      */
     public void drawResource(String username) throws RemoteException {
+
     }
 
     public void chooseSecretObjective(String username, Integer index) {
@@ -222,17 +228,39 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         }
     }
 
-    @Override
-    public void changeSide(String username) {
+    private void notifyListPlayers() {
+        for (VirtualClient client : clientList.values()) {
+            try {
+                client.sendCommand(new ShowInGamePlayerObj(clientList.keySet().stream().toList()));
+            } catch (RemoteException e) {
+                gameControllerWrite(e.getMessage());
+            }
+        }
     }
 
-    @Override
-    public void changeStarterSide(String username) {
-    }
-
-    @Override
     public void selectCard(String username, int index) {
+        try {
+            model.setSelectCard(username, index);
+        } catch (IllegalStateOperationException e) {
+            gameControllerWrite(e.getMessage());
+        }
     }
+    public void changeSide(String username) {
+        try {
+            model.changeSide(username);
+        } catch (IllegalStateOperationException e) {
+            gameControllerWrite(e.getMessage());
+        }
+    }
+
+    public void changeStarterSide(String username) {
+        try {
+            model.changStarterSide(username);
+        } catch (IllegalStateOperationException e) {
+            gameControllerWrite(e.getMessage());
+        }
+    }
+
 
     public GameModel getModel() {
         return model;

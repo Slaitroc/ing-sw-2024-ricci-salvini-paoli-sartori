@@ -129,6 +129,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void drawResource(int index) throws RemoteException {
+        gameController.sendCommand(new DrawResObj(username, index));
 //        gameController.drawResource(username);
     }
 
@@ -150,6 +151,21 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public void play(Point point) throws RemoteException {
         gameController.sendCommand(new PlayObj(username, point.x, point.y));
+    }
+
+    @Override
+    public void selectCard(int index) throws RemoteException {
+        gameController.sendCommand(new SelectCardObj(username, index));
+    }
+
+    @Override
+    public void changeSide() throws RemoteException {
+        gameController.sendCommand(new FlipCardObj(username));
+    }
+
+    @Override
+    public void changeStarterSide() throws RemoteException {
+        gameController.sendCommand(new FlipStarterCardObj(username));
     }
 
     @Override

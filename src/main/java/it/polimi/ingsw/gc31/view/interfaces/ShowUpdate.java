@@ -39,13 +39,16 @@ public interface ShowUpdate {
 
     void show_gameIsFull(int id);
 
-    void show_readyStatus(boolean status);
+    void show_readyStatus(String username, boolean status);
 
     void show_chatMessage(String username, String message);
 
     void show_gameDoesNotExist();
 
     void show_wrongGameSize();
+
     void show_playerTurn(String username, String info);
+
+    void show_inGamePlayers(List<String> players);
 
 }
