@@ -38,13 +38,9 @@ public class GameListController extends ViewController {
                         btn.getStyleClass().add("small-button");
                         btn.getStyleClass().add("rounded-button");
                         btn.setOnAction(event -> {
-                            app.setNumberOfPlayers(Integer.parseInt(getTableView().getItems().get(getIndex()).getPlayers().charAt(2) + ""));
-                            for (int i = 0; i < Integer.parseInt(getTableView().getItems().get(getIndex()).getPlayers().charAt(0) + ""); i++) {
-                                GUIApplication.getPlayerList().add("Player" + i);
-                            }
                             app.setCurrentGameID(Integer.parseInt(getTableView().getItems().get(getIndex()).getGameID()));
-                            GameInstance GameInstance = getTableView().getItems().get(getIndex());
-                            joinGame(GameInstance);
+                            app.setNumberOfPlayers(Integer.parseInt(getTableView().getItems().get(getIndex()).getPlayers().split("/")[1]));
+                            joinGame(app.getCurrentGameID());
                         });
                     }
 
@@ -63,10 +59,10 @@ public class GameListController extends ViewController {
         });
     }
 
-    private void joinGame(GameInstance gameInstance) {
+    private void joinGame(Integer id) {
 
         try {
-            client.joinGame(Integer.parseInt(gameInstance.getGameID()));
+            client.joinGame(id);
         } catch (RemoteException e) {
             show_ServerCrashWarning();
         }
@@ -97,5 +93,6 @@ public class GameListController extends ViewController {
             alert.showAndWait();
         }
     }
+
 }
 

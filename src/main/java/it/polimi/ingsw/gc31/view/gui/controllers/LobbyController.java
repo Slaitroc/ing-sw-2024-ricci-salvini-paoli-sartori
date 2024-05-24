@@ -12,6 +12,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LobbyController extends ViewController {
 
@@ -37,7 +39,7 @@ public class LobbyController extends ViewController {
 
 
     @FXML
-    MFXTextField namePlayer1;
+    public MFXTextField namePlayer1;
     @FXML
     public MFXTextField namePlayer2;
     @FXML
@@ -79,165 +81,45 @@ public class LobbyController extends ViewController {
 
     @Override
     public void setUp() {
+
         gameIDLabel.setText("Game ID: " + app.getCurrentGameID());
 
-        inGamePlayer2.setVisible(false);
-        inGamePlayer2.setManaged(false);
+        disableStackPane(inGamePlayer2);
+        disableStackPane(inGamePlayer3);
+        disableStackPane(inGamePlayer4);
 
-        inGamePlayer3.setVisible(false);
-        inGamePlayer3.setManaged(false);
+        disableStackPane(waitingPlayer2);
+        disableStackPane(waitingPlayer3);
+        disableStackPane(waitingPlayer4);
 
-        inGamePlayer4.setVisible(false);
-        inGamePlayer4.setManaged(false);
+        disableStackPane(lockPlayer3);
+        disableStackPane(lockPlayer4);
 
-        lockPlayer3.setVisible(false);
-        lockPlayer3.setManaged(false);
-
-        lockPlayer4.setVisible(false);
-        lockPlayer4.setManaged(false);
-
-        waitingPlayer2.setVisible(false);
-        waitingPlayer2.setManaged(false);
-
-        waitingPlayer3.setVisible(false);
-        waitingPlayer3.setManaged(false);
-
-        waitingPlayer4.setVisible(false);
-        waitingPlayer4.setManaged(false);
 
         switch (app.getNumberOfPlayers()) {
             case 2:
-                if (GUIApplication.getPlayerList().isEmpty()) {
-                    imPlayerNumber = 1;
-                    iconPlayer1.setVisible(true);
-                    namePlayer1.setText(app.getUsername());
+                enableStackPane(waitingPlayer2);
 
-                    waitingPlayer2.setVisible(true);
-                    waitingPlayer2.setManaged(true);
-
-                } else {
-                    imPlayerNumber = 2;
-                    iconPlayer2.setVisible(true);
-                    namePlayer1.setText(GUIApplication.getPlayerList().getFirst());
-
-                    inGamePlayer2.setVisible(true);
-                    inGamePlayer2.setManaged(true);
-                    namePlayer2.setText(app.getUsername());
-                }
-
-                lockPlayer3.setVisible(true);
-                lockPlayer3.setManaged(true);
-
-                lockPlayer4.setVisible(true);
-                lockPlayer4.setManaged(true);
-
-
+                enableStackPane(lockPlayer3);
+                enableStackPane(lockPlayer4);
                 break;
             case 3:
-
-                if (GUIApplication.getPlayerList().isEmpty()) {
-                    imPlayerNumber = 1;
-                    iconPlayer1.setVisible(true);
-                    namePlayer1.setText(app.getUsername());
-
-                    waitingPlayer2.setVisible(true);
-                    waitingPlayer2.setManaged(true);
-
-                    waitingPlayer3.setVisible(true);
-                    waitingPlayer3.setManaged(true);
-                } else if (GUIApplication.getPlayerList().size() == 1) {
-                    imPlayerNumber = 2;
-                    iconPlayer2.setVisible(true);
-                    namePlayer1.setText(GUIApplication.getPlayerList().getFirst());
-
-                    inGamePlayer2.setVisible(true);
-                    inGamePlayer2.setManaged(true);
-                    namePlayer2.setText(app.getUsername());
-
-                    waitingPlayer3.setVisible(true);
-                    waitingPlayer3.setManaged(true);
-                } else {
-                    imPlayerNumber = 3;
-                    iconPlayer3.setVisible(true);
-                    namePlayer1.setText(GUIApplication.getPlayerList().getFirst());
-
-                    inGamePlayer2.setVisible(true);
-                    inGamePlayer2.setManaged(true);
-                    namePlayer2.setText(GUIApplication.getPlayerList().get(1));
-
-                    inGamePlayer3.setVisible(true);
-                    inGamePlayer3.setManaged(true);
-                    namePlayer3.setText(app.getUsername());
-
-                }
-                lockPlayer4.setVisible(true);
-                lockPlayer4.setManaged(true);
+                enableStackPane(waitingPlayer2);
+                enableStackPane(waitingPlayer3);
+                enableStackPane(lockPlayer4);
                 break;
-
             case 4:
-                if (GUIApplication.getPlayerList().isEmpty()) {
-                    imPlayerNumber = 1;
-                    iconPlayer1.setVisible(true);
-                    namePlayer1.setText(app.getUsername());
-
-                    waitingPlayer2.setVisible(true);
-                    waitingPlayer2.setManaged(true);
-
-                    waitingPlayer3.setVisible(true);
-                    waitingPlayer3.setManaged(true);
-
-                    waitingPlayer4.setVisible(true);
-                    waitingPlayer4.setManaged(true);
-
-                } else if (GUIApplication.getPlayerList().size() == 1) {
-                    imPlayerNumber = 2;
-                    iconPlayer2.setVisible(true);
-                    namePlayer1.setText(GUIApplication.getPlayerList().getFirst());
-
-                    inGamePlayer2.setVisible(true);
-                    inGamePlayer2.setManaged(true);
-                    namePlayer2.setText(app.getUsername());
-
-                    waitingPlayer3.setVisible(true);
-                    waitingPlayer3.setManaged(true);
-
-                    waitingPlayer4.setVisible(true);
-                    waitingPlayer4.setManaged(true);
-
-                } else if (GUIApplication.getPlayerList().size() == 2) {
-                    imPlayerNumber = 3;
-                    iconPlayer3.setVisible(true);
-                    namePlayer1.setText(GUIApplication.getPlayerList().getFirst());
-
-                    inGamePlayer2.setVisible(true);
-                    inGamePlayer2.setManaged(true);
-                    namePlayer2.setText(GUIApplication.getPlayerList().get(1));
-
-                    inGamePlayer3.setVisible(true);
-                    inGamePlayer3.setManaged(true);
-                    namePlayer3.setText(app.getUsername());
-
-                    waitingPlayer4.setVisible(true);
-                    waitingPlayer4.setManaged(true);
-                } else {
-                    imPlayerNumber = 4;
-                    iconPlayer4.setVisible(true);
-                    namePlayer1.setText(GUIApplication.getPlayerList().getFirst());
-
-                    inGamePlayer2.setVisible(true);
-                    inGamePlayer2.setManaged(true);
-                    namePlayer2.setText(GUIApplication.getPlayerList().get(1));
-
-                    inGamePlayer3.setVisible(true);
-                    inGamePlayer3.setManaged(true);
-                    namePlayer3.setText(GUIApplication.getPlayerList().get(2));
-
-                    inGamePlayer4.setVisible(true);
-                    inGamePlayer4.setManaged(true);
-                    namePlayer4.setText(app.getUsername());
-                }
+                enableStackPane(waitingPlayer2);
+                enableStackPane(waitingPlayer3);
+                enableStackPane(waitingPlayer4);
                 break;
         }
+
+        updateLobby();
+        System.out.println("I'm player number " + imPlayerNumber);
+        System.out.println("This is lobby number " + app.getCurrentGameID());
+        System.out.println("In this lobby there are supposed to be " + app.getNumberOfPlayers() + " players");
+        System.out.println("In this lobby there are " + app.getPlayerList().size() + " players");
     }
 
     @FXML
@@ -254,6 +136,16 @@ public class LobbyController extends ViewController {
         } catch (RemoteException e) {
             show_ServerCrashWarning();
         }
+    }
+
+    private void enableStackPane(StackPane pane) {
+        pane.setVisible(true);
+        pane.setManaged(true);
+    }
+
+    private void disableStackPane(StackPane pane) {
+        pane.setVisible(false);
+        pane.setManaged(false);
     }
 
     @Override
@@ -279,20 +171,134 @@ public class LobbyController extends ViewController {
     }
 
     private void changeReady(TextField ready) {
-        if (ready.getText().equals("Not Ready")) {
-            try {
-                client.setReady(true);
-                ready.setText("Ready");
-            } catch (RemoteException e) {
-                show_ServerCrashWarning();
+        try {
+            //System.out.println("Hey, I'm " + app.getUsername() + ", Player Number " + imPlayerNumber + ". I am setting my status from " + ready.getText());
+            client.setReady(ready.getText().equals("Not Ready"));
+        } catch (RemoteException e) {
+            show_ServerCrashWarning();
+        }
+    }
+
+    @Override
+    public void showReady(String username, boolean status) {
+        //System.out.println("Hey, I'm " + app.getUsername() + ", Player Number " + imPlayerNumber + ". I am observing that player " + username + " is setting his status to " + status);
+        if (username.equals(app.getPlayerList().getFirst())) {
+            //System.out.println("I have observed that player number 1 changed his status");
+            if (status) {
+                ready1.setText("Ready");
+            } else {
+                ready1.setText("Not Ready");
             }
-        } else {
-            try {
-                client.setReady(false);
-                ready.setText("Not Ready");
-            } catch (RemoteException e) {
-                show_ServerCrashWarning();
+        } else if (username.equals(app.getPlayerList().get(1))) {
+            //System.out.println("I have observed that player number 2 changed his status");
+            if (status) {
+                ready2.setText("Ready");
+            } else {
+                ready2.setText("Not Ready");
             }
+        } else if (username.equals(app.getPlayerList().get(2))) {
+            //System.out.println("I have observed that player number 3 changed his status");
+            if (status) {
+                ready3.setText("Ready");
+            } else {
+                ready3.setText("Not Ready");
+            }
+        } else if (username.equals(app.getPlayerList().get(3))) {
+            //System.out.println("I have observed that player number 4 changed his status");
+            if (status) {
+                ready4.setText("Ready");
+            } else {
+                ready4.setText("Not Ready");
+            }
+        }
+    }
+
+    @Override
+    public void updateLobby() {
+        int count = 1;
+        for (String name : app.getPlayerList()) {
+            switch (count) {
+                case 1:
+                    namePlayer1.setText(name);
+                    if (name.equals(app.getUsername())) {
+                        imPlayerNumber = 1;
+                        iconPlayer1.setVisible(true);
+                    }
+                    break;
+                case 2:
+                    namePlayer2.setText(name);
+                    disableStackPane(waitingPlayer2);
+                    enableStackPane(inGamePlayer2);
+                    if (name.equals(app.getUsername())) {
+                        imPlayerNumber = 2;
+                        iconPlayer2.setVisible(true);
+                    }
+                    break;
+                case 3:
+                    namePlayer3.setText(name);
+                    disableStackPane(waitingPlayer3);
+                    enableStackPane(inGamePlayer3);
+                    if (name.equals(app.getUsername())) {
+                        imPlayerNumber = 3;
+                        iconPlayer3.setVisible(true);
+                    }
+                    break;
+                case 4:
+                    namePlayer4.setText(name);
+                    disableStackPane(waitingPlayer4);
+                    enableStackPane(inGamePlayer4);
+                    if (name.equals(app.getUsername())) {
+                        imPlayerNumber = 4;
+                        iconPlayer4.setVisible(true);
+                    }
+                    break;
+            }
+            count++;
+        }
+    }
+
+    @Override
+    public void unreadyMe(){
+        try {
+            client.setReady(false);
+        } catch (RemoteException e) {
+            show_ServerCrashWarning();
+        }
+        switch (imPlayerNumber) {
+            case 1:
+                ready1.setText("Not Ready");
+                break;
+            case 2:
+                ready2.setText("Not Ready");
+                break;
+            case 3:
+                ready3.setText("Not Ready");
+                break;
+            case 4:
+                ready4.setText("Not Ready");
+                break;
+        }
+    }
+
+    private void setPlayer(int i) {
+        iconPlayer1.setVisible(false);
+        iconPlayer2.setVisible(false);
+        iconPlayer3.setVisible(false);
+        iconPlayer4.setVisible(false);
+
+        switch (i) {
+            case 1:
+                imPlayerNumber = 1;
+                iconPlayer1.setVisible(true);
+            case 2:
+                imPlayerNumber = 2;
+                iconPlayer2.setVisible(true);
+            case 3:
+                imPlayerNumber = 3;
+                iconPlayer3.setVisible(true);
+            case 4:
+                imPlayerNumber = 4;
+                iconPlayer4.setVisible(true);
         }
     }
 }

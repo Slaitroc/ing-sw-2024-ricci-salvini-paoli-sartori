@@ -28,6 +28,7 @@ public abstract class ViewController {
     public ClientCommands getClient() {
         return this.client;
     }
+    public void unreadyMe(){};
 
     protected void show_ServerCrashWarning(){
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -40,4 +41,6 @@ public abstract class ViewController {
     public void setUp(){};
     public void setMessage(String message){};
     public void updateChat(String username, String message){};
+    public void updateLobby(){};
+    public void showReady(String username, boolean status){};
 }

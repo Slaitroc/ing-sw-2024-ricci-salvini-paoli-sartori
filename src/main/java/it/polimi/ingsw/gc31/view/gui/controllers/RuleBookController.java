@@ -3,7 +3,6 @@ package it.polimi.ingsw.gc31.view.gui.controllers;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
 import javafx.fxml.FXML;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class RuleBookController extends ViewController{
@@ -110,7 +109,7 @@ public class RuleBookController extends ViewController{
 
     @FXML
     private void loadMainMenuScene() {
-        app.setDefaultSize();
+        app.setDefaultWindowSize();
         app.loadScene(SceneTag.MAINMENU);
     }
 

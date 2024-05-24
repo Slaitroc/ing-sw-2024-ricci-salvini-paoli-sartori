@@ -19,19 +19,19 @@
     <GridPane  alignment="CENTER" hgap="50">
 
         <ImageView fx:id="iconPlayer1" GridPane.rowIndex="0" GridPane.columnIndex="0" fitHeight="100" fitWidth="100" visible="false" GridPane.halignment="CENTER">
-            <Image url="@../Images/AppIcons/iconMushroom.png"/>
-        </ImageView>
-
-        <ImageView fx:id="iconPlayer2" GridPane.rowIndex="0" GridPane.columnIndex="1" fitHeight="100" fitWidth="100" visible="false" GridPane.halignment="CENTER">
-            <Image url="@../Images/AppIcons/iconAnimal.png"/>
-        </ImageView>
-
-        <ImageView fx:id="iconPlayer3" GridPane.rowIndex="0" GridPane.columnIndex="2" fitHeight="100" fitWidth="100" visible="false" GridPane.halignment="CENTER">
             <Image url="@../Images/AppIcons/iconPlant.png"/>
         </ImageView>
 
-        <ImageView fx:id="iconPlayer4" GridPane.rowIndex="0" GridPane.columnIndex="3" fitHeight="100" fitWidth="100" visible="false" GridPane.halignment="CENTER">
+        <ImageView fx:id="iconPlayer2" GridPane.rowIndex="0" GridPane.columnIndex="1" fitHeight="100" fitWidth="100" visible="false" GridPane.halignment="CENTER">
             <Image url="@../Images/AppIcons/iconInsect.png"/>
+        </ImageView>
+
+        <ImageView fx:id="iconPlayer3" GridPane.rowIndex="0" GridPane.columnIndex="2" fitHeight="100" fitWidth="100" visible="false" GridPane.halignment="CENTER">
+            <Image url="@../Images/AppIcons/iconMushroom.png"/>
+        </ImageView>
+
+        <ImageView fx:id="iconPlayer4" GridPane.rowIndex="0" GridPane.columnIndex="3" fitHeight="100" fitWidth="100" visible="false" GridPane.halignment="CENTER">
+            <Image url="@../Images/AppIcons/iconAnimal.png"/>
         </ImageView>
 
 
@@ -67,7 +67,7 @@
                    GridPane.rowIndex="1" GridPane.columnIndex="1">
 
             <!-- StackPane for PLAYER2_IN_LOBBY  -->
-            <StackPane fx:id="inGamePlayer2" styleClass="stackPane-playerSlot, player3"
+            <StackPane fx:id="inGamePlayer2" styleClass="stackPane-playerSlot, player2"
                        maxWidth="135" maxHeight="360" minWidth="135" minHeight="360">
                 <VBox spacing="70">
                     <padding>

@@ -5,23 +5,15 @@ import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 
@@ -180,7 +172,7 @@ public class MainMenuController extends ViewController {
 
     @FXML
     private void loadRuleBookScene() {
-        app.setRuleBookSize();
+        app.setRuleBookWindowSize();
         app.loadScene(SceneTag.RULEBOOK);
     }
 
