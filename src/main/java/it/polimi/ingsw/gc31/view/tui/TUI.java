@@ -1557,7 +1557,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_joinedToGame(int id) {
+    public void show_joinedToGame(int id, int maxNumberOfPlayers) {
         printToCmdLineOut(serverWrite("Joined to game: " + id));
         state = new JoinedToGameState(this);
         state.command_showCommandsInfo();

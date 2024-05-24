@@ -182,9 +182,9 @@ public class Controller extends UnicastRemoteObject implements IController {
                     .getMaxNumberPlayers()) {
                 gameControlList.get(idGame).joinGame(username, client);
                 client.setGameController(gameControlList.get(idGame));
-                client.sendCommand(new JoinedToGameObj(idGame));
+                client.sendCommand(new JoinedToGameObj(idGame, gameControlList.get(idGame).getMaxNumberPlayers()));
                 tempClients.remove(username);
-                gameControlList.get(idGame);
+                gameControlList.get(idGame); //??
             } else {
                 client.sendCommand(new GameIsFullObj(idGame));
             }

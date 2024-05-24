@@ -5,12 +5,10 @@ import java.awt.*;
 import java.rmi.RemoteException;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
-import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import javafx.application.Platform;
 import it.polimi.ingsw.gc31.view.UI;
-import javafx.scene.control.Alert;
 
 import java.util.List;
 import java.util.Map;
@@ -54,13 +52,9 @@ public class GUI extends UI {
     @Override
     public void show_gameCreated(int gameID) {
         Platform.runLater(() -> {
-            try {
-                app.setCurrentGameID(app.getClient().getGameID());
-                app.setLobbySize();
+                app.setCurrentGameID(gameID);
+                app.setLobbyWindowSize();
                 app.loadScene(SceneTag.LOBBY);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
         });
     }
 
@@ -79,9 +73,11 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_joinedToGame(int id) {
+    public void show_joinedToGame(int id, int maxNumberOfPlayers) {
         Platform.runLater(() -> {
-            app.setLobbySize();
+            app.setLobbyWindowSize();
+            app.setNumberOfPlayers(maxNumberOfPlayers);
+            app.setCurrentGameID(id);
             app.loadScene(SceneTag.LOBBY);
         });
     }
@@ -89,13 +85,16 @@ public class GUI extends UI {
     @Override
     public void show_gameIsFull(int id) {
         Platform.runLater(() -> {
-            app.getCurrentController().setMessage("Username already taken!");
+            app.getCurrentController().setMessage("Lobby is full!");
         });
     }
 
     @Override
     public void show_readyStatus(String username,  boolean status) {
-        System.out.println("Status set to" + status);
+        System.out.println("show_readyStatus triggered!!!! VALUES: " + username + " " + status);
+        Platform.runLater(() -> {
+            app.getCurrentController().showReady(username ,status);
+        });
     }
 
     @Override
@@ -106,7 +105,13 @@ public class GUI extends UI {
 
     @Override
     public void show_inGamePlayers(List<String> players) {
-
+        Platform.runLater(() -> {
+            System.out.println("Show_inGamePlayers triggered!!!!: values" + players);
+            app.setPlayerList(players);
+            app.getCurrentController().unreadyMe();
+            app.getCurrentController().updateLobby();
+            //app.getCurrentController();
+        });
     }
 
     @Override

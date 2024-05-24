@@ -1,11 +1,9 @@
 package it.polimi.ingsw.gc31.view.gui;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
-import it.polimi.ingsw.gc31.client_server.listeners.Observable;
 import it.polimi.ingsw.gc31.view.gui.controllers.GameInstance;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.text.Font;
@@ -32,7 +30,7 @@ public class GUIApplication extends Application {
     private static Integer currentGameID;
     private static ObservableList<GameInstance> gameInstances = FXCollections.observableArrayList();
     private static ViewController currentController;
-    private static final List<String> playerList = new ArrayList<>();
+    private static List<String> playerList = new ArrayList<>();
 
     @SuppressWarnings("unused")
 
@@ -50,7 +48,7 @@ public class GUIApplication extends Application {
         loadScene(SceneTag.START);
 
         // Set window size
-        setDefaultSize();
+        setDefaultWindowSize();
         //primaryStage.setFullScreen(true);
 
         // Set Title and AppIcon
@@ -95,7 +93,7 @@ public class GUIApplication extends Application {
         //System.out.println("Client set to " + client.toString());
     }
 
-    public void setRuleBookSize() {
+    public void setRuleBookWindowSize() {
         primaryStage.setWidth(1400);
         primaryStage.setHeight(900);
         primaryStage.setMinWidth(1400);
@@ -103,7 +101,7 @@ public class GUIApplication extends Application {
         primaryStage.centerOnScreen();
     }
 
-    public void setDefaultSize() {
+    public void setDefaultWindowSize() {
         primaryStage.setWidth(720);
         primaryStage.setHeight(540);
         primaryStage.setMinWidth(720);
@@ -111,7 +109,7 @@ public class GUIApplication extends Application {
         primaryStage.centerOnScreen();
     }
 
-    public void setLobbySize() {
+    public void setLobbyWindowSize() {
         primaryStage.setWidth(1095);
         primaryStage.setHeight(540);
         primaryStage.setMinWidth(1095);
@@ -160,8 +158,12 @@ public class GUIApplication extends Application {
         return currentController;
     }
 
-    public static List<String> getPlayerList() {
+    public List<String> getPlayerList() {
         return playerList;
+    }
+
+    public void setPlayerList(List<String> playerList) {
+        GUIApplication.playerList = playerList;
     }
 
 }
