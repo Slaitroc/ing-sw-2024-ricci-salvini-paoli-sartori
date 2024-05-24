@@ -14,7 +14,7 @@ public class ShowReadyStatusObj extends ClientQueueObject {
 
     @Override
     public void execute(UI ui) {
-        ui.show_readyStatus(status);
+        ui.show_readyStatus(username, status);
     }
 
 }

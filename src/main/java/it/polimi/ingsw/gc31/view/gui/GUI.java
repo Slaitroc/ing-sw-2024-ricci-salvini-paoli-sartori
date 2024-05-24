@@ -70,7 +70,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_readyStatus(boolean status) {
+    public void show_readyStatus(String username, boolean status) {
 
     }
 

@@ -1581,7 +1581,8 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_readyStatus(boolean status) {
+    public void show_readyStatus(String username, boolean status) {
+        //FIXME modificare
         if (status) {
             printToCmdLineOut(serverWrite("You are ready"));
         } else {
