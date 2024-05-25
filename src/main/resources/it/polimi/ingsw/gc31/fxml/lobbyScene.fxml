@@ -6,6 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.TextFlow?>
 <StackPane xmlns="http://javafx.com/javafx/17"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.LobbyController"
@@ -16,21 +17,25 @@
         <Insets top="10" right="20" bottom="10" left="20"/>
     </padding>
 
-    <GridPane  alignment="CENTER" hgap="50">
+    <GridPane alignment="CENTER" hgap="50">
 
-        <ImageView fx:id="iconPlayer1" GridPane.rowIndex="0" GridPane.columnIndex="0" fitHeight="100" fitWidth="100" visible="false" GridPane.halignment="CENTER">
+        <ImageView fx:id="iconPlayer1" GridPane.rowIndex="0" GridPane.columnIndex="0" fitHeight="100" fitWidth="100"
+                   visible="false" GridPane.halignment="CENTER">
             <Image url="@../Images/AppIcons/iconPlant.png"/>
         </ImageView>
 
-        <ImageView fx:id="iconPlayer2" GridPane.rowIndex="0" GridPane.columnIndex="1" fitHeight="100" fitWidth="100" visible="false" GridPane.halignment="CENTER">
+        <ImageView fx:id="iconPlayer2" GridPane.rowIndex="0" GridPane.columnIndex="1" fitHeight="100" fitWidth="100"
+                   visible="false" GridPane.halignment="CENTER">
             <Image url="@../Images/AppIcons/iconInsect.png"/>
         </ImageView>
 
-        <ImageView fx:id="iconPlayer3" GridPane.rowIndex="0" GridPane.columnIndex="2" fitHeight="100" fitWidth="100" visible="false" GridPane.halignment="CENTER">
+        <ImageView fx:id="iconPlayer3" GridPane.rowIndex="0" GridPane.columnIndex="2" fitHeight="100" fitWidth="100"
+                   visible="false" GridPane.halignment="CENTER">
             <Image url="@../Images/AppIcons/iconMushroom.png"/>
         </ImageView>
 
-        <ImageView fx:id="iconPlayer4" GridPane.rowIndex="0" GridPane.columnIndex="3" fitHeight="100" fitWidth="100" visible="false" GridPane.halignment="CENTER">
+        <ImageView fx:id="iconPlayer4" GridPane.rowIndex="0" GridPane.columnIndex="3" fitHeight="100" fitWidth="100"
+                   visible="false" GridPane.halignment="CENTER">
             <Image url="@../Images/AppIcons/iconAnimal.png"/>
         </ImageView>
 
@@ -45,7 +50,8 @@
                     <Insets top="20" right="10" bottom="20" left="10"/>
                 </padding>
                 <StackPane>
-                    <MFXTextField fx:id="namePlayer1" stylesheets="@../css/PlayerNames.css" styleClass="player-text-field"/>
+                    <MFXTextField fx:id="namePlayer1" stylesheets="@../css/PlayerNames.css"
+                                  styleClass="player-text-field"/>
                 </StackPane>
                 <StackPane>
                     <ImageView fitHeight="100" fitWidth="100">
@@ -74,7 +80,8 @@
                         <Insets top="20" right="10" bottom="20" left="10"/>
                     </padding>
                     <StackPane>
-                        <MFXTextField fx:id="namePlayer2" stylesheets="@../css/PlayerNames.css" styleClass="player-text-field"/>
+                        <MFXTextField fx:id="namePlayer2" stylesheets="@../css/PlayerNames.css"
+                                      styleClass="player-text-field"/>
                     </StackPane>
                     <StackPane>
                         <ImageView fitHeight="100" fitWidth="100">
@@ -119,7 +126,8 @@
                         <Insets top="20" right="10" bottom="20" left="10"/>
                     </padding>
                     <StackPane>
-                        <MFXTextField fx:id="namePlayer3" stylesheets="@../css/PlayerNames.css" styleClass="player-text-field"/>
+                        <MFXTextField fx:id="namePlayer3" stylesheets="@../css/PlayerNames.css"
+                                      styleClass="player-text-field"/>
                     </StackPane>
                     <StackPane>
                         <ImageView fitHeight="100" fitWidth="100">
@@ -172,7 +180,8 @@
                         <Insets top="20" right="10" bottom="20" left="10"/>
                     </padding>
                     <StackPane>
-                        <MFXTextField fx:id="namePlayer4" stylesheets="@../css/PlayerNames.css" styleClass="player-text-field"/>
+                        <MFXTextField fx:id="namePlayer4" stylesheets="@../css/PlayerNames.css"
+                                      styleClass="player-text-field"/>
                     </StackPane>
                     <StackPane>
                         <ImageView fitHeight="100" fitWidth="100">
@@ -216,17 +225,20 @@
         <StackPane maxWidth="135" maxHeight="360" minWidth="135" minHeight="360"
                    GridPane.rowIndex="1" GridPane.columnIndex="4">
             <VBox spacing="10" alignment="TOP_CENTER" prefHeight="360" maxHeight="360">
-                <MFXTextField fx:id="textField" maxWidth="135" maxHeight="40" minWidth="135" minHeight="40"
+                <ScrollPane fx:id="scrollPane" maxWidth="170" maxHeight="250" minWidth="170" minHeight="250"
+                            stylesheets="@../css/SimpleTextField.css"
+                            fitToWidth="true" fitToHeight="true">
+                    <TextFlow fx:id="chatField" styleClass="mfx-simple-small-text-field, lobby-chat-background">
+                    </TextFlow>
+                </ScrollPane>
+                <MFXTextField fx:id="textField" maxWidth="170" maxHeight="40" minWidth="170" minHeight="40"
                               onKeyPressed="#handleEnterKeyPressed"
                               stylesheets="@../css/SimpleTextField.css" styleClass="mfx-simple-small-text-field">
                 </MFXTextField>
-                <TextArea fx:id="chatField" maxWidth="135" maxHeight="240" minWidth="135" minHeight="240"
-                          editable="false" wrapText="true"
-                          stylesheets="@../css/SimpleTextField.css" styleClass="mfx-simple-small-text-field">
-                </TextArea>
-                <MFXToggleButton stylesheets="@../css/Buttons.css" styleClass="small-button, rounded-button"
-                                 onAction="#setReady">
-                </MFXToggleButton>
+                <MFXButton stylesheets="@../css/Buttons.css" styleClass="really-small-button, rounded-button"
+                           maxWidth="135" maxHeight="40" minWidth="135" minHeight="40"
+                           onAction="#setReady" text="Set Ready">
+                </MFXButton>
             </VBox>
         </StackPane>
         <Label fx:id="gameIDLabel" GridPane.rowIndex="0" GridPane.columnIndex="4"

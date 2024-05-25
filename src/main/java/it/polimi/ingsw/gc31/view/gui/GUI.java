@@ -109,7 +109,6 @@ public class GUI extends UI {
         Platform.runLater(() -> {
             System.out.println("Show_inGamePlayers triggered!!!!: values" + players);
             app.setPlayerList(players);
-            app.getCurrentController().unreadyMe();
             app.getCurrentController().updateLobby();
             //app.getCurrentController();
         });
@@ -184,7 +183,9 @@ public class GUI extends UI {
     @Override
     public void show_chatMessage(String username, String message) {
         //System.out.println(username + "said:" + message);
-        app.getCurrentController().updateChat(username, message);
+        Platform.runLater(() -> {
+            app.getCurrentController().updateChat(username, message);
+        });
     }
 
     @Override

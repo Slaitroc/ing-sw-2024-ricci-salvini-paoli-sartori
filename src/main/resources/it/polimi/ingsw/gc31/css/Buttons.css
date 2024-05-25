@@ -19,6 +19,16 @@
     -mfx-depth-level: LEVEL5;
 }
 
+.really-small-button {
+    -fx-background-color: -dark-green;
+    -fx-font: 12px 'glimmer of light';
+    -fx-text-fill: -white;
+    -fx-cursor: hand;
+    -fx-text-alignment: center;
+    -mfx-button-type: RAISED;
+    -mfx-depth-level: LEVEL5;
+}
+
 .rounded-button{
     -fx-background-radius: 20;
     -fx-border-radius: 20;
@@ -80,11 +90,4 @@
 
 .mfx-combo-box-cell:selected {
     -fx-background-color: -light-green;
-}
-
-.mfx-toggle-button{
-    -fx-background-color: -dark-green;
-    -fx-cursor: hand;
-    -mfx-button-type: RAISED;
-    -mfx-depth-level: LEVEL5;
 }

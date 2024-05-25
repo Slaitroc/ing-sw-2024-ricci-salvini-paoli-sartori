@@ -28,7 +28,6 @@ public abstract class ViewController {
     public ClientCommands getClient() {
         return this.client;
     }
-    public void unreadyMe(){};
 
     protected void show_ServerCrashWarning(){
         Alert alert = new Alert(Alert.AlertType.ERROR);

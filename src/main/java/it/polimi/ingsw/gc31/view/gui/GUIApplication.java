@@ -17,6 +17,7 @@ import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.view.gui.controllers.ViewController;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class GUIApplication extends Application {
@@ -30,7 +31,7 @@ public class GUIApplication extends Application {
     private static Integer currentGameID;
     private static ObservableList<GameInstance> gameInstances = FXCollections.observableArrayList();
     private static ViewController currentController;
-    private static List<String> playerList = new ArrayList<>();
+    private static LinkedHashMap<String, Boolean> playerList = new LinkedHashMap<>();
 
     @SuppressWarnings("unused")
 
@@ -158,11 +159,11 @@ public class GUIApplication extends Application {
         return currentController;
     }
 
-    public List<String> getPlayerList() {
+    public LinkedHashMap<String, Boolean> getPlayerList() {
         return playerList;
     }
 
-    public void setPlayerList(List<String> playerList) {
+    public void setPlayerList(LinkedHashMap<String, Boolean> playerList) {
         GUIApplication.playerList = playerList;
     }
 

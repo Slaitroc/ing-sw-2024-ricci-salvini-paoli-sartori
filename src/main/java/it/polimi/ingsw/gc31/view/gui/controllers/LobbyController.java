@@ -1,19 +1,25 @@
 package it.polimi.ingsw.gc31.view.gui.controllers;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.controls.MFXToggleButton;
 import it.polimi.ingsw.gc31.view.gui.GUIApplication;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class LobbyController extends ViewController {
 
@@ -69,7 +75,11 @@ public class LobbyController extends ViewController {
     @FXML
     public MFXTextField textField;
     @FXML
-    public TextArea chatField;
+    public TextFlow chatField;
+    @FXML
+    public ScrollPane scrollPane;
+    @FXML
+    public MFXToggleButton toggleButton;
 
     private int imPlayerNumber;
 
@@ -150,7 +160,26 @@ public class LobbyController extends ViewController {
 
     @Override
     public void updateChat(String username, String message) {
-        chatField.setText("\n" + username + ": " + message + chatField.getText());
+        Text usernameText = new Text(username + ": ");
+        if(username.equals(app.getPlayerList().keySet().stream().toList().getFirst())) {
+            usernameText.setFill(Color.GREEN);
+        }
+        else if (username.equals(app.getPlayerList().keySet().stream().toList().get(1))) {
+            usernameText.setFill(Color.VIOLET);
+        }
+        else if (username.equals(app.getPlayerList().keySet().stream().toList().get(2))) {
+            usernameText.setFill(Color.RED);
+        }
+        else if (username.equals(app.getPlayerList().keySet().stream().toList().get(3))) {
+            usernameText.setFill(Color.BLUE);
+        }
+        Text messageText = new Text(message + "\n");
+        messageText.setFill(Color.BLACK);
+
+        chatField.getChildren().add(usernameText);
+        chatField.getChildren().add(messageText);
+        scrollPane.layout();
+        scrollPane.setVvalue(1.0);
     }
 
     public void setReady() {
@@ -182,28 +211,28 @@ public class LobbyController extends ViewController {
     @Override
     public void showReady(String username, boolean status) {
         //System.out.println("Hey, I'm " + app.getUsername() + ", Player Number " + imPlayerNumber + ". I am observing that player " + username + " is setting his status to " + status);
-        if (username.equals(app.getPlayerList().getFirst())) {
+        if (username.equals(app.getPlayerList().keySet().stream().toList().getFirst())) {
             //System.out.println("I have observed that player number 1 changed his status");
             if (status) {
                 ready1.setText("Ready");
             } else {
                 ready1.setText("Not Ready");
             }
-        } else if (username.equals(app.getPlayerList().get(1))) {
+        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(1))) {
             //System.out.println("I have observed that player number 2 changed his status");
             if (status) {
                 ready2.setText("Ready");
             } else {
                 ready2.setText("Not Ready");
             }
-        } else if (username.equals(app.getPlayerList().get(2))) {
+        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(2))) {
             //System.out.println("I have observed that player number 3 changed his status");
             if (status) {
                 ready3.setText("Ready");
             } else {
                 ready3.setText("Not Ready");
             }
-        } else if (username.equals(app.getPlayerList().get(3))) {
+        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(3))) {
             //System.out.println("I have observed that player number 4 changed his status");
             if (status) {
                 ready4.setText("Ready");
@@ -216,67 +245,46 @@ public class LobbyController extends ViewController {
     @Override
     public void updateLobby() {
         int count = 1;
-        for (String name : app.getPlayerList()) {
+        for (Map.Entry<String, Boolean> player : app.getPlayerList().entrySet()) {
             switch (count) {
                 case 1:
-                    namePlayer1.setText(name);
-                    if (name.equals(app.getUsername())) {
+                    namePlayer1.setText(player.getKey());
+                    if (player.getKey().equals(app.getUsername())) {
                         imPlayerNumber = 1;
                         iconPlayer1.setVisible(true);
+
                     }
                     break;
                 case 2:
-                    namePlayer2.setText(name);
+                    namePlayer2.setText(player.getKey());
                     disableStackPane(waitingPlayer2);
                     enableStackPane(inGamePlayer2);
-                    if (name.equals(app.getUsername())) {
+                    if (player.getKey().equals(app.getUsername())) {
                         imPlayerNumber = 2;
                         iconPlayer2.setVisible(true);
                     }
                     break;
                 case 3:
-                    namePlayer3.setText(name);
+                    namePlayer3.setText(player.getKey());
                     disableStackPane(waitingPlayer3);
                     enableStackPane(inGamePlayer3);
-                    if (name.equals(app.getUsername())) {
+                    if (player.getKey().equals(app.getUsername())) {
                         imPlayerNumber = 3;
                         iconPlayer3.setVisible(true);
                     }
                     break;
                 case 4:
-                    namePlayer4.setText(name);
+                    namePlayer4.setText(player.getKey());
                     disableStackPane(waitingPlayer4);
                     enableStackPane(inGamePlayer4);
-                    if (name.equals(app.getUsername())) {
+                    if (player.getKey().equals(app.getUsername())) {
                         imPlayerNumber = 4;
                         iconPlayer4.setVisible(true);
                     }
                     break;
             }
+            showReady(player.getKey(), player.getValue());
             count++;
-        }
-    }
-
-    @Override
-    public void unreadyMe(){
-        try {
-            client.setReady(false);
-        } catch (RemoteException e) {
-            show_ServerCrashWarning();
-        }
-        switch (imPlayerNumber) {
-            case 1:
-                ready1.setText("Not Ready");
-                break;
-            case 2:
-                ready2.setText("Not Ready");
-                break;
-            case 3:
-                ready3.setText("Not Ready");
-                break;
-            case 4:
-                ready4.setText("Not Ready");
-                break;
         }
     }
 
