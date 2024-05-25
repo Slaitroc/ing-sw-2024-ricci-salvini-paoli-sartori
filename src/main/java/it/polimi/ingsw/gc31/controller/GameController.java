@@ -36,7 +36,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     private final int maxNumberPlayers;
     private final int idGame;
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
-    private final Map<String, Boolean> readyStatus;
+    private final LinkedHashMap<String, Boolean> readyStatus;
 
     /**
      * Constructor for the GameController class.
@@ -54,11 +54,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         this.idGame = idGame;
         this.clientList = new LinkedHashMap<>();
         this.clientList.put(username, client);
-        this.readyStatus = new HashMap<>();
+        this.readyStatus = new LinkedHashMap<>();
         this.readyStatus.put(username, false);
         this.model = new GameModel();
         new Thread(this::executor).start();
-        System.out.println("Player " + username + " has joined the game " + idGame);
 
         notifyListPlayers();
     }
@@ -103,12 +102,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void joinGame(String username, VirtualClient client) throws RemoteException {
         clientList.put(username, client);
         readyStatus.put(username, false);
-        System.out.println("Player " + username + " has joined the game " + idGame);
         if (maxNumberPlayers == this.clientList.size()) {
             gameControllerWrite("The number of players for the game " + maxNumberPlayers + " has been reached");
         }
 
-        System.out.println("Current Players list: " + clientList.keySet().stream().toList());
         notifyListPlayers();
     }
 
@@ -116,6 +113,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void setReadyStatus(boolean ready, String username) throws RemoteException, IllegalStateOperationException {
         readyStatus.replace(username, ready);
 
+        notifyListPlayers();
         for (String client: clientList.keySet()) {
             clientList.get(client).sendCommand(new ShowReadyStatusObj(username, readyStatus.get(username)));
         }
@@ -235,7 +233,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     private void notifyListPlayers() {
         for (VirtualClient client : clientList.values()) {
             try {
-                client.sendCommand(new ShowInGamePlayerObj(clientList.sequencedKeySet().stream().toList()));
+                client.sendCommand(new ShowInGamePlayerObj(readyStatus));
             } catch (RemoteException e) {
                 gameControllerWrite(e.getMessage());
             }
