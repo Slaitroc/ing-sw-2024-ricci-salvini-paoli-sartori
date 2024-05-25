@@ -4,14 +4,15 @@ import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 
 import java.awt.*;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public interface ShowUpdate {
 
-    void show_goldDeck(String firstCardDeck, String card1, String card2);
+    void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2);
 
-    void show_resourceDeck(String firstCardDeck, String card1, String card2);
+    void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2);
 
     void show_objectiveDeck(String firstCardDeck, String card1, String card2);
 
@@ -49,6 +50,6 @@ public interface ShowUpdate {
 
     void show_playerTurn(String username, String info);
 
-    void show_inGamePlayers(List<String> players);
+    void show_inGamePlayers(LinkedHashMap<String, Boolean> players);
 
 }

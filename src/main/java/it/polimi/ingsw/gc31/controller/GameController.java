@@ -4,6 +4,7 @@ import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -35,7 +36,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     private final int maxNumberPlayers;
     private final int idGame;
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
-    private final Map<String, Boolean> readyStatus;
+    private final LinkedHashMap<String, Boolean> readyStatus;
 
     /**
      * Constructor for the GameController class.
@@ -51,9 +52,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         this.callsList = new LinkedBlockingQueue<>();
         this.maxNumberPlayers = maxNumberPlayers;
         this.idGame = idGame;
-        this.clientList = new HashMap<>();
+        this.clientList = new LinkedHashMap<>();
         this.clientList.put(username, client);
-        this.readyStatus = new HashMap<>();
+        this.readyStatus = new LinkedHashMap<>();
         this.readyStatus.put(username, false);
         this.model = new GameModel();
         new Thread(this::executor).start();
@@ -112,6 +113,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void setReadyStatus(boolean ready, String username) throws RemoteException, IllegalStateOperationException {
         readyStatus.replace(username, ready);
 
+        notifyListPlayers();
         for (String client: clientList.keySet()) {
             clientList.get(client).sendCommand(new ShowReadyStatusObj(client, readyStatus.get(client)));
         }
@@ -231,7 +233,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     private void notifyListPlayers() {
         for (VirtualClient client : clientList.values()) {
             try {
-                client.sendCommand(new ShowInGamePlayerObj(clientList.keySet().stream().toList()));
+                client.sendCommand(new ShowInGamePlayerObj(readyStatus));
             } catch (RemoteException e) {
                 gameControllerWrite(e.getMessage());
             }

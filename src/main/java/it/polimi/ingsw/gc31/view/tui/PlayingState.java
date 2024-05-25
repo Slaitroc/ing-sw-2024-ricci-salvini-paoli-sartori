@@ -59,6 +59,7 @@ public class PlayingState extends TuiState {
         } catch (NoGamesException e) {
             e.printStackTrace();
         }
+        stateNotify();
     }
 
     @Override

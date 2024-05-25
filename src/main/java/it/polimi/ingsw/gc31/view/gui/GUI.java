@@ -10,6 +10,7 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import javafx.application.Platform;
 import it.polimi.ingsw.gc31.view.UI;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +96,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_inGamePlayers(List<String> players) {
+    public void show_inGamePlayers(LinkedHashMap<String, Boolean> players) {
 
     }
 
@@ -118,7 +119,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_goldDeck(String firstCardDeck, String card1, String card2) {
+    public void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_goldDeck'");
     }
@@ -147,7 +148,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_resourceDeck(String firstCardDeck, String card1, String card2) {
+    public void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_resourceDeck'");
     }

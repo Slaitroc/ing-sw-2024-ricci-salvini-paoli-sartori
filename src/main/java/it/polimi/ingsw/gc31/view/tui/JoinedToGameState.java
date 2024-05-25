@@ -70,6 +70,7 @@ public class JoinedToGameState extends TuiState {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        stateNotify();
     }
 
     @Override
