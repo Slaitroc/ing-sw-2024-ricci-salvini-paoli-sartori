@@ -8,6 +8,16 @@
     -fx-background-radius: 20;
     -fx-border-radius: 20;
 }
+
+.table-view .scroll-bar:horizontal,
+.table-view .scroll-bar:horizontal .track,
+.table-view .scroll-bar:vertical,
+.table-view .scroll-bar:vertical .track {
+    -fx-opacity: 0;
+    -fx-pref-width: 1;
+    -fx-pref-height: 1;
+}
+
 .table-view .column-header-background{
     -fx-background-color: transparent;
 }
@@ -43,10 +53,4 @@
     -fx-border-color: -black;
     -fx-border-width: 2;
     -fx-border-radius: 10;
-}
-
-
-
-.scroll-bar{
-    -fx-opacity: 0;
 }

@@ -110,7 +110,6 @@ public class GUI extends UI {
             System.out.println("Show_inGamePlayers triggered!!!!: values" + players);
             app.setPlayerList(players);
             app.getCurrentController().updateLobby();
-            //app.getCurrentController();
         });
     }
 

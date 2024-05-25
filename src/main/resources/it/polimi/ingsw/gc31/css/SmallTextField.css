@@ -3,4 +3,6 @@
 .small-text-label{
     -fx-font: 12px 'glimmer of light';
     -fx-text-alignment: center;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
 }

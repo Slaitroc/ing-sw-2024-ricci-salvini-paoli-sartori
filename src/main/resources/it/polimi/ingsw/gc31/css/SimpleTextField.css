@@ -9,12 +9,3 @@
     -fx-text-fill: -black;
     -fx-font: 12px "glimmer of light";
 }
-
-.lobby-chat-background{
-    -fx-background-image: url(../Images/Misc/bombyx_Behance.jpg) ;
-    -fx-background-size: 100%;
-    -fx-background-radius: 10;
-    -fx-background-insets: 20;
-    -fx-border-width: 2;
-    -fx-border-color: -dark-green;
-}

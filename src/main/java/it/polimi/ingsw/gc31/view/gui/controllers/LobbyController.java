@@ -2,11 +2,9 @@ package it.polimi.ingsw.gc31.view.gui.controllers;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import io.github.palexdev.materialfx.controls.MFXToggleButton;
-import it.polimi.ingsw.gc31.view.gui.GUIApplication;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -17,8 +15,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class LobbyController extends ViewController {
@@ -81,6 +77,7 @@ public class LobbyController extends ViewController {
     @FXML
     public MFXToggleButton toggleButton;
 
+    // Player number in the game
     private int imPlayerNumber;
 
 
@@ -89,10 +86,19 @@ public class LobbyController extends ViewController {
     protected void initialize() {
     }
 
+    /**
+     * Disable all StackPanes and enable back only those which will be actually used
+     * through the updateLobby method
+     */
     @Override
     public void setUp() {
 
         gameIDLabel.setText("Game ID: " + app.getCurrentGameID());
+
+        iconPlayer1.setVisible(false);
+        iconPlayer2.setVisible(false);
+        iconPlayer3.setVisible(false);
+        iconPlayer4.setVisible(false);
 
         disableStackPane(inGamePlayer2);
         disableStackPane(inGamePlayer3);
@@ -105,7 +111,7 @@ public class LobbyController extends ViewController {
         disableStackPane(lockPlayer3);
         disableStackPane(lockPlayer4);
 
-
+        // Enable the waiting player and lock player panes based on the number of players
         switch (app.getNumberOfPlayers()) {
             case 2:
                 enableStackPane(waitingPlayer2);
@@ -132,6 +138,10 @@ public class LobbyController extends ViewController {
         System.out.println("In this lobby there are " + app.getPlayerList().size() + " players");
     }
 
+    /**
+     * Enter key on chat to send message
+     * @param event The key event.
+     */
     @FXML
     private void handleEnterKeyPressed(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER && !textField.getText().isEmpty()) {
@@ -140,7 +150,11 @@ public class LobbyController extends ViewController {
         }
     }
 
-    public void sendText(String message) {
+    /**
+     * Sends a chat message.
+     * @param message The message to send.
+     */
+    private void sendText(String message) {
         try {
             client.sendChatMessage(client.getUsername(), message);
         } catch (RemoteException e) {
@@ -148,16 +162,30 @@ public class LobbyController extends ViewController {
         }
     }
 
+    /**
+     * Enables a StackPane.
+     * @param pane The StackPane to enable.
+     */
     private void enableStackPane(StackPane pane) {
         pane.setVisible(true);
         pane.setManaged(true);
     }
 
+    /**
+     * Disables a StackPane.
+     * @param pane The StackPane to disable.
+     */
     private void disableStackPane(StackPane pane) {
         pane.setVisible(false);
         pane.setManaged(false);
     }
 
+    /**
+     * Updates the chat with a new message. Color Usernames.
+     * ScrollPane is updated to keep the last message visible
+     * @param username The username of the sender.
+     * @param message The message.
+     */
     @Override
     public void updateChat(String username, String message) {
         Text usernameText = new Text(username + ": ");
@@ -182,6 +210,10 @@ public class LobbyController extends ViewController {
         scrollPane.setVvalue(1.0);
     }
 
+    /**
+     * Method called on button trigger
+     * Select the right player on witch call the changeReady() function
+     */
     public void setReady() {
         switch (imPlayerNumber) {
             case 1:
@@ -199,6 +231,10 @@ public class LobbyController extends ViewController {
         }
     }
 
+    /**
+     * Changes the ready status of a player. Here the message to the server is sent
+     * @param ready The TextField representing the ready status.
+     */
     private void changeReady(TextField ready) {
         try {
             //System.out.println("Hey, I'm " + app.getUsername() + ", Player Number " + imPlayerNumber + ". I am setting my status from " + ready.getText());
@@ -208,6 +244,18 @@ public class LobbyController extends ViewController {
         }
     }
 
+    /**
+     * Updates the ready status of players in the lobby.
+     * This method sets the ready status text ("Ready" or "Not Ready") for each player in the lobby
+     * based on their current status. It checks which player has changed their status and updates
+     * the corresponding UI label accordingly.
+     * The method performs the following actions:
+     * 1. Retrieves the player's position in the list from the application.
+     * 2. Compares the given username with the usernames in the player list.
+     * 3. Sets the ready status text for the corresponding player based on the provided status.
+     * @param username the username of the player whose status has changed.
+     * @param status the current ready status of the player (true if ready, false otherwise).
+     */
     @Override
     public void showReady(String username, boolean status) {
         //System.out.println("Hey, I'm " + app.getUsername() + ", Player Number " + imPlayerNumber + ". I am observing that player " + username + " is setting his status to " + status);
@@ -242,6 +290,19 @@ public class LobbyController extends ViewController {
         }
     }
 
+    /**
+     * Updates the lobby with the current players and their statuses.
+     * This method iterates through the player list obtained from the application,
+     * and for each player, it updates the lobby UI elements such as player names
+     * and visibility of specific icons based on the player’s position and status.
+     * The method performs the following actions:
+     * 1. Sets the player's name in the corresponding label.
+     * 2. Updates the visibility of icons to indicate which player corresponds to the current user.
+     * 3. Enables or disables specific UI components (StackPane) based on the player's presence in the game.
+     * 4. Calls the showReady method to update the player's ready status.
+     * The player list is a map with player names as keys and their ready status as values.
+     *
+     */
     @Override
     public void updateLobby() {
         int count = 1;
@@ -285,28 +346,6 @@ public class LobbyController extends ViewController {
             }
             showReady(player.getKey(), player.getValue());
             count++;
-        }
-    }
-
-    private void setPlayer(int i) {
-        iconPlayer1.setVisible(false);
-        iconPlayer2.setVisible(false);
-        iconPlayer3.setVisible(false);
-        iconPlayer4.setVisible(false);
-
-        switch (i) {
-            case 1:
-                imPlayerNumber = 1;
-                iconPlayer1.setVisible(true);
-            case 2:
-                imPlayerNumber = 2;
-                iconPlayer2.setVisible(true);
-            case 3:
-                imPlayerNumber = 3;
-                iconPlayer3.setVisible(true);
-            case 4:
-                imPlayerNumber = 4;
-                iconPlayer4.setVisible(true);
         }
     }
 }

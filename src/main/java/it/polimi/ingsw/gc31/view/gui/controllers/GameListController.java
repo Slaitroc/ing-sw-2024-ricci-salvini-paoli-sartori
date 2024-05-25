@@ -21,6 +21,9 @@ public class GameListController extends ViewController {
     @FXML
     public TableColumn<GameInstance, Void> actionColumn;
 
+    /**
+     * Initializes the controller. Sets up the table columns and the action button.
+     */
     @Override
     @FXML
     protected void initialize() {
@@ -59,6 +62,10 @@ public class GameListController extends ViewController {
         });
     }
 
+    /**
+     * Joins a game with the given ID.
+     * @param id The ID of the game to join.
+     */
     private void joinGame(Integer id) {
 
         try {
@@ -69,6 +76,9 @@ public class GameListController extends ViewController {
 
     }
 
+    /**
+     * Sets up the game list view.
+     */
     @Override
     public void setUp() {
         gamesList = app.getListGames();
