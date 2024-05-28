@@ -86,6 +86,33 @@ public class SocketClientHandler implements VirtualClient {
     private void tcpClient_reader() {
         new Thread(() -> {
             ServerQueueObject obj = null;
+
+            try{
+                while( (obj = (ServerQueueObject) input.readObject() ) != null){
+                    if (obj.getRecipient().equals(DefaultValues.RECIPIENT_CONTROLLER)) {
+                        try {
+                            controller.sendCommand(obj);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (obj.getRecipient().equals(DefaultValues.RECIPIENT_GAME_CONTROLLER)) {
+                        try {
+                            gameController.sendCommand(obj);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                //se oggetto letto è null la connessione è caduta
+                //TODO aggiungere wait per aspettare x minuti che il client si riconnetta,
+                // se dopo x minuti il client non si è riconnesso chiudo la connessione. Altrimenti
+                // devo riconnettere il client alla partita a cui stava giocando
+            } catch (IOException | ClassNotFoundException e ){
+                e.printStackTrace();
+            }
+
+            /*
             while (true) {
                 try {
                     obj = (ServerQueueObject) input.readObject();
@@ -106,9 +133,9 @@ public class SocketClientHandler implements VirtualClient {
                             e.printStackTrace();
                         }
                     }
-
                 }
             }
+             */
         }).start();
     }
 
