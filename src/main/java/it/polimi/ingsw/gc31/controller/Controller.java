@@ -6,7 +6,6 @@ import java.util.*;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
-import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameCreatedObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameDoesNotExistObj;
@@ -124,14 +123,16 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @throws RemoteException
      */
     @Override
-    public void connect(VirtualClient client, String username)
+    public boolean connect(VirtualClient client, String username)
             throws RemoteException {
         if (nicknames.add(username)) {
             tempClients.put(username, client);
             client.setController(this);
             client.sendCommand((new ValidUsernameObj(username)));
+            return true;
         } else {
             client.sendCommand(new WrongUsernameObj(username));
+            return false;
             // FIX PlayerAlreadyExistsException non più necessaria (da verificare)
         }
     }
@@ -139,7 +140,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     /**
      * Creates a new game and adds it to the game control list.
      *
-     * @param username         the username of the client creating the game.
+     * @param username     the username of the client creating the game.
      * @param maxNumPlayer the maximum number of players for the game.
      * @throws RemoteException if an RMI error occurs.
      */
@@ -184,7 +185,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                 client.setGameController(gameControlList.get(idGame));
                 client.sendCommand(new JoinedToGameObj(idGame, gameControlList.get(idGame).getMaxNumberPlayers()));
                 tempClients.remove(username);
-                gameControlList.get(idGame); //??
+                gameControlList.get(idGame); // ??
             } else {
                 client.sendCommand(new GameIsFullObj(idGame));
             }
@@ -228,4 +229,5 @@ public class Controller extends UnicastRemoteObject implements IController {
     public VirtualClient getNewConnection() {
         return newConnection;
     }
+
 }

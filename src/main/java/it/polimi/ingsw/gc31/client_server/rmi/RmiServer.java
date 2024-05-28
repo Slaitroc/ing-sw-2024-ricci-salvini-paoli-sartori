@@ -43,10 +43,13 @@ public class RmiServer implements VirtualServer {
     }
 
     @Override
-    public void connect(VirtualClient client, String username)
+    public boolean connect(VirtualClient client, String username)
             throws RemoteException {
-        serverWrite("New client connected: " + username);
-        controller.connect(client, username);
+        if (controller.connect(client, username)) {
+            return true;
+        } else {
+            return false;
+        }
 
     }
 
