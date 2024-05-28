@@ -37,9 +37,10 @@ public class TUI extends UI {
     private final int CHAT_BOARD_INITIAL_COLUMN = 1;
     private final int CHAT_BOARD_LINES = 10;
     private final int CHAT_BOARD_WIDTH = 60;
+
     private final int PLAYAREA_INITIAL_ROW = 2;
-    private final int PLAYAREA_INITIAL_COLUMN = 80;
-    private final int PLAYAREA_END_ROW = 29;
+    private final int PLAYAREA_INITIAL_COLUMN = 70;
+    private final int PLAYAREA_END_ROW = 31;
     private final int PLAYAREA_END_COLUMN = 184;
     private final int CARD_LENGTH = 21;
     private final int CARD_HEIGHT = 7;
@@ -48,30 +49,31 @@ public class TUI extends UI {
     private final int CARD_X_OFFSET = 15;
     // the misalignment along y between two cards
     private final int CARD_Y_OFFSET = 4;
-    private final int HAND_INITIAL_ROW = 32;
+
+    private final int HAND_INITIAL_ROW = 33;
     private final int HAND_INITIAL_COLUMN = 80;
-    private final int HAND_END_ROW = 41;
+    private final int HAND_END_ROW = 42;
     private final int HAND_END_COLUMN = 160;
 
-    private final int STARTER_CARD_INITIAL_ROW = 32;
-    private final int STARTER_CARD_INITIAL_COLUMN = 161;
-    private final int STARTER_CARD_END_ROW = 41;
-    private final int STARTER_CARD_END_COLUMN = 184;
+    private final int STARTER_CARD_INITIAL_ROW = 10;
+    private final int STARTER_CARD_INITIAL_COLUMN = 111;
+    private final int STARTER_CARD_END_ROW = 19;
+    private final int STARTER_CARD_END_COLUMN = 134;
 
     private final int CHOOSE_OBJECTIVE_INITIAL_ROW = 2;
     private final int CHOOSE_OBJECTIVE_INITIAL_COLUMN = 161;
     private final int CHOOSE_OBJECTIVE_END_ROW = 19;
     private final int CHOOSE_OBJECTIVE_END_COLUMN = 184;
 
-    private final int OBJECTIVE_INITIAL_ROW = 2;
-    private final int OBJECTIVE_INITIAL_COLUMN = 161;
-    private final int OBJECTIVE_END_ROW = 10;
-    private final int OBJECTIVE_END_COLUMN = 184;
+    private final int OBJECTIVE_INITIAL_ROW = 35;
+    private final int OBJECTIVE_INITIAL_COLUMN = 46;
+    private final int OBJECTIVE_END_ROW = 43;
+    private final int OBJECTIVE_END_COLUMN = 69;
 
     private final int COMMON_OBJECTIVE_INITIAL_ROW = 35;
     private final int COMMON_OBJECTIVE_INITIAL_COLUMN = 1;
     private final int COMMON_OBJECTIVE_END_ROW = 43;
-    private final int COMMON_OBJECTIVE_END_COLUMN = 67;
+    private final int COMMON_OBJECTIVE_END_COLUMN = 45;
 
     private final int GOLD_DECK_INITIAL_ROW = 14;
     private final int GOLD_DECK_INITIAL_COLUMN = 1;
@@ -83,10 +85,10 @@ public class TUI extends UI {
     private final int RESOURCE_DECK_END_ROW = 34;
     private final int RESOURCE_DECK_END_COLUMN = 67;
 
-    private final int PLAYERS_INFO_INITIAL_ROW = 2;
-    private final int PLAYERS_INFO_INITIAL_COLUMN = 61;
-    private final int PLAYERS_INFO_END_ROW = 10;
-    private final int PLAYERS_INFO_END_COLUMN = 79;
+    private final int PLAYERS_INFO_INITIAL_ROW =33;
+    private final int PLAYERS_INFO_INITIAL_COLUMN = 161;
+    private final int PLAYERS_INFO_END_ROW = 40;
+    private final int PLAYERS_INFO_END_COLUMN = 184;
 
     // CONSTANTS
     private final int CMD_LINE_EFFECTIVE_WIDTH = CMD_LINE_WIDTH - 2;
@@ -177,8 +179,7 @@ public class TUI extends UI {
 
     // TODO fare una sola funzione
 
-    private StringBuilder print_Borders(String titleArea, int initialRow, int initialColumn, int endRow,
-            int endColumn) {
+    private StringBuilder print_Borders(String titleArea, int initialRow, int initialColumn, int endRow, int endColumn) {
         StringBuilder res = new StringBuilder();
         res.append(ansi().cursor(initialRow, initialColumn).fg(WHITE).a("┌")
                 .a(String.valueOf("─").repeat(endColumn - initialColumn - 1)).a("┐"));
@@ -198,21 +199,19 @@ public class TUI extends UI {
      */
     private StringBuilder print_PlacedCards(Map<Point, PlayableCard> placedCards) {
         StringBuilder res = new StringBuilder();
-        res.append(clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
         List<Point> placeHolders = createPlaceHolder(placedCards);
 
-//        for (Point point : placeHolders) {
-//            print_PlaceHolder(
-//                    point,
-//                    PLAYAREA_INITIAL_COLUMN + (PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN) / 2
-//                            + (CARD_X_OFFSET * point.x) + OFFSET_X_PLAYAREA,
-//                    PLAYAREA_INITIAL_ROW + (PLAYAREA_END_ROW - PLAYAREA_INITIAL_ROW) / 2
-//                            - (CARD_Y_OFFSET * point.y) + OFFSET_Y_PLAYAREA,
-//                    PLAYAREA_INITIAL_ROW, PLAYAREA_END_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_COLUMN);
-//        }
+        for (Point point : placeHolders) {
+            res.append(print_PlaceHolder(
+                    point,
+                    PLAYAREA_INITIAL_COLUMN + (PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN) / 2
+                            + (CARD_X_OFFSET * point.x) + OFFSET_X_PLAYAREA,
+                    PLAYAREA_INITIAL_ROW + (PLAYAREA_END_ROW - PLAYAREA_INITIAL_ROW) / 2
+                            - (CARD_Y_OFFSET * point.y) + OFFSET_Y_PLAYAREA,
+                    PLAYAREA_INITIAL_ROW, PLAYAREA_END_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_COLUMN));
+        }
 
         for (Map.Entry<Point, PlayableCard> entry : placedCards.entrySet()) {
-            PlayableCard card = entry.getValue();
             res.append(print_PlayableCard(
                     entry.getValue(),
                     PLAYAREA_INITIAL_COLUMN + (PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN) / 2
@@ -698,7 +697,7 @@ public class TUI extends UI {
         return null;
     }
 
-    private void print_PlaceHolder(Point point, int x, int y, int overFlowUp, int overFlowDown, int overFlowLeft,
+    private StringBuilder print_PlaceHolder(Point point, int x, int y, int overFlowUp, int overFlowDown, int overFlowLeft,
             int overFlowRight) {
         int relative_x = x - (CARD_LENGTH - 1) / 2;
         int relative_y = y - (CARD_HEIGHT - 1) / 2;
@@ -756,7 +755,7 @@ public class TUI extends UI {
                 }
             }
         }
-        System.out.println(res);
+        return res;
     }
 
     /**
@@ -1441,6 +1440,8 @@ public class TUI extends UI {
     public void show_playArea(String username, Map<Point, PlayableCard> playArea, String achievedResources) {
         if (client.getUsername().equals(username)) {
             StringBuilder res = new StringBuilder();
+            res.append(clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
+            res.append(print_Borders("Play Area", PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
             res.append(print_PlacedCards(playArea));
 
             synchronized (playViewUpdate) {
@@ -1451,16 +1452,19 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_scorePlayer(String username, Integer score) {
-        if (client.getUsername().equals(username)) {
-            StringBuilder res = new StringBuilder();
-            res.append(ansi().cursor(OBJECTIVE_END_ROW+1, OBJECTIVE_INITIAL_COLUMN).a("               "));
-            res.append(ansi().cursor(OBJECTIVE_END_ROW, OBJECTIVE_INITIAL_COLUMN).a("Your score: "+score));
+    public void show_scorePlayer(LinkedHashMap<String, Integer> scores) {
+        StringBuilder res = new StringBuilder();
+        res.append(clearArea(PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN, PLAYERS_INFO_END_ROW, PLAYERS_INFO_END_COLUMN));
+        res.append(print_Borders("Players info", PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN, PLAYERS_INFO_END_ROW, PLAYERS_INFO_END_COLUMN));
+        int index = 1;
+        for (String player : scores.keySet()) {
+            res.append(ansi().cursor(PLAYERS_INFO_INITIAL_ROW+index, PLAYERS_INFO_INITIAL_COLUMN+1).a(player+": "+scores.get(player)));
+            index++;
+        }
 
-            synchronized (playViewUpdate) {
-                playViewUpdate.add(res);
-                playViewUpdate.notify();
-            }
+        synchronized (playViewUpdate) {
+            playViewUpdate.add(res);
+            playViewUpdate.notify();
         }
     }
 
@@ -1543,7 +1547,7 @@ public class TUI extends UI {
 
         res.append(clearArea(CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN, CHOOSE_OBJECTIVE_END_ROW,
                 CHOOSE_OBJECTIVE_END_COLUMN));
-        res.append(ansi().cursor(OBJECTIVE_INITIAL_ROW - 1, OBJECTIVE_INITIAL_COLUMN).a("Your Objective Card"));
+        res.append(ansi().cursor(OBJECTIVE_INITIAL_ROW, OBJECTIVE_INITIAL_COLUMN+1).a("Your Objective Card"));
         res.append(print_ObjectiveCard(objectiveCard, OBJECTIVE_INITIAL_COLUMN + 1, OBJECTIVE_INITIAL_ROW + 1,
                 OBJECTIVE_INITIAL_ROW, OBJECTIVE_END_ROW, OBJECTIVE_INITIAL_COLUMN, OBJECTIVE_END_COLUMN));
         synchronized (playViewUpdate) {
@@ -1591,6 +1595,7 @@ public class TUI extends UI {
                     COMMON_OBJECTIVE_INITIAL_ROW+1, COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_END_ROW,
                     COMMON_OBJECTIVE_INITIAL_COLUMN, COMMON_OBJECTIVE_END_COLUMN));
         }
+        res.append(ansi().cursor(COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_END_COLUMN).a("+"));
         synchronized (playViewUpdate) {
             playViewUpdate.add(res);
             playViewUpdate.notify();
@@ -1601,7 +1606,8 @@ public class TUI extends UI {
     public void show_starterCard(PlayableCard starterCard) {
         StringBuilder res = new StringBuilder();
         res.append(clearArea(STARTER_CARD_INITIAL_ROW, STARTER_CARD_INITIAL_COLUMN, STARTER_CARD_END_ROW, STARTER_CARD_END_ROW));
-        res.append(print_Borders("STARTER CARD", STARTER_CARD_INITIAL_ROW, STARTER_CARD_INITIAL_COLUMN, STARTER_CARD_END_ROW, STARTER_CARD_END_COLUMN));
+        //res.append(print_Borders("STARTER CARD", STARTER_CARD_INITIAL_ROW, STARTER_CARD_INITIAL_COLUMN, STARTER_CARD_END_ROW, STARTER_CARD_END_COLUMN));
+        res.append(ansi().cursor(STARTER_CARD_INITIAL_ROW, STARTER_CARD_INITIAL_COLUMN+1).a("Starter Card:"));
         res.append(print_PlayableCard(starterCard, STARTER_CARD_INITIAL_COLUMN + 1,
                 STARTER_CARD_INITIAL_ROW + 1, STARTER_CARD_INITIAL_ROW, STARTER_CARD_END_ROW, STARTER_CARD_INITIAL_COLUMN, STARTER_CARD_END_COLUMN));
 
@@ -1679,8 +1685,10 @@ public class TUI extends UI {
     public void show_playerTurn(String username, String info) {
         if (client.getUsername().equals(username)) {
             StringBuilder res = new StringBuilder();
-            res.append(ansi().cursor(HAND_END_ROW+1, HAND_INITIAL_COLUMN).a("                            "));
-            res.append(ansi().cursor(HAND_END_ROW + 1, HAND_INITIAL_COLUMN).a("Player state: "+info));
+            res.append(ansi().cursor(HAND_END_ROW-1, HAND_END_COLUMN+1).a("              "));
+            res.append(ansi().cursor(HAND_END_ROW, HAND_END_COLUMN+1).a("              "));
+            res.append(ansi().cursor(HAND_END_ROW-1, HAND_END_COLUMN+1).a("Player state:"));
+            res.append(ansi().cursor(HAND_END_ROW, HAND_END_COLUMN+1).a(info));
 
             synchronized (playViewUpdate) {
                 playViewUpdate.add(res);
