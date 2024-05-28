@@ -28,7 +28,7 @@ public class TCPClient implements ClientCommands {
     @SuppressWarnings("resource")
     public TCPClient(String ipaddress) throws IOException {
         this.username = DefaultValues.DEFAULT_USERNAME;
-        Socket serverSocket = new Socket(ipaddress, 1200);
+        Socket serverSocket = new Socket(ipaddress, DefaultValues.TCP_PORT);
         this.input = new ObjectInputStream(serverSocket.getInputStream());
         this.output = new ObjectOutputStream(serverSocket.getOutputStream());
         this.callsList = new LinkedBlockingQueue<>();

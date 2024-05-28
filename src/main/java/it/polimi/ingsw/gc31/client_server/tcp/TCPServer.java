@@ -20,7 +20,7 @@ public class TCPServer {
 
     // TODO Gestire meglio eccezioni
     public TCPServer(String ipaddress) throws NumberFormatException, UnknownHostException, IOException {
-        int port = 1200;
+        int port = DefaultValues.TCP_PORT;
         this.listenSocket = new ServerSocket(port, 50, InetAddress.getByName("0.0.0.0"));
         TCPserverWrite("Server IP " + ipaddress);
         TCPserverWrite("Server in ascolto sulla porta " + port);
