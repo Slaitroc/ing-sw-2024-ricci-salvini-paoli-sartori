@@ -7,11 +7,11 @@ import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.utility.DefaultValues;
 import it.polimi.ingsw.gc31.view.UI;
 
 public class TCPClient implements ClientCommands {
@@ -28,7 +28,7 @@ public class TCPClient implements ClientCommands {
     @SuppressWarnings("resource")
     public TCPClient(String ipaddress) throws IOException {
         this.username = DefaultValues.DEFAULT_USERNAME;
-        Socket serverSocket = new Socket(ipaddress, 1200);
+        Socket serverSocket = new Socket(ipaddress, DefaultValues.TCP_PORT);
         this.input = new ObjectInputStream(serverSocket.getInputStream());
         this.output = new ObjectOutputStream(serverSocket.getOutputStream());
         this.callsList = new LinkedBlockingQueue<>();

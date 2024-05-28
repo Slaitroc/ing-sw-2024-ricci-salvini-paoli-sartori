@@ -4,7 +4,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
-import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameCreatedObj;
@@ -18,6 +17,8 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongUsernameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
+import it.polimi.ingsw.gc31.utility.DefaultValues;
+
 import java.util.concurrent.LinkedBlockingQueue;
 
 //NOTE creation of GameController for match creation

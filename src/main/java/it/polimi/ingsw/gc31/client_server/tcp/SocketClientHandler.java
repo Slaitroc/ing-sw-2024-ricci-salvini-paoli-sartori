@@ -1,10 +1,10 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
-import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
+import it.polimi.ingsw.gc31.utility.DefaultValues;
 
 import java.io.IOException;
 
@@ -29,14 +29,12 @@ eseguito da loro
 public class SocketClientHandler implements VirtualClient {
     private IController controller;
     private IGameController gameController;
-    private String username;
-
-    private Integer idGame;
+    private Integer idGame; // viene settata ma ancora non utilizzata
+    // private String username;
+    // private boolean ready = false;
 
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
-
-    private boolean ready = false;
 
     /**
      * This method is the constructor of the client handler

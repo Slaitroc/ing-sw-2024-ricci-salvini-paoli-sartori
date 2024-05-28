@@ -1,4 +1,4 @@
-package it.polimi.ingsw.gc31;
+package it.polimi.ingsw.gc31.utility;
 
 import java.util.Map;
 
@@ -78,15 +78,20 @@ public class DefaultValues {
     public final static int[] RGB_COLOR_BLUE = { 114, 202, 203 };
     public final static int[] RBG_COLOR_PURPLE = { 165, 85, 158 };
     public final static int[] RGB_COLOR_CORNER = { 223, 215, 176 };
-    public final static int[] RGB_COLOR_STARTER = {189,175,127};
+    public final static int[] RGB_COLOR_STARTER = { 189, 175, 127 };
 
     public static int[] getRgbColor(CardColor color) {
         switch (color) {
-            case RED: return RGB_COLOR_RED;
-            case GREEN: return RGB_COLOR_GREEN;
-            case BLUE: return RGB_COLOR_BLUE;
-            case PURPLE: return RBG_COLOR_PURPLE;
-            default: return RGB_COLOR_STARTER;
+            case RED:
+                return RGB_COLOR_RED;
+            case GREEN:
+                return RGB_COLOR_GREEN;
+            case BLUE:
+                return RGB_COLOR_BLUE;
+            case PURPLE:
+                return RBG_COLOR_PURPLE;
+            default:
+                return RGB_COLOR_STARTER;
         }
     }
 
@@ -96,8 +101,7 @@ public class DefaultValues {
     // NETWORK
     public final static String RECIPIENT_CONTROLLER = "controller";
     public final static String RECIPIENT_GAME_CONTROLLER = "gameController";
-    public final static String RECIPIENT_UI = "ui";
-    public final static String RECIPIENT_VC = "virtualClient";
-    public final static String RECIPIENT_CC = "clientCommands";
+    public final static int RMI_PORT = 1100;
+    public final static int TCP_PORT = 1200;
 
 }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.view.gui;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.utility.DefaultValues;
 import it.polimi.ingsw.gc31.view.gui.controllers.GameInstance;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -13,10 +14,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.view.gui.controllers.ViewController;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -50,13 +49,14 @@ public class GUIApplication extends Application {
 
         // Set window size
         setDefaultWindowSize();
-        //primaryStage.setFullScreen(true);
+        // primaryStage.setFullScreen(true);
 
         // Set Title and AppIcon
         primaryStage.setTitle("CODEX Naturalis");
-        Image icon = new Image(getClass().getResource("/it/polimi/ingsw/gc31/Images/AppIcons/icon.png").toExternalForm());
+        Image icon = new Image(
+                getClass().getResource("/it/polimi/ingsw/gc31/Images/AppIcons/icon.png").toExternalForm());
         primaryStage.getIcons().add(icon);
-        //primaryStage.resizableProperty().setValue(Boolean.FALSE);
+        // primaryStage.resizableProperty().setValue(Boolean.FALSE);
 
         // Show window
         primaryStage.show();
@@ -89,9 +89,10 @@ public class GUIApplication extends Application {
         return client;
     }
 
-    public void setClient (ClientCommands client) {
+    @SuppressWarnings("static-access")
+    public void setClient(ClientCommands client) {
         this.client = client;
-        //System.out.println("Client set to " + client.toString());
+        // System.out.println("Client set to " + client.toString());
     }
 
     public void setRuleBookWindowSize() {
@@ -142,11 +143,11 @@ public class GUIApplication extends Application {
         currentGameID = gameID;
     }
 
-    public ObservableList<GameInstance> getListGames(){
+    public ObservableList<GameInstance> getListGames() {
         return gameInstances;
     }
 
-    public void setListGames(List<String> gamesList){
+    public void setListGames(List<String> gamesList) {
         gameInstances.clear();
         for (String game : gamesList) {
             String gameID = game.split(" ")[0];

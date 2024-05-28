@@ -1,10 +1,10 @@
 package it.polimi.ingsw.gc31.client_server.rmi;
 
-import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.utility.DefaultValues;
 import it.polimi.ingsw.gc31.view.UI;
 
 import java.awt.*;
@@ -32,8 +32,9 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
      * verified by the server controller.
      */
     public RmiClient(String ipaddress) throws RemoteException, NotBoundException {
-        this.server = (VirtualServer) LocateRegistry.getRegistry(ipaddress, 55000).lookup("VirtualServer");
-        this.server.RMIserverWrite("New connection detected...");
+        this.server = (VirtualServer) LocateRegistry.getRegistry(ipaddress, DefaultValues.RMI_PORT)
+                .lookup("VirtualServer");
+        this.server.RMIserverWrite("New connection detected ");
         this.username = DefaultValues.DEFAULT_USERNAME;
         this.controller = null;
         this.callsList = new LinkedBlockingQueue<>();

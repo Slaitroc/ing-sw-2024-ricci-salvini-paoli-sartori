@@ -1,11 +1,11 @@
 package it.polimi.ingsw.gc31.client_server.rmi;
 
-import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
+import it.polimi.ingsw.gc31.utility.DefaultValues;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -34,10 +34,10 @@ public class RmiServer implements VirtualServer {
 
         this.controller = Controller.getController();
         this.callsList = new LinkedBlockingQueue<>();
-        int port = 55000;
-        LocateRegistry.createRegistry(port).rebind("VirtualServer", UnicastRemoteObject.exportObject(this, 0));
+        LocateRegistry.createRegistry(DefaultValues.RMI_PORT).rebind("VirtualServer",
+                UnicastRemoteObject.exportObject(this, DefaultValues.RMI_PORT));
         RMIserverWrite("Server created");
-        RMIserverWrite("Server in ascolto sulla porta " + port);
+        RMIserverWrite("Server in ascolto sulla porta " + DefaultValues.RMI_PORT);
 
         executor();
     }

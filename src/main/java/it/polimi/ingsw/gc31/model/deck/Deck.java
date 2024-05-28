@@ -1,11 +1,12 @@
 package it.polimi.ingsw.gc31.model.deck;
 
 import com.google.gson.*;
-import it.polimi.ingsw.gc31.DefaultValues;
+
 import it.polimi.ingsw.gc31.client_server.listeners.Observable;
 import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
+import it.polimi.ingsw.gc31.utility.DefaultValues;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

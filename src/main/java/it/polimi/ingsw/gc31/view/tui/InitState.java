@@ -1,9 +1,10 @@
 package it.polimi.ingsw.gc31.view.tui;
 
+import static it.polimi.ingsw.gc31.utility.OurScanner.scanner;
+
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
-import static it.polimi.ingsw.gc31.OurScanner.scanner;
 
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 

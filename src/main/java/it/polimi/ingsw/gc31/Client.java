@@ -1,5 +1,7 @@
 package it.polimi.ingsw.gc31;
 
+import static it.polimi.ingsw.gc31.utility.OurScanner.scanner;
+
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.NotBoundException;
@@ -11,8 +13,6 @@ import it.polimi.ingsw.gc31.utility.CliPrint;
 import it.polimi.ingsw.gc31.view.gui.GUI;
 import it.polimi.ingsw.gc31.view.tui.TUI;
 import org.fusesource.jansi.AnsiConsole;
-
-import static it.polimi.ingsw.gc31.OurScanner.scanner;
 
 public class Client {
 

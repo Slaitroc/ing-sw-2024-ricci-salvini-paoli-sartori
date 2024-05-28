@@ -1,7 +1,5 @@
 package it.polimi.ingsw.gc31.utility;
 
-import it.polimi.ingsw.gc31.DefaultValues;
-
 public class CliPrint {
 
     public static void coloredPrintPurple(String text) {

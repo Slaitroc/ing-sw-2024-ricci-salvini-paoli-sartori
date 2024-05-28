@@ -8,11 +8,12 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
+import static it.polimi.ingsw.gc31.utility.DefaultValues.getRgbColor;
 import static org.fusesource.jansi.Ansi.ansi;
-import static it.polimi.ingsw.gc31.DefaultValues.getRgbColor;
 
 /**
- * This Class represents the Objective where the player needs to have 3 cards placed diagonally (towards the bottom)
+ * This Class represents the Objective where the player needs to have 3 cards
+ * placed diagonally (towards the bottom)
  */
 public class StairDown extends Objective {
     /**
@@ -36,8 +37,10 @@ public class StairDown extends Objective {
      * @param placedCard is the map that contains all the card on the player's board
      * @return the number of points obtained by the player
      */
-    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint, Map<Resources, Integer> achievedResources) {
-        int maxX = findMaxX(placedCard), minX = findMinX(placedCard), maxY = findMaxY(placedCard), minY = findMinY(placedCard);
+    public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint,
+            Map<Resources, Integer> achievedResources) {
+        int maxX = findMaxX(placedCard), minX = findMinX(placedCard), maxY = findMaxY(placedCard),
+                minY = findMinY(placedCard);
         int count = 0;
         Point point = new Point(0, 0);
 
@@ -71,16 +74,16 @@ public class StairDown extends Objective {
         int[] cardColor = getRgbColor(this.cardColor);
         StringBuilder res = new StringBuilder();
         res.append(
-                ansi().restoreCursorPosition().fgRgb(cardColor[0],cardColor[1],cardColor[2]).a("┌──┐"));
+                ansi().restoreCursorPosition().fgRgb(cardColor[0], cardColor[1], cardColor[2]).a("┌──┐"));
         res.append(
                 ansi().restoreCursorPosition().cursorDown(1)
-                        .fgRgb(cardColor[0],cardColor[1],cardColor[2]).a("└──⊠──┐"));
+                        .fgRgb(cardColor[0], cardColor[1], cardColor[2]).a("└──⊠──┐"));
         res.append(
                 ansi().restoreCursorPosition().cursorDown(2)
-                        .fgRgb(cardColor[0],cardColor[1],cardColor[2]).a("   └──⊠──┐"));
+                        .fgRgb(cardColor[0], cardColor[1], cardColor[2]).a("   └──⊠──┐"));
         res.append(
                 ansi().restoreCursorPosition().cursorDown(3)
-                        .fgRgb(cardColor[0],cardColor[1],cardColor[2]).a("      └──┘"));
+                        .fgRgb(cardColor[0], cardColor[1], cardColor[2]).a("      └──┘"));
         return res.toString();
     }
 

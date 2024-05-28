@@ -2,7 +2,6 @@
 package it.polimi.ingsw.gc31.view.gui;
 
 import java.awt.*;
-import java.rmi.RemoteException;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
@@ -53,9 +52,9 @@ public class GUI extends UI {
     @Override
     public void show_gameCreated(int gameID) {
         Platform.runLater(() -> {
-                app.setCurrentGameID(gameID);
-                app.setLobbyWindowSize();
-                app.loadScene(SceneTag.LOBBY);
+            app.setCurrentGameID(gameID);
+            app.setLobbyWindowSize();
+            app.loadScene(SceneTag.LOBBY);
         });
     }
 
@@ -91,10 +90,10 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_readyStatus(String username,  boolean status) {
+    public void show_readyStatus(String username, boolean status) {
         System.out.println("show_readyStatus triggered!!!! VALUES: " + username + " " + status);
         Platform.runLater(() -> {
-            app.getCurrentController().showReady(username ,status);
+            app.getCurrentController().showReady(username, status);
         });
     }
 
@@ -111,12 +110,6 @@ public class GUI extends UI {
             app.setPlayerList(players);
             app.getCurrentController().updateLobby();
         });
-    }
-
-    @Override
-    public void updateHand(String username, List<String> hand) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateHand'");
     }
 
     @Override
@@ -181,7 +174,7 @@ public class GUI extends UI {
 
     @Override
     public void show_chatMessage(String username, String message) {
-        //System.out.println(username + "said:" + message);
+        // System.out.println(username + "said:" + message);
         Platform.runLater(() -> {
             app.getCurrentController().updateChat(username, message);
         });
@@ -202,6 +195,7 @@ public class GUI extends UI {
 
 }
 
-
-//TODO show_inGamePlayers (when i join a match lobby I want to know the string of player currently in the game)
-//TODO show_PlayerJoined (when i am in a match lobby I want to know who entered my lobby)
+// TODO show_inGamePlayers (when i join a match lobby I want to know the string
+// of player currently in the game)
+// TODO show_PlayerJoined (when i am in a match lobby I want to know who entered
+// my lobby)

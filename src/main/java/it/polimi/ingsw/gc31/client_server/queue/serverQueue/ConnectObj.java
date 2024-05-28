@@ -2,10 +2,10 @@ package it.polimi.ingsw.gc31.client_server.queue.serverQueue;
 
 import java.rmi.RemoteException;
 
-import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
 import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.controller.GameController;
+import it.polimi.ingsw.gc31.utility.DefaultValues;
 
 public class ConnectObj extends ServerQueueObject {
 

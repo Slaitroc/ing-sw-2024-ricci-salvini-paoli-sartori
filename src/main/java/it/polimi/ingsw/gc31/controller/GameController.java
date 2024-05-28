@@ -8,7 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.NewChatMessage;
@@ -23,6 +22,7 @@ import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 import it.polimi.ingsw.gc31.model.enumeration.GameState;
 import it.polimi.ingsw.gc31.model.player.Player;
+import it.polimi.ingsw.gc31.utility.DefaultValues;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 
 /**
@@ -114,7 +114,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         readyStatus.replace(username, ready);
 
         notifyListPlayers();
-        for (String client: clientList.keySet()) {
+        for (String client : clientList.keySet()) {
             clientList.get(client).sendCommand(new ShowReadyStatusObj(username, readyStatus.get(username)));
         }
         checkReady();
@@ -228,7 +228,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void playStarter(String username) {
         try {
             model.playStarter(username);
-            gameControllerWrite("Player"+username+" has played starter card");
+            gameControllerWrite("Player" + username + " has played starter card");
         } catch (IllegalStateOperationException e) {
             gameControllerWrite(e.getMessage());
         }
@@ -251,6 +251,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             gameControllerWrite(e.getMessage());
         }
     }
+
     public void changeSide(String username) {
         try {
             model.changeSide(username);
@@ -266,7 +267,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             gameControllerWrite(e.getMessage());
         }
     }
-
 
     public GameModel getModel() {
         return model;
