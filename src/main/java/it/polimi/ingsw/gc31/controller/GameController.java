@@ -201,8 +201,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      *
      * @throws RemoteException If a remote invocation error occurs.
      */
-    public void drawResource(String username) throws RemoteException {
-
+    public void drawResource(String username, int index) throws RemoteException {
+        try {
+            model.drawResource(username, index);
+        } catch (IllegalStateOperationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void chooseSecretObjective(String username, Integer index) {

@@ -88,6 +88,17 @@ public class PlayingState extends TuiState {
 
     @Override
     protected void command_drawResource() {
+        tui.printToCmdLineOut("Which card do you want to draw?");
+        tui.printToCmdLineOut("0 -> from top of the deck");
+        tui.printToCmdLineOut("1 -> card 1");
+        tui.printToCmdLineOut("2 -> card 2");
+        int input = Integer.parseInt(scanner.nextLine());
+        try {
+            tui.getClient().drawResource(input);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        stateNotify();
     }
 
     @Override

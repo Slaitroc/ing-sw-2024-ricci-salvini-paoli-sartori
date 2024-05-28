@@ -14,7 +14,7 @@ public interface ShowUpdate {
 
     void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2);
 
-    void show_objectiveDeck(String firstCardDeck, String card1, String card2);
+    void show_objectiveDeck(ObjectiveCard firstCardDeck, ObjectiveCard card1, ObjectiveCard card2);
 
     void show_starterCard(PlayableCard starterCard);
 

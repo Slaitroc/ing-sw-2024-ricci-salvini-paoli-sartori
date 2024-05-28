@@ -8,17 +8,17 @@ import java.rmi.RemoteException;
 public class DrawResObj extends ServerQueueObject {
 
     private final String username;
-    private final int select;
+    private final int index;
 
-    public DrawResObj(String username, int select) {
+    public DrawResObj(String username, int index) {
         this.username = username;
-        this.select = select;
+        this.index = index;
     }
 
     @Override
     public void execute(GameController gameController) {
         try {
-            gameController.drawResource(username);
+            gameController.drawResource(username, index);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

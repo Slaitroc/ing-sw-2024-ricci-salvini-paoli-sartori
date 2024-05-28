@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.model.gameModel;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.listeners.*;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
@@ -96,6 +97,8 @@ public class CreationGameModelState implements GameModelState {
         List<PlayerScoreListener> playerScoreListeners = new ArrayList<>();
         List<PlayAreaListener> playAreaListenerList = new ArrayList<>();
         List<GoldDeckListener> goldDeckListeners = new ArrayList<>();
+        List<ResourceDeckListener> resourceDeckListeners = new ArrayList<>();
+        List<ObjectiveDeckListener> objectiveDeckListeners = new ArrayList<>();
         List<PlayerTurnListener> playerTurnListeners = new ArrayList<>();
 
         for (String username : players.keySet()) {
@@ -107,6 +110,10 @@ public class CreationGameModelState implements GameModelState {
             playAreaListenerList.add(new PlayAreaListener(clients.get(username)));
             // create goldDeckListener for all players
             goldDeckListeners.add(new GoldDeckListener(clients.get(username)));
+            // create resourceDeckListener for all players
+            resourceDeckListeners.add(new ResourceDeckListener(clients.get(username)));
+            // create objectiveDeckListener for all players
+            objectiveDeckListeners.add(new ObjectiveDeckListener(clients.get(username)));
             // create playerTurnListener for all players
             playerTurnListeners.add(new PlayerTurnListener(clients.get(username)));
         }
@@ -142,6 +149,12 @@ public class CreationGameModelState implements GameModelState {
         // FIXME giusto?
         for (GoldDeckListener listener : goldDeckListeners) {
             model.getBoard().getDeckGold().addListener(listener);
+        }
+        for (ResourceDeckListener listener: resourceDeckListeners) {
+            model.getBoard().getDeckResource().addListener(listener);
+        }
+        for (ObjectiveDeckListener listener: objectiveDeckListeners) {
+            model.getBoard().getDeckObjective().addListener(listener);
         }
     }
 }

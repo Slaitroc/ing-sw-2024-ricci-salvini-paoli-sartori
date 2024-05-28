@@ -131,7 +131,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) {
+    public void show_objectiveDeck(ObjectiveCard firstCardDeck, ObjectiveCard card1, ObjectiveCard card2) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_objectiveDeck'");
     }

@@ -68,10 +68,10 @@ public class TUI extends UI {
     private final int OBJECTIVE_END_ROW = 10;
     private final int OBJECTIVE_END_COLUMN = 184;
 
-    private final int COMMON_OBJECTIVE_INITIAL_ROW = 12;
-    private final int COMMON_OBJECTIVE_INITIAL_COLUMN = 161;
-    private final int COMMON_OBJECTIVE_END_ROW = 21;
-    private final int COMMON_OBJECTIVE_END_COLUMN = 184;
+    private final int COMMON_OBJECTIVE_INITIAL_ROW = 35;
+    private final int COMMON_OBJECTIVE_INITIAL_COLUMN = 1;
+    private final int COMMON_OBJECTIVE_END_ROW = 43;
+    private final int COMMON_OBJECTIVE_END_COLUMN = 67;
 
     private final int GOLD_DECK_INITIAL_ROW = 14;
     private final int GOLD_DECK_INITIAL_COLUMN = 1;
@@ -1577,7 +1577,24 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) {
+    public void show_objectiveDeck(ObjectiveCard firstCardDeck, ObjectiveCard card1, ObjectiveCard card2) {
+        StringBuilder res = new StringBuilder();
+        //res.append(clearArea(COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_INITIAL_COLUMN, COMMON_OBJECTIVE_END_ROW, COMMON_OBJECTIVE_END_COLUMN));
+        res.append(ansi().cursor(COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_INITIAL_COLUMN+1).a("COMMON OBJECTIVE"));
+        if (card1 != null) {
+            res.append(print_ObjectiveCard(card1, COMMON_OBJECTIVE_INITIAL_COLUMN + 1,
+                    COMMON_OBJECTIVE_INITIAL_ROW+1, COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_END_ROW,
+                    COMMON_OBJECTIVE_INITIAL_COLUMN, COMMON_OBJECTIVE_END_COLUMN));
+        }
+        if (card2 != null) {
+            res.append(print_ObjectiveCard(card2, COMMON_OBJECTIVE_INITIAL_COLUMN + 1 + (CARD_LENGTH + 1),
+                    COMMON_OBJECTIVE_INITIAL_ROW+1, COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_END_ROW,
+                    COMMON_OBJECTIVE_INITIAL_COLUMN, COMMON_OBJECTIVE_END_COLUMN));
+        }
+        synchronized (playViewUpdate) {
+            playViewUpdate.add(res);
+            playViewUpdate.notify();
+        }
     }
 
     @Override

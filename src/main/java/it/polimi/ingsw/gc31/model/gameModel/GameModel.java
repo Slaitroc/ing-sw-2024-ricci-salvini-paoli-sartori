@@ -156,6 +156,10 @@ public class GameModel {
         gameState.drawGold(this, username, index);
     }
 
+    public void drawResource(String username, int index) throws IllegalStateOperationException {
+        gameState.drawResource(this, username, index);
+    }
+
     public void setSelectCard(String username, int index) throws IllegalStateOperationException {
         gameState.setSelectCard(this, username, index);
     }
