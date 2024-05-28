@@ -8,7 +8,7 @@ import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 
 public interface IController extends Remote {
     // TODO non sono sicuro
-    void connect(VirtualClient client, String username) throws RemoteException;
+    boolean connect(VirtualClient client, String username) throws RemoteException;
 
     void createGame(String username, int maxNumberPlayers) throws RemoteException;
 

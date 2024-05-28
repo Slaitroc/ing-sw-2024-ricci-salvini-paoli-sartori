@@ -126,11 +126,6 @@ public class GUI extends UI {
     }
 
     // SHOW UPDATE
-    @Override
-    public void show_scorePlayer(String key, Integer value) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_scorePlayer'");
-    }
 
     @Override
     public void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
@@ -142,6 +137,11 @@ public class GUI extends UI {
     public void show_handPlayer(String username, List<PlayableCard> hand) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_handPlayer'");
+    }
+
+    @Override
+    public void show_scorePlayer(LinkedHashMap<String, Integer> scores) {
+
     }
 
     @Override

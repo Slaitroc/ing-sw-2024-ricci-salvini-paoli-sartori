@@ -26,7 +26,7 @@ public interface ShowUpdate {
 
     void show_handPlayer(String username, List<PlayableCard> hand);
 
-    void show_scorePlayer(String key, Integer value);
+    void show_scorePlayer(LinkedHashMap<String, Integer> scores);
 
     void show_listGame(List<String> listGame);
 

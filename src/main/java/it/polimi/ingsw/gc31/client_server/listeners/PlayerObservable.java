@@ -6,6 +6,7 @@ import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import javafx.util.Pair;
 
 import java.awt.*;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public abstract class PlayerObservable {
     Observable<Pair<String, List<PlayableCard>>> playerHandListeners = new Observable<>();
     Observable<PlayableCard> playerStarterCardListener = new Observable<>();
     Observable<ObjectiveCard> playerObjectiveCardListener = new Observable<>();
-    Observable<Pair<String, Integer>> playerScoreListeners = new Observable<>();
+//    Observable<LinkedHashMap<String, Integer>> playerScoreListeners = new Observable<>();
     Observable<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> playAreaListeners = new Observable<>();
     Observable<Pair<ObjectiveCard, ObjectiveCard>> playerChooseObjectiveCardListener = new Observable<>();
     Observable<Pair<String, String>> playerTurnListener = new Observable<>();
@@ -59,14 +60,14 @@ public abstract class PlayerObservable {
         playerObjectiveCardListener.addListener(listener);
     }
 
-    /**
-     * Adds a listener for receiving updates of the player's score
-     *
-     * @param listener the listener to be added for player score updates.
-     */
-    public void addPlayerScoreListener(Listener<Pair<String, Integer>> listener) {
-        playerScoreListeners.addListener(listener);
-    }
+//    /**
+//     * Adds a listener for receiving updates of the player's score
+//     *
+//     * @param listener the listener to be added for player score updates.
+//     */
+//    public void addPlayerScoreListener(Listener<LinkedHashMap<String, Integer>> listener) {
+//        playerScoreListeners.addListener(listener);
+//    }
 
     /**
      * Adds a listener for receiving updates of the player's play area
@@ -160,14 +161,14 @@ public abstract class PlayerObservable {
         playerObjectiveCardListener.notifyListeners(data);
     }
 
-    /**
-     * Notifies all registered listeners about an update to the player's score.
-     *
-     * @param data a Pair<String, List<PlayableCard>> object containing the player's score.
-     */
-    public void notifyPlayerScoreListener(Pair<String, Integer> data) {
-        playerScoreListeners.notifyListeners(data);
-    }
+//    /**
+//     * Notifies all registered listeners about an update to the player's score.
+//     *
+//     * @param data a Pair<String, List<PlayableCard>> object containing the player's score.
+//     */
+//    public void notifyPlayerScoreListener(LinkedHashMap<String, Integer> data) {
+//        playerScoreListeners.notifyListeners(data);
+//    }
 
     /**
      * Notifies all registered listeners about an update to the player's play area.

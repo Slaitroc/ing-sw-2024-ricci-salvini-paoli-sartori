@@ -6,9 +6,10 @@ import java.rmi.RemoteException;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 
 public interface VirtualServer extends Remote {
-    void RMIserverWrite(String text) throws RemoteException;
+    void RMIserverWrite(String text) throws RemoteException; // NOTE si può togliere? viene usato dal networking o solo
+                                                             // in locale?
 
-    public void connect(VirtualClient client, String username)
+    public boolean connect(VirtualClient client, String username)
             throws RemoteException;
 
     public void sendCommand(ServerQueueObject obj) throws RemoteException;

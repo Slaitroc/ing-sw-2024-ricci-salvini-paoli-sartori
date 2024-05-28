@@ -5,6 +5,7 @@ import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SetupGameModelState implements GameModelState{
@@ -12,7 +13,7 @@ public class SetupGameModelState implements GameModelState{
         System.out.println("Game changed to SETUP");
     }
     @Override
-    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients) throws IllegalStateOperationException {
+    public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 

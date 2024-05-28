@@ -213,7 +213,7 @@ public class Player extends PlayerObservable {
     public void playStarter() {
         try {
             inGameState.playStarter(this);
-            notifyPlayerScoreListener(new Pair<>(username, score));
+//            notifyPlayerScoreListener(new Pair<>(username, score));
             notifyPlayAreaListener(
                     new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
         } catch (IllegalStateOperationException e) {
