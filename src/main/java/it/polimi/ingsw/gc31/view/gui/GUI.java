@@ -116,13 +116,14 @@ public class GUI extends UI {
     @Override
     public void updateHand(String username, List<String> hand) throws RemoteException {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateHand'");
     }
 
     @Override
     public void update_ToPlayingState() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateHand'");
+        Platform.runLater(() -> {
+            app.setFullScreen();
+            app.loadScene(SceneTag.GAME);
+        });
     }
 
     // SHOW UPDATE
@@ -130,13 +131,11 @@ public class GUI extends UI {
     @Override
     public void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_goldDeck'");
     }
 
     @Override
     public void show_handPlayer(String username, List<PlayableCard> hand) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_handPlayer'");
     }
 
     @Override
@@ -147,7 +146,6 @@ public class GUI extends UI {
     @Override
     public void show_objectiveDeck(ObjectiveCard firstCardDeck, ObjectiveCard card1, ObjectiveCard card2) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_objectiveDeck'");
     }
 
     @Override
@@ -158,25 +156,21 @@ public class GUI extends UI {
     @Override
     public void show_playArea(String username, Map<Point, PlayableCard> playArea, String achievedResources) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_playArea'");
     }
 
     @Override
     public void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_resourceDeck'");
     }
 
     @Override
     public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_chooseObjectiveCard'");
     }
 
     @Override
     public void show_objectiveCard(ObjectiveCard objectiveCard) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_objectiveCard'");
     }
 
     @Override

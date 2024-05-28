@@ -16,7 +16,10 @@
     <padding>
         <Insets top="10" right="20" bottom="10" left="20"/>
     </padding>
-
+<VBox alignment="CENTER" spacing="5">
+    <ImageView fitWidth="800" fitHeight="160">
+        <Image url="@../Images/Misc/border2.jpg"/>
+    </ImageView>
     <GridPane alignment="CENTER" hgap="50">
 
         <ImageView fx:id="iconPlayer1" GridPane.rowIndex="0" GridPane.columnIndex="0" fitHeight="100" fitWidth="100"
@@ -43,63 +46,51 @@
         <!-- StackPane for GENERAL_PLAYER1 -->
         <!-- StackPane for PLAYER1_IN_LOBBY  -->
         <StackPane stylesheets="@../css/Commons.css" styleClass="stackPane-playerSlot, player1"
-                   maxWidth="202" maxHeight="360" minWidth="202" minHeight="360"
+                   maxWidth="200" maxHeight="360" minWidth="200" minHeight="360"
                    GridPane.rowIndex="1" GridPane.columnIndex="0">
-            <VBox spacing="70">
+            <VBox spacing="70" alignment="CENTER">
                 <padding>
                     <Insets top="20" right="10" bottom="20" left="10"/>
                 </padding>
-                <StackPane>
-                    <MFXTextField fx:id="namePlayer1" stylesheets="@../css/PlayerNames.css"
-                                  styleClass="player-text-field" alignment="CENTER" prefWidth="150"/>
-                </StackPane>
-                <StackPane>
-                    <ImageView fitHeight="100" fitWidth="100">
-                        <Image url="@../Images/Board/CODEX_pion_vert.png"/>
-                    </ImageView>
-                </StackPane>
-                <StackPane>
-                    <TextField fx:id="ready1" stylesheets="@../css/Labels.css" styleClass="ready-label" text="Not Ready"
-                               alignment="CENTER"
-                               editable="false" mouseTransparent="true">
-                    </TextField>
-                </StackPane>
+                <MFXTextField fx:id="namePlayer1" stylesheets="@../css/PlayerNames.css"
+                              styleClass="player-text-field" alignment="CENTER" prefWidth="150"/>
+                <ImageView fitHeight="100" fitWidth="100">
+                    <Image url="@../Images/Board/CODEX_pion_vert.png"/>
+                </ImageView>
+                <TextField fx:id="ready1" stylesheets="@../css/Labels.css" styleClass="ready-label"
+                           text="Not Ready" alignment="CENTER"
+                           editable="false" mouseTransparent="true">
+                </TextField>
             </VBox>
         </StackPane>
 
         <!-- StackPane for GENERAL_PLAYER2 -->
         <StackPane styleClass="stackPane-playerSlot"
-                   maxWidth="202" maxHeight="360" minWidth="202" minHeight="360"
+                   maxWidth="200" maxHeight="360" minWidth="200" minHeight="360"
                    GridPane.rowIndex="1" GridPane.columnIndex="1">
 
             <!-- StackPane for PLAYER2_IN_LOBBY  -->
             <StackPane fx:id="inGamePlayer2" styleClass="stackPane-playerSlot, player2"
-                       maxWidth="202" maxHeight="360" minWidth="202" minHeight="360">
-                <VBox spacing="70">
+                       maxWidth="200" maxHeight="360" minWidth="200" minHeight="360">
+                <VBox spacing="70" alignment="CENTER">
                     <padding>
                         <Insets top="20" right="10" bottom="20" left="10"/>
                     </padding>
-                    <StackPane>
-                        <MFXTextField fx:id="namePlayer2" stylesheets="@../css/PlayerNames.css"
-                                      styleClass="player-text-field" alignment="CENTER" prefWidth="150"/>
-                    </StackPane>
-                    <StackPane>
-                        <ImageView fitHeight="100" fitWidth="100">
-                            <Image url="@../Images/Board/CODEX_pion_jaune.png"/>
-                        </ImageView>
-                    </StackPane>
-                    <StackPane>
-                        <TextField fx:id="ready2" stylesheets="@../css/Labels.css" styleClass="ready-label"
-                                   text="Not Ready"
-                                   editable="false" mouseTransparent="true">
-                        </TextField>
-                    </StackPane>
+                    <MFXTextField fx:id="namePlayer2" stylesheets="@../css/PlayerNames.css"
+                                  styleClass="player-text-field" alignment="CENTER" prefWidth="150"/>
+                    <ImageView fitHeight="100" fitWidth="100">
+                        <Image url="@../Images/Board/CODEX_pion_jaune.png"/>
+                    </ImageView>
+                    <TextField fx:id="ready2" stylesheets="@../css/Labels.css" styleClass="ready-label"
+                               text="Not Ready" alignment="CENTER"
+                               editable="false" mouseTransparent="true">
+                    </TextField>
                 </VBox>
             </StackPane>
 
             <!-- StackPane for WAITING_PLAYER2  -->
             <StackPane fx:id="waitingPlayer2" styleClass="stackPane-playerSlot, lockedPlayerSlot"
-                       maxWidth="202" maxHeight="360" minWidth="202" minHeight="360">
+                       maxWidth="200" maxHeight="360" minWidth="200" minHeight="360">
                 <ImageView fitHeight="100" fitWidth="100">
                     <Image url="@../Images/AppIcons/waiting_player.gif"/>
                 </ImageView>
@@ -108,37 +99,31 @@
 
         <!-- StackPane for GENERAL_PLAYER3 -->
         <StackPane styleClass="stackPane-playerSlot"
-                   maxWidth="202" maxHeight="360" minWidth="202" minHeight="360"
+                   maxWidth="200" maxHeight="360" minWidth="200" minHeight="360"
                    GridPane.rowIndex="1" GridPane.columnIndex="2">
 
             <!-- StackPane for PLAYER3_IN_LOBBY  -->
             <StackPane fx:id="inGamePlayer3" styleClass="stackPane-playerSlot, player3"
-                       maxWidth="202" maxHeight="360" minWidth="202" minHeight="360">
-                <VBox spacing="70">
+                       maxWidth="200" maxHeight="360" minWidth="200" minHeight="360">
+                <VBox spacing="70" alignment="CENTER">
                     <padding>
                         <Insets top="20" right="10" bottom="20" left="10"/>
                     </padding>
-                    <StackPane>
-                        <MFXTextField fx:id="namePlayer3" stylesheets="@../css/PlayerNames.css"
-                                      styleClass="player-text-field" alignment="CENTER" prefWidth="150"/>
-                    </StackPane>
-                    <StackPane>
-                        <ImageView fitHeight="100" fitWidth="100">
-                            <Image url="@../Images/Board/CODEX_pion_rouge.png"/>
-                        </ImageView>
-                    </StackPane>
-                    <StackPane>
-                        <TextField fx:id="ready3" stylesheets="@../css/Labels.css" styleClass="ready-label"
-                                   text="Not Ready"
-                                   editable="false" mouseTransparent="true">
-                        </TextField>
-                    </StackPane>
+                    <MFXTextField fx:id="namePlayer3" stylesheets="@../css/PlayerNames.css"
+                                  styleClass="player-text-field" alignment="CENTER" prefWidth="150"/>
+                    <ImageView fitHeight="100" fitWidth="100">
+                        <Image url="@../Images/Board/CODEX_pion_rouge.png"/>
+                    </ImageView>
+                    <TextField fx:id="ready3" stylesheets="@../css/Labels.css" styleClass="ready-label"
+                               text="Not Ready" alignment="CENTER"
+                               editable="false" mouseTransparent="true">
+                    </TextField>
                 </VBox>
             </StackPane>
 
             <!-- StackPane for WAITING_PLAYER3  -->
             <StackPane fx:id="waitingPlayer3" styleClass="stackPane-playerSlot, lockedPlayerSlot"
-                       maxWidth="202" maxHeight="360" minWidth="202" minHeight="360">
+                       maxWidth="200" maxHeight="360" minWidth="200" minHeight="360">
                 <ImageView fitHeight="100" fitWidth="100">
                     <Image url="@../Images/AppIcons/waiting_player.gif"/>
                 </ImageView>
@@ -146,46 +131,40 @@
 
             <!-- StackPane for LOCKED_PLAYER3_SLOT  -->
             <StackPane fx:id="lockPlayer3" styleClass="stackPane-playerSlot, lockedPlayerSlot"
-                       maxWidth="202" maxHeight="360" minWidth="202" minHeight="360">
+                       maxWidth="200" maxHeight="360" minWidth="200" minHeight="360">
                 <ImageView fitHeight="120" fitWidth="120">
-                    <Image url="@../Images/AppIcons/LockIcon.png"/>
+                    <Image url="@../Images/AppIcons/iconLock.png"/>
                 </ImageView>
             </StackPane>
         </StackPane>
 
         <!-- StackPane for GENERAL_PLAYER4 -->
         <StackPane
-                maxWidth="202" maxHeight="360" minWidth="202" minHeight="360"
+                maxWidth="200" maxHeight="360" minWidth="200" minHeight="360"
                 GridPane.rowIndex="1" GridPane.columnIndex="3">
 
             <!-- StackPane for PLAYER4_IN_LOBBY  -->
             <StackPane fx:id="inGamePlayer4" styleClass="stackPane-playerSlot, player4"
-                       maxWidth="202" maxHeight="360" minWidth="202" minHeight="360">
-                <VBox spacing="70">
+                       maxWidth="200" maxHeight="360" minWidth="200" minHeight="360">
+                <VBox spacing="70" alignment="CENTER">
                     <padding>
                         <Insets top="20" right="10" bottom="20" left="10"/>
                     </padding>
-                    <StackPane>
-                        <MFXTextField fx:id="namePlayer4" stylesheets="@../css/PlayerNames.css"
-                                      styleClass="player-text-field" alignment="CENTER" prefWidth="150"/>
-                    </StackPane>
-                    <StackPane>
-                        <ImageView fitHeight="100" fitWidth="100">
-                            <Image url="@../Images/Board/CODEX_pion_bleu.png"/>
-                        </ImageView>
-                    </StackPane>
-                    <StackPane>
-                        <TextField fx:id="ready4" stylesheets="@../css/Labels.css" styleClass="ready-label"
-                                   text="Not Ready"
-                                   editable="false" mouseTransparent="true">
-                        </TextField>
-                    </StackPane>
+                    <MFXTextField fx:id="namePlayer4" stylesheets="@../css/PlayerNames.css"
+                                  styleClass="player-text-field" alignment="CENTER" prefWidth="150"/>
+                    <ImageView fitHeight="100" fitWidth="100">
+                        <Image url="@../Images/Board/CODEX_pion_bleu.png"/>
+                    </ImageView>
+                    <TextField fx:id="ready4" stylesheets="@../css/Labels.css" styleClass="ready-label"
+                               text="Not Ready" alignment="CENTER"
+                               editable="false" mouseTransparent="true">
+                    </TextField>
                 </VBox>
             </StackPane>
 
             <!-- StackPane for WAITING_PLAYER4  -->
             <StackPane fx:id="waitingPlayer4" styleClass="stackPane-playerSlot, lockedPlayerSlot"
-                       maxWidth="202" maxHeight="360" minWidth="202" minHeight="360">
+                       maxWidth="200" maxHeight="360" minWidth="200" minHeight="360">
                 <ImageView fitHeight="100" fitWidth="100">
                     <Image url="@../Images/AppIcons/waiting_player.gif"/>
                 </ImageView>
@@ -193,26 +172,27 @@
 
             <!-- StackPane for LOCKED_PLAYER4_SLOT  -->
             <StackPane fx:id="lockPlayer4" styleClass="stackPane-playerSlot, lockedPlayerSlot"
-                       maxWidth="202" maxHeight="360" minWidth="202" minHeight="360">
+                       maxWidth="200" maxHeight="360" minWidth="200" minHeight="360">
                 <ImageView fitHeight="120" fitWidth="120">
-                    <Image url="@../Images/AppIcons/LockIcon.png"/>
+                    <Image url="@../Images/AppIcons/iconLock.png"/>
                 </ImageView>
             </StackPane>
         </StackPane>
 
         <!-- StackPane for GENERAL CHAT and READY BUTTON -->
-        <StackPane maxWidth="202" maxHeight="360" minWidth="202" minHeight="360"
+        <StackPane maxWidth="200" maxHeight="360" minWidth="200" minHeight="360"
                    GridPane.rowIndex="1" GridPane.columnIndex="4">
             <VBox spacing="10" alignment="TOP_CENTER" prefHeight="360" maxHeight="360">
-                <ScrollPane fx:id="scrollPane" maxWidth="170" maxHeight="250" minWidth="170" minHeight="250"
-                            fitToWidth="true" fitToHeight="true" stylesheets="@../css/Chat.css" styleClass="chat-scroll-pane">
+                <ScrollPane fx:id="scrollPane" maxWidth="200" maxHeight="250" minWidth="200" minHeight="250"
+                            fitToWidth="true" fitToHeight="true" stylesheets="@../css/Chat.css"
+                            styleClass="chat-scroll-pane">
                     <padding>
                         <Insets top="10" right="5" bottom="10" left="5"/>
                     </padding>
-                    <TextFlow fx:id="chatField"  styleClass="lobby-chat-background">
+                    <TextFlow fx:id="chatField" styleClass="lobby-chat-background">
                     </TextFlow>
                 </ScrollPane>
-                <MFXTextField fx:id="textField" maxWidth="170" maxHeight="40" minWidth="170" minHeight="40"
+                <MFXTextField fx:id="textField" maxWidth="200" maxHeight="40" minWidth="200" minHeight="40"
                               onKeyPressed="#handleEnterKeyPressed"
                               stylesheets="@../css/SimpleTextField.css" styleClass="mfx-simple-small-text-field">
                 </MFXTextField>
@@ -226,5 +206,5 @@
                stylesheets="@../css/Labels.css" styleClass="text-label">
         </Label>
     </GridPane>
-
+</VBox>
 </StackPane>

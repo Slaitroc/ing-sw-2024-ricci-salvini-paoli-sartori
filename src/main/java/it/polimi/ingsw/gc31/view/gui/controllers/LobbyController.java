@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.view.gui.controllers;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import io.github.palexdev.materialfx.controls.MFXToggleButton;
+import it.polimi.ingsw.gc31.view.gui.SceneTag;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -140,6 +141,7 @@ public class LobbyController extends ViewController {
 
     /**
      * Enter key on chat to send message
+     *
      * @param event The key event.
      */
     @FXML
@@ -152,6 +154,7 @@ public class LobbyController extends ViewController {
 
     /**
      * Sends a chat message.
+     *
      * @param message The message to send.
      */
     private void sendText(String message) {
@@ -164,6 +167,7 @@ public class LobbyController extends ViewController {
 
     /**
      * Enables a StackPane.
+     *
      * @param pane The StackPane to enable.
      */
     private void enableStackPane(StackPane pane) {
@@ -173,6 +177,7 @@ public class LobbyController extends ViewController {
 
     /**
      * Disables a StackPane.
+     *
      * @param pane The StackPane to disable.
      */
     private void disableStackPane(StackPane pane) {
@@ -183,22 +188,20 @@ public class LobbyController extends ViewController {
     /**
      * Updates the chat with a new message. Color Usernames.
      * ScrollPane is updated to keep the last message visible
+     *
      * @param username The username of the sender.
-     * @param message The message.
+     * @param message  The message.
      */
     @Override
     public void updateChat(String username, String message) {
         Text usernameText = new Text(username + ": ");
-        if(username.equals(app.getPlayerList().keySet().stream().toList().getFirst())) {
+        if (username.equals(app.getPlayerList().keySet().stream().toList().getFirst())) {
             usernameText.setFill(Color.GREEN);
-        }
-        else if (username.equals(app.getPlayerList().keySet().stream().toList().get(1))) {
+        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(1))) {
             usernameText.setFill(Color.VIOLET);
-        }
-        else if (username.equals(app.getPlayerList().keySet().stream().toList().get(2))) {
+        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(2))) {
             usernameText.setFill(Color.RED);
-        }
-        else if (username.equals(app.getPlayerList().keySet().stream().toList().get(3))) {
+        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(3))) {
             usernameText.setFill(Color.BLUE);
         }
         Text messageText = new Text(message + "\n");
@@ -233,6 +236,7 @@ public class LobbyController extends ViewController {
 
     /**
      * Changes the ready status of a player. Here the message to the server is sent
+     *
      * @param ready The TextField representing the ready status.
      */
     private void changeReady(TextField ready) {
@@ -253,8 +257,9 @@ public class LobbyController extends ViewController {
      * 1. Retrieves the player's position in the list from the application.
      * 2. Compares the given username with the usernames in the player list.
      * 3. Sets the ready status text for the corresponding player based on the provided status.
+     *
      * @param username the username of the player whose status has changed.
-     * @param status the current ready status of the player (true if ready, false otherwise).
+     * @param status   the current ready status of the player (true if ready, false otherwise).
      */
     @Override
     public void showReady(String username, boolean status) {
@@ -288,7 +293,18 @@ public class LobbyController extends ViewController {
                 ready4.setText("Not Ready");
             }
         }
+        checkAllReady();
     }
+
+    private void checkAllReady() {
+        if(app.getPlayerList().size() == app.getNumberOfPlayers()){
+            if (ready1.getText().equals("Ready") && ready2.getText().equals("Ready") && ready3.getText().equals("Ready") && ready4.getText().equals("Ready")) {
+                app.loadScene(SceneTag.GAME);
+            }
+        }
+
+    }
+
 
     /**
      * Updates the lobby with the current players and their statuses.
@@ -301,7 +317,6 @@ public class LobbyController extends ViewController {
      * 3. Enables or disables specific UI components (StackPane) based on the player's presence in the game.
      * 4. Calls the showReady method to update the player's ready status.
      * The player list is a map with player names as keys and their ready status as values.
-     *
      */
     @Override
     public void updateLobby() {

@@ -12,9 +12,12 @@
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.RuleBookController"
-           stylesheets="@../css/Commons.css, @../css/Buttons.css, @../css/Panes.css" styleClass="stackPane-ruleBook" >
+           stylesheets="@../css/Commons.css, @../css/Buttons.css, @../css/Panes.css" styleClass="stackPane-default" >
 
-    <VBox  alignment="CENTER" spacing="20">
+    <VBox  alignment="CENTER" spacing="5">
+        <ImageView fitHeight="120" fitWidth="600">
+            <Image url="@../Images/Misc/border1.jpg"/>
+        </ImageView>
         <StackPane>
             <padding>
                 <Insets top="10" right="20" bottom="10" left="20"/>
