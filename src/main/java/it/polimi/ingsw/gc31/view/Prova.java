@@ -17,6 +17,10 @@ import it.polimi.ingsw.gc31.model.strategies.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.*;
 import it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater;
 import it.polimi.ingsw.gc31.utility.gsonUtility.ObjectiveAdapter;
@@ -32,17 +36,5 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
 
 public class Prova {
     public static void main(String[] args){
-        Deck<PlayableCard> res = new Deck<>(CardType.GOLD);
-        PlayableCard card = res.draw();
-        card.changeSide();
-
-        String resJson = gsonTranslater.toJson(card, PlayableCard.class);
-
-        System.out.println(resJson);
-
-
-        PlayableCard cardFrom = gsonTranslater.fromJson(resJson, PlayableCard.class);
-
-        System.out.println(cardFrom.getSide());
     }
 }
