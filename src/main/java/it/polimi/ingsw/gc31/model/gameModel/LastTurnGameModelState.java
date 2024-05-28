@@ -4,21 +4,23 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.player.Player;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 
-public class LastTurnGameModelState implements GameModelState{
+public class LastTurnGameModelState implements GameModelState {
     public LastTurnGameModelState() {
         System.out.println("Game changed to LAST TURN");
     }
+
     @Override
-    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients) throws IllegalStateOperationException {
+    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients)
+            throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
     @Override
-    public void chooseSecretObjective(GameModel model, String username, Integer index) throws IllegalStateOperationException {
+    public void chooseSecretObjective(GameModel model, String username, Integer index)
+            throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
@@ -63,10 +65,10 @@ public class LastTurnGameModelState implements GameModelState{
 
     @Override
     public void detectEndGame(GameModel model) throws IllegalStateOperationException {
-        if (model.getCurrIndexPlayer() == model.getPlayers().size()-1) {
+        if (model.getCurrIndexPlayer() == model.getPlayers().size() - 1) {
             model.setGameState(new EndGameModelState());
 
-            //Calculate points
+            // Calculate points
         }
     }
 }

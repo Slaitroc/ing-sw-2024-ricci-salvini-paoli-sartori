@@ -5,7 +5,6 @@ import java.util.*;
 import java.util.List;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
@@ -88,6 +87,7 @@ public class GameModel {
     public Board getBoard() {
         return board;
     }
+
     /**
      * This method is used to end the turn of a player.
      * It also
@@ -107,38 +107,45 @@ public class GameModel {
      * This method is used to detect when a player reaches 20 points.
      */
     private void detectEndGame() {
-//        synchronized (this) {
-//            if (this.gameState == GameState.RUNNING & getCurrPlayingPlayer().getScore() >= 20) {
-//                startShowdown();
-//                System.out.println("Someone reached 20 points!");
-//            } else if (this.gameState == GameState.SHOWDOWN & getCurrPlayingPlayer() == players.getFirst()) {
-//                startLastTurn();
-//                System.out.println("Players has now one more turn to play!");
-//            } else if (this.gameState == GameState.LAST_TURN && getCurrPlayingPlayer() == players.getLast()) {
-//                startEndGame();
-//                System.out.println("\n_____GAME HAS ENDED_____!\n");
-//                for (Player player : players) {
-//                    player.calculateObjectiveCard(objective1);
-//                    player.calculateObjectiveCard(objective2);
-//                    player.calculateObjectiveCard(player.getObjectiveCard());
-//                    System.out.println(player.getUsername() + " has " + player.getScore() + " points!");
-//                }
-//            }
-//        }
+        // synchronized (this) {
+        // if (this.gameState == GameState.RUNNING & getCurrPlayingPlayer().getScore()
+        // >= 20) {
+        // startShowdown();
+        // System.out.println("Someone reached 20 points!");
+        // } else if (this.gameState == GameState.SHOWDOWN & getCurrPlayingPlayer() ==
+        // players.getFirst()) {
+        // startLastTurn();
+        // System.out.println("Players has now one more turn to play!");
+        // } else if (this.gameState == GameState.LAST_TURN && getCurrPlayingPlayer() ==
+        // players.getLast()) {
+        // startEndGame();
+        // System.out.println("\n_____GAME HAS ENDED_____!\n");
+        // for (Player player : players) {
+        // player.calculateObjectiveCard(objective1);
+        // player.calculateObjectiveCard(objective2);
+        // player.calculateObjectiveCard(player.getObjectiveCard());
+        // System.out.println(player.getUsername() + " has " + player.getScore() + "
+        // points!");
+        // }
+        // }
+        // }
     }
+
     public Map<String, Player> getPlayers() {
         return players;
     }
+
     public Player getCurrPlayer() {
         return players.get(turnPlayer.get(currPlayingPlayer));
     }
+
     public int getCurrIndexPlayer() {
         return currPlayingPlayer;
     }
+
     public void setGameState(GameModelState gameState) {
         this.gameState = gameState;
     }
-
 
     public void chooseSecretObjective(String username, Integer index) throws IllegalStateOperationException {
         gameState.chooseSecretObjective(this, username, index);

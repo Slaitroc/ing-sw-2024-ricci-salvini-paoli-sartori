@@ -1,7 +1,7 @@
 package it.polimi.ingsw.gc31;
 
 import java.io.IOException;
-import java.net.ServerSocket;
+import java.net.InetAddress;
 
 import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
 import it.polimi.ingsw.gc31.client_server.tcp.TCPServer;
@@ -13,9 +13,11 @@ public class Server {
         System.out.print("\033[H\033[2J");
         System.out.flush();
 
-        ServerSocket listenSocket = new ServerSocket(Integer.parseInt("1200"));
-        new TCPServer(listenSocket);
-        new RmiServer();
+        InetAddress localHost = InetAddress.getLocalHost();
+        String ipAddress = localHost.getHostAddress();
+
+        new TCPServer(ipAddress);
+        new RmiServer(ipAddress);
     }
 
 }

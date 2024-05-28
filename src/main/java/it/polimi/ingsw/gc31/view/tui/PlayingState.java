@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
 
-import com.sun.source.doctree.EscapeTree;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 
 import static it.polimi.ingsw.gc31.OurScanner.scanner;
@@ -176,7 +175,6 @@ public class PlayingState extends TuiState {
         }
         stateNotify();
     }
-
 
     @Override
     protected void command_initial() {

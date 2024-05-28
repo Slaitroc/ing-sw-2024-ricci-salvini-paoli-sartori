@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
-import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsFullObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.model.card.*;
@@ -39,13 +38,16 @@ public class GsonTranslater {
             .registerTypeAdapter(StairUp.class, new ObjectiveAdapter())
             .registerTypeAdapter(ServerQueueObject.class, new ServerQueueObjAdapter())
             .registerTypeAdapter(DrawResObj.class, new ServerQueueObjAdapter())
-            .registerTypeAdapter(new TypeToken<Map<Resources, Integer>>(){}.getType(), new MapRequirementsAdapter())
-            .registerTypeAdapter(new TypeToken<Map<Point, PlayableCard>>(){}.getType(), new PlayAreaAdapter())
+            .registerTypeAdapter(new TypeToken<Map<Resources, Integer>>() {
+            }.getType(), new MapRequirementsAdapter())
+            .registerTypeAdapter(new TypeToken<Map<Point, PlayableCard>>() {
+            }.getType(), new PlayAreaAdapter())
             .registerTypeAdapter(ClientQueueObject.class, new ClientQueueObjAdapter())
             .serializeNulls()
             .create();
 
-    public static void serializePrivateFields(Object obj, JsonObject jsonObject, JsonSerializationContext jsonSerializationContext) {
+    public static void serializePrivateFields(Object obj, JsonObject jsonObject,
+            JsonSerializationContext jsonSerializationContext) {
         Class<?> clazz = obj.getClass();
         while (clazz != null) {
             jsonObject.addProperty("type", obj.getClass().getName());

@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
-import it.polimi.ingsw.gc31.utility.DeepCopy;
 
 import java.util.*;
 
@@ -14,7 +13,7 @@ import java.util.*;
  *
  * @author Christian Salvini
  */
-public class CardFront{
+public class CardFront {
     /**
      * The score obtained from placing the card.
      */

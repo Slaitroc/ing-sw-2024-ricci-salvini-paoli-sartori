@@ -31,8 +31,8 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
      * - sets its name and assigning it the remote controller once the name is
      * verified by the server controller.
      */
-    public RmiClient() throws RemoteException, NotBoundException {
-        this.server = (VirtualServer) LocateRegistry.getRegistry("127.0.0.1", 1100).lookup("VirtualServer");
+    public RmiClient(String ipaddress) throws RemoteException, NotBoundException {
+        this.server = (VirtualServer) LocateRegistry.getRegistry(ipaddress, 55000).lookup("VirtualServer");
         this.server.RMIserverWrite("New connection detected...");
         this.username = DefaultValues.DEFAULT_USERNAME;
         this.controller = null;
@@ -130,7 +130,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public void drawResource(int index) throws RemoteException {
         gameController.sendCommand(new DrawResObj(username, index));
-//        gameController.drawResource(username);
+        // gameController.drawResource(username);
     }
 
     @Override

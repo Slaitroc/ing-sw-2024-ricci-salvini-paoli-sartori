@@ -3,7 +3,6 @@ package it.polimi.ingsw.gc31.model.gameModel;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.listeners.*;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
-import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
@@ -12,7 +11,8 @@ import java.util.List;
 
 public class CreationGameModelState implements GameModelState {
     @Override
-    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients) throws IllegalStateOperationException {
+    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients)
+            throws IllegalStateOperationException {
         Map<String, Player> players = createPlayers(model, clients.keySet());
 
         createAllListeners(model, players, clients);
@@ -38,7 +38,8 @@ public class CreationGameModelState implements GameModelState {
     }
 
     @Override
-    public void chooseSecretObjective(GameModel model, String username, Integer index) throws IllegalStateOperationException {
+    public void chooseSecretObjective(GameModel model, String username, Integer index)
+            throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
@@ -82,7 +83,7 @@ public class CreationGameModelState implements GameModelState {
         throw new IllegalStateOperationException();
     }
 
-    private Map<String, Player> createPlayers(GameModel model, Set<String> setUsername){
+    private Map<String, Player> createPlayers(GameModel model, Set<String> setUsername) {
         Map<String, Player> players = new HashMap<>();
         for (String username : setUsername) {
             Player player = new Player(model.pawnAssignment(), username, model.getBoard());
@@ -139,7 +140,8 @@ public class CreationGameModelState implements GameModelState {
             player.addPlayerStarterCardListener(new PlayerStarterCardListener(clients.get(player.getUsername())));
 
             // add to the player its own playerChooseObjectiveCardListener
-            player.addPlayerChooseObjectiveCardListener(new PlayerChooseObjectiveCardListener(clients.get(player.getUsername())));
+            player.addPlayerChooseObjectiveCardListener(
+                    new PlayerChooseObjectiveCardListener(clients.get(player.getUsername())));
 
             // add to the player its own playerObjectiveCardListener
             player.addPlayerObjectiveCardListener(
@@ -150,10 +152,10 @@ public class CreationGameModelState implements GameModelState {
         for (GoldDeckListener listener : goldDeckListeners) {
             model.getBoard().getDeckGold().addListener(listener);
         }
-        for (ResourceDeckListener listener: resourceDeckListeners) {
+        for (ResourceDeckListener listener : resourceDeckListeners) {
             model.getBoard().getDeckResource().addListener(listener);
         }
-        for (ObjectiveDeckListener listener: objectiveDeckListeners) {
+        for (ObjectiveDeckListener listener : objectiveDeckListeners) {
             model.getBoard().getDeckObjective().addListener(listener);
         }
     }
