@@ -36,7 +36,7 @@ public interface ShowUpdate {
 
     void show_wrongUsername(String username);
 
-    void show_joinedToGame(int id);
+    void show_joinedToGame(int id, int maxNumberOfPlayers);
 
     void show_gameIsFull(int id);
 

@@ -67,7 +67,8 @@ class PlayAreaTest {
 
                 System.out.println("testPlace (1,-1):");
                 PlayableCard playableCard2 = board.getDeckResource().draw();
-                playArea.place(playableCard2, new Point(1, -1));
+                PlayableCard finalPlayableCard = playableCard2;
+                assertThrows(IllegalPlaceCardException.class, ()->playArea.place(finalPlayableCard, new Point(1, -1)));
                 assertEquals(playableCard, playArea.getPlacedCards().get(new Point(1, -1)));
                 System.out.println("Correct");
 
@@ -79,7 +80,8 @@ class PlayAreaTest {
 
                 System.out.println("testPlace (2, 0):");
                 playableCard2 = board.getDeckResource().draw();
-                playArea.place(playableCard2, new Point(2, 0));
+                PlayableCard finalPlayableCard2 = playableCard2;
+                assertThrows(IllegalPlaceCardException.class, ()->playArea.place(finalPlayableCard2, new Point(2, 0)));
                 assertEquals(playableCard, playArea.getPlacedCards().get(new Point(2, 0)));
                 System.out.println("Correct");
 
@@ -91,7 +93,8 @@ class PlayAreaTest {
 
                 System.out.println("testPlace (100, -200):");
                 playableCard = board.getDeckResource().draw();
-                playArea.place(playableCard, new Point(100, -200));
+                PlayableCard finalPlayableCard1 = playableCard;
+                assertThrows(IllegalPlaceCardException.class, ()->playArea.place(finalPlayableCard1, new Point(100, -200)));
                 assertNull(playArea.getPlacedCards().get(new Point(100, -200)));
                 System.out.println("Correct");
         }
@@ -237,7 +240,10 @@ class PlayAreaTest {
                                 Resources.MUSHROOM, 1);
                 goldCard.changeSide();
                 System.out.println(playArea.getAchievedResources());
-                playArea.place(goldCard, new Point(3, 1));
+
+
+                PlayableCard finalGoldCard = goldCard;
+                assertThrows(IllegalPlaceCardException.class, ()->playArea.place(finalGoldCard, new Point(3, 1)));
                 assertNull(playArea.getPlacedCards().get(new Point(3, 1)));
 
         }

@@ -31,7 +31,7 @@ import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
  */
 public class GameController extends UnicastRemoteObject implements IGameController {
     private final GameModel model;
-    private final Map<String, VirtualClient> clientList;
+    private final LinkedHashMap<String, VirtualClient> clientList;
     @SuppressWarnings("unused")
     private final int maxNumberPlayers;
     private final int idGame;
@@ -115,7 +115,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
         notifyListPlayers();
         for (String client: clientList.keySet()) {
-            clientList.get(client).sendCommand(new ShowReadyStatusObj(client, readyStatus.get(client)));
+            clientList.get(client).sendCommand(new ShowReadyStatusObj(username, readyStatus.get(username)));
         }
         checkReady();
     }

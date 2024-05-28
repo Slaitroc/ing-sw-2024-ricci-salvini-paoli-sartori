@@ -16,15 +16,16 @@ import java.util.Map;
 
 public class GUI extends UI {
 
+    GUIApplication app;
+
     public GUI(ClientCommands client) {
         this.client = client;
     }
 
     /**
      * This method allows to call a Runnable inside the GUI thread
-     * 
+     *
      * @param r
-     * 
      * @Slaitroc
      */
     public void runInGuiApp(Runnable r) {
@@ -35,69 +36,81 @@ public class GUI extends UI {
     protected void uiRunUI() {
         // Application.launch(GUIApplication.class);
 
-        GUIApplication GUIApplication = new GUIApplication();
-        GUIApplication.setClient(client);
+        app = new GUIApplication();
+        app.setClient(client);
+        client.setUI(this);
         GUIApplication.run();
     }
 
     @Override
     public void show_listGame(List<String> listGame) {
-
+        Platform.runLater(() -> {
+            app.setListGames(listGame);
+            app.loadScene(SceneTag.GAMELIST);
+        });
     }
 
     @Override
     public void show_gameCreated(int gameID) {
-
+        Platform.runLater(() -> {
+                app.setCurrentGameID(gameID);
+                app.setLobbyWindowSize();
+                app.loadScene(SceneTag.LOBBY);
+        });
     }
 
     @Override
     public void show_validUsername(String username) {
-
+        Platform.runLater(() -> {
+            app.loadScene(SceneTag.MAINMENU);
+        });
     }
 
     @Override
     public void show_wrongUsername(String username) {
-
+        Platform.runLater(() -> {
+            app.getCurrentController().setMessage("Username already taken!");
+        });
     }
 
     @Override
-    public void show_joinedToGame(int id) {
-
+    public void show_joinedToGame(int id, int maxNumberOfPlayers) {
+        Platform.runLater(() -> {
+            app.setLobbyWindowSize();
+            app.setNumberOfPlayers(maxNumberOfPlayers);
+            app.setCurrentGameID(id);
+            app.loadScene(SceneTag.LOBBY);
+        });
     }
 
     @Override
     public void show_gameIsFull(int id) {
-
+        Platform.runLater(() -> {
+            app.getCurrentController().setMessage("Lobby is full!");
+        });
     }
 
     @Override
-    public void show_readyStatus(String username, boolean status) {
-
-    }
-
-    @Override
-    public void show_chatMessage(String username, String message) {
-
-    }
-
-    @Override
-    public void show_gameDoesNotExist() {
-
-    }
-
-    @Override
-    public void show_wrongGameSize() {
-
+    public void show_readyStatus(String username,  boolean status) {
+        System.out.println("show_readyStatus triggered!!!! VALUES: " + username + " " + status);
+        Platform.runLater(() -> {
+            app.getCurrentController().showReady(username ,status);
+        });
     }
 
     @Override
     public void show_playerTurn(String username, String info) {
-
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateHand'");
     }
 
     @Override
     public void show_inGamePlayers(LinkedHashMap<String, Boolean> players) {
-
+        Platform.runLater(() -> {
+            System.out.println("Show_inGamePlayers triggered!!!!: values" + players);
+            app.setPlayerList(players);
+            app.getCurrentController().updateLobby();
+        });
     }
 
     @Override
@@ -108,7 +121,8 @@ public class GUI extends UI {
 
     @Override
     public void update_ToPlayingState() {
-
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateHand'");
     }
 
     // SHOW UPDATE
@@ -164,4 +178,30 @@ public class GUI extends UI {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show_objectiveCard'");
     }
+
+    @Override
+    public void show_chatMessage(String username, String message) {
+        //System.out.println(username + "said:" + message);
+        Platform.runLater(() -> {
+            app.getCurrentController().updateChat(username, message);
+        });
+    }
+
+    @Override
+    public void show_gameDoesNotExist() {
+        Platform.runLater(() -> {
+            app.getCurrentController().setMessage("Game does not exist!");
+        });
+    }
+
+    @Override
+    public void show_wrongGameSize() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_wrongGameSize'");
+    }
+
 }
+
+
+//TODO show_inGamePlayers (when i join a match lobby I want to know the string of player currently in the game)
+//TODO show_PlayerJoined (when i am in a match lobby I want to know who entered my lobby)

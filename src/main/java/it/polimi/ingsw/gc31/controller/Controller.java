@@ -140,8 +140,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * Creates a new game and adds it to the game control list.
      *
      * @param username         the username of the client creating the game.
-     * @param maxNumberPlayers the maximum number of players for the game.
-     * @return the game controller for the newly created game.
+     * @param maxNumPlayer the maximum number of players for the game.
      * @throws RemoteException if an RMI error occurs.
      */
     @Override
@@ -161,7 +160,6 @@ public class Controller extends UnicastRemoteObject implements IController {
             client.sendCommand(new GameCreatedObj(gameControlList.size() - 1));
             client.setGameController(gameControlList.get(gameControlList.size() - 1));
         }
-
     }
 
     /**
@@ -184,9 +182,9 @@ public class Controller extends UnicastRemoteObject implements IController {
                     .getMaxNumberPlayers()) {
                 gameControlList.get(idGame).joinGame(username, client);
                 client.setGameController(gameControlList.get(idGame));
-                client.sendCommand(new JoinedToGameObj(idGame));
+                client.sendCommand(new JoinedToGameObj(idGame, gameControlList.get(idGame).getMaxNumberPlayers()));
                 tempClients.remove(username);
-                gameControlList.get(idGame);
+                gameControlList.get(idGame); //??
             } else {
                 client.sendCommand(new GameIsFullObj(idGame));
             }

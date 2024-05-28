@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTableView?>
+<StackPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.GameListController"
+            stylesheets="@../css/Commons.css, @../css/TableView.css, @../css/Buttons.css, @../css/Panes.css"
+            styleClass="codex-background">
+
+    <padding>
+        <Insets bottom="20" left="30" right="30" top="20"/>
+    </padding>
+
+    <GridPane alignment="CENTER" vgap="30">
+        <TableView fx:id="tableView" styleClass="table-view, column-header"
+                   prefWidth="600" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <columns>
+                <TableColumn fx:id="gameIDColumn" prefWidth="150.0" text="Game ID"
+                             styleClass="table-view,table-cell" minWidth="200"/>
+                <TableColumn fx:id="playersColumn" prefWidth="150.0" text="Players in Game"
+                             styleClass="table-view, table-cell" minWidth="200"/>
+                <TableColumn fx:id="actionColumn" prefWidth="150.0" text="Enter Game"
+                             styleClass="table-view, table-cell" minWidth="200"/>
+            </columns>
+        </TableView>
+        <HBox GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <MFXButton layoutX="188.0" layoutY="349.0" onAction="#goMainMenu" prefWidth="250"
+                       styleClass="small-button, rounded-button" text="Back"/>
+            <MFXButton layoutX="188.0" layoutY="349.0" onAction="#refresh" prefWidth="250"
+                       styleClass="small-button, rounded-button" text="Refresh" translateX="100"/>
+        </HBox>
+
+
+    </GridPane>
+
+</StackPane>
