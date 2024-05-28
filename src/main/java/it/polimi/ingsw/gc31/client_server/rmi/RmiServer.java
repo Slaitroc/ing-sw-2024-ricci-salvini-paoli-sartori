@@ -34,8 +34,8 @@ public class RmiServer implements VirtualServer {
 
         this.controller = Controller.getController();
         this.callsList = new LinkedBlockingQueue<>();
-        int port = 55000;
-        LocateRegistry.createRegistry(port).rebind("VirtualServer", UnicastRemoteObject.exportObject(this, 0));
+        int port = 1100;
+        LocateRegistry.createRegistry(port).rebind("VirtualServer", UnicastRemoteObject.exportObject(this, port));
         RMIserverWrite("Server created");
         RMIserverWrite("Server in ascolto sulla porta " + port);
 
