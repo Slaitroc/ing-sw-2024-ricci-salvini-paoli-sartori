@@ -6,6 +6,7 @@ import it.polimi.ingsw.gc31.model.player.Player;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class LastTurnGameModelState implements GameModelState{
@@ -13,7 +14,7 @@ public class LastTurnGameModelState implements GameModelState{
         System.out.println("Game changed to LAST TURN");
     }
     @Override
-    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients) throws IllegalStateOperationException {
+    public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 

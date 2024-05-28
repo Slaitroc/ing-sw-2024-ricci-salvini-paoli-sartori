@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CreationGameModelState implements GameModelState {
     @Override
-    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients) throws IllegalStateOperationException {
+    public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
         Map<String, Player> players = createPlayers(model, clients.keySet());
 
         createAllListeners(model, players, clients);
@@ -31,6 +31,10 @@ public class CreationGameModelState implements GameModelState {
         model.getBoard().getDeckResource().refill();
         // The Secrete Objective 1 and the Secrete Objective 2 are drawn on the board
         model.getBoard().getDeckObjective().refill();
+
+        for (String username : clients.keySet()) {
+            model.getBoard().updateScore(username, 0);
+        }
 
         // change the state of the gameModel
         model.setGameState(new SetupGameModelState());
@@ -123,10 +127,6 @@ public class CreationGameModelState implements GameModelState {
             for (PlayerHandListener listener : playerHandListenersList) {
                 player.addPlayerHandListener(listener);
             }
-            // add all playerScoreListener to all player
-            for (PlayerScoreListener listener : playerScoreListeners) {
-                player.addPlayerScoreListener(listener);
-            }
             // add all playAreaListener to all player
             for (PlayAreaListener listener : playAreaListenerList) {
                 player.addPlayAreaListener(listener);
@@ -155,6 +155,9 @@ public class CreationGameModelState implements GameModelState {
         }
         for (ObjectiveDeckListener listener: objectiveDeckListeners) {
             model.getBoard().getDeckObjective().addListener(listener);
+        }
+        for (PlayerScoreListener listener: playerScoreListeners) {
+            model.getBoard().addListener(listener);
         }
     }
 }

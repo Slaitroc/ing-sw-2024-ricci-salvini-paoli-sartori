@@ -44,7 +44,7 @@ public class GameModel {
         this.gameState = new CreationGameModelState();
     }
 
-    public void initGame(Map<String, VirtualClient> clients) throws IllegalStateOperationException {
+    public void initGame(LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
         players = gameState.initGame(this, clients);
     }
 
