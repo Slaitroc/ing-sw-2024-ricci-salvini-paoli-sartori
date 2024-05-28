@@ -1,0 +1,15 @@
+@import 'Colors.css';
+
+.vbox {
+  -fx-background-color: -white;
+  -fx-font: 36px "FrakturNo2";
+  -fx-text-alignment: center;
+}
+
+.stackPane-black {
+  -fx-background-color: -black;
+}
+
+.stackPane-default {
+  -fx-background-color: -light-beige;
+}

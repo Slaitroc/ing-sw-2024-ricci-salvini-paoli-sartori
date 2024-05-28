@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.StackPane?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+
+
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.UsernameController"
+           stylesheets="@../css/Commons.css, @../css/Buttons.css, @../css/Labels.css" styleClass="stackPane-default">
+
+    <VBox alignment="CENTER" spacing="20">
+        <Label alignment="CENTER" text="Type your username here" styleClass="text-label" />
+
+        <MFXTextField fx:id="usernameField" floatingText="Username" stylesheets="@../css/SimpleTextField.css" styleClass="mfx-simple-text-field, text-label" prefWidth="330"
+        onKeyPressed="#handleEnterKeyPressed"/>
+
+        <Label fx:id="warningLabel" visible="false" stylesheets="@../css/WarningLabels.css" styleClass="warning"/>
+
+        <HBox alignment="CENTER" spacing="30" styleClass="stackPane-default">
+
+            <MFXButton layoutX="100.0" layoutY="200.0"
+                       text="Login" styleClass="rounded-button, small-button" prefWidth="150"
+                       onAction="#login"/>
+
+            <MFXButton layoutX="100.0" layoutY="200"
+                       text="Back" styleClass="rounded-button, small-button" prefWidth="150"
+                       onAction="#loadStartScene"/>
+        </HBox>
+    </VBox>
+</StackPane>

@@ -1,0 +1,8 @@
+@import "Colors.css";
+
+.mfx-check-box {
+    -fx-cursor: hand;
+    -mfx-button-type: RAISED;
+    -mfx-depth-level: LEVEL5;
+    -fx-font: 15px 'glimmer of light';
+}

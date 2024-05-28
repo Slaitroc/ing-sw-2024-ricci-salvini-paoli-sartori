@@ -4,12 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
-import it.polimi.ingsw.gc31.utility.DeepCopy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardBack{
+public class CardBack {
     private final List<Resources> resources;
     private final String dirImg;
 

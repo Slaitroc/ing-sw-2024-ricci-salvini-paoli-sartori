@@ -48,5 +48,28 @@ public class SetupGameModelState implements GameModelState{
         throw new IllegalStateOperationException();
     }
 
+    @Override
+    public void drawResource(GameModel model, String username, int index) throws IllegalStateOperationException {
+        throw new IllegalStateOperationException();
+    }
 
+    @Override
+    public void setSelectCard(GameModel model, String username, int index) throws IllegalStateOperationException {
+        throw new IllegalStateOperationException();
+    }
+
+    @Override
+    public void changeSide(GameModel model, String username) throws IllegalStateOperationException {
+        throw new IllegalStateOperationException();
+    }
+
+    @Override
+    public void changeStarterSide(GameModel model, String username) throws IllegalStateOperationException {
+        throw new IllegalStateOperationException();
+    }
+
+    @Override
+    public void detectEndGame(GameModel model) throws IllegalStateOperationException {
+        throw new IllegalStateOperationException();
+    }
 }

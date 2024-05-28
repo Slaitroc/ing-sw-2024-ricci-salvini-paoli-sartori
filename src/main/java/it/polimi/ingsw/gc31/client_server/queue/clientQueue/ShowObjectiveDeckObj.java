@@ -1,6 +1,8 @@
 package it.polimi.ingsw.gc31.client_server.queue.clientQueue;
 
+import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.view.UI;
+import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
 public class ShowObjectiveDeckObj extends ClientQueueObject {
     private final String firstCardDeck;
@@ -15,6 +17,9 @@ public class ShowObjectiveDeckObj extends ClientQueueObject {
 
     @Override
     public void execute(UI ui) {
-        ui.show_objectiveDeck(firstCardDeck, card1, card2);
+        ui.show_objectiveDeck(
+                gsonTranslater.fromJson(firstCardDeck, ObjectiveCard.class),
+                gsonTranslater.fromJson(card1, ObjectiveCard.class),
+                gsonTranslater.fromJson(card2, ObjectiveCard.class));
     }
 }

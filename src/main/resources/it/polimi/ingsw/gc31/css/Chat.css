@@ -1,0 +1,23 @@
+@import "Colors.css";
+
+.lobby-chat-background {
+    -fx-background-color: transparent;
+    -fx-background-image: url(../Images/Misc/bombyx_Behance.png);
+    -fx-background-size: 100%;
+    -fx-border-radius: 20;
+    -fx-font: 12px "glimmer of light";
+}
+
+.chat-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-radius: 20;
+    -fx-border-width: 3;
+    -fx-border-color: -dark-green;
+    -fx-hbar-policy: never;
+    -fx-vbar-policy: never;
+}
+
+.chat-scroll-pane .viewport {
+    -fx-background-color: transparent;
+    -fx-background-radius: 40;
+}

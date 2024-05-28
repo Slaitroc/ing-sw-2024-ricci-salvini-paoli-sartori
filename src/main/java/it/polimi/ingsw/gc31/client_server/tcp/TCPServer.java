@@ -4,7 +4,9 @@ import it.polimi.ingsw.gc31.DefaultValues;
 
 import java.io.*;
 import java.net.ServerSocket;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +19,12 @@ public class TCPServer {
     }
 
     // TODO Gestire meglio eccezioni
-    public TCPServer(ServerSocket listenSocket) {
-        this.listenSocket = listenSocket;
+    public TCPServer(String ipaddress) throws NumberFormatException, UnknownHostException, IOException {
+        int port = 1200;
+        this.listenSocket = new ServerSocket(port, 50, InetAddress.getByName("0.0.0.0"));
+        TCPserverWrite("Server IP " + ipaddress);
+        TCPserverWrite("Server in ascolto sulla porta " + port);
+
         try {
             runServer();
         } catch (IOException e) {

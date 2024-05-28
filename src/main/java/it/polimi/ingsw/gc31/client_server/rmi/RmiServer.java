@@ -28,11 +28,17 @@ public class RmiServer implements VirtualServer {
         System.out.println(DefaultValues.ANSI_GREEN + DefaultValues.RMI_SERVER_TAG + DefaultValues.ANSI_RESET + text);
     }
 
-    public RmiServer() throws RemoteException {
+    public RmiServer(String ipaddress) throws RemoteException {
+        System.setProperty("java.rmi.server.hostname", ipaddress);
+        RMIserverWrite("Server IP " + ipaddress);
+
         this.controller = Controller.getController();
         this.callsList = new LinkedBlockingQueue<>();
-        LocateRegistry.createRegistry(1100).rebind("VirtualServer", UnicastRemoteObject.exportObject(this, 0));
-        serverWrite("Server created");
+        int port = 55000;
+        LocateRegistry.createRegistry(port).rebind("VirtualServer", UnicastRemoteObject.exportObject(this, 0));
+        RMIserverWrite("Server created");
+        RMIserverWrite("Server in ascolto sulla porta " + port);
+
         executor();
     }
 

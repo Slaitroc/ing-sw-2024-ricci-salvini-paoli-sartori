@@ -1,0 +1,93 @@
+@import 'Colors.css';
+
+.mfx-button {
+    -fx-background-color: -dark-green;
+    -fx-font: 30px 'glimmer of light';
+    -fx-text-fill: -white;
+    -fx-cursor: hand;
+    -fx-text-alignment: center;
+    -mfx-button-type: RAISED;
+}
+
+.small-button {
+    -fx-background-color: -dark-green;
+    -fx-font: 20px 'glimmer of light';
+    -fx-text-fill: -white;
+    -fx-cursor: hand;
+    -fx-text-alignment: center;
+    -mfx-button-type: RAISED;
+    -mfx-depth-level: LEVEL5;
+}
+
+.really-small-button {
+    -fx-background-color: -dark-green;
+    -fx-font: 12px 'glimmer of light';
+    -fx-text-fill: -white;
+    -fx-cursor: hand;
+    -fx-text-alignment: center;
+    -mfx-button-type: RAISED;
+    -mfx-depth-level: LEVEL5;
+}
+
+.rounded-button{
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+    -fx-border-color: -black;
+}
+
+.title-button {
+    -fx-background-color: -dark-green;
+    -fx-font: 30px "FrakturNo2";
+    -fx-text-fill: -white;
+    -fx-cursor: hand;
+    -fx-text-alignment: center;
+    -mfx-button-type: RAISED;
+}
+
+.mfx-combo-box {
+    -fx-background-color: -dark-green;
+    -fx-border-color: transparent;
+    -fx-border-radius: 0;
+    -fx-font: 18px 'glimmer of light';
+    -fx-text-fill: -black;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-text-alignment: left;
+    -mfx-button-type: RAISED;
+}
+.mfx-combo-box .floating-text {
+    -fx-background-color: transparent;
+    -fx-text-fill: -white;
+}
+
+.mfx-combo-box .caret .mfx-font-icon {
+    -mfx-color: -white;
+}
+
+.mfx-combo-box .caret .mfx-ripple-generator {
+    -mfx-ripple-color: rgba(255, 255, 255, 0.5);
+}
+
+.mfx-combo-box .text-field {
+    -fx-background-radius: 20;
+}
+
+.mfx-combo-box-cell {
+    -mfx-main: -mfx-purple;
+    -mfx-hover: rgba(98, 0, 238, 0.1);
+    -mfx-selected: rgba(98, 0, 238, 0.2);
+    -fx-background-color: transparent;
+    -fx-background-radius: 5;
+    -fx-border-color: -dark-green;
+    -fx-border-width: 2;
+    -fx-padding: 5;
+}
+
+.mfx-combo-box-cell:hover {
+    -fx-background-color: -light-green;
+}
+
+.mfx-combo-box-cell:selected {
+    -fx-background-color: -light-green;
+}

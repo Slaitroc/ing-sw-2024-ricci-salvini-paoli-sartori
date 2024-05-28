@@ -1,9 +1,7 @@
 package it.polimi.ingsw.gc31.utility.gsonUtility;
 
 import com.google.gson.*;
-import io.github.palexdev.mfxcore.observables.OnChanged;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
-import it.polimi.ingsw.gc31.model.card.PlayableCard;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.serializePrivateFields;
 
@@ -13,7 +11,8 @@ import java.lang.reflect.Type;
 
 public class ServerQueueObjAdapter implements JsonSerializer<ServerQueueObject>, JsonDeserializer<ServerQueueObject> {
     @Override
-    public ServerQueueObject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public ServerQueueObject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+            throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
         ServerQueueObject serverQueueObject = null;
 
@@ -25,7 +24,8 @@ public class ServerQueueObjAdapter implements JsonSerializer<ServerQueueObject>,
 
                 serverQueueObject = createInstance(clazz, jsonObject, context);
             }
-        } catch (ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+        } catch (ClassNotFoundException | InvocationTargetException | InstantiationException
+                | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
 
@@ -39,9 +39,11 @@ public class ServerQueueObjAdapter implements JsonSerializer<ServerQueueObject>,
         return jsonObject;
     }
 
-    private <T extends ServerQueueObject> T createInstance(Class<T> clazz, JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext) throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    private <T extends ServerQueueObject> T createInstance(Class<T> clazz, JsonObject jsonObject,
+            JsonDeserializationContext jsonDeserializationContext)
+            throws InvocationTargetException, InstantiationException, IllegalAccessException {
 
-        for (Constructor<?> constructor: clazz.getDeclaredConstructors()) {
+        for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
             Class<?>[] parameterTypes = constructor.getParameterTypes();
             Object[] parameters = new Object[parameterTypes.length];
             boolean foundMatch = true;

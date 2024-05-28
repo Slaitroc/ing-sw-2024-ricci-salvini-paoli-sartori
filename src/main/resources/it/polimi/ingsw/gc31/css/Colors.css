@@ -1,0 +1,21 @@
+* {
+    -dark-green: #442a1b;
+    -light-green: #8f7d6b;
+    -black: #000000;
+    -white: #fffefffb;
+    -red: #ff0000;
+    -yellow: #ffff00;
+    -grey: #808080;
+    -light-blue: #ADD8E6;
+    -dark-blue: #00008B;
+    -light-beige: #eeecd5;
+    -avory: #E4DFCC;
+    -milk-white: #F0F0EE;
+
+    -text-he: rgba(0, 0, 0, 0.87); /* High Emphasis */
+    -text-me: rgba(0, 0, 0, 0.60); /* Medium Emphasis*/
+    -text-disabled: rgba(0, 0, 0, 0.38); /* Disabled */
+
+    -common-gradient: linear-gradient(to right bottom, #c4008b, #d00085, #dc007f, #e60b79, #ef1872, #f5276b, #fa3564, #fe415e, #ff5158, #ff5f52, #ff6c4e, #ff794b);
+    -secondary-gradient: linear-gradient(to right bottom, #1ec400, #00bd3a, #00b654, #00ae67, #00a574, #00a280, #009e8a, #009a91, #009b9d, #009ba8, #009bb2, #009abb);
+}

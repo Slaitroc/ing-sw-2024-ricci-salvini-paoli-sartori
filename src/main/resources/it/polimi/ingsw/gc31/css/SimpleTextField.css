@@ -1,0 +1,11 @@
+@import "Colors.css";
+
+.mfx-simple-text-field {
+    -fx-text-fill: -black;
+    -fx-font: 20px "glimmer of light";
+}
+
+.mfx-simple-small-text-field {
+    -fx-text-fill: -black;
+    -fx-font: 12px "glimmer of light";
+}

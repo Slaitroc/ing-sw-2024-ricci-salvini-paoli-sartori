@@ -35,6 +35,12 @@ public interface ClientCommands {
 
     void play(Point point) throws RemoteException;
 
+    void selectCard(int index) throws RemoteException;
+
+    void changeSide() throws RemoteException;
+
+    void changeStarterSide() throws RemoteException;
+
     int getGameID() throws RemoteException; // FIX serve?
 
     String getUsername();// FIX serve? TODO penso di si

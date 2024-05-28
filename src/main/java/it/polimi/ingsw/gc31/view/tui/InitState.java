@@ -102,6 +102,21 @@ public class InitState extends TuiState {
     }
 
     @Override
+    protected void command_selectCard() {
+
+    }
+
+    @Override
+    protected void command_changeSide() {
+
+    }
+
+    @Override
+    protected void command_changeStarterSide() {
+
+    }
+
+    @Override
     protected void command_initial() {
         tui.getClient().setUI(this.tui);
         setUsername();

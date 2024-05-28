@@ -26,9 +26,9 @@ public class TCPClient implements ClientCommands {
      * This method is the constructor of the TCPClient
      */
     @SuppressWarnings("resource")
-    public TCPClient() throws IOException {
+    public TCPClient(String ipaddress) throws IOException {
         this.username = DefaultValues.DEFAULT_USERNAME;
-        Socket serverSocket = new Socket("127.0.0.1", 1200);
+        Socket serverSocket = new Socket(ipaddress, 1200);
         this.input = new ObjectInputStream(serverSocket.getInputStream());
         this.output = new ObjectOutputStream(serverSocket.getOutputStream());
         this.callsList = new LinkedBlockingQueue<>();
@@ -64,7 +64,7 @@ public class TCPClient implements ClientCommands {
             ClientQueueObject obj = null;
             while (true) {
                 try {
-                        obj = (ClientQueueObject) input.readObject();
+                    obj = (ClientQueueObject) input.readObject();
                 } catch (ClassNotFoundException | IOException e) {
                     e.printStackTrace();
                 }
@@ -114,7 +114,8 @@ public class TCPClient implements ClientCommands {
     }
 
     /**
-     * This method is invoked after the server send the result of the setUsername method
+     * This method is invoked after the server send the result of the setUsername
+     * method
      *
      * @param username is the username set for the player server-side
      */
@@ -135,6 +136,7 @@ public class TCPClient implements ClientCommands {
 
     /**
      * This method return the player's username
+     *
      * @return the player's username
      */
     @Override
@@ -148,8 +150,8 @@ public class TCPClient implements ClientCommands {
      * username ane exception is launched
      *
      * @param username is the username set by the client
-     * @throws IOException                          if there is an error reading the
-     *                                              client handler messages
+     * @throws IOException if there is an error reading the
+     *                     client handler messages
      */
     @Override
     public void setUsernameCall(String username) throws IOException {
@@ -198,7 +200,7 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void getGameList() throws IOException, NoGamesException {
-            tcp_sendCommand(new GetGameListObj(this.username), DefaultValues.RECIPIENT_CONTROLLER);
+        tcp_sendCommand(new GetGameListObj(this.username), DefaultValues.RECIPIENT_CONTROLLER);
     }
 
     /**
@@ -253,6 +255,21 @@ public class TCPClient implements ClientCommands {
 
     }
 
+    @Override
+    public void selectCard(int index) throws RemoteException {
+
+    }
+
+    @Override
+    public void changeSide() throws RemoteException {
+
+    }
+
+    @Override
+    public void changeStarterSide() throws RemoteException {
+
+    }
+
     /**
      * This method returns the player's game idGame
      *
@@ -273,6 +290,7 @@ public class TCPClient implements ClientCommands {
 
     /**
      * This method sends the object that sends a message in the chat
+     *
      * @param username is the username of the player sending the message
      * @param message is the String the player wants to send in the chat
      */

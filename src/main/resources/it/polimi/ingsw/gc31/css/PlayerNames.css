@@ -1,0 +1,11 @@
+@import "Colors.css";
+
+.player-text-field {
+    -mfx-editable: false;
+    -mfx-animated: true;
+    -mfx-caret-visible: true;
+    -mfx-float-mode: BORDER;
+    -fx-text-fill: -black;
+    -fx-font-family:"glimmer of light";
+    -fx-font-size: 12px;
+}

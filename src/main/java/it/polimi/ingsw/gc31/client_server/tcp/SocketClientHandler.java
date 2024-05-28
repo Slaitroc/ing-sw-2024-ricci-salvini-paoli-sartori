@@ -2,7 +2,6 @@ package it.polimi.ingsw.gc31.client_server.tcp;
 
 import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
-import it.polimi.ingsw.gc31.view.tui.TUI;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
@@ -10,13 +9,9 @@ import it.polimi.ingsw.gc31.controller.Controller;
 import java.io.IOException;
 
 import java.rmi.RemoteException;
-import java.util.List;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 /*
 ricevo
 deserializzo
@@ -46,10 +41,10 @@ public class SocketClientHandler implements VirtualClient {
     /**
      * This method is the constructor of the client handler
      *
-     * @param input      is the reference to the input stream of the socket
-     *                   connection
-     * @param output     is the reference to the output stream of the socket
-     *                   connection
+     * @param input  is the reference to the input stream of the socket
+     *               connection
+     * @param output is the reference to the output stream of the socket
+     *               connection
      */
     public SocketClientHandler(ObjectInputStream input, ObjectOutputStream output) {
         this.controller = Controller.getController();

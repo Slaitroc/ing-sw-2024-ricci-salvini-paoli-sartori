@@ -3,7 +3,6 @@ package it.polimi.ingsw.gc31.client_server.queue.serverQueue;
 import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
 import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.controller.GameController;
-import it.polimi.ingsw.gc31.model.player.Player;
 
 public class SelectCardObj extends ServerQueueObject {
 
@@ -17,8 +16,7 @@ public class SelectCardObj extends ServerQueueObject {
 
     @Override
     public void execute(GameController gameController) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'execute'");
+        gameController.selectCard(username, index);
     }
 
     @Override

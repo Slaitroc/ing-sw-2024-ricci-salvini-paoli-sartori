@@ -1,0 +1,30 @@
+@import "Colors.css";
+
+.mfx-text-field{
+    -fx-background-color:  -dark-green;
+    -fx-text-limit: 20;
+    -fx-font: 20px 'glimmer of light';
+    -fx-text-fill: -black;
+}
+
+.mfx-text-field .floating-text {
+    -fx-text-fill: -white;
+    -fx-font: 20px "glimmer of light";
+}
+
+.mfx-text-field .text-field{
+    -fx-background-radius: 20;
+}
+
+
+.mfx-small-text-field {
+    -fx-text-fill: -black;
+    -fx-text-limit: 10;
+    -fx-font: 12px "glimmer of light";
+}
+
+.mfx-small-text-field .floating-text {
+    -fx-text-fill: -black;
+    -mfx-text-limit: 10;
+    -fx-font: 12px "glimmer of light";
+}

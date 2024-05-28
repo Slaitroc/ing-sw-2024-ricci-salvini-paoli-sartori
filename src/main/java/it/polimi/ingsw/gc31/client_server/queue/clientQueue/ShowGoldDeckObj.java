@@ -1,6 +1,8 @@
 package it.polimi.ingsw.gc31.client_server.queue.clientQueue;
 
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.UI;
+import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
 public class ShowGoldDeckObj extends ClientQueueObject {
     private final String firstCardDeck;
@@ -15,6 +17,9 @@ public class ShowGoldDeckObj extends ClientQueueObject {
 
     @Override
     public void execute(UI ui) {
-        ui.show_goldDeck(firstCardDeck, card1, card2);
+        ui.show_goldDeck(
+                gsonTranslater.fromJson(firstCardDeck, PlayableCard.class),
+                gsonTranslater.fromJson(card1, PlayableCard.class),
+                gsonTranslater.fromJson(card2, PlayableCard.class));
     }
 }

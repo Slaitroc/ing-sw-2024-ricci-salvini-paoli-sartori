@@ -31,8 +31,8 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
      * - sets its name and assigning it the remote controller once the name is
      * verified by the server controller.
      */
-    public RmiClient() throws RemoteException, NotBoundException {
-        this.server = (VirtualServer) LocateRegistry.getRegistry("127.0.0.1", 1100).lookup("VirtualServer");
+    public RmiClient(String ipaddress) throws RemoteException, NotBoundException {
+        this.server = (VirtualServer) LocateRegistry.getRegistry(ipaddress, 55000).lookup("VirtualServer");
         this.server.RMIserverWrite("New connection detected...");
         this.username = DefaultValues.DEFAULT_USERNAME;
         this.controller = null;
@@ -129,7 +129,8 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void drawResource(int index) throws RemoteException {
-//        gameController.drawResource(username);
+        gameController.sendCommand(new DrawResObj(username, index));
+        // gameController.drawResource(username);
     }
 
     @Override
@@ -150,6 +151,21 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public void play(Point point) throws RemoteException {
         gameController.sendCommand(new PlayObj(username, point.x, point.y));
+    }
+
+    @Override
+    public void selectCard(int index) throws RemoteException {
+        gameController.sendCommand(new SelectCardObj(username, index));
+    }
+
+    @Override
+    public void changeSide() throws RemoteException {
+        gameController.sendCommand(new FlipCardObj(username));
+    }
+
+    @Override
+    public void changeStarterSide() throws RemoteException {
+        gameController.sendCommand(new FlipStarterCardObj(username));
     }
 
     @Override

@@ -21,6 +21,8 @@ public class Client {
         // pulisce il terminale
         System.out.print("\033[H\033[2J");
         System.out.flush();
+        CliPrint.coloredPrintPurple("Write Server IP:");
+        String ipaddress = scanner.nextLine();
 
         CliPrint.coloredPrintPurple("Chose connection:");
         System.out.println("\t1->RMI\n\t2->TCP");
@@ -29,9 +31,9 @@ public class Client {
         ClientCommands client = null;
         try {
             if (networkChoise == 1) {
-                client = new RmiClient();
+                client = new RmiClient(ipaddress);
             } else if (networkChoise == 2) {
-                client = new TCPClient();
+                client = new TCPClient(ipaddress);
             }
         } catch (RemoteException e) {
             e.printStackTrace();
