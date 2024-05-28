@@ -96,8 +96,7 @@ public class DefaultValues {
     // NETWORK
     public final static String RECIPIENT_CONTROLLER = "controller";
     public final static String RECIPIENT_GAME_CONTROLLER = "gameController";
-    public final static String RECIPIENT_UI = "ui";
-    public final static String RECIPIENT_VC = "virtualClient";
-    public final static String RECIPIENT_CC = "clientCommands";
+    public final static int RMI_PORT = 1100;
+    public final static int TCP_PORT = 1200;
 
 }
