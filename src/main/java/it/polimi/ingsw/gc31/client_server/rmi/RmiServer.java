@@ -71,23 +71,25 @@ public class RmiServer implements VirtualServer {
     }
 
     private void executor() {
-        while (true) {
-            ServerQueueObject action;
-            synchronized (callsList) {
-                while (callsList.isEmpty()) {
-                    try {
-                        callsList.wait();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+        new Thread(() -> {
+            while (true) {
+                ServerQueueObject action;
+                synchronized (callsList) {
+                    while (callsList.isEmpty()) {
+                        try {
+                            callsList.wait();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
+                    action = callsList.poll();
                 }
-                action = callsList.poll();
-            }
-            if (action != null) {
-                action.execute(this);
+                if (action != null) {
+                    action.execute(this);
 
+                }
             }
-        }
+        }).start();
     }
 
     @Override
