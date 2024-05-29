@@ -16,7 +16,6 @@ public class Server {
         System.out.flush();
         String ipAddress = null;
 
-
         Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
         while (networkInterfaces.hasMoreElements()) {
             NetworkInterface networkInterface = networkInterfaces.nextElement();
@@ -38,6 +37,7 @@ public class Server {
         }
 
         if (ipAddress != null) {
+            new TCPServer(ipAddress);
             new RmiServer(ipAddress);
         }
     }

@@ -132,10 +132,27 @@ public class PlayingState extends TuiState {
 
     @Override
     protected void command_play() {
-        tui.printToCmdLineOut(tui.tuiWrite("Type X coordinate: "));
-        int inputX = Integer.parseInt(scanner.nextLine());
-        tui.printToCmdLineOut(tui.tuiWrite("Type Y coordinate: "));
-        int inputY = Integer.parseInt(scanner.nextLine());
+        boolean valid = true;
+        int inputX = 0;
+        int inputY = 0;
+        do {
+            valid = true;
+            tui.printToCmdLineOut(tui.tuiWrite("Type X coordinate: "));
+            try {
+                inputX = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                valid = false;
+                tui.printToCmdLineOut(tui.tuiWrite("Try again... "));
+            }
+            tui.printToCmdLineOut(tui.tuiWrite("Type Y coordinate: "));
+            try {
+                inputY = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                valid = false;
+                tui.printToCmdLineOut(tui.tuiWrite("Try again... "));
+            }
+        } while (!valid);
+
         try {
             tui.getClient().play(new Point(inputX, inputY));
         } catch (RemoteException e) {
