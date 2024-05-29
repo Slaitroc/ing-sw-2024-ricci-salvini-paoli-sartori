@@ -17,7 +17,7 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongUsernameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
-import it.polimi.ingsw.gc31.utility.DefaultValues;
+import it.polimi.ingsw.gc31.utility.DV;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -102,16 +102,6 @@ public class Controller extends UnicastRemoteObject implements IController {
                 }
             }
         }).start();
-    }
-
-    /**
-     * Prints a message to the console with a specific format.
-     *
-     * @param text the message to print.
-     */
-    public void controllerWrite(String text) {
-        System.out.println(DefaultValues.ANSI_GREEN + DefaultValues.RMI_SERVER_TAG + DefaultValues.ANSI_BLUE
-                + DefaultValues.CONTROLLER_TAG + DefaultValues.ANSI_RESET + text);
     }
 
     /**

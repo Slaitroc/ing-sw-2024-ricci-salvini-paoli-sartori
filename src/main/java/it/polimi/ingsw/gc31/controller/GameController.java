@@ -10,6 +10,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.NewChatMessage;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowInGamePlayerObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowReadyStatusObj;
@@ -22,7 +23,7 @@ import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 import it.polimi.ingsw.gc31.model.enumeration.GameState;
 import it.polimi.ingsw.gc31.model.player.Player;
-import it.polimi.ingsw.gc31.utility.DefaultValues;
+import it.polimi.ingsw.gc31.utility.DV;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 
 /**
@@ -103,7 +104,8 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         clientList.put(username, client);
         readyStatus.put(username, false);
         if (maxNumberPlayers == this.clientList.size()) {
-            gameControllerWrite("The number of players for the game " + maxNumberPlayers + " has been reached");
+            ServerLog.gControllerWrite("The number of players for the game " + maxNumberPlayers + " has been reached",
+                    idGame);
         }
 
         notifyListPlayers();
@@ -136,7 +138,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             // TODO occuparsi dell'eccezione
             try {
                 model.initGame(clientList);
-                gameControllerWrite("The game has started");
+                ServerLog.gControllerWrite("The game has started", idGame);
             } catch (IllegalStateOperationException e) {
                 throw new RuntimeException(e);
             }
@@ -168,16 +170,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         return clientList.size();
     }
 
-    /**
-     * Writes a message to the game controller.
-     *
-     * @param text the message to write.
-     */
-    private void gameControllerWrite(String text) {
-        System.out.println(DefaultValues.ANSI_PURPLE
-                + DefaultValues.gameControllerTag(String.valueOf(idGame)) + DefaultValues.ANSI_RESET + text);
-    }
-
     // WARNING: methods receive username in input, instead of using
     // model.currPlayingPlayer.drawGold() etc.
     // because otherwise clients could play the turn of others
@@ -191,7 +183,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.drawGold(username, index);
         } catch (IllegalStateOperationException e) {
-            gameControllerWrite(e.getMessage());
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
         }
     }
 
@@ -213,7 +205,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.chooseSecretObjective(username, index);
         } catch (IllegalStateOperationException e) {
-            gameControllerWrite(e.getMessage());
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
         }
     }
 
@@ -221,16 +213,16 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.play(username, point);
         } catch (IllegalStateOperationException e) {
-            gameControllerWrite(e.getMessage());
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
         }
     }
 
     public void playStarter(String username) {
         try {
             model.playStarter(username);
-            gameControllerWrite("Player" + username + " has played starter card");
+            ServerLog.gControllerWrite("Player" + username + " has played starter card", idGame);
         } catch (IllegalStateOperationException e) {
-            gameControllerWrite(e.getMessage());
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
         }
     }
 
@@ -239,7 +231,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             try {
                 client.sendCommand(new ShowInGamePlayerObj(readyStatus));
             } catch (RemoteException e) {
-                gameControllerWrite(e.getMessage());
+                ServerLog.gControllerWrite(e.getMessage(), idGame);
             }
         }
     }
@@ -248,7 +240,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.setSelectCard(username, index);
         } catch (IllegalStateOperationException e) {
-            gameControllerWrite(e.getMessage());
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
         }
     }
 
@@ -256,7 +248,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.changeSide(username);
         } catch (IllegalStateOperationException e) {
-            gameControllerWrite(e.getMessage());
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
         }
     }
 
@@ -264,7 +256,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.changStarterSide(username);
         } catch (IllegalStateOperationException e) {
-            gameControllerWrite(e.getMessage());
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
         }
     }
 

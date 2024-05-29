@@ -11,7 +11,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
-import it.polimi.ingsw.gc31.utility.DefaultValues;
+import it.polimi.ingsw.gc31.utility.DV;
 import it.polimi.ingsw.gc31.view.UI;
 
 public class TCPClient implements ClientCommands {
@@ -27,8 +27,8 @@ public class TCPClient implements ClientCommands {
      */
     @SuppressWarnings("resource")
     public TCPClient(String ipaddress) throws IOException {
-        this.username = DefaultValues.DEFAULT_USERNAME;
-        Socket serverSocket = new Socket(ipaddress, DefaultValues.TCP_PORT);
+        this.username = DV.DEFAULT_USERNAME;
+        Socket serverSocket = new Socket(ipaddress, DV.TCP_PORT);
         this.input = new ObjectInputStream(serverSocket.getInputStream());
         this.output = new ObjectOutputStream(serverSocket.getOutputStream());
         this.callsList = new LinkedBlockingQueue<>();
@@ -140,7 +140,7 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void setUsernameCall(String username) throws IOException {
-        tcp_sendCommand(new ConnectObj(username), DefaultValues.RECIPIENT_CONTROLLER);
+        tcp_sendCommand(new ConnectObj(username), DV.RECIPIENT_CONTROLLER);
     }
 
     /**
@@ -152,7 +152,7 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void createGame(int maxNumberPlayer) throws IOException {
-        tcp_sendCommand(new CreateGameObj(this.username, maxNumberPlayer), DefaultValues.RECIPIENT_CONTROLLER);
+        tcp_sendCommand(new CreateGameObj(this.username, maxNumberPlayer), DV.RECIPIENT_CONTROLLER);
     }
 
     /**
@@ -163,7 +163,7 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void joinGame(int gameId) {
-        tcp_sendCommand(new JoinGameObj(this.username, gameId), DefaultValues.RECIPIENT_CONTROLLER);
+        tcp_sendCommand(new JoinGameObj(this.username, gameId), DV.RECIPIENT_CONTROLLER);
     }
 
     /**
@@ -185,27 +185,27 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void getGameList() throws IOException, NoGamesException {
-        tcp_sendCommand(new GetGameListObj(this.username), DefaultValues.RECIPIENT_CONTROLLER);
+        tcp_sendCommand(new GetGameListObj(this.username), DV.RECIPIENT_CONTROLLER);
     }
 
     @Override
     public void setReady(boolean ready) {
-        tcp_sendCommand(new ReadyStatusObj(ready, this.username), DefaultValues.RECIPIENT_GAME_CONTROLLER);
+        tcp_sendCommand(new ReadyStatusObj(ready, this.username), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
     @Override
     public void drawGold(int index) throws RemoteException {
-        tcp_sendCommand(new DrawGoldObj(this.username, index), DefaultValues.RECIPIENT_GAME_CONTROLLER);
+        tcp_sendCommand(new DrawGoldObj(this.username, index), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
     @Override
     public void drawResource(int index) throws RemoteException {
-        tcp_sendCommand(new DrawResObj(this.username, 0), DefaultValues.RECIPIENT_GAME_CONTROLLER);
+        tcp_sendCommand(new DrawResObj(this.username, 0), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
     @Override
     public void chooseSecretObjective1() {
-        tcp_sendCommand(new ChooseSecretObjectiveObj(this.username, 0), DefaultValues.RECIPIENT_GAME_CONTROLLER);
+        tcp_sendCommand(new ChooseSecretObjectiveObj(this.username, 0), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
     @Override
@@ -241,7 +241,7 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void chooseSecretObjective2() {
-        tcp_sendCommand(new ChooseSecretObjectiveObj(this.username, 1), DefaultValues.RECIPIENT_GAME_CONTROLLER);
+        tcp_sendCommand(new ChooseSecretObjectiveObj(this.username, 1), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
     /**
@@ -252,6 +252,6 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void sendChatMessage(String username, String message) {
-        tcp_sendCommand(new ChatMessage(this.username, message), DefaultValues.RECIPIENT_GAME_CONTROLLER);
+        tcp_sendCommand(new ChatMessage(this.username, message), DV.RECIPIENT_GAME_CONTROLLER);
     }
 }

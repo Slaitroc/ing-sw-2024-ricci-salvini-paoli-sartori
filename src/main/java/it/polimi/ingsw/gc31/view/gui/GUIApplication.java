@@ -1,7 +1,7 @@
 package it.polimi.ingsw.gc31.view.gui;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
-import it.polimi.ingsw.gc31.utility.DefaultValues;
+import it.polimi.ingsw.gc31.utility.DV;
 import it.polimi.ingsw.gc31.view.gui.controllers.GameInstance;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -71,8 +71,8 @@ public class GUIApplication extends Application {
 
     public void loadScene(SceneTag tag) {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(DefaultValues.getGuiFxmlScenes().get(tag)));
-        System.out.println("Loading scene " + DefaultValues.getGuiFxmlScenes().get(tag) + " ...");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(DV.getGuiFxmlScenes().get(tag)));
+        System.out.println("Loading scene " + DV.getGuiFxmlScenes().get(tag) + " ...");
         try {
             Scene scene = new Scene(loader.load());
             currentController = loader.getController();

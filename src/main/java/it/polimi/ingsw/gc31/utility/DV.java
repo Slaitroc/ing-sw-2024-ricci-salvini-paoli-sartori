@@ -7,7 +7,7 @@ import it.polimi.ingsw.gc31.view.gui.SceneTag;
 
 import java.util.HashMap;
 
-public class DefaultValues {
+public class DV {
 
     // JSON directories
     public static final String DIRJsonGoldCard = "/it/polimi/ingsw/gc31/CardsJson/GoldCard.json";

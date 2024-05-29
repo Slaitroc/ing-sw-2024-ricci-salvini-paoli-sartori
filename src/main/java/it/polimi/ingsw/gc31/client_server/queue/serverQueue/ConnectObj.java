@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
 import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.controller.GameController;
-import it.polimi.ingsw.gc31.utility.DefaultValues;
+import it.polimi.ingsw.gc31.utility.DV;
 
 public class ConnectObj extends ServerQueueObject {
 
@@ -48,7 +48,7 @@ public class ConnectObj extends ServerQueueObject {
     }
 
     private void TCPserverWrite(String text) {
-        System.out.println(DefaultValues.ANSI_YELLOW + DefaultValues.TCP_SERVER_TAG + DefaultValues.ANSI_RESET + text);
+        System.out.println(DV.ANSI_YELLOW + DV.TCP_SERVER_TAG + DV.ANSI_RESET + text);
     }
 
 }

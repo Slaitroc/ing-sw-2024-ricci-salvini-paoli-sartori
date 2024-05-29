@@ -1,8 +1,8 @@
 package it.polimi.ingsw.gc31.view.tui;
 
-import static it.polimi.ingsw.gc31.utility.DefaultValues.RGB_COLOR_CORNER;
-import static it.polimi.ingsw.gc31.utility.DefaultValues.RGB_COLOR_RED;
-import static it.polimi.ingsw.gc31.utility.DefaultValues.getRgbColor;
+import static it.polimi.ingsw.gc31.utility.DV.RGB_COLOR_CORNER;
+import static it.polimi.ingsw.gc31.utility.DV.RGB_COLOR_RED;
+import static it.polimi.ingsw.gc31.utility.DV.getRgbColor;
 import static org.fusesource.jansi.Ansi.ansi;
 import static org.fusesource.jansi.Ansi.Color.WHITE;
 import static org.fusesource.jansi.Ansi.Color.YELLOW;
@@ -17,7 +17,7 @@ import java.util.*;
 
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.strategies.*;
-import it.polimi.ingsw.gc31.utility.DefaultValues;
+import it.polimi.ingsw.gc31.utility.DV;
 
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
@@ -947,7 +947,7 @@ public class TUI extends UI {
      * @return the formatted String
      */
     protected String tuiWrite(String text) {
-        return DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_RESET + text;
+        return DV.ANSI_BLUE + DV.TUI_TAG + DV.ANSI_RESET + text;
     }
 
     /**
@@ -957,8 +957,8 @@ public class TUI extends UI {
      * @return the formatted String
      */
     protected String tuiWriteGreen(String text) {
-        return DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_GREEN + text
-                + DefaultValues.ANSI_RESET;
+        return DV.ANSI_BLUE + DV.TUI_TAG + DV.ANSI_GREEN + text
+                + DV.ANSI_RESET;
     }
 
     /**
@@ -968,12 +968,12 @@ public class TUI extends UI {
      * @return the formatted String
      */
     protected String tuiWritePurple(String text) {
-        return DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_PURPLE + text
-                + DefaultValues.ANSI_RESET;
+        return DV.ANSI_BLUE + DV.TUI_TAG + DV.ANSI_PURPLE + text
+                + DV.ANSI_RESET;
     }
 
     protected String serverWrite(String text) {
-        return DefaultValues.ANSI_PURPLE + DefaultValues.SERVER_TAG + DefaultValues.ANSI_RESET + text;
+        return DV.ANSI_PURPLE + DV.SERVER_TAG + DV.ANSI_RESET + text;
     }
 
     /**

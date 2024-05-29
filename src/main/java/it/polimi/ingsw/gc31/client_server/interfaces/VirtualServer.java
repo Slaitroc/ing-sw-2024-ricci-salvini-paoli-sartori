@@ -15,4 +15,6 @@ public interface VirtualServer extends Remote {
     public void sendCommand(ServerQueueObject obj) throws RemoteException;
 
     public void setVirtualClient(VirtualClient client) throws RemoteException;
+
+    public String getClientIP() throws RemoteException;
 }

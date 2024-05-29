@@ -4,7 +4,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
-import it.polimi.ingsw.gc31.utility.DefaultValues;
+import it.polimi.ingsw.gc31.utility.DV;
 
 import java.io.IOException;
 
@@ -91,13 +91,13 @@ public class SocketClientHandler implements VirtualClient {
                     e.printStackTrace();
                 }
                 if (obj != null) {
-                    if (obj.getRecipient().equals(DefaultValues.RECIPIENT_CONTROLLER)) {
+                    if (obj.getRecipient().equals(DV.RECIPIENT_CONTROLLER)) {
                         try {
                             controller.sendCommand(obj);
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
-                    } else if (obj.getRecipient().equals(DefaultValues.RECIPIENT_GAME_CONTROLLER)) {
+                    } else if (obj.getRecipient().equals(DV.RECIPIENT_GAME_CONTROLLER)) {
                         try {
                             gameController.sendCommand(obj);
                         } catch (RemoteException e) {

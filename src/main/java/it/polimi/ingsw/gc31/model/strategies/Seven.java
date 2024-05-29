@@ -9,7 +9,7 @@ import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
 import static org.fusesource.jansi.Ansi.Color.WHITE;
-import static it.polimi.ingsw.gc31.utility.DefaultValues.getRgbColor;
+import static it.polimi.ingsw.gc31.utility.DV.getRgbColor;
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**
