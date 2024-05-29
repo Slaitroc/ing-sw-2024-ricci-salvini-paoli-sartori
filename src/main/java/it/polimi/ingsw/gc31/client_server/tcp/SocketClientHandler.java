@@ -31,7 +31,7 @@ public class SocketClientHandler implements VirtualClient {
     private IGameController gameController;
     private Integer idGame; // viene settata ma ancora non utilizzata
     // private String username;
-    // private boolean ready = false;
+    private boolean ready = false;
 
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
@@ -77,20 +77,16 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     /**
-     * This method reads the object from the and sends it to the
+     * This method reads the object from the client and sends it to the
      * right controller
      * based on the recipient of the object
      */
     private void tcpClient_reader() {
         new Thread(() -> {
             ServerQueueObject obj = null;
-            while (true) {
-                try {
-                    obj = (ServerQueueObject) input.readObject();
-                } catch (ClassNotFoundException | IOException e) {
-                    e.printStackTrace();
-                }
-                if (obj != null) {
+
+            try {
+                while ((obj = (ServerQueueObject) input.readObject()) != null) {
                     if (obj.getRecipient().equals(DV.RECIPIENT_CONTROLLER)) {
                         try {
                             controller.sendCommand(obj);
@@ -104,15 +100,47 @@ public class SocketClientHandler implements VirtualClient {
                             e.printStackTrace();
                         }
                     }
-
                 }
+
+                // se oggetto letto è null la connessione è caduta
+                // TODO aggiungere wait per aspettare x minuti che il client si riconnetta,
+                // se dopo x minuti il client non si è riconnesso chiudo la connessione.
+                // Altrimenti
+                // devo riconnettere il client alla partita a cui stava giocando
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
+
+            /*
+             * while (true) {
+             * try {
+             * obj = (ServerQueueObject) input.readObject();
+             * } catch (ClassNotFoundException | IOException e) {
+             * e.printStackTrace();
+             * }
+             * if (obj != null) {
+             * if (obj.getRecipient().equals(DV.RECIPIENT_CONTROLLER)) {
+             * try {
+             * controller.sendCommand(obj);
+             * } catch (RemoteException e) {
+             * e.printStackTrace();
+             * }
+             * } else if (obj.getRecipient().equals(DV.RECIPIENT_GAME_CONTROLLER)) {
+             * try {
+             * gameController.sendCommand(obj);
+             * } catch (RemoteException e) {
+             * e.printStackTrace();
+             * }
+             * }
+             * }
+             * }
+             */
         }).start();
     }
 
     /**
      * This method sets the gameID
-     * 
+     *
      * @param gameID is the value that needs to be set
      */
     @Override
@@ -120,18 +148,35 @@ public class SocketClientHandler implements VirtualClient {
         this.idGame = gameID;
     }
 
+    /**
+     * This method returns the value of the attribute ready.
+     *
+     * @return the value of the ready attribute
+     */
     @Override
-    public boolean isReady() throws RemoteException {
-        return false;
+    public boolean isReady() {
+        return ready;
     }
 
+    /**
+     * This method set the controller attribute to the one taken as a parameter.
+     *
+     * @param controller is the new reference to the controller that needs to be set
+     *                   to the attribute
+     */
     @Override
-    public void setController(IController controller) throws RemoteException {
+    public void setController(IController controller) {
         this.controller = controller;
     }
 
+    /**
+     * This method set the gameController attribute to the one taken as a parameter.
+     *
+     * @param gameController is the new reference to the gameController that needs
+     *                       to be set to the attribute
+     */
     @Override
-    public void setGameController(IGameController gameController) throws RemoteException {
+    public void setGameController(IGameController gameController) {
         this.gameController = gameController;
     }
 

@@ -32,7 +32,7 @@
                         <Image url="@../Images/AppIcons/iconPlant.png"/>
                     </ImageView>
                     <ImageView fx:id="imageView6" fitHeight="50" fitWidth="50" visible="false">
-                        <Image url="@../Images/AppIcons/iconFeather.png"/>
+                        <Image url="@../Images/AppIcons/iconQuill.png"/>
                     </ImageView>
                 </StackPane>
 

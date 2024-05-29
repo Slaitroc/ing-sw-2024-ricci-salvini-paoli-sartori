@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.InGameController"
+            stylesheets="@../css/Commons.css" styleClass="stackPane-default">
+    <HBox>
+        <VBox>
+            <!-- PLAY AREA GRID PANE-->
+            <ScrollPane fx:id="playAreaGrid" VBox.vgrow="ALWAYS" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0">
+                <GridPane>
+                </GridPane>
+            </ScrollPane>
+            <!-- PLAYER HAND-->
+            <HBox VBox.vgrow="NEVER" HBox.hgrow="ALWAYS" AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0">
+                <!-- Chat PopUp button-->
+                <MFXButton>
+                </MFXButton>
+                <!-- Secret Objective-->
+                <ImageView fitWidth="149" fitHeight="100">
+                    <Image url="@../Images/CardsImages/CardPlaceHolder.png"/>
+                </ImageView>
+                <!-- Hand Card 1-->
+                <ImageView fitWidth="149" fitHeight="100">
+                    <Image url="@../Images/CardsImages/CardPlaceHolder.png"/>
+                </ImageView>
+                <!-- Hand Card 2-->
+                <ImageView fitWidth="149" fitHeight="100">
+                    <Image url="@../Images/CardsImages/CardPlaceHolder.png"/>
+                </ImageView>
+                <!-- Hand Card 3-->
+                <ImageView fitWidth="149" fitHeight="100">
+                    <Image url="@../Images/CardsImages/CardPlaceHolder.png"/>
+                </ImageView>
+            </HBox>
+        </VBox>
+        <VBox AnchorPane.rightAnchor="0" maxWidth="350">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <!--ALL DECKS and DRAWABLE CARDS-->
+            <HBox spacing="20">
+                <!--RESOURCE DECK + Card1 + Card2-->
+                <VBox spacing="10">
+                    <!--RESOURCE DECK-->
+                    <ImageView fitWidth="149" fitHeight="100">
+                        <Image url="@../Images/CardsImages/CardPlaceHolder.png"/>
+                    </ImageView>
+                    <!--RESOURCE CARD1-->
+                    <ImageView fitWidth="149" fitHeight="100">
+                        <Image url="@../Images/CardsImages/CardPlaceHolder.png"/>
+                    </ImageView>
+                    <!--RESOURCE CARD2-->
+                    <ImageView fitWidth="149" fitHeight="100">
+                        <Image url="@../Images/CardsImages/CardPlaceHolder.png"/>
+                    </ImageView>
+                </VBox>
+                <!--GOLD DECK + Card1 + Card2-->
+                <VBox>
+                    <!--GOLD DECK-->
+                    <ImageView fitWidth="149" fitHeight="100">
+                        <Image url="@../Images/CardsImages/CardPlaceHolder.png"/>
+                    </ImageView>
+                    <!--GOLD CARD 1-->
+                    <ImageView fitWidth="149" fitHeight="100">
+                        <Image url="@../Images/CardsImages/CardPlaceHolder.png"/>
+                    </ImageView>
+                    <!--GOLD CARD2-->
+                    <ImageView fitWidth="149" fitHeight="100">
+                        <Image url="@../Images/CardsImages/CardPlaceHolder.png"/>
+                    </ImageView>
+                </VBox>
+            </HBox>
+
+            <!--COMMON OBJECTIVES-->
+            <VBox spacing="10">
+                <MFXTextField text="COMMONS">
+                </MFXTextField>
+                <HBox spacing="20">
+                    <!--COMMON OBJ CARD 1-->
+                    <ImageView fx:id="commonObjCart1" fitWidth="149" fitHeight="100">
+                        <Image url="@../Images/CardsImages/CardPlaceHolder.png"/>
+                    </ImageView>
+                    <!--COMMON OBJ CARD 2-->
+                    <ImageView fx:id="commonObjCart2" fitWidth="149" fitHeight="100">
+                        <Image url="@../Images/CardsImages/CardPlaceHolder.png"/>
+                    </ImageView>
+                </HBox>
+            </VBox>
+
+            <!--ALL PLAYERS RESOURCES COUNT-->
+            <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" stylesheets="@../css/ResourceCountWindow.css">
+                <!--RESOURCES PLAYER 1-->
+                <HBox id="resource-count-window">
+                    <!--MUSHROOM ICON-->
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconMushroom.png"/>
+                    </ImageView>
+                    <!--COUNT MUSHROOMS-->
+                    <Label fx:id="mushCount1" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconAnimal.png"/>
+                    </ImageView>
+                    <!--COUNT ANIMALS-->
+                    <Label fx:id="animalCount1" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconPlant.png"/>
+                    </ImageView>
+                    <!--COUNT PLANTS-->
+                    <Label fx:id="plantCount1" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconInsect.png"/>
+                    </ImageView>
+                    <!--COUNT INSECTS-->
+                    <Label fx:id="insectCount1" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconInk.png"/>
+                    </ImageView>
+                    <!--COUNT INKWELLS-->
+                    <Label fx:id="inkCount1" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconQuill.png"/>
+                    </ImageView>
+                    <!--COUNT QUILLS-->
+                    <Label fx:id="quillCount1" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconScroll.png"/>
+                    </ImageView>
+                    <!--COUNT SCROLLS-->
+                    <Label fx:id="scrollCount1" text="0">
+                    </Label>
+                </HBox>
+                <!--RESOURCES PLAYER 2-->
+                <HBox id="resource-count-window">
+                    <!--MUSHROOM ICON-->
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconMushroom.png"/>
+                    </ImageView>
+                    <!--MUSHROOM ICON-->
+                    <!--COUNT MUSHROOMS-->
+                    <Label fx:id="mushCount2" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconAnimal.png"/>
+                    </ImageView>
+                    <!--COUNT ANIMALS-->
+                    <Label fx:id="animalCount2" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconPlant.png"/>
+                    </ImageView>
+                    <!--COUNT PLANTS-->
+                    <Label fx:id="plantCount2" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconInsect.png"/>
+                    </ImageView>
+                    <!--COUNT INSECTS-->
+                    <Label fx:id="insectCount2" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconInk.png"/>
+                    </ImageView>
+                    <!--COUNT INKWELLS-->
+                    <Label fx:id="inkCount2" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconQuill.png"/>
+                    </ImageView>
+                    <!--COUNT QUILLS-->
+                    <Label fx:id="quillCount2" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconScroll.png"/>
+                    </ImageView>
+                    <!--COUNT SCROLLS-->
+                    <Label fx:id="scrollCount2" text="0">
+                    </Label>
+                </HBox>
+
+                <!--RESOURCES PLAYER 3-->
+                <HBox id="resource-count-window">
+                    <!--MUSHROOM ICON-->
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconMushroom.png"/>
+                    </ImageView>
+                    <!--MUSHROOM ICON-->
+                    <!--COUNT MUSHROOMS-->
+                    <Label fx:id="mushCount3" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconAnimal.png"/>
+                    </ImageView>
+                    <!--COUNT ANIMALS-->
+                    <Label fx:id="animalCount3" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconPlant.png"/>
+                    </ImageView>
+                    <!--COUNT PLANTS-->
+                    <Label fx:id="plantCount3" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconInsect.png"/>
+                    </ImageView>
+                    <!--COUNT INSECTS-->
+                    <Label fx:id="insectCount3" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconInk.png"/>
+                    </ImageView>
+                    <!--COUNT INKWELLS-->
+                    <Label fx:id="inkCount3" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconQuill.png"/>
+                    </ImageView>
+                    <!--COUNT QUILLS-->
+                    <Label fx:id="quillCount3" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconScroll.png"/>
+                    </ImageView>
+                    <!--COUNT SCROLLS-->
+                    <Label fx:id="scrollCount3">
+                    </Label>
+                </HBox>
+
+                <!--RESOURCES PLAYER 4-->
+                <HBox id="resource-count-window">
+                    <!--MUSHROOM ICON-->
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconMushroom.png"/>
+                    </ImageView>
+                    <!--MUSHROOM ICON-->
+                    <!--COUNT MUSHROOMS-->
+                    <Label fx:id="mushCount4" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconAnimal.png"/>
+                    </ImageView>
+                    <!--COUNT ANIMALS-->
+                    <Label fx:id="animalCount4" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconPlant.png"/>
+                    </ImageView>
+                    <!--COUNT PLANTS-->
+                    <Label fx:id="plantCount4" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconInsect.png"/>
+                    </ImageView>
+                    <!--COUNT INSECTS-->
+                    <Label fx:id="insectCount4" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconInk.png"/>
+                    </ImageView>
+                    <!--COUNT INKWELLS-->
+                    <Label fx:id="inkCount4" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconQuill.png"/>
+                    </ImageView>
+                    <!--COUNT QUILLS-->
+                    <Label fx:id="quillCount4" text="0">
+                    </Label>
+                    <ImageView fitWidth="20" fitHeight="20">
+                        <Image url="@../Images/AppIcons/iconScroll.png"/>
+                    </ImageView>
+                    <!--COUNT SCROLLS-->
+                    <Label fx:id="scrollCount4" text="0">
+                    </Label>
+                </HBox>
+            </VBox>
+        </VBox>
+    </HBox>
+
+</AnchorPane>

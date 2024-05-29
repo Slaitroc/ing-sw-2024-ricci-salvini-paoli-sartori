@@ -114,9 +114,13 @@ public class GUIApplication extends Application {
     public void setLobbyWindowSize() {
         primaryStage.setWidth(1280);
         primaryStage.setHeight(720);
-        primaryStage.setMinWidth(1180);
-        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(1200);
+        primaryStage.setMinHeight(720);
         primaryStage.centerOnScreen();
+    }
+
+    public void setFullScreen(){
+        primaryStage.setFullScreen(true);
     }
 
     public String getUsername() {

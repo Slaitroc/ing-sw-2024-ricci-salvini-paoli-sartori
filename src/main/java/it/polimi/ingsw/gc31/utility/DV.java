@@ -60,6 +60,7 @@ public class DV {
     public final static String GUI_SCENE_mainMenuScene = "/it/polimi/ingsw/gc31/fxml/mainMenuScene.fxml";
     public final static String GUI_SCENE_ruleBookScene = "/it/polimi/ingsw/gc31/fxml/ruleBookScene.fxml";
     public final static String GUI_SCENE_gameListScene = "/it/polimi/ingsw/gc31/fxml/gameListScene.fxml";
+    public final static String GUI_SCENE_inGameScene = "/it/polimi/ingsw/gc31/fxml/inGameScene.fxml";
 
     public static Map<SceneTag, String> getGuiFxmlScenes() {
         Map<SceneTag, String> sceneList = new HashMap<>();
@@ -69,6 +70,7 @@ public class DV {
         sceneList.put(SceneTag.MAINMENU, GUI_SCENE_mainMenuScene);
         sceneList.put(SceneTag.RULEBOOK, GUI_SCENE_ruleBookScene);
         sceneList.put(SceneTag.GAMELIST, GUI_SCENE_gameListScene);
+        sceneList.put(SceneTag.GAME, GUI_SCENE_inGameScene);
 
         return sceneList;
     }
