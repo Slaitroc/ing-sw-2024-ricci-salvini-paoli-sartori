@@ -13,7 +13,7 @@ public class Start extends PlayerState {
     private boolean objectiveChosen = false;
 
     @Override
-    public void addObjectiveCard(ObjectiveCard card, Player player) {
+    public void chooseSecretObjective(ObjectiveCard card, Player player) {
         player.setObjectiveCard(card);
         objectiveChosen = true;
     }
@@ -43,12 +43,17 @@ public class Start extends PlayerState {
     public void playStarter(Player player) throws ObjectiveCardNotChosenException {
         if (objectiveChosen) {
             player.getPlayArea().placeStarter(player.getStarterCard());
-            player.setInGameState(new NotPlaced());
-            System.out.println("Player: " + player.getUsername() + " IS NOW READY TO PLAY.");
-        }
-        else {
+            // the players are all put in the waiting state, waiting for all the other
+            // players to finish their setup phase
+            player.setInGameState(new Waiting());
+        } else {
             throw new ObjectiveCardNotChosenException();
         }
+    }
+
+    @Override
+    public String stateInfo() {
+        return "start";
     }
 
 }

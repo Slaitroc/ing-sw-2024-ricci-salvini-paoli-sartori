@@ -1,21 +1,28 @@
 package it.polimi.ingsw.gc31.client_server.queue.serverQueue;
 
-import it.polimi.ingsw.gc31.model.GameModel;
-import it.polimi.ingsw.gc31.model.player.Player;
+import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
+import it.polimi.ingsw.gc31.controller.Controller;
+import it.polimi.ingsw.gc31.controller.GameController;
 
-public class PlayStarterObj implements ServerQueueObject {
+public class PlayStarterObj extends ServerQueueObject {
 
-    Player player;
-    GameModel model;
+    private String username;
 
-    public PlayStarterObj(Player player, GameModel model) {
-        this.player = player;
-        this.model = model;
+    public PlayStarterObj(String username) {
+        this.username = username;
     }
 
     @Override
-    public void execute() {
-        player.playStarter();
-        model.checkStartGame();
+    public void execute(GameController gameController) {
+        gameController.playStarter(username);
     }
+
+    @Override
+    public void execute(Controller controller) {
+    }
+
+    @Override
+    public void execute(RmiServer server) {
+    }
+
 }

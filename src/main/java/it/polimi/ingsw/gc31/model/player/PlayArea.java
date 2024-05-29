@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.*;
 
 import it.polimi.ingsw.gc31.client_server.listeners.Observable;
+import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import javafx.util.Pair;
@@ -83,7 +84,7 @@ public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCa
      * @param point the point to place the card at.
      * @return the score gained from the card.
      */
-    public int place(PlayableCard card, Point point) {
+    public int place(PlayableCard card, Point point) throws IllegalPlaceCardException {
         if (checkRequirements(card)) {
             if (allowedMove(point)) {
                 placedCards.put(new Point(point), card);
@@ -95,9 +96,9 @@ public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCa
                 }
                 return card.getScore();
             }
-            else System.out.println("Illegal placement of card");
+            throw new IllegalPlaceCardException();
         }
-        return 0;
+        throw new IllegalPlaceCardException();
     }
 
     /**

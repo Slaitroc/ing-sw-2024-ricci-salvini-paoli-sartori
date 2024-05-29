@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.client_server.listeners;
 
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowPlayAreaObj;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import javafx.util.Pair;
@@ -54,13 +55,14 @@ public class PlayAreaListener
         @Override
         public void update(Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>> data)
                         throws RemoteException {
-                client.show_playArea(
-                                data.getKey(),
-                                gsonTranslater.toJson(data.getValue().getKey(),
-                                                new TypeToken<Map<Point, PlayableCard>>() {
-                                                }.getType()),
-                                gsonTranslater.toJson(data.getValue().getValue(),
-                                                new TypeToken<Map<Resources, Integer>>() {
-                                                }.getType()));
+                client.sendCommand(new ShowPlayAreaObj(
+                        data.getKey(),
+                        gsonTranslater.toJson(data.getValue().getKey(),
+                                new TypeToken<Map<Point, PlayableCard>>() {
+                                }.getType()),
+                        gsonTranslater.toJson(data.getValue().getValue(),
+                                new TypeToken<Map<Resources, Integer>>() {
+                                }.getType()))
+                );
         }
 }

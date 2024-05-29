@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.listeners;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowStarterCardObj;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
@@ -16,6 +17,6 @@ public class PlayerStarterCardListener implements Listener<PlayableCard> {
 
     @Override
     public void update(PlayableCard data) throws RemoteException {
-        client.show_starterCard(gsonTranslater.toJson(data, PlayableCard.class));
+        client.sendCommand(new ShowStarterCardObj(gsonTranslater.toJson(data, PlayableCard.class)));
     }
 }

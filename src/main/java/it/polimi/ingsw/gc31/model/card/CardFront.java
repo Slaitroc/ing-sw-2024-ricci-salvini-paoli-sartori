@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
-import it.polimi.ingsw.gc31.utility.DeepCopy;
 
 import java.util.*;
 
@@ -14,7 +13,7 @@ import java.util.*;
  *
  * @author Christian Salvini
  */
-public class CardFront implements DeepCopy<CardFront> {
+public class CardFront {
     /**
      * The score obtained from placing the card.
      */
@@ -42,7 +41,7 @@ public class CardFront implements DeepCopy<CardFront> {
     /**
      * Objective of the card to be verified in order to obtain the score points.
      */
-    private final Objective ob;
+    private final Objective objective;
 
     /**
      * Constructor of the class
@@ -61,7 +60,7 @@ public class CardFront implements DeepCopy<CardFront> {
         // if (dirImg == null) throw new DirImgValueMissingException();
         this.dirImg = dirImg;
         // TODO implementare depp copy per ob
-        this.ob = ob;
+        this.objective = ob;
     }
 
     /**
@@ -103,7 +102,7 @@ public class CardFront implements DeepCopy<CardFront> {
     }
 
     public Objective getObjective() {
-        return ob;
+        return objective;
     }
 
     public String getImage() {
@@ -153,17 +152,6 @@ public class CardFront implements DeepCopy<CardFront> {
 
         jsonObject.add("objective", null);
         return jsonObject;
-    }
-
-    @Override
-    public CardFront deepCopy() {
-        return new CardFront(
-                score,
-                listDeepCopy(resources),
-                mapDeepCopy(requirements),
-                new String(dirImg),
-                // TODO non serve la deepCopy di ob, credo
-                ob);
     }
 
     public List<Resources> getCorners() {

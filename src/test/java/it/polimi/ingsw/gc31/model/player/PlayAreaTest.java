@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.model.player;
 
 import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
+import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
@@ -38,7 +39,7 @@ class PlayAreaTest {
          */
         @Test
         @DisplayName("Placing overlapping Cards Test")
-        public void testPlaceOnRight() throws EmptyDeckException{
+        public void testPlaceOnRight() throws EmptyDeckException, IllegalPlaceCardException {
 
                 System.out.println("testPlace (1,1)):");
                 PlayableCard playableCard = board.getDeckResource().draw();
@@ -66,7 +67,8 @@ class PlayAreaTest {
 
                 System.out.println("testPlace (1,-1):");
                 PlayableCard playableCard2 = board.getDeckResource().draw();
-                playArea.place(playableCard2, new Point(1, -1));
+                PlayableCard finalPlayableCard = playableCard2;
+                assertThrows(IllegalPlaceCardException.class, ()->playArea.place(finalPlayableCard, new Point(1, -1)));
                 assertEquals(playableCard, playArea.getPlacedCards().get(new Point(1, -1)));
                 System.out.println("Correct");
 
@@ -78,7 +80,8 @@ class PlayAreaTest {
 
                 System.out.println("testPlace (2, 0):");
                 playableCard2 = board.getDeckResource().draw();
-                playArea.place(playableCard2, new Point(2, 0));
+                PlayableCard finalPlayableCard2 = playableCard2;
+                assertThrows(IllegalPlaceCardException.class, ()->playArea.place(finalPlayableCard2, new Point(2, 0)));
                 assertEquals(playableCard, playArea.getPlacedCards().get(new Point(2, 0)));
                 System.out.println("Correct");
 
@@ -90,7 +93,8 @@ class PlayAreaTest {
 
                 System.out.println("testPlace (100, -200):");
                 playableCard = board.getDeckResource().draw();
-                playArea.place(playableCard, new Point(100, -200));
+                PlayableCard finalPlayableCard1 = playableCard;
+                assertThrows(IllegalPlaceCardException.class, ()->playArea.place(finalPlayableCard1, new Point(100, -200)));
                 assertNull(playArea.getPlacedCards().get(new Point(100, -200)));
                 System.out.println("Correct");
         }
@@ -105,7 +109,7 @@ class PlayAreaTest {
          * @author Matteo Paoli
          */
         @Disabled
-        public void testCheckRequirements() throws EmptyDeckException {
+        public void testCheckRequirements() throws EmptyDeckException, IllegalPlaceCardException {
 
                 PlayableCard resourceCard = board.getDeckResource().draw();
                 playArea.place(resourceCard, new Point(1, 1));
@@ -137,7 +141,7 @@ class PlayAreaTest {
          */
         @Test
         @DisplayName("Placing goldCards Test")
-        public void testGoldCards() {
+        public void testGoldCards() throws IllegalPlaceCardException {
 
                 System.out.println("resourceCard in (1,1))");
                 PlayableCard resourceCard = createResourceCard(
@@ -236,7 +240,10 @@ class PlayAreaTest {
                                 Resources.MUSHROOM, 1);
                 goldCard.changeSide();
                 System.out.println(playArea.getAchievedResources());
-                playArea.place(goldCard, new Point(3, 1));
+
+
+                PlayableCard finalGoldCard = goldCard;
+                assertThrows(IllegalPlaceCardException.class, ()->playArea.place(finalGoldCard, new Point(3, 1)));
                 assertNull(playArea.getPlacedCards().get(new Point(3, 1)));
 
         }

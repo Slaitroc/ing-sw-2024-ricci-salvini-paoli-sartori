@@ -9,7 +9,7 @@ import java.awt.*;
 public class Waiting extends PlayerState {
 
     @Override
-    public void addObjectiveCard(ObjectiveCard card, Player player) throws IllegalStateOperationException {
+    public void chooseSecretObjective(ObjectiveCard card, Player player) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
@@ -31,6 +31,11 @@ public class Waiting extends PlayerState {
     @Override
     public void playStarter(Player player) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
+    }
+
+    @Override
+    public String stateInfo()    {
+        return "waiting";
     }
 
 }

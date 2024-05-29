@@ -70,6 +70,17 @@ public abstract class TuiState {
 
     protected abstract void command_drawResource();
 
-    protected abstract void command_chooseSecreteObjective();
+    protected abstract void command_chooseSecreteObjective1();
 
+    protected abstract void command_chooseSecreteObjective2();
+
+    protected abstract void command_playStarter();
+
+    protected abstract void command_play();
+
+    protected abstract void command_selectCard();
+
+    protected abstract void command_changeSide();
+
+    protected abstract void command_changeStarterSide();
 }

@@ -4,7 +4,7 @@ import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.view.UI;
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
-public class ShowChooseSecretObjectiveCardObj implements ClientQueueObject {
+public class ShowChooseSecretObjectiveCardObj extends ClientQueueObject {
     private final String objectiveCard1;
     private final String objectiveCard2;
 
@@ -15,7 +15,6 @@ public class ShowChooseSecretObjectiveCardObj implements ClientQueueObject {
 
     @Override
     public void execute(UI ui) {
-
         ui.show_chooseObjectiveCard(
                 gsonTranslater.fromJson(objectiveCard1, ObjectiveCard.class),
                 gsonTranslater.fromJson(objectiveCard2, ObjectiveCard.class));

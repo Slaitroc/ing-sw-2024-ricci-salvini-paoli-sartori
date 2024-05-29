@@ -1,5 +1,8 @@
 package it.polimi.ingsw.gc31.view.tui;
 
+import static it.polimi.ingsw.gc31.utility.OurScanner.scanner;
+
+import java.awt.*;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
@@ -20,14 +23,26 @@ public class PlayingState extends TuiState {
         commandsMap.put(("help").toLowerCase(), this::command_showCommandsInfo);
         commandsMap.put("dg", this::command_drawGold);
         commandsMap.put("dr", this::command_drawResource);
-        commandsMap.put("cs", this::command_chooseSecreteObjective);
+        commandsMap.put("cs1", this::command_chooseSecreteObjective1);
+        commandsMap.put("cs2", this::command_chooseSecreteObjective2);
+        commandsMap.put("ps", this::command_playStarter);
+        commandsMap.put("p", this::command_play);
+        commandsMap.put("s", this::command_selectCard);
+        commandsMap.put("c", this::command_changeSide);
+        commandsMap.put("cs", this::command_changeStarterSide);
         commandsMap.put("invalid", this::command_invalidCommand);
 
         commandsInfo = new LinkedHashMap<>();
         commandsInfo.put("help", "Shows commands info");
         commandsInfo.put("dg -> draw gold", "Draw a gold card");
         commandsInfo.put("dr -> draw resource", "Draw a resource card");
-        commandsInfo.put("cs -> choose secrete objective 1", "Choose secrete objective 1");
+        commandsInfo.put("cs1 ->", "Choose secrete objective 1");
+        commandsInfo.put("cs2 ->", "Choose secrete objective 2");
+        commandsInfo.put("ps ->", "Play starter card");
+        commandsInfo.put("p ->", "Play a card in the play area");
+        commandsInfo.put("s ->", "Select a card from hand");
+        commandsInfo.put("c ->", "Change side select card");
+        commandsInfo.put("cs ->", "Change side starter card");
     }
 
     @Override
@@ -43,6 +58,7 @@ public class PlayingState extends TuiState {
         } catch (NoGamesException e) {
             e.printStackTrace();
         }
+        stateNotify();
     }
 
     @Override
@@ -56,35 +72,108 @@ public class PlayingState extends TuiState {
 
     @Override
     protected void command_drawGold() {
-        tui.tuiWrite("Which card do you want to draw?");
+        tui.printToCmdLineOut("Which card do you want to draw?");
+        tui.printToCmdLineOut("0 -> from top of the deck");
+        tui.printToCmdLineOut("1 -> card 1");
+        tui.printToCmdLineOut("2 -> card 2");
+        int input = Integer.parseInt(scanner.nextLine());
         try {
-            tui.getClient().drawGold();
-            tui.tuiWrite("Gold card draw");
+            tui.getClient().drawGold(input);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        stateNotify();
     }
 
     @Override
     protected void command_drawResource() {
-        // TODO qui va aggiunto un metodo che mostri le possibili carte da pescare
-        tui.tuiWrite("Which card do you want to draw?");
+        tui.printToCmdLineOut("Which card do you want to draw?");
+        tui.printToCmdLineOut("0 -> from top of the deck");
+        tui.printToCmdLineOut("1 -> card 1");
+        tui.printToCmdLineOut("2 -> card 2");
+        int input = Integer.parseInt(scanner.nextLine());
         try {
-            tui.getClient().drawResource();
-            tui.tuiWrite("Resource card draw");
+            tui.getClient().drawResource(input);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        stateNotify();
     }
 
     @Override
-    protected void command_chooseSecreteObjective() {
-        tui.tuiWrite("Choose secrete objective 1");
+    protected void command_chooseSecreteObjective1() {
         try {
             tui.getClient().chooseSecretObjective1();
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+        stateNotify();
+    }
+
+    @Override
+    protected void command_chooseSecreteObjective2() {
+        try {
+            tui.getClient().chooseSecretObjective2();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        stateNotify();
+    }
+
+    @Override
+    protected void command_playStarter() {
+        try {
+            tui.getClient().playStarter();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        stateNotify();
+    }
+
+    @Override
+    protected void command_play() {
+        tui.printToCmdLineOut(tui.tuiWrite("Type X coordinate: "));
+        int inputX = Integer.parseInt(scanner.nextLine());
+        tui.printToCmdLineOut(tui.tuiWrite("Type Y coordinate: "));
+        int inputY = Integer.parseInt(scanner.nextLine());
+        try {
+            tui.getClient().play(new Point(inputX, inputY));
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        stateNotify();
+    }
+
+    @Override
+    protected void command_selectCard() {
+        tui.printToCmdLineOut(tui.tuiWrite("Type the index of    the card:"));
+        int input = Integer.parseInt(scanner.nextLine());
+        try {
+            tui.getClient().selectCard(input);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        stateNotify();
+    }
+
+    @Override
+    protected void command_changeSide() {
+        try {
+            tui.getClient().changeSide();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        stateNotify();
+    }
+
+    @Override
+    protected void command_changeStarterSide() {
+        try {
+            tui.getClient().changeStarterSide();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        stateNotify();
     }
 
     @Override

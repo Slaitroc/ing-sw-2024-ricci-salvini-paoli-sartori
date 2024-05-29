@@ -1,0 +1,56 @@
+@import "Colors.css";
+
+.table-view {
+    -fx-font: 18px 'glimmer of light';
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+    -fx-background-color: -light-beige;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+}
+
+.table-view .scroll-bar:horizontal,
+.table-view .scroll-bar:horizontal .track,
+.table-view .scroll-bar:vertical,
+.table-view .scroll-bar:vertical .track {
+    -fx-opacity: 0;
+    -fx-pref-width: 1;
+    -fx-pref-height: 1;
+}
+
+.table-view .column-header-background{
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header, .table-view .column-header .label {
+    -fx-text-fill: -white;
+    -fx-background-color: -dark-green;
+    -fx-cursor: hand;
+    -fx-text-alignment: center;
+    -mfx-button-type: RAISED;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+}
+
+.table-row-cell{
+    -fx-background-color: -light-beige;
+    -fx-border-color: transparent transparent -light-green transparent;
+    -fx-border-width: 1px;
+}
+.table-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -black;
+    -fx-alignment: center;
+    -fx-padding: 5px;
+}
+.table-row-cell:selected{
+    -fx-background-color: -light-beige;
+}
+
+.table-row-cell:hover{
+    -fx-background-color: -light-green;
+    -fx-border-color: -black;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+}

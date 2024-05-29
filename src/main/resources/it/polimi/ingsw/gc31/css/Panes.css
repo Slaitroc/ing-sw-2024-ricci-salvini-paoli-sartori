@@ -1,0 +1,40 @@
+
+.stackPane-ruleBook{
+    -fx-background-image: url(../Images/Misc/NaturalisBackground.gif);
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: stretch;
+    -fx-font: 36px "FrakturNo2";
+    -fx-text-alignment: center;
+}
+
+
+.stackPane-playerSlot{
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-width: 5px;
+    -fx-border-color: -black;
+}
+
+.player1{
+    -fx-background-image: url(../Images/LobbyPlayerSlot/WiseMan1.png);
+}
+.player2{
+    -fx-background-image: url(../Images/LobbyPlayerSlot/WiseMan2.png);
+}
+.player3{
+    -fx-background-image: url(../Images/LobbyPlayerSlot/WiseMan3.png);
+}
+.player4{
+    -fx-background-image: url(../Images/LobbyPlayerSlot/WiseMan4.png);
+}
+
+.lockedPlayerSlot{
+    -fx-background-color: -grey;
+}
+
+.codex-background{
+    -fx-background-image: url(../Images/Misc/Codex_esploso.png);
+    -fx-background-size: cover;
+}

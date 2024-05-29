@@ -4,12 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
-import it.polimi.ingsw.gc31.utility.DeepCopy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardBack implements DeepCopy<CardBack> {
+public class CardBack {
     private final List<Resources> resources;
     private final String dirImg;
 
@@ -63,13 +62,6 @@ public class CardBack implements DeepCopy<CardBack> {
         jsonObject.addProperty("dirImg", dirImg);
 
         return jsonObject;
-    }
-
-    @Override
-    public CardBack deepCopy() {
-        return new CardBack(
-                listDeepCopy(resources),
-                new String(dirImg));
     }
 
     public List<Resources> getCorners() {

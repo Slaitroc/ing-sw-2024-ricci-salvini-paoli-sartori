@@ -1,8 +1,5 @@
 package it.polimi.ingsw.gc31.view;
 
-import java.rmi.RemoteException;
-import java.util.List;
-
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
@@ -15,16 +12,16 @@ public abstract class UI implements ShowUpdate {
      * @Slaitroc
      */
     protected ClientCommands client;
-    /**
-     * This variable's type could change during the development.
-     * Its scope is to track the different section of an UI (Scenes for GUI
-     * and
-     * views for TUI)
-     * Probably it'll become an array of boolean or a Map or IDK
-     * 
-     * @Slaitroc
-     */
-    protected boolean inGame;
+    // /**
+    // * This variable's type could change during the development.
+    // * Its scope is to track the different section of an UI (Scenes for GUI
+    // * and
+    // * views for TUI)
+    // * Probably it'll become an array of boolean or a Map or IDK
+    // *
+    // * @Slaitroc
+    // */
+    // protected boolean inGame;
 
     /**
      * Run a new scene/view. Should be using {@link #inGame} to choose between
@@ -44,12 +41,5 @@ public abstract class UI implements ShowUpdate {
      * @Slaitroc
      */
     protected abstract void uiRunUI();
-
-    // DA CAPIRE
-    public abstract void updateHand(String username, List<String> hand) throws RemoteException;
-
-    // TODO da aggiungere a ShowUpdate
-
-    public abstract void update_ToPlayingState();
 
 }

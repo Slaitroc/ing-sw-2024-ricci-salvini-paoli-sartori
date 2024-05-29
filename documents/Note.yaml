@@ -1,0 +1,11 @@
+File:
+  SocketClientHandler: attributi privati idGame, username e ready servono?
+  UI: runUI() che chiama UIRunUi serve?
+  Listener: serve l'interfaccia Listener? non basta creare le classi specifiche dei listeners e fargli solo il metodo update?
+
+Proposte:
+  - cambiare il nome di DefaultValues a DV.java
+  - migliorare il Log del server con metodo statico di una classe ServerLog
+
+Problemi Gravi:
+  - se si disconnette un player si blocca il game. (succedeva con ready quindi bisogna vedere quell'update)

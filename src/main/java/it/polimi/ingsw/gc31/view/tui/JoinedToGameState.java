@@ -70,6 +70,7 @@ public class JoinedToGameState extends TuiState {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        stateNotify();
     }
 
     @Override
@@ -82,16 +83,47 @@ public class JoinedToGameState extends TuiState {
     }
 
     @Override
+    protected void command_chooseSecreteObjective1() {
+
+    }
+
+    @Override
+    protected void command_chooseSecreteObjective2() {
+
+    }
+
+    @Override
+    protected void command_playStarter() {
+
+    }
+
+    @Override
+    protected void command_play() {
+
+    }
+
+    @Override
+    protected void command_selectCard() {
+
+    }
+
+    @Override
+    protected void command_changeSide() {
+
+    }
+
+    @Override
+    protected void command_changeStarterSide() {
+
+    }
+
+    @Override
     protected void command_initial() {
         command_showCommandsInfo();
     }
 
     @Override
     protected void setUsername() {
-    }
-
-    @Override
-    protected void command_chooseSecreteObjective() {
     }
 
 }

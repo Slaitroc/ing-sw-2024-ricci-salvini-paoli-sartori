@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.scene.control.Label?>
+<StackPane stylesheets="@../css/Commons.css, @../css/Buttons.css, @../css/Panes.css" styleClass="stackPane-default" xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.MainMenuController">
+    <padding>
+        <Insets bottom="10" left="20" right="20" top="10"/>
+    </padding>
+    <HBox alignment="CENTER" spacing="20">
+        <ImageView fitHeight="250" fitWidth="381">
+            <Image url="@../Images/Misc/CodexLogo.png"/>
+        </ImageView>
+        <VBox alignment="CENTER" spacing="30" styleClass="stackPane-default">
+            <HBox alignment="CENTER">
+                <MFXButton fx:id="createGameButton" layoutX="188.0" layoutY="349.0" onAction="#showCreateGameMenu"
+                           onMouseEntered="#showPointer1"
+                           onMouseExited="#hidePointer1" prefWidth="250" styleClass="small-button, rounded-button"
+                           text="New Game"/>
+                <StackPane>
+                    <ImageView fx:id="imageView1" fitHeight="50" fitWidth="50" visible="false">
+                        <Image url="@../Images/AppIcons/iconPlant.png"/>
+                    </ImageView>
+                    <ImageView fx:id="imageView6" fitHeight="50" fitWidth="50" visible="false">
+                        <Image url="@../Images/AppIcons/iconQuill.png"/>
+                    </ImageView>
+                </StackPane>
+
+            </HBox>
+
+            <!-- OUTER STACKPANE-->
+            <StackPane>
+
+                <!-- CREATE GAME MENU-->
+                <StackPane fx:id="createGameMenu" visible="false" managed="false">
+                    <VBox spacing="60">
+                        <HBox>
+                            <MFXComboBox fx:id="comboBox" prefWidth="150.0" floatingText="Players"
+                                         styleClass="mfx-combo-box, rounded-button"
+                                         onMouseEntered="#showPointer7" onMouseExited="#hidePointer7"/>
+                            <ImageView fx:id="imageView7" fitHeight="50" fitWidth="50" visible="false">
+                                <Image url="@../Images/AppIcons/iconScroll.png"/>
+                            </ImageView>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT">
+                            <MFXButton text="Play" onAction="#createGame" styleClass="small-button, rounded-button"
+                                       onMouseEntered="#showPointer5" onMouseExited="#hidePointer5"/>
+                            <ImageView fx:id="imageView5" fitHeight="50" fitWidth="50" visible="false">
+                                <Image url="@../Images/AppIcons/iconInk.png"/>
+                            </ImageView>
+                        </HBox>
+                    </VBox>
+                </StackPane>
+
+                <!-- JOIN GAME MENU-->
+                <StackPane fx:id="joinGameMenu" visible="false" managed="false">
+                    <VBox spacing="30">
+                        <HBox>
+                            <MFXTextField fx:id="gameID" prefWidth="150.0" floatingText="Game ID"
+                                          stylesheets="@../css/TextField.css" styleClass="rounded-button, mfx-text-field, floating-text"
+                                          onMouseEntered="#showPointer8" onMouseExited="#hidePointer8" onKeyPressed="#handleEnterKeyPressed"
+                                          maxWidth="200"/>
+                            <ImageView fx:id="imageView8" fitHeight="50" fitWidth="50" visible="false">
+                                <Image url="@../Images/AppIcons/iconScroll.png"/>
+                            </ImageView>
+                        </HBox>
+                        <Label fx:id="warningLabel" visible="false" stylesheets="@../css/WarningLabels.css" styleClass="warning"/>
+                        <HBox alignment="CENTER_RIGHT">
+                            <MFXButton text="Join" onAction="#joinGame" styleClass="small-button, rounded-button"
+                                       onMouseEntered="#showPointer9" onMouseExited="#hidePointer9"/>
+                            <ImageView fx:id="imageView9" fitHeight="50" fitWidth="50" visible="false">
+                                <Image url="@../Images/AppIcons/iconInk.png"/>
+                            </ImageView>
+                        </HBox>
+                    </VBox>
+                </StackPane>
+
+                <!-- GENERAL MENU-->
+                <StackPane fx:id="generalMenu">
+                    <VBox spacing="20" styleClass="stackPane-default">
+                        <HBox alignment="CENTER">
+                            <MFXButton layoutX="188.0" layoutY="349.0" onAction="#showJoinGameMenu"
+                                       onMouseEntered="#showPointer2" onMouseExited="#hidePointer2" prefWidth="250"
+                                       styleClass="small-button, rounded-button" text="Enter Game"/>
+                            <ImageView fx:id="imageView2" fitHeight="50" fitWidth="50" visible="false">
+                                <Image url="@../Images/AppIcons/iconMushroom.png"/>
+                            </ImageView>
+                        </HBox>
+                        <HBox alignment="CENTER">
+                            <MFXButton layoutX="188.0" layoutY="349.0" onAction="#showGames"
+                                       onMouseEntered="#showPointer3" onMouseExited="#hidePointer3" prefWidth="250"
+                                       styleClass="small-button, rounded-button" text="Show Games"/>
+                            <ImageView fx:id="imageView3" fitHeight="50" fitWidth="50" visible="false">
+                                <Image url="@../Images/AppIcons/iconInsect.png"/>
+                            </ImageView>
+                        </HBox>
+
+                        <HBox alignment="CENTER">
+                            <MFXButton layoutX="188.0" layoutY="349.0" onAction="#showRules"
+                                       onMouseEntered="#showPointer4" onMouseExited="#hidePointer4" prefWidth="250"
+                                       styleClass="small-button, rounded-button" text="Rule Book"/>
+                            <ImageView fx:id="imageView4" fitHeight="50" fitWidth="50" visible="false">
+                                <Image url="@../Images/AppIcons/iconAnimal.png"/>
+                            </ImageView>
+                        </HBox>
+                    </VBox>
+                </StackPane>
+            </StackPane>
+
+        </VBox>
+    </HBox>
+</StackPane>

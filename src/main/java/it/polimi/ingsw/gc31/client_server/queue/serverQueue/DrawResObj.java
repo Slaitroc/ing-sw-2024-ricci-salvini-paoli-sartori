@@ -1,25 +1,35 @@
 package it.polimi.ingsw.gc31.client_server.queue.serverQueue;
 
-import it.polimi.ingsw.gc31.model.GameModel;
-import it.polimi.ingsw.gc31.model.player.Player;
+import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
+import it.polimi.ingsw.gc31.controller.Controller;
+import it.polimi.ingsw.gc31.controller.GameController;
+import java.rmi.RemoteException;
 
-public class DrawResObj implements ServerQueueObject {
+public class DrawResObj extends ServerQueueObject {
 
-    private Player player;
-    private GameModel model;
+    private final String username;
+    private final int index;
 
-    public DrawResObj(Player player, GameModel model) {
-        this.player = player;
-        this.model = model;
+    public DrawResObj(String username, int index) {
+        this.username = username;
+        this.index = index;
     }
 
     @Override
-    public void execute() {
-        if (player.drawResource()) {
-            model.endTurn();
-            // System.out.println("PLAYER: " + player.getUsername() + " HAS JUST DRAWN A
-            // RESOURCE CARD.");
+    public void execute(GameController gameController) {
+        try {
+            gameController.drawResource(username, index);
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
+    }
+
+    @Override
+    public void execute(Controller controller) {
+    }
+
+    @Override
+    public void execute(RmiServer server) {
     }
 
 }

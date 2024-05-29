@@ -1,9 +1,11 @@
 package it.polimi.ingsw.gc31.client_server.listeners;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowScorePlayerObj;
 import javafx.util.Pair;
 
 import java.rmi.RemoteException;
+import java.util.LinkedHashMap;
 
 /**
  * This class defines a listener for receiving player score updates.
@@ -13,7 +15,7 @@ import java.rmi.RemoteException;
  *     <li>Integer: the score</li>
  * </ul>
  */
-public class PlayerScoreListener implements Listener<Pair<String, Integer>> {
+public class PlayerScoreListener implements Listener<LinkedHashMap<String, Integer>> {
     private VirtualClient client;
 
     /**
@@ -35,7 +37,7 @@ public class PlayerScoreListener implements Listener<Pair<String, Integer>> {
      * @throws RemoteException This exception is thrown if there is an error communicating with the VirtualClient.
      */
     @Override
-    public void update(Pair<String, Integer> data) throws RemoteException {
-        client.show_scorePlayer(data.getKey(), data.getValue());
+    public void update(LinkedHashMap<String, Integer> data) throws RemoteException {
+        client.sendCommand(new ShowScorePlayerObj(data));
     }
 }

@@ -1,45 +1,29 @@
 package it.polimi.ingsw.gc31.controller;
 
+import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.gc31.utility.gsonUtility.PlayableCardAdapter;
-import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.client_server.listeners.PlayerHandListener;
-import it.polimi.ingsw.gc31.client_server.listeners.GoldDeckListener;
-import it.polimi.ingsw.gc31.client_server.listeners.PlayAreaListener;
-import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
-import it.polimi.ingsw.gc31.client_server.listeners.PlayerStarterCardListener;
-import it.polimi.ingsw.gc31.client_server.listeners.PlayerObjectiveCardListener;
+import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.NewChatMessage;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowInGamePlayerObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowReadyStatusObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.StartGameObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChooseSecretObjectiveObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawGoldObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawGoldOneObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawGoldTwoObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResOneObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResTwoObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.PlayObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.FlipCardObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.FlipStarterCardObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.PlayObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.PlayStarterObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.SelectCardObj;
-import it.polimi.ingsw.gc31.model.GameModel;
-import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 import it.polimi.ingsw.gc31.model.enumeration.GameState;
 import it.polimi.ingsw.gc31.model.player.Player;
+import it.polimi.ingsw.gc31.utility.DV;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 
 /**
@@ -48,14 +32,12 @@ import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
  */
 public class GameController extends UnicastRemoteObject implements IGameController {
     private final GameModel model;
-    private Map<String, Player> playerList;
-    private final Map<String, VirtualClient> clientList;
+    private final LinkedHashMap<String, VirtualClient> clientList;
     @SuppressWarnings("unused")
-    private final Gson gsonCard/* , gsonObjective */;
     private final int maxNumberPlayers;
     private final int idGame;
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
-    private final Map<String, Boolean> readyStatus;
+    private final LinkedHashMap<String, Boolean> readyStatus;
 
     /**
      * Constructor for the GameController class.
@@ -68,25 +50,17 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      */
     public GameController(String username, VirtualClient client, int maxNumberPlayers, int idGame)
             throws RemoteException {
-        this.model = new GameModel();
         this.callsList = new LinkedBlockingQueue<>();
         this.maxNumberPlayers = maxNumberPlayers;
         this.idGame = idGame;
-        this.playerList = new HashMap<>();
-        this.clientList = new HashMap<>();
+        this.clientList = new LinkedHashMap<>();
         this.clientList.put(username, client);
-        this.readyStatus = new HashMap<>();
+        this.readyStatus = new LinkedHashMap<>();
         this.readyStatus.put(username, false);
-        /*
-         * gsonObjective = new GsonBuilder()
-         * .registerTypeAdapter(ObjectiveCard.class, new ObjectiveCardAdapter())
-         * .create();
-         */
-        gsonCard = new GsonBuilder()
-                .registerTypeAdapter(PlayableCard.class, new PlayableCardAdapter())
-                .create();
-
+        this.model = new GameModel();
         new Thread(this::executor).start();
+
+        notifyListPlayers();
     }
 
     @Override
@@ -130,20 +104,27 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         clientList.put(username, client);
         readyStatus.put(username, false);
         if (maxNumberPlayers == this.clientList.size()) {
-            gameControllerWrite("The number of players for the game " + maxNumberPlayers + " has been reached");
+            ServerLog.gControllerWrite("The number of players for the game " + maxNumberPlayers + " has been reached",
+                    idGame);
         }
+
+        notifyListPlayers();
     }
 
     @Override
     public void setReadyStatus(boolean ready, String username) throws RemoteException, IllegalStateOperationException {
         readyStatus.replace(username, ready);
-        clientList.get(username).sendCommand(new ShowReadyStatusObj(ready));
-        checkReady();
 
+        notifyListPlayers();
+        for (String client : clientList.keySet()) {
+            clientList.get(client).sendCommand(new ShowReadyStatusObj(username, readyStatus.get(username)));
+        }
+        checkReady();
     }
 
+    // FIXME occuparsi di RemoteException
     @Override
-    public void checkReady() throws RemoteException, IllegalStateOperationException {
+    public void checkReady() throws RemoteException {
         int counter = 0;
         for (Boolean status : readyStatus.values()) {
             if (status == true) {
@@ -154,43 +135,14 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             for (VirtualClient clients : clientList.values()) {
                 clients.sendCommand(new StartGameObj());
             }
-            initGame();
-        }
-    }
-
-    /**
-     * Initializes the game by creating players and dealing cards.
-     * It also sets the player controller for each client.
-     */
-    public void initGame() throws RemoteException, IllegalStateOperationException {
-        if (model.getGameState() == GameState.SETUP) {
-            playerList = model.createPlayers(clientList.keySet()); // Here the players are created and added to the
-            // playerList
-            model.setObjectives(); // Here the common goals are initialized
-            model.initSecretObj(); // Here the secret goals are drawn
-
-            createAllListeners();
-            for (Player player : playerList.values()) {
-                player.setStarterCard(); // Here the starter cards are drawn
-                player.drawResource();
-                player.drawResource();
-                player.drawGold(); // Here the player hands are initialized
-                // showHand(player); // Here the player's hands are shown
-                // showObjectives(playerList.get(player)); // Here the common goals are supposed
-                // to be shown :)
+            // TODO occuparsi dell'eccezione
+            try {
+                model.initGame(clientList);
+                ServerLog.gControllerWrite("The game has started", idGame);
+            } catch (IllegalStateOperationException e) {
+                throw new RuntimeException(e);
             }
-            model.getBoard().getDeckGold().refill(); // Here the GoldCard1 and GoldCard2 are drawn on the board
-            model.getBoard().getDeckResource().refill(); // Here the ResourceCard1 and ResourceCard2 are drawn on the
-            // board
-        } else {
-            System.out.println("Failed to initialize game.");
-            throw new RemoteException();
         }
-
-        // TODO mandare messaggio al client di inizio partita
-        // for (VirtualClient player: clientList.values()) {
-        // player.sendMessage("[GameController] la partita è iniziata");
-        // }
     }
 
     public void sendChatMessage(NewChatMessage message) {
@@ -203,13 +155,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
         }
     }
-
-    /*
-     * TODO Do I use this and create all the initStarters etc. methods in the
-     * GameController,
-     * or do I use the methods in the GameModel and call them from the
-     * GameController?
-     */
 
     /**
      * @return the maximum number of players.
@@ -225,22 +170,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         return clientList.size();
     }
 
-    /*
-     * public Player getPlayer(String username) {
-     * return playerList.get(username);
-     * }
-     */
-
-    /**
-     * Writes a message to the game controller.
-     *
-     * @param text the message to write.
-     */
-    private void gameControllerWrite(String text) {
-        System.out.println(DefaultValues.ANSI_PURPLE
-                + DefaultValues.gameControllerTag(String.valueOf(idGame)) + DefaultValues.ANSI_RESET + text);
-    }
-
     // WARNING: methods receive username in input, instead of using
     // model.currPlayingPlayer.drawGold() etc.
     // because otherwise clients could play the turn of others
@@ -249,45 +178,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * Draws a gold card from the deck for the player and then shows the player's
      * hand.
      *
-     * @throws RemoteException If a remote invocation error occurs.
      */
-    @Override
-    public void drawGold(String username) throws RemoteException {
-        if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
-                || model.getGameState() == GameState.SHOWDOWN) {
-            addQueueObj(new DrawGoldObj(playerList.get(username), model));
-        } else {
-            gameControllerWrite("The game is not in the right state to draw");
-        }
-    }
-
-    /**
-     * Draws the first gold card for the player and then shows the player's hand.
-     *
-     * @throws RemoteException If a remote invocation error occurs.
-     */
-    @Override
-    public void drawGoldCard1(String username) throws RemoteException {
-        if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
-                || model.getGameState() == GameState.SHOWDOWN) {
-            addQueueObj(new DrawGoldOneObj(playerList.get(username), model));
-        } else {
-            gameControllerWrite("The game is not in the right state to draw");
-        }
-    }
-
-    /**
-     * Draws the second gold card for the player and then shows the player's hand.
-     *
-     * @throws RemoteException If a remote invocation error occurs.
-     */
-    @Override
-    public void drawGoldCard2(String username) throws RemoteException {
-        if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
-                || model.getGameState() == GameState.SHOWDOWN) {
-            addQueueObj(new DrawGoldTwoObj(playerList.get(username), model));
-        } else {
-            gameControllerWrite("The game is not in the right state to draw");
+    public void drawGold(String username, int index) {
+        try {
+            model.drawGold(username, index);
+        } catch (IllegalStateOperationException e) {
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
         }
     }
 
@@ -297,164 +193,74 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      *
      * @throws RemoteException If a remote invocation error occurs.
      */
-    @Override
-    public void drawResource(String username) throws RemoteException {
-        if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
-                || model.getGameState() == GameState.SHOWDOWN) {
-            addQueueObj(new DrawResObj(playerList.get(username), model));
-        } else {
-            gameControllerWrite("The game is not in the right state to draw");
+    public void drawResource(String username, int index) throws RemoteException {
+        try {
+            model.drawResource(username, index);
+        } catch (IllegalStateOperationException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    /**
-     * Draws the first resource card for the player and then shows the player's
-     * hand.
-     *
-     * @throws RemoteException If a remote invocation error occurs.
-     */
-    @Override
-    public void drawResourceCard1(String username) throws RemoteException {
-        if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
-                || model.getGameState() == GameState.SHOWDOWN) {
-            addQueueObj(new DrawResOneObj(playerList.get(username), model));
-        } else {
-            gameControllerWrite("The game is not in the right state to draw");
+    public void chooseSecretObjective(String username, Integer index) {
+        try {
+            model.chooseSecretObjective(username, index);
+        } catch (IllegalStateOperationException e) {
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
         }
     }
 
-    /**
-     * Draws the second resource card for the player and then shows the player's
-     * hand.
-     *
-     * @throws RemoteException If a remote invocation error occurs.
-     */
-    @Override
-    public void drawResourceCard2(String username) throws RemoteException {
-        if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
-                || model.getGameState() == GameState.SHOWDOWN) {
-            addQueueObj(new DrawResTwoObj(playerList.get(username), model));
-        } else {
-            gameControllerWrite("The game is not in the right state to draw");
+    public void play(String username, Point point) {
+        try {
+            model.play(username, point);
+        } catch (IllegalStateOperationException e) {
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
         }
     }
 
-    @Override
-    public void chooseSecretObjective1(String username) {
-        if (model.getGameState() == GameState.SETUP) {
-            addQueueObj(new ChooseSecretObjectiveObj(username, model, 1));
-        } else
-            gameControllerWrite("The game is not in the right state to choose secret objective");
-    }
-
-    @Override
-    public void chooseSecretObjective2(String username) {
-        if (model.getGameState() == GameState.SETUP) {
-            addQueueObj(new ChooseSecretObjectiveObj(username, model, 2));
-        } else
-            gameControllerWrite("The game is not in the right state to choose secret objective");
-    }
-
-    @Override
-    public void play(String username, int x, int y) {
-        if (model.getGameState() == GameState.RUNNING || model.getGameState() == GameState.LAST_TURN
-                || model.getGameState() == GameState.SHOWDOWN) {
-            addQueueObj(new PlayObj(playerList.get(username), model, x, y));
-        } else {
-            gameControllerWrite("The game is not in the right state to play");
-        }
-
-    }
-
-    @Override
     public void playStarter(String username) {
-        if (model.getGameState() == GameState.SETUP) {
-            addQueueObj(new PlayStarterObj(playerList.get(username), model));
-        } else {
-            gameControllerWrite("The game is not in the right state to play starter");
+        try {
+            model.playStarter(username);
+            ServerLog.gControllerWrite("Player" + username + " has played starter card", idGame);
+        } catch (IllegalStateOperationException e) {
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
         }
     }
 
-    @Override
-    public void changeSide(String username) {
-        addQueueObj(new FlipCardObj(playerList.get(username)));
+    private void notifyListPlayers() {
+        for (VirtualClient client : clientList.values()) {
+            try {
+                client.sendCommand(new ShowInGamePlayerObj(readyStatus));
+            } catch (RemoteException e) {
+                ServerLog.gControllerWrite(e.getMessage(), idGame);
+            }
+        }
     }
 
-    @Override
-    public void changeStarterSide(String username) {
-        addQueueObj(new FlipStarterCardObj(playerList.get(username)));
-    }
-
-    @Override
     public void selectCard(String username, int index) {
-        addQueueObj(new SelectCardObj(playerList.get(username), index));
+        try {
+            model.setSelectCard(username, index);
+        } catch (IllegalStateOperationException e) {
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
+        }
     }
 
-    /*
-     * @Override
-     * public void play(String username, Point point) {
-     * Player player = playerList.get(username);
-     * player.play(point);
-     * }
-     */
+    public void changeSide(String username) {
+        try {
+            model.changeSide(username);
+        } catch (IllegalStateOperationException e) {
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
+        }
+    }
 
-    /*
-     * @Override
-     * public void selectCard(String username, int index) {
-     * Player player = playerList.get(username);
-     * player.setSelectedCard(index);
-     * }
-     */
-
-    // PRIVATE METHODS:
+    public void changeStarterSide(String username) {
+        try {
+            model.changStarterSide(username);
+        } catch (IllegalStateOperationException e) {
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
+        }
+    }
 
     public GameModel getModel() {
         return model;
     }
-
-    public void createAllListeners() {
-        List<PlayerHandListener> playerHandListenersList = new ArrayList<>();
-        List<PlayerScoreListener> playerScoreListeners = new ArrayList<>();
-        List<PlayAreaListener> playAreaListenerList = new ArrayList<>();
-
-        List<GoldDeckListener> goldDeckListeners = new ArrayList<>();
-
-        // TODO creare funzione per la creazione di tutti i listener
-        for (String username : playerList.keySet()) {
-            // create playerHandListener for all players
-            playerHandListenersList.add(new PlayerHandListener(clientList.get(username)));
-            // create playerScoreListener for all players
-            playerScoreListeners.add(new PlayerScoreListener(clientList.get(username)));
-            // create playAreaListener for all players
-            playAreaListenerList.add(new PlayAreaListener(clientList.get(username)));
-
-            goldDeckListeners.add(new GoldDeckListener(clientList.get(username)));
-        }
-
-        for (Player player : playerList.values()) {
-            // add all playerHandListener to all player
-            for (PlayerHandListener listener : playerHandListenersList) {
-                player.addPlayerHandListener(listener);
-            }
-            // add all playerScoreListener to all player
-            for (PlayerScoreListener listener : playerScoreListeners) {
-                player.addPlayerScoreListener(listener);
-            }
-            // add all playAreaListener to all player
-            for (PlayAreaListener listener : playAreaListenerList) {
-                player.addPlayAreaListener(listener);
-            }
-            // add to the player its own playerStarterCardListener
-            player.addPlayerStarterCardListener(new PlayerStarterCardListener(clientList.get(player.getUsername())));
-
-            // add to the player its own playerObjectiveCardListener
-            player.addPlayerObjectiveCardListener(
-                    new PlayerObjectiveCardListener(clientList.get(player.getUsername())));
-        }
-
-        for (GoldDeckListener listener : goldDeckListeners) {
-            model.getBoard().getDeckGold().addListener(listener);
-        }
-    }
-
 }

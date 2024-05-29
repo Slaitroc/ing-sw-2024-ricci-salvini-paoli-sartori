@@ -1,31 +1,44 @@
 package it.polimi.ingsw.gc31;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.rmi.RemoteException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 
-import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
 import it.polimi.ingsw.gc31.client_server.tcp.TCPServer;
-import it.polimi.ingsw.gc31.controller.Controller;
 
 public class Server {
-    private static IController virtualController = Controller.getController();
 
     public static void main(String[] args) throws IOException {
         // pulisce il terminale
         System.out.print("\033[H\033[2J");
         System.out.flush();
+        String ipAddress = null;
 
-        try {
-            new RmiServer(virtualController);
 
-            // TODO spostare prima riga dentro SocketServer
-            ServerSocket listenSocket = new ServerSocket(Integer.parseInt("1200"));
-            new TCPServer(listenSocket, virtualController).runServer();
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+        while (networkInterfaces.hasMoreElements()) {
+            NetworkInterface networkInterface = networkInterfaces.nextElement();
+
+            // Ignorare le interfacce di loopback e non attive
+            if (networkInterface.isLoopback() || !networkInterface.isUp()) {
+                continue;
+            }
+
+            Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+            while (inetAddresses.hasMoreElements()) {
+                InetAddress inetAddress = inetAddresses.nextElement();
+                // Verificare se l'indirizzo è un indirizzo locale
+                if (inetAddress.isSiteLocalAddress()) {
+                    // Stampa dell'indirizzo IP locale
+                    ipAddress = inetAddress.getHostAddress();
+                }
+            }
+        }
+
+        if (ipAddress != null) {
+            new RmiServer(ipAddress);
         }
     }
-
 }

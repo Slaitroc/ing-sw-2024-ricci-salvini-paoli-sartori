@@ -4,6 +4,10 @@ import it.polimi.ingsw.gc31.view.UI;
 
 import java.io.Serializable;
 
-public interface ClientQueueObject extends Serializable {
-    void execute(UI ui);
+public abstract class ClientQueueObject implements Serializable {
+
+    String recipient;
+
+    public abstract void execute(UI ui);
+
 }

@@ -5,7 +5,7 @@ import it.polimi.ingsw.gc31.view.UI;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
-public class ShowSecretObjectiveCardObj implements ClientQueueObject {
+public class ShowSecretObjectiveCardObj extends ClientQueueObject {
     private final String objectiveCard;
 
     public ShowSecretObjectiveCardObj(String objectiveCard) {

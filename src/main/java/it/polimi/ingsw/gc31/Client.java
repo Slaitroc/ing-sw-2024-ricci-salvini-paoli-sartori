@@ -1,5 +1,7 @@
 package it.polimi.ingsw.gc31;
 
+import static it.polimi.ingsw.gc31.utility.OurScanner.scanner;
+
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.NotBoundException;
@@ -12,8 +14,6 @@ import it.polimi.ingsw.gc31.view.gui.GUI;
 import it.polimi.ingsw.gc31.view.tui.TUI;
 import org.fusesource.jansi.AnsiConsole;
 
-import static it.polimi.ingsw.gc31.OurScanner.scanner;
-
 public class Client {
 
     public static void main(String[] args) throws NotBoundException, RemoteException {
@@ -21,6 +21,8 @@ public class Client {
         // pulisce il terminale
         System.out.print("\033[H\033[2J");
         System.out.flush();
+        CliPrint.coloredPrintPurple("Write Server IP:");
+        String ipaddress = scanner.nextLine();
 
         CliPrint.coloredPrintPurple("Chose connection:");
         System.out.println("\t1->RMI\n\t2->TCP");
@@ -29,9 +31,9 @@ public class Client {
         ClientCommands client = null;
         try {
             if (networkChoise == 1) {
-                client = new RmiClient();
+                client = new RmiClient(ipaddress);
             } else if (networkChoise == 2) {
-                client = new TCPClient();
+                client = new TCPClient(ipaddress);
             }
         } catch (RemoteException e) {
             e.printStackTrace();

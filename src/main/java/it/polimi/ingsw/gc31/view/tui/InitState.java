@@ -1,9 +1,10 @@
 package it.polimi.ingsw.gc31.view.tui;
 
+import static it.polimi.ingsw.gc31.utility.OurScanner.scanner;
+
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
-import static it.polimi.ingsw.gc31.OurScanner.scanner;
 
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 
@@ -82,7 +83,37 @@ public class InitState extends TuiState {
     }
 
     @Override
-    protected void command_chooseSecreteObjective() {
+    protected void command_chooseSecreteObjective1() {
+
+    }
+
+    @Override
+    protected void command_chooseSecreteObjective2() {
+
+    }
+
+    @Override
+    protected void command_playStarter() {
+
+    }
+
+    @Override
+    protected void command_play() {
+
+    }
+
+    @Override
+    protected void command_selectCard() {
+
+    }
+
+    @Override
+    protected void command_changeSide() {
+
+    }
+
+    @Override
+    protected void command_changeStarterSide() {
 
     }
 
@@ -100,7 +131,7 @@ public class InitState extends TuiState {
         tui.moveCursorToCmdLine();
         input = scanner.nextLine();
         try {
-            tui.getClient().setUsername(input.trim());
+            tui.getClient().setUsernameCall(input.trim());
         } catch (IOException e) {
             e.printStackTrace();
         }

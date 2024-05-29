@@ -1,20 +1,25 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
-import it.polimi.ingsw.gc31.exceptions.*;
-import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
-import it.polimi.ingsw.gc31.model.card.PlayableCard;
-import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
+import it.polimi.ingsw.gc31.controller.Controller;
+import it.polimi.ingsw.gc31.utility.DV;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.rmi.RemoteException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
+import java.rmi.RemoteException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+/*
+ricevo
+deserializzo
+getto e check il recipient
+a seconda chiamo gamecontroller o controller sendobject
+
+eseguito da loro
+ */
 /**
  * This class receives the inputs from the virtual socket server, executes the
  * methods requested by the client
@@ -22,308 +27,157 @@ import java.util.Map;
  * server
  */
 public class SocketClientHandler implements VirtualClient {
-    final IController controller;
+    private IController controller;
     private IGameController gameController;
-    private String username;
-    @SuppressWarnings("unused")
-    private VirtualClient client;
-    private Integer idGame;
-    private Map<String, Runnable> commandsMap;
-
-    private final TCPServer server;
-    private final BufferedReader input;
-    private final PrintWriter output;
+    private Integer idGame; // viene settata ma ancora non utilizzata
+    // private String username;
     private boolean ready = false;
+
+    private final ObjectInputStream input;
+    private final ObjectOutputStream output;
 
     /**
      * This method is the constructor of the client handler
      *
-     * @param controller is the IController of the specific client
-     * @param server     is the TCPServer linked to that client handler
-     * @param input      is the reference to the input stream of the socket
-     *                   connection
-     * @param output     is the reference to the output stream of the socket
-     *                   connection
+     * @param input  is the reference to the input stream of the socket
+     *               connection
+     * @param output is the reference to the output stream of the socket
+     *               connection
      */
-    public SocketClientHandler(IController controller, TCPServer server, BufferedReader input, PrintWriter output) {
-        this.controller = controller;
-        this.server = server;
+    public SocketClientHandler(ObjectInputStream input, ObjectOutputStream output) {
+        this.controller = Controller.getController();
+        Controller.getController().setNewConnection(this);
         this.input = input;
         this.output = output;
-        initializeMap();
+        tcpClient_reader();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                input.close();
+                output.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }));
     }
 
-    private void initializeMap() {
-        this.commandsMap = new HashMap<>();
-        this.commandsMap.put("connect", this::runConnect);
-        this.commandsMap.put("create game", this::runCreateGame);
-        this.commandsMap.put("get game list", this::runGetGameList);
-        this.commandsMap.put("join game", this::runJoinGame);
-        this.commandsMap.put("draw gold", this::runDrawGold);
-    }
-
-    private void runConnect() {
-        String line = null;
+    /**
+     * This method send to the TCPClient the ClientQueueObject that needs to be
+     * executed
+     */
+    @Override
+    public void sendCommand(ClientQueueObject obj) throws RemoteException {
         try {
-            line = input.readLine();
-            controller.connect(this, line);
-            this.username = line;
-            output.println("username set");
-            output.flush();
-            server.TCPserverWrite("New client connected: " + username);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (PlayerNicknameAlreadyExistsException p) {
-            output.println("Username already exists!");
-            output.flush();
-        }
-    }
-
-    private void runCreateGame() {
-        try {
-            int maxNumberPlayer = Integer.parseInt(input.readLine());
-            gameController = controller.createGame(username, maxNumberPlayer);
-            output.println(this.idGame);
+            output.writeObject(obj);
+            output.reset();
             output.flush();
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void runGetGameList() {
-        try {
-            controller.getGameList(username);
-        } catch (NoGamesException e) {
-            output.println("no game exception");
-            output.flush();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void runJoinGame() {
-        Integer idGame = null;
-        try {
-            idGame = Integer.parseInt(input.readLine());
-            gameController = controller.joinGame(username, idGame);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void runDrawGold() {
-        try {
-            gameController.drawGold(username);
-        } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * This method is invoked on the client handler creation (by a Thread), read in
-     * an infinite loop
-     * the commands sent by the TCPClient and invokes the methods based on the
-     * client messages
-     *
-     * @throws IOException if an error occurs reading on the socket input stream
+     * This method reads the object from the client and sends it to the
+     * right controller
+     * based on the recipient of the object
      */
-    public void runVirtualView() throws IOException {
-        String line;
-        while ((line = input.readLine()) != null) {
-            commandsMap.get(line).run();
+    private void tcpClient_reader() {
+        new Thread(() -> {
+            ServerQueueObject obj = null;
+
+            try {
+                while ((obj = (ServerQueueObject) input.readObject()) != null) {
+                    if (obj.getRecipient().equals(DV.RECIPIENT_CONTROLLER)) {
+                        try {
+                            controller.sendCommand(obj);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (obj.getRecipient().equals(DV.RECIPIENT_GAME_CONTROLLER)) {
+                        try {
+                            gameController.sendCommand(obj);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                // se oggetto letto è null la connessione è caduta
+                // TODO aggiungere wait per aspettare x minuti che il client si riconnetta,
+                // se dopo x minuti il client non si è riconnesso chiudo la connessione.
+                // Altrimenti
+                // devo riconnettere il client alla partita a cui stava giocando
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
             /*
-             * switch (line) {
-             * case "connect": {
-             * commandsMap.get("connect");
-             * 
-             * line = input.readLine();
+             * while (true) {
              * try {
-             * controller.connect(this, line);
-             * this.username = line;
-             * output.println("username set");
-             * output.flush();
-             * server.TCPserverWrite("New client connected: " + username);
-             * } catch (PlayerNicknameAlreadyExistsException e) {
-             * output.println("username already exists");
-             * output.flush();
+             * obj = (ServerQueueObject) input.readObject();
+             * } catch (ClassNotFoundException | IOException e) {
+             * e.printStackTrace();
              * }
-             * break;
-             * }
-             * case "create game": {
-             * commandsMap.get("create game");
-             * 
-             * int maxNumberPlayer = Integer.parseInt(input.readLine());
-             * gameController = controller.createGame(username, maxNumberPlayer);
-             * output.println(this.idGame);
-             * output.flush();
-             * break;
-             * }
-             * case "get game list": {
-             * commandsMap.get("get game list");
-             * 
+             * if (obj != null) {
+             * if (obj.getRecipient().equals(DV.RECIPIENT_CONTROLLER)) {
              * try {
-             * controller.getGameList(username);
-             * } catch (NoGamesException e) {
-             * output.println("no game exception");
-             * output.flush();
+             * controller.sendCommand(obj);
+             * } catch (RemoteException e) {
+             * e.printStackTrace();
              * }
-             * break;
+             * } else if (obj.getRecipient().equals(DV.RECIPIENT_GAME_CONTROLLER)) {
+             * try {
+             * gameController.sendCommand(obj);
+             * } catch (RemoteException e) {
+             * e.printStackTrace();
              * }
-             * case "join game": {
-             * commandsMap.get("join game");
-             * 
-             * int idGame = Integer.parseInt(input.readLine());
-             * 
-             * gameController = controller.joinGame(username, idGame);
-             * 
-             * break;
              * }
-             * case "draw gold": {
-             * gameController.drawGold(username);
-             * commandsMap.get("draw gold");
-             * break;
              * }
              * }
              */
-        }
+        }).start();
     }
 
     /**
      * This method sets the gameID
      *
      * @param gameID is the value that needs to be set
-     * @throws RemoteException
      */
     @Override
     public void setGameID(int gameID) throws RemoteException {
         this.idGame = gameID;
     }
 
-    @Override
-    public void show_handPlayer(String username, List<PlayableCard> hand) {
-        /*
-         * output.print("show hand player");
-         * // username non viene utilizzato
-         * // output.print(username);
-         * for (String s : hand) {
-         * output.println(s);
-         * }
-         * output.println("end list");
-         * output.flush();
-         */
-    }
-
-    @Override
-    public void show_scorePlayer(String username, Integer score) {
-        output.println("show score");
-        // username non viene utilizzato
-        output.println(username);
-        output.println(score);
-        output.flush();
-    }
-
-    @Override
-    public void show_starterCard(String starterCard) {
-        output.println("show starter card");
-        output.println(starterCard);
-        output.flush();
-    }
-
-    @Override
-    public void show_objectiveCard(ObjectiveCard objectiveCard) {
-        output.println("show objective card");
-        output.println(objectiveCard);
-        output.flush();
-    }
-
-    @Override
-    public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
-
-    }
-
-    @Override
-    public void show_playArea(String username, String playArea, String achievedResources) {
-
-    }
-
-    @Override
-    public void show_goldDeck(String firstCardDeck, String card1, String card2) {
-        output.println("show gold deck");
-        output.println(firstCardDeck);
-        output.println(card1);
-        output.println(card2);
-        output.flush();
-    }
-
-    @Override
-    public void show_resourceDeck(String firstCardDeck, String card1, String card2) {
-        output.println("show resource deck");
-        output.println(firstCardDeck);
-        output.println(card1);
-        output.println(card2);
-        output.flush();
-    }
-
-    @Override
-    public void show_objectiveDeck(String firstCardDeck, String card1, String card2) {
-        output.println("show objective card");
-        output.println(firstCardDeck);
-        output.println(card1);
-        output.println(card2);
-        output.flush();
-    }
-
     /**
-     * This method should send to the tcp client the list of games created.
-     * In order to do so the method writes on the socket stream every String
-     * that represents a game
+     * This method returns the value of the attribute ready.
      *
-     * @param listGame is the list with every String representing a game
-     * @throws RemoteException
+     * @return the value of the ready attribute
      */
     @Override
-    public void showListGame(List<String> listGame) throws RemoteException {
-        output.println("show game list");
-        // listGame.forEach(output::println);
-        for (String s : listGame)
-            output.println(s);
-        output.println("game list finished");
-        output.flush();
-    }
-
-    @Override
-    public boolean isReady() throws RemoteException {
+    public boolean isReady() {
         return ready;
     }
 
+    /**
+     * This method set the controller attribute to the one taken as a parameter.
+     *
+     * @param controller is the new reference to the controller that needs to be set
+     *                   to the attribute
+     */
     @Override
-    public void startGame() throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'startGame'");
+    public void setController(IController controller) {
+        this.controller = controller;
     }
 
+    /**
+     * This method set the gameController attribute to the one taken as a parameter.
+     *
+     * @param gameController is the new reference to the gameController that needs
+     *                       to be set to the attribute
+     */
     @Override
-    public ShowUpdate getUI() throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getUI'");
+    public void setGameController(IGameController gameController) {
+        this.gameController = gameController;
     }
 
-    @Override
-    public void sendCommand(ClientQueueObject obj) throws RemoteException {
-
-    }
-
-    @Override
-    public void show_listGame(List<String> listGame) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_listGame'");
-    }
-
-    @Override
-    public void show_gameCreated() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_gameCreated'");
-    }
 }
