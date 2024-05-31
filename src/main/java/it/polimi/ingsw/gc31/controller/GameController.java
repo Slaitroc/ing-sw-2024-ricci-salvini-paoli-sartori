@@ -11,15 +11,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
-import it.polimi.ingsw.gc31.client_server.queue.clientQueue.NewChatMessage;
-import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowInGamePlayerObj;
-import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowReadyStatusObj;
-import it.polimi.ingsw.gc31.client_server.queue.clientQueue.StartGameObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.*;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.PlayObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.FlipCardObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.FlipStarterCardObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
+import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
+import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 import it.polimi.ingsw.gc31.model.enumeration.GameState;
 import it.polimi.ingsw.gc31.model.player.Player;
@@ -213,7 +212,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.play(username, point);
         } catch (IllegalStateOperationException e) {
-            ServerLog.gControllerWrite(e.getMessage(), idGame);
+            try {
+                clientList.get(username).sendCommand(new ShowInvalidActionObj("You are in the wrong state"));
+            } catch (RemoteException ex) {
+                // TODO occuparsi dell'eccezione
+                throw new RuntimeException(ex);
+            }
         }
     }
 
@@ -222,7 +226,19 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             model.playStarter(username);
             ServerLog.gControllerWrite("Player" + username + " has played starter card", idGame);
         } catch (IllegalStateOperationException e) {
-            ServerLog.gControllerWrite(e.getMessage(), idGame);
+            try {
+                clientList.get(username).sendCommand(new ShowInvalidActionObj("You are in the wrong state"));
+            } catch (RemoteException ex) {
+                // TODO occuparsi dell'eccezione
+                throw new RuntimeException(ex);
+            }
+        } catch (ObjectiveCardNotChosenException e) {
+            try {
+                clientList.get(username).sendCommand(new ShowInvalidActionObj("You must first choose your secret objective"));
+            } catch (RemoteException ex) {
+                // TODO occuparsi dell'eccezione
+                throw new RuntimeException(ex);
+            }
         }
     }
 
@@ -240,7 +256,19 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.setSelectCard(username, index);
         } catch (IllegalStateOperationException e) {
-            ServerLog.gControllerWrite(e.getMessage(), idGame);
+            try {
+                clientList.get(username).sendCommand(new ShowInvalidActionObj("You are in the wrong state"));
+            } catch (RemoteException ex) {
+                // TODO occuparsi dell'eccezione
+                throw new RuntimeException(ex);
+            }
+        } catch (WrongIndexSelectedCard e) {
+            try {
+                clientList.get(username).sendCommand(new ShowInvalidActionObj("Selected index out of bounds"));
+            } catch (RemoteException ex) {
+                // TODO occuparsi dell'eccezione
+                throw new RuntimeException(ex);
+            }
         }
     }
 

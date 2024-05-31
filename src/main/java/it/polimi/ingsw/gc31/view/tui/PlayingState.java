@@ -166,7 +166,7 @@ public class PlayingState extends TuiState {
         tui.printToCmdLineOut(tui.tuiWrite("Type the index of    the card:"));
         int input = Integer.parseInt(scanner.nextLine());
         try {
-            tui.getClient().selectCard(input);
+            tui.getClient().selectCard(input - 1);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

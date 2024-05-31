@@ -1747,4 +1747,9 @@ public class TUI extends UI {
             playViewUpdate.notify();
         }
     }
+
+    @Override
+    public void show_invalidAction(String message) {
+
+    }
 }

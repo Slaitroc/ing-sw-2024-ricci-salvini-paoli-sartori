@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
@@ -47,7 +48,7 @@ public class RunningGameModelSate implements GameModelState {
     }
 
     @Override
-    public void setSelectCard(GameModel model, String username, int index) throws IllegalStateOperationException {
+    public void setSelectCard(GameModel model, String username, int index) throws IllegalStateOperationException, WrongIndexSelectedCard {
         model.getPlayers().get(username).setSelectedCard(index);
     }
 
@@ -58,12 +59,12 @@ public class RunningGameModelSate implements GameModelState {
 
     @Override
     public void changeStarterSide(GameModel model, String username) throws IllegalStateOperationException {
-        model.getPlayers().get(username).changeStarterSide();
+        throw new IllegalStateOperationException();
     }
 
     @Override
     public void detectEndGame(GameModel model) throws IllegalStateOperationException {
-        if (model.getCurrPlayer().getScore() >= 2) {
+        if (model.getCurrPlayer().getScore() >= 20) {
             model.setGameState(new ShowDownGameModelState());
         }
     }
