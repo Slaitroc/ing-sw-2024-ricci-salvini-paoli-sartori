@@ -1101,6 +1101,7 @@ public class TUI extends UI {
                     if (cmdLineOut.isEmpty()) {
                         try {
                             print_CmdLineBorders();
+                            cmdLineAreaSelection.add(0);
                             commandLineReader(); // solo al lancio del thread command line out la lista cmdLineOut è
                             // vuota, quindi entra in questo if solo una volta
                             cmdLineOut.wait();
@@ -1123,7 +1124,6 @@ public class TUI extends UI {
      * <code>cmdLineMessages</code> queue.
      */
     private void commandLineReader() {
-        cmdLineAreaSelection.add(0);
         new Thread(() -> {
             commandLineProcess();
             Scanner cmdScanner = new Scanner(System.in);
@@ -1374,7 +1374,7 @@ public class TUI extends UI {
                     Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW - 1 - i, CHAT_BOARD_INPUT_COLUMN)
                             .a(chatMessages.toArray()[chatMessages.size() - 1 - i]));
         }
-        chatNeedsUpdate = false;
+        // chatNeedsUpdate = false;
         resetCursor();
     }
 
