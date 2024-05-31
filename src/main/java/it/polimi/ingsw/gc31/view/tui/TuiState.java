@@ -34,6 +34,8 @@ public abstract class TuiState {
      * <p>
      * Potrebbe essere nella tui ma visto che riguarda principalmente la concorrenza
      * con gli stati per ora lo lascio qui
+     * Nota: devo migliorare le java doc---> per ora basta sapere che o il comando o
+     * la risposta devono chiamare state.notify perché tutto funzioni correttamente
      */
     protected void stateNotify() {
         synchronized (tui.stateLockQueue) {
