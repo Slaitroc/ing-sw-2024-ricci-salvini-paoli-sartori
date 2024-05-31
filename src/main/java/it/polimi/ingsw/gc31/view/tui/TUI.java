@@ -1234,19 +1234,17 @@ public class TUI extends UI {
                     }
                 }
                 String input = chatScanner.nextLine();
-                if (input.isEmpty()) {
-                    continue;
-                }
-                if (input.equals("ccc")) {
-                    removeFromChatAreaSelection();
-                    addToCmdLineAreaSelection();
-                    moveCursorToCmdLine();
-
-                } else {
-                    try {
-                        client.sendChatMessage(getClient().getUsername(), input.trim());
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
+                if (!input.isEmpty()) {
+                    if (input.equals("ccc")) {
+                        removeFromChatAreaSelection();
+                        addToCmdLineAreaSelection();
+                        moveCursorToCmdLine();
+                    } else {
+                        try {
+                            client.sendChatMessage(getClient().getUsername(), input.trim());
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
