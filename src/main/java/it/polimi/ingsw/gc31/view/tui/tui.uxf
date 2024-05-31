@@ -237,7 +237,7 @@ layer=0
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>Text</id><coordinates><x>900</x><y>891</y><w>108</w><h>27</h></coordinates><panel_attributes>notify
 style=wordwrap
 fg=#6600ff
-layer=1</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>792</x><y>864</y><w>135</w><h>18</h></coordinates><panel_attributes>cmdLineAreaSelection.poll(0)
+layer=1</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>792</x><y>864</y><w>135</w><h>18</h></coordinates><panel_attributes>chatAreaSelection.add()
 fontsize=9		
 style=wordwrap
 bg=white
@@ -726,4 +726,5 @@ halign=center
 
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLFrame</id><coordinates><x>0</x><y>243</y><w>198</w><h>45</h></coordinates><panel_attributes>updates vari
 fg=black</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2880</x><y>792</y><w>27</w><h>558</h></coordinates><panel_attributes>lt=.
-</panel_attributes><additional_attributes>10;600;10;10</additional_attributes></element></diagram>
+</panel_attributes><additional_attributes>10;600;10;10</additional_attributes></element><element><id>UMLFrame</id><coordinates><x>720</x><y>972</y><w>288</w><h>81</h></coordinates><panel_attributes>else
+fg=black</panel_attributes><additional_attributes></additional_attributes></element></diagram>
