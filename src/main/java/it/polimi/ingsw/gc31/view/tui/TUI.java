@@ -689,8 +689,9 @@ public class TUI extends UI {
             }
 
             // if there are resources in the center print them
-//            res.append(ansi().cursor(relative_y+CARD_HEIGHT/2, relative_x+CARD_LENGTH/2).a("."));
-            if (resources.size() > 4 && relative_y+CARD_HEIGHT/2 > overFlowRight) {
+            // res.append(ansi().cursor(relative_y+CARD_HEIGHT/2,
+            // relative_x+CARD_LENGTH/2).a("."));
+            if (resources.size() > 4 && relative_y + CARD_HEIGHT / 2 > overFlowRight) {
                 res.append(ansi().cursor(relative_y + CARD_HEIGHT / 2, relative_x + CARD_LENGTH / 2 - 1)
                         .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
                         .a(" " + resources.get(4).getSymbol() + " "));
@@ -702,7 +703,8 @@ public class TUI extends UI {
         return null;
     }
 
-    private StringBuilder print_PlaceHolder(Point point, int x, int y, int overFlowUp, int overFlowDown, int overFlowLeft, int overFlowRight) {
+    private StringBuilder print_PlaceHolder(Point point, int x, int y, int overFlowUp, int overFlowDown,
+            int overFlowLeft, int overFlowRight) {
         int relative_x = x - (CARD_LENGTH - 1) / 2;
         int relative_y = y - (CARD_HEIGHT - 1) / 2;
 
@@ -809,25 +811,28 @@ public class TUI extends UI {
     // TODO temporanei
     protected void movePlayAreaRight() {
         if (placedCards != null) {
-            OFFSET_X_PLAYAREA += CARD_X_OFFSET*2;
+            OFFSET_X_PLAYAREA += CARD_X_OFFSET * 2;
             show_playArea(client.getUsername(), placedCards, null);
         }
     }
+
     protected void movePlayAreaLeft() {
         if (placedCards != null) {
-            OFFSET_X_PLAYAREA -= CARD_X_OFFSET*2;
+            OFFSET_X_PLAYAREA -= CARD_X_OFFSET * 2;
             show_playArea(client.getUsername(), placedCards, null);
         }
     }
+
     protected void movePlayAreaDown() {
         if (placedCards != null) {
-            OFFSET_Y_PLAYAREA += CARD_Y_OFFSET*2;
+            OFFSET_Y_PLAYAREA += CARD_Y_OFFSET * 2;
             show_playArea(client.getUsername(), placedCards, null);
         }
     }
+
     protected void movePlayAreaUp() {
         if (placedCards != null) {
-            OFFSET_Y_PLAYAREA -= CARD_Y_OFFSET*2;
+            OFFSET_Y_PLAYAREA -= CARD_Y_OFFSET * 2;
             show_playArea(client.getUsername(), placedCards, null);
         }
     }
@@ -1468,9 +1473,10 @@ public class TUI extends UI {
                     PLAYAREA_END_COLUMN));
             res.append(print_PlacedCards(playArea));
 
-             res.append(ansi().cursor(PLAYAREA_INITIAL_ROW + (PLAYAREA_END_ROW -
-             PLAYAREA_INITIAL_ROW) / 2,
-             PLAYAREA_INITIAL_COLUMN + (PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN) / 2).bg(RED).a(".").reset());
+            res.append(ansi().cursor(PLAYAREA_INITIAL_ROW + (PLAYAREA_END_ROW -
+                    PLAYAREA_INITIAL_ROW) / 2,
+                    PLAYAREA_INITIAL_COLUMN + (PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN) / 2).bg(RED).a(".")
+                    .reset());
 
             placedCards = playArea;
 
