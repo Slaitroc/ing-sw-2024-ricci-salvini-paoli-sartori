@@ -6,6 +6,8 @@ import java.util.List;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
+import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
@@ -72,16 +74,16 @@ public class GameModel {
             turnPlayer = new ArrayList<>();
             turnPlayer.addAll(players.keySet());
             currPlayingPlayer = 0;
+        } else {
+            currPlayingPlayer = (currPlayingPlayer + 1) % players.size();
         }
-        currPlayingPlayer = (currPlayingPlayer + 1) % players.size();
 
-        // pongo tutti i giocatori a waiting
+        // set all players to waiting state
         for (Player player : players.values()) {
             player.setInGameState(new Waiting());
         }
-        // pongo il giocatore in gioco a notPlaced
+        // set in game player to notPlaced state
         players.get(turnPlayer.get(currPlayingPlayer)).setInGameState(new NotPlaced());
-
     }
 
     public Board getBoard() {
@@ -92,58 +94,27 @@ public class GameModel {
      * This method is used to end the turn of a player.
      * It also
      */
-    public void endTurn() {
-        // FIXME gestire qua questa eccezione?
-        try {
-            gameState.detectEndGame(this);
-            setNextPlayingPlayer();
-        } catch (IllegalStateOperationException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    // FIXME non penso serva sincronizzare il metodo
-    /**
-     * This method is used to detect when a player reaches 20 points.
-     */
-    private void detectEndGame() {
-        // synchronized (this) {
-        // if (this.gameState == GameState.RUNNING & getCurrPlayingPlayer().getScore()
-        // >= 20) {
-        // startShowdown();
-        // System.out.println("Someone reached 20 points!");
-        // } else if (this.gameState == GameState.SHOWDOWN & getCurrPlayingPlayer() ==
-        // players.getFirst()) {
-        // startLastTurn();
-        // System.out.println("Players has now one more turn to play!");
-        // } else if (this.gameState == GameState.LAST_TURN && getCurrPlayingPlayer() ==
-        // players.getLast()) {
-        // startEndGame();
-        // System.out.println("\n_____GAME HAS ENDED_____!\n");
-        // for (Player player : players) {
-        // player.calculateObjectiveCard(objective1);
-        // player.calculateObjectiveCard(objective2);
-        // player.calculateObjectiveCard(player.getObjectiveCard());
-        // System.out.println(player.getUsername() + " has " + player.getScore() + "
-        // points!");
-        // }
-        // }
-        // }
+    public void endTurn() throws IllegalStateOperationException {
+        gameState.detectEndGame(this);
+        setNextPlayingPlayer();
     }
 
     public Map<String, Player> getPlayers() {
         return players;
     }
 
-    public Player getCurrPlayer() {
-        return players.get(turnPlayer.get(currPlayingPlayer));
+    protected Player getCurrPlayer() {
+        if (turnPlayer != null) {
+            return players.get(turnPlayer.get(currPlayingPlayer));
+        }
+        return null;
     }
 
-    public int getCurrIndexPlayer() {
+    protected int getCurrIndexPlayer() {
         return currPlayingPlayer;
     }
 
-    public void setGameState(GameModelState gameState) {
+    protected void setGameState(GameModelState gameState) {
         this.gameState = gameState;
     }
 
@@ -151,7 +122,7 @@ public class GameModel {
         gameState.chooseSecretObjective(this, username, index);
     }
 
-    public void playStarter(String username) throws IllegalStateOperationException {
+    public void playStarter(String username) throws IllegalStateOperationException, ObjectiveCardNotChosenException {
         gameState.playStarter(this, username);
     }
 
@@ -167,7 +138,7 @@ public class GameModel {
         gameState.drawResource(this, username, index);
     }
 
-    public void setSelectCard(String username, int index) throws IllegalStateOperationException {
+    public void setSelectCard(String username, int index) throws IllegalStateOperationException, WrongIndexSelectedCard {
         gameState.setSelectCard(this, username, index);
     }
 
@@ -177,5 +148,10 @@ public class GameModel {
 
     public void changStarterSide(String username) throws IllegalStateOperationException {
         gameState.changeStarterSide(this, username);
+    }
+
+    // Test methods
+    GameModelState getGameState() {
+        return gameState;
     }
 }

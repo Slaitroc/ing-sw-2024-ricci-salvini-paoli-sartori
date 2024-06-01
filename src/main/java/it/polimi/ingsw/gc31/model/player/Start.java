@@ -14,8 +14,11 @@ public class Start extends PlayerState {
 
     @Override
     public void chooseSecretObjective(ObjectiveCard card, Player player) {
-        player.setObjectiveCard(card);
-        objectiveChosen = true;
+        if (!objectiveChosen) {
+            player.setObjectiveCard(card);
+            objectiveChosen = true;
+        }
+        // TODO fare qualcosa se objective è gia stata scelta e si tenta di sceglier di nuovo la carta obbiettivo?
     }
 
     @Override

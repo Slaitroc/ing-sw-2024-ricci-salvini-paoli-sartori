@@ -83,12 +83,7 @@ public class InitState extends TuiState {
     }
 
     @Override
-    protected void command_chooseSecreteObjective1() {
-
-    }
-
-    @Override
-    protected void command_chooseSecreteObjective2() {
+    protected void command_chooseSecreteObjective() {
 
     }
 
@@ -114,6 +109,11 @@ public class InitState extends TuiState {
 
     @Override
     protected void command_changeStarterSide() {
+
+    }
+
+    @Override
+    protected void command_movePlayArea() {
 
     }
 
