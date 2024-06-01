@@ -95,7 +95,7 @@ public class Player extends PlayerObservable {
     // FIXME potrebbe esserci un problema perchè se addToHand non va a buon fine la carta pesccata finisce in un buco nero
     public boolean drawGold(int index) throws EmptyDeckException {
         Deck<PlayableCard> deck = board.getDeckGold();
-        if (deck.peekCard() == null || deck.peekCard1() == null || deck.peekCard2() == null) {
+        if (deck.peekCard() == null) {
             deck.replaceDeck(board.getDeckResource().getQueueDeck());
         }
 
