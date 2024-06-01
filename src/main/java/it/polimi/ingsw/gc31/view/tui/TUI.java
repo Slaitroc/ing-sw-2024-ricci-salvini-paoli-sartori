@@ -689,12 +689,12 @@ public class TUI extends UI {
             }
 
             // if there are resources in the center print them
-            res.append(ansi().cursor(relative_y+CARD_HEIGHT/2, relative_x+CARD_LENGTH/2).a("."));
-//            if (resources.size() > 4 && relative_y+CARD_HEIGHT/2 > overFlowRight) {
-//                res.append(ansi().cursor(relative_y + CARD_HEIGHT / 2, relative_x + CARD_LENGTH / 2 - 1)
-//                        .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
-//                        .a(" " + resources.get(4).getSymbol() + " "));
-//            }
+//            res.append(ansi().cursor(relative_y+CARD_HEIGHT/2, relative_x+CARD_LENGTH/2).a("."));
+            if (resources.size() > 4 && relative_y+CARD_HEIGHT/2 > overFlowRight) {
+                res.append(ansi().cursor(relative_y + CARD_HEIGHT / 2, relative_x + CARD_LENGTH / 2 - 1)
+                        .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
+                        .a(" " + resources.get(4).getSymbol() + " "));
+            }
 
             res.append(ansi().reset());
             return res;
