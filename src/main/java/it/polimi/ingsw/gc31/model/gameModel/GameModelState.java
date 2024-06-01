@@ -21,4 +21,5 @@ public interface GameModelState {
     void changeSide(GameModel model, String username) throws IllegalStateOperationException;
     void changeStarterSide(GameModel model, String username) throws IllegalStateOperationException;
     void detectEndGame(GameModel model) throws IllegalStateOperationException;
+    void endGame(GameModel model) throws IllegalStateOperationException;
 }

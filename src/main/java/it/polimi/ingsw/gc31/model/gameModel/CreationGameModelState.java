@@ -87,6 +87,11 @@ public class CreationGameModelState implements GameModelState {
         throw new IllegalStateOperationException();
     }
 
+    @Override
+    public void endGame(GameModel model) throws IllegalStateOperationException {
+
+    }
+
     private Map<String, Player> createPlayers(GameModel model, Set<String> setUsername) {
         Map<String, Player> players = new HashMap<>();
         for (String username : setUsername) {

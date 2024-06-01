@@ -73,4 +73,9 @@ public class LastTurnGameModelState implements GameModelState {
             // Calculate points
         }
     }
+
+    @Override
+    public void endGame(GameModel model) throws IllegalStateOperationException {
+
+    }
 }
