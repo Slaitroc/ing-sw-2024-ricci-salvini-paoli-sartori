@@ -48,6 +48,15 @@ public class GameModel {
     public void initGame(LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
         players = gameState.initGame(this, clients);
     }
+    public void endGame() {
+        for (Player player : players.values()) {
+            int point  = 0;
+            point += board.getDeckObjective().getCard1().getObjective().isObjectiveDone(player.getPlayArea().getPlacedCards(), null, player.getPlayArea().getAchievedResources());
+            point += board.getDeckObjective().getCard2().getObjective().isObjectiveDone(player.getPlayArea().getPlacedCards(), null, player.getPlayArea().getAchievedResources());
+            point += player.getScore();
+            System.out.println(player.getUsername()+" ha fatto "+point+" punti");
+        }
+    }
 
     /**
      * This method assigns a pawn color to a player.
