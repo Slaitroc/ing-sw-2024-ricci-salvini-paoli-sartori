@@ -294,17 +294,17 @@ public class TCPClient implements ClientCommands {
 
     @Override
     public void selectCard(int index) {
-        tcp_sendCommand(new SelectCardObj(this.username, index), DefaultValues.RECIPIENT_GAME_CONTROLLER);
+        tcp_sendCommand(new SelectCardObj(this.username, index), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
     @Override
     public void changeSide() throws RemoteException {
-        tcp_sendCommand(new FlipCardObj(this.username), DefaultValues.RECIPIENT_GAME_CONTROLLER);
+        tcp_sendCommand(new FlipCardObj(this.username), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
     @Override
     public void changeStarterSide() throws RemoteException {
-        tcp_sendCommand(new FlipStarterCardObj(this.username), DefaultValues.RECIPIENT_GAME_CONTROLLER);
+        tcp_sendCommand(new FlipStarterCardObj(this.username), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
     /**

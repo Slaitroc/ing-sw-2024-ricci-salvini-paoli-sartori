@@ -196,6 +196,7 @@ public class Player extends PlayerObservable {
                 new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
         notifyPlayerHandListener(
                 new Pair<>(username, hand));
+        board.updateScore(username, score);
     }
 
     /**
