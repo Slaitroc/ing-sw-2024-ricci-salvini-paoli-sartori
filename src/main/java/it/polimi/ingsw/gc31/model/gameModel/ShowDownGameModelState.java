@@ -68,4 +68,9 @@ public class ShowDownGameModelState implements GameModelState {
             model.setGameState(new LastTurnGameModelState());
         }
     }
+
+    @Override
+    public void endGame(GameModel model) throws IllegalStateOperationException {
+
+    }
 }

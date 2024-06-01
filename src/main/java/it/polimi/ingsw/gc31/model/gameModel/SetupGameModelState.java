@@ -74,4 +74,9 @@ public class SetupGameModelState implements GameModelState{
     public void detectEndGame(GameModel model) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
+
+    @Override
+    public void endGame(GameModel model) throws IllegalStateOperationException {
+
+    }
 }

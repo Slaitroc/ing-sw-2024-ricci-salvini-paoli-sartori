@@ -64,8 +64,13 @@ public class RunningGameModelSate implements GameModelState {
 
     @Override
     public void detectEndGame(GameModel model) throws IllegalStateOperationException {
-        if (model.getCurrPlayer().getScore() >= 20) {
+        if (model.getCurrPlayer().getScore() >= 5) {
             model.setGameState(new ShowDownGameModelState());
         }
+    }
+
+    @Override
+    public void endGame(GameModel model) throws IllegalStateOperationException {
+
     }
 }
