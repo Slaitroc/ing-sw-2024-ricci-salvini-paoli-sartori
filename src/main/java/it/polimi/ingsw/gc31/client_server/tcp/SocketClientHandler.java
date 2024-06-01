@@ -1,10 +1,10 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
-import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
+import it.polimi.ingsw.gc31.utility.DV;
 
 import java.io.IOException;
 
@@ -29,14 +29,12 @@ eseguito da loro
 public class SocketClientHandler implements VirtualClient {
     private IController controller;
     private IGameController gameController;
-    private String username;
-
-    private Integer idGame;
+    private Integer idGame; // viene settata ma ancora non utilizzata
+    // private String username;
+    private boolean ready = false;
 
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
-
-    private boolean ready = false;
 
     /**
      * This method is the constructor of the client handler
@@ -87,15 +85,15 @@ public class SocketClientHandler implements VirtualClient {
         new Thread(() -> {
             ServerQueueObject obj = null;
 
-            try{
-                while( (obj = (ServerQueueObject) input.readObject() ) != null){
-                    if (obj.getRecipient().equals(DefaultValues.RECIPIENT_CONTROLLER)) {
+            try {
+                while ((obj = (ServerQueueObject) input.readObject()) != null) {
+                    if (obj.getRecipient().equals(DV.RECIPIENT_CONTROLLER)) {
                         try {
                             controller.sendCommand(obj);
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
-                    } else if (obj.getRecipient().equals(DefaultValues.RECIPIENT_GAME_CONTROLLER)) {
+                    } else if (obj.getRecipient().equals(DV.RECIPIENT_GAME_CONTROLLER)) {
                         try {
                             gameController.sendCommand(obj);
                         } catch (RemoteException e) {
@@ -104,37 +102,38 @@ public class SocketClientHandler implements VirtualClient {
                     }
                 }
 
-                //se oggetto letto è null la connessione è caduta
-                //TODO aggiungere wait per aspettare x minuti che il client si riconnetta,
-                // se dopo x minuti il client non si è riconnesso chiudo la connessione. Altrimenti
+                // se oggetto letto è null la connessione è caduta
+                // TODO aggiungere wait per aspettare x minuti che il client si riconnetta,
+                // se dopo x minuti il client non si è riconnesso chiudo la connessione.
+                // Altrimenti
                 // devo riconnettere il client alla partita a cui stava giocando
-            } catch (IOException | ClassNotFoundException e ){
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
 
             /*
-            while (true) {
-                try {
-                    obj = (ServerQueueObject) input.readObject();
-                } catch (ClassNotFoundException | IOException e) {
-                    e.printStackTrace();
-                }
-                if (obj != null) {
-                    if (obj.getRecipient().equals(DefaultValues.RECIPIENT_CONTROLLER)) {
-                        try {
-                            controller.sendCommand(obj);
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
-                    } else if (obj.getRecipient().equals(DefaultValues.RECIPIENT_GAME_CONTROLLER)) {
-                        try {
-                            gameController.sendCommand(obj);
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
+             * while (true) {
+             * try {
+             * obj = (ServerQueueObject) input.readObject();
+             * } catch (ClassNotFoundException | IOException e) {
+             * e.printStackTrace();
+             * }
+             * if (obj != null) {
+             * if (obj.getRecipient().equals(DV.RECIPIENT_CONTROLLER)) {
+             * try {
+             * controller.sendCommand(obj);
+             * } catch (RemoteException e) {
+             * e.printStackTrace();
+             * }
+             * } else if (obj.getRecipient().equals(DV.RECIPIENT_GAME_CONTROLLER)) {
+             * try {
+             * gameController.sendCommand(obj);
+             * } catch (RemoteException e) {
+             * e.printStackTrace();
+             * }
+             * }
+             * }
+             * }
              */
         }).start();
     }
@@ -162,7 +161,8 @@ public class SocketClientHandler implements VirtualClient {
     /**
      * This method set the controller attribute to the one taken as a parameter.
      *
-     * @param controller is the new reference to the controller that needs to be set to the attribute
+     * @param controller is the new reference to the controller that needs to be set
+     *                   to the attribute
      */
     @Override
     public void setController(IController controller) {
@@ -172,7 +172,8 @@ public class SocketClientHandler implements VirtualClient {
     /**
      * This method set the gameController attribute to the one taken as a parameter.
      *
-     * @param gameController is the new reference to the gameController that needs to be set to the attribute
+     * @param gameController is the new reference to the gameController that needs
+     *                       to be set to the attribute
      */
     @Override
     public void setGameController(IGameController gameController) {

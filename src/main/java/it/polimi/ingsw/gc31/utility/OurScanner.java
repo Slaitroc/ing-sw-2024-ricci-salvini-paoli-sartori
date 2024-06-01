@@ -1,4 +1,4 @@
-package it.polimi.ingsw.gc31;
+package it.polimi.ingsw.gc31.utility;
 
 import java.util.Scanner;
 

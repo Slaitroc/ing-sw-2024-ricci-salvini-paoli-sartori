@@ -1,13 +1,10 @@
 package it.polimi.ingsw.gc31.view.tui;
 
+import static it.polimi.ingsw.gc31.utility.DV.RGB_COLOR_CORNER;
+import static it.polimi.ingsw.gc31.utility.DV.RGB_COLOR_RED;
+import static it.polimi.ingsw.gc31.utility.DV.getRgbColor;
+import static org.fusesource.jansi.Ansi.Color.*;
 import static org.fusesource.jansi.Ansi.ansi;
-import static org.fusesource.jansi.Ansi.Color.WHITE;
-import static org.fusesource.jansi.Ansi.Color.YELLOW;
-
-import static org.fusesource.jansi.Ansi.Color.BLACK;
-import static it.polimi.ingsw.gc31.DefaultValues.RGB_COLOR_RED;
-import static it.polimi.ingsw.gc31.DefaultValues.RGB_COLOR_CORNER;
-import static it.polimi.ingsw.gc31.DefaultValues.getRgbColor;
 
 import java.awt.Point;
 import java.io.PrintStream;
@@ -16,11 +13,13 @@ import java.rmi.RemoteException;
 import java.util.*;
 
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
+import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.model.strategies.*;
+import it.polimi.ingsw.gc31.utility.DV;
+
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
-import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
@@ -85,7 +84,7 @@ public class TUI extends UI {
     private final int RESOURCE_DECK_END_ROW = 34;
     private final int RESOURCE_DECK_END_COLUMN = 67;
 
-    private final int PLAYERS_INFO_INITIAL_ROW =33;
+    private final int PLAYERS_INFO_INITIAL_ROW = 33;
     private final int PLAYERS_INFO_INITIAL_COLUMN = 161;
     private final int PLAYERS_INFO_END_ROW = 40;
     private final int PLAYERS_INFO_END_COLUMN = 184;
@@ -107,6 +106,9 @@ public class TUI extends UI {
     private int OFFSET_Y_PLAYAREA = 0;
 
     private final int[] RGB_COLOR_GOLD = { 181, 148, 16 };
+
+    // FIXME temporaneo
+    private Map<Point, PlayableCard> placedCards = null;
 
     // PRINT METHODS
 
@@ -179,7 +181,8 @@ public class TUI extends UI {
 
     // TODO fare una sola funzione
 
-    private StringBuilder print_Borders(String titleArea, int initialRow, int initialColumn, int endRow, int endColumn) {
+    private StringBuilder print_Borders(String titleArea, int initialRow, int initialColumn, int endRow,
+            int endColumn) {
         StringBuilder res = new StringBuilder();
         res.append(ansi().cursor(initialRow, initialColumn).fg(WHITE).a("┌")
                 .a(String.valueOf("─").repeat(endColumn - initialColumn - 1)).a("┐"));
@@ -685,7 +688,9 @@ public class TUI extends UI {
                 }
             }
 
-            if (resources.size() > 4) {
+            // if there are resources in the center print them
+//            res.append(ansi().cursor(relative_y+CARD_HEIGHT/2, relative_x+CARD_LENGTH/2).a("."));
+            if (resources.size() > 4 && relative_y+CARD_HEIGHT/2 > overFlowRight) {
                 res.append(ansi().cursor(relative_y + CARD_HEIGHT / 2, relative_x + CARD_LENGTH / 2 - 1)
                         .bgRgb(RGB_COLOR_CORNER[0], RGB_COLOR_CORNER[1], RGB_COLOR_CORNER[2])
                         .a(" " + resources.get(4).getSymbol() + " "));
@@ -697,8 +702,7 @@ public class TUI extends UI {
         return null;
     }
 
-    private StringBuilder print_PlaceHolder(Point point, int x, int y, int overFlowUp, int overFlowDown, int overFlowLeft,
-            int overFlowRight) {
+    private StringBuilder print_PlaceHolder(Point point, int x, int y, int overFlowUp, int overFlowDown, int overFlowLeft, int overFlowRight) {
         int relative_x = x - (CARD_LENGTH - 1) / 2;
         int relative_y = y - (CARD_HEIGHT - 1) / 2;
 
@@ -800,6 +804,32 @@ public class TUI extends UI {
             }
         }
         return placeHolders;
+    }
+
+    // TODO temporanei
+    protected void movePlayAreaRight() {
+        if (placedCards != null) {
+            OFFSET_X_PLAYAREA += CARD_X_OFFSET*2;
+            show_playArea(client.getUsername(), placedCards, null);
+        }
+    }
+    protected void movePlayAreaLeft() {
+        if (placedCards != null) {
+            OFFSET_X_PLAYAREA -= CARD_X_OFFSET*2;
+            show_playArea(client.getUsername(), placedCards, null);
+        }
+    }
+    protected void movePlayAreaDown() {
+        if (placedCards != null) {
+            OFFSET_Y_PLAYAREA += CARD_Y_OFFSET*2;
+            show_playArea(client.getUsername(), placedCards, null);
+        }
+    }
+    protected void movePlayAreaUp() {
+        if (placedCards != null) {
+            OFFSET_Y_PLAYAREA -= CARD_Y_OFFSET*2;
+            show_playArea(client.getUsername(), placedCards, null);
+        }
     }
 
     // GETTERS & SETTERS
@@ -944,7 +974,7 @@ public class TUI extends UI {
      * @return the formatted String
      */
     protected String tuiWrite(String text) {
-        return DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_RESET + text;
+        return DV.ANSI_BLUE + DV.TUI_TAG + DV.ANSI_RESET + text;
     }
 
     /**
@@ -954,8 +984,8 @@ public class TUI extends UI {
      * @return the formatted String
      */
     protected String tuiWriteGreen(String text) {
-        return DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_GREEN + text
-                + DefaultValues.ANSI_RESET;
+        return DV.ANSI_BLUE + DV.TUI_TAG + DV.ANSI_GREEN + text
+                + DV.ANSI_RESET;
     }
 
     /**
@@ -965,12 +995,12 @@ public class TUI extends UI {
      * @return the formatted String
      */
     protected String tuiWritePurple(String text) {
-        return DefaultValues.ANSI_BLUE + DefaultValues.TUI_TAG + DefaultValues.ANSI_PURPLE + text
-                + DefaultValues.ANSI_RESET;
+        return DV.ANSI_BLUE + DV.TUI_TAG + DV.ANSI_PURPLE + text
+                + DV.ANSI_RESET;
     }
 
     protected String serverWrite(String text) {
-        return DefaultValues.ANSI_PURPLE + DefaultValues.SERVER_TAG + DefaultValues.ANSI_RESET + text;
+        return DV.ANSI_PURPLE + DV.SERVER_TAG + DV.ANSI_RESET + text;
     }
 
     /**
@@ -1406,11 +1436,6 @@ public class TUI extends UI {
 
     }
 
-    @Override
-    public void updateHand(String username, List<String> hand) {
-
-    }
-
     /**
      * JAVADOC da modificare (non prendetela seriamente)
      * <p>
@@ -1441,8 +1466,15 @@ public class TUI extends UI {
         if (client.getUsername().equals(username)) {
             StringBuilder res = new StringBuilder();
             res.append(clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
-            res.append(print_Borders("Play Area", PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
+            res.append(print_Borders("Play Area", PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW,
+                    PLAYAREA_END_COLUMN));
             res.append(print_PlacedCards(playArea));
+
+             res.append(ansi().cursor(PLAYAREA_INITIAL_ROW + (PLAYAREA_END_ROW -
+             PLAYAREA_INITIAL_ROW) / 2,
+             PLAYAREA_INITIAL_COLUMN + (PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN) / 2).bg(RED).a(".").reset());
+
+            placedCards = playArea;
 
             synchronized (playViewUpdate) {
                 playViewUpdate.add(res);
@@ -1454,11 +1486,14 @@ public class TUI extends UI {
     @Override
     public void show_scorePlayer(LinkedHashMap<String, Integer> scores) {
         StringBuilder res = new StringBuilder();
-        res.append(clearArea(PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN, PLAYERS_INFO_END_ROW, PLAYERS_INFO_END_COLUMN));
-        res.append(print_Borders("Players info", PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN, PLAYERS_INFO_END_ROW, PLAYERS_INFO_END_COLUMN));
+        res.append(clearArea(PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN, PLAYERS_INFO_END_ROW,
+                PLAYERS_INFO_END_COLUMN));
+        res.append(print_Borders("Players info", PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN,
+                PLAYERS_INFO_END_ROW, PLAYERS_INFO_END_COLUMN));
         int index = 1;
         for (String player : scores.keySet()) {
-            res.append(ansi().cursor(PLAYERS_INFO_INITIAL_ROW+index, PLAYERS_INFO_INITIAL_COLUMN+1).a(player+": "+scores.get(player)));
+            res.append(ansi().cursor(PLAYERS_INFO_INITIAL_ROW + index, PLAYERS_INFO_INITIAL_COLUMN + 1)
+                    .a(player + ": " + scores.get(player)));
             index++;
         }
 
@@ -1470,49 +1505,71 @@ public class TUI extends UI {
 
     @Override
     public void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
-        StringBuilder res = print_Deck("Gold Deck", firstCardDeck, card1, card2, GOLD_DECK_INITIAL_ROW, GOLD_DECK_INITIAL_COLUMN, GOLD_DECK_END_ROW, GOLD_DECK_END_COLUMN);
+        StringBuilder res = print_Deck("Gold Deck", firstCardDeck, card1, card2, GOLD_DECK_INITIAL_ROW,
+                GOLD_DECK_INITIAL_COLUMN, GOLD_DECK_END_ROW, GOLD_DECK_END_COLUMN);
         synchronized (playViewUpdate) {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
     }
 
-    private StringBuilder print_Deck(String title, PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2, int initial_row, int initial_col, int end_row, int end_col) {
+    private StringBuilder print_Deck(String title, PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2,
+            int initial_row, int initial_col, int end_row, int end_col) {
         StringBuilder res = new StringBuilder();
         res.append(clearArea(initial_row, initial_col, end_row, end_col));
         res.append(print_Borders(title, initial_row, initial_col, end_row, end_col));
         if (firstCardDeck != null) {
-            res.append(print_PlayableCard(firstCardDeck, initial_col + 1, initial_row + 1, initial_row, end_row, initial_col, end_col));
-            res.append(ansi().cursor(initial_row+CARD_HEIGHT+1, initial_col+1).a("Deck"));
+            res.append(print_PlayableCard(firstCardDeck, initial_col + 1, initial_row + 1, initial_row, end_row,
+                    initial_col, end_col));
+            res.append(ansi().cursor(initial_row + CARD_HEIGHT + 1, initial_col + 1).a("Deck"));
         }
         if (card1 != null) {
-            res.append(print_PlayableCard(card1, initial_col + 1 + (CARD_LENGTH + 1), initial_row + 1, initial_row, end_row, initial_col, end_col));
-            res.append(ansi().cursor(initial_row+CARD_HEIGHT+1,initial_col+1+(CARD_LENGTH+1)).a("Card 1"));
+            res.append(print_PlayableCard(card1, initial_col + 1 + (CARD_LENGTH + 1), initial_row + 1, initial_row,
+                    end_row, initial_col, end_col));
+            res.append(ansi().cursor(initial_row + CARD_HEIGHT + 1, initial_col + 1 + (CARD_LENGTH + 1)).a("Card 1"));
         }
         if (card2 != null) {
-            res.append(print_PlayableCard(card2, initial_col + 1 + (CARD_LENGTH + 1)*2, initial_row + 1, initial_row, end_row, initial_col, end_col));
-            res.append(ansi().cursor(initial_row+CARD_HEIGHT+1,initial_col+1+(CARD_LENGTH+1)*2).a("Card 2"));
+            res.append(print_PlayableCard(card2, initial_col + 1 + (CARD_LENGTH + 1) * 2, initial_row + 1, initial_row,
+                    end_row, initial_col, end_col));
+            res.append(
+                    ansi().cursor(initial_row + CARD_HEIGHT + 1, initial_col + 1 + (CARD_LENGTH + 1) * 2).a("Card 2"));
         }
         return res;
     }
 
     @Override
     public void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
-        StringBuilder res = print_Deck("Resource Deck", firstCardDeck, card1, card2, RESOURCE_DECK_INITIAL_ROW, RESOURCE_DECK_INITIAL_COLUMN, RESOURCE_DECK_END_ROW, RESOURCE_DECK_END_COLUMN);
-//        res.append(clearArea(RESOURCE_DECK_INITIAL_ROW, RESOURCE_DECK_INITIAL_COLUMN, RESOURCE_DECK_END_ROW, RESOURCE_DECK_END_COLUMN));
-//        res.append(print_Borders("RESOURCE DECK", RESOURCE_DECK_INITIAL_ROW, RESOURCE_DECK_INITIAL_COLUMN, RESOURCE_DECK_END_ROW, RESOURCE_DECK_END_COLUMN));
-//        if (firstCardDeck != null) {
-//            res.append(print_PlayableCard(firstCardDeck, RESOURCE_DECK_INITIAL_COLUMN + 1, RESOURCE_DECK_INITIAL_ROW + 1, RESOURCE_DECK_INITIAL_ROW, RESOURCE_DECK_END_ROW, RESOURCE_DECK_INITIAL_COLUMN, RESOURCE_DECK_END_COLUMN));
-//            res.append(ansi().cursor(RESOURCE_DECK_INITIAL_ROW+CARD_HEIGHT+1, RESOURCE_DECK_INITIAL_COLUMN+1).a("Deck"));
-//        }
-//        if (card1 != null) {
-//            res.append(print_PlayableCard(card1, RESOURCE_DECK_INITIAL_COLUMN + 1 + (CARD_LENGTH + 1), RESOURCE_DECK_INITIAL_ROW + 1, RESOURCE_DECK_INITIAL_ROW, RESOURCE_DECK_END_ROW, RESOURCE_DECK_INITIAL_COLUMN, RESOURCE_DECK_END_COLUMN));
-//            res.append(ansi().cursor(RESOURCE_DECK_INITIAL_ROW+CARD_HEIGHT+1,RESOURCE_DECK_INITIAL_COLUMN+1+(CARD_LENGTH+1)).a("Card 1"));
-//        }
-//        if (card2 != null) {
-//            res.append(print_PlayableCard(card2, RESOURCE_DECK_INITIAL_COLUMN + 1 + (CARD_LENGTH + 1)*2, RESOURCE_DECK_INITIAL_ROW + 1, RESOURCE_DECK_INITIAL_ROW, RESOURCE_DECK_END_ROW, RESOURCE_DECK_INITIAL_COLUMN, RESOURCE_DECK_END_COLUMN));
-//            res.append(ansi().cursor(RESOURCE_DECK_INITIAL_ROW+CARD_HEIGHT+1,RESOURCE_DECK_INITIAL_COLUMN+1+(CARD_LENGTH+1)*2).a("Card 2"));
-//        }
+        StringBuilder res = print_Deck("Resource Deck", firstCardDeck, card1, card2, RESOURCE_DECK_INITIAL_ROW,
+                RESOURCE_DECK_INITIAL_COLUMN, RESOURCE_DECK_END_ROW, RESOURCE_DECK_END_COLUMN);
+        // res.append(clearArea(RESOURCE_DECK_INITIAL_ROW, RESOURCE_DECK_INITIAL_COLUMN,
+        // RESOURCE_DECK_END_ROW, RESOURCE_DECK_END_COLUMN));
+        // res.append(print_Borders("RESOURCE DECK", RESOURCE_DECK_INITIAL_ROW,
+        // RESOURCE_DECK_INITIAL_COLUMN, RESOURCE_DECK_END_ROW,
+        // RESOURCE_DECK_END_COLUMN));
+        // if (firstCardDeck != null) {
+        // res.append(print_PlayableCard(firstCardDeck, RESOURCE_DECK_INITIAL_COLUMN +
+        // 1, RESOURCE_DECK_INITIAL_ROW + 1, RESOURCE_DECK_INITIAL_ROW,
+        // RESOURCE_DECK_END_ROW, RESOURCE_DECK_INITIAL_COLUMN,
+        // RESOURCE_DECK_END_COLUMN));
+        // res.append(ansi().cursor(RESOURCE_DECK_INITIAL_ROW+CARD_HEIGHT+1,
+        // RESOURCE_DECK_INITIAL_COLUMN+1).a("Deck"));
+        // }
+        // if (card1 != null) {
+        // res.append(print_PlayableCard(card1, RESOURCE_DECK_INITIAL_COLUMN + 1 +
+        // (CARD_LENGTH + 1), RESOURCE_DECK_INITIAL_ROW + 1, RESOURCE_DECK_INITIAL_ROW,
+        // RESOURCE_DECK_END_ROW, RESOURCE_DECK_INITIAL_COLUMN,
+        // RESOURCE_DECK_END_COLUMN));
+        // res.append(ansi().cursor(RESOURCE_DECK_INITIAL_ROW+CARD_HEIGHT+1,RESOURCE_DECK_INITIAL_COLUMN+1+(CARD_LENGTH+1)).a("Card
+        // 1"));
+        // }
+        // if (card2 != null) {
+        // res.append(print_PlayableCard(card2, RESOURCE_DECK_INITIAL_COLUMN + 1 +
+        // (CARD_LENGTH + 1)*2, RESOURCE_DECK_INITIAL_ROW + 1,
+        // RESOURCE_DECK_INITIAL_ROW, RESOURCE_DECK_END_ROW,
+        // RESOURCE_DECK_INITIAL_COLUMN, RESOURCE_DECK_END_COLUMN));
+        // res.append(ansi().cursor(RESOURCE_DECK_INITIAL_ROW+CARD_HEIGHT+1,RESOURCE_DECK_INITIAL_COLUMN+1+(CARD_LENGTH+1)*2).a("Card
+        // 2"));
+        // }
         synchronized (playViewUpdate) {
             playViewUpdate.add(res);
             playViewUpdate.notify();
@@ -1525,7 +1582,8 @@ public class TUI extends UI {
             StringBuilder res = new StringBuilder();
             int index = 0;
             res.append(clearArea(HAND_INITIAL_ROW, HAND_INITIAL_COLUMN, HAND_END_ROW, HAND_END_COLUMN));
-            res.append(print_Borders("HAND: "+username, HAND_INITIAL_ROW, HAND_INITIAL_COLUMN, HAND_END_ROW, HAND_END_COLUMN));
+            res.append(print_Borders("HAND: " + username, HAND_INITIAL_ROW, HAND_INITIAL_COLUMN, HAND_END_ROW,
+                    HAND_END_COLUMN));
             for (PlayableCard card : hand) {
                 res.append(print_PlayableCard(card, HAND_INITIAL_COLUMN + 1 + (CARD_LENGTH + 1) * index,
                         HAND_INITIAL_ROW + 1, HAND_INITIAL_ROW, HAND_END_ROW, HAND_INITIAL_COLUMN, HAND_END_COLUMN));
@@ -1547,7 +1605,7 @@ public class TUI extends UI {
 
         res.append(clearArea(CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN, CHOOSE_OBJECTIVE_END_ROW,
                 CHOOSE_OBJECTIVE_END_COLUMN));
-        res.append(ansi().cursor(OBJECTIVE_INITIAL_ROW, OBJECTIVE_INITIAL_COLUMN+1).a("Your Objective Card"));
+        res.append(ansi().cursor(OBJECTIVE_INITIAL_ROW, OBJECTIVE_INITIAL_COLUMN + 1).a("Your Objective Card"));
         res.append(print_ObjectiveCard(objectiveCard, OBJECTIVE_INITIAL_COLUMN + 1, OBJECTIVE_INITIAL_ROW + 1,
                 OBJECTIVE_INITIAL_ROW, OBJECTIVE_END_ROW, OBJECTIVE_INITIAL_COLUMN, OBJECTIVE_END_COLUMN));
         synchronized (playViewUpdate) {
@@ -1583,16 +1641,19 @@ public class TUI extends UI {
     @Override
     public void show_objectiveDeck(ObjectiveCard firstCardDeck, ObjectiveCard card1, ObjectiveCard card2) {
         StringBuilder res = new StringBuilder();
-        //res.append(clearArea(COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_INITIAL_COLUMN, COMMON_OBJECTIVE_END_ROW, COMMON_OBJECTIVE_END_COLUMN));
-        res.append(ansi().cursor(COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_INITIAL_COLUMN+1).a("COMMON OBJECTIVE"));
+        // res.append(clearArea(COMMON_OBJECTIVE_INITIAL_ROW,
+        // COMMON_OBJECTIVE_INITIAL_COLUMN, COMMON_OBJECTIVE_END_ROW,
+        // COMMON_OBJECTIVE_END_COLUMN));
+        res.append(
+                ansi().cursor(COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_INITIAL_COLUMN + 1).a("COMMON OBJECTIVE"));
         if (card1 != null) {
             res.append(print_ObjectiveCard(card1, COMMON_OBJECTIVE_INITIAL_COLUMN + 1,
-                    COMMON_OBJECTIVE_INITIAL_ROW+1, COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_END_ROW,
+                    COMMON_OBJECTIVE_INITIAL_ROW + 1, COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_END_ROW,
                     COMMON_OBJECTIVE_INITIAL_COLUMN, COMMON_OBJECTIVE_END_COLUMN));
         }
         if (card2 != null) {
             res.append(print_ObjectiveCard(card2, COMMON_OBJECTIVE_INITIAL_COLUMN + 1 + (CARD_LENGTH + 1),
-                    COMMON_OBJECTIVE_INITIAL_ROW+1, COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_END_ROW,
+                    COMMON_OBJECTIVE_INITIAL_ROW + 1, COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_END_ROW,
                     COMMON_OBJECTIVE_INITIAL_COLUMN, COMMON_OBJECTIVE_END_COLUMN));
         }
         res.append(ansi().cursor(COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_END_COLUMN).a("+"));
@@ -1605,11 +1666,14 @@ public class TUI extends UI {
     @Override
     public void show_starterCard(PlayableCard starterCard) {
         StringBuilder res = new StringBuilder();
-        res.append(clearArea(STARTER_CARD_INITIAL_ROW, STARTER_CARD_INITIAL_COLUMN, STARTER_CARD_END_ROW, STARTER_CARD_END_ROW));
-        //res.append(print_Borders("STARTER CARD", STARTER_CARD_INITIAL_ROW, STARTER_CARD_INITIAL_COLUMN, STARTER_CARD_END_ROW, STARTER_CARD_END_COLUMN));
-        res.append(ansi().cursor(STARTER_CARD_INITIAL_ROW, STARTER_CARD_INITIAL_COLUMN+1).a("Starter Card:"));
+        res.append(clearArea(STARTER_CARD_INITIAL_ROW, STARTER_CARD_INITIAL_COLUMN, STARTER_CARD_END_ROW,
+                STARTER_CARD_END_ROW));
+        // res.append(print_Borders("STARTER CARD", STARTER_CARD_INITIAL_ROW,
+        // STARTER_CARD_INITIAL_COLUMN, STARTER_CARD_END_ROW, STARTER_CARD_END_COLUMN));
+        res.append(ansi().cursor(STARTER_CARD_INITIAL_ROW, STARTER_CARD_INITIAL_COLUMN + 1).a("Starter Card:"));
         res.append(print_PlayableCard(starterCard, STARTER_CARD_INITIAL_COLUMN + 1,
-                STARTER_CARD_INITIAL_ROW + 1, STARTER_CARD_INITIAL_ROW, STARTER_CARD_END_ROW, STARTER_CARD_INITIAL_COLUMN, STARTER_CARD_END_COLUMN));
+                STARTER_CARD_INITIAL_ROW + 1, STARTER_CARD_INITIAL_ROW, STARTER_CARD_END_ROW,
+                STARTER_CARD_INITIAL_COLUMN, STARTER_CARD_END_COLUMN));
 
         synchronized (playViewUpdate) {
             playViewUpdate.add(res);
@@ -1659,14 +1723,14 @@ public class TUI extends UI {
 
     @Override
     public void show_readyStatus(String username, boolean status) {
-//        if (client.getUsername().equals(username)) {
-//            if (status) {
-//                printToCmdLineOut(serverWrite("You are ready"));
-//            } else {
-//                printToCmdLineOut(serverWrite("You are not ready"));
-//            }
-//        }
-//        state.stateNotify();
+        // if (client.getUsername().equals(username)) {
+        // if (status) {
+        // printToCmdLineOut(serverWrite("You are ready"));
+        // } else {
+        // printToCmdLineOut(serverWrite("You are not ready"));
+        // }
+        // }
+        // state.stateNotify();
     }
 
     @Override
@@ -1685,10 +1749,10 @@ public class TUI extends UI {
     public void show_playerTurn(String username, String info) {
         if (client.getUsername().equals(username)) {
             StringBuilder res = new StringBuilder();
-            res.append(ansi().cursor(HAND_END_ROW-1, HAND_END_COLUMN+1).a("              "));
-            res.append(ansi().cursor(HAND_END_ROW, HAND_END_COLUMN+1).a("              "));
-            res.append(ansi().cursor(HAND_END_ROW-1, HAND_END_COLUMN+1).a("Player state:"));
-            res.append(ansi().cursor(HAND_END_ROW, HAND_END_COLUMN+1).a(info));
+            res.append(ansi().cursor(HAND_END_ROW - 1, HAND_END_COLUMN + 1).a("              "));
+            res.append(ansi().cursor(HAND_END_ROW, HAND_END_COLUMN + 1).a("              "));
+            res.append(ansi().cursor(HAND_END_ROW - 1, HAND_END_COLUMN + 1).a("Player state:"));
+            res.append(ansi().cursor(HAND_END_ROW, HAND_END_COLUMN + 1).a(info));
 
             synchronized (playViewUpdate) {
                 playViewUpdate.add(res);
@@ -1700,11 +1764,14 @@ public class TUI extends UI {
     @Override
     public void show_inGamePlayers(LinkedHashMap<String, Boolean> players) {
         StringBuilder res = new StringBuilder();
-        res.append(clearArea(PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN, PLAYERS_INFO_END_ROW, PLAYERS_INFO_END_COLUMN));
-        res.append(print_Borders("Players info", PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN, PLAYERS_INFO_END_ROW, PLAYERS_INFO_END_COLUMN));
+        res.append(clearArea(PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN, PLAYERS_INFO_END_ROW,
+                PLAYERS_INFO_END_COLUMN));
+        res.append(print_Borders("Players info", PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN,
+                PLAYERS_INFO_END_ROW, PLAYERS_INFO_END_COLUMN));
         int index = 1;
         for (String player : players.keySet()) {
-            res.append(ansi().cursor(PLAYERS_INFO_INITIAL_ROW+index, PLAYERS_INFO_INITIAL_COLUMN+1).a(player+": "+players.get(player)));
+            res.append(ansi().cursor(PLAYERS_INFO_INITIAL_ROW + index, PLAYERS_INFO_INITIAL_COLUMN + 1)
+                    .a(player + ": " + players.get(player)));
             index++;
         }
 
@@ -1712,5 +1779,10 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
+    }
+
+    @Override
+    public void show_invalidAction(String message) {
+
     }
 }

@@ -10,6 +10,8 @@ import java.util.Map;
 
 public interface ShowUpdate {
 
+    public abstract void update_ToPlayingState();
+
     void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2);
 
     void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2);
@@ -51,5 +53,7 @@ public interface ShowUpdate {
     void show_playerTurn(String username, String info);
 
     void show_inGamePlayers(LinkedHashMap<String, Boolean> players);
+
+    void show_invalidAction(String message);
 
 }

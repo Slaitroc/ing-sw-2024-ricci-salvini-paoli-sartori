@@ -1,14 +1,17 @@
 package it.polimi.ingsw.gc31.client_server.rmi;
 
-import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
+import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
+import it.polimi.ingsw.gc31.utility.DV;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.server.RemoteServer;
+import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 
 import java.util.Queue;
@@ -24,20 +27,16 @@ public class RmiServer implements VirtualServer {
 
     private final Queue<ServerQueueObject> callsList;
 
-    private void serverWrite(String text) {
-        System.out.println(DefaultValues.ANSI_GREEN + DefaultValues.RMI_SERVER_TAG + DefaultValues.ANSI_RESET + text);
-    }
-
     public RmiServer(String ipaddress) throws RemoteException {
         System.setProperty("java.rmi.server.hostname", ipaddress);
-        RMIserverWrite("Server IP " + ipaddress);
+        ServerLog.rmiWrite("Server IP " + ipaddress);
 
         this.controller = Controller.getController();
         this.callsList = new LinkedBlockingQueue<>();
-        int port = DefaultValues.RMI_PORT;
-        LocateRegistry.createRegistry(port).rebind("VirtualServer", UnicastRemoteObject.exportObject(this, port));
-        RMIserverWrite("Server created");
-        RMIserverWrite("Server in ascolto sulla porta " + port);
+        LocateRegistry.createRegistry(DV.RMI_PORT).rebind("VirtualServer",
+                UnicastRemoteObject.exportObject(this, DV.RMI_PORT));
+        ServerLog.rmiWrite("Server created");
+        ServerLog.rmiWrite("Server in ascolto sulla porta " + DV.RMI_PORT);
 
         executor();
     }
@@ -72,28 +71,41 @@ public class RmiServer implements VirtualServer {
     }
 
     private void executor() {
-        while (true) {
-            ServerQueueObject action;
-            synchronized (callsList) {
-                while (callsList.isEmpty()) {
-                    try {
-                        callsList.wait();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+        new Thread(() -> {
+            while (true) {
+                ServerQueueObject action;
+                synchronized (callsList) {
+                    while (callsList.isEmpty()) {
+                        try {
+                            callsList.wait();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
+                    action = callsList.poll();
                 }
-                action = callsList.poll();
-            }
-            if (action != null) {
-                action.execute(this);
+                if (action != null) {
+                    action.execute(this);
 
+                }
             }
-        }
+        }).start();
     }
 
     @Override
     public void RMIserverWrite(String text) throws RemoteException {
-        serverWrite(text);
+        ServerLog.rmiWrite(text);
+    }
+
+    @Override
+    public String getClientIP() throws RemoteException {
+        String ip = null;
+        try {
+            ip = RemoteServer.getClientHost().toString();
+        } catch (ServerNotActiveException e) {
+            e.printStackTrace();
+        }
+        return ip;
     }
 
 }

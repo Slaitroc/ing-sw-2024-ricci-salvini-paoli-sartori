@@ -1,4 +1,4 @@
-package it.polimi.ingsw.gc31;
+package it.polimi.ingsw.gc31.utility;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
@@ -9,12 +9,12 @@ import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.view.tui.TUI;
 import org.fusesource.jansi.AnsiConsole;
 
+import static it.polimi.ingsw.gc31.utility.OurScanner.scanner;
+
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static it.polimi.ingsw.gc31.OurScanner.scanner;
 
 public class PrintProvca extends TUI {
     public PrintProvca(ClientCommands client) {

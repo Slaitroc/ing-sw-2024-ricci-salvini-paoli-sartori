@@ -1,11 +1,12 @@
 package it.polimi.ingsw.gc31.model.deck;
 
 import com.google.gson.*;
-import it.polimi.ingsw.gc31.DefaultValues;
+
 import it.polimi.ingsw.gc31.client_server.listeners.Observable;
 import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
+import it.polimi.ingsw.gc31.utility.DV;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,22 +39,22 @@ public class Deck<T extends Card> extends Observable<Deck> {
         try {
             switch (cardType) {
                 case GOLD:
-                    is = getClass().getResourceAsStream(DefaultValues.DIRJsonGoldCard);
+                    is = getClass().getResourceAsStream(DV.DIRJsonGoldCard);
                     fileReader = new InputStreamReader(is);
                     type = GoldCard.class;
                     break;
                 case RESOURCE:
-                    is = getClass().getResourceAsStream(DefaultValues.DIRJsonResourceCard);
+                    is = getClass().getResourceAsStream(DV.DIRJsonResourceCard);
                     fileReader = new InputStreamReader(is);
                     type = ResourceCard.class;
                     break;
                 case STARTER:
-                    is = getClass().getResourceAsStream(DefaultValues.DIRJsonStarterCard);
+                    is = getClass().getResourceAsStream(DV.DIRJsonStarterCard);
                     fileReader = new InputStreamReader(is);
                     type = StarterCard.class;
                     break;
                 case OBJECTIVE:
-                    is = getClass().getResourceAsStream(DefaultValues.DIRJsonObjectiveCard);
+                    is = getClass().getResourceAsStream(DV.DIRJsonObjectiveCard);
                     fileReader = new InputStreamReader(is);
                     type = ObjectiveCard.class;
                     break;
@@ -107,8 +108,9 @@ public class Deck<T extends Card> extends Observable<Deck> {
     public T draw() throws EmptyDeckException {
         if (deck.isEmpty())
             throw new EmptyDeckException();
+        T card = deck.poll();
         notifyListeners(this);
-        return deck.poll();
+        return card;
     }
 
     public void refill() {

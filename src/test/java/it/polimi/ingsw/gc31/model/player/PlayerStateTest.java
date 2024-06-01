@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.model.player;
 
 import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
@@ -62,7 +63,7 @@ public class PlayerStateTest {
     }
 
     @Disabled
-    public void testGameTurns() throws EmptyDeckException, IllegalStateOperationException {
+    public void testGameTurns() throws EmptyDeckException, IllegalStateOperationException, WrongIndexSelectedCard {
         // System.out.println("Start testGameTurns");
         PlayableCard verifyCard;
 

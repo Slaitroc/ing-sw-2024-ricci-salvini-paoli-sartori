@@ -4,7 +4,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
-import it.polimi.ingsw.gc31.DefaultValues;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameCreatedObj;
@@ -18,6 +17,7 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongUsernameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
+
 import java.util.concurrent.LinkedBlockingQueue;
 
 //NOTE creation of GameController for match creation
@@ -101,16 +101,6 @@ public class Controller extends UnicastRemoteObject implements IController {
                 }
             }
         }).start();
-    }
-
-    /**
-     * Prints a message to the console with a specific format.
-     *
-     * @param text the message to print.
-     */
-    public void controllerWrite(String text) {
-        System.out.println(DefaultValues.ANSI_GREEN + DefaultValues.RMI_SERVER_TAG + DefaultValues.ANSI_BLUE
-                + DefaultValues.CONTROLLER_TAG + DefaultValues.ANSI_RESET + text);
     }
 
     /**
