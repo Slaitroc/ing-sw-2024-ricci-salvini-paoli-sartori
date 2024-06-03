@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.controller;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
+import java.util.concurrent.*;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
@@ -18,7 +19,6 @@ import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
-import java.util.concurrent.LinkedBlockingQueue;
 
 //NOTE creation of GameController for match creation
 // Does the GameController related to the first match get created immediately after the first player has logged in?
@@ -67,7 +67,10 @@ public class Controller extends UnicastRemoteObject implements IController {
         nicknames = new HashSet<>();
         gameControlList = new ArrayList<>();
         callsList = new LinkedBlockingQueue<>();
+        clientsHeartBeat = new ConcurrentHashMap<>();
+        scheduler = Executors.newScheduledThreadPool(1);
         executor();
+        startHeartBeatCheck();
     }
 
     @Override
@@ -119,6 +122,9 @@ public class Controller extends UnicastRemoteObject implements IController {
             tempClients.put(username, client);
             client.setController(this);
             client.sendCommand((new ValidUsernameObj(username)));
+
+            clientsHeartBeat.put(client, System.currentTimeMillis());
+
             return true;
         } else {
             client.sendCommand(new WrongUsernameObj(username));
@@ -218,6 +224,36 @@ public class Controller extends UnicastRemoteObject implements IController {
     @Override
     public VirtualClient getNewConnection() {
         return newConnection;
+    }
+
+    //Risorse per heartbeat
+    //FIXME spostare in cima attributi e metodi
+    private ConcurrentHashMap<VirtualClient, Long> clientsHeartBeat;
+    private ScheduledExecutorService scheduler;
+
+    private void startHeartBeatCheck(){
+        scheduler.scheduleAtFixedRate(() -> checkHeartBeats(), 0, 10, TimeUnit.MILLISECONDS);
+    }
+
+    private void checkHeartBeats(){
+        long now = System.currentTimeMillis();
+        for(VirtualClient client : clientsHeartBeat.keySet()){
+            if(now - clientsHeartBeat.get(client) > 10000) {
+                clientsHeartBeat.remove(client);
+                /*
+                try "chiudi connessione al client disconnesso"
+                 */
+                System.out.println("Client disconnesso per timeout");
+            }
+        }
+    }
+
+    @Override
+    public void updateHeartBeat(VirtualClient client) throws RemoteException{
+        if(!clientsHeartBeat.containsKey(client))
+            System.out.println("Il client da cui è arrivato l'HeartBeat non è presente nella mappa");
+        clientsHeartBeat.replace(client, System.currentTimeMillis());
+        System.out.println("HeartBeat ricevuto");
     }
 
 }

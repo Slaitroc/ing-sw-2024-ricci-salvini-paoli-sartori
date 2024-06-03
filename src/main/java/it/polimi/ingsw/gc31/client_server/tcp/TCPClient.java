@@ -6,6 +6,8 @@ import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
@@ -22,8 +24,13 @@ public class TCPClient implements ClientCommands {
     private UI ui;
     private final Queue<ClientQueueObject> callsList;
 
+    private Timer timer;
+    private final BufferedReader heartBeatInput;
+    private final PrintWriter heartBeatOutput;
+
     /**
-     * This method is the constructor of the TCPClient
+     * This method is the constructor of the TCPClient.
+     * The timer is set as a daemon by the specific constructor in order to not
      */
     @SuppressWarnings("resource")
     public TCPClient(String ipaddress) throws IOException {
@@ -32,9 +39,12 @@ public class TCPClient implements ClientCommands {
         this.input = new ObjectInputStream(serverSocket.getInputStream());
         this.output = new ObjectOutputStream(serverSocket.getOutputStream());
         this.callsList = new LinkedBlockingQueue<>();
+        this.timer = new Timer(true);
+        this.heartBeatInput = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
+        this.heartBeatOutput = new PrintWriter(new BufferedWriter(new OutputStreamWriter(serverSocket.getOutputStream())));
         clientHandler_reader();
         executor();
-
+        startHeartBeat();
     }
 
     /**
@@ -316,5 +326,15 @@ public class TCPClient implements ClientCommands {
     @Override
     public void sendChatMessage(String username, String message) {
         tcp_sendCommand(new ChatMessage(this.username, message), DV.RECIPIENT_GAME_CONTROLLER);
+    }
+
+    //FIXME aggiungere metodo close che esegue "timer.cancel();" quando si vuole chiudere la connessione
+    private void startHeartBeat(){
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run(){
+                    tcp_sendCommand(new HeartBeatObj(username), DV.RECIPIENT_HEARTBEAT);
+                    System.out.println("HeartBeat inviato");
+            }
+        }, 0, 5000);
     }
 }

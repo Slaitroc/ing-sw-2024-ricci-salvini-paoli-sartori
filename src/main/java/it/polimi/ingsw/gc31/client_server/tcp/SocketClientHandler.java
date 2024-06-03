@@ -6,11 +6,13 @@ import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.utility.DV;
 
-import java.io.IOException;
+import java.io.*;
 
 import java.rmi.RemoteException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /*
 ricevo
@@ -99,6 +101,8 @@ public class SocketClientHandler implements VirtualClient {
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
+                    } else if(obj.getRecipient().equals(DV.RECIPIENT_HEARTBEAT)){
+                        controller.updateHeartBeat(this);
                     }
                 }
 
@@ -108,7 +112,8 @@ public class SocketClientHandler implements VirtualClient {
                 // Altrimenti
                 // devo riconnettere il client alla partita a cui stava giocando
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                System.out.println("Connessione interrotta");
             }
 
             /*
@@ -179,5 +184,4 @@ public class SocketClientHandler implements VirtualClient {
     public void setGameController(IGameController gameController) {
         this.gameController = gameController;
     }
-
 }
