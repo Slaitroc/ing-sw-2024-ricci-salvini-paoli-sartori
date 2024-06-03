@@ -3,16 +3,12 @@ package it.polimi.ingsw.gc31.model.player;
 import java.awt.*;
 
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerObservable;
-import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
-import it.polimi.ingsw.gc31.exceptions.FullHandException;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
-import it.polimi.ingsw.gc31.exceptions.InvalidCardDraw;
+import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
-import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -99,7 +95,7 @@ public class Player extends PlayerObservable {
     // FIXME potrebbe esserci un problema perchè se addToHand non va a buon fine la carta pesccata finisce in un buco nero
     public boolean drawGold(int index) throws EmptyDeckException {
         Deck<PlayableCard> deck = board.getDeckGold();
-        if (deck.peekCard() == null || deck.peekCard1() == null || deck.peekCard2() == null) {
+        if (deck.peekCard() == null) {
             deck.replaceDeck(board.getDeckResource().getQueueDeck());
         }
 
@@ -195,34 +191,21 @@ public class Player extends PlayerObservable {
      * @param point: coordinate of where in the map to place the card
      */
     public void play(Point point) throws IllegalStateOperationException {
-        try {
-            inGameState.play(point, this);
-            notifyPlayAreaListener(
-                    new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
-            notifyPlayerHandListener(
-                    new Pair<>(username, hand));
-        } catch (IllegalStateOperationException e) {
-            System.out.println("Player " + username + " not allowed to place cards in current state");
-            throw new IllegalStateOperationException();
-        }
+        inGameState.play(point, this);
+        notifyPlayAreaListener(
+                new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
+        notifyPlayerHandListener(
+                new Pair<>(username, hand));
+        board.updateScore(username, score);
     }
 
     /**
      * Method let the player place the starterCard in the map on position (0,0)
      */
-    public void playStarter() {
-        try {
-            inGameState.playStarter(this);
-//            notifyPlayerScoreListener(new Pair<>(username, score));
-            notifyPlayAreaListener(
-                    new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
-        } catch (IllegalStateOperationException e) {
-            System.out.println("Player" + username + " not allowed to place the starter card in current state");
-            e.getStackTrace();
-        } catch (ObjectiveCardNotChosenException e) {
-            System.out.println("Player " + username + " has not chosen an objective card yet");
-            e.getStackTrace();
-        }
+    public void playStarter() throws IllegalStateOperationException, ObjectiveCardNotChosenException {
+        inGameState.playStarter(this);
+        notifyPlayAreaListener(
+                new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
     }
 
     /**
@@ -303,7 +286,10 @@ public class Player extends PlayerObservable {
      *
      * @param selectedCard: index of the card in the hand
      */
-    public void setSelectedCard(int selectedCard) {
+    public void setSelectedCard(int selectedCard) throws WrongIndexSelectedCard {
+        if (selectedCard < 0 || selectedCard >= this.hand.size()) {
+            throw new WrongIndexSelectedCard();
+        }
         this.selectedCard = selectedCard;
     }
 

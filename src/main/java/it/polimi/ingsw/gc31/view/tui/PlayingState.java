@@ -23,26 +23,26 @@ public class PlayingState extends TuiState {
         commandsMap.put(("help").toLowerCase(), this::command_showCommandsInfo);
         commandsMap.put("dg", this::command_drawGold);
         commandsMap.put("dr", this::command_drawResource);
-        commandsMap.put("cs1", this::command_chooseSecreteObjective1);
-        commandsMap.put("cs2", this::command_chooseSecreteObjective2);
+        commandsMap.put("co", this::command_chooseSecreteObjective);
         commandsMap.put("ps", this::command_playStarter);
         commandsMap.put("p", this::command_play);
         commandsMap.put("s", this::command_selectCard);
         commandsMap.put("c", this::command_changeSide);
         commandsMap.put("cs", this::command_changeStarterSide);
+        commandsMap.put("mv", this::command_movePlayArea);
         commandsMap.put("invalid", this::command_invalidCommand);
 
         commandsInfo = new LinkedHashMap<>();
         commandsInfo.put("help", "Shows commands info");
         commandsInfo.put("dg -> draw gold", "Draw a gold card");
         commandsInfo.put("dr -> draw resource", "Draw a resource card");
-        commandsInfo.put("cs1 ->", "Choose secrete objective 1");
-        commandsInfo.put("cs2 ->", "Choose secrete objective 2");
+        commandsInfo.put("co ->", "Choose secrete objective");
         commandsInfo.put("ps ->", "Play starter card");
         commandsInfo.put("p ->", "Play a card in the play area");
         commandsInfo.put("s ->", "Select a card from hand");
         commandsInfo.put("c ->", "Change side select card");
         commandsInfo.put("cs ->", "Change side starter card");
+        commandsInfo.put("mv -> ", "Move play area");
     }
 
     @Override
@@ -77,6 +77,7 @@ public class PlayingState extends TuiState {
         tui.printToCmdLineOut("1 -> card 1");
         tui.printToCmdLineOut("2 -> card 2");
         int input = Integer.parseInt(scanner.nextLine());
+
         try {
             tui.getClient().drawGold(input);
         } catch (RemoteException e) {
@@ -101,19 +102,19 @@ public class PlayingState extends TuiState {
     }
 
     @Override
-    protected void command_chooseSecreteObjective1() {
+    protected void command_chooseSecreteObjective() {
+        tui.printToCmdLineOut("Which card do you want to choose?");
+        tui.printToCmdLineOut("1 -> Secret Objective 1");
+        tui.printToCmdLineOut("2 -> Secret Objective 2");
+        int input = Integer.parseInt(scanner.nextLine());
         try {
-            tui.getClient().chooseSecretObjective1();
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-        stateNotify();
-    }
-
-    @Override
-    protected void command_chooseSecreteObjective2() {
-        try {
-            tui.getClient().chooseSecretObjective2();
+            if (input == 1) {
+                tui.getClient().chooseSecretObjective1();
+            } else if (input == 2) {
+                tui.getClient().chooseSecretObjective2();
+            } else {
+                tui.printToCmdLineOut("Invalid value");
+            }
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -163,10 +164,10 @@ public class PlayingState extends TuiState {
 
     @Override
     protected void command_selectCard() {
-        tui.printToCmdLineOut(tui.tuiWrite("Type the index of    the card:"));
+        tui.printToCmdLineOut(tui.tuiWrite("Type the index of the card:"));
         int input = Integer.parseInt(scanner.nextLine());
         try {
-            tui.getClient().selectCard(input);
+            tui.getClient().selectCard(input - 1);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -190,6 +191,30 @@ public class PlayingState extends TuiState {
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+        stateNotify();
+    }
+
+    @Override
+    protected void command_movePlayArea() {
+        tui.printToCmdLineOut(tui.tuiWrite("In which direction do you want to move?:"));
+        tui.printToCmdLineOut(tui.tuiWrite("r -> right"));
+        tui.printToCmdLineOut(tui.tuiWrite("l -> left"));
+        tui.printToCmdLineOut(tui.tuiWrite("u -> up"));
+        tui.printToCmdLineOut(tui.tuiWrite("d -> down"));
+        String input = scanner.nextLine();
+
+        tui.printToCmdLineOut(tui.tuiWrite(input));
+
+        if (input.equals("r")) {
+            tui.movePlayAreaRight();
+        } else if (input.equals("l")) {
+            tui.movePlayAreaLeft();
+        } else if (input.equals("u")) {
+            tui.movePlayAreaUp();
+        } else if (input.equals("d")) {
+            tui.movePlayAreaDown();
+        }
+
         stateNotify();
     }
 

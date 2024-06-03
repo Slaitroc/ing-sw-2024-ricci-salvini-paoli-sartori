@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
@@ -23,7 +24,7 @@ public class SetupGameModelState implements GameModelState{
     }
 
     @Override
-    public void playStarter(GameModel model, String username) throws IllegalStateOperationException {
+    public void playStarter(GameModel model, String username) throws IllegalStateOperationException, ObjectiveCardNotChosenException {
         model.getPlayers().get(username).playStarter();
 
         boolean allPlayersPlayedStarter = true;
@@ -66,11 +67,16 @@ public class SetupGameModelState implements GameModelState{
 
     @Override
     public void changeStarterSide(GameModel model, String username) throws IllegalStateOperationException {
-        throw new IllegalStateOperationException();
+        model.getPlayers().get(username).changeStarterSide();
     }
 
     @Override
     public void detectEndGame(GameModel model) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
+    }
+
+    @Override
+    public void endGame(GameModel model) throws IllegalStateOperationException {
+
     }
 }

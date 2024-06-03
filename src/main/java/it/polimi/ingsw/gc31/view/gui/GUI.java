@@ -113,6 +113,11 @@ public class GUI extends UI {
     }
 
     @Override
+    public void show_invalidAction(String message) {
+
+    }
+
+    @Override
     public void update_ToPlayingState() {
         Platform.runLater(() -> {
             app.setFullScreen();

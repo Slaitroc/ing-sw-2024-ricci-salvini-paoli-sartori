@@ -108,8 +108,9 @@ public class Deck<T extends Card> extends Observable<Deck> {
     public T draw() throws EmptyDeckException {
         if (deck.isEmpty())
             throw new EmptyDeckException();
+        T card = deck.poll();
         notifyListeners(this);
-        return deck.poll();
+        return card;
     }
 
     public void refill() {
