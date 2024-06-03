@@ -98,14 +98,6 @@ public abstract class PlayableCard implements Card {
 
     abstract public Objective getObjective();
 
-    public JsonObject frontSerializeToJson() {
-        return front.serializeToJson();
-    }
-
-    public JsonObject backSerializeToJson() {
-        return back.serializeToJson();
-    }
-
     @Override
     public boolean getSide() {
         return side;
@@ -123,11 +115,6 @@ public abstract class PlayableCard implements Card {
             return front.getImage();
         else
             return back.getImage();
-    }
-
-    @Override
-    public Card deepCopy() {
-        return null;
     }
 
     public List<Resources> getCorners() {

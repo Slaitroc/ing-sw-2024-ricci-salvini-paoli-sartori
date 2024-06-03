@@ -5,6 +5,8 @@ import java.util.*;
 import java.util.List;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowPlayAreaObj;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
@@ -26,10 +28,9 @@ import it.polimi.ingsw.gc31.model.player.Waiting;
 public class GameModel {
     private final Board board;
     int pawnSelector;
-    private Map<String, Player> players;
-    private ObjectiveCard objective1, objective2;
-    private List<ObjectiveCard> secretObjectives;
-    private List<String> turnPlayer;
+    protected Map<String, Player> players;
+    protected List<ObjectiveCard> secretObjectives;
+    protected List<String> turnPlayer;
     private int currPlayingPlayer = 0;
     private GameModelState gameState;
 
@@ -42,22 +43,16 @@ public class GameModel {
         this.board = new Board();
         this.players = new HashMap<>();
         this.turnPlayer = null;
+        this.secretObjectives = new ArrayList<>();
         this.gameState = new CreationGameModelState();
     }
 
     public void initGame(LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
         players = gameState.initGame(this, clients);
     }
-    public void endGame() {
-        for (Player player : players.values()) {
-            int point  = 0;
-            point += board.getDeckObjective().getCard1().getObjective().isObjectiveDone(player.getPlayArea().getPlacedCards(), null, player.getPlayArea().getAchievedResources());
-            point += board.getDeckObjective().getCard2().getObjective().isObjectiveDone(player.getPlayArea().getPlacedCards(), null, player.getPlayArea().getAchievedResources());
-            point += player.getScore();
-            System.out.println(player.getUsername()+" ha fatto "+point+" punti");
-        }
+    protected void endGame() throws IllegalStateOperationException {
+        gameState.endGame(this);
     }
-
     /**
      * This method assigns a pawn color to a player.
      * It uses the static variable pawnSelector to determine the color.

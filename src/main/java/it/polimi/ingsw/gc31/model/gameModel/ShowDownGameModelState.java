@@ -71,6 +71,6 @@ public class ShowDownGameModelState implements GameModelState {
 
     @Override
     public void endGame(GameModel model) throws IllegalStateOperationException {
-
+        throw new IllegalStateOperationException();
     }
 }

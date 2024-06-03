@@ -107,29 +107,6 @@ public class Player extends PlayerObservable {
         return false;
     }
 
-//    /**
-//     * Draws the first gold card and adds it to the player's hand.
-//     */
-//    public boolean drawGoldCard1() {
-//        Deck<PlayableCard> deck = board.getDeckGold();
-//        if (deck.peekCard1() == null) {
-//            deck.replaceDeck(board.getDeckResource().getQueueDeck());
-//        }
-//        return addToHand(deck.getCard1(), false);
-//    }
-//
-//    /**
-//     * Draws the second gold card and adds it to the player's hand.
-//     */
-//    public boolean drawGoldCard2() {
-//        Deck<PlayableCard> deck = board.getDeckGold();
-//        if (deck.peekCard2() == null) {
-//            deck.replaceDeck(board.getDeckResource().getQueueDeck());
-//        }
-//        return addToHand(deck.getCard2(), false);
-//
-//    }
-
     /**
      * Draws a resource card directly from the resourceDeck and adds it to the
      * player's hand.
@@ -171,19 +148,19 @@ public class Player extends PlayerObservable {
 //        return addToHand(deck.getCard2(), false);
 //    }
 
-    /**
-     * Basic repositioning of the card in hand temporarily implemented
-     * with an input/output System
-     * TODO change I/O System with what we will actually use
-     */
-    public void moveCardInHand() {
-        try {
-            inGameState.moveCardInHand(this);
-        } catch (IllegalStateOperationException e) {
-            System.out.println("Player " + username + " not allowed to move cards in hand in current state");
-            e.getStackTrace();
-        }
-    }
+//    /**
+//     * Basic repositioning of the card in hand temporarily implemented
+//     * with an input/output System
+//     * TODO change I/O System with what we will actually use
+//     */
+//    public void moveCardInHand() {
+//        try {
+//            inGameState.moveCardInHand(this);
+//        } catch (IllegalStateOperationException e) {
+//            System.out.println("Player " + username + " not allowed to move cards in hand in current state");
+//            e.getStackTrace();
+//        }
+//    }
 
     /**
      * Method let the player place the selectedCard in the map
@@ -224,21 +201,25 @@ public class Player extends PlayerObservable {
         notifyPlayerChooseObjectiveCardListener(new Pair<>(objectiveCardToChoose.get(0),this.objectiveCardToChoose.get(1)));
     }
 
+//    /**
+//     *
+//     */
+//    public void addObjectiveCardToChoose(List<ObjectiveCard> cards) {
+//        objectiveCardToChoose = cards;
+//    }
+
+
+    public void calculateObjectiveCard() {
+        score += objectiveCard.getObjective().isObjectiveDone(playArea.getPlacedCards(), null, playArea.getAchievedResources());
+    }
     /**
      *
-     */
-    public void addObjectiveCardToChoose(List<ObjectiveCard> cards) {
-        objectiveCardToChoose = cards;
-    }
-
-    /**
-     * Method to calculate ONLY the SECRET objective card of the player
-     * and the COMMON objective card of the game (not the playable objectives)
+     * Method to calculate the COMMON objective card of the game
      *
      * @param obj: Objective Card to calculate
      */
     public void calculateObjectiveCard(ObjectiveCard obj) {
-        obj.getObjective().isObjectiveDone(playArea.getPlacedCards(), null, playArea.getAchievedResources());
+        score += obj.getObjective().isObjectiveDone(playArea.getPlacedCards(), null, playArea.getAchievedResources());
     }
 
     // GETTERS
@@ -271,13 +252,13 @@ public class Player extends PlayerObservable {
         return this.hand;
     }
 
-    public ObjectiveCard getObjectiveCard() {
-        return this.objectiveCard;
-    }
+//    public ObjectiveCard getObjectiveCard() {
+//        return this.objectiveCard;
+//    }
 
-    public PawnColor getPawnColor() {
-        return this.pawnColor;
-    }
+//    public PawnColor getPawnColor() {
+//        return this.pawnColor;
+//    }
 
     // SETTERS
 
@@ -323,4 +304,8 @@ public class Player extends PlayerObservable {
         return this.inGameState.stateInfo();
     }
 
+//    // Setter package-private for the test
+//    void setScore(int score) {
+//        this.score = score;
+//    }
 }

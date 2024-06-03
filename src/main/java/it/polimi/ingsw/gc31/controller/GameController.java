@@ -3,26 +3,17 @@ package it.polimi.ingsw.gc31.controller;
 import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.*;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.DrawResObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.PlayObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.FlipCardObj;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.FlipStarterCardObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
-import it.polimi.ingsw.gc31.model.enumeration.GameState;
-import it.polimi.ingsw.gc31.model.player.Player;
-import it.polimi.ingsw.gc31.utility.DV;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 
 /**

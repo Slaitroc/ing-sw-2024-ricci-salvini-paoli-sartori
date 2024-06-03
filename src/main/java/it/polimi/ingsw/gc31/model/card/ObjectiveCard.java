@@ -42,8 +42,4 @@ public class ObjectiveCard implements Card {
             return dirImgBack;
     }
 
-    @Override
-    public ObjectiveCard deepCopy() {
-        return null;
-    }
 }

@@ -1,5 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.listeners;
 
+import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,5 @@
 package it.polimi.ingsw.gc31.model.card;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
 
@@ -127,31 +124,6 @@ public class CardFront {
             newMap.put(val.getKey(), Integer.valueOf(val.getValue()));
         }
         return newMap;
-    }
-
-    public JsonObject serializeToJson() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("score", this.score);
-
-        JsonArray resourcesArray = new JsonArray();
-        for (Resources res : this.resources) {
-            resourcesArray.add(res.toString());
-        }
-        jsonObject.add("resources", resourcesArray);
-
-        if (requirements.equals(Collections.emptyMap())) {
-            jsonObject.add("requirements", null);
-        } else {
-            JsonObject requirementsObjet = new JsonObject();
-            for (Map.Entry<Resources, Integer> res : this.requirements.entrySet()) {
-                requirementsObjet.addProperty(res.getKey().toString(), res.getValue());
-            }
-            jsonObject.add("requirements", requirementsObjet);
-        }
-        jsonObject.addProperty("dirImg", dirImg);
-
-        jsonObject.add("objective", null);
-        return jsonObject;
     }
 
     public List<Resources> getCorners() {

@@ -29,8 +29,9 @@ public class CreationGameModelState implements GameModelState {
         model.getBoard().getDeckGold().refill();
         // THe ResourceCar1 and ResourceCard2 are drawn on the board
         model.getBoard().getDeckResource().refill();
-        // The Secrete Objective 1 and the Secrete Objective 2 are drawn on the board
-        model.getBoard().getDeckObjective().refill();
+        // The Secrete Objective 1 and the Secrete Objective 2 are drawn
+        model.secretObjectives.add(model.getBoard().getDeckObjective().draw());
+        model.secretObjectives.add(model.getBoard().getDeckObjective().draw());
 
         for (String username : clients.keySet()) {
             model.getBoard().updateScore(username, 0);
@@ -89,7 +90,7 @@ public class CreationGameModelState implements GameModelState {
 
     @Override
     public void endGame(GameModel model) throws IllegalStateOperationException {
-
+        throw new IllegalStateOperationException();
     }
 
     private Map<String, Player> createPlayers(GameModel model, Set<String> setUsername) {
@@ -102,6 +103,8 @@ public class CreationGameModelState implements GameModelState {
     }
 
     // FIXME non so quanto sia bello mettere questo metodo qua.
+    // FIXME riguardare intermanet i listener
+    // FIXME non bellissimo come l'ho fatto fino ad ora
     private void createAllListeners(GameModel model, Map<String, Player> players, Map<String, VirtualClient> clients) {
         List<PlayerHandListener> playerHandListenersList = new ArrayList<>();
         List<PlayerScoreListener> playerScoreListeners = new ArrayList<>();
