@@ -10,23 +10,23 @@ import java.util.Map;
 
 public interface ShowUpdate {
 
-    public abstract void update_ToPlayingState();
+    void update_ToPlayingState();
 
     void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2);
 
     void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2);
 
-    void show_objectiveDeck(ObjectiveCard firstCardDeck, ObjectiveCard card1, ObjectiveCard card2);
+    void show_commonObjectiveCard(ObjectiveCard card1, ObjectiveCard card2);
 
-    void show_starterCard(PlayableCard starterCard);
+    void show_starterCard(String username, PlayableCard starterCard);
 
-    void show_objectiveCard(ObjectiveCard objectiveCard);
+    void show_objectiveCard(String username, ObjectiveCard objectiveCard);
 
-    void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2);
+    void show_chooseObjectiveCard(String username, ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2);
 
     void show_playArea(String username, Map<Point, PlayableCard> playArea, String achievedResources);
 
-    void show_handPlayer(String username, List<PlayableCard> hand);
+    void show_handPlayer(String username, List<PlayableCard> hand, int selectedCard);
 
     void show_scorePlayer(LinkedHashMap<String, Integer> scores);
 

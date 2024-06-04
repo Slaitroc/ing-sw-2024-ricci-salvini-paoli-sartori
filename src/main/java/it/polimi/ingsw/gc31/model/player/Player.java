@@ -2,14 +2,12 @@ package it.polimi.ingsw.gc31.model.player;
 
 import java.awt.*;
 
-import it.polimi.ingsw.gc31.client_server.listeners.PlayerObservable;
 import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
-import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +17,13 @@ import java.util.List;
  * It manages the player's state, hand, score, and other game-related
  * attributes.
  */
-public class Player extends PlayerObservable {
+public class Player{
 
     private final Board board;
     private int selectedCard;
     private PlayableCard selectedStarterCard;
     private ObjectiveCard objectiveCard;
-    private List<ObjectiveCard> objectiveCardToChoose;
+    private final List<ObjectiveCard> objectiveCardToChoose;
     private final String username;
     private final PlayArea playArea;
     private final PawnColor pawnColor;
@@ -66,7 +64,7 @@ public class Player extends PlayerObservable {
     private boolean addToHand(PlayableCard card, Boolean byDeck) {
         try {
             inGameState.addToHand(card, this, byDeck);
-            notifyPlayerHandListener(new Pair<>(username, hand));
+//            notifyPlayerHandListener(new Pair<>(username, hand));
             return true;
         } catch (IllegalStateOperationException e) {
             System.out.println("Player " + username + " cannot draw in current state");
@@ -169,10 +167,8 @@ public class Player extends PlayerObservable {
      */
     public void play(Point point) throws IllegalStateOperationException {
         inGameState.play(point, this);
-        notifyPlayAreaListener(
-                new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
-        notifyPlayerHandListener(
-                new Pair<>(username, hand));
+//        notifyPlayAreaListener(new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
+//        notifyPlayerHandListener(new Pair<>(username, hand));
         board.updateScore(username, score);
     }
 
@@ -181,8 +177,7 @@ public class Player extends PlayerObservable {
      */
     public void playStarter() throws IllegalStateOperationException, ObjectiveCardNotChosenException {
         inGameState.playStarter(this);
-        notifyPlayAreaListener(
-                new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
+//        notifyPlayAreaListener(new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
     }
 
     /**
@@ -198,7 +193,11 @@ public class Player extends PlayerObservable {
     public void drawChooseObjectiveCards() {
         objectiveCardToChoose.add(board.getDeckObjective().draw());
         objectiveCardToChoose.add(board.getDeckObjective().draw());
-        notifyPlayerChooseObjectiveCardListener(new Pair<>(objectiveCardToChoose.get(0),this.objectiveCardToChoose.get(1)));
+//        notifyPlayerChooseObjectiveCardListener(new Pair<>(objectiveCardToChoose.get(0),this.objectiveCardToChoose.get(1)));
+    }
+
+    public List<ObjectiveCard> getChooseSecretObjective() {
+        return objectiveCardToChoose;
     }
 
 //    /**
@@ -236,6 +235,10 @@ public class Player extends PlayerObservable {
         return this.selectedStarterCard;
     }
 
+    public int getIndexSelectedCard() {
+        return this.selectedCard;
+    }
+
     public String getUsername() {
         return this.username;
     }
@@ -252,13 +255,9 @@ public class Player extends PlayerObservable {
         return this.hand;
     }
 
-//    public ObjectiveCard getObjectiveCard() {
-//        return this.objectiveCard;
-//    }
-
-//    public PawnColor getPawnColor() {
-//        return this.pawnColor;
-//    }
+    public ObjectiveCard getObjectiveCard() {
+        return this.objectiveCard;
+    }
 
     // SETTERS
 
@@ -276,28 +275,26 @@ public class Player extends PlayerObservable {
 
     public void setStarterCard() throws EmptyDeckException {
         this.selectedStarterCard = board.getDeckStarter().draw();
-        notifyPlayerStarterCardListener(selectedStarterCard);
+//        notifyPlayerStarterCardListener(selectedStarterCard);
     }
 
     public void changeSide() {
         hand.get(selectedCard).changeSide();
-        notifyPlayerHandListener(new Pair<>(username, hand));
+//        notifyPlayerHandListener(new Pair<>(username, hand));
     }
     public void changeStarterSide() {
         selectedStarterCard.changeSide();
-        notifyPlayerStarterCardListener(selectedStarterCard);
+//        notifyPlayerStarterCardListener(selectedStarterCard);
     }
 
     // NOTICE: This setter is not supposed to be called from anyone except the Start
     // state of the player
     protected void setObjectiveCard(ObjectiveCard card) {
         this.objectiveCard = card;
-        notifyPlayerObjectiveCardListener(objectiveCard);
     }
 
     public void setInGameState(PlayerState inGameState) {
         this.inGameState = inGameState;
-        notifyPlayerTurnListener(new Pair<>(username, infoState()));
     }
 
     public String infoState() {

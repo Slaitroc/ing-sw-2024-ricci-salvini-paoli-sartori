@@ -1,6 +1,5 @@
 package it.polimi.ingsw.gc31.model;
 
-import it.polimi.ingsw.gc31.client_server.listeners.Observable;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
@@ -8,7 +7,7 @@ import it.polimi.ingsw.gc31.model.enumeration.CardType;
 
 import java.util.LinkedHashMap;
 
-public class Board extends Observable<LinkedHashMap<String, Integer>> {
+public class Board{
 
     private final Deck<PlayableCard> goldDeck;
     private final Deck<PlayableCard> resourceDeck;
@@ -25,8 +24,10 @@ public class Board extends Observable<LinkedHashMap<String, Integer>> {
     }
     public void updateScore(String username, int integer) {
         playersScore.put(username, integer);
-        notifyListeners(playersScore);
+    }
 
+    public LinkedHashMap<String, Integer> getPlayersScore(String username) {
+        return playersScore;
     }
 
     public Deck<PlayableCard> getDeckGold() {

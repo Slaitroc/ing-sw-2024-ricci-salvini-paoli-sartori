@@ -3,11 +3,9 @@ package it.polimi.ingsw.gc31.model.player;
 import java.awt.Point;
 import java.util.*;
 
-import it.polimi.ingsw.gc31.client_server.listeners.Observable;
 import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
-import javafx.util.Pair;
 
 /**
  * This class represents the play area of a player in the game.
@@ -15,7 +13,7 @@ import javafx.util.Pair;
  *
  * @author Matteo Paoli
  */
-public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> {
+public class PlayArea{
 
     private final Map<Point, PlayableCard> placedCards;
     private final Map<Resources, Integer> achievedResources;
@@ -232,6 +230,7 @@ public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCa
         return new HashMap<>(achievedResources);
     }
 
+    // FIXME forse non serve
     public List<Point> getCardOrder() {
         return new ArrayList<>(cardOrder);
     }

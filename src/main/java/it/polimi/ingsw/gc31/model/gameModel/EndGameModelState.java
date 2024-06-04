@@ -63,11 +63,11 @@ public class EndGameModelState implements GameModelState {
     }
 
     @Override
-    public void endGame(GameModel model) throws IllegalStateOperationException {
+    public void endGame(GameModel model){
         for (Player player: model.getPlayers().values()) {
             player.calculateObjectiveCard();
-            player.calculateObjectiveCard(model.secretObjectives.get(0));
-            player.calculateObjectiveCard(model.secretObjectives.get(1));
+            player.calculateObjectiveCard(model.commonObjectives.get(0));
+            player.calculateObjectiveCard(model.commonObjectives.get(1));
         }
     }
 }

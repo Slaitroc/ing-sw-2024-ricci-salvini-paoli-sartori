@@ -133,7 +133,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_handPlayer(String username, List<PlayableCard> hand) {
+    public void show_handPlayer(String username, List<PlayableCard> hand, int selectedCard) {
         // TODO Auto-generated method stub
     }
 
@@ -143,12 +143,12 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_objectiveDeck(ObjectiveCard firstCardDeck, ObjectiveCard card1, ObjectiveCard card2) {
+    public void show_commonObjectiveCard(ObjectiveCard card1, ObjectiveCard card2) {
         // TODO Auto-generated method stub
     }
 
     @Override
-    public void show_starterCard(PlayableCard starterCard) {
+    public void show_starterCard(String username, PlayableCard starterCard) {
 
     }
 
@@ -163,12 +163,12 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
+    public void show_chooseObjectiveCard(String username, ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
         // TODO Auto-generated method stub
     }
 
     @Override
-    public void show_objectiveCard(ObjectiveCard objectiveCard) {
+    public void show_objectiveCard(String username, ObjectiveCard objectiveCard) {
         // TODO Auto-generated method stub
     }
 

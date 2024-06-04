@@ -4,7 +4,6 @@ import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
-import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
@@ -17,7 +16,6 @@ import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.model.strategies.Count;
-import it.polimi.ingsw.gc31.model.strategies.Objective;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -97,14 +95,14 @@ class GameModelTest {
         Deck<ObjectiveCard> deck = new Deck<>(CardType.OBJECTIVE);
         FakePlayer player;
         assertInstanceOf(CreationGameModelState.class, model.getGameState());
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.endTurn());
+        assertThrowsExactly(IllegalStateOperationException.class, model::endTurn);
         utilityInitGame(model);
 
         assertInstanceOf(SetupGameModelState.class, model.getGameState());
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.endTurn());
+        assertThrowsExactly(IllegalStateOperationException.class, model::endTurn);
 
-        model.secretObjectives.add(deck.draw());
-        model.secretObjectives.add(deck.draw());
+        model.commonObjectives.add(deck.draw());
+        model.commonObjectives.add(deck.draw());
 
         // if last player reach 20 points the state must change to Last turn
         model.setGameState(new RunningGameModelSate());
@@ -140,8 +138,8 @@ class GameModelTest {
         FakeGameModel model2 = new FakeGameModel();
         utilityInitGame(model2);
 
-        model2.secretObjectives.add(deck.draw());
-        model2.secretObjectives.add(deck.draw());
+        model2.commonObjectives.add(deck.draw());
+        model2.commonObjectives.add(deck.draw());
 
         model2.setGameState(new RunningGameModelSate());
         for (int i=0; i<4; i++) {
@@ -591,8 +589,8 @@ class GameModelTest {
         utilityInitGame(model);
         assertThrowsExactly(IllegalStateOperationException.class, () ->model.endGame());
 
-        model.secretObjectives.add(new ObjectiveCard(2, new Count(Arrays.asList(Resources.MUSHROOM, Resources.MUSHROOM, Resources.MUSHROOM)), null, null));
-        model.secretObjectives.add(new ObjectiveCard(2, new Count(Arrays.asList(Resources.INK, Resources.INK)), null, null));
+        model.commonObjectives.add(new ObjectiveCard(2, new Count(Arrays.asList(Resources.MUSHROOM, Resources.MUSHROOM, Resources.MUSHROOM)), null, null));
+        model.commonObjectives.add(new ObjectiveCard(2, new Count(Arrays.asList(Resources.INK, Resources.INK)), null, null));
 
         //last player reach 20 points the game must directly enter in lastTurn state
         model.setGameState(new RunningGameModelSate());
