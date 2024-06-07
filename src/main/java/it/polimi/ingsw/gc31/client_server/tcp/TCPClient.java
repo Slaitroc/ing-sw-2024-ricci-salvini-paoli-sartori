@@ -25,8 +25,6 @@ public class TCPClient implements ClientCommands {
     private final Queue<ClientQueueObject> callsList;
 
     private Timer timer;
-    private final BufferedReader heartBeatInput;
-    private final PrintWriter heartBeatOutput;
 
     /**
      * This method is the constructor of the TCPClient.
@@ -40,11 +38,8 @@ public class TCPClient implements ClientCommands {
         this.output = new ObjectOutputStream(serverSocket.getOutputStream());
         this.callsList = new LinkedBlockingQueue<>();
         this.timer = new Timer(true);
-        this.heartBeatInput = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
-        this.heartBeatOutput = new PrintWriter(new BufferedWriter(new OutputStreamWriter(serverSocket.getOutputStream())));
         clientHandler_reader();
         executor();
-        startHeartBeat();
     }
 
     /**
@@ -137,6 +132,7 @@ public class TCPClient implements ClientCommands {
     @Override
     public void setUsernameResponse(String username) {
         this.username = username;
+        startHeartBeat();
     }
 
     /**
@@ -302,18 +298,29 @@ public class TCPClient implements ClientCommands {
         tcp_sendCommand(new PlayObj(this.username, point.x, point.y), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method sends the object that select a card at the specified hand location
+     *
+     * @param index is the position in the hand of the card the player wants to select
+     */
     @Override
     public void selectCard(int index) {
         tcp_sendCommand(new SelectCardObj(this.username, index), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method sends the object that flips the card selected for the player
+     */
     @Override
-    public void changeSide() throws RemoteException {
+    public void changeSide() {
         tcp_sendCommand(new FlipCardObj(this.username), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method sends the object that flips the starter card
+     */
     @Override
-    public void changeStarterSide() throws RemoteException {
+    public void changeStarterSide() {
         tcp_sendCommand(new FlipStarterCardObj(this.username), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
@@ -328,6 +335,13 @@ public class TCPClient implements ClientCommands {
         tcp_sendCommand(new ChatMessage(this.username, message), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method starts the procedure of the heart beat.
+     * It creates a task that is executed periodically.
+     * In particular every 5 seconds a HeartBeatObj is created and sent to the clientHandler with the specific recipient.
+     * The first execution is done at the invocation of this method,
+     * all the others execution are performed every 5 seconds
+     */
     //FIXME aggiungere metodo close che esegue "timer.cancel();" quando si vuole chiudere la connessione
     private void startHeartBeat(){
         timer.scheduleAtFixedRate(new TimerTask() {

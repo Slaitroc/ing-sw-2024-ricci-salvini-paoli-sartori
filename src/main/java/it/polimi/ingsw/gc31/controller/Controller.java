@@ -226,15 +226,26 @@ public class Controller extends UnicastRemoteObject implements IController {
         return newConnection;
     }
 
+
     //Risorse per heartbeat
     //FIXME spostare in cima attributi e metodi
     private ConcurrentHashMap<VirtualClient, Long> clientsHeartBeat;
     private ScheduledExecutorService scheduler;
 
+    /**
+     * This method creates a task that execute every 10 seconds the checkHeartBeats method
+     */
     private void startHeartBeatCheck(){
         scheduler.scheduleAtFixedRate(() -> checkHeartBeats(), 0, 10, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * This method get the current time, expressed in milliseconds, in the variable "now".
+     * Then, for every VirtualClient in the clientsHeartBeat list, the method checks if the last heart beat
+     * received from the client is older than 10 seconds.
+     * If the condition is true the client is considered crashed and the method remove the client from the list,
+     * also closes the connection towards the client.
+     */
     private void checkHeartBeats(){
         long now = System.currentTimeMillis();
         for(VirtualClient client : clientsHeartBeat.keySet()){
@@ -248,6 +259,14 @@ public class Controller extends UnicastRemoteObject implements IController {
         }
     }
 
+    /**
+     * This method is invoked for every heartBeatObj received.
+     * The method updates the time value kept in the clientsHeartBeat for the client that sent it.
+     * Furthermore, if an heartBeat arrives but the client is not in the Map a specific message is written
+     *
+     * @param client is the client that sent the heart beat
+     * @throws RemoteException if an error occurs in the rmi connection
+     */
     @Override
     public void updateHeartBeat(VirtualClient client) throws RemoteException{
         if(!clientsHeartBeat.containsKey(client))

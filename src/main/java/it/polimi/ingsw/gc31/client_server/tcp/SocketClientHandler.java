@@ -81,7 +81,8 @@ public class SocketClientHandler implements VirtualClient {
     /**
      * This method reads the object from the client and sends it to the
      * right controller
-     * based on the recipient of the object
+     * based on the recipient of the object.
+     * The Object corresponding to the heartBeat are treated differently because it needs to be evaluated instantly
      */
     private void tcpClient_reader() {
         new Thread(() -> {
@@ -112,8 +113,8 @@ public class SocketClientHandler implements VirtualClient {
                 // Altrimenti
                 // devo riconnettere il client alla partita a cui stava giocando
             } catch (IOException | ClassNotFoundException e) {
-//                e.printStackTrace();
-                System.out.println("Connessione interrotta");
+                e.printStackTrace();
+//                System.out.println("Connessione interrotta");
             }
 
             /*
