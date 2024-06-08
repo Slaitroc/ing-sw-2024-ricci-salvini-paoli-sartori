@@ -38,7 +38,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         this.username = DV.DEFAULT_USERNAME;
         this.controller = null;
         this.callsList = new LinkedBlockingQueue<>();
-        new Thread(this::executor).start();
+        executor();
     }
 
     @Override
@@ -55,23 +55,25 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     private void executor() {
-        while (true) {
-            ClientQueueObject action;
-            synchronized (callsList) {
-                while (callsList.isEmpty()) {
-                    try {
-                        callsList.wait();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+        new Thread(() -> {
+            while (true) {
+                ClientQueueObject action;
+                synchronized (callsList) {
+                    while (callsList.isEmpty()) {
+                        try {
+                            callsList.wait();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
+                    action = callsList.poll();
                 }
-                action = callsList.poll();
-            }
-            if (action != null) {
-                action.execute(ui);
+                if (action != null) {
+                    action.execute(ui);
 
+                }
             }
-        }
+        }).start();
     }
 
     // CLIENT COMMANDS

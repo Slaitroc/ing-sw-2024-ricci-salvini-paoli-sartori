@@ -1349,13 +1349,22 @@ public class TUI extends UI {
      * @param command
      */
     private void execute_command(String command) {
-        if (state.commandsMap.containsKey(command)) {
-            state.commandsMap.get(command).run();
-        } else if (command.isEmpty()) {
+        if (command.isEmpty() || command.equals("help")) {
+            state.command_showCommandsInfo();
             state.stateNotify();
+        } else if (state.commandsMap.containsKey(command)) {
+            state.commandsMap.get(command).run();
         } else {
             state.commandsMap.get("invalid").run();
         }
+
+        // if (state.commandsMap.containsKey(command)) {
+        // state.commandsMap.get(command).run();
+        // } else if (command.isEmpty() || command.equals("help")) {
+        // state.stateNotify();
+        // } else {
+        // state.commandsMap.get("invalid").run();
+        // }
     }
 
     /**
@@ -1431,13 +1440,6 @@ public class TUI extends UI {
     }
 
     // UPDATES FIELDS & METHODS
-
-    @Override
-    public void update_ToPlayingState() {
-        this.state = new PlayingState(this);
-        state.command_showCommandsInfo();
-
-    }
 
     /**
      * JAVADOC da modificare (non prendetela seriamente)
@@ -1735,6 +1737,13 @@ public class TUI extends UI {
         // }
         // }
         // state.stateNotify();
+    }
+
+    @Override
+    public void update_ToPlayingState() {
+        this.state = new PlayingState(this);
+        state.command_showCommandsInfo();
+
     }
 
     @Override

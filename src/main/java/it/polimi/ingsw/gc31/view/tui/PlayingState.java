@@ -220,7 +220,7 @@ public class PlayingState extends TuiState {
 
     @Override
     protected void command_initial() {
-        command_showCommandsInfo();
+        // command_showCommandsInfo();
     }
 
     @Override
