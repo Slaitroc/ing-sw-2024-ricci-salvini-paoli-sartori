@@ -2,7 +2,14 @@
 
 ###### <span style="color: red;">Note:</span> <u>se ne fixate qualcuno aggiornate il checkbox!</u>
 
-- [x] Avendo aggiunto gli oggetti network molti metodi che sono nelle interfacce (Icontroller IGameController) non vengono mai chiamati da remoto. Potremmo e dovremmo rimuoverli dalle interfacce. Gli oggetti hanno come tipo del parametro execute la classe concreta e non l'interfaccia. Più semplice.
+- [x] Avendo aggiunto gli oggetti network molti metodi che sono nel package client_server.interfaces non vengono mai chiamati da remoto, pertanto se non sono nemmeno utili per creare analogie tra i protocolli network vanno rimossi dalle interfacce che estendono Remote. Gli oggetti network hanno come tipo del parametro execute la classe concreta e non l'interfaccia (più semplice) ---> Override non effettivamente utilizzato in tutti i metodi che vengono chiamati all'interno degli oggetti.
+
+      SPIEGAZIONE: Usare le interfacce è:
+            - utile per creare analogia e coerenze di firme tra TCP e RMI
+            - fondamentale per utilizzare RMI
+      Però mischiare le cose e buttare tutto nelle interfacce crea confusione su alcuni temi:
+            -Le interfacce che servono per avere oggetti con metodi omonimi (classico utilizzo interfacce) non è necessario che estendano Remote. Tuttavia per il corretto funzionamento dei metodi utilizzati da Oggetti remote RMI l'estendere Remote è necessario ---> per non creare due interfacce separate alcune interfacce estendono Remote anche se non è necessario per la tutti i metodi.
+            - Remote exception è chiamata da RMI --> eccezione più generica a quelle chiamate da TCP.
 
 - [] rmi ha dei problemi (stavo hostando io su codespace e chri da ubuntu non riusciva a connettersi con RMI (con TCP si) la prima connessione di lookup veniva rilevata --> magari il problema è la risposta)
 

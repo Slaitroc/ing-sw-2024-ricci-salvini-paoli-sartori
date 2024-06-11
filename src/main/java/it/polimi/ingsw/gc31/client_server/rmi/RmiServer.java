@@ -40,7 +40,7 @@ public class RmiServer implements VirtualServer {
         executor();
     }
 
-    @Override
+    // @Override
     public boolean connect(VirtualClient client, String username)
             throws RemoteException {
         if (controller.connect(client, username)) {
@@ -91,7 +91,6 @@ public class RmiServer implements VirtualServer {
         }).start();
     }
 
-    @Override
     public void RMIserverWrite(String text) throws RemoteException {
         ServerLog.rmiWrite(text);
     }
