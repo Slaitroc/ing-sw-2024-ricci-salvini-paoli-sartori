@@ -3,15 +3,11 @@
 ###### <span style="color: red;">Note:</span> <u>se ne fixate qualcuno aggiornate il checkbox!</u>
 
 - [x] Avendo aggiunto gli oggetti network molti metodi che sono nel package client_server.interfaces non vengono mai chiamati da remoto, pertanto se non sono nemmeno utili per creare analogie tra i protocolli network vanno rimossi dalle interfacce che estendono Remote. Gli oggetti network hanno come tipo del parametro execute la classe concreta e non l'interfaccia (più semplice) ---> Override non effettivamente utilizzato in tutti i metodi che vengono chiamati all'interno degli oggetti.
-
-      SPIEGAZIONE: Usare le interfacce è:
-            - utile per creare analogia e coerenze di firme tra TCP e RMI
-            - fondamentale per utilizzare RMI
+      SPIEGAZIONE: Usare le interfacce è: - utile per creare analogia e coerenze di firme tra TCP e RMI - fondamentale per utilizzare RMI
       Però mischiare le cose e buttare tutto nelle interfacce crea confusione su alcuni temi:
-            -Le interfacce che servono per avere oggetti con metodi omonimi (classico utilizzo interfacce) non è necessario che estendano Remote. Tuttavia per il corretto funzionamento dei metodi utilizzati da Oggetti remote RMI l'estendere Remote è necessario ---> per non creare due interfacce separate alcune interfacce estendono Remote anche se non è necessario per la tutti i metodi.
-            - Remote exception è chiamata da RMI --> eccezione più generica a quelle chiamate da TCP.
+      -Le interfacce che servono per avere oggetti con metodi omonimi (classico utilizzo interfacce) non è necessario che estendano Remote. Tuttavia per il corretto funzionamento dei metodi utilizzati da Oggetti remote RMI l'estendere Remote è necessario ---> per non creare due interfacce separate alcune interfacce estendono Remote anche se non è necessario per la tutti i metodi. - Remote exception è lanciata da RMI --> eccezione più generica di quelle chiamate da TCP.
 
-- [] rmi ha dei problemi (stavo hostando io su codespace e chri da ubuntu non riusciva a connettersi con RMI (con TCP si) la prima connessione di lookup veniva rilevata --> magari il problema è la risposta)
+- [ ] RMI ha dei problemi di connessione su ubuntu: la connessione di lookup viene rilevata ma non va oltre e lancia un'eccezione.
 
 - [ ] se un utente logga e non inserisce il nome prima dell'altro blocca quello successivo (in rmi non sembra succedere ma in tcp si)--> potrebbe succedere anche in RMI ma è molto improbabile (dovrebbero loggare in istanti vicinissimi)
       SOLUZIONE (IDEA):
@@ -20,7 +16,7 @@
       idea 2 -> sapere chi è il client serve per poter inviare il connect object, visto che forse abbiamo fatto un altro canale per l'heartBeat se quello funziona con le stringhe potremmo usarlo anche per settare le connessioni iniziali --> così non serve più connect object e nemmeno salvare le temporary connection.
 - [ ] alla disconnessione del client il server printa uno stack trace ma sarebbe meglio scrivere un messaggio di log con le info
 - [x] impostare i valori di default per la connessione se non viene inserito nessun input
-      SOLUZIONE: ora ci sono due nuovi valori di DV per forzare l'ip
+      SOLUZIONE: ora ci sono due nuovi valori di DV per forzare l'ip dei server
 
 - [ ] non cambia il side della carta dopo che viene selezionata (problema di player state)
 - [ ] feedback e storico delle mosse lo vogliamo mettere? magari anche qualcosa che ricorda che carta viene selezionata

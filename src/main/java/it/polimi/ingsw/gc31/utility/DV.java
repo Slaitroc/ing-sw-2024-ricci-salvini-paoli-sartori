@@ -106,4 +106,7 @@ public class DV {
     public final static int RMI_PORT = 1100;
     public final static int TCP_PORT = 1200;
 
+    public final static boolean forceIP = false;
+    public final static String forcedIP = "192.168.192.197";
+
 }
