@@ -11,28 +11,29 @@ import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
 import java.rmi.RemoteException;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
-public class PlayAreaListener implements Listener {
-        private final List<VirtualClient> client;
-        public PlayAreaListener(List<VirtualClient> client) {
-                this.client = client;
+public class PlayAreaListener extends Listener {
+        public PlayAreaListener(Map<String, VirtualClient> clients) {
+                super(clients);
         }
 
         @Override
         public void update(GameModel model, String username) throws RemoteException {
                 Player player = model.getPlayers().get(username);
-                ClientQueueObject clientQueueObject = new ShowPlayAreaObj(
-                        username,
-                        gsonTranslater.toJson(player.getPlayArea().getPlacedCards(), new TypeToken<Map<Point, PlayableCard>>(){}.getType()),
-                        gsonTranslater.toJson(player.getPlayArea().getAchievedResources(), new TypeToken<Map<Resources, Integer>>(){}.getType())
-                );
+                if (player.getPlayArea().getPlacedCards().containsKey(new Point(0,0))) {
+                        ClientQueueObject clientQueueObject = new ShowPlayAreaObj(
+                                username,
+                                gsonTranslater.toJson(player.getPlayArea().getPlacedCards(), new TypeToken<LinkedHashMap<Point, PlayableCard>>(){}.getType()),
+                                gsonTranslater.toJson(player.getPlayArea().getAchievedResources(), new TypeToken<Map<Resources, Integer>>(){}.getType())
+                        );
 
-                for (VirtualClient client : client) {
-                        client.sendCommand(clientQueueObject);
+                        for (VirtualClient client: clients.values()) {
+                                client.sendCommand(clientQueueObject);
+                        }
                 }
         }
 }

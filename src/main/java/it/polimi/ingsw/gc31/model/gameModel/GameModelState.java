@@ -9,6 +9,7 @@ import it.polimi.ingsw.gc31.model.player.Player;
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.List;
 
 public interface GameModelState {
     Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException;

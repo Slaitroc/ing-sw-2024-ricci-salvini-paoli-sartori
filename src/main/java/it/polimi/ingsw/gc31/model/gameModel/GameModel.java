@@ -24,14 +24,16 @@ import it.polimi.ingsw.gc31.model.player.Waiting;
  *
  * @author Slaitroc
  */
-public class GameModel extends GameListenerHandler {
+public class GameModel{
     private final Board board;
     private int pawnSelector;
     protected Map<String, Player> players;
+    protected Map<String, VirtualClient> clients;
     protected List<ObjectiveCard> commonObjectives;
     protected List<String> turnPlayer;
     private int currPlayingPlayer = 0;
     private GameModelState gameState;
+    private Map<String, GameListenerHandler> listeners;
 
     /**
      * Constructor for the GameModel class.
@@ -44,21 +46,14 @@ public class GameModel extends GameListenerHandler {
         this.turnPlayer = null;
         this.commonObjectives = new ArrayList<>();
         this.gameState = new CreationGameModelState();
+        this.listeners = new HashMap<>();
     }
 
     public void initGame(LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
+        this.clients = clients;
         players = gameState.initGame(this, clients);
-
-        for (String username : clients.keySet()) {
-            notifyHandListener(this, username);
-            notifyChooseObjectiveListener(this, username);
-            notifyStarterCardListener(this, username);
-            notifyTurnListener(this, username);
-            notifyGoldDeckListener(this, null);
-            notifyResourcedDeckListener(this, null);
-            notifyCommonObjectiveCardListener(this, null);
-            notifyPlayerScoreListener(this, null);
-        }
+        this.clients = clients;
+        notifyAllGameListeners();
     }
     protected void endGame() throws IllegalStateOperationException {
         gameState.endGame(this);
@@ -67,7 +62,7 @@ public class GameModel extends GameListenerHandler {
     public void endTurn() throws IllegalStateOperationException {
         gameState.detectEndGame(this);
         setNextPlayingPlayer();
-        notifyPlayerScoreListener(this, null);
+        listeners.values().forEach(listener -> listener.notifyPlayerScoreListener(this));
     }
     public void setNextPlayingPlayer() {
         if (turnPlayer == null) {
@@ -84,7 +79,7 @@ public class GameModel extends GameListenerHandler {
         }
         // set in game player to notPlaced state
         players.get(turnPlayer.get(currPlayingPlayer)).setInGameState(new NotPlaced());
-        players.values().forEach(player -> notifyTurnListener(this, player.getUsername()));
+        listeners.values().forEach(listener -> listener.notifyTurnListener(this));
     }
     /**
      * Assigns a pawn color to a player.
@@ -131,46 +126,54 @@ public class GameModel extends GameListenerHandler {
 
     public List<ObjectiveCard> getCommonObjectives() {return this.commonObjectives;}
 
+    public Map<String, GameListenerHandler> getListeners() {return this.listeners;}
+
     public void chooseSecretObjective(String username, Integer index) throws IllegalStateOperationException {
         gameState.chooseSecretObjective(this, username, index);
-        notifyObjectiveCardListener(this, username);
+        listeners.get(username).notifyObjectiveCardListener(this);
     }
 
     public void playStarter(String username) throws IllegalStateOperationException, ObjectiveCardNotChosenException {
         gameState.playStarter(this, username);
-        notifyPlayAreaListener(this, username);
+        listeners.get(username).notifyPlayAreaListener(this);
     }
 
     public void play(String username, Point point) throws IllegalStateOperationException {
         gameState.play(this, username, point);
-        notifyPlayAreaListener(this, username);
+        listeners.get(username).notifyPlayAreaListener(this);
+        listeners.get(username).notifyHandListener(this);
+        listeners.values().forEach(listener -> listener.notifyTurnListener(this));
     }
 
     public void drawGold(String username, int index) throws IllegalStateOperationException {
         gameState.drawGold(this, username, index);
-        notifyGoldDeckListener(this, username);
+        listeners.values().forEach(listener -> listener.notifyGoldDeckListener(this));
+        listeners.get(username).notifyHandListener(this);
     }
 
     public void drawResource(String username, int index) throws IllegalStateOperationException {
         gameState.drawResource(this, username, index);
-        notifyResourcedDeckListener(this, username);
+        listeners.values().forEach(listener -> listener.notifyResourcedDeckListener(this));
+        listeners.get(username).notifyHandListener(this);
     }
 
     public void setSelectCard(String username, int index) throws IllegalStateOperationException, WrongIndexSelectedCard {
         gameState.setSelectCard(this, username, index);
-        notifyHandListener(this, username);
+        listeners.get(username).notifyHandListener(this);
     }
 
     public void changeSide(String username) throws IllegalStateOperationException {
         gameState.changeSide(this, username);
-        notifyHandListener(this, username);
+        listeners.get(username).notifyHandListener(this);
     }
 
     public void changStarterSide(String username) throws IllegalStateOperationException {
         gameState.changeStarterSide(this, username);
-        notifyStarterCardListener(this, username);
+        listeners.get(username).notifyStarterCardListener(this);
     }
-
+    public void notifyAllGameListeners() {
+        listeners.values().forEach(listener -> listener.notifyAllListeners(this));
+    }
     // Test methods
     GameModelState getGameState() {
         return gameState;

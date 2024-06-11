@@ -1,17 +1,27 @@
 package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
+import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.player.Player;
+import it.polimi.ingsw.gc31.utility.DV;
 
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class RunningGameModelSate implements GameModelState {
-    public RunningGameModelSate() {
+    public RunningGameModelSate(GameModel model) {
         System.out.println("Game changed to RUNNING");
+
+        for (String username: model.getListeners().keySet()) {
+            GameListenerHandler gameListener = model.getListeners().get(username);
+            model.getListeners().get(username).removeStarterCardListener();
+
+            gameListener.addPlayerScoreListener(new PlayerScoreListener(model.clients));
+        }
     }
     @Override
     public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
@@ -64,9 +74,9 @@ public class RunningGameModelSate implements GameModelState {
 
     @Override
     public void detectEndGame(GameModel model) throws IllegalStateOperationException {
-        if (model.getCurrPlayer().getScore() >= 20 && model.getCurrIndexPlayer() == model.getPlayers().size()-1) {
+        if (model.getCurrPlayer().getScore() >= DV.GamePoints && model.getCurrIndexPlayer() == model.getPlayers().size()-1) {
             model.setGameState(new LastTurnGameModelState());
-        } else if (model.getCurrPlayer().getScore() >= 20){
+        } else if (model.getCurrPlayer().getScore() >= DV.GamePoints){
             model.setGameState(new ShowDownGameModelState());
         }
     }

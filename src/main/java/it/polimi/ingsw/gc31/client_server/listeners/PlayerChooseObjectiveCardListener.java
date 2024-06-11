@@ -9,14 +9,14 @@ import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Map;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
-public class PlayerChooseObjectiveCardListener implements Listener {
-    private final List<VirtualClient> clients;
+public class PlayerChooseObjectiveCardListener extends Listener {
 
-    public PlayerChooseObjectiveCardListener(List<VirtualClient> clients) {
-        this.clients = clients;
+    public PlayerChooseObjectiveCardListener(Map<String, VirtualClient> clients) {
+        super(clients);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class PlayerChooseObjectiveCardListener implements Listener {
                 gsonTranslater.toJson(player.getChooseSecretObjective().get(0), ObjectiveCard.class),
                 gsonTranslater.toJson(player.getChooseSecretObjective().get(1), ObjectiveCard.class)
         );
-        for (VirtualClient client : clients) {
+        for (VirtualClient client: clients.values()) {
             client.sendCommand(clientQueueObject);
         }
     }

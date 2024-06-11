@@ -8,13 +8,30 @@ import java.util.Map;
 
 public class GameListenerHandler{
     private final Map<String, Listener> listeners = new HashMap<>();
+    private final String username;
 
-    private void notifyListeners(String type, GameModel model, String username){
-        // TODO gestire quando non c'è il tipo?
-        try {
-            listeners.get(type).update(model, username);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
+    public GameListenerHandler(String username) {
+        this.username = username;
+    }
+
+    public void notifyAllListeners(GameModel model) {
+        for (Listener listener : listeners.values()) {
+            try {
+                listener.update(model, username);
+            } catch (RemoteException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private void notifyListener(String type, GameModel model){
+        if (listeners.containsKey(type)) {
+            try {
+                listeners.get(type).update(model, username);
+            } catch (RemoteException e) {
+                // TODO cosa fare?
+                System.out.println(e.getMessage());
+            }
         }
     }
 
@@ -98,44 +115,44 @@ public class GameListenerHandler{
         listeners.remove("playerScore");
     }
 
-    public void notifyPlayAreaListener(GameModel model, String username){
-        notifyListeners("playArea", model, username);
+    public void notifyPlayAreaListener(GameModel model){
+        notifyListener("playArea", model);
     }
 
-    public void notifyHandListener(GameModel model, String username){
-        notifyListeners("hand", model, username);
+    public void notifyHandListener(GameModel model){
+        notifyListener("hand", model);
     }
 
-    public void notifyChooseObjectiveListener(GameModel model, String username){
-        notifyListeners("chooseObjective", model, username);
+    public void notifyChooseObjectiveListener(GameModel model){
+        notifyListener("chooseObjective", model);
     }
 
-    public void notifyStarterCardListener(GameModel model, String username){
-        notifyListeners("starterCard", model, username);
+    public void notifyStarterCardListener(GameModel model){
+        notifyListener("starterCard", model);
     }
 
-    public void notifyTurnListener(GameModel model, String username){
-        notifyListeners("turn", model, username);
+    public void notifyTurnListener(GameModel model){
+        notifyListener("turn", model);
     }
 
-    public void notifyObjectiveCardListener(GameModel model, String username){
-        notifyListeners("objectiveCard", model, username);
+    public void notifyObjectiveCardListener(GameModel model){
+        notifyListener("objectiveCard", model);
     }
 
-    public void notifyGoldDeckListener(GameModel model, String username){
-        notifyListeners("goldDeck", model, username);
+    public void notifyGoldDeckListener(GameModel model){
+        notifyListener("goldDeck", model);
     }
 
-    public void notifyResourcedDeckListener(GameModel model, String username){
-        notifyListeners("resourcedDeck", model, username);
+    public void notifyResourcedDeckListener(GameModel model){
+        notifyListener("resourcedDeck", model);
     }
 
-    public void notifyCommonObjectiveCardListener(GameModel model, String username){
-        notifyListeners("commonObjectiveCard", model, username);
+    public void notifyCommonObjectiveCardListener(GameModel model){
+        notifyListener("commonObjectiveCard", model);
     }
 
-    public void notifyPlayerScoreListener(GameModel model, String username){
-        notifyListeners("playerScore", model, username);
+    public void notifyPlayerScoreListener(GameModel model){
+        notifyListener("playerScore", model);
     }
 
 }

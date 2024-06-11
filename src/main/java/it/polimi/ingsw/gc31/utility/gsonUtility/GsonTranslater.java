@@ -14,6 +14,7 @@ import it.polimi.ingsw.gc31.model.strategies.*;
 
 import java.awt.*;
 import java.lang.reflect.Field;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class GsonTranslater {
@@ -40,7 +41,7 @@ public class GsonTranslater {
             .registerTypeAdapter(DrawResObj.class, new ServerQueueObjAdapter())
             .registerTypeAdapter(new TypeToken<Map<Resources, Integer>>() {
             }.getType(), new MapRequirementsAdapter())
-            .registerTypeAdapter(new TypeToken<Map<Point, PlayableCard>>() {
+            .registerTypeAdapter(new TypeToken<LinkedHashMap<Point, PlayableCard>>() {
             }.getType(), new PlayAreaAdapter())
             .registerTypeAdapter(ClientQueueObject.class, new ClientQueueObjAdapter())
             .serializeNulls()

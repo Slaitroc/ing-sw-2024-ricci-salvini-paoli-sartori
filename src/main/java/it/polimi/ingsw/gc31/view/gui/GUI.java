@@ -118,6 +118,11 @@ public class GUI extends UI {
     }
 
     @Override
+    public void show_GameIsOver() {
+
+    }
+
+    @Override
     public void update_ToPlayingState() {
         Platform.runLater(() -> {
             app.setFullScreen();
@@ -153,7 +158,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_playArea(String username, Map<Point, PlayableCard> playArea, String achievedResources) {
+    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea, String achievedResources) {
         // TODO Auto-generated method stub
     }
 

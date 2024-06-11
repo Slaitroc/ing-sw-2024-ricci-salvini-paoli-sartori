@@ -7,25 +7,23 @@ import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Map;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
-public class CommonObjectiveCardListener implements Listener{
-    private final List<VirtualClient> clients;
+public class CommonObjectiveCardListener extends Listener{
 
-    public CommonObjectiveCardListener(List<VirtualClient> clients) {
-        this.clients = clients;
+    public CommonObjectiveCardListener(Map<String, VirtualClient> clients) {
+        super(clients);
     }
 
     @Override
     public void update(GameModel model, String username) throws RemoteException {
-        for (VirtualClient client : clients) {
-            client.sendCommand(
-                    new ShowCommonObjectiveCardObj(
-                            gsonTranslater.toJson(model.getCommonObjectives().get(0), ObjectiveCard.class),
-                            gsonTranslater.toJson(model.getCommonObjectives().get(1), ObjectiveCard.class)
-                    )
-            );
-        }
+        clients.get(username).sendCommand(
+                new ShowCommonObjectiveCardObj(
+                        gsonTranslater.toJson(model.getCommonObjectives().get(0), ObjectiveCard.class),
+                        gsonTranslater.toJson(model.getCommonObjectives().get(1), ObjectiveCard.class)
+                )
+        );
     }
 }

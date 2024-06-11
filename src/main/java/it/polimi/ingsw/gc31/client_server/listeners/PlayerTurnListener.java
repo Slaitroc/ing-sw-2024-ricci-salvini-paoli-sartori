@@ -6,17 +6,16 @@ import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Map;
 
-public class PlayerTurnListener implements Listener{
-    private final List<VirtualClient> clients;
-
-    public PlayerTurnListener(List<VirtualClient> clients) {
-        this.clients = clients;
+public class PlayerTurnListener extends Listener{
+    public PlayerTurnListener(Map<String, VirtualClient> clients) {
+        super(clients);
     }
 
     @Override
     public void update(GameModel model, String username) throws RemoteException {
-        for (VirtualClient client : clients) {
+        for (VirtualClient client : clients.values()) {
             client.sendCommand(new ShowPlayerTurnObj(username, model.getPlayers().get(username).infoState()));
         }
     }

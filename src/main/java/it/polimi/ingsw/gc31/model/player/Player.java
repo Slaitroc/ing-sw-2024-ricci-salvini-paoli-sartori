@@ -123,43 +123,6 @@ public class Player{
 
         return false;
     }
-
-//    /**
-//     * Draws the first resource card and adds it to the player's hand.
-//     */
-//    public boolean drawResourceCard1() {
-//        Deck<PlayableCard> deck = board.getDeckResource();
-//        if (deck.peekCard1() == null) {
-//            deck.replaceDeck(board.getDeckGold().getQueueDeck());
-//        }
-//        return addToHand(deck.getCard1(), false);
-//    }
-//
-//    /**
-//     * Draws the second resource card and adds it to the player's hand.
-//     */
-//    public boolean drawResourceCard2() {
-//        Deck<PlayableCard> deck = board.getDeckResource();
-//        if (deck.peekCard2() == null) {
-//            deck.replaceDeck(board.getDeckGold().getQueueDeck());
-//        }
-//        return addToHand(deck.getCard2(), false);
-//    }
-
-//    /**
-//     * Basic repositioning of the card in hand temporarily implemented
-//     * with an input/output System
-//     * TODO change I/O System with what we will actually use
-//     */
-//    public void moveCardInHand() {
-//        try {
-//            inGameState.moveCardInHand(this);
-//        } catch (IllegalStateOperationException e) {
-//            System.out.println("Player " + username + " not allowed to move cards in hand in current state");
-//            e.getStackTrace();
-//        }
-//    }
-
     /**
      * Method let the player place the selectedCard in the map
      *
@@ -167,8 +130,6 @@ public class Player{
      */
     public void play(Point point) throws IllegalStateOperationException {
         inGameState.play(point, this);
-//        notifyPlayAreaListener(new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
-//        notifyPlayerHandListener(new Pair<>(username, hand));
         board.updateScore(username, score);
     }
 
@@ -177,7 +138,6 @@ public class Player{
      */
     public void playStarter() throws IllegalStateOperationException, ObjectiveCardNotChosenException {
         inGameState.playStarter(this);
-//        notifyPlayAreaListener(new Pair<>(username, new Pair<>(playArea.getPlacedCards(), playArea.getAchievedResources())));
     }
 
     /**
@@ -193,20 +153,11 @@ public class Player{
     public void drawChooseObjectiveCards() {
         objectiveCardToChoose.add(board.getDeckObjective().draw());
         objectiveCardToChoose.add(board.getDeckObjective().draw());
-//        notifyPlayerChooseObjectiveCardListener(new Pair<>(objectiveCardToChoose.get(0),this.objectiveCardToChoose.get(1)));
     }
 
     public List<ObjectiveCard> getChooseSecretObjective() {
         return objectiveCardToChoose;
     }
-
-//    /**
-//     *
-//     */
-//    public void addObjectiveCardToChoose(List<ObjectiveCard> cards) {
-//        objectiveCardToChoose = cards;
-//    }
-
 
     public void calculateObjectiveCard() {
         score += objectiveCard.getObjective().isObjectiveDone(playArea.getPlacedCards(), null, playArea.getAchievedResources());
@@ -275,16 +226,13 @@ public class Player{
 
     public void setStarterCard() throws EmptyDeckException {
         this.selectedStarterCard = board.getDeckStarter().draw();
-//        notifyPlayerStarterCardListener(selectedStarterCard);
     }
 
     public void changeSide() {
         hand.get(selectedCard).changeSide();
-//        notifyPlayerHandListener(new Pair<>(username, hand));
     }
     public void changeStarterSide() {
         selectedStarterCard.changeSide();
-//        notifyPlayerStarterCardListener(selectedStarterCard);
     }
 
     // NOTICE: This setter is not supposed to be called from anyone except the Start
@@ -300,9 +248,4 @@ public class Player{
     public String infoState() {
         return this.inGameState.stateInfo();
     }
-
-//    // Setter package-private for the test
-//    void setScore(int score) {
-//        this.score = score;
-//    }
 }

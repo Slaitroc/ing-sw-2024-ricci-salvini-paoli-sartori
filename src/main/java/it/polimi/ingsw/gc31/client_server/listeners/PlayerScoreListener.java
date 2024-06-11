@@ -5,7 +5,8 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowScorePlayerObj;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 
 import java.rmi.RemoteException;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * This class defines a listener for receiving player score updates.
@@ -15,19 +16,16 @@ import java.util.List;
  *     <li>Integer: the score</li>
  * </ul>
  */
-public class PlayerScoreListener implements Listener {
-    private final List<VirtualClient> clients;
+public class PlayerScoreListener extends Listener {
 
-    public PlayerScoreListener(List<VirtualClient> clients) {
-        this.clients = clients;
+    public PlayerScoreListener(Map<String, VirtualClient> clients) {
+        super(clients);
     }
 
     @Override
     public void update(GameModel model, String username) throws RemoteException {
-        for (VirtualClient client : clients) {
-            client.sendCommand(
-                    new ShowScorePlayerObj(model.getBoard().getPlayersScore(username))
-            );
+        for (VirtualClient client : clients.values()) {
+            client.sendCommand(new ShowScorePlayerObj(model.getBoard().getPlayersScore()));
         }
     }
 }

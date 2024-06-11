@@ -7,6 +7,7 @@ import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ShowDownGameModelState implements GameModelState {

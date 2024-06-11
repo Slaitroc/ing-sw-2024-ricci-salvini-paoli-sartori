@@ -48,7 +48,7 @@ class GameModelTest {
         assertInstanceOf(SetupGameModelState.class, model.getGameState());
         assertThrowsExactly(IllegalStateOperationException.class, () -> model.initGame(clients));
 
-        model.setGameState(new RunningGameModelSate());
+        model.setGameState(new RunningGameModelSate(model));
         assertThrowsExactly(IllegalStateOperationException.class, () -> model.initGame(clients));
 
         model.setGameState(new ShowDownGameModelState());
@@ -105,7 +105,7 @@ class GameModelTest {
         model.commonObjectives.add(deck.draw());
 
         // if last player reach 20 points the state must change to Last turn
-        model.setGameState(new RunningGameModelSate());
+        model.setGameState(new RunningGameModelSate(model));
         for (int i=0; i<4; i++) {
             model.setNextPlayingPlayer();
             player = (FakePlayer) model.getCurrPlayer();
@@ -141,7 +141,7 @@ class GameModelTest {
         model2.commonObjectives.add(deck.draw());
         model2.commonObjectives.add(deck.draw());
 
-        model2.setGameState(new RunningGameModelSate());
+        model2.setGameState(new RunningGameModelSate(model));
         for (int i=0; i<4; i++) {
             model2.setNextPlayingPlayer();
             player = (FakePlayer) model2.getCurrPlayer();
@@ -222,7 +222,7 @@ class GameModelTest {
             assertThrowsExactly(IllegalStateOperationException.class, () -> model.chooseSecretObjective(username, 0));
         }
 
-        model.setGameState(new RunningGameModelSate());
+        model.setGameState(new RunningGameModelSate(model));
         for (String username : clients.keySet()) {
             assertThrowsExactly(IllegalStateOperationException.class, () -> model.chooseSecretObjective(username, 0));
         }
@@ -593,7 +593,7 @@ class GameModelTest {
         model.commonObjectives.add(new ObjectiveCard(2, new Count(Arrays.asList(Resources.INK, Resources.INK)), null, null));
 
         //last player reach 20 points the game must directly enter in lastTurn state
-        model.setGameState(new RunningGameModelSate());
+        model.setGameState(new RunningGameModelSate(model));
         assertThrowsExactly(IllegalStateOperationException.class, () ->model.endGame());
 
         // the first player reach 15 points and achieve his secret objective card
@@ -679,7 +679,7 @@ class GameModelTest {
                 Player player = new FakePlayer(pawnAssignment(), username, getBoard());
                 players.put(username, player);
             }
-            setGameState(new SetupGameModelState());
+            setGameState(new SetupGameModelState(this));
         }
 
         public FakePlayer getCurrPlayer() {

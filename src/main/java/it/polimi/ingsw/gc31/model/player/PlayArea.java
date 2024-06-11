@@ -15,7 +15,7 @@ import it.polimi.ingsw.gc31.model.enumeration.Resources;
  */
 public class PlayArea{
 
-    private final Map<Point, PlayableCard> placedCards;
+    private final LinkedHashMap<Point, PlayableCard> placedCards;
     private final Map<Resources, Integer> achievedResources;
     private final Point lastPlaced = new Point(0, 0);
     private final List<Point> cardOrder;
@@ -25,7 +25,7 @@ public class PlayArea{
      * It initializes the placed cards and achieved resources.
      */
     public PlayArea() {
-        this.placedCards = new HashMap<>();
+        this.placedCards = new LinkedHashMap<>();
         this.achievedResources = new HashMap<>();
         this.cardOrder = new ArrayList<>();
         cardOrder.add(new Point(0, 0));
@@ -219,8 +219,8 @@ public class PlayArea{
     /**
      * @return a copy of the placed cards.
      */
-    public Map<Point, PlayableCard> getPlacedCards() {
-        return new HashMap<>(placedCards);
+    public LinkedHashMap<Point, PlayableCard> getPlacedCards() {
+        return placedCards;
     }
 
     /**

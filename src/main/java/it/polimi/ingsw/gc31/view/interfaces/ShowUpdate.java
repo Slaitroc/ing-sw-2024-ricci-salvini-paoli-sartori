@@ -24,7 +24,7 @@ public interface ShowUpdate {
 
     void show_chooseObjectiveCard(String username, ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2);
 
-    void show_playArea(String username, Map<Point, PlayableCard> playArea, String achievedResources);
+    void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea, String achievedResources);
 
     void show_handPlayer(String username, List<PlayableCard> hand, int selectedCard);
 
@@ -55,5 +55,5 @@ public interface ShowUpdate {
     void show_inGamePlayers(LinkedHashMap<String, Boolean> players);
 
     void show_invalidAction(String message);
-
+    void show_GameIsOver();
 }

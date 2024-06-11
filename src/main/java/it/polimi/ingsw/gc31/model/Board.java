@@ -26,7 +26,7 @@ public class Board{
         playersScore.put(username, integer);
     }
 
-    public LinkedHashMap<String, Integer> getPlayersScore(String username) {
+    public LinkedHashMap<String, Integer> getPlayersScore() {
         return playersScore;
     }
 

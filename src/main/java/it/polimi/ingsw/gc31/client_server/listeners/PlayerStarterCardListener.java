@@ -11,12 +11,12 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
 
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Map;
 
-public class PlayerStarterCardListener implements Listener {
-    private final List<VirtualClient> clients;
+public class PlayerStarterCardListener extends Listener {
 
-    public PlayerStarterCardListener(List<VirtualClient> clients) {
-        this.clients = clients;
+    public PlayerStarterCardListener(Map<String, VirtualClient> clients) {
+        super(clients);
     }
 
     @Override
@@ -26,9 +26,9 @@ public class PlayerStarterCardListener implements Listener {
                 username,
                 gsonTranslater.toJson(player.getStarterCard(), PlayableCard.class)
         );
-        for (VirtualClient client : clients) {
+
+        for (VirtualClient client : clients.values()) {
             client.sendCommand(clientQueueObject);
         }
-
     }
 }

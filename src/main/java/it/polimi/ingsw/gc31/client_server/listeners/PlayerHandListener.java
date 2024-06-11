@@ -9,6 +9,7 @@ import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Map;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
@@ -25,11 +26,10 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
  *
  * @author christian salvini
  */
-public class PlayerHandListener implements Listener {
-    private final List<VirtualClient> clients;
+public class PlayerHandListener extends Listener {
 
-    public PlayerHandListener(List<VirtualClient> clients) {
-        this.clients = clients;
+    public PlayerHandListener(Map<String, VirtualClient> clients) {
+        super(clients);
     }
 
     @Override
@@ -41,33 +41,8 @@ public class PlayerHandListener implements Listener {
                 player.getIndexSelectedCard()
         );
 
-        for (VirtualClient client : clients) {
+        for (VirtualClient client: clients.values()) {
             client.sendCommand(clientQueueObject);
         }
     }
-//    private VirtualClient client;
-//
-//    /**
-//     * Constructs a PlayerHandListener with the specified VirtualClient.
-//     *
-//     * @param client The VirtualClient to update with players hand information.
-//     */
-//    public PlayerHandListener(VirtualClient client) {
-//        this.client = client;
-//    }
-//
-//    /**
-//     * Receives an update containing the player's hand data and triggers the display
-//     * on the associated VirtualClient.
-//     *
-//     * @param data A pair containing the username and the player's hand.
-//     * @throws RemoteException It there is a communication error.
-//     */
-//    @Override
-//    public void update(Pair<String, List<PlayableCard>> data) throws RemoteException {
-//        client.sendCommand(new ShowHandPlayerObj(
-//                data.getKey(),
-//                data.getValue().stream().map(card -> gsonTranslater.toJson(card, PlayableCard.class))
-//                        .toList()));
-//    }
 }

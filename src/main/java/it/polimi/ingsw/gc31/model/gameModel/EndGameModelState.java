@@ -1,11 +1,14 @@
 package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsOverObj;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
+import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EndGameModelState implements GameModelState {
@@ -68,6 +71,14 @@ public class EndGameModelState implements GameModelState {
             player.calculateObjectiveCard();
             player.calculateObjectiveCard(model.commonObjectives.get(0));
             player.calculateObjectiveCard(model.commonObjectives.get(1));
+        }
+
+        for (VirtualClient client: model.clients.values()) {
+            try {
+                client.sendCommand(new GameIsOverObj());
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
