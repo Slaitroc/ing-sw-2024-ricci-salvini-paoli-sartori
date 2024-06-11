@@ -48,7 +48,7 @@ public class Server {
 
         if (ipAddress != null) {
             try {
-                new TCPServer("192.168.192.23");
+                new TCPServer("192.168.192.197");
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             } catch (UnknownHostException e) {
@@ -77,7 +77,7 @@ public class Server {
                 e.printStackTrace();
             }
             try {
-                new RmiServer("192.168.192.23");
+                new RmiServer("192.168.192.197");
             } catch (RemoteException e) {
                 ServerLog.rmiWrite("Remote exception line 62 Server.java");
                 e.printStackTrace();

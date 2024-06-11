@@ -13,7 +13,6 @@ import java.rmi.RemoteException;
 import java.util.*;
 
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
-import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.model.strategies.*;
 import it.polimi.ingsw.gc31.utility.DV;
 

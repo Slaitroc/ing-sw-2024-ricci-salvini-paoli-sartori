@@ -1,6 +1,5 @@
 package it.polimi.ingsw.gc31.client_server.rmi;
 
-import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualServer;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
@@ -18,7 +17,7 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class RmiServer implements VirtualServer {
-    private IController controller;
+    private Controller controller;
     private VirtualClient client;
 
     public VirtualClient getVirtualClient() {

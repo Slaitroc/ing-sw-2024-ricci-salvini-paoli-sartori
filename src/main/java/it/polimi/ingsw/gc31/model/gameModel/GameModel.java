@@ -48,13 +48,16 @@ public class GameModel {
     public void initGame(LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
         players = gameState.initGame(this, clients);
     }
+
     public void endGame() {
         for (Player player : players.values()) {
-            int point  = 0;
-            point += board.getDeckObjective().getCard1().getObjective().isObjectiveDone(player.getPlayArea().getPlacedCards(), null, player.getPlayArea().getAchievedResources());
-            point += board.getDeckObjective().getCard2().getObjective().isObjectiveDone(player.getPlayArea().getPlacedCards(), null, player.getPlayArea().getAchievedResources());
+            int point = 0;
+            point += board.getDeckObjective().getCard1().getObjective().isObjectiveDone(
+                    player.getPlayArea().getPlacedCards(), null, player.getPlayArea().getAchievedResources());
+            point += board.getDeckObjective().getCard2().getObjective().isObjectiveDone(
+                    player.getPlayArea().getPlacedCards(), null, player.getPlayArea().getAchievedResources());
             point += player.getScore();
-            System.out.println(player.getUsername()+" ha fatto "+point+" punti");
+            System.out.println(player.getUsername() + " ha fatto " + point + " punti");
         }
     }
 
@@ -147,7 +150,8 @@ public class GameModel {
         gameState.drawResource(this, username, index);
     }
 
-    public void setSelectCard(String username, int index) throws IllegalStateOperationException, WrongIndexSelectedCard {
+    public void setSelectCard(String username, int index)
+            throws IllegalStateOperationException, WrongIndexSelectedCard {
         gameState.setSelectCard(this, username, index);
     }
 

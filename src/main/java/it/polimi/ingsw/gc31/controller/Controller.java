@@ -112,7 +112,6 @@ public class Controller extends UnicastRemoteObject implements IController {
      *                                              use.
      * @throws RemoteException
      */
-    @Override
     public boolean connect(VirtualClient client, String username)
             throws RemoteException {
         if (nicknames.add(username)) {
@@ -134,7 +133,6 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @param maxNumPlayer the maximum number of players for the game.
      * @throws RemoteException if an RMI error occurs.
      */
-    @Override
     public void createGame(String username, int maxNumPlayer) throws RemoteException {
         VirtualClient client = tempClients.get(username);
         if (maxNumPlayer < 2 || maxNumPlayer > 4) {
@@ -161,7 +159,6 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @return the game controller for the joined game.
      * @throws RemoteException if an RMI error occurs.
      */
-    @Override
     public void joinGame(String username, int idGame) throws RemoteException {
 
         VirtualClient client = tempClients.get(username);
@@ -197,7 +194,6 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @throws RemoteException  if an RMI error occurs.
      * @throws NoGamesException if there are no current games.
      */
-    @Override
     public void getGameList(String username) throws RemoteException, NoGamesException {
         if (gameControlList.isEmpty()) {
             List<String> res = new ArrayList<>();
@@ -215,7 +211,6 @@ public class Controller extends UnicastRemoteObject implements IController {
         }
     }
 
-    @Override
     public VirtualClient getNewConnection() {
         return newConnection;
     }
