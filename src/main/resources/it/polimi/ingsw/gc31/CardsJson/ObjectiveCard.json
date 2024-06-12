@@ -1,150 +1,150 @@
 [
   {
     "score": 2,
-    "dirImgFront": null,
+    "dirImgFront": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_87.jpg",
     "objective": {
       "color1": "RED",
       "typeObjective": "STAIRUP"
     },
-    "dirImgBack": null
+    "dirImgBack": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_87.jpg"
   },
   {
     "score": 2,
-    "dirImgFront": null,
+    "dirImgFront": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_88.jpg",
     "objective": {
       "color1": "GREEN",
       "typeObjective": "STAIRDOWN"
     },
-    "dirImgBack": null
+    "dirImgBack": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_88.jpg"
   },
   {
     "score": 2,
-    "dirImgFront": null,
+    "dirImgFront": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_89.jpg",
     "objective": {
       "color1": "BLUE",
       "typeObjective": "STAIRUP"
     },
-    "dirImgBack": null
+    "dirImgBack": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_89.jpg"
   },
   {
     "score": 2,
-    "dirImgFront": null,
+    "dirImgFront": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_90.jpg",
     "objective": {
       "color1": "PURPLE",
       "typeObjective": "STAIRDOWN"
     },
-    "dirImgBack": null
+    "dirImgBack": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_90.jpg"
   },
   {
     "score": 3,
-    "dirImgFront": null,
+    "dirImgFront": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_91.jpg",
     "objective": {
       "color1": "RED",
       "color2": "GREEN",
       "typeObjective": "LSHAPE"
     },
-    "dirImgBack": null
+    "dirImgBack": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_91.jpg"
   },
   {
     "score": 3,
-    "dirImgFront": null,
+    "dirImgFront": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_92.jpg",
     "objective": {
       "color1": "GREEN",
       "color2": "PURPLE",
       "typeObjective": "LSHAPEREVERSE"
     },
-    "dirImgBack": null
+    "dirImgBack": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_92.jpg"
   },
   {
     "score": 3,
-    "dirImgFront": null,
+    "dirImgFront": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_93.jpg",
     "objective": {
       "color1": "BLUE",
       "color2": "RED",
       "typeObjective": "SEVENREVERSE"
     },
-    "dirImgBack": null
+    "dirImgBack": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_93.jpg"
   },
   {
     "score": 3,
-    "dirImgFront": null,
+    "dirImgFront": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_94.jpg",
     "objective": {
       "color1": "PURPLE",
       "color2": "BLUE",
       "typeObjective": "SEVEN"
     },
-    "dirImgBack": null
+    "dirImgBack": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_94.jpg"
   },
   {
     "score": 2,
-    "dirImgFront": null,
+    "dirImgFront": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_95.jpg",
     "objective": {
       "resources": ["MUSHROOM","MUSHROOM","MUSHROOM"],
       "typeObjective": "COUNT"
     },
-    "dirImgBack": null
+    "dirImgBack": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_95.jpg"
   },
   {
     "score": 2,
-    "dirImgFront": null,
+    "dirImgFront": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_96.jpg",
     "objective": {
       "resources": ["PLANT","PLANT","PLANT"],
       "typeObjective": "COUNT"
     },
-    "dirImgBack": null
+    "dirImgBack": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_96.jpg"
   },
   {
     "score": 2,
-    "dirImgFront": null,
+    "dirImgFront": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_97.jpg",
     "objective": {
       "resources": ["ANIMAL","ANIMAL","ANIMAL"],
       "typeObjective": "COUNT"
     },
-    "dirImgBack": null
+    "dirImgBack": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_97.jpg"
   },
   {
     "score": 2,
-    "dirImgFront": null,
+    "dirImgFront": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_98.jpg",
     "objective": {
       "resources": ["INSECT","INSECT","INSECT"],
       "typeObjective": "COUNT"
     },
-    "dirImgBack": null
+    "dirImgBack": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_98.jpg"
   },
   {
     "score": 3,
-    "dirImgFront": null,
+    "dirImgFront": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_99.jpg",
     "objective": {
       "resources": ["FEATHER","INK","SCROLL"],
       "typeObjective": "COUNT"
     },
-    "dirImgBack": null
+    "dirImgBack": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_99.jpg"
   },
   {
     "score": 3,
-    "dirImgFront": null,
+    "dirImgFront": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_100.jpg",
     "objective": {
       "resources": ["SCROLL","SCROLL"],
       "typeObjective": "COUNT"
     },
-    "dirImgBack": null
+    "dirImgBack": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_100.jpg"
   },
   {
     "score": 2,
-    "dirImgFront": null,
+    "dirImgFront": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_101.jpg",
     "objective": {
       "resources": ["INK","INK"],
       "typeObjective": "COUNT"
     },
-    "dirImgBack": null
+    "dirImgBack": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_101.jpg"
   },
   {
     "score": 2,
-    "dirImgFront": null,
+    "dirImgFront": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_102.jpg",
     "objective": {
       "resources": ["FEATHER", "FEATHER"],
       "typeObjective": "COUNT"
     },
-    "dirImgBack": null
+    "dirImgBack": "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_102.jpg"
   }
 ]
