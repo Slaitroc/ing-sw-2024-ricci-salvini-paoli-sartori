@@ -1,14 +1,13 @@
 
 package it.polimi.ingsw.gc31.view.gui;
 
-import java.awt.*;
-
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
-import javafx.application.Platform;
 import it.polimi.ingsw.gc31.view.UI;
+import javafx.application.Platform;
 
+import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +32,6 @@ public class GUI extends UI {
 
     @Override
     protected void uiRunUI() {
-        // Application.launch(GUIApplication.class);
-
         app = new GUIApplication();
         app.setClient(client);
         client.setUI(this);
@@ -99,14 +96,15 @@ public class GUI extends UI {
 
     @Override
     public void show_playerTurn(String username, String info) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateHand'");
+        Platform.runLater(() -> {
+            app.getCurrentController().playerStateInfo(username, info);
+        });
     }
 
     @Override
     public void show_inGamePlayers(LinkedHashMap<String, Boolean> players) {
         Platform.runLater(() -> {
-            System.out.println("Show_inGamePlayers triggered!!!!: values" + players);
+            //System.out.println("show_inGamePlayers triggered!!!!: values" + players);
             app.setPlayerList(players);
             app.getCurrentController().updateLobby();
         });
@@ -114,14 +112,15 @@ public class GUI extends UI {
 
     @Override
     public void show_invalidAction(String message) {
-
+        System.out.println("show_invalidAction called");
     }
 
     @Override
     public void update_ToPlayingState() {
         Platform.runLater(() -> {
-            app.setFullScreen();
             app.loadScene(SceneTag.GAME);
+            app.setFullScreen();
+            System.out.println("update_ToPlayingState called");
         });
     }
 
@@ -129,47 +128,84 @@ public class GUI extends UI {
 
     @Override
     public void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
-        // TODO Auto-generated method stub
+        Platform.runLater(() -> {
+            /*System.out.println("show_goldDeck called");
+            System.out.println("firstCardDeck= "+ firstCardDeck);
+            System.out.println("firstCardDeck dirImg: " + firstCardDeck.getImage());
+            System.out.println("firstCardDeck specifics: " + firstCardDeck.backSerializeToJson());*/
+            app.getCurrentController().show_goldDeck(firstCardDeck, card1, card2);
+        });
     }
 
     @Override
     public void show_handPlayer(String username, List<PlayableCard> hand) {
-        // TODO Auto-generated method stub
+        Platform.runLater(() -> {
+            app.getCurrentController().show_handPlayer(username, hand);
+            System.out.println("show_handPlayer called");
+        });
     }
 
     @Override
     public void show_scorePlayer(LinkedHashMap<String, Integer> scores) {
-
+        System.out.println("show_scorePlayer called");
     }
 
     @Override
     public void show_objectiveDeck(ObjectiveCard firstCardDeck, ObjectiveCard card1, ObjectiveCard card2) {
-        // TODO Auto-generated method stub
+        Platform.runLater(() -> {
+            if (card1 != null && !card1.getSide()) {
+                card1.changeSide();
+            }
+            if (card2 != null && !card2.getSide()) {
+                card2.changeSide();
+            }
+            app.getCurrentController().show_objectiveDeck(firstCardDeck, card1, card2);
+            System.out.println("show_objectiveDeck called");
+        });
+
     }
 
     @Override
     public void show_starterCard(PlayableCard starterCard) {
-
+        Platform.runLater(() -> {
+            app.getCurrentController().show_starterCard(starterCard);
+            System.out.println("show_starterCard called");
+        });
     }
 
     @Override
     public void show_playArea(String username, Map<Point, PlayableCard> playArea, String achievedResources) {
-        // TODO Auto-generated method stub
+        Platform.runLater(() -> {
+            app.getCurrentController().show_playArea(username, playArea, achievedResources);
+            System.out.println("show_playArea called");
+        });
     }
 
     @Override
     public void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
-        // TODO Auto-generated method stub
+        Platform.runLater(() -> {
+            app.getCurrentController().show_resourceDeck(firstCardDeck, card1, card2);
+            System.out.println("show_resourceDeck called");
+        });
     }
 
     @Override
     public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
-        // TODO Auto-generated method stub
+        Platform.runLater(() -> {
+            objectiveCard1.changeSide();
+            objectiveCard2.changeSide();
+            app.getCurrentController().show_chooseObjectiveCard(objectiveCard1, objectiveCard2);
+            System.out.println("show_chooseObjectiveCard called");
+        });
     }
 
     @Override
     public void show_objectiveCard(ObjectiveCard objectiveCard) {
-        // TODO Auto-generated method stub
+        Platform.runLater(() -> {
+            objectiveCard.changeSide();
+            app.getCurrentController().show_objectiveCard(objectiveCard);
+            System.out.println("show_objectiveCard called");
+        });
     }
 
     @Override
@@ -194,8 +230,3 @@ public class GUI extends UI {
     }
 
 }
-
-// TODO show_inGamePlayers (when i join a match lobby I want to know the string
-// of player currently in the game)
-// TODO show_PlayerJoined (when i am in a match lobby I want to know who entered
-// my lobby)

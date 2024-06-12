@@ -2,11 +2,17 @@ package it.polimi.ingsw.gc31.view.gui.controllers;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.client_server.listeners.Observable;
+import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.gui.GUIApplication;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class ViewController {
 
@@ -53,7 +59,27 @@ public abstract class ViewController {
      * @param message Message to be shown
      */
     public void setMessage(String message){};
+
+    /**
+     * Updates the chat with a new message. Color Usernames.
+     * ScrollPane is updated to keep the last message visible.
+     * Only lobbyScene and inGameScene implements this method
+     *
+     * @param username The username of the sender.
+     * @param message  The message.
+     */
     public void updateChat(String username, String message){};
     public void updateLobby(){};
     public void showReady(String username, boolean status){};
+    public void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2){};
+    public void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2){};
+    public void show_handPlayer(String username, List<PlayableCard> hand){};
+    public void show_scorePlayer(LinkedHashMap<String, Integer> scores){};
+    public void show_starterCard(PlayableCard starterCard) {};
+    public void show_playArea(String username, Map<Point, PlayableCard> playArea, String achievedResources) {};
+    public void show_chooseObjectiveCard(ObjectiveCard secretObjectiveCard1, ObjectiveCard secretObjectiveCard2) {};
+    public void show_objectiveDeck(ObjectiveCard firstCardDeck, ObjectiveCard commonObjectiveCard1, ObjectiveCard commonObjectiveCard2) {};
+    public void show_objectiveCard(ObjectiveCard objectiveCard) {};
+
+    public void playerStateInfo(String username, String info) {};
 }
