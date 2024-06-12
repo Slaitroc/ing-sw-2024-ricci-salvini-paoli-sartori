@@ -1,0 +1,16 @@
+@import "Colors.css";
+
+#deck-card{
+    -fx-border-width: 5;
+    -fx-border-color: -black;
+}
+
+#gold-card{
+    -fx-border-width: 5;
+    -fx-border-color: -gold;
+}
+
+#resource-card{
+    -fx-border-width: 5;
+    -fx-border-color: -white;
+}
