@@ -317,4 +317,10 @@ public class TCPClient implements ClientCommands {
     public void sendChatMessage(String username, String message) {
         tcp_sendCommand(new ChatMessage(this.username, message), DV.RECIPIENT_GAME_CONTROLLER);
     }
+
+    @Override
+    public void quitGame() throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'quitGame'");
+    }
 }

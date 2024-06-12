@@ -193,6 +193,12 @@ public class GUI extends UI {
         throw new UnsupportedOperationException("Unimplemented method 'show_wrongGameSize'");
     }
 
+    @Override
+    public void show_quitFromGame(int id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_quitFromGame'");
+    }
+
 }
 
 // TODO show_inGamePlayers (when i join a match lobby I want to know the string

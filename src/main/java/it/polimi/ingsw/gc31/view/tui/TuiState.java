@@ -21,7 +21,7 @@ public abstract class TuiState {
             String formattedLine = String.format("%-20s : %s", command, description);
             tui.printToCmdLineOut(formattedLine);
         }
-        //stateNotify();
+        // stateNotify();
     }
 
     protected abstract void command_initial();
@@ -67,6 +67,8 @@ public abstract class TuiState {
     protected abstract void command_showGames();
 
     protected abstract void command_joinGame();
+
+    protected abstract void command_quitGame();
 
     protected abstract void command_ready();
 

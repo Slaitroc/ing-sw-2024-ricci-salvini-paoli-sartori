@@ -233,4 +233,8 @@ public class PlayingState extends TuiState {
         stateNotify();
     }
 
+    @Override
+    protected void command_quitGame() {
+    }
+
 }

@@ -37,7 +37,7 @@
 ## Debug da fare
 
 - [ ] provare a fare due partite da due in contemporanea
-- [ ] dare la possibilità di quittare un game prima che parta (prima di playing state (tui))
+- [x] dare la possibilità di quittare un game prima che parta (prima di playing state (tui))
 - [ ] togliere la chat prima di playing state (o introdurre una global chat)
 - [x] help non chiama la state.notify() --> risolto
 

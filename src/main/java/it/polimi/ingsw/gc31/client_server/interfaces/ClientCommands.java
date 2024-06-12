@@ -19,6 +19,8 @@ public interface ClientCommands {
 
     void joinGame(int gameId) throws RemoteException;
 
+    void quitGame() throws RemoteException;
+
     void getGameList() throws RemoteException, NoGamesException, IOException;
 
     void setReady(boolean ready) throws RemoteException;

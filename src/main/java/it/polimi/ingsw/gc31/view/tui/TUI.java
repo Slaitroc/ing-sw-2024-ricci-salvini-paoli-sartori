@@ -111,10 +111,19 @@ public class TUI extends UI {
 
     // PRINT METHODS
 
+    private void erase_ChatBoard() {
+        for (int i = -1; i < CHAT_BOARD_LINES + 1; i++) {
+            AnsiConsole.out().print(
+                    Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW + 1 + i, CHAT_BOARD_INITIAL_COLUMN)
+                            .a(" " + " ".repeat(CHAT_BOARD_EFFECTIVE_WIDTH) + " "));
+        }
+    }
+
     /**
      * Draws the borders of the chat board
      */
     private void print_ChatBorders() {
+        erase_ChatBoard();
         AnsiConsole.out()
                 .print(Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW, CHAT_BOARD_INITIAL_COLUMN)
                         .a("┌" + "─".repeat(CHAT_BOARD_EFFECTIVE_WIDTH) + "┐"));
@@ -126,22 +135,6 @@ public class TUI extends UI {
         AnsiConsole.out().print(
                 Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW + CHAT_BOARD_LINES + 1, CHAT_BOARD_INITIAL_COLUMN)
                         .a("└" + "─".repeat(CHAT_BOARD_EFFECTIVE_WIDTH) + "┘"));
-        // AnsiConsole.out()
-        // .print(Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW + CHAT_BOARD_LINES + 2,
-        // CHAT_BOARD_INITIAL_COLUMN)
-        // .fg(YELLOW).a(" __ _ _ _ ___ ").reset());
-        // AnsiConsole.out()
-        // .print(Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW + CHAT_BOARD_LINES + 3,
-        // CHAT_BOARD_INITIAL_COLUMN)
-        // .fg(YELLOW).a(" / _| U |/ \\_ _|").reset());
-        // AnsiConsole.out()
-        // .print(Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW + CHAT_BOARD_LINES + 4,
-        // CHAT_BOARD_INITIAL_COLUMN)
-        // .fg(YELLOW).a("( (_| | o | | ").reset());
-        // AnsiConsole.out()
-        // .print(Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW + CHAT_BOARD_LINES + 5,
-        // CHAT_BOARD_INITIAL_COLUMN)
-        // .fg(YELLOW).a(" \\__|_n_|_n_|_| ").reset());
 
     }
 
@@ -159,22 +152,6 @@ public class TUI extends UI {
         }
         AnsiConsole.out().print(Ansi.ansi().cursor(CMD_LINE_INITIAL_ROW + CMD_LINE_LINES + 1, CMD_LINE_INITIAL_COLUMN)
                 .a("└" + "─".repeat(CMD_LINE_EFFECTIVE_WIDTH) + "┘"));
-        // AnsiConsole.out()
-        // .print(Ansi.ansi().cursor(CMD_LINE_INITIAL_ROW + CMD_LINE_LINES + 2,
-        // CMD_LINE_INITIAL_COLUMN)
-        // .fg(CYAN).a(" __ _ _ __ _ _ _ _ ___ ").reset());
-        // AnsiConsole.out()
-        // .print(Ansi.ansi().cursor(CMD_LINE_INITIAL_ROW + CMD_LINE_LINES + 3,
-        // CMD_LINE_INITIAL_COLUMN)
-        // .fg(CYAN).a(" / _| \\_/ | \\ | | | | \\| | __|").reset());
-        // AnsiConsole.out()
-        // .print(Ansi.ansi().cursor(CMD_LINE_INITIAL_ROW + CMD_LINE_LINES + 4,
-        // CMD_LINE_INITIAL_COLUMN)
-        // .fg(CYAN).a("( (_| \\_/ | o )_| |_| | \\\\ | _| ").reset());
-        // AnsiConsole.out()
-        // .print(Ansi.ansi().cursor(CMD_LINE_INITIAL_ROW + CMD_LINE_LINES + 5,
-        // CMD_LINE_INITIAL_COLUMN)
-        // .fg(CYAN).a(" \\__|_| |_|__/__|___|_|_|\\_|___|").reset());
 
     }
 
@@ -861,9 +838,6 @@ public class TUI extends UI {
     public TUI(TuiState state, ClientCommands client) {
         this.client = client;
         this.state = state;
-        chatMessages = new ArrayDeque<String>();
-        cmdLineMessages = new ArrayDeque<String>();
-
     }
 
     public TUI(ClientCommands client) {
@@ -871,8 +845,6 @@ public class TUI extends UI {
 
         this.state = new InitState(this);
         this.client = client;
-        chatMessages = new ArrayDeque<String>();
-        cmdLineMessages = new ArrayDeque<String>();
     }
 
     // UTILITIES
@@ -1095,7 +1067,7 @@ public class TUI extends UI {
      * Right now this is the simplest implementation that comes to my mind, but it
      * would be better to use a specific class for the chat messages.
      */
-    private final Queue<String> chatMessages;
+    private final Queue<String> chatMessages = new ArrayDeque<String>();
     /**
      * This variable is used to manage the command line output messages.
      * <p>
@@ -1117,151 +1089,159 @@ public class TUI extends UI {
      * The <code>commandLineProcess</code> thread reads the messages from this
      * queue and processes them.
      */
-    protected final Queue<String> cmdLineMessages;
+    protected final Queue<String> cmdLineMessages = new ArrayDeque<String>();
+    private final Queue<StringBuilder> playViewUpdate = new ArrayDeque<StringBuilder>();
 
     /**
-     * This method starts the <code>commandLineOut</code> thread.
-     * <p>
-     * This thread is used to print the command line output messages the right way
-     * and in the right position.
-     */
-    private void commandLineOut() {
-        new Thread(() -> {
-            while (true) {
-                synchronized (cmdLineOut) {
-                    if (cmdLineOut.isEmpty()) {
-                        try {
-                            print_CmdLineBorders();
-                            cmdLineAreaSelection.add(0);
-                            commandLineReader(); // solo al lancio del thread command line out la lista cmdLineOut è
-                            // vuota, quindi entra in questo if solo una volta
-                            cmdLineOut.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        print_CmdLineBorders();
-                        updateCmdLineOut(); // sembra looppare all'infinito
-                    }
-                }
-            }
-        }).start();
-    }
-
-    /**
-     * This method starts the <code>commandLineReader</code> thread.
-     * <p>
-     * This thread is used to read the input from the system input and add it to the
-     * <code>cmdLineMessages</code> queue.
-     */
-    private void commandLineReader() {
-        new Thread(() -> {
-            commandLineProcess();
-            Scanner cmdScanner = new Scanner(System.in);
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                cmdScanner.close();
-            }));
-            while (true) {
-                synchronized (cmdLineAreaSelection) {
-                    if (cmdLineAreaSelection.isEmpty()) {
-                        try {
-                            cmdLineAreaSelection.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                if (comingFromChat == false) {
-                    // if a is running a command, it waits for the command to be finished
-                    // This is necessary to let each command get its input
-                    synchronized (stateLock) {
-                        addToStateLockQueue();
-                        try {
-                            stateLock.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                comingFromChat = false;
-                String input = null;
-                moveCursorToCmdLine();
-
-                input = cmdScanner.nextLine();
-                // Sends the input to the command line process thread and waits for the command
-                // to be executed
-                if (input != null) {
-                    if (input.equals("chat")) {
-                        printToCmdLineOut("comando " + input + " eseguito", Ansi.Color.CYAN);
-                        removeFromCmdLineAreaSelection();
-                        addToChatAreaSelection();
-                        moveCursorToChatLine();
-                        comingFromChat = true;
-                    } else {
-                        synchronized (cmdLineMessages) {
-                            cmdLineMessages.add(input.trim());
-                            cmdLineMessages.notify();
-                        }
-                    }
-                }
-            }
-
-        }).start();
-
-    }
-
-    /**
-     * This method starts the <code>commandLineProcess</code> thread.
-     * <p>
      * This thread is used to process the commands in the
      * <code>cmdLineMessages</code> queue.
      * <p>
      * If the command is "chat", it moves the cursor to the chat input area.
      */
-    private void commandLineProcess() {
-        new Thread(() -> {
-            state.command_initial();
-            while (true) {
-                String cmd = null;
-                synchronized (cmdLineMessages) {
-                    while (cmdLineMessages.isEmpty()) {
-                        try {
-                            cmdLineMessages.wait(); // Attendi che ci sia un nuovo comando
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+    Thread cmdLineProcessThread = new Thread(() -> {
+        state.command_initial();
+        while (true) {
+            String cmd = null;
+            synchronized (cmdLineMessages) {
+                while (cmdLineMessages.isEmpty()) {
+                    try {
+                        cmdLineMessages.wait(); // Attendi che ci sia un nuovo comando
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    cmd = cmdLineMessages.poll();
-                    if (cmd != null) {
-                        execute_command(cmd);
+                }
+                cmd = cmdLineMessages.poll();
+                if (cmd != null) {
+                    execute_command(cmd);
+                }
+            }
+        }
+    });
+    /**
+     * This thread is used to read the input from the system input and add it to the
+     * <code>cmdLineMessages</code> queue.
+     */
+    Thread cmdLineReaderThread = new Thread(() -> {
+        cmdLineProcessThread.start();
+        ;
+        Scanner cmdScanner = new Scanner(System.in);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            cmdScanner.close();
+        }));
+        while (true) {
+            synchronized (cmdLineAreaSelection) {
+                if (cmdLineAreaSelection.isEmpty()) {
+                    try {
+                        cmdLineAreaSelection.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
             }
-        }).start();
+
+            if (comingFromChat == false) {
+                // if a is running a command, it waits for the command to be finished
+                // This is necessary to let each command get its input
+                synchronized (stateLock) {
+                    addToStateLockQueue();
+                    try {
+                        stateLock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            comingFromChat = false;
+            String input = null;
+            moveCursorToCmdLine();
+
+            input = cmdScanner.nextLine();
+            // Sends the input to the command line process thread and waits for the command
+            // to be executed
+            if (input != null) {
+                if (input.equals("chat")) {
+                    printToCmdLineOut("comando " + input + " eseguito", Ansi.Color.CYAN);
+                    removeFromCmdLineAreaSelection();
+                    addToChatAreaSelection();
+                    moveCursorToChatLine();
+                    comingFromChat = true;
+                } else {
+                    synchronized (cmdLineMessages) {
+                        cmdLineMessages.add(input.trim());
+                        cmdLineMessages.notify();
+                    }
+                }
+            }
+        }
+
+    });
+    /**
+     * This thread is used to print the command line output messages the right way
+     * and in the right position.
+     */
+    Thread cmdLineOutThread = new Thread(() -> {
+        while (true) {
+            synchronized (cmdLineOut) {
+                if (cmdLineOut.isEmpty()) {
+                    try {
+                        print_CmdLineBorders();
+                        cmdLineAreaSelection.add(0);
+                        cmdLineReaderThread.start();
+                        ; // solo al lancio del thread command line out la lista cmdLineOut è
+                          // vuota, quindi entra in questo if solo una volta
+                        cmdLineOut.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    print_CmdLineBorders();
+                    updateCmdLineOut(); // sembra looppare all'infinito
+                }
+            }
+        }
+    });
+
+    private Thread chatBoardThreadBuilder() {
+        return new Thread(() -> {
+            print_ChatBorders();
+            moveCursorToCmdLine();
+            while (!Thread.currentThread().isInterrupted()) {
+                synchronized (chatNeedsUpdate) {
+                    try {
+                        chatNeedsUpdate.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                print_ChatBorders();
+                updateChatBoardOut();
+            }
+            erase_ChatBoard();
+        });
 
     }
 
     /**
-     * This method starts the <code>chatReader</code> thread.
-     * <p>
+     * This thread is used to print the chat board messages the right way and in the
+     * right position.
+     */
+    Thread chatBoardThread = chatBoardThreadBuilder();
+    /**
      * This thread is used to read the input from the system input and add it to the
      * <code>chatMessages</code> queue.
      */
-    private void chatReader() {
-        new Thread(() -> {
-            Scanner chatScanner = new Scanner(System.in);
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                chatScanner.close();
-            }));
-            while (true) {
-                synchronized (chatAreaSelection) {
-                    if (chatAreaSelection.isEmpty()) {
-                        try {
-                            chatAreaSelection.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+    Thread chatReaderThread = new Thread(() -> {
+        Scanner chatScanner = new Scanner(System.in);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            chatScanner.close();
+        }));
+        while (!Thread.currentThread().isInterrupted()) {
+            synchronized (chatAreaSelection) {
+                if (chatAreaSelection.isEmpty()) {
+                    try {
+                        chatAreaSelection.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
                 String input = chatScanner.nextLine();
@@ -1279,55 +1259,26 @@ public class TUI extends UI {
                     }
                 }
             }
-        }).start();
-    }
 
-    /**
-     * cmdLineOut.notifyAll();
-     * <p>
-     * This method starts the <code>chatBoard</code> thread.
-     * <p>
-     * This thread is used to print the chat board messages the right way and in the
-     * right position.
-     */
-    private void chatBoard() {
-        new Thread(() -> {
-            print_ChatBorders();
-            moveCursorToCmdLine();
-            while (true) {
-                synchronized (chatNeedsUpdate) {
+        }
+    });
+
+    Thread playViewThread = new Thread(() -> {
+        while (true) {
+            synchronized (playViewUpdate) {
+                while (playViewUpdate.isEmpty()) {
                     try {
-                        chatNeedsUpdate.wait();
+                        playViewUpdate.wait();
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        throw new RuntimeException(e);
                     }
                 }
-                print_ChatBorders();
-                updateChatBoardOut();
+                System.out.println(playViewUpdate.poll());
+                resetCursor();
             }
-        }).start();
-    }
+        }
 
-    private final Queue<StringBuilder> playViewUpdate = new ArrayDeque<StringBuilder>();
-
-    private void playView() {
-        new Thread(() -> {
-            while (true) {
-                synchronized (playViewUpdate) {
-                    while (playViewUpdate.isEmpty()) {
-                        try {
-                            playViewUpdate.wait();
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    System.out.println(playViewUpdate.poll());
-                    resetCursor();
-                }
-            }
-
-        }).start();
-    }
+    });
 
     @Override
     public void show_chatMessage(String username, String message) {
@@ -1431,10 +1382,10 @@ public class TUI extends UI {
             e.printStackTrace();
         }
 
-        chatBoard();
-        chatReader();
-        playView();
-        commandLineOut();
+        // chatBoardThread.start();
+        chatReaderThread.start();
+        playViewThread.start();
+        cmdLineOutThread.start();
 
     }
 
@@ -1708,6 +1659,19 @@ public class TUI extends UI {
         state = new JoinedToGameState(this);
         state.command_showCommandsInfo();
         state.stateNotify();
+        chatBoardThread.start();
+
+    }
+
+    // NOTE è un memo per quando creerò il metodo
+    @Override
+    public void show_quitFromGame(int id) {
+        printToCmdLineOut(serverWrite("Quit from game: " + id));
+        chatBoardThread.interrupt();
+        chatBoardThread = chatBoardThreadBuilder(); // mi sembra di ricordare da qualche vecchia lezione che se il
+                                                    // thread muore l'assegnazione all'oggetto sparisce e va rifatta
+        state = new InitState(this);
+        state.stateNotify();
 
     }
 
@@ -1724,6 +1688,7 @@ public class TUI extends UI {
         state = new JoinedToGameState(this);
         state.command_showCommandsInfo();
         state.stateNotify();
+        chatBoardThread.start();
     }
 
     @Override

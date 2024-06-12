@@ -10,6 +10,7 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameCreatedObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameDoesNotExistObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsFullObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.JoinedToGameObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.QuitFromGameRObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowGamesObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ValidUsernameObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongGameSizeObj;
@@ -177,6 +178,13 @@ public class Controller extends UnicastRemoteObject implements IController {
                 client.sendCommand(new GameIsFullObj(idGame));
             }
         }
+    }
+
+    public void quitGame(String username, int idGame, VirtualClient client) throws RemoteException {
+        tempClients.put(username, client);
+        // se il gioco era costituito da una sola persona va eliminato il gamecontroller
+        // corrispondente
+        client.sendCommand(new QuitFromGameRObj(idGame));
     }
 
     // GETTERS

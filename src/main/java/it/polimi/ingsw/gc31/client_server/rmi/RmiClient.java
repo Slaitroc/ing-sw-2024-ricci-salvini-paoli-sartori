@@ -209,4 +209,9 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         this.gameController = gameController;
     }
 
+    @Override
+    public void quitGame() throws RemoteException {
+        gameController.sendCommand(new QuitGameObj(username));
+    }
+
 }

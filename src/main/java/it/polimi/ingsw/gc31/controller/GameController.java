@@ -101,6 +101,13 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         notifyListPlayers();
     }
 
+    public void quitGame(String username) throws RemoteException {
+        VirtualClient client = clientList.get(username);
+        clientList.remove(username, client);
+        readyStatus.remove(username, false);
+        Controller.getController().quitGame(username, idGame, client);
+    }
+
     public void setReadyStatus(boolean ready, String username) throws RemoteException, IllegalStateOperationException {
         readyStatus.replace(username, ready);
 

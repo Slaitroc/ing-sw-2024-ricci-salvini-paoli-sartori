@@ -137,4 +137,8 @@ public class InitState extends TuiState {
         }
     }
 
+    @Override
+    protected void command_quitGame() {
+    }
+
 }
