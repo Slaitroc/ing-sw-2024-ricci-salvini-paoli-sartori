@@ -61,19 +61,13 @@ public class Player{
      * @param deck the deck to draw from.
      *
      */
-    private boolean addToHand(Deck<PlayableCard> deck, int index) {
+    private void addToHand(Deck<PlayableCard> deck, int index) throws IllegalStateOperationException{
         try {
             inGameState.addToHand(deck, this, index);
-            return true;
-        } catch (IllegalStateOperationException e) {
-            System.out.println("Player " + username + " cannot draw in current state");
-            return false;
         } catch (FullHandException e) {
             System.out.println("Player " + username + "'s hand is full");
-            return false;
         } catch (InvalidCardDraw e) {
             System.out.println("Player " + username + " tried to draw an invalid card");
-            return false;
         }
     }
 
@@ -87,7 +81,7 @@ public class Player{
      */
 
     // FIXME potrebbe esserci un problema perchè se addToHand non va a buon fine la carta pesccata finisce in un buco nero
-    public boolean drawGold(int index) throws EmptyDeckException {
+    public boolean drawGold(int index) throws EmptyDeckException, IllegalStateOperationException {
         if (index < 0 || index > 2) return false;
         Deck<PlayableCard> deck = board.getDeckGold();
         if (deck.peekCard() == null) {
@@ -104,7 +98,7 @@ public class Player{
      *
      * @throws EmptyDeckException if the deck is empty.
      */
-    public boolean drawResource(int index) throws EmptyDeckException {
+    public boolean drawResource(int index) throws EmptyDeckException, IllegalStateOperationException {
         Deck<PlayableCard> deck = board.getDeckResource();
         if (index < 0 || index > 2) return false;
         if (deck.peekCard() == null) {

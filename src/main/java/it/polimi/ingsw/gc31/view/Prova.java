@@ -15,10 +15,10 @@ public class Prova {
 //        ProvaTui provaTui = new ProvaTui(null);
 //        provaTui.printStarter();
 //        provaTui.printGold();
-        String blink = "\033[5m";
-        String reset = "\033[0m";
-        String text = "Questo testo lampeggia";
-        System.out.println(blink+text+reset);
+//        String blink = "\033[5m";
+//        String reset = "\033[0m";
+//        String text = "Questo testo lampeggia";
+//        System.out.println(blink+text+reset);
     }
 
     public static class ProvaTui extends TUI {

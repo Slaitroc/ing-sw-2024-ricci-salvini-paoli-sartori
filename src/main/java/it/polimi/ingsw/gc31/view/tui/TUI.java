@@ -1503,6 +1503,12 @@ public class TUI extends UI {
     }
 
     @Override
+    public void update_ToPlayingState() {
+        this.state = new PlayingState(this);
+        state.command_showCommandsInfo();
+    }
+
+    @Override
     public void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
         StringBuilder res = print_Deck("Gold Deck", firstCardDeck, card1, card2, GOLD_DECK_INITIAL_ROW,
                 GOLD_DECK_INITIAL_COLUMN, GOLD_DECK_END_ROW, GOLD_DECK_END_COLUMN);
@@ -1669,6 +1675,11 @@ public class TUI extends UI {
     }
 
     @Override
+    public void show_quitFromGame(int id) {
+
+    }
+
+    @Override
     public void show_gameIsFull(int id) {
         printToCmdLineOut(serverWrite(serverWrite("Game " + id + " is full")));
         state.stateNotify();
@@ -1779,19 +1790,19 @@ public class TUI extends UI {
 
     @Override
     public void show_heartBeat() {
-        StringBuilder res = new StringBuilder();
-        if (heart == false) {
-            res.append(ansi().cursor(1, 1).a("💚"));
-            heart = true;
-        } else {
-            res.append(ansi().cursor(1, 1).a("💔"));
-            heart = false;
-
-        }
-        synchronized (playViewUpdate) {
-            playViewUpdate.add(res);
-            playViewUpdate.notify();
-        }
+//        StringBuilder res = new StringBuilder();
+//        if (heart == false) {
+//            res.append(ansi().cursor(1, 1).a("💚"));
+//            heart = true;
+//        } else {
+//            res.append(ansi().cursor(1, 1).a("💔"));
+//            heart = false;
+//
+//        }
+//        synchronized (playViewUpdate) {
+//            playViewUpdate.add(res);
+//            playViewUpdate.notify();
+//        }
     }
     // Thread HeartBeat = new Thread(()->{
 

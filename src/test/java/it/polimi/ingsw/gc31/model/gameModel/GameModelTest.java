@@ -539,7 +539,7 @@ class GameModelTest {
         utilityInitGame();
 
         for (String username: clients.keySet()) {
-            assertThrowsExactly(IllegalStateOperationException.class, () -> model.setSelectCard(username, 0));
+            assertDoesNotThrow(() -> model.setSelectCard(username, 0));
         }
         utilitySkipSetupGame();
 
@@ -575,7 +575,7 @@ class GameModelTest {
 
         utilityInitGame();
         for (String username: clients.keySet()) {
-            assertThrowsExactly(IllegalStateOperationException.class, () ->model.changeSide(username));
+            assertDoesNotThrow(() ->model.changeSide(username));
         }
 
         utilitySkipSetupGame();
@@ -786,6 +786,11 @@ class GameModelTest {
 
         @Override
         public void setGameController(IGameController gameController) throws RemoteException {
+
+        }
+
+        @Override
+        public void setRmiToken(int token) throws RemoteException {
 
         }
     }

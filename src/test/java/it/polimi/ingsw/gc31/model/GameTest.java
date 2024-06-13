@@ -41,6 +41,11 @@ public class GameTest {
         public void setGameController(IGameController gameController) throws RemoteException {
 
         }
+
+        @Override
+        public void setRmiToken(int token) throws RemoteException {
+
+        }
     }
     GameModel model;
     LinkedHashMap<String, VirtualClient> clients;
