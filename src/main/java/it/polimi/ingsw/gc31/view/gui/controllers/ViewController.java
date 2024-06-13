@@ -76,8 +76,8 @@ public abstract class ViewController {
     public void show_scorePlayer(LinkedHashMap<String, Integer> scores){}
     public void show_starterCard(String username, PlayableCard starterCard) {}
     public void show_playArea(String username, Map<Point, PlayableCard> playArea, Map<Resources, Integer> achievedResources) {}
-    public void show_chooseObjectiveCard(ObjectiveCard secretObjectiveCard1, ObjectiveCard secretObjectiveCard2) {}
+    public void show_chooseObjectiveCard(String username, ObjectiveCard secretObjectiveCard1, ObjectiveCard secretObjectiveCard2) {}
     public void show_commonObjectives(ObjectiveCard commonObjectiveCard1, ObjectiveCard commonObjectiveCard2) {}
-    public void show_objectiveCard(ObjectiveCard objectiveCard) {}
+    public void show_objectiveCard(String username, ObjectiveCard objectiveCard) {}
     public void playerStateInfo(String username, String info) {}
 }
