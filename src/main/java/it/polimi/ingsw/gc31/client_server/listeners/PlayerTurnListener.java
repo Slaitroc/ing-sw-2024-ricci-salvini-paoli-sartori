@@ -2,17 +2,33 @@ package it.polimi.ingsw.gc31.client_server.listeners;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowPlayerTurnObj;
-import javafx.util.Pair;
+import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 
 import java.rmi.RemoteException;
+import java.util.Map;
 
-public class PlayerTurnListener implements Listener<Pair<String, String>>{
-    private final VirtualClient client;
-    public PlayerTurnListener(VirtualClient client) {
-        this.client = client;
+/**
+ * This class represents a listener that handles updates for the turn of a specific player.
+ * It sends the state in game of a player.
+ *
+ * @author sslvo
+ */
+public class PlayerTurnListener extends Listener{
+    public PlayerTurnListener(Map<String, VirtualClient> clients) {
+        super(clients);
     }
+
+    /**
+     * Extract from the game model the state in game of the player and sends it to all clients.
+     *
+     * @param model The game model from which to extract the data,
+     * @param username The username of the player whose play area is being updated.
+     * @throws RemoteException if there is a remote communication error.
+     */
     @Override
-    public void update(Pair<String, String> data) throws RemoteException {
-        client.sendCommand(new ShowPlayerTurnObj(data.getKey(), data.getValue()));
+    public void update(GameModel model, String username) throws RemoteException {
+        for (VirtualClient client : clients.values()) {
+            client.sendCommand(new ShowPlayerTurnObj(username, model.getPlayers().get(username).infoState()));
+        }
     }
 }

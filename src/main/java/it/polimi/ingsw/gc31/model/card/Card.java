@@ -25,5 +25,4 @@ public interface Card {
      */
     public String getImage();
 
-    abstract public Card deepCopy();
 }

@@ -4,6 +4,7 @@ import it.polimi.ingsw.gc31.exceptions.FullHandException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import it.polimi.ingsw.gc31.model.deck.Deck;
 
 import java.awt.*;
 
@@ -15,17 +16,17 @@ public class Placed extends PlayerState {
     }
 
     @Override
-    public void addToHand(PlayableCard card, Player player, Boolean byDeck)
+    public void addToHand(Deck<PlayableCard> deck, Player player, int index)
             throws FullHandException, NullPointerException {
-        executeAddToHand(card, player);
+        executeAddToHand(deck, player, index);
         player.setInGameState(new Waiting());
         //System.out.println("PLAYER: " + player.getUsername() + " HAS JUST DRAWN A CARD, IS NOW WAITING.");
     }
 
-    @Override
-    public void moveCardInHand(Player player) {
-        executeMoveCardInHand(player);
-    }
+//    @Override
+//    public void moveCardInHand(Player player) {
+//        executeMoveCardInHand(player);
+//    }
 
     @Override
     public void play(Point point, Player player) throws IllegalStateOperationException {

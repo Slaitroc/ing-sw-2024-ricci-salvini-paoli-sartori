@@ -116,6 +116,11 @@ public class GUI extends UI {
     }
 
     @Override
+    public void show_GameIsOver() {
+
+    }
+
+    @Override
     public void update_ToPlayingState() {
         Platform.runLater(() -> {
             app.loadScene(SceneTag.GAME);
@@ -138,7 +143,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_handPlayer(String username, List<PlayableCard> hand) {
+    public void show_handPlayer(String username, List<PlayableCard> hand, int selectedCard) {
         Platform.runLater(() -> {
             app.getCurrentController().show_handPlayer(username, hand);
             //System.out.println("show_handPlayer called");
@@ -151,7 +156,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_objectiveDeck(ObjectiveCard firstCardDeck, ObjectiveCard card1, ObjectiveCard card2) {
+    public void show_objectiveDeck(ObjectiveCard card1, ObjectiveCard card2) {
         Platform.runLater(() -> {
             if (card1 != null && !card1.getSide()) {
                 card1.changeSide();
@@ -166,7 +171,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_starterCard(PlayableCard starterCard) {
+    public void show_starterCard(String username, PlayableCard starterCard) {
         Platform.runLater(() -> {
             app.getCurrentController().show_starterCard(starterCard);
             //System.out.println("show_starterCard called");
@@ -174,7 +179,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_playArea(String username, Map<Point, PlayableCard> playArea, String achievedResources) {
+    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea, String achievedResources) {
         Platform.runLater(() -> {
             app.getCurrentController().show_playArea(username, playArea, achievedResources);
             //System.out.println("show_playArea called");
@@ -191,7 +196,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_chooseObjectiveCard(ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
+    public void show_chooseObjectiveCard(String username, ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
         Platform.runLater(() -> {
             objectiveCard1.changeSide();
             objectiveCard2.changeSide();

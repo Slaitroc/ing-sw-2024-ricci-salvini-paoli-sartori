@@ -30,6 +30,7 @@ module it.polimi.ingsw.gc31 {
     exports it.polimi.ingsw.gc31.model;
     exports it.polimi.ingsw.gc31.model.enumeration;
     exports it.polimi.ingsw.gc31.model.card;
+    exports it.polimi.ingsw.gc31.model.deck;
     exports it.polimi.ingsw.gc31.model.strategies;
     exports it.polimi.ingsw.gc31.model.player;
     exports it.polimi.ingsw.gc31.model.gameModel;

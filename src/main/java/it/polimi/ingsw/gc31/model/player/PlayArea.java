@@ -3,11 +3,9 @@ package it.polimi.ingsw.gc31.model.player;
 import java.awt.Point;
 import java.util.*;
 
-import it.polimi.ingsw.gc31.client_server.listeners.Observable;
 import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
-import javafx.util.Pair;
 
 /**
  * This class represents the play area of a player in the game.
@@ -15,9 +13,9 @@ import javafx.util.Pair;
  *
  * @author Matteo Paoli
  */
-public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> {
+public class PlayArea{
 
-    private final Map<Point, PlayableCard> placedCards;
+    private final LinkedHashMap<Point, PlayableCard> placedCards;
     private final Map<Resources, Integer> achievedResources;
     private final Point lastPlaced = new Point(0, 0);
     private final List<Point> cardOrder;
@@ -27,7 +25,7 @@ public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCa
      * It initializes the placed cards and achieved resources.
      */
     public PlayArea() {
-        this.placedCards = new HashMap<>();
+        this.placedCards = new LinkedHashMap<>();
         this.achievedResources = new HashMap<>();
         this.cardOrder = new ArrayList<>();
         cardOrder.add(new Point(0, 0));
@@ -221,8 +219,8 @@ public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCa
     /**
      * @return a copy of the placed cards.
      */
-    public Map<Point, PlayableCard> getPlacedCards() {
-        return new HashMap<>(placedCards);
+    public LinkedHashMap<Point, PlayableCard> getPlacedCards() {
+        return placedCards;
     }
 
     /**
@@ -232,6 +230,7 @@ public class PlayArea extends Observable<Pair<String, Pair<Map<Point, PlayableCa
         return new HashMap<>(achievedResources);
     }
 
+    // FIXME forse non serve
     public List<Point> getCardOrder() {
         return new ArrayList<>(cardOrder);
     }

@@ -3,40 +3,40 @@ package it.polimi.ingsw.gc31.client_server.listeners;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowSecretObjectiveCardObj;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
+import it.polimi.ingsw.gc31.model.gameModel.GameModel;
+import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.rmi.RemoteException;
+import java.util.Map;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
 /**
- * A listener class that handles updates related to a player's objective card.
- * This listener is designed to update a VirtualClient with the objective card
- * chosen by the player
+ * This class represents a listener that handles updates related to a specific player's objective card.
+ * It sends the objective card the player had choose.
  *
- * @author christian salvini
+ * @author sslvo
  */
-public class PlayerObjectiveCardListener implements Listener<ObjectiveCard> {
-    private VirtualClient client;
-
-    /**
-     * Constructs a PlayerObjectiveCardListener with the specified VirtualClient
-     *
-     * @param client The VirtualClient to update with objective card information.
-     */
-    public PlayerObjectiveCardListener(VirtualClient client) {
-        this.client = client;
+public class PlayerObjectiveCardListener extends Listener {
+    public PlayerObjectiveCardListener(Map<String, VirtualClient> clients) {
+        super(clients);
     }
 
     /**
-     * Receives an update containing the objective card and triggers the display on
-     * the associated VirtualClient
+     * Extract from the game model the objective card the player had choose and sends it to all clients.
      *
-     * @param data The objective card to display.
-     * @throws RemoteException If there is a communication error.
-     *
+     * @param model The game model from which to extract the data,
+     * @param username The username of the player whose play area is being updated.
+     * @throws RemoteException if there is a remote communication error.
      */
     @Override
-    public void update(ObjectiveCard data) throws RemoteException {
-        client.sendCommand(new ShowSecretObjectiveCardObj(gsonTranslater.toJson(data, ObjectiveCard.class)));
+    public void update(GameModel model, String username) throws RemoteException {
+        Player player = model.getPlayers().get(username);
+        if (player.getObjectiveCard() != null) {
+            for (VirtualClient client : clients.values()) {
+                client.sendCommand(new ShowSecretObjectiveCardObj(username, gsonTranslater.toJson(player.getObjectiveCard(), ObjectiveCard.class)));
+            }
+        }
+
     }
 }

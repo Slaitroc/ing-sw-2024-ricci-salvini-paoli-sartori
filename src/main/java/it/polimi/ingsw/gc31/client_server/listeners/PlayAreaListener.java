@@ -2,67 +2,52 @@ package it.polimi.ingsw.gc31.client_server.listeners;
 
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowPlayAreaObj;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
-import javafx.util.Pair;
+import it.polimi.ingsw.gc31.model.gameModel.GameModel;
+import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
 import java.rmi.RemoteException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
 /**
- * The PlayAreaListener class implements the Listener interface to observe
- * changes in the playArea.
- * It receives data in the form of a pair containing:
- * <ul>
- * <li>A String containing the username of the player's playArea</li>
- * <li>A pair of maps:
- * <ul>
- * <li>The first map (Map<Point, PlayableCard>) is the PlacedCards.</li>
- * <li>The second map (Map<Resources, Integer>) is the achievedResources.</li>
- * </ul>
- * </li>
- * </ul>
- * This listener is designed to update a VirtualClient with the play area
- * updated.
+ * The PlayAreaListener class is a subclass of Listener that handles updates for the play area of a player.
+ * It retrieves the updated play area data from the game model and sends it to all clients.
  *
- * @author christian salvini
+ * @author sslvo
  */
-public class PlayAreaListener
-                implements Listener<Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>>> {
-        private VirtualClient client;
-
-        /**
-         * Constructs a PlayAreaListener with the specified VirtualClient.
-         *
-         * @param client The VirtualClient to update with play area information.
-         */
-        public PlayAreaListener(VirtualClient client) {
-                this.client = client;
+public class PlayAreaListener extends Listener {
+        public PlayAreaListener(Map<String, VirtualClient> clients) {
+                super(clients);
         }
 
         /**
-         * Receives an update containing play area data and triggers the display on the
-         * associated VirtualClient.
+         * Extracts from the game model the cards placed by the player
+         * and the available resources in the play area.
          *
-         * @param data A pair containing the username, the PlaceCards and the
-         *             achievedResources
-         * @throws RemoteException If there is a communication error,
+         * @param model The game model from which to extract the data,
+         * @param username The username of the player whose play area is being updated.
+         * @throws RemoteException if there is a remote communication error.
          */
         @Override
-        public void update(Pair<String, Pair<Map<Point, PlayableCard>, Map<Resources, Integer>>> data)
-                        throws RemoteException {
-                client.sendCommand(new ShowPlayAreaObj(
-                        data.getKey(),
-                        gsonTranslater.toJson(data.getValue().getKey(),
-                                new TypeToken<Map<Point, PlayableCard>>() {
-                                }.getType()),
-                        gsonTranslater.toJson(data.getValue().getValue(),
-                                new TypeToken<Map<Resources, Integer>>() {
-                                }.getType()))
-                );
+        public void update(GameModel model, String username) throws RemoteException {
+                Player player = model.getPlayers().get(username);
+                if (player.getPlayArea().getPlacedCards().containsKey(new Point(0,0))) {
+                        ClientQueueObject clientQueueObject = new ShowPlayAreaObj(
+                                username,
+                                gsonTranslater.toJson(player.getPlayArea().getPlacedCards(), new TypeToken<LinkedHashMap<Point, PlayableCard>>(){}.getType()),
+                                gsonTranslater.toJson(player.getPlayArea().getAchievedResources())
+                        );
+
+                        for (VirtualClient client: clients.values()) {
+                                client.sendCommand(clientQueueObject);
+                        }
+                }
         }
 }

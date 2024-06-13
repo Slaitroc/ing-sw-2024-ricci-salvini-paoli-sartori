@@ -10,16 +10,19 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
 public class ShowHandPlayerObj extends ClientQueueObject {
     private final String username;
     private final List<String> hand;
+    private final int selectedCard;
 
-    public ShowHandPlayerObj(String username, List<String> hand) {
+    public ShowHandPlayerObj(String username, List<String> hand, int selectedCard) {
         this.username = username;
         this.hand = hand;
+        this.selectedCard = selectedCard;
     }
 
     @Override
     public void execute(UI ui) {
         ui.show_handPlayer(
                 username,
-                hand.stream().map(card -> gsonTranslater.fromJson(card, PlayableCard.class)).toList());
+                hand.stream().map(card -> gsonTranslater.fromJson(card, PlayableCard.class)).toList(),
+                selectedCard);
     }
 }
