@@ -21,6 +21,7 @@ public abstract class TuiState {
             String formattedLine = String.format("%-20s : %s", command, description);
             tui.printToCmdLineOut(formattedLine);
         }
+        // stateNotify();
     }
 
     protected abstract void command_initial();
@@ -34,9 +35,12 @@ public abstract class TuiState {
      * <p>
      * Potrebbe essere nella tui ma visto che riguarda principalmente la concorrenza
      * con gli stati per ora lo lascio qui
+     * Nota: devo migliorare le java doc---> per ora basta sapere che o il comando o
+     * la risposta devono chiamare state.notify perché tutto funzioni correttamente
      */
     protected void stateNotify() {
         synchronized (tui.stateLockQueue) {
+
             if (tui.stateLockQueue.isEmpty()) {
                 try {
                     tui.stateLockQueue.wait();
@@ -63,6 +67,8 @@ public abstract class TuiState {
     protected abstract void command_showGames();
 
     protected abstract void command_joinGame();
+
+    protected abstract void command_quitGame();
 
     protected abstract void command_ready();
 

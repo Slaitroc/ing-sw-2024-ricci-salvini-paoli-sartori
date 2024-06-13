@@ -105,7 +105,14 @@ public class DV {
     // NETWORK
     public final static String RECIPIENT_CONTROLLER = "controller";
     public final static String RECIPIENT_GAME_CONTROLLER = "gameController";
+    public static final String RECIPIENT_HEARTBEAT = "HEARTBEAT";
     public final static int RMI_PORT = 1100;
     public final static int TCP_PORT = 1200;
+
+    // Token
+    public final static int defaultToken = 0000;
+
+    public final static boolean forceIP = false;
+    public final static String forcedIP = "192.168.192.197";
 
 }

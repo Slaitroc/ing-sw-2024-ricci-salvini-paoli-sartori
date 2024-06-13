@@ -57,7 +57,7 @@ class GameModelTest {
         model.setGameState(new LastTurnGameModelState());
         assertThrowsExactly(IllegalStateOperationException.class, () -> model.initGame(clients));
 
-        model.setGameState(new EndGameModelState());
+        model.setGameState(new EndGameModelState(model));
         assertThrowsExactly(IllegalStateOperationException.class, () -> model.initGame(clients));
     }
 
@@ -287,7 +287,7 @@ class GameModelTest {
             assertThrowsExactly(IllegalStateOperationException.class, () -> model.chooseSecretObjective(username, 0));
         }
 
-        model.setGameState(new EndGameModelState());
+        model.setGameState(new EndGameModelState(model));
         for (String username : clients.keySet()) {
             assertThrowsExactly(IllegalStateOperationException.class, () -> model.chooseSecretObjective(username, 0));
         }
@@ -328,7 +328,7 @@ class GameModelTest {
             assertThrowsExactly(IllegalStateOperationException.class, () -> model.playStarter(userame));
         }
 
-        model.setGameState(new EndGameModelState());
+        model.setGameState(new EndGameModelState(model));
         for (String userame: clients.keySet()) {
             assertThrowsExactly(IllegalStateOperationException.class, () -> model.playStarter(userame));
         }
@@ -387,7 +387,7 @@ class GameModelTest {
             fail("Exception should not have been thrown");
         }
 
-        model.setGameState(new EndGameModelState());
+        model.setGameState(new EndGameModelState(model));
         for (String username: clients.keySet()) {
             assertThrowsExactly(IllegalStateOperationException.class, () -> model.play(username, new Point(1, 1)));
         }
@@ -456,7 +456,7 @@ class GameModelTest {
         }
         assertDoesNotThrow(() -> model.drawGold(model.getCurrPlayer().getUsername(), 0));
 
-        model.setGameState(new EndGameModelState());
+        model.setGameState(new EndGameModelState(model));
         for (String username: clients.keySet()) {
             assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawGold(username, 0));
         }
@@ -525,7 +525,7 @@ class GameModelTest {
         }
         assertDoesNotThrow(() -> model.drawResource(model.getCurrPlayer().getUsername(), 0));
 
-        model.setGameState(new EndGameModelState());
+        model.setGameState(new EndGameModelState(model));
         for (String username: clients.keySet()) {
             assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawResource(username, 0));
         }
@@ -539,7 +539,7 @@ class GameModelTest {
         utilityInitGame();
 
         for (String username: clients.keySet()) {
-            assertThrowsExactly(IllegalStateOperationException.class, () -> model.setSelectCard(username, 0));
+            assertDoesNotThrow(() -> model.setSelectCard(username, 0));
         }
         utilitySkipSetupGame();
 
@@ -561,7 +561,7 @@ class GameModelTest {
             assertDoesNotThrow(() -> model.setSelectCard(username, 0));
         }
 
-        model.setGameState(new EndGameModelState());
+        model.setGameState(new EndGameModelState(model));
         for (String username: clients.keySet()) {
             assertThrowsExactly(IllegalStateOperationException.class, () -> model.setSelectCard(username, 0));
         }
@@ -575,7 +575,7 @@ class GameModelTest {
 
         utilityInitGame();
         for (String username: clients.keySet()) {
-            assertThrowsExactly(IllegalStateOperationException.class, () ->model.changeSide(username));
+            assertDoesNotThrow(() ->model.changeSide(username));
         }
 
         utilitySkipSetupGame();
@@ -593,7 +593,7 @@ class GameModelTest {
             assertDoesNotThrow(() ->model.changeSide(username));
         }
 
-        model.setGameState(new EndGameModelState());
+        model.setGameState(new EndGameModelState(model));
         for (String username: clients.keySet()) {
             assertThrowsExactly(IllegalStateOperationException.class, () ->model.changeSide(username));
         }
@@ -625,7 +625,7 @@ class GameModelTest {
             assertThrowsExactly(IllegalStateOperationException.class, () ->model.changStarterSide(username));
         }
 
-        model.setGameState(new EndGameModelState());
+        model.setGameState(new EndGameModelState(model));
         for (String username: clients.keySet()) {
             assertThrowsExactly(IllegalStateOperationException.class, () ->model.changStarterSide(username));
         }
@@ -786,6 +786,11 @@ class GameModelTest {
 
         @Override
         public void setGameController(IGameController gameController) throws RemoteException {
+
+        }
+
+        @Override
+        public void setRmiToken(int token) throws RemoteException {
 
         }
     }

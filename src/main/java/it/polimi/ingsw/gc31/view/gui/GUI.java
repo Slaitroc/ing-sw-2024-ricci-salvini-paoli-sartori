@@ -85,7 +85,7 @@ public class GUI extends UI {
     @Override
     public void show_inGamePlayers(LinkedHashMap<String, Boolean> players) {
         Platform.runLater(() -> {
-            //System.out.println("show_inGamePlayers triggered!!!!: values" + players);
+            // System.out.println("show_inGamePlayers triggered!!!!: values" + players);
             app.setPlayerList(players);
             app.getCurrentController().updateLobby();
         });
@@ -93,12 +93,17 @@ public class GUI extends UI {
 
     @Override
     public void show_invalidAction(String message) {
-        //System.out.println("show_invalidAction called");
+        // System.out.println("show_invalidAction called");
     }
 
     @Override
-    public void show_GameIsOver() {
+    public void show_GameIsOver(String username) {
 
+    }
+
+    @Override
+    public void receiveToken(int token) {
+        client.setToken(token);
     }
 
     @Override
@@ -106,7 +111,7 @@ public class GUI extends UI {
         Platform.runLater(() -> {
             app.loadScene(SceneTag.GAME);
             app.setFullScreen();
-            //System.out.println("update_ToPlayingState called");
+            // System.out.println("update_ToPlayingState called");
         });
     }
 
@@ -115,10 +120,13 @@ public class GUI extends UI {
     @Override
     public void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
         Platform.runLater(() -> {
-            /*System.out.println("show_goldDeck called");
-            System.out.println("firstCardDeck= "+ firstCardDeck);
-            System.out.println("firstCardDeck dirImg: " + firstCardDeck.getImage());
-            System.out.println("firstCardDeck specifics: " + firstCardDeck.backSerializeToJson());*/
+            /*
+             * System.out.println("show_goldDeck called");
+             * System.out.println("firstCardDeck= "+ firstCardDeck);
+             * System.out.println("firstCardDeck dirImg: " + firstCardDeck.getImage());
+             * System.out.println("firstCardDeck specifics: " +
+             * firstCardDeck.backSerializeToJson());
+             */
             app.getCurrentController().show_goldDeck(firstCardDeck, card1, card2);
         });
     }
@@ -127,13 +135,13 @@ public class GUI extends UI {
     public void show_handPlayer(String username, List<PlayableCard> hand, int selectedCard) {
         Platform.runLater(() -> {
             app.getCurrentController().show_handPlayer(username, hand);
-            //System.out.println("show_handPlayer called");
+            // System.out.println("show_handPlayer called");
         });
     }
 
     @Override
     public void show_scorePlayer(LinkedHashMap<String, Integer> scores) {
-        //System.out.println("show_scorePlayer called");
+        // System.out.println("show_scorePlayer called");
     }
 
     @Override
@@ -146,7 +154,7 @@ public class GUI extends UI {
                 card2.changeSide();
             }
             app.getCurrentController().show_commonObjectives(card1, card2);
-            //System.out.println("show_objectiveDeck called");
+            // System.out.println("show_objectiveDeck called");
         });
 
     }
@@ -155,16 +163,18 @@ public class GUI extends UI {
     public void show_starterCard(String username, PlayableCard starterCard) {
         Platform.runLater(() -> {
             app.getCurrentController().show_starterCard(username, starterCard);
-            //System.out.println("show_starterCard called");
+            // System.out.println("show_starterCard called");
         });
     }
 
     @Override
-    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea, Map<Resources, Integer> achievedResources) {
+    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea,
+            Map<Resources, Integer> achievedResources) {
         Platform.runLater(() -> {
             app.getCurrentController().show_playArea(username, playArea, achievedResources);
-            //System.out.println("show_playArea called");
-            //System.out.println("Player "+ username + " achievedResources: " + achievedResources);
+            // System.out.println("show_playArea called");
+            // System.out.println("Player "+ username + " achievedResources: " +
+            // achievedResources);
         });
     }
 
@@ -172,7 +182,7 @@ public class GUI extends UI {
     public void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
         Platform.runLater(() -> {
             app.getCurrentController().show_resourceDeck(firstCardDeck, card1, card2);
-            //System.out.println("show_resourceDeck called");
+            // System.out.println("show_resourceDeck called");
         });
     }
 
@@ -182,7 +192,7 @@ public class GUI extends UI {
             objectiveCard1.changeSide();
             objectiveCard2.changeSide();
             app.getCurrentController().show_chooseObjectiveCard(username, objectiveCard1, objectiveCard2);
-            //System.out.println("show_chooseObjectiveCard called");
+            // System.out.println("show_chooseObjectiveCard called");
         });
     }
 
@@ -191,7 +201,7 @@ public class GUI extends UI {
         Platform.runLater(() -> {
             objectiveCard.changeSide();
             app.getCurrentController().show_objectiveCard(username, objectiveCard);
-            //System.out.println("show_objectiveCard called");
+            // System.out.println("show_objectiveCard called");
         });
     }
 
@@ -212,4 +222,21 @@ public class GUI extends UI {
         throw new UnsupportedOperationException("Unimplemented method 'show_wrongGameSize'");
     }
 
+    @Override
+    public void show_quitFromGame(int id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_quitFromGame'");
+    }
+
+    @Override
+    public void show_heartBeat() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_heartBeat'");
+    }
+
 }
+
+// TODO show_inGamePlayers (when i join a match lobby I want to know the string
+// of player currently in the game)
+// TODO show_PlayerJoined (when i am in a match lobby I want to know who entered
+// my lobby)

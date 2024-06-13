@@ -41,6 +41,8 @@ public interface ShowUpdate {
 
     void show_joinedToGame(int id, int maxNumberOfPlayers);
 
+    void show_quitFromGame(int id);
+
     void show_gameIsFull(int id);
 
     void show_readyStatus(String username, boolean status);
@@ -56,5 +58,9 @@ public interface ShowUpdate {
     void show_inGamePlayers(LinkedHashMap<String, Boolean> players);
 
     void show_invalidAction(String message);
-    void show_GameIsOver();
+    void show_GameIsOver(String username);
+
+    void receiveToken(int token);
+
+    void show_heartBeat();
 }

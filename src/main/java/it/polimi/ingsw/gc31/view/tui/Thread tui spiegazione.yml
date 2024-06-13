@@ -4,7 +4,7 @@ Reader, Process, CmdOut, ChatReader, ChatBoard
 
 Lock:
 
-stateLock, stateLockQueue, cmdLineAreaSelection, chatAreaSelection, cmdLineMessages, cmdLineOut, chatNeedsUpdate
+stateLock, stateLockQueue, AreaSelection, chatAreaSelection, cmdLineMessages, cmdLineOut, chatNeedsUpdate
 
 Boolean: 
  comingFromChat = false
@@ -32,7 +32,7 @@ CmdOut:
 Reader:
     - starta il thread Process
     while true:
-        synch(cmdLineAreaSelection):
+        synch(AreaSelection):
             - se la cmdLine non è l'area selezionata va in wait *5*
         se comingFromChat = false:
             synch(stateLock):
@@ -46,8 +46,8 @@ Reader:
         - legge l'input da tastiera (bloccante)
         se l'input non è vuoto:
             se l'input è "chat":
-                - synch(cmdLineAreaSelection):
-                    - rimuove l'oggetto dalla coda cmdLineAreaSelection
+                - synch(AreaSelection):
+                    - rimuove l'oggetto dalla coda AreaSelection
                     - aggiunge l'oggetto alla coda chatAreaSelection (notify *6*)
                     - muove il cursore alla chat
                     - imposta comingFromChat = true
@@ -91,7 +91,7 @@ ChatReader:
             se l'input è "ccc":
                 - synch(chatAreaSelection):
                     - rimuove l'oggetto dalla coda chatAreaSelection
-                    - aggiunge l'oggetto alla coda cmdLineAreaSelection (notify *5*)
+                    - aggiunge l'oggetto alla coda AreaSelection (notify *5*)
                     - muove il cursore alla command Line
             altrimenti:
                 - aggiunge l'input alla lista chatMessages

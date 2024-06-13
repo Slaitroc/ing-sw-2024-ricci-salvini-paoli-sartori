@@ -20,9 +20,10 @@ public class PlayerScoreListener extends Listener {
     }
 
     /**
-     * Extract from the game model the score of all players and send it to a specific client
+     * Extract from the game model the score of all players and send it to a
+     * specific client
      *
-     * @param model The game model from which to extract the data,
+     * @param model    The game model from which to extract the data,
      * @param username The username of the player whose play area is being updated.
      * @throws RemoteException if there is a remote communication error.
      */

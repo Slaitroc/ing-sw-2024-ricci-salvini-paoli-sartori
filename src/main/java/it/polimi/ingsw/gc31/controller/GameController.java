@@ -101,7 +101,13 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         notifyListPlayers();
     }
 
-    @Override
+    public void quitGame(String username) throws RemoteException {
+        VirtualClient client = clientList.get(username);
+        clientList.remove(username, client);
+        readyStatus.remove(username, false);
+        Controller.getController().quitGame(username, idGame, client);
+    }
+
     public void setReadyStatus(boolean ready, String username) throws RemoteException, IllegalStateOperationException {
         readyStatus.replace(username, ready);
 
@@ -112,8 +118,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         checkReady();
     }
 
-    // FIXME occuparsi di RemoteException
-    @Override
     public void checkReady() throws RemoteException {
         int counter = 0;
         for (Boolean status : readyStatus.values()) {
@@ -225,7 +229,8 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             }
         } catch (ObjectiveCardNotChosenException e) {
             try {
-                clientList.get(username).sendCommand(new ShowInvalidActionObj("You must first choose your secret objective"));
+                clientList.get(username)
+                        .sendCommand(new ShowInvalidActionObj("You must first choose your secret objective"));
             } catch (RemoteException ex) {
                 // TODO occuparsi dell'eccezione
                 throw new RuntimeException(ex);
