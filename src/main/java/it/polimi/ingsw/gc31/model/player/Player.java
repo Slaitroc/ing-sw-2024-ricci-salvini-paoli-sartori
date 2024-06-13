@@ -58,25 +58,21 @@ public class Player{
      * and the method is called by the six public drawing methods.
      * Here are written the exceptions messages
      *
-     * @param card:   address of the card to add in hand
-     * @param byDeck: boolean that specifies if the card is drawn from the deck
+     * @param deck the deck to draw from.
+     *
      */
-    private boolean addToHand(PlayableCard card, Boolean byDeck) {
+    private boolean addToHand(Deck<PlayableCard> deck, int index) {
         try {
-            inGameState.addToHand(card, this, byDeck);
-//            notifyPlayerHandListener(new Pair<>(username, hand));
+            inGameState.addToHand(deck, this, index);
             return true;
         } catch (IllegalStateOperationException e) {
             System.out.println("Player " + username + " cannot draw in current state");
-            e.getStackTrace();
             return false;
         } catch (FullHandException e) {
             System.out.println("Player " + username + "'s hand is full");
-            e.getStackTrace();
             return false;
         } catch (InvalidCardDraw e) {
             System.out.println("Player " + username + " tried to draw an invalid card");
-            e.getStackTrace();
             return false;
         }
     }
@@ -92,17 +88,14 @@ public class Player{
 
     // FIXME potrebbe esserci un problema perchè se addToHand non va a buon fine la carta pesccata finisce in un buco nero
     public boolean drawGold(int index) throws EmptyDeckException {
+        if (index < 0 || index > 2) return false;
         Deck<PlayableCard> deck = board.getDeckGold();
         if (deck.peekCard() == null) {
             deck.replaceDeck(board.getDeckResource().getQueueDeck());
         }
 
-        if (index == 0) return addToHand(deck.draw(), true);
-        else if (index == 1) return addToHand(deck.getCard1(), false);
-        else if (index == 2) return addToHand(deck.getCard2(), false);
-
-        // if index is wrong return false
-        return false;
+        addToHand(deck, index);
+        return true;
     }
 
     /**
@@ -113,15 +106,13 @@ public class Player{
      */
     public boolean drawResource(int index) throws EmptyDeckException {
         Deck<PlayableCard> deck = board.getDeckResource();
+        if (index < 0 || index > 2) return false;
         if (deck.peekCard() == null) {
             deck.replaceDeck(board.getDeckGold().getQueueDeck());
         }
 
-        if (index == 0) return addToHand(deck.draw(), true);
-        else if (index == 1) return addToHand(deck.getCard1(), false);
-        else if (index == 2) return addToHand(deck.getCard2(), false);
-
-        return false;
+        addToHand(deck, index);
+        return true;
     }
     /**
      * Method let the player place the selectedCard in the map

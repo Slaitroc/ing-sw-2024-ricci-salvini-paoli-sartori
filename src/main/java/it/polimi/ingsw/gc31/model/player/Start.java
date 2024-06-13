@@ -8,6 +8,7 @@ import it.polimi.ingsw.gc31.exceptions.InvalidCardDraw;
 import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import it.polimi.ingsw.gc31.model.deck.Deck;
 
 public class Start extends PlayerState {
     private boolean objectiveChosen = false;
@@ -22,20 +23,20 @@ public class Start extends PlayerState {
     }
 
     @Override
-    public void addToHand(PlayableCard card, Player player, Boolean byDeck) throws FullHandException, InvalidCardDraw {
-        if (!byDeck) {
+    public void addToHand(Deck<PlayableCard> deck, Player player, int index) throws FullHandException, InvalidCardDraw {
+        if (index != 0) {
             throw new InvalidCardDraw();
         }
         if (player.hand.size() > 3) {
             throw new FullHandException();
         }
-        executeAddToHand(card, player);
+        executeAddToHand(deck, player, index);
     }
 
-    @Override
-    public void moveCardInHand(Player player) throws IllegalStateOperationException {
-        throw new IllegalStateOperationException();
-    }
+//    @Override
+//    public void moveCardInHand(Player player) throws IllegalStateOperationException {
+//        throw new IllegalStateOperationException();
+//    }
 
     @Override
     public void play(Point point, Player player) throws IllegalStateOperationException {
