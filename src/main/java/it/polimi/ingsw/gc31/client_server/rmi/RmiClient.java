@@ -25,6 +25,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     private UI ui;
     private final LinkedBlockingQueue<ClientQueueObject> callsList;
     private int token;
+    private boolean firstConnectionDone = false;
 
     /**
      * Creates a client with a default name and calls inner procedures to:
@@ -38,11 +39,13 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         this.server = (VirtualServer) LocateRegistry.getRegistry(ipaddress, DV.RMI_PORT)
                 .lookup("VirtualServer");
         this.server.RMIserverWrite("New connection detected from ip: " + server.getClientIP());
+        this.server.generateToken(this);
         this.username = DV.DEFAULT_USERNAME;
         this.controller = null;
         this.callsList = new LinkedBlockingQueue<>();
         timer = new Timer(true);
         new Thread(this::executor).start();
+
     }
 
     @Override
@@ -88,7 +91,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public void setUsernameCall(String username) throws RemoteException {
         if (controller == null) {
-            server.setVirtualClient(this);
             server.sendCommand(new ConnectObj(username, token));
         }
 
@@ -234,18 +236,23 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
                     throw new RuntimeException(e);
                 }
             }
-        }, 0, 5000);
+        }, 0, 2000);
     }
 
     private void sendHeartBeat() throws RemoteException {
         controller.updateHeartBeat(this);
-        System.out.println("HeartBeat inviato");
+        // System.out.println("HeartBeat inviato");
     }
 
     // Metodi per token
 
     @Override
     public void setToken(int token) {
+        this.token = token;
+    }
+
+    @Override
+    public void setRmiToken(int token) throws RemoteException {
         this.token = token;
     }
 }

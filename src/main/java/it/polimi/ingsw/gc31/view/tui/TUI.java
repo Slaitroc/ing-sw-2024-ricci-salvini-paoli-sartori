@@ -1763,7 +1763,29 @@ public class TUI extends UI {
 
     }
 
-    public void receiveToken(int token){
+    public void receiveToken(int token) {
         client.setToken(token);
     }
+
+    private boolean heart = false;
+
+    @Override
+    public void show_heartBeat() {
+        StringBuilder res = new StringBuilder();
+        if (heart == false) {
+            res.append(ansi().cursor(1, 1).a("💚"));
+            heart = true;
+        } else {
+            res.append(ansi().cursor(1, 1).a("💔"));
+            heart = false;
+
+        }
+        synchronized (playViewUpdate) {
+            playViewUpdate.add(res);
+            playViewUpdate.notify();
+        }
+    }
+    // Thread HeartBeat = new Thread(()->{
+
+    // });
 }

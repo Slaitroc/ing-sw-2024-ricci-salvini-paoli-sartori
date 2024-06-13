@@ -57,5 +57,8 @@ public interface ShowUpdate {
     void show_inGamePlayers(LinkedHashMap<String, Boolean> players);
 
     void show_invalidAction(String message);
+
     void receiveToken(int token);
+
+    void show_heartBeat();
 }

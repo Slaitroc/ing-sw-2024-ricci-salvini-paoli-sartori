@@ -204,6 +204,12 @@ public class GUI extends UI {
         throw new UnsupportedOperationException("Unimplemented method 'show_quitFromGame'");
     }
 
+    @Override
+    public void show_heartBeat() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show_heartBeat'");
+    }
+
 }
 
 // TODO show_inGamePlayers (when i join a match lobby I want to know the string

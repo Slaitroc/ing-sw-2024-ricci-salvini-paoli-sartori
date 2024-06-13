@@ -8,7 +8,7 @@ import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 public interface IController extends Remote {
     void sendCommand(ServerQueueObject obj) throws RemoteException;
 
-    VirtualClient getCorrectConnection(int token) throws RemoteException;
+    VirtualClient getRightConnection(int token) throws RemoteException;
 
     void updateHeartBeat(VirtualClient client) throws RemoteException;
 }

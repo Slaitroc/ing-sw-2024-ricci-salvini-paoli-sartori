@@ -5,11 +5,15 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.concurrent.*;
 
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
+
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameCreatedObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameDoesNotExistObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsFullObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.HeartBeatObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.JoinedToGameObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.QuitFromGameRObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowGamesObj;
@@ -53,17 +57,17 @@ public class Controller extends UnicastRemoteObject implements IController {
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
     private final Map<Integer, VirtualClient> newConnections;
 
-    public void setNewConnection(VirtualClient newConnection) {
+    public int generateToken(VirtualClient newConnection) {
         int token;
         token = (int) (Math.random() * 1000);
         while (newConnections.containsValue(token)) {
             token = (int) (Math.random() * 1000);
         }
-
         this.newConnections.put(token, newConnection);
+        return token;
     }
 
-    public void setNewConnectionCorrect(VirtualClient newConnection) {
+    public void sendToken(VirtualClient newConnection) {
         try {
             Integer getToken = null;
             for (Map.Entry<Integer, VirtualClient> t : newConnections.entrySet()) {
@@ -140,7 +144,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      */
     public boolean connect(VirtualClient client, String username)
             throws RemoteException {
-        setNewConnectionCorrect(client);
+        sendToken(client);
         if (nicknames.add(username)) {
             tempClients.put(username, client);
             client.setController(this);
@@ -249,7 +253,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     }
 
     @Override
-    public VirtualClient getCorrectConnection(int token) {
+    public VirtualClient getRightConnection(int token) {
         return newConnections.get(token);
     }
 
@@ -304,7 +308,9 @@ public class Controller extends UnicastRemoteObject implements IController {
         if (!clientsHeartBeat.containsKey(client))
             System.out.println("Il client da cui è arrivato l'HeartBeat non è presente nella mappa");
         clientsHeartBeat.replace(client, System.currentTimeMillis());
-        System.out.println("HeartBeat ricevuto");
+        System.out.println(Ansi.ansi().cursor(1, 1).a("\\033[5m💚\\033[0m\\").reset());
+        // System.out.println("HeartBeat ricevuto");
+        client.sendCommand(new HeartBeatObj());
     }
 
 }

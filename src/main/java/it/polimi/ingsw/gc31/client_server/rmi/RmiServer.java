@@ -17,7 +17,6 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class RmiServer implements VirtualServer {
-    private Controller controller;
     private VirtualClient client;
 
     public VirtualClient getVirtualClient() {
@@ -30,7 +29,6 @@ public class RmiServer implements VirtualServer {
         System.setProperty("java.rmi.server.hostname", ipaddress);
         ServerLog.rmiWrite("Server IP " + ipaddress);
 
-        this.controller = Controller.getController();
         this.callsList = new LinkedBlockingQueue<>();
         LocateRegistry.createRegistry(DV.RMI_PORT).rebind("VirtualServer",
                 UnicastRemoteObject.exportObject(this, DV.RMI_PORT));
@@ -40,10 +38,23 @@ public class RmiServer implements VirtualServer {
         executor();
     }
 
+    @Override
+    public void generateToken(VirtualClient newConnection) {
+        try {
+            newConnection.setRmiToken(Controller.getController().generateToken(newConnection));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public VirtualClient getRightConnection(int token) {
+        return Controller.getController().getRightConnection(token);
+    }
+
     // @Override
     public boolean connect(VirtualClient client, String username)
             throws RemoteException {
-        if (controller.connect(client, username)) {
+        if (Controller.getController().connect(client, username)) {
             return true;
         } else {
             return false;

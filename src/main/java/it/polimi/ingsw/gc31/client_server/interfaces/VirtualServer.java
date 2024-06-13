@@ -13,4 +13,6 @@ public interface VirtualServer extends Remote {
     public void setVirtualClient(VirtualClient client) throws RemoteException;
 
     public String getClientIP() throws RemoteException;
+
+    public void generateToken(VirtualClient client) throws RemoteException;
 }

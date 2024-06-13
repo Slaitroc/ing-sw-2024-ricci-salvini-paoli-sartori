@@ -9,11 +9,9 @@
 
 - [ ] RMI ha dei problemi di connessione su ubuntu: la connessione di lookup viene rilevata ma non va oltre e lancia un'eccezione.
 
-- [ ] se un utente logga e non inserisce il nome prima dell'altro blocca quello successivo (in rmi non sembra succedere ma in tcp si)--> potrebbe succedere anche in RMI ma è molto improbabile (dovrebbero loggare in istanti vicinissimi)
+- [x] se un utente logga e non inserisce il nome prima dell'altro blocca quello successivo (in rmi non sembra succedere ma in tcp si)--> potrebbe succedere anche in RMI ma è molto improbabile (dovrebbero loggare in istanti vicinissimi)
       SOLUZIONE (IDEA):
-      idea 1 -> assegnare un id al client e tenere traccia del counter lato server (servono anche dei nuovi oggetti network per incrementare il counter)
-      idea 1 non bellissima
-      idea 2 -> sapere chi è il client serve per poter inviare il connect object, visto che forse abbiamo fatto un altro canale per l'heartBeat se quello funziona con le stringhe potremmo usarlo anche per settare le connessioni iniziali --> così non serve più connect object e nemmeno salvare le temporary connection.
+      ---> scrivi la soluzione corretta
 - [ ] alla disconnessione del client il server printa uno stack trace ma sarebbe meglio scrivere un messaggio di log con le info
 - [x] impostare i valori di default per la connessione se non viene inserito nessun input
       SOLUZIONE: ora ci sono due nuovi valori di DV per forzare l'ip dei server
