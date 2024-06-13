@@ -4,6 +4,7 @@ package it.polimi.ingsw.gc31.view.gui;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.view.UI;
 import javafx.application.Platform;
 
@@ -18,16 +19,6 @@ public class GUI extends UI {
 
     public GUI(ClientCommands client) {
         this.client = client;
-    }
-
-    /**
-     * This method allows to call a Runnable inside the GUI thread
-     *
-     * @param r
-     * @Slaitroc
-     */
-    public void runInGuiApp(Runnable r) {
-        Platform.runLater(r);
     }
 
     @Override
@@ -57,48 +48,38 @@ public class GUI extends UI {
 
     @Override
     public void show_validUsername(String username) {
-        Platform.runLater(() -> {
-            app.loadScene(SceneTag.MAINMENU);
-        });
+        Platform.runLater(() -> app.loadScene(SceneTag.MAINMENU));
     }
 
     @Override
     public void show_wrongUsername(String username) {
-        Platform.runLater(() -> {
-            app.getCurrentController().setMessage("Username already taken!");
-        });
+        Platform.runLater(() -> app.getCurrentController().setMessage("Username already taken!"));
     }
 
     @Override
     public void show_joinedToGame(int id, int maxNumberOfPlayers) {
         Platform.runLater(() -> {
-            app.setLobbyWindowSize();
             app.setNumberOfPlayers(maxNumberOfPlayers);
             app.setCurrentGameID(id);
             app.loadScene(SceneTag.LOBBY);
+            app.setLobbyWindowSize();
         });
     }
 
     @Override
     public void show_gameIsFull(int id) {
-        Platform.runLater(() -> {
-            app.getCurrentController().setMessage("Lobby is full!");
-        });
+        Platform.runLater(() -> app.getCurrentController().setMessage("Lobby is full!"));
     }
 
     @Override
     public void show_readyStatus(String username, boolean status) {
         System.out.println("show_readyStatus triggered!!!! VALUES: " + username + " " + status);
-        Platform.runLater(() -> {
-            app.getCurrentController().showReady(username, status);
-        });
+        Platform.runLater(() -> app.getCurrentController().showReady(username, status));
     }
 
     @Override
     public void show_playerTurn(String username, String info) {
-        Platform.runLater(() -> {
-            app.getCurrentController().playerStateInfo(username, info);
-        });
+        Platform.runLater(() -> app.getCurrentController().playerStateInfo(username, info));
     }
 
     @Override
@@ -156,7 +137,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_objectiveDeck(ObjectiveCard card1, ObjectiveCard card2) {
+    public void show_commonObjectiveCard(ObjectiveCard card1, ObjectiveCard card2) {
         Platform.runLater(() -> {
             if (card1 != null && !card1.getSide()) {
                 card1.changeSide();
@@ -164,7 +145,7 @@ public class GUI extends UI {
             if (card2 != null && !card2.getSide()) {
                 card2.changeSide();
             }
-            app.getCurrentController().show_objectiveDeck(firstCardDeck, card1, card2);
+            app.getCurrentController().show_commonObjectives(card1, card2);
             //System.out.println("show_objectiveDeck called");
         });
 
@@ -173,13 +154,13 @@ public class GUI extends UI {
     @Override
     public void show_starterCard(String username, PlayableCard starterCard) {
         Platform.runLater(() -> {
-            app.getCurrentController().show_starterCard(starterCard);
+            app.getCurrentController().show_starterCard(username, starterCard);
             //System.out.println("show_starterCard called");
         });
     }
 
     @Override
-    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea, String achievedResources) {
+    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea, Map<Resources, Integer> achievedResources) {
         Platform.runLater(() -> {
             app.getCurrentController().show_playArea(username, playArea, achievedResources);
             //System.out.println("show_playArea called");
@@ -206,7 +187,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_objectiveCard(ObjectiveCard objectiveCard) {
+    public void show_objectiveCard(String username, ObjectiveCard objectiveCard) {
         Platform.runLater(() -> {
             objectiveCard.changeSide();
             app.getCurrentController().show_objectiveCard(objectiveCard);
@@ -217,16 +198,12 @@ public class GUI extends UI {
     @Override
     public void show_chatMessage(String username, String message) {
         // System.out.println(username + "said:" + message);
-        Platform.runLater(() -> {
-            app.getCurrentController().updateChat(username, message);
-        });
+        Platform.runLater(() -> app.getCurrentController().updateChat(username, message));
     }
 
     @Override
     public void show_gameDoesNotExist() {
-        Platform.runLater(() -> {
-            app.getCurrentController().setMessage("Game does not exist!");
-        });
+        Platform.runLater(() -> app.getCurrentController().setMessage("Game does not exist!"));
     }
 
     @Override

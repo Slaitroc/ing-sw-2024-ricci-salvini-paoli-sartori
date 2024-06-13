@@ -5,6 +5,7 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import it.polimi.ingsw.gc31.model.card.Card;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
@@ -337,12 +338,14 @@ public class InGameController extends ViewController {
     }
 
     @Override
-    public void show_starterCard(PlayableCard starterCard) {
-        setImage(starterCard, this.starterCard);
+    public void show_starterCard(String username, PlayableCard starterCard) {
+        if(username.equals(app.getUsername())){
+            setImage(starterCard, this.starterCard);
+        }
     }
 
     @Override
-    public void show_playArea(String username, Map<Point, PlayableCard> playArea, String achievedResources) {
+    public void show_playArea(String username, Map<Point, PlayableCard> playArea, Map<Resources, Integer> achievedResources) {
         //System.out.println("I'm " + app.getUsername() + ", I'm updating playArea for " + username);
         //System.out.println("Currently otherPlayers are: " + otherPlayers);
         if (username.equals(app.getUsername())) {
@@ -382,7 +385,7 @@ public class InGameController extends ViewController {
     }
 
     @Override
-    public void show_objectiveDeck(ObjectiveCard firstCardDeck, ObjectiveCard commonObjectiveCard1, ObjectiveCard commonObjectiveCard2) {
+    public void show_commonObjectives(ObjectiveCard commonObjectiveCard1, ObjectiveCard commonObjectiveCard2) {
         setImage(commonObjectiveCard1, commonObjCard1);
         setImage(commonObjectiveCard2, commonObjCard2);
     }
@@ -684,11 +687,8 @@ public class InGameController extends ViewController {
     }
 
     //TODO modify after deserialization of resources
-    private void updateResources(int playerNumber, String resources) {
-        String[] resourcesArray = resources.split(" ");
-        for (int i = 0; i < resourcesArray.length; i++) {
-            resourceLabels.get(playerNumber).get(i).setText(resourcesArray[i]);
-        }
+    private void updateResources(int playerNumber, Map<Resources, Integer> achievedResources) {
+
     }
 
     /**
