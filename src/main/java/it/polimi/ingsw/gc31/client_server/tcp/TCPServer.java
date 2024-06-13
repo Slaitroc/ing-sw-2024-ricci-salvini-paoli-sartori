@@ -52,9 +52,7 @@ public class TCPServer {
                 }
 
             }
-            // FIX chiudere clientSocket e input e output
 
         }).start();
     }
-
 }

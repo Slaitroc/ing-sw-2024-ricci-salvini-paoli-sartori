@@ -23,7 +23,7 @@ public class TCPClient implements ClientCommands {
     private Integer idGame;
     private UI ui;
     private final Queue<ClientQueueObject> callsList;
-
+    private int token;
     private Timer timer;
 
     /**
@@ -165,8 +165,8 @@ public class TCPClient implements ClientCommands {
      *                     client handler messages
      */
     @Override
-    public void setUsernameCall(String username) throws IOException {
-        tcp_sendCommand(new ConnectObj(username), DV.RECIPIENT_CONTROLLER);
+    public void setUsernameCall(String username){
+        tcp_sendCommand(new ConnectObj(username, token), DV.RECIPIENT_CONTROLLER);
     }
 
     /**
@@ -350,5 +350,12 @@ public class TCPClient implements ClientCommands {
                     System.out.println("HeartBeat inviato");
             }
         }, 0, 5000);
+    }
+
+    //Metodi per token
+
+    @Override
+    public void setToken(int token){
+        this.token = token;
     }
 }

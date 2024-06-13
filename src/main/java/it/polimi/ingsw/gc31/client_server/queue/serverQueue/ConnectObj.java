@@ -10,10 +10,11 @@ import it.polimi.ingsw.gc31.utility.DV;
 public class ConnectObj extends ServerQueueObject {
 
     private final String username;
+    private final int token;
 
-    public ConnectObj(String username) {
+    public ConnectObj(String username, int token) {
         this.username = username;
-
+        this.token = token;
     }
 
     @Override
@@ -22,8 +23,9 @@ public class ConnectObj extends ServerQueueObject {
 
     @Override
     public void execute(Controller controller) {
+
         try {
-            if (controller.connect(controller.getNewConnection(), username)) {
+            if (controller.connect(controller.getCorrectConnection(token), username)) {
                 TCPserverWrite("New user connected: " + username);
             } else {
                 TCPserverWrite("New connection refused");

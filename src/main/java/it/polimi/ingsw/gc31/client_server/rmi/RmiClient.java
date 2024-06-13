@@ -24,6 +24,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     private String username;
     private UI ui;
     private final LinkedBlockingQueue<ClientQueueObject> callsList;
+    private int token;
 
     /**
      * Creates a client with a default name and calls inner procedures to:
@@ -86,7 +87,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     public void setUsernameCall(String username) throws RemoteException {
         if (controller == null) {
             server.setVirtualClient(this);
-            server.sendCommand(new ConnectObj(username));
+            server.sendCommand(new ConnectObj(username, token));
         }
 
     }
@@ -213,8 +214,8 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     //Risorse per heartbeat
     //FIXME spostare in cima attributi e metodi per heartbeat
-    private Timer timer;
 
+    private Timer timer;
     public void startHeartBeat(){
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -231,5 +232,12 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     private void sendHeartBeat() throws RemoteException{
         controller.updateHeartBeat(this);
         System.out.println("HeartBeat inviato");
+    }
+
+    //Metodi per token
+
+    @Override
+    public void setToken(int token) {
+        this.token = token;
     }
 }

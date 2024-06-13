@@ -48,10 +48,10 @@ public class SocketClientHandler implements VirtualClient {
      */
     public SocketClientHandler(ObjectInputStream input, ObjectOutputStream output) {
         this.controller = Controller.getController();
-        Controller.getController().setNewConnection(this);
         this.input = input;
         this.output = output;
         tcpClient_reader();
+        Controller.getController().setNewConnection(this);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
@@ -113,8 +113,8 @@ public class SocketClientHandler implements VirtualClient {
                 // Altrimenti
                 // devo riconnettere il client alla partita a cui stava giocando
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-//                System.out.println("Connessione interrotta");
+//                e.printStackTrace();
+                System.out.println("A TCP client disconnected");
             }
 
             /*

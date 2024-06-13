@@ -15,6 +15,7 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowGamesObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ValidUsernameObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongGameSizeObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongUsernameObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.SaveToken;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
@@ -50,11 +51,26 @@ public class Controller extends UnicastRemoteObject implements IController {
     private Map<String, VirtualClient> tempClients;
     private final Set<String> nicknames;
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
-    private VirtualClient newConnection;
+    private final Map<VirtualClient, Integer> newConnections;
 
     public void setNewConnection(VirtualClient newConnection) {
-        this.newConnection = newConnection;
+        int token;
+        token = (int) (Math.random() * 1000);
+        while(newConnections.containsValue(token)){
+            token = (int) (Math.random() * 1000);
+        }
+
+        this.newConnections.put(newConnection, token);
     }
+
+    public void setNewConnectionCorrect(VirtualClient newConnection) {
+        try {
+            newConnection.sendCommand(new SaveToken(newConnections.get(newConnection)));
+        } catch (RemoteException e) {
+            System.out.println("The token was not sent correctly");
+        }
+    }
+
 
     /**
      * Private constructor for the Controller class.
@@ -69,6 +85,7 @@ public class Controller extends UnicastRemoteObject implements IController {
         callsList = new LinkedBlockingQueue<>();
         clientsHeartBeat = new ConcurrentHashMap<>();
         scheduler = Executors.newScheduledThreadPool(1);
+        newConnections = new HashMap<>();
         executor();
         startHeartBeatCheck();
     }
@@ -118,6 +135,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     @Override
     public boolean connect(VirtualClient client, String username)
             throws RemoteException {
+        setNewConnectionCorrect(client);
         if (nicknames.add(username)) {
             tempClients.put(username, client);
             client.setController(this);
@@ -222,8 +240,9 @@ public class Controller extends UnicastRemoteObject implements IController {
     }
 
     @Override
-    public VirtualClient getNewConnection() {
-        return newConnection;
+    public VirtualClient getCorrectConnection(int token) {
+
+        return newConnections.get(token);
     }
 
 

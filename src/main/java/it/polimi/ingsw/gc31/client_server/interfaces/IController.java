@@ -18,7 +18,7 @@ public interface IController extends Remote {
 
     void sendCommand(ServerQueueObject obj) throws RemoteException;
 
-    VirtualClient getNewConnection() throws RemoteException;
+    VirtualClient getCorrectConnection(int token) throws RemoteException;
 
     void updateHeartBeat(VirtualClient client) throws RemoteException;
 }
