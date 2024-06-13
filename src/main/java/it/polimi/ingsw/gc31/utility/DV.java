@@ -20,6 +20,7 @@ public class DV {
     public final static String SERVER_TAG = "[Server] ";
     public final static String TCP_SERVER_TAG = "[TCP server] ";
     public static final String CONTROLLER_TAG = "\t[Controller]: ";
+
     public static String gameControllerTag(String id) {
         return "\t[GameController " + id + "]: ";
     }
@@ -27,7 +28,6 @@ public class DV {
     public static String playerControllerTag(String name) {
         return "\t[PlayerController " + name + "]: ";
     }
-
 
     // ANSI color
     public static final String ANSI_RESET = "\u001B[0m";
@@ -61,6 +61,7 @@ public class DV {
     public final static String GUI_SCENE_ruleBookScene = "/it/polimi/ingsw/gc31/fxml/ruleBookScene.fxml";
     public final static String GUI_SCENE_gameListScene = "/it/polimi/ingsw/gc31/fxml/gameListScene.fxml";
     public final static String GUI_SCENE_inGameScene = "/it/polimi/ingsw/gc31/fxml/inGameScene.fxml";
+
     public static Map<SceneTag, String> getGuiFxmlScenes() {
         Map<SceneTag, String> sceneList = new HashMap<>();
         sceneList.put(SceneTag.START, GUI_SCENE_startScene);
@@ -74,13 +75,13 @@ public class DV {
         return sceneList;
     }
 
-
     public final static int[] RGB_COLOR_RED = { 204, 76, 67 };
     public final static int[] RGB_COLOR_GREEN = { 73, 184, 105 };
     public final static int[] RGB_COLOR_BLUE = { 114, 202, 203 };
     public final static int[] RBG_COLOR_PURPLE = { 165, 85, 158 };
     public final static int[] RGB_COLOR_CORNER = { 223, 215, 176 };
     public final static int[] RGB_COLOR_STARTER = { 189, 175, 127 };
+
     public static int[] getRgbColor(CardColor color) {
         switch (color) {
             case RED:
@@ -96,7 +97,6 @@ public class DV {
         }
     }
 
-
     // Model
     public final static String DEFAULT_USERNAME = "New User";
 
@@ -106,5 +106,8 @@ public class DV {
     public static final String RECIPIENT_HEARTBEAT = "HEARTBEAT";
     public final static int RMI_PORT = 1100;
     public final static int TCP_PORT = 1200;
+
+    // Token
+    public final static int defaultToken = 0000;
 
 }

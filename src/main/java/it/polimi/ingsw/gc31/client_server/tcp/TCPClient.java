@@ -25,6 +25,7 @@ public class TCPClient implements ClientCommands {
     private final Queue<ClientQueueObject> callsList;
     private int token;
     private Timer timer;
+    private boolean firstConnectionDone = false;
 
     /**
      * This method is the constructor of the TCPClient.
@@ -165,8 +166,13 @@ public class TCPClient implements ClientCommands {
      *                     client handler messages
      */
     @Override
-    public void setUsernameCall(String username){
-        tcp_sendCommand(new ConnectObj(username, token), DV.RECIPIENT_CONTROLLER);
+    public void setUsernameCall(String username) {
+        if (firstConnectionDone)
+            tcp_sendCommand(new ConnectObj(username, token), DV.RECIPIENT_CONTROLLER);
+        else {
+            tcp_sendCommand(new ConnectObj(username), DV.RECIPIENT_CONTROLLER);
+            firstConnectionDone = true;
+        }
     }
 
     /**
@@ -299,9 +305,11 @@ public class TCPClient implements ClientCommands {
     }
 
     /**
-     * This method sends the object that select a card at the specified hand location
+     * This method sends the object that select a card at the specified hand
+     * location
      *
-     * @param index is the position in the hand of the card the player wants to select
+     * @param index is the position in the hand of the card the player wants to
+     *              select
      */
     @Override
     public void selectCard(int index) {
@@ -338,24 +346,26 @@ public class TCPClient implements ClientCommands {
     /**
      * This method starts the procedure of the heart beat.
      * It creates a task that is executed periodically.
-     * In particular every 5 seconds a HeartBeatObj is created and sent to the clientHandler with the specific recipient.
+     * In particular every 5 seconds a HeartBeatObj is created and sent to the
+     * clientHandler with the specific recipient.
      * The first execution is done at the invocation of this method,
      * all the others execution are performed every 5 seconds
      */
-    //FIXME aggiungere metodo close che esegue "timer.cancel();" quando si vuole chiudere la connessione
-    private void startHeartBeat(){
+    // FIXME aggiungere metodo close che esegue "timer.cancel();" quando si vuole
+    // chiudere la connessione
+    private void startHeartBeat() {
         timer.scheduleAtFixedRate(new TimerTask() {
-            public void run(){
-                    tcp_sendCommand(new HeartBeatObj(username), DV.RECIPIENT_HEARTBEAT);
-                    System.out.println("HeartBeat inviato");
+            public void run() {
+                tcp_sendCommand(new HeartBeatObj(username), DV.RECIPIENT_HEARTBEAT);
+                System.out.println("HeartBeat inviato");
             }
         }, 0, 5000);
     }
 
-    //Metodi per token
+    // Metodi per token
 
     @Override
-    public void setToken(int token){
+    public void setToken(int token) {
         this.token = token;
     }
 }

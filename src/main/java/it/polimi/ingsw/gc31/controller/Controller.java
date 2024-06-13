@@ -20,7 +20,6 @@ import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
-
 //NOTE creation of GameController for match creation
 // Does the GameController related to the first match get created immediately after the first player has logged in?
 // It seems easier to do it this way than to manage waits for the creation of GameControllers in the Controller
@@ -56,7 +55,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     public void setNewConnection(VirtualClient newConnection) {
         int token;
         token = (int) (Math.random() * 1000);
-        while(newConnections.containsValue(token)){
+        while (newConnections.containsValue(token)) {
             token = (int) (Math.random() * 1000);
         }
 
@@ -70,7 +69,6 @@ public class Controller extends UnicastRemoteObject implements IController {
             System.out.println("The token was not sent correctly");
         }
     }
-
 
     /**
      * Private constructor for the Controller class.
@@ -240,38 +238,40 @@ public class Controller extends UnicastRemoteObject implements IController {
     }
 
     @Override
-    public VirtualClient getCorrectConnection(int token) {
-
+    public VirtualClient getCorrectConnection() {
         return newConnections.get(token);
     }
 
-
-    //Risorse per heartbeat
-    //FIXME spostare in cima attributi e metodi
+    // Risorse per heartbeat
+    // FIXME spostare in cima attributi e metodi
     private ConcurrentHashMap<VirtualClient, Long> clientsHeartBeat;
     private ScheduledExecutorService scheduler;
 
     /**
-     * This method creates a task that execute every 10 seconds the checkHeartBeats method
+     * This method creates a task that execute every 10 seconds the checkHeartBeats
+     * method
      */
-    private void startHeartBeatCheck(){
+    private void startHeartBeatCheck() {
         scheduler.scheduleAtFixedRate(() -> checkHeartBeats(), 0, 10, TimeUnit.MILLISECONDS);
     }
 
     /**
-     * This method get the current time, expressed in milliseconds, in the variable "now".
-     * Then, for every VirtualClient in the clientsHeartBeat list, the method checks if the last heart beat
+     * This method get the current time, expressed in milliseconds, in the variable
+     * "now".
+     * Then, for every VirtualClient in the clientsHeartBeat list, the method checks
+     * if the last heart beat
      * received from the client is older than 10 seconds.
-     * If the condition is true the client is considered crashed and the method remove the client from the list,
+     * If the condition is true the client is considered crashed and the method
+     * remove the client from the list,
      * also closes the connection towards the client.
      */
-    private void checkHeartBeats(){
+    private void checkHeartBeats() {
         long now = System.currentTimeMillis();
-        for(VirtualClient client : clientsHeartBeat.keySet()){
-            if(now - clientsHeartBeat.get(client) > 10000) {
+        for (VirtualClient client : clientsHeartBeat.keySet()) {
+            if (now - clientsHeartBeat.get(client) > 10000) {
                 clientsHeartBeat.remove(client);
                 /*
-                try "chiudi connessione al client disconnesso"
+                 * try "chiudi connessione al client disconnesso"
                  */
                 System.out.println("Client disconnesso per timeout");
             }
@@ -280,15 +280,17 @@ public class Controller extends UnicastRemoteObject implements IController {
 
     /**
      * This method is invoked for every heartBeatObj received.
-     * The method updates the time value kept in the clientsHeartBeat for the client that sent it.
-     * Furthermore, if an heartBeat arrives but the client is not in the Map a specific message is written
+     * The method updates the time value kept in the clientsHeartBeat for the client
+     * that sent it.
+     * Furthermore, if an heartBeat arrives but the client is not in the Map a
+     * specific message is written
      *
      * @param client is the client that sent the heart beat
      * @throws RemoteException if an error occurs in the rmi connection
      */
     @Override
-    public void updateHeartBeat(VirtualClient client) throws RemoteException{
-        if(!clientsHeartBeat.containsKey(client))
+    public void updateHeartBeat(VirtualClient client) throws RemoteException {
+        if (!clientsHeartBeat.containsKey(client))
             System.out.println("Il client da cui è arrivato l'HeartBeat non è presente nella mappa");
         clientsHeartBeat.replace(client, System.currentTimeMillis());
         System.out.println("HeartBeat ricevuto");

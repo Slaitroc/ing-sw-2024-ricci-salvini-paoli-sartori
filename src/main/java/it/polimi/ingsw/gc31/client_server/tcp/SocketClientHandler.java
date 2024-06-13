@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.client_server.tcp;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.utility.DV;
@@ -82,7 +83,8 @@ public class SocketClientHandler implements VirtualClient {
      * This method reads the object from the client and sends it to the
      * right controller
      * based on the recipient of the object.
-     * The Object corresponding to the heartBeat are treated differently because it needs to be evaluated instantly
+     * The Object corresponding to the heartBeat are treated differently because it
+     * needs to be evaluated instantly
      */
     private void tcpClient_reader() {
         new Thread(() -> {
@@ -92,6 +94,19 @@ public class SocketClientHandler implements VirtualClient {
                 while ((obj = (ServerQueueObject) input.readObject()) != null) {
                     if (obj.getRecipient().equals(DV.RECIPIENT_CONTROLLER)) {
                         try {
+                            try {
+                                ConnectObj connectObj = (ConnectObj) obj;
+                                if (connectObj.getToken() == DV.defaultToken) {
+                                    if (controller.connect(this, connectObj.getUsername())) {
+                                        // TCPserverWrite("New user connected: " + connectObj.getUsername());
+                                    } else {
+                                        // TCPserverWrite("New connection refused");
+                                    }
+                                }
+                                continue;
+                            } catch (ClassCastException e) {
+
+                            }
                             controller.sendCommand(obj);
                         } catch (RemoteException e) {
                             e.printStackTrace();
@@ -102,7 +117,7 @@ public class SocketClientHandler implements VirtualClient {
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
-                    } else if(obj.getRecipient().equals(DV.RECIPIENT_HEARTBEAT)){
+                    } else if (obj.getRecipient().equals(DV.RECIPIENT_HEARTBEAT)) {
                         controller.updateHeartBeat(this);
                     }
                 }
@@ -113,7 +128,7 @@ public class SocketClientHandler implements VirtualClient {
                 // Altrimenti
                 // devo riconnettere il client alla partita a cui stava giocando
             } catch (IOException | ClassNotFoundException e) {
-//                e.printStackTrace();
+                // e.printStackTrace();
                 System.out.println("A TCP client disconnected");
             }
 
