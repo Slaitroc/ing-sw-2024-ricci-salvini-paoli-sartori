@@ -56,5 +56,5 @@ public interface ShowUpdate {
     void show_inGamePlayers(LinkedHashMap<String, Boolean> players);
 
     void show_invalidAction(String message);
-    void show_GameIsOver();
+    void show_GameIsOver(String username);
 }

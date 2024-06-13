@@ -119,7 +119,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_GameIsOver() {
+    public void show_GameIsOver(String username) {
 
     }
 
