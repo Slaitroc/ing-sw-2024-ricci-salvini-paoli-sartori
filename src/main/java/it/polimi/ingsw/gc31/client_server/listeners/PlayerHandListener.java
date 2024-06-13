@@ -8,23 +8,15 @@ import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.rmi.RemoteException;
-import java.util.List;
 import java.util.Map;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
 /**
- * A listener class that handles updates related to a player's hand.
- * It receives data in the form of a pair containing:
- * <ul>
- * <li>The username of the player to whom the hand belongs</li>
- * <li>A list of PlayableCard objects representing the cards in the player's
- * hand.</li>
- * </ul>
- * This listener is designed to update a VirtualClient with the player's hand
- * updated.
+ * This class represents a listener that handles updates for a player's hand.
+ * It retrieves the updated hand of a player from the game model and sends it to all clients.
  *
- * @author christian salvini
+ * @author sslvo
  */
 public class PlayerHandListener extends Listener {
 
@@ -32,6 +24,12 @@ public class PlayerHandListener extends Listener {
         super(clients);
     }
 
+    /**
+     * Extract from the game model the hand of the player and the index of the selected card and sends them to all clients.
+     * @param model The game model from which to extract the data,
+     * @param username The username of the player whose play area is being updated.
+     * @throws RemoteException if there is a remote communication error.
+     */
     @Override
     public void update(GameModel model, String username) throws RemoteException {
         Player player = model.getPlayers().get(username);

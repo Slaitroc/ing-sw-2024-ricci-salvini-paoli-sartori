@@ -31,9 +31,10 @@ public class GameModel{
     protected Map<String, VirtualClient> clients;
     protected List<ObjectiveCard> commonObjectives;
     protected List<String> turnPlayer;
+    protected Map<String, Boolean> playerConnection;
     private int currPlayingPlayer = 0;
     private GameModelState gameState;
-    private Map<String, GameListenerHandler> listeners;
+    private final Map<String, GameListenerHandler> listeners;
 
     /**
      * Constructor for the GameModel class.
@@ -47,12 +48,12 @@ public class GameModel{
         this.commonObjectives = new ArrayList<>();
         this.gameState = new CreationGameModelState();
         this.listeners = new HashMap<>();
+        this.playerConnection = new HashMap<>();
     }
 
     public void initGame(LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
         this.clients = clients;
         players = gameState.initGame(this, clients);
-        this.clients = clients;
         notifyAllGameListeners();
     }
     protected void endGame() throws IllegalStateOperationException {
@@ -65,13 +66,16 @@ public class GameModel{
         listeners.values().forEach(listener -> listener.notifyPlayerScoreListener(this));
     }
     public void setNextPlayingPlayer() {
-        if (turnPlayer == null) {
-            turnPlayer = new ArrayList<>();
-            turnPlayer.addAll(players.keySet());
-            currPlayingPlayer = 0;
-        } else {
-            currPlayingPlayer = (currPlayingPlayer + 1) % players.size();
-        }
+        // TODO potrebbe funzionare il todo
+        //do {
+            if (turnPlayer == null) {
+                turnPlayer = new ArrayList<>();
+                turnPlayer.addAll(players.keySet());
+                currPlayingPlayer = 0;
+            } else {
+                currPlayingPlayer = (currPlayingPlayer + 1) % players.size();
+            }
+        //} while (playerConnection.get(getCurrPlayer().getUsername()));
 
         // set all players to waiting state
         for (Player player : players.values()) {

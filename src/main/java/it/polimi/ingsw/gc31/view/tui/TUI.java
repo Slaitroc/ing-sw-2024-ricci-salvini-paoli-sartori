@@ -51,7 +51,7 @@ public class TUI extends UI {
     private final int HAND_INITIAL_ROW = 33;
     private final int HAND_INITIAL_COLUMN = 68;
     private final int HAND_END_ROW = 42;
-    private final int HAND_END_COLUMN = 160;
+    private final int HAND_END_COLUMN = 135;
 
     private final int STARTER_CARD_INITIAL_ROW = 10;
     private final int STARTER_CARD_INITIAL_COLUMN = 111;
@@ -84,9 +84,14 @@ public class TUI extends UI {
     private final int RESOURCE_DECK_END_COLUMN = 67;
 
     private final int PLAYERS_INFO_INITIAL_ROW = 33;
-    private final int PLAYERS_INFO_INITIAL_COLUMN = 161;
+    private final int PLAYERS_INFO_INITIAL_COLUMN = 145;
     private final int PLAYERS_INFO_END_ROW = 40;
     private final int PLAYERS_INFO_END_COLUMN = 184;
+
+    private final int ACHIEVED_RESOURCES_INITIAL_ROW = 33;
+    private final int ACHIEVED_RESOURCES_INITIAL_COLUMN = 136;
+    private final int ACHIEVED_RESOURCES_END_ROW = 42;
+    private final int ACHIEVED_RESOURCES_END_COLUMN = 144;
 
     // CONSTANTS
     private final int CMD_LINE_EFFECTIVE_WIDTH = CMD_LINE_WIDTH - 2;
@@ -1495,21 +1500,22 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea, String achievedResources) {
+    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea, Map<Resources, Integer> achievedResources) {
         if (client.getUsername().equals(username)) {
             StringBuilder res = new StringBuilder();
             res.append(clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
             res.append(print_Borders("Play Area", PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW,
                     PLAYAREA_END_COLUMN));
             res.append(print_PlacedCards(playArea));
-
-//            res.append(ansi().cursor(PLAYAREA_INITIAL_ROW + (PLAYAREA_END_ROW -
-//                    PLAYAREA_INITIAL_ROW) / 2,
-//                    PLAYAREA_INITIAL_COLUMN + (PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN) / 2).bg(RED).a(".")
-//                    .reset());
-
             placedCards = playArea;
 
+            res.append(clearArea(ACHIEVED_RESOURCES_INITIAL_ROW, ACHIEVED_RESOURCES_INITIAL_COLUMN, ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
+            res.append(print_Borders("", ACHIEVED_RESOURCES_INITIAL_ROW, ACHIEVED_RESOURCES_INITIAL_COLUMN, ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
+            int index = 0;
+            for (Map.Entry<Resources, Integer> entry: achievedResources.entrySet()) {
+                res.append(ansi().cursor(ACHIEVED_RESOURCES_INITIAL_ROW+1+index, ACHIEVED_RESOURCES_INITIAL_COLUMN+1).a(entry.getKey().getSymbol()+": "+entry.getValue()));
+                index++;
+            }
             synchronized (playViewUpdate) {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
@@ -1654,7 +1660,6 @@ public class TUI extends UI {
                     COMMON_OBJECTIVE_INITIAL_ROW + 1, COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_END_ROW,
                     COMMON_OBJECTIVE_INITIAL_COLUMN, COMMON_OBJECTIVE_END_COLUMN));
         }
-        res.append(ansi().cursor(COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_END_COLUMN).a("+"));
         synchronized (playViewUpdate) {
             playViewUpdate.add(res);
             playViewUpdate.notify();
@@ -1747,10 +1752,10 @@ public class TUI extends UI {
     public void show_playerTurn(String username, String info) {
         if (client.getUsername().equals(username)) {
             StringBuilder res = new StringBuilder();
-            res.append(ansi().cursor(HAND_END_ROW - 1, HAND_END_COLUMN + 1).a("              "));
-            res.append(ansi().cursor(HAND_END_ROW, HAND_END_COLUMN + 1).a("              "));
-            res.append(ansi().cursor(HAND_END_ROW - 1, HAND_END_COLUMN + 1).a("Player state:"));
-            res.append(ansi().cursor(HAND_END_ROW, HAND_END_COLUMN + 1).a(info));
+            res.append(ansi().cursor(ACHIEVED_RESOURCES_END_ROW - 1, ACHIEVED_RESOURCES_END_COLUMN + 1).a("              "));
+            res.append(ansi().cursor(ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN + 1).a("              "));
+            res.append(ansi().cursor(ACHIEVED_RESOURCES_END_ROW - 1, ACHIEVED_RESOURCES_END_COLUMN + 1).a("Player state:"));
+            res.append(ansi().cursor(ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN + 1).a(info));
 
             synchronized (playViewUpdate) {
                 playViewUpdate.add(res);

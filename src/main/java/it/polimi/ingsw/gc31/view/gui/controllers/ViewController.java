@@ -1,12 +1,9 @@
 package it.polimi.ingsw.gc31.view.gui.controllers;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
-import it.polimi.ingsw.gc31.client_server.listeners.Observable;
 import it.polimi.ingsw.gc31.view.gui.GUIApplication;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-
-import java.util.ArrayList;
 
 public abstract class ViewController {
 

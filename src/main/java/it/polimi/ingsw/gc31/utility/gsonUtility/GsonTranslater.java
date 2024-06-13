@@ -43,7 +43,6 @@ public class GsonTranslater {
             }.getType(), new MapRequirementsAdapter())
             .registerTypeAdapter(new TypeToken<LinkedHashMap<Point, PlayableCard>>() {
             }.getType(), new PlayAreaAdapter())
-            .registerTypeAdapter(ClientQueueObject.class, new ClientQueueObjAdapter())
             .serializeNulls()
             .create();
 

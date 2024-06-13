@@ -40,6 +40,10 @@ public class CreationGameModelState implements GameModelState {
             model.getListeners().put(username, new GameListenerHandler(username));
         }
 
+        for (String username: clients.keySet()) {
+            model.playerConnection.put(username, true);
+        }
+
         // change the state of the gameModel
         model.setGameState(new SetupGameModelState(model));
         return players;

@@ -6,6 +6,7 @@ import java.awt.*;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import javafx.application.Platform;
 import it.polimi.ingsw.gc31.view.UI;
 
@@ -158,7 +159,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea, String achievedResources) {
+    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea, Map<Resources, Integer> achievedResources) {
         // TODO Auto-generated method stub
     }
 

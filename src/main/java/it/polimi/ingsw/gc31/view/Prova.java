@@ -1,22 +1,39 @@
 package it.polimi.ingsw.gc31.view;
 
+import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.Card;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
+import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.view.tui.TUI;
 import it.polimi.ingsw.gc31.view.tui.TuiState;
 import org.fusesource.jansi.AnsiConsole;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
+
 public class Prova {
     public static void main(String[] args) {
-        ProvaTui provaTui = new ProvaTui(null);
-        // provaTui.printStarter();
-        provaTui.printGold();
+//        ProvaTui provaTui = new ProvaTui(null);
+//        // provaTui.printStarter();
+//        provaTui.printGold();
+//
+//        AnsiConsole.systemUninstall();
+//
 
-        AnsiConsole.systemUninstall();
+        Map<Resources, Integer> achievedResources = new HashMap<>();
+        achievedResources.put(Resources.ANIMAL, 0);
+        achievedResources.put(Resources.MUSHROOM, 0);
+
+        String toJson = gsonTranslater.toJson(achievedResources);
+        System.out.println(toJson);
+
+        Map<Resources, Integer> resources = gsonTranslater.fromJson(toJson, new TypeToken<Map<Resources, Integer>>(){}.getType());
     }
 
     public static class ProvaTui extends TUI {
