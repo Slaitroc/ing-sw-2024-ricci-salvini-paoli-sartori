@@ -191,7 +191,7 @@ public class GUI extends UI {
         Platform.runLater(() -> {
             objectiveCard1.changeSide();
             objectiveCard2.changeSide();
-            app.getCurrentController().show_chooseObjectiveCard(objectiveCard1, objectiveCard2);
+            app.getCurrentController().show_chooseObjectiveCard(username, objectiveCard1, objectiveCard2);
             // System.out.println("show_chooseObjectiveCard called");
         });
     }
@@ -200,7 +200,7 @@ public class GUI extends UI {
     public void show_objectiveCard(String username, ObjectiveCard objectiveCard) {
         Platform.runLater(() -> {
             objectiveCard.changeSide();
-            app.getCurrentController().show_objectiveCard(objectiveCard);
+            app.getCurrentController().show_objectiveCard(username, objectiveCard);
             // System.out.println("show_objectiveCard called");
         });
     }

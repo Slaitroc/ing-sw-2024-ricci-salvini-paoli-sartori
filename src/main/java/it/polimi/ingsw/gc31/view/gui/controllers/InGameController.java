@@ -379,9 +379,11 @@ public class InGameController extends ViewController {
     }
 
     @Override
-    public void show_chooseObjectiveCard(ObjectiveCard secretObjectiveCard1, ObjectiveCard secretObjectiveCard2) {
-        setImage(secretObjectiveCard1, secretObj1);
-        setImage(secretObjectiveCard2, secretObj2);
+    public void show_chooseObjectiveCard(String username, ObjectiveCard secretObjectiveCard1, ObjectiveCard secretObjectiveCard2) {
+        if(username.equals(app.getUsername())){
+            setImage(secretObjectiveCard1, secretObj1);
+            setImage(secretObjectiveCard2, secretObj2);
+        }
     }
 
     @Override
@@ -391,8 +393,8 @@ public class InGameController extends ViewController {
     }
 
     @Override
-    public void show_objectiveCard(ObjectiveCard objectiveCard) {
-        setImage(objectiveCard, secretObjective);
+    public void show_objectiveCard(String username, ObjectiveCard objectiveCard) {
+        if(username.equals(app.getUsername())) setImage(objectiveCard, secretObjective);
     }
 
     @Override
