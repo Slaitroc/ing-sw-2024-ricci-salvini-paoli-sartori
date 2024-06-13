@@ -50,7 +50,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     private Map<String, VirtualClient> tempClients;
     private final Set<String> nicknames;
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
-    private final Map<VirtualClient, Integer> newConnections;
+    private final Map<Integer, VirtualClient> newConnections;
 
     public void setNewConnection(VirtualClient newConnection) {
         int token;
@@ -59,12 +59,19 @@ public class Controller extends UnicastRemoteObject implements IController {
             token = (int) (Math.random() * 1000);
         }
 
-        this.newConnections.put(newConnection, token);
+        this.newConnections.put(token, newConnection);
     }
 
     public void setNewConnectionCorrect(VirtualClient newConnection) {
         try {
-            newConnection.sendCommand(new SaveToken(newConnections.get(newConnection)));
+            Integer getToken = null;
+            for (Map.Entry<Integer, VirtualClient> t : newConnections.entrySet()) {
+                if (t.getValue().equals(newConnection)) {
+                    getToken = t.getKey();
+                }
+
+            }
+            newConnection.sendCommand(new SaveToken(getToken));
         } catch (RemoteException e) {
             System.out.println("The token was not sent correctly");
         }
@@ -238,7 +245,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     }
 
     @Override
-    public VirtualClient getCorrectConnection() {
+    public VirtualClient getCorrectConnection(int token) {
         return newConnections.get(token);
     }
 

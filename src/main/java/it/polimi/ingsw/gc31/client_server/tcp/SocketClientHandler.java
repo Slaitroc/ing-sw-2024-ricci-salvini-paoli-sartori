@@ -98,12 +98,14 @@ public class SocketClientHandler implements VirtualClient {
                                 ConnectObj connectObj = (ConnectObj) obj;
                                 if (connectObj.getToken() == DV.defaultToken) {
                                     if (controller.connect(this, connectObj.getUsername())) {
+                                        System.out.println("New user connected: " + connectObj.getUsername());
                                         // TCPserverWrite("New user connected: " + connectObj.getUsername());
                                     } else {
+                                        System.out.println("New connection refused");
                                         // TCPserverWrite("New connection refused");
                                     }
+                                    continue;
                                 }
-                                continue;
                             } catch (ClassCastException e) {
 
                             }
