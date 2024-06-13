@@ -8,3 +8,9 @@
     -fx-border-radius: 10;
     -fx-padding: 10;
 }
+
+#resource-box{
+    -fx-background-color: -light-beige;
+    -fx-background-radius: 10;
+    -fx-border-radius: 2;
+}

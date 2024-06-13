@@ -1,16 +1,23 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
+import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
+import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.utility.DV;
 
-import java.io.IOException;
+import java.io.*;
 
 import java.rmi.RemoteException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import io.github.palexdev.mfxcore.controls.Control;
 
 /*
 ricevo
@@ -27,7 +34,6 @@ eseguito da loro
  * server
  */
 public class SocketClientHandler implements VirtualClient {
-    private IController controller;
     private IGameController gameController;
     private Integer idGame; // viene settata ma ancora non utilizzata
     // private String username;
@@ -45,11 +51,10 @@ public class SocketClientHandler implements VirtualClient {
      *               connection
      */
     public SocketClientHandler(ObjectInputStream input, ObjectOutputStream output) {
-        this.controller = Controller.getController();
-        Controller.getController().setNewConnection(this);
         this.input = input;
         this.output = output;
         tcpClient_reader();
+        Controller.getController().generateToken(this);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
@@ -79,7 +84,9 @@ public class SocketClientHandler implements VirtualClient {
     /**
      * This method reads the object from the client and sends it to the
      * right controller
-     * based on the recipient of the object
+     * based on the recipient of the object.
+     * The Object corresponding to the heartBeat are treated differently because it
+     * needs to be evaluated instantly
      */
     private void tcpClient_reader() {
         new Thread(() -> {
@@ -89,7 +96,20 @@ public class SocketClientHandler implements VirtualClient {
                 while ((obj = (ServerQueueObject) input.readObject()) != null) {
                     if (obj.getRecipient().equals(DV.RECIPIENT_CONTROLLER)) {
                         try {
-                            controller.sendCommand(obj);
+                            try {
+                                ConnectObj connectObj = (ConnectObj) obj;
+                                if (connectObj.getToken() == DV.defaultToken) {
+                                    if (Controller.getController().connect(this, connectObj.getUsername())) {
+                                        ServerLog.tcpWrite("New user connected: " + connectObj.getUsername());
+                                    } else {
+                                        ServerLog.tcpWrite("New connection refused");
+                                    }
+                                    continue;
+                                }
+                            } catch (ClassCastException e) {
+
+                            }
+                            Controller.getController().sendCommand(obj);
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
@@ -99,6 +119,8 @@ public class SocketClientHandler implements VirtualClient {
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
+                    } else if (obj.getRecipient().equals(DV.RECIPIENT_HEARTBEAT)) {
+                        Controller.getController().updateHeartBeat(this);
                     }
                 }
 
@@ -108,33 +130,9 @@ public class SocketClientHandler implements VirtualClient {
                 // Altrimenti
                 // devo riconnettere il client alla partita a cui stava giocando
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                // e.printStackTrace();
+                System.out.println("A TCP client disconnected");
             }
-
-            /*
-             * while (true) {
-             * try {
-             * obj = (ServerQueueObject) input.readObject();
-             * } catch (ClassNotFoundException | IOException e) {
-             * e.printStackTrace();
-             * }
-             * if (obj != null) {
-             * if (obj.getRecipient().equals(DV.RECIPIENT_CONTROLLER)) {
-             * try {
-             * controller.sendCommand(obj);
-             * } catch (RemoteException e) {
-             * e.printStackTrace();
-             * }
-             * } else if (obj.getRecipient().equals(DV.RECIPIENT_GAME_CONTROLLER)) {
-             * try {
-             * gameController.sendCommand(obj);
-             * } catch (RemoteException e) {
-             * e.printStackTrace();
-             * }
-             * }
-             * }
-             * }
-             */
         }).start();
     }
 
@@ -159,17 +157,6 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     /**
-     * This method set the controller attribute to the one taken as a parameter.
-     *
-     * @param controller is the new reference to the controller that needs to be set
-     *                   to the attribute
-     */
-    @Override
-    public void setController(IController controller) {
-        this.controller = controller;
-    }
-
-    /**
      * This method set the gameController attribute to the one taken as a parameter.
      *
      * @param gameController is the new reference to the gameController that needs
@@ -178,6 +165,17 @@ public class SocketClientHandler implements VirtualClient {
     @Override
     public void setGameController(IGameController gameController) {
         this.gameController = gameController;
+    }
+
+    @Override
+    public void setController(IController controller) throws RemoteException {
+        // non serve in Tcp perché il VirtualClient è server side e si prende il
+        // controller con
+        // il singleton
+    }
+
+    @Override
+    public void setRmiToken(int token) throws RemoteException {
     }
 
 }

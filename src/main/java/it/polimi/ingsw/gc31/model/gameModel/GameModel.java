@@ -24,7 +24,7 @@ import it.polimi.ingsw.gc31.model.player.Waiting;
  *
  * @author Slaitroc
  */
-public class GameModel{
+public class GameModel {
     private final Board board;
     private int pawnSelector;
     protected Map<String, Player> players;
@@ -56,6 +56,7 @@ public class GameModel{
         players = gameState.initGame(this, clients);
         notifyAllGameListeners();
     }
+
     protected void endGame() throws IllegalStateOperationException {
         gameState.endGame(this);
     }
@@ -65,6 +66,7 @@ public class GameModel{
         setNextPlayingPlayer();
         listeners.values().forEach(listener -> listener.notifyPlayerScoreListener(this));
     }
+
     public void setNextPlayingPlayer() {
         // TODO potrebbe funzionare il todo
         do {
@@ -85,6 +87,7 @@ public class GameModel{
         players.get(turnPlayer.get(currPlayingPlayer)).setInGameState(new NotPlaced());
         listeners.values().forEach(listener -> listener.notifyTurnListener(this));
     }
+
     /**
      * Assigns a pawn color to a player.
      * It uses the static variable pawnSelector to determine the color.
@@ -128,9 +131,13 @@ public class GameModel{
         this.gameState = gameState;
     }
 
-    public List<ObjectiveCard> getCommonObjectives() {return this.commonObjectives;}
+    public List<ObjectiveCard> getCommonObjectives() {
+        return this.commonObjectives;
+    }
 
-    public Map<String, GameListenerHandler> getListeners() {return this.listeners;}
+    public Map<String, GameListenerHandler> getListeners() {
+        return this.listeners;
+    }
 
     public void chooseSecretObjective(String username, Integer index) throws IllegalStateOperationException {
         gameState.chooseSecretObjective(this, username, index);
@@ -161,7 +168,8 @@ public class GameModel{
         listeners.get(username).notifyHandListener(this);
     }
 
-    public void setSelectCard(String username, int index) throws IllegalStateOperationException, WrongIndexSelectedCard {
+    public void setSelectCard(String username, int index)
+            throws IllegalStateOperationException, WrongIndexSelectedCard {
         gameState.setSelectCard(this, username, index);
         listeners.get(username).notifyHandListener(this);
     }
@@ -175,9 +183,11 @@ public class GameModel{
         gameState.changeStarterSide(this, username);
         listeners.get(username).notifyStarterCardListener(this);
     }
+
     public void notifyAllGameListeners() {
         listeners.values().forEach(listener -> listener.notifyAllListeners(this));
     }
+
     // Test methods
     GameModelState getGameState() {
         return gameState;

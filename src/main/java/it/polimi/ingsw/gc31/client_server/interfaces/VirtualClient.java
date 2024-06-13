@@ -17,4 +17,6 @@ public interface VirtualClient extends Remote {
 
     public void setGameController(IGameController gameController) throws RemoteException;
 
+    public void setRmiToken(int token) throws RemoteException;
+
 }

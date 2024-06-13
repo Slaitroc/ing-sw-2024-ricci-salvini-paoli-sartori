@@ -4,12 +4,11 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.listeners.*;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
+import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class SetupGameModelState implements GameModelState{
@@ -29,6 +28,7 @@ public class SetupGameModelState implements GameModelState{
             gameListener.addTurnListener(new PlayerTurnListener(model.clients));
         }
     }
+
     @Override
     public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
@@ -44,7 +44,7 @@ public class SetupGameModelState implements GameModelState{
         model.getPlayers().get(username).playStarter();
 
         boolean allPlayersPlayedStarter = true;
-        for (Player player: model.getPlayers().values()) {
+        for (Player player : model.getPlayers().values()) {
             if (player.infoState().equals("start")) {
                 allPlayersPlayedStarter = false;
             }
@@ -72,13 +72,13 @@ public class SetupGameModelState implements GameModelState{
     }
 
     @Override
-    public void setSelectCard(GameModel model, String username, int index) throws IllegalStateOperationException {
-        throw new IllegalStateOperationException();
+    public void setSelectCard(GameModel model, String username, int index) throws IllegalStateOperationException, WrongIndexSelectedCard {
+        model.getPlayers().get(username).setSelectedCard(index);
     }
 
     @Override
     public void changeSide(GameModel model, String username) throws IllegalStateOperationException {
-        throw new IllegalStateOperationException();
+        model.getPlayers().get(username).changeSide();
     }
 
     @Override

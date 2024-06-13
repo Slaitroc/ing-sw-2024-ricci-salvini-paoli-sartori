@@ -26,6 +26,7 @@ public class JoinedToGameState extends TuiState {
 
         commandsMap.put(("help").toLowerCase(), this::command_showCommandsInfo);
         commandsMap.put("ready", this::command_ready);
+        commandsMap.put("quit", this::command_quitGame);
         commandsMap.put("invalid", this::command_invalidCommand);
 
         // info map
@@ -52,6 +53,15 @@ public class JoinedToGameState extends TuiState {
 
     @Override
     protected void command_joinGame() {
+    }
+
+    @Override
+    protected void command_quitGame() {
+        try {
+            tui.getClient().quitGame();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

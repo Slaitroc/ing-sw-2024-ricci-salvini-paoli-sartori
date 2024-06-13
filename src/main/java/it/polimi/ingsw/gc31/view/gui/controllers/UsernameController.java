@@ -34,8 +34,8 @@ public class UsernameController extends ViewController {
                 client.setUsernameCall(usernameField.getText());
                 client.setUsernameResponse(usernameField.getText());
             } catch (IOException e) {
-                warningLabel.setVisible(true);
-                warningLabel.setText("Server Error! Please restart the app.");
+                e.printStackTrace();
+                show_ServerCrashWarning();
             }
         }
     }

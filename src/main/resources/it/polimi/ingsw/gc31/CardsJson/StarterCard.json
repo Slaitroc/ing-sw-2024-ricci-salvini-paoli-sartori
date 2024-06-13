@@ -7,11 +7,11 @@
       "resources": ["PLANT", "ANIMAL", "INSECT", "MUSHROOM"],
       "requirements": null,
       "objective": null,
-      "dirImg": null
+      "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/StarterFront/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_81.jpg"
     },
     "back" : {
       "resources": ["PLANT", "EMPTY", "INSECT", "EMPTY", "INSECT"],
-      "dirImg": null
+      "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/StarterBack/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_81.jpg"
     }
   },
   {
@@ -22,11 +22,11 @@
       "resources": ["ANIMAL", "INSECT", "MUSHROOM", "PLANT"],
       "requirements": null,
       "objective": null,
-      "dirImg": null
+      "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/StarterFront/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_82.jpg"
     },
     "back" : {
       "resources": ["EMPTY", "MUSHROOM", "EMPTY", "ANIMAL", "MUSHROOM"],
-      "dirImg": null
+      "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/StarterBack/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_82.jpg"
     }
   },
   {
@@ -37,11 +37,11 @@
       "resources": ["ANIMAL", "PLANT", "MUSHROOM", "INSECT"],
       "requirements": null,
       "objective": null,
-      "dirImg": null
+      "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/StarterFront/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_83.jpg"
     },
     "back" : {
       "resources": ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "MUSHROOM", "PLANT"],
-      "dirImg": null
+      "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/StarterBack/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_83.jpg"
     }
   },
   {
@@ -52,11 +52,11 @@
       "resources": ["INSECT", "MUSHROOM", "ANIMAL", "PLANT"],
       "requirements": null,
       "objective": null,
-      "dirImg": null
+      "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/StarterFront/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_84.jpg"
     },
     "back" : {
       "resources": ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "INSECT", "ANIMAL"],
-      "dirImg": null
+      "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/StarterBack/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_84.jpg"
     }
   },
   {
@@ -67,11 +67,11 @@
       "resources": ["MUSHROOM", "ANIMAL", "PLANT", "INSECT"],
       "requirements": null,
       "objective": null,
-      "dirImg": null
+      "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/StarterFront/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_85.jpg"
     },
     "back" : {
       "resources": ["EMPTY", "HIDDEN", "HIDDEN", "EMPTY", "PLANT", "INSECT", "ANIMAL"],
-      "dirImg": null
+      "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/StarterBack/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_85.jpg"
     }
   },
   {
@@ -82,11 +82,11 @@
       "resources": ["ANIMAL", "INSECT", "PLANT", "MUSHROOM"],
       "requirements": null,
       "objective": null,
-      "dirImg": null
+      "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/StarterFront/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_86.jpg"
     },
     "back" : {
       "resources": ["EMPTY", "HIDDEN", "HIDDEN", "EMPTY", "MUSHROOM", "ANIMAL", "PLANT"],
-      "dirImg": null
+      "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/StarterBack/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_86.jpg"
     }
   }
 ]

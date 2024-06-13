@@ -1,7 +1,6 @@
 package it.polimi.ingsw.gc31.view.gui.controllers;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
-import io.github.palexdev.materialfx.controls.MFXToggleButton;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -75,8 +74,6 @@ public class LobbyController extends ViewController {
     public TextFlow chatField;
     @FXML
     public ScrollPane scrollPane;
-    @FXML
-    public MFXToggleButton toggleButton;
 
     // Player number in the game
     private int imPlayerNumber;
@@ -133,10 +130,10 @@ public class LobbyController extends ViewController {
         }
 
         updateLobby();
-        System.out.println("I'm player number " + imPlayerNumber);
-        System.out.println("This is lobby number " + app.getCurrentGameID());
-        System.out.println("In this lobby there are supposed to be " + app.getNumberOfPlayers() + " players");
-        System.out.println("In this lobby there are " + app.getPlayerList().size() + " players");
+        //System.out.println("I'm player number " + imPlayerNumber);
+        //System.out.println("This is lobby number " + app.getCurrentGameID());
+        //System.out.println("In this lobby there are supposed to be " + app.getNumberOfPlayers() + " players");
+        //System.out.println("In this lobby there are " + app.getPlayerList().size() + " players");
     }
 
     /**
@@ -166,7 +163,7 @@ public class LobbyController extends ViewController {
     }
 
     /**
-     * Enables a StackPane.
+     * Enables a StackPane by setting it to visible and managed.
      *
      * @param pane The StackPane to enable.
      */
@@ -176,7 +173,7 @@ public class LobbyController extends ViewController {
     }
 
     /**
-     * Disables a StackPane.
+     * Disables a StackPane by setting it to invisible and not managed.
      *
      * @param pane The StackPane to disable.
      */
@@ -185,13 +182,7 @@ public class LobbyController extends ViewController {
         pane.setManaged(false);
     }
 
-    /**
-     * Updates the chat with a new message. Color Usernames.
-     * ScrollPane is updated to keep the last message visible
-     *
-     * @param username The username of the sender.
-     * @param message  The message.
-     */
+
     @Override
     public void updateChat(String username, String message) {
         Text usernameText = new Text(username + ": ");
