@@ -1,8 +1,5 @@
 package it.polimi.ingsw.gc31.model.card;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
 import java.util.ArrayList;
@@ -12,10 +9,7 @@ public class CardBack {
     private final List<Resources> resources;
     private final String dirImg;
 
-    // TODO implementare deep copy per resources
     public CardBack(List<Resources> resources, String dirImg) {
-        // if (resources.size() < 4 || resources.size() > 7) throw new
-        // WrongNumberOfCornerException();
         this.resources = listDeepCopy(resources);
         this.dirImg = dirImg;
     }
@@ -50,18 +44,6 @@ public class CardBack {
             newList.add(val);
         }
         return newList;
-    }
-
-    public JsonObject serializeToJson() {
-        JsonObject jsonObject = new JsonObject();
-        JsonArray resourcesArray = new JsonArray();
-        for (Resources res : this.resources) {
-            resourcesArray.add(res.toString());
-        }
-        jsonObject.add("resources", resourcesArray);
-        jsonObject.addProperty("dirImg", dirImg);
-
-        return jsonObject;
     }
 
     public List<Resources> getCorners() {

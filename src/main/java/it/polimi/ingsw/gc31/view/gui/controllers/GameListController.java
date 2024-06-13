@@ -71,6 +71,7 @@ public class GameListController extends ViewController {
         try {
             client.joinGame(id);
         } catch (RemoteException e) {
+            e.printStackTrace();
             show_ServerCrashWarning();
         }
 

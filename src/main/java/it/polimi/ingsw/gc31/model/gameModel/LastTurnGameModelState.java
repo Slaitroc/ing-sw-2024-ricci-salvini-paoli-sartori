@@ -7,6 +7,7 @@ import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LastTurnGameModelState implements GameModelState {
@@ -69,13 +70,12 @@ public class LastTurnGameModelState implements GameModelState {
     public void detectEndGame(GameModel model) throws IllegalStateOperationException {
         if (model.getCurrIndexPlayer() == model.getPlayers().size() - 1) {
             model.setGameState(new EndGameModelState());
-
-            // Calculate points
+            model.endGame();
         }
     }
 
     @Override
     public void endGame(GameModel model) throws IllegalStateOperationException {
-
+        throw new IllegalStateOperationException();
     }
 }

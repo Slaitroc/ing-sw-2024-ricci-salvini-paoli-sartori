@@ -28,11 +28,12 @@ public class BackClassAdapter implements JsonDeserializer<CardBack>, JsonSeriali
 
         // get("dirImg") can be null.
         String dirImg;
-        if (jsonObject.get("dirImg") == null) {
-            dirImg = jsonObject.get("dirImg").getAsString();
-        } else {
+        if (jsonObject.get("dirImg").isJsonNull()) {
             dirImg = null;
+        } else {
+            dirImg = jsonObject.get("dirImg").getAsString();
         }
+
         return new CardBack(
                 resources,
                 dirImg

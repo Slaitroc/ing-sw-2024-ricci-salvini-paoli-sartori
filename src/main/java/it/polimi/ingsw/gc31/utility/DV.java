@@ -9,6 +9,8 @@ import java.util.HashMap;
 
 public class DV {
 
+    public static final int GamePoints = 5;
+
     // JSON directories
     public static final String DIRJsonGoldCard = "/it/polimi/ingsw/gc31/CardsJson/GoldCard.json";
     public static final String DIRJsonResourceCard = "/it/polimi/ingsw/gc31/CardsJson/ResourceCard.json";

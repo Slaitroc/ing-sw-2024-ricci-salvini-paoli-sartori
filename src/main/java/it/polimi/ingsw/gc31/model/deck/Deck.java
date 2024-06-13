@@ -2,7 +2,6 @@ package it.polimi.ingsw.gc31.model.deck;
 
 import com.google.gson.*;
 
-import it.polimi.ingsw.gc31.client_server.listeners.Observable;
 import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
@@ -18,8 +17,7 @@ import java.util.*;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
-@SuppressWarnings("rawtypes")
-public class Deck<T extends Card> extends Observable<Deck> {
+public class Deck<T extends Card>{
 
     // TODO cambiare implementazione con queue
     private Queue<T> deck;
@@ -77,7 +75,7 @@ public class Deck<T extends Card> extends Observable<Deck> {
 
                         // deserialize a single element and add it to the deck
                         T res = gsonTranslater.fromJson(jsonObject, type);
-                        tempDeck.add((T) res);
+                        tempDeck.add(res);
                     }
                 }
 
@@ -109,7 +107,7 @@ public class Deck<T extends Card> extends Observable<Deck> {
         if (deck.isEmpty())
             throw new EmptyDeckException();
         T card = deck.poll();
-        notifyListeners(this);
+//        notifyListeners(this);
         return card;
     }
 
@@ -130,7 +128,7 @@ public class Deck<T extends Card> extends Observable<Deck> {
                 card1 = null;
             }
         }
-        notifyListeners(this);
+//        notifyListeners(this);
     }
 
     public T getCard1() {

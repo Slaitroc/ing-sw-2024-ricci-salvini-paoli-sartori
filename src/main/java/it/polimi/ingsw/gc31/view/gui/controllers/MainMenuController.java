@@ -71,6 +71,7 @@ public class MainMenuController extends ViewController {
                 /*app.loadScene(SceneTag.LOBBY);*/ //DOES NOT WORK LIKE THIS
 
             } catch (IOException e) {
+                e.printStackTrace();
                 show_ServerCrashWarning();
             }
         }

@@ -14,7 +14,7 @@
                 "MUSHROOM": 2,
                 "ANIMAL": 1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_41.jpg",
             "objective": {
                 "typeObjective": "RESOURCESCORE",
                 "resources": "FEATHER"
@@ -28,7 +28,7 @@
                 "EMPTY",
                 "MUSHROOM"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"
         }
     },
     {
@@ -46,7 +46,7 @@
                 "MUSHROOM": 2,
                 "PLANT": 1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_42.jpg",
             "objective": {
                 "typeObjective": "RESOURCESCORE",
                 "resources": "INK"
@@ -60,7 +60,7 @@
                 "EMPTY",
                 "MUSHROOM"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_42.jpg"
         }
     },
     {
@@ -78,7 +78,7 @@
                 "MUSHROOM": 2,
                 "INSECT": 1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_43.jpg",
             "objective": {
                 "typeObjective": "RESOURCESCORE",
                 "resources": "SCROLL"
@@ -92,7 +92,7 @@
                 "EMPTY",
                 "MUSHROOM"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_43.jpg"
         }
     },
     {
@@ -110,7 +110,7 @@
                 "MUSHROOM": 3,
                 "ANIMAL": 1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_44.jpg",
             "objective": {
                 "typeObjective": "COVERCORNERSCORE"
             }
@@ -123,7 +123,7 @@
                 "EMPTY",
                 "MUSHROOM"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_44.jpg"
         }
     },
     {
@@ -141,7 +141,7 @@
                 "MUSHROOM": 3,
                 "PLANT": 1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_45.jpg",
             "objective": {
                 "typeObjective": "COVERCORNERSCORE"
             }
@@ -154,7 +154,7 @@
                 "EMPTY",
                 "MUSHROOM"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_45.jpg"
         }
     },
     {
@@ -172,7 +172,7 @@
                 "MUSHROOM": 3,
                 "INSECT": 1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_46.jpg",
             "objective": {
                 "typeObjective": "COVERCORNERSCORE"
             }
@@ -185,7 +185,7 @@
                 "EMPTY",
                 "MUSHROOM"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_46.jpg"
         }
     },
     {
@@ -202,7 +202,7 @@
             "requirements": {
                 "MUSHROOM": 3
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_47.jpg",
             "objective": null
         },
         "back": {
@@ -213,7 +213,7 @@
                 "EMPTY",
                 "MUSHROOM"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_47.jpg"
         }
     },
     {
@@ -230,7 +230,7 @@
             "requirements": {
                 "MUSHROOM": 3
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_48.jpg",
             "objective": null
         },
         "back": {
@@ -241,7 +241,7 @@
                 "EMPTY",
                 "MUSHROOM"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_48.jpg"
         }
     },
     {
@@ -258,7 +258,7 @@
             "requirements": {
                 "MUSHROOM": 3
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_49.jpg",
             "objective": null
         },
         "back": {
@@ -269,7 +269,7 @@
                 "EMPTY",
                 "MUSHROOM"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_49.jpg"
         }
     },
     {
@@ -286,7 +286,7 @@
             "requirements": {
                 "MUSHROOM": 5
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_50.jpg",
             "objective": null
         },
         "back": {
@@ -297,7 +297,7 @@
                 "EMPTY",
                 "MUSHROOM"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_50.jpg"
         }
     },
     {
@@ -315,7 +315,7 @@
                 "PLANT": 2,
                 "INSECT": 1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_51.jpg",
             "objective": {
                 "typeObjective": "RESOURCESCORE",
                 "resources": "FEATHER"
@@ -329,7 +329,7 @@
                 "EMPTY",
                 "PLANT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_51.jpg"
         }
     },
     {
@@ -347,7 +347,7 @@
                 "PLANT": 2,
                 "MUSHROOM": 1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_52.jpg",
             "objective": {
                 "typeObjective": "RESOURCESCORE",
                 "resources": "SCROLL"
@@ -361,7 +361,7 @@
                 "EMPTY",
                 "PLANT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_52.jpg"
         }
     },
     {
@@ -379,7 +379,7 @@
                 "PLANT": 2,
                 "ANIMAL": 1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_53.jpg",
             "objective": {
                 "typeObjective": "RESOURCESCORE",
                 "resources": "INK"
@@ -393,7 +393,7 @@
                 "EMPTY",
                 "PLANT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_53.jpg"
         }
     },
     {
@@ -411,7 +411,7 @@
                 "PLANT": 3,
                 "INSECT": 1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_54.jpg",
             "objective": {
                 "typeObjective": "COVERCORNERSCORE"
             }
@@ -424,7 +424,7 @@
                 "EMPTY",
                 "PLANT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_54.jpg"
         }
     },
     {
@@ -442,7 +442,7 @@
                 "PLANT": 3,
                 "ANIMAL": 1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_55.jpg",
             "objective": {
                 "typeObjective": "COVERCORNERSCORE"
             }
@@ -455,7 +455,7 @@
                 "EMPTY",
                 "PLANT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_55.jpg"
         }
     },
     {
@@ -473,7 +473,7 @@
                 "PLANT": 3,
                 "MUSHROOM": 1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_56.jpg",
             "objective": {
                 "typeObjective": "COVERCORNERSCORE"
             }
@@ -486,7 +486,7 @@
                 "EMPTY",
                 "PLANT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_56.jpg"
         }
     },
     {
@@ -503,7 +503,7 @@
             "requirements": {
                 "PLANT": 3
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_57.jpg",
             "objective": null
         },
         "back": {
@@ -514,7 +514,7 @@
                 "EMPTY",
                 "PLANT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_57.jpg"
         }
     },
     {
@@ -531,7 +531,7 @@
             "requirements": {
                 "PLANT": 3
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_58.jpg",
             "objective": null
         },
         "back": {
@@ -542,7 +542,7 @@
                 "EMPTY",
                 "PLANT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_58.jpg"
         }
     },
     {
@@ -559,7 +559,7 @@
             "requirements": {
                 "PLANT": 3
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_59.jpg",
             "objective": null
         },
         "back": {
@@ -570,7 +570,7 @@
                 "EMPTY",
                 "PLANT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_59.jpg"
         }
     },
     {
@@ -587,7 +587,7 @@
             "requirements": {
                 "PLANT": 5
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_60.jpg",
             "objective": null
         },
         "back": {
@@ -598,7 +598,7 @@
                 "EMPTY",
                 "PLANT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_60.jpg"
         }
     },
     {
@@ -616,7 +616,7 @@
                 "ANIMAL": 2,
                 "INSECT":1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_61.jpg",
             "objective": {
                 "typeObjective": "RESOURCESCORE",
                 "resources": "INK"
@@ -630,7 +630,7 @@
                 "EMPTY",
                 "ANIMAL"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_61.jpg"
         }
     },
     {
@@ -648,7 +648,7 @@
                 "ANIMAL": 2,
                 "PLANT":1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_62.jpg",
             "objective": {
                 "typeObjective": "RESOURCESCORE",
                 "resources": "SCROLL"
@@ -662,7 +662,7 @@
                 "EMPTY",
                 "ANIMAL"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_62.jpg"
         }
     },
     {
@@ -680,7 +680,7 @@
                 "ANIMAL": 2,
                 "MUSHROOM":1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_63.jpg",
             "objective": {
                 "typeObjective": "RESOURCESCORE",
                 "resources": "FEATHER"
@@ -694,7 +694,7 @@
                 "EMPTY",
                 "ANIMAL"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_63.jpg"
         }
     },
     {
@@ -712,7 +712,7 @@
                 "ANIMAL": 3,
                 "INSECT":1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_64.jpg",
             "objective": {
                 "typeObjective": "COVERCORNERSCORE"
             }
@@ -725,7 +725,7 @@
                 "EMPTY",
                 "ANIMAL"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_64.jpg"
         }
     },
     {
@@ -743,7 +743,7 @@
                 "ANIMAL": 3,
                 "MUSHROOM":1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_65.jpg",
             "objective": {
                 "typeObjective": "COVERCORNERSCORE"
             }
@@ -756,7 +756,7 @@
                 "EMPTY",
                 "ANIMAL"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_65.jpg"
         }
     },
     {
@@ -774,7 +774,7 @@
                 "ANIMAL": 3,
                 "PLANT":1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_66.jpg",
             "objective": {
                 "typeObjective": "COVERCORNERSCORE"
             }
@@ -787,7 +787,7 @@
                 "EMPTY",
                 "ANIMAL"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_66.jpg"
         }
     },
     {
@@ -804,7 +804,7 @@
             "requirements": {
                 "ANIMAL": 3
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_67.jpg",
             "objective": null
         },
         "back": {
@@ -815,7 +815,7 @@
                 "EMPTY",
                 "ANIMAL"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_67.jpg"
         }
     },
     {
@@ -832,7 +832,7 @@
             "requirements": {
                 "ANIMAL": 3
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_68.jpg",
             "objective": null
         },
         "back": {
@@ -843,7 +843,7 @@
                 "EMPTY",
                 "ANIMAL"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_68.jpg"
         }
     },
     {
@@ -860,7 +860,7 @@
             "requirements": {
                 "ANIMAL": 3
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_69.jpg",
             "objective": null
         },
         "back": {
@@ -871,7 +871,7 @@
                 "EMPTY",
                 "ANIMAL"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_69.jpg"
         }
     },
     {
@@ -888,7 +888,7 @@
             "requirements": {
                 "ANIMAL": 5
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_70.jpg",
             "objective": null
         },
         "back": {
@@ -899,7 +899,7 @@
                 "EMPTY",
                 "ANIMAL"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_70.jpg"
         }
     },
     {
@@ -917,7 +917,7 @@
                 "INSECT": 2,
                 "PLANT":1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_71.jpg",
             "objective": {
                 "typeObjective": "RESOURCESCORE",
                 "resources": "FEATHER"
@@ -931,7 +931,7 @@
                 "EMPTY",
                 "INSECT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_71.jpg"
         }
     },
     {
@@ -949,7 +949,7 @@
                 "INSECT": 2,
                 "ANIMAL":1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_72.jpg",
             "objective": {
                 "typeObjective": "RESOURCESCORE",
                 "resources": "SCROLL"
@@ -963,7 +963,7 @@
                 "EMPTY",
                 "INSECT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_72.jpg"
         }
     },
     {
@@ -981,7 +981,7 @@
                 "INSECT": 2,
                 "MUSHROOM":1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_73.jpg",
             "objective": {
                 "typeObjective": "RESOURCESCORE",
                 "resources": "INK"
@@ -995,7 +995,7 @@
                 "EMPTY",
                 "INSECT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_73.jpg"
         }
     },
     {
@@ -1013,7 +1013,7 @@
                 "INSECT": 3,
                 "ANIMAL":1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_74.jpg",
             "objective": {
                 "typeObjective": "COVERCORNERSCORE"
             }
@@ -1026,7 +1026,7 @@
                 "EMPTY",
                 "INSECT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_74.jpg"
         }
     },
     {
@@ -1044,7 +1044,7 @@
                 "INSECT": 3,
                 "PLANT":1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_75.jpg",
             "objective": {
                 "typeObjective": "COVERCORNERSCORE"
             }
@@ -1057,7 +1057,7 @@
                 "EMPTY",
                 "INSECT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_75.jpg"
         }
     },
     {
@@ -1075,7 +1075,7 @@
                 "INSECT": 3,
                 "MUSHROOM":1
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_76.jpg",
             "objective": {
                 "typeObjective": "COVERCORNERSCORE"
             }
@@ -1088,7 +1088,7 @@
                 "EMPTY",
                 "INSECT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_76.jpg"
         }
     },
     {
@@ -1105,7 +1105,7 @@
             "requirements": {
                 "INSECT": 3
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_77.jpg",
             "objective": null
         },
         "back": {
@@ -1116,7 +1116,7 @@
                 "EMPTY",
                 "INSECT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_77.jpg"
         }
     },
     {
@@ -1133,7 +1133,7 @@
             "requirements": {
                 "INSECT": 3
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_78.jpg",
             "objective": null
         },
         "back": {
@@ -1144,7 +1144,7 @@
                 "EMPTY",
                 "INSECT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_78.jpg"
         }
     },
     {
@@ -1161,7 +1161,7 @@
             "requirements": {
                 "INSECT": 3
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_79.jpg",
             "objective": null
         },
         "back": {
@@ -1172,7 +1172,7 @@
                 "EMPTY",
                 "INSECT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_79.jpg"
         }
     },
     {
@@ -1189,7 +1189,7 @@
             "requirements": {
                 "INSECT": 5
             },
-            "dirImg": null,
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldFront/1709659025650-fa69fadb-c647-4aa4-a049-05e38017b96d_80.jpg",
             "objective": null
         },
         "back": {
@@ -1200,7 +1200,7 @@
                 "EMPTY",
                 "INSECT"
             ],
-            "dirImg": null
+            "dirImg": "/it/polimi/ingsw/gc31/Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_80.jpg"
         }
     }
 ]

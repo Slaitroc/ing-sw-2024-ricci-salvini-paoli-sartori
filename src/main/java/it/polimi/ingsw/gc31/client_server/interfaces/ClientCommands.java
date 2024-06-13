@@ -25,6 +25,10 @@ public interface ClientCommands {
 
     void setReady(boolean ready) throws RemoteException;
 
+    /**
+     * Draws a gold card directly from the goldDeck and adds it to the player's
+     * hand. index=0 to draw from top of the deck. index=1,2 to draw card1,card2
+     */
     void drawGold(int index) throws RemoteException;
 
     void drawResource(int index) throws RemoteException;
