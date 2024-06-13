@@ -12,7 +12,9 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Timer;
 
 public class RmiClient extends UnicastRemoteObject implements VirtualClient, ClientCommands {
     private IController controller;
@@ -22,6 +24,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     private String username;
     private UI ui;
     private final LinkedBlockingQueue<ClientQueueObject> callsList;
+    private int token;
 
     /**
      * Creates a client with a default name and calls inner procedures to:
@@ -38,7 +41,8 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         this.username = DV.DEFAULT_USERNAME;
         this.controller = null;
         this.callsList = new LinkedBlockingQueue<>();
-        executor();
+        timer = new Timer(true);
+        new Thread(this::executor).start();
     }
 
     @Override
@@ -85,7 +89,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     public void setUsernameCall(String username) throws RemoteException {
         if (controller == null) {
             server.setVirtualClient(this);
-            server.sendCommand(new ConnectObj(username));
+            server.sendCommand(new ConnectObj(username, token));
         }
 
     }
@@ -202,6 +206,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public void setController(IController controller) throws RemoteException {
         this.controller = controller;
+        startHeartBeat();
     }
 
     @Override
@@ -214,4 +219,33 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         gameController.sendCommand(new QuitGameObj(username));
     }
 
+    // Risorse per heartbeat
+    // FIXME spostare in cima attributi e metodi per heartbeat
+
+    private Timer timer;
+
+    public void startHeartBeat() {
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    sendHeartBeat();
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, 0, 5000);
+    }
+
+    private void sendHeartBeat() throws RemoteException {
+        controller.updateHeartBeat(this);
+        System.out.println("HeartBeat inviato");
+    }
+
+    // Metodi per token
+
+    @Override
+    public void setToken(int token) {
+        this.token = token;
+    }
 }

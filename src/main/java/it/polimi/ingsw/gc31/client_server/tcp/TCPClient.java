@@ -6,6 +6,8 @@ import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
@@ -21,9 +23,13 @@ public class TCPClient implements ClientCommands {
     private Integer idGame;
     private UI ui;
     private final Queue<ClientQueueObject> callsList;
+    private int token;
+    private Timer timer;
+    private boolean firstConnectionDone = false;
 
     /**
-     * This method is the constructor of the TCPClient
+     * This method is the constructor of the TCPClient.
+     * The timer is set as a daemon by the specific constructor in order to not
      */
     @SuppressWarnings("resource")
     public TCPClient(String ipaddress) throws IOException {
@@ -32,9 +38,9 @@ public class TCPClient implements ClientCommands {
         this.input = new ObjectInputStream(serverSocket.getInputStream());
         this.output = new ObjectOutputStream(serverSocket.getOutputStream());
         this.callsList = new LinkedBlockingQueue<>();
+        this.timer = new Timer(true);
         clientHandler_reader();
         executor();
-
     }
 
     /**
@@ -127,6 +133,7 @@ public class TCPClient implements ClientCommands {
     @Override
     public void setUsernameResponse(String username) {
         this.username = username;
+        startHeartBeat();
     }
 
     /**
@@ -159,8 +166,13 @@ public class TCPClient implements ClientCommands {
      *                     client handler messages
      */
     @Override
-    public void setUsernameCall(String username) throws IOException {
-        tcp_sendCommand(new ConnectObj(username), DV.RECIPIENT_CONTROLLER);
+    public void setUsernameCall(String username) {
+        if (firstConnectionDone)
+            tcp_sendCommand(new ConnectObj(username, token), DV.RECIPIENT_CONTROLLER);
+        else {
+            tcp_sendCommand(new ConnectObj(username), DV.RECIPIENT_CONTROLLER);
+            firstConnectionDone = true;
+        }
     }
 
     /**
@@ -292,18 +304,31 @@ public class TCPClient implements ClientCommands {
         tcp_sendCommand(new PlayObj(this.username, point.x, point.y), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method sends the object that select a card at the specified hand
+     * location
+     *
+     * @param index is the position in the hand of the card the player wants to
+     *              select
+     */
     @Override
     public void selectCard(int index) {
         tcp_sendCommand(new SelectCardObj(this.username, index), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method sends the object that flips the card selected for the player
+     */
     @Override
-    public void changeSide() throws RemoteException {
+    public void changeSide() {
         tcp_sendCommand(new FlipCardObj(this.username), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method sends the object that flips the starter card
+     */
     @Override
-    public void changeStarterSide() throws RemoteException {
+    public void changeStarterSide() {
         tcp_sendCommand(new FlipStarterCardObj(this.username), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
@@ -322,5 +347,31 @@ public class TCPClient implements ClientCommands {
     public void quitGame() throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'quitGame'");
+    }
+
+    /**
+     * This method starts the procedure of the heart beat.
+     * It creates a task that is executed periodically.
+     * In particular every 5 seconds a HeartBeatObj is created and sent to the
+     * clientHandler with the specific recipient.
+     * The first execution is done at the invocation of this method,
+     * all the others execution are performed every 5 seconds
+     */
+    // FIXME aggiungere metodo close che esegue "timer.cancel();" quando si vuole
+    // chiudere la connessione
+    private void startHeartBeat() {
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                tcp_sendCommand(new HeartBeatObj(username), DV.RECIPIENT_HEARTBEAT);
+                System.out.println("HeartBeat inviato");
+            }
+        }, 0, 5000);
+    }
+
+    // Metodi per token
+
+    @Override
+    public void setToken(int token) {
+        this.token = token;
     }
 }

@@ -118,6 +118,11 @@ public class GUI extends UI {
     }
 
     @Override
+    public void receiveToken(int token) {
+        client.setToken(token);
+    }
+
+    @Override
     public void update_ToPlayingState() {
         Platform.runLater(() -> {
             app.setFullScreen();

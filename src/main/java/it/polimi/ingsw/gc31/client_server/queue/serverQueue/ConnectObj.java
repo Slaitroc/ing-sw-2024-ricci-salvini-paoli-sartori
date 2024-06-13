@@ -11,9 +11,24 @@ public class ConnectObj extends ServerQueueObject {
 
     private final String username;
 
+    public String getUsername() {
+        return username;
+    }
+
+    private final int token;
+
+    public int getToken() {
+        return token;
+    }
+
+    public ConnectObj(String username, int token) {
+        this.username = username;
+        this.token = token;
+    }
+
     public ConnectObj(String username) {
         this.username = username;
-
+        this.token = DV.defaultToken;
     }
 
     @Override
@@ -22,8 +37,12 @@ public class ConnectObj extends ServerQueueObject {
 
     @Override
     public void execute(Controller controller) {
+
         try {
-            if (controller.connect(controller.getNewConnection(), username)) {
+
+            if (token == DV.defaultToken) {
+            }
+            if (controller.connect(controller.getCorrectConnection(token), username)) {
                 TCPserverWrite("New user connected: " + username);
             } else {
                 TCPserverWrite("New connection refused");

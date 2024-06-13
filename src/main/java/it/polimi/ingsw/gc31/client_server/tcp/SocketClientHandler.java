@@ -2,15 +2,18 @@ package it.polimi.ingsw.gc31.client_server.tcp;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.utility.DV;
 
-import java.io.IOException;
+import java.io.*;
 
 import java.rmi.RemoteException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /*
 ricevo
@@ -46,10 +49,10 @@ public class SocketClientHandler implements VirtualClient {
      */
     public SocketClientHandler(ObjectInputStream input, ObjectOutputStream output) {
         this.controller = Controller.getController();
-        Controller.getController().setNewConnection(this);
         this.input = input;
         this.output = output;
         tcpClient_reader();
+        Controller.getController().setNewConnection(this);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
@@ -79,7 +82,9 @@ public class SocketClientHandler implements VirtualClient {
     /**
      * This method reads the object from the client and sends it to the
      * right controller
-     * based on the recipient of the object
+     * based on the recipient of the object.
+     * The Object corresponding to the heartBeat are treated differently because it
+     * needs to be evaluated instantly
      */
     private void tcpClient_reader() {
         new Thread(() -> {
@@ -89,6 +94,21 @@ public class SocketClientHandler implements VirtualClient {
                 while ((obj = (ServerQueueObject) input.readObject()) != null) {
                     if (obj.getRecipient().equals(DV.RECIPIENT_CONTROLLER)) {
                         try {
+                            try {
+                                ConnectObj connectObj = (ConnectObj) obj;
+                                if (connectObj.getToken() == DV.defaultToken) {
+                                    if (controller.connect(this, connectObj.getUsername())) {
+                                        System.out.println("New user connected: " + connectObj.getUsername());
+                                        // TCPserverWrite("New user connected: " + connectObj.getUsername());
+                                    } else {
+                                        System.out.println("New connection refused");
+                                        // TCPserverWrite("New connection refused");
+                                    }
+                                    continue;
+                                }
+                            } catch (ClassCastException e) {
+
+                            }
                             controller.sendCommand(obj);
                         } catch (RemoteException e) {
                             e.printStackTrace();
@@ -99,6 +119,8 @@ public class SocketClientHandler implements VirtualClient {
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
+                    } else if (obj.getRecipient().equals(DV.RECIPIENT_HEARTBEAT)) {
+                        controller.updateHeartBeat(this);
                     }
                 }
 
@@ -108,7 +130,8 @@ public class SocketClientHandler implements VirtualClient {
                 // Altrimenti
                 // devo riconnettere il client alla partita a cui stava giocando
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                // e.printStackTrace();
+                System.out.println("A TCP client disconnected");
             }
 
             /*
@@ -179,5 +202,4 @@ public class SocketClientHandler implements VirtualClient {
     public void setGameController(IGameController gameController) {
         this.gameController = gameController;
     }
-
 }

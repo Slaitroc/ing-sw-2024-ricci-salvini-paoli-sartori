@@ -1762,4 +1762,8 @@ public class TUI extends UI {
     public void show_invalidAction(String message) {
 
     }
+
+    public void receiveToken(int token){
+        client.setToken(token);
+    }
 }

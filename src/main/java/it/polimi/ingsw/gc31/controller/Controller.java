@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.controller;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
+import java.util.concurrent.*;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
@@ -15,11 +16,10 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowGamesObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ValidUsernameObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongGameSizeObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongUsernameObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.SaveToken;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
-
-import java.util.concurrent.LinkedBlockingQueue;
 
 //NOTE creation of GameController for match creation
 // Does the GameController related to the first match get created immediately after the first player has logged in?
@@ -51,10 +51,31 @@ public class Controller extends UnicastRemoteObject implements IController {
     private Map<String, VirtualClient> tempClients;
     private final Set<String> nicknames;
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
-    private VirtualClient newConnection;
+    private final Map<Integer, VirtualClient> newConnections;
 
     public void setNewConnection(VirtualClient newConnection) {
-        this.newConnection = newConnection;
+        int token;
+        token = (int) (Math.random() * 1000);
+        while (newConnections.containsValue(token)) {
+            token = (int) (Math.random() * 1000);
+        }
+
+        this.newConnections.put(token, newConnection);
+    }
+
+    public void setNewConnectionCorrect(VirtualClient newConnection) {
+        try {
+            Integer getToken = null;
+            for (Map.Entry<Integer, VirtualClient> t : newConnections.entrySet()) {
+                if (t.getValue().equals(newConnection)) {
+                    getToken = t.getKey();
+                }
+
+            }
+            newConnection.sendCommand(new SaveToken(getToken));
+        } catch (RemoteException e) {
+            System.out.println("The token was not sent correctly");
+        }
     }
 
     /**
@@ -68,7 +89,11 @@ public class Controller extends UnicastRemoteObject implements IController {
         nicknames = new HashSet<>();
         gameControlList = new ArrayList<>();
         callsList = new LinkedBlockingQueue<>();
+        clientsHeartBeat = new ConcurrentHashMap<>();
+        scheduler = Executors.newScheduledThreadPool(1);
+        newConnections = new HashMap<>();
         executor();
+        startHeartBeatCheck();
     }
 
     @Override
@@ -115,10 +140,14 @@ public class Controller extends UnicastRemoteObject implements IController {
      */
     public boolean connect(VirtualClient client, String username)
             throws RemoteException {
+        setNewConnectionCorrect(client);
         if (nicknames.add(username)) {
             tempClients.put(username, client);
             client.setController(this);
             client.sendCommand((new ValidUsernameObj(username)));
+
+            clientsHeartBeat.put(client, System.currentTimeMillis());
+
             return true;
         } else {
             client.sendCommand(new WrongUsernameObj(username));
@@ -219,8 +248,63 @@ public class Controller extends UnicastRemoteObject implements IController {
         }
     }
 
-    public VirtualClient getNewConnection() {
-        return newConnection;
+    @Override
+    public VirtualClient getCorrectConnection(int token) {
+        return newConnections.get(token);
+    }
+
+    // Risorse per heartbeat
+    // FIXME spostare in cima attributi e metodi
+    private ConcurrentHashMap<VirtualClient, Long> clientsHeartBeat;
+    private ScheduledExecutorService scheduler;
+
+    /**
+     * This method creates a task that execute every 10 seconds the checkHeartBeats
+     * method
+     */
+    private void startHeartBeatCheck() {
+        scheduler.scheduleAtFixedRate(() -> checkHeartBeats(), 0, 10, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * This method get the current time, expressed in milliseconds, in the variable
+     * "now".
+     * Then, for every VirtualClient in the clientsHeartBeat list, the method checks
+     * if the last heart beat
+     * received from the client is older than 10 seconds.
+     * If the condition is true the client is considered crashed and the method
+     * remove the client from the list,
+     * also closes the connection towards the client.
+     */
+    private void checkHeartBeats() {
+        long now = System.currentTimeMillis();
+        for (VirtualClient client : clientsHeartBeat.keySet()) {
+            if (now - clientsHeartBeat.get(client) > 10000) {
+                clientsHeartBeat.remove(client);
+                /*
+                 * try "chiudi connessione al client disconnesso"
+                 */
+                System.out.println("Client disconnesso per timeout");
+            }
+        }
+    }
+
+    /**
+     * This method is invoked for every heartBeatObj received.
+     * The method updates the time value kept in the clientsHeartBeat for the client
+     * that sent it.
+     * Furthermore, if an heartBeat arrives but the client is not in the Map a
+     * specific message is written
+     *
+     * @param client is the client that sent the heart beat
+     * @throws RemoteException if an error occurs in the rmi connection
+     */
+    @Override
+    public void updateHeartBeat(VirtualClient client) throws RemoteException {
+        if (!clientsHeartBeat.containsKey(client))
+            System.out.println("Il client da cui è arrivato l'HeartBeat non è presente nella mappa");
+        clientsHeartBeat.replace(client, System.currentTimeMillis());
+        System.out.println("HeartBeat ricevuto");
     }
 
 }
