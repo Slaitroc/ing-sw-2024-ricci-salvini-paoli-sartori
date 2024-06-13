@@ -10,11 +10,13 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Pair;
@@ -142,19 +144,40 @@ public class InGameController extends ViewController {
     public ImageView secretObj2;
 
     @FXML
+    public Tab tab2;
+    @FXML
+    public Tab tab3;
+    @FXML
+    public Tab tab4;
+
+
+    private final List<String> otherPlayers = new ArrayList<>();
+
+    @FXML
     public Button playStarterButton;
 
     public VBox initialChoise;
 
-    //NOTE
-    //The four integers represent the minimum and maximum x and y coordinates of the playAreaGrid
-    //gridDimensions.get(grid).get(0) = minX
-    //gridDimensions.get(grid).get(1) = minY
-    //gridDimensions.get(grid).get(2) = maxX
-    //gridDimensions.get(grid).get(3) = gridDimensions.get(grid).get(3)
-    private Map<GridPane, ArrayList<Integer>> gridDimensions = new HashMap<>();
-    private final Map<Pair<Integer, Integer>, Cell> cells = new HashMap<>();
 
+    /* NOTE
+     * The four integers represent the minimum and maximum x and y coordinates of the playAreaGrid
+     * gridDimensions.get(grid).get(0) = minX
+     * gridDimensions.get(grid).get(1) = minY
+     * gridDimensions.get(grid).get(2) = maxX
+     * gridDimensions.get(grid).get(3) = gridDimensions.get(grid).get(3)
+     */
+    private final LinkedHashMap<GridPane, ArrayList<Integer>> gridDimensions = new LinkedHashMap<>();
+
+    /*
+     * NOTE
+     * We need a map of cells for each gridPane, otherwise all the cells will be overwritten with
+     * those of the last gridPane used. For code clarity, we have decided to use a list of maps.
+     * */
+    private final Map<Pair<Integer, Integer>, Cell> cells1 = new HashMap<>();
+    private final Map<Pair<Integer, Integer>, Cell> cells2 = new HashMap<>();
+    private final Map<Pair<Integer, Integer>, Cell> cells3 = new HashMap<>();
+    private final Map<Pair<Integer, Integer>, Cell> cells4 = new HashMap<>();
+    private final List<Map<Pair<Integer, Integer>, Cell>> cellList = new ArrayList<>(Arrays.asList(cells1, cells2, cells3, cells4));
     Rectangle2D cardViewport = new Rectangle2D(69, 79, 894, 600);
 
     @Override
@@ -164,35 +187,71 @@ public class InGameController extends ViewController {
     @Override
     public void setUp() {
 
+        // Set the clip of the ImageViews to a rectangle with rounded corners
+        setClipToImageView(handCard1);
+        setClipToImageView(handCard2);
+        setClipToImageView(handCard3);
+        setClipToImageView(deckGold);
+        setClipToImageView(deckGoldCard1);
+        setClipToImageView(deckGoldCard2);
+        setClipToImageView(deckResource);
+        setClipToImageView(deckResourceCard1);
+        setClipToImageView(deckResourceCard2);
+        setClipToImageView(secretObj1);
+        setClipToImageView(secretObj2);
+        setClipToImageView(commonObjCard1);
+        setClipToImageView(commonObjCard2);
+        setClipToImageView(starterCard);
+        setClipToImageView(secretObjective);
+
+        //Initializes the tabs titles and disable the not used ones
+        List<Tab> tabs = new ArrayList<>(Arrays.asList(tab2, tab3, tab4));
+        int k = 0;
+        for (String player : app.getPlayerList().keySet()) {
+            if (!player.equals(app.getUsername())) {
+                otherPlayers.add(player);
+                System.out.println("Adding other player: " + player);
+                tabs.get(k).setText(player);
+                k++;
+            }
+        }
+        for (; k <= 2; k++) {
+            //System.out.println("Disabling tab " + k);
+            tabs.get(k).setDisable(true);
+            tabs.get(k).setText("Locked");
+        }
+
+        //Initializes the gridDimensions maps for all the playAreaGrids that need to be initialized to minX=0, minY=0, maxX=0, maxY=0
         gridDimensions.put(player1PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
         gridDimensions.put(player2PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
-        if (app.getNumberOfPlayers()==2){
+        if (app.getNumberOfPlayers() == 2) {
             player3Resources.setVisible(false);
             player4Resources.setVisible(false);
-        } else if (app.getNumberOfPlayers()==3){
+        } else if (app.getNumberOfPlayers() == 3) {
             player4Resources.setVisible(false);
             gridDimensions.put(player3PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
-        } else if (app.getNumberOfPlayers()==4){
+        } else if (app.getNumberOfPlayers() == 4) {
             gridDimensions.put(player4PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
         }
+
+        //Initializes the first 3 columns and rows for all the playAreaGrids
+        k = 0;
+        for (GridPane grid : gridDimensions.keySet()) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    Cell cell = new Cell(grid, i, j);
+                    cellList.get(k).put(new Pair<>(i, j), cell);
+                }
+            }
+            k++;
+        }
+        player1PlayAreaGrid.setVisible(false);
 
         //Initializes the resourceLabels map
         resourceLabels.put(1, Arrays.asList(mushCount1, animalCount1, insectCount1, plantCount1, inkCount1, quillCount1, scrollCount1));
         resourceLabels.put(2, Arrays.asList(mushCount2, animalCount2, insectCount2, plantCount2, inkCount2, quillCount2, scrollCount2));
         resourceLabels.put(3, Arrays.asList(mushCount3, animalCount3, insectCount3, plantCount3, inkCount3, quillCount3, scrollCount3));
         resourceLabels.put(4, Arrays.asList(mushCount4, animalCount4, insectCount4, plantCount4, inkCount4, quillCount4, scrollCount4));
-
-        //Initializes the first 3 columns and rows for all the playAreaGrids
-        for(GridPane grid : gridDimensions.keySet()){
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    Cell cell = new Cell(grid, i, j);
-                    player1PlayAreaGrid.add(cell, i, j);
-                    cells.put(new Pair<>(i, j), cell);
-                }
-            }
-        }
-        player1PlayAreaGrid.setVisible(false);
 
         //Set 3 listeners for drag detection on the hand cards
         handCard1.setOnDragDetected(event -> {
@@ -201,7 +260,7 @@ public class InGameController extends ViewController {
             content.putImage(handCard1.getImage());
             db.setContent(content);
             try {
-                System.out.println("Selecting Card 0");
+                //System.out.println("Selecting Card 0");
                 client.selectCard(0);
             } catch (RemoteException e) {
                 show_ServerCrashWarning();
@@ -215,7 +274,7 @@ public class InGameController extends ViewController {
             content.putImage(handCard2.getImage());
             db.setContent(content);
             try {
-                System.out.println("Selecting Card 1");
+                //System.out.println("Selecting Card 1");
                 client.selectCard(1);
             } catch (RemoteException e) {
                 show_ServerCrashWarning();
@@ -229,7 +288,7 @@ public class InGameController extends ViewController {
             content.putImage(handCard3.getImage());
             db.setContent(content);
             try {
-                System.out.println("Selecting Card 2");
+                //System.out.println("Selecting Card 2");
                 client.selectCard(2);
             } catch (RemoteException e) {
                 show_ServerCrashWarning();
@@ -264,6 +323,8 @@ public class InGameController extends ViewController {
                     setImage(hand.get(1), handCard2);
                     if (hand.size() >= 3) {
                         setImage(hand.get(2), handCard3);
+                    } else {
+                        handCard3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/CardPlaceHolder1.png"))));
                     }
                 }
             }
@@ -282,9 +343,35 @@ public class InGameController extends ViewController {
 
     @Override
     public void show_playArea(String username, Map<Point, PlayableCard> playArea, String achievedResources) {
+        //System.out.println("I'm " + app.getUsername() + ", I'm updating playArea for " + username);
+        //System.out.println("Currently otherPlayers are: " + otherPlayers);
         if (username.equals(app.getUsername())) {
-            updateGrid(player1PlayAreaGrid, playArea);
+            //System.out.println("Updating playArea for player1");
+            //System.out.println("My gridPane is: " + player1PlayAreaGrid);
+            updateGrid(player1PlayAreaGrid, cells1, playArea);
             //updateResources(1, achievedResources);
+        }
+        if (username.equals(otherPlayers.getFirst())) {
+            //System.out.println("Updating playArea for player2");
+            //System.out.println("My gridPane is: " + player2PlayAreaGrid);
+            updateGrid(player2PlayAreaGrid, cells2, playArea);
+            //updateResources(2, achievedResources);
+        }
+        if (app.getNumberOfPlayers() >= 3) {
+            if (username.equals(otherPlayers.get(1))) {
+                //System.out.println("Updating playArea for player3");
+                //System.out.println("My gridPane is: " + player3PlayAreaGrid);
+                updateGrid(player3PlayAreaGrid, cells3, playArea);
+                //updateResources(3, achievedResources);
+            }
+            if (app.getNumberOfPlayers() == 4) {
+                if (username.equals(otherPlayers.get(2))) {
+                    //System.out.println("Updating playArea for player4");
+                    //System.out.println("My gridPane is: " + player4PlayAreaGrid);
+                    updateGrid(player4PlayAreaGrid, cells4, playArea);
+                    //updateResources(4, achievedResources);
+                }
+            }
         }
     }
 
@@ -330,7 +417,7 @@ public class InGameController extends ViewController {
         chatField.getChildren().add(messageText);
         scrollPane.layout();
         scrollPane.setVvalue(1.0);
-        if(!chatPopUp.isVisible()){
+        if (!chatPopUp.isVisible()) {
             chatButtonImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/AppIcons/iconMessagePending.png"))));
         }
     }
@@ -345,24 +432,24 @@ public class InGameController extends ViewController {
      */
     public void changeCardSide(MouseEvent mouseEvent) {
         if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-            System.out.println("changeSide called");
+            //System.out.println("changeSide called");
             ImageView card = (ImageView) mouseEvent.getSource();
 
             try {
                 if (card == handCard1) {
-                    System.out.println("Called on Card1");
+                    //System.out.println("Called on Card1");
                     client.selectCard(0);
                     client.changeSide();
                 } else if (card == handCard2) {
-                    System.out.println("Called on Card2");
+                    //System.out.println("Called on Card2");
                     client.selectCard(1);
                     client.changeSide();
                 } else if (card == handCard3) {
-                    System.out.println("Called on Card3");
+                    //System.out.println("Called on Card3");
                     client.selectCard(2);
                     client.changeSide();
                 } else if (card == starterCard) {
-                    System.out.println("Called on Starter Card");
+                    //System.out.println("Called on Starter Card");
                     client.changeStarterSide();
                 }
             } catch (RemoteException e) {
@@ -378,31 +465,31 @@ public class InGameController extends ViewController {
      * @param mouseEvent The mouse event triggering the card draw.
      */
     public void drawCard(MouseEvent mouseEvent) {
-        System.out.println("drawCard called");
+        //System.out.println("drawCard called");
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-            System.out.println("Primary Button Down");
+            //System.out.println("Primary Button Down");
             ImageView card = (ImageView) mouseEvent.getSource();
             try {
                 if (card == deckResource) {
-                    System.out.println("Called on deckResource");
+                    //System.out.println("Called on deckResource");
                     client.drawResource(0);
                     client.changeSide();
                 } else if (card == deckResourceCard1) {
-                    System.out.println("Called on deckResourceCard1");
+                    //System.out.println("Called on deckResourceCard1");
                     client.drawResource(1);
                     client.changeSide();
                 } else if (card == deckResourceCard2) {
-                    System.out.println("Called on deckResourceCard2");
+                    //System.out.println("Called on deckResourceCard2");
                     client.drawResource(2);
                     client.changeSide();
                 } else if (card == deckGold) {
-                    System.out.println("Called on deckGold");
+                    //System.out.println("Called on deckGold");
                     client.drawGold(0);
                 } else if (card == deckGoldCard1) {
-                    System.out.println("Called on deckGoldCard1");
+                    //System.out.println("Called on deckGoldCard1");
                     client.drawGold(1);
                 } else if (card == deckGoldCard2) {
-                    System.out.println("Called on deckGoldCard2");
+                    //System.out.println("Called on deckGoldCard2");
                     client.drawGold(2);
                 }
             } catch (RemoteException e) {
@@ -445,13 +532,13 @@ public class InGameController extends ViewController {
      * @param event The mouse event triggering the chat toggle.
      */
     public void showHideChat(MouseEvent event) {
-        System.out.println("ChatPopUp is visible: " + chatPopUp.isVisible());
+        //System.out.println("ChatPopUp is visible: " + chatPopUp.isVisible());
         if (chatPopUp.isVisible()) {
-            System.out.println("Trying to hide chat");
+            //System.out.println("Trying to hide chat");
             chatPopUp.setVisible(false);
             chatPopUp.setMouseTransparent(true);
         } else {
-            System.out.println("Trying to show chat");
+            //System.out.println("Trying to show chat");
             chatPopUp.setVisible(true);
             chatPopUp.setMouseTransparent(false);
             chatButtonImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/AppIcons/iconMessage.png"))));
@@ -496,75 +583,75 @@ public class InGameController extends ViewController {
      * @param target The target ImageView.
      */
     private void setImage(Card card, ImageView target) {
-        if (card != null)
+        if (card != null) {
             target.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(card.getImage()))));
+        }
     }
 
     /**
      * Adds a column to the specified GridPane at the specified x-coordinate and fills it with cells.
+     * Notice that it need to specify what cells map to use.
      *
      * @param grid The GridPane to which the column is to be added.
      * @param x    The x-coordinate of the new column.
      */
-    private void addColumn(GridPane grid, int x) {
+    private void addColumn(GridPane grid, Map<Pair<Integer, Integer>, Cell> cells, int x) {
+        //System.out.println("Adding column " + x + " to grid " + grid);
         for (int y = 0; y < grid.getRowCount(); y++) {
             if (cells.get(new Pair<>(x, y)) == null) {
                 Cell cell = new Cell(grid, x, y);
-                grid.add(cell, x, y);
                 cells.put(new Pair<>(x, y), cell);
-                System.out.println("Adding cell on [" + x + ";" + y + "] because of addColumn(" + x + ")");
-            }
-            else {
-                System.out.println("Cell already present on [" + x + ";" + y + "]");
+                //System.out.println("Adding cell on [" + x + ";" + y + "] because of addColumn(" + x + ")");
+            } else {
+                //System.out.println("Cell already present on [" + x + ";" + y + "]");
             }
         }
     }
 
     /**
      * Adds a row to the specified GridPane at the specified y-coordinate and fills it with cells.
+     * Notice that it need to specify what cells map to use.
      *
      * @param grid The GridPane to which the row is to be added.
      * @param y    The y-coordinate of the new row.
      */
-    private void addRow(GridPane grid, int y) {
+    private void addRow(GridPane grid, Map<Pair<Integer, Integer>, Cell> cells, int y) {
+        //System.out.println("Adding row " + y + " to grid " + grid);
         for (int x = 0; x < grid.getColumnCount(); x++) {
             if (cells.get(new Pair<>(x, y)) == null) {
                 Cell cell = new Cell(grid, x, y);
-                grid.add(cell, x, y);
                 cells.put(new Pair<>(x, y), cell);
-                System.out.println("Adding cell on [" + x + ";" + y + "] because of addRow(" + y + ")");
-            }
-            else {
-                System.out.println("Cell already present on [" + x + ";" + y + "]");
+                //System.out.println("Adding cell on [" + x + ";" + y + "] because of addRow(" + y + ")");
+            } else {
+                //System.out.println("Cell already present on [" + x + ";" + y + "]");
             }
         }
     }
 
     /**
-     * Start with checking if the specified grid had to be resized, then set all the cells to the invisible image and
-     * finally set the image of the cards in the playArea to the cells in the grid.
-     * 
+     * Start with checking if the specified grid had to be resized, then set all the cells of the relative grid
+     * to the invisible image and finally set the image of the cards in the playArea to the cells in the grid.
      *
      * @param grid     The GridPane to be updated.
      * @param playArea The map representing the play area.
      */
-    private void updateGrid(GridPane grid, Map<Point, PlayableCard> playArea) {
+    private void updateGrid(GridPane grid, Map<Pair<Integer, Integer>, Cell> cells, Map<Point, PlayableCard> playArea) {
         for (Map.Entry<Point, PlayableCard> placedCard : playArea.entrySet()) {
             if (placedCard.getKey().x <= gridDimensions.get(grid).getFirst()) {
-                gridDimensions.get(grid).set(0,placedCard.getKey().x);
-                addColumn(grid, gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2);
+                gridDimensions.get(grid).set(0, placedCard.getKey().x);
+                addColumn(grid, cells, gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2);
             }
             if (placedCard.getKey().y <= gridDimensions.get(grid).get(1)) {
                 gridDimensions.get(grid).set(1, placedCard.getKey().y);
-                addRow(grid, gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2);
+                addRow(grid, cells, gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2);
             }
             if (placedCard.getKey().x >= gridDimensions.get(grid).get(2)) {
                 gridDimensions.get(grid).set(2, placedCard.getKey().x);
-                addColumn(grid, gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2);
+                addColumn(grid, cells, gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2);
             }
             if (placedCard.getKey().y >= gridDimensions.get(grid).get(3)) {
                 gridDimensions.get(grid).set(3, placedCard.getKey().y);
-                addRow(grid, gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2);
+                addRow(grid, cells, gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2);
             }
         }
 
@@ -581,7 +668,7 @@ public class InGameController extends ViewController {
 
         for (int x = 0; x < grid.getColumnCount(); x++) {
             for (int y = 0; y < grid.getRowCount(); y++) {
-                cells.get(new Pair<>(x, y)).setCardImage("/it/polimi/ingsw/gc31/Images/CardsImages/CardPlaceHolder1.png");
+                cells.get(new Pair<>(x, y)).hideImage();
                 System.out.println("Cell [" + x + ";" + y + "] set to invisible image");
             }
         }
@@ -593,6 +680,14 @@ public class InGameController extends ViewController {
             System.out.println("Adding card that was on Point: " + placedCard.getKey() + " on cell [" + newCoordinateX + ";" + newCoordinateY + "]");
             //System.out.println("Card Image Path: " + placedCard.getValue().getImage());
             cells.get(new Pair<>(newCoordinateX, newCoordinateY)).setCardImage(placedCard.getValue().getImage());
+        }
+    }
+
+    //TODO modify after deserialization of resources
+    private void updateResources(int playerNumber, String resources) {
+        String[] resourcesArray = resources.split(" ");
+        for (int i = 0; i < resourcesArray.length; i++) {
+            resourceLabels.get(playerNumber).get(i).setText(resourcesArray[i]);
         }
     }
 
@@ -609,22 +704,60 @@ public class InGameController extends ViewController {
         }
     }
 
+    /**
+     * Set the clip of the target ImageView to a rectangle with rounded corners.
+     * Basically used to round the corners of the cards.
+     * Change here to modify the shape of the cards.
+     */
+    private void setClipToImageView(ImageView target){
+        Rectangle clip = new Rectangle(
+                target.getFitWidth(), target.getFitHeight()
+        );
+        clip.setArcWidth(15);
+        clip.setArcHeight(15);
+
+        target.setClip(clip);
+    }
 
 
     //INNER CLASSES:____________________________________________________________________________________________________
+    /*
+     * Cell class that extends ImageView and represents a cell in the playAreaGrid.
+     * It has a positionX and positionY that represent the x and y coordinates of the cell in the grid.
+     * It has a cardImage that represents the image of the card in the cell.
+     * If the cell is empty, the image is set to an ALMOST invisible image.
+     * Using a 100% transparent image does not trigger his function (TO VERIFY)
+     *
+     */
     class Cell extends ImageView {
         private int positionX;
         private int positionY;
         private Image cardImage;
+        private final StackPane pane;
 
+        /**
+        * Needs to be initialized with a GridPane, an x and a y coordinate.
+        *
+        * @param grid The GridPane to which the cell belongs.
+        * @param x The x-coordinate of the cell.
+        * @param y The y-coordinate of the cell.
+        */
         public Cell(GridPane grid, int x, int y) {
             positionX = x;
             positionY = y;
-            Border border = new Border(new BorderStroke(javafx.scene.paint.Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
+            //Border border = new Border(new BorderStroke(javafx.scene.paint.Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
             cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/CardPlaceHolder1.png")));
 
+            pane = new StackPane();
 
-            if(grid.equals(player1PlayAreaGrid)){
+            pane.setMaxHeight(60);
+            pane.setMaxWidth(115);
+            pane.setMinHeight(60);
+            pane.setMinWidth(115);
+            pane.getChildren().add(this);
+
+            //If the cell belongs to player1, it is set to accept drag and drop events
+            if (grid.equals(player1PlayAreaGrid)) {
                 setOnDragOver(event -> {
                     if (event.getGestureSource() != this && event.getDragboard().hasImage()) {
                         event.acceptTransferModes(TransferMode.MOVE);
@@ -633,8 +766,8 @@ public class InGameController extends ViewController {
                 });
 
                 setOnDragDropped(event -> {
-                    System.out.println("Mouse Drag Dropped on cell " + positionX + " " + positionY);
-                    System.out.println("Playing card in " + (positionX + gridDimensions.get(grid).getFirst() - 1) + " " + (gridDimensions.get(grid).get(3) - positionY + 1));
+                    //System.out.println("Mouse Drag Dropped on cell " + positionX + " " + positionY);
+                    //System.out.println("Playing card in " + (positionX + gridDimensions.get(grid).getFirst() - 1) + " " + (gridDimensions.get(grid).get(3) - positionY + 1));
                     if (event.getDragboard().hasImage()) {
                         try {
                             client.play(new Point(positionX + gridDimensions.get(grid).getFirst() - 1, gridDimensions.get(grid).get(3) - positionY + 1));
@@ -651,14 +784,26 @@ public class InGameController extends ViewController {
             }
 
             this.setImage(cardImage);
-            this.setFitWidth(150); // Imposta la larghezza desiderata
-            this.setFitHeight(100); // Imposta l'altezza desiderata
             this.setPreserveRatio(true);
             this.setViewport(cardViewport);
+            this.setFitWidth(149); // set the card width
+            this.setFitHeight(100); // Set the card height
+
+            // Round image boarder
+            setClipToImageView(this);
+
+            grid.add(pane, x, y);
         }
 
         public void setCardImage(String cardImageUrl) {
+            pane.toFront();
             this.cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(cardImageUrl)));
+            this.setImage(cardImage);
+        }
+
+        public void hideImage() {
+            pane.toBack();
+            this.cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/CardPlaceHolder1.png")));
             this.setImage(cardImage);
         }
     }

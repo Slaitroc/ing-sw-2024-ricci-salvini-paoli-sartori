@@ -112,7 +112,7 @@ public class GUI extends UI {
 
     @Override
     public void show_invalidAction(String message) {
-        System.out.println("show_invalidAction called");
+        //System.out.println("show_invalidAction called");
     }
 
     @Override
@@ -120,7 +120,7 @@ public class GUI extends UI {
         Platform.runLater(() -> {
             app.loadScene(SceneTag.GAME);
             app.setFullScreen();
-            System.out.println("update_ToPlayingState called");
+            //System.out.println("update_ToPlayingState called");
         });
     }
 
@@ -141,13 +141,13 @@ public class GUI extends UI {
     public void show_handPlayer(String username, List<PlayableCard> hand) {
         Platform.runLater(() -> {
             app.getCurrentController().show_handPlayer(username, hand);
-            System.out.println("show_handPlayer called");
+            //System.out.println("show_handPlayer called");
         });
     }
 
     @Override
     public void show_scorePlayer(LinkedHashMap<String, Integer> scores) {
-        System.out.println("show_scorePlayer called");
+        //System.out.println("show_scorePlayer called");
     }
 
     @Override
@@ -160,7 +160,7 @@ public class GUI extends UI {
                 card2.changeSide();
             }
             app.getCurrentController().show_objectiveDeck(firstCardDeck, card1, card2);
-            System.out.println("show_objectiveDeck called");
+            //System.out.println("show_objectiveDeck called");
         });
 
     }
@@ -169,7 +169,7 @@ public class GUI extends UI {
     public void show_starterCard(PlayableCard starterCard) {
         Platform.runLater(() -> {
             app.getCurrentController().show_starterCard(starterCard);
-            System.out.println("show_starterCard called");
+            //System.out.println("show_starterCard called");
         });
     }
 
@@ -177,7 +177,8 @@ public class GUI extends UI {
     public void show_playArea(String username, Map<Point, PlayableCard> playArea, String achievedResources) {
         Platform.runLater(() -> {
             app.getCurrentController().show_playArea(username, playArea, achievedResources);
-            System.out.println("show_playArea called");
+            //System.out.println("show_playArea called");
+            //System.out.println("Player "+ username + " achievedResources: " + achievedResources);
         });
     }
 
@@ -185,7 +186,7 @@ public class GUI extends UI {
     public void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
         Platform.runLater(() -> {
             app.getCurrentController().show_resourceDeck(firstCardDeck, card1, card2);
-            System.out.println("show_resourceDeck called");
+            //System.out.println("show_resourceDeck called");
         });
     }
 
@@ -195,7 +196,7 @@ public class GUI extends UI {
             objectiveCard1.changeSide();
             objectiveCard2.changeSide();
             app.getCurrentController().show_chooseObjectiveCard(objectiveCard1, objectiveCard2);
-            System.out.println("show_chooseObjectiveCard called");
+            //System.out.println("show_chooseObjectiveCard called");
         });
     }
 
@@ -204,7 +205,7 @@ public class GUI extends UI {
         Platform.runLater(() -> {
             objectiveCard.changeSide();
             app.getCurrentController().show_objectiveCard(objectiveCard);
-            System.out.println("show_objectiveCard called");
+            //System.out.println("show_objectiveCard called");
         });
     }
 
