@@ -788,6 +788,11 @@ class GameModelTest {
         public void setGameController(IGameController gameController) throws RemoteException {
 
         }
+
+        @Override
+        public void setRmiToken(int token) throws RemoteException {
+
+        }
     }
 
     private void utilityInitGame() {

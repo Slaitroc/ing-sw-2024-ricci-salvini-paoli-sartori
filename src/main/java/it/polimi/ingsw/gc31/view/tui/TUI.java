@@ -1787,19 +1787,19 @@ public class TUI extends UI {
 
     @Override
     public void show_heartBeat() {
-        StringBuilder res = new StringBuilder();
-        if (heart == false) {
-            res.append(ansi().cursor(1, 1).a("💚"));
-            heart = true;
-        } else {
-            res.append(ansi().cursor(1, 1).a("💔"));
-            heart = false;
-
-        }
-        synchronized (playViewUpdate) {
-            playViewUpdate.add(res);
-            playViewUpdate.notify();
-        }
+//        StringBuilder res = new StringBuilder();
+//        if (heart == false) {
+//            res.append(ansi().cursor(1, 1).a("💚"));
+//            heart = true;
+//        } else {
+//            res.append(ansi().cursor(1, 1).a("💔"));
+//            heart = false;
+//
+//        }
+//        synchronized (playViewUpdate) {
+//            playViewUpdate.add(res);
+//            playViewUpdate.notify();
+//        }
     }
     // Thread HeartBeat = new Thread(()->{
 

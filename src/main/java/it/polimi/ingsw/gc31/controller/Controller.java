@@ -5,6 +5,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.concurrent.*;
 
+import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -57,6 +58,13 @@ public class Controller extends UnicastRemoteObject implements IController {
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
     private final Map<Integer, VirtualClient> newConnections;
 
+    /**
+     * This method generates a unique token (from 0 to 999) every time a new client connects with the server
+     * Every token value is associated with its client in the newConnections map
+     *
+     * @param newConnection is the VirtualClient that just connected to the server
+     * @return the token generated
+     */
     public int generateToken(VirtualClient newConnection) {
         int token;
         token = (int) (Math.random() * 1000);
@@ -67,6 +75,12 @@ public class Controller extends UnicastRemoteObject implements IController {
         return token;
     }
 
+    /**
+     * This method is invoked every time a client wants to set its username
+     * The method finds and sends the token associated with the VirtualClient that tries to set its username
+     *
+     * @param newConnection is the VirtualClient that is trying to set its username
+     */
     public void sendToken(VirtualClient newConnection) {
         try {
             Integer getToken = null;
@@ -100,11 +114,22 @@ public class Controller extends UnicastRemoteObject implements IController {
         startHeartBeatCheck();
     }
 
+    /**
+     * This method request to add to the list of object the new object received from a client
+     *
+     * @param obj is the new object to be added
+     * @throws RemoteException if an error occurs in the rmi connection
+     */
     @Override
     public void sendCommand(ServerQueueObject obj) throws RemoteException {
         addQueueObj(obj);
     }
 
+    /**
+     * This method adds a new object to the queue of object to be executed
+     *
+     * @param obj is the object to be added to the queue
+     */
     private void addQueueObj(ServerQueueObject obj) {
         synchronized (callsList) {
             callsList.add(obj);
@@ -182,6 +207,7 @@ public class Controller extends UnicastRemoteObject implements IController {
             tempClients.remove(username);
             client.sendCommand(new GameCreatedObj(gameControlList.size() - 1));
             client.setGameController(gameControlList.get(gameControlList.size() - 1));
+            ServerLog.controllerWrite("A new game has been created with id: " + gameControlList.size());
         }
     }
 
@@ -190,7 +216,6 @@ public class Controller extends UnicastRemoteObject implements IController {
      *
      * @param username the username of the client joining the game.
      * @param idGame   the ID of the game to join.
-     * @return the game controller for the joined game.
      * @throws RemoteException if an RMI error occurs.
      */
     public void joinGame(String username, int idGame) throws RemoteException {
@@ -213,6 +238,13 @@ public class Controller extends UnicastRemoteObject implements IController {
         }
     }
 
+    /**
+     * This method add the client (that just quit a game lobby) to the map tempClients
+     * @param username is the username of the player that just quit
+     * @param idGame is the id of the game which was joined by the player
+     * @param client is the client that requested to quit from a lobby
+     * @throws RemoteException if an error occurs in the rmi connection
+     */
     public void quitGame(String username, int idGame, VirtualClient client) throws RemoteException {
         tempClients.put(username, client);
         // se il gioco era costituito da una sola persona va eliminato il gamecontroller
@@ -252,6 +284,13 @@ public class Controller extends UnicastRemoteObject implements IController {
         }
     }
 
+    /**
+     * This method return the specific VirtualClient associated with the unique token received as a parameter
+     * The newConnections map contains every client connected with the server and the unique token associated with it
+     *
+     * @param token is the token associated to the VirtualClient t
+     * @return the VirtualClient that has the given token
+     */
     @Override
     public VirtualClient getRightConnection(int token) {
         return newConnections.get(token);
@@ -308,7 +347,7 @@ public class Controller extends UnicastRemoteObject implements IController {
         if (!clientsHeartBeat.containsKey(client))
             System.out.println("Il client da cui è arrivato l'HeartBeat non è presente nella mappa");
         clientsHeartBeat.replace(client, System.currentTimeMillis());
-        System.out.println(Ansi.ansi().cursor(1, 1).a("\\033[5m💚\\033[0m\\").reset());
+//        System.out.println(Ansi.ansi().cursor(1, 1).a("\\033[5m💚\\033[0m\\").reset());
         // System.out.println("HeartBeat ricevuto");
         client.sendCommand(new HeartBeatObj());
     }
