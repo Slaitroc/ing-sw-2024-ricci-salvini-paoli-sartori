@@ -67,7 +67,7 @@ public class GameModel{
     }
     public void setNextPlayingPlayer() {
         // TODO potrebbe funzionare il todo
-        //do {
+        do {
             if (turnPlayer == null) {
                 turnPlayer = new ArrayList<>();
                 turnPlayer.addAll(players.keySet());
@@ -75,7 +75,7 @@ public class GameModel{
             } else {
                 currPlayingPlayer = (currPlayingPlayer + 1) % players.size();
             }
-        //} while (playerConnection.get(getCurrPlayer().getUsername()));
+        } while (!playerConnection.get(getCurrPlayer().getUsername()));
 
         // set all players to waiting state
         for (Player player : players.values()) {

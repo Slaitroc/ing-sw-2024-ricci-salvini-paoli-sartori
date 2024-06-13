@@ -87,6 +87,56 @@ class GameModelTest {
         model.setNextPlayingPlayer();
         assertEquals(0, model.getCurrIndexPlayer());
         assertEquals("notplaced", model.getCurrPlayer().infoState());
+
+    }
+    @Test
+    void setNextPlayingPlayerDisconnections() {
+        utilityInitGame();
+
+        assertEquals(0, model.getCurrIndexPlayer());
+
+        utilitySkipSetupGame();
+
+        // disconnect first player
+        assertEquals(0, model.getCurrIndexPlayer());
+        model.playerConnection.put(model.getCurrPlayer().getUsername(), false);
+
+        model.setNextPlayingPlayer();
+        model.setNextPlayingPlayer();
+        model.setNextPlayingPlayer();
+        assertEquals(3, model.getCurrIndexPlayer());
+
+        // player with index 0 is skipped
+        model.setNextPlayingPlayer();
+        assertEquals(1, model.getCurrIndexPlayer());
+
+        // disconnect last player
+        model.setNextPlayingPlayer();
+        model.setNextPlayingPlayer();
+        assertEquals(3, model.getCurrIndexPlayer());
+        model.playerConnection.put(model.getCurrPlayer().getUsername(), false);
+
+        // player with index 0 is skipped
+        model.setNextPlayingPlayer();
+        assertEquals(1, model.getCurrIndexPlayer());
+        model.setNextPlayingPlayer();
+        assertEquals(2, model.getCurrIndexPlayer());
+        // player with index 3 and 0 are skipped
+        model.setNextPlayingPlayer();
+        assertEquals(1, model.getCurrIndexPlayer());
+
+        // player with index 0 and 3 are reconnected
+        model.playerConnection.put(model.turnPlayer.get(0), true);
+        model.playerConnection.put(model.turnPlayer.get(3), true);
+
+        // player with index 0 and 3 are not skipped any more
+        model.setNextPlayingPlayer();
+        assertEquals(2, model.getCurrIndexPlayer());
+        model.setNextPlayingPlayer();
+        assertEquals(3, model.getCurrIndexPlayer());
+        model.setNextPlayingPlayer();
+        assertEquals(0, model.getCurrIndexPlayer());
+
     }
 
     @Test
@@ -675,9 +725,13 @@ class GameModelTest {
         }
         public void initGame(LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException{
             players = new HashMap<>();
+            super.clients = new HashMap<>();
             for (String username: clients.keySet()) {
                 Player player = new FakePlayer(pawnAssignment(), username, getBoard());
                 players.put(username, player);
+            }
+            for (String username: clients.keySet()) {
+                playerConnection.put(username, true);
             }
             setGameState(new SetupGameModelState(this));
         }

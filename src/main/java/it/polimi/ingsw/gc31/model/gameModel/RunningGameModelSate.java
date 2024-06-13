@@ -22,6 +22,8 @@ public class RunningGameModelSate implements GameModelState {
 
             gameListener.addPlayerScoreListener(new PlayerScoreListener(model.clients));
         }
+
+        model.notifyAllGameListeners();
     }
     @Override
     public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {

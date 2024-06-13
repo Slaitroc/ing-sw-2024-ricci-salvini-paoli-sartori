@@ -73,11 +73,11 @@ public class EndGameModelState implements GameModelState {
             player.calculateObjectiveCard(model.commonObjectives.get(1));
         }
 
-        for (VirtualClient client: model.clients.values()) {
+        for (String username: model.clients.keySet()) {
             try {
-                client.sendCommand(new GameIsOverObj());
+                model.clients.get(username).sendCommand(new GameIsOverObj());
             } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                System.out.println("Error sending game is over");
             }
         }
     }
