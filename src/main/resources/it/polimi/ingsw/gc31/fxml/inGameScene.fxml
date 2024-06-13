@@ -7,7 +7,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.TextFlow?>
-<StackPane styleClass="stackPane-default" stylesheets="@../css/Commons.css" xmlns="http://javafx.com/javafx/21"
+<StackPane fx:id="motherPane" styleClass="stackPane-default" stylesheets="@../css/Commons.css" xmlns="http://javafx.com/javafx/21"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.InGameController">
     <padding>

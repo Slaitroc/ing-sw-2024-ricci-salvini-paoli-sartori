@@ -8,12 +8,14 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -151,6 +153,8 @@ public class InGameController extends ViewController {
     @FXML
     public Tab tab4;
 
+    @FXML
+    public StackPane motherPane;
 
     private final List<String> otherPlayers = new ArrayList<>();
 
@@ -255,47 +259,11 @@ public class InGameController extends ViewController {
         resourceLabels.put(4, Arrays.asList(mushCount4, animalCount4, insectCount4, plantCount4, inkCount4, quillCount4, scrollCount4));
 
         //Set 3 listeners for drag detection on the hand cards
-        handCard1.setOnDragDetected(event -> {
-            Dragboard db = handCard1.startDragAndDrop(TransferMode.MOVE);
-            ClipboardContent content = new ClipboardContent();
-            content.putImage(handCard1.getImage());
-            db.setContent(content);
-            try {
-                //System.out.println("Selecting Card 0");
-                client.selectCard(0);
-            } catch (RemoteException e) {
-                show_ServerCrashWarning();
-            }
-            event.consume();
-        });
+        // (outer stackPane is momentarily fixed inside this method to avoid a resize bug, I'm warning you)
+        addHandCardDragListener(handCard1);
+        addHandCardDragListener(handCard2);
+        addHandCardDragListener(handCard3);
 
-        handCard2.setOnDragDetected(event -> {
-            Dragboard db = handCard2.startDragAndDrop(TransferMode.MOVE);
-            ClipboardContent content = new ClipboardContent();
-            content.putImage(handCard2.getImage());
-            db.setContent(content);
-            try {
-                //System.out.println("Selecting Card 1");
-                client.selectCard(1);
-            } catch (RemoteException e) {
-                show_ServerCrashWarning();
-            }
-            event.consume();
-        });
-
-        handCard3.setOnDragDetected(event -> {
-            Dragboard db = handCard3.startDragAndDrop(TransferMode.MOVE);
-            ClipboardContent content = new ClipboardContent();
-            content.putImage(handCard3.getImage());
-            db.setContent(content);
-            try {
-                //System.out.println("Selecting Card 2");
-                client.selectCard(2);
-            } catch (RemoteException e) {
-                show_ServerCrashWarning();
-            }
-            event.consume();
-        });
     }
 
 
@@ -322,7 +290,7 @@ public class InGameController extends ViewController {
                 setImage(hand.getFirst(), handCard1);
                 if (hand.size() >= 2) {
                     setImage(hand.get(1), handCard2);
-                    if (hand.size() >= 3) {
+                    if (hand.size() == 3) {
                         setImage(hand.get(2), handCard3);
                     } else {
                         handCard3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/CardPlaceHolder1.png"))));
@@ -352,27 +320,27 @@ public class InGameController extends ViewController {
             //System.out.println("Updating playArea for player1");
             //System.out.println("My gridPane is: " + player1PlayAreaGrid);
             updateGrid(player1PlayAreaGrid, cells1, playArea);
-            //updateResources(1, achievedResources);
+            updateResources(1, achievedResources);
         }
         if (username.equals(otherPlayers.getFirst())) {
             //System.out.println("Updating playArea for player2");
             //System.out.println("My gridPane is: " + player2PlayAreaGrid);
             updateGrid(player2PlayAreaGrid, cells2, playArea);
-            //updateResources(2, achievedResources);
+            updateResources(2, achievedResources);
         }
         if (app.getNumberOfPlayers() >= 3) {
             if (username.equals(otherPlayers.get(1))) {
                 //System.out.println("Updating playArea for player3");
                 //System.out.println("My gridPane is: " + player3PlayAreaGrid);
                 updateGrid(player3PlayAreaGrid, cells3, playArea);
-                //updateResources(3, achievedResources);
+                updateResources(3, achievedResources);
             }
             if (app.getNumberOfPlayers() == 4) {
                 if (username.equals(otherPlayers.get(2))) {
                     //System.out.println("Updating playArea for player4");
                     //System.out.println("My gridPane is: " + player4PlayAreaGrid);
                     updateGrid(player4PlayAreaGrid, cells4, playArea);
-                    //updateResources(4, achievedResources);
+                    updateResources(4, achievedResources);
                 }
             }
         }
@@ -690,7 +658,38 @@ public class InGameController extends ViewController {
 
     //TODO modify after deserialization of resources
     private void updateResources(int playerNumber, Map<Resources, Integer> achievedResources) {
-
+        for (Map.Entry<Resources, Integer> resource : achievedResources.entrySet()) {
+            switch (resource.getKey()) {
+                case Resources.MUSHROOM:
+                    System.out.println("Updating MUSHROOM for player " + playerNumber + " to " + resource.getValue());
+                    resourceLabels.get(playerNumber).getFirst().setText(String.valueOf(resource.getValue()));
+                    break;
+                case Resources.ANIMAL:
+                    System.out.println("Updating ANIMAL for player " + playerNumber + " to " + resource.getValue());
+                    resourceLabels.get(playerNumber).get(1).setText(String.valueOf(resource.getValue()));
+                    break;
+                case Resources.INSECT:
+                    System.out.println("Updating INSECT for player " + playerNumber + " to " + resource.getValue());
+                    resourceLabels.get(playerNumber).get(2).setText(String.valueOf(resource.getValue()));
+                    break;
+                case Resources.PLANT:
+                    System.out.println("Updating PLANT for player " + playerNumber + " to " + resource.getValue());
+                    resourceLabels.get(playerNumber).get(3).setText(String.valueOf(resource.getValue()));
+                    break;
+                case Resources.INK:
+                    System.out.println("Updating INK for player " + playerNumber + " to " + resource.getValue());
+                    resourceLabels.get(playerNumber).get(4).setText(String.valueOf(resource.getValue()));
+                    break;
+                case Resources.FEATHER:
+                    System.out.println("Updating FEATHER for player " + playerNumber + " to " + resource.getValue());
+                    resourceLabels.get(playerNumber).get(5).setText(String.valueOf(resource.getValue()));
+                    break;
+                case Resources.SCROLL:
+                    System.out.println("Updating SCROLL for player " + playerNumber + " to " + resource.getValue());
+                    resourceLabels.get(playerNumber).get(6).setText(String.valueOf(resource.getValue()));
+                    break;
+            }
+        }
     }
 
     /**
@@ -720,6 +719,46 @@ public class InGameController extends ViewController {
 
         target.setClip(clip);
     }
+
+    /**
+     * Adds a drag listener to the specified (ImageView) handCard.
+     * When a drag is detected, the motherPane is locked to the current size and the card is dragged.
+     * Then a snapshot of the card is taken and added to the dragBoard.
+     * This is done because of a bug that resize the outer pane when a snapshot is taken.
+     * The motherPane is then set to resizable again.
+     *
+     * @param card The ImageView to which the drag listener is to be added.
+     */
+    private void addHandCardDragListener(ImageView card){
+        card.setOnDragDetected(event -> {
+            lockMotherPaneSize();
+            WritableImage snapshot = card.snapshot(new SnapshotParameters(), null);
+            Dragboard db = card.startDragAndDrop(TransferMode.MOVE);
+            ClipboardContent content = new ClipboardContent();
+            content.putImage(snapshot);
+            db.setContent(content);
+            setMotherPaneResizable();
+            try {
+                if(card.equals(handCard1)) client.selectCard(0);
+                else if(card.equals(handCard2)) client.selectCard(1);
+                else if(card.equals(handCard3)) client.selectCard(2);
+            } catch(RemoteException e){
+                show_ServerCrashWarning();
+            }
+            event.consume();
+        });
+    }
+
+    private void lockMotherPaneSize(){
+        motherPane.setMinSize(motherPane.getWidth(), motherPane.getHeight());
+        motherPane.setMaxSize(motherPane.getWidth(), motherPane.getHeight());
+    }
+
+    private void setMotherPaneResizable(){
+        motherPane.setMinSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+        motherPane.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+    }
+
 
 
     //INNER CLASSES:____________________________________________________________________________________________________
