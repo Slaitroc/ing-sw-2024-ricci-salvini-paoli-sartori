@@ -363,7 +363,7 @@ public class TCPClient implements ClientCommands {
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 tcp_sendCommand(new HeartBeatObj(username), DV.RECIPIENT_HEARTBEAT);
-                System.out.println("HeartBeat inviato");
+                //System.out.println("HeartBeat inviato");
             }
         }, 0, 5000);
     }

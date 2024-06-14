@@ -117,9 +117,22 @@ public class TUI extends UI {
     // PRINT METHODS
     Map<TUIAreas, StringBuilder> areasCache = new HashMap<>();
 
-    private void forceRefreshTUI(){
+    protected void forceRefreshTUI(){
         System.out.print("\033[H\033[2J");
         System.out.flush();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        synchronized(playViewUpdate){
+        for (Map.Entry<TUIAreas, StringBuilder> area : areasCache.entrySet()) {
+                playViewUpdate.add(area.getValue());
+            }
+            playViewUpdate.notify();
+        }
+        moveCursorToCmdLine();
+        state.stateNotify();
 
     }
 

@@ -26,6 +26,8 @@ public abstract class TuiState {
 
     protected abstract void command_initial();
 
+    protected abstract void command_refreshTUI();
+
     /**
      * Si assicura che il Reader Thread sia in attesa del termine dell'esecuzione di
      * un comando. Se non lo fosse entrerebbe in attesa di essere risvegliato senza
