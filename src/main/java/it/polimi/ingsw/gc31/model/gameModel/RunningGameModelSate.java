@@ -19,6 +19,7 @@ public class RunningGameModelSate implements GameModelState {
         for (String username: model.getListeners().keySet()) {
             GameListenerHandler gameListener = model.getListeners().get(username);
             model.getListeners().get(username).removeStarterCardListener();
+            model.getListeners().get(username).removeChooseObjectiveListener();
 
             gameListener.addPlayerScoreListener(new PlayerScoreListener(model.clients));
         }

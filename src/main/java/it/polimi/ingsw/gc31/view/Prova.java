@@ -7,18 +7,8 @@ import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.view.tui.TUI;
 import org.fusesource.jansi.AnsiConsole;
 
-import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
-import static org.fusesource.jansi.Ansi.ansi;
-
 public class Prova {
     public static void main(String[] args) {
-//        ProvaTui provaTui = new ProvaTui(null);
-//        provaTui.printStarter();
-//        provaTui.printGold();
-//        String blink = "\033[5m";
-//        String reset = "\033[0m";
-//        String text = "Questo testo lampeggia";
-//        System.out.println(blink+text+reset);
     }
 
     public static class ProvaTui extends TUI {
