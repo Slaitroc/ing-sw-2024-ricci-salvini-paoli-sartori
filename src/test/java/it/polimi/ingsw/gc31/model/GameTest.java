@@ -41,6 +41,12 @@ public class GameTest {
         public void setGameController(IGameController gameController) throws RemoteException {
 
         }
+
+        @Override
+        public void setRmiToken(int token) throws RemoteException {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'setRmiToken'");
+        }
     }
     GameModel model;
     LinkedHashMap<String, VirtualClient> clients;

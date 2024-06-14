@@ -115,6 +115,14 @@ public class TUI extends UI {
     private LinkedHashMap<Point, PlayableCard> placedCards = null;
 
     // PRINT METHODS
+    Map<TUIAreas, StringBuilder> areasCache = new HashMap<>();
+
+    private void forceRefreshTUI(){
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+
+    }
+
 
     private void erase_ChatBoard() {
         for (int i = -1; i < CHAT_BOARD_LINES + 1; i++) {
@@ -1032,7 +1040,8 @@ public class TUI extends UI {
      * <p>
      * This variable is used to manage the available commands in the current state
      */
-    private TuiState state;
+    private TuiState state; 
+
 
     protected Object stateLock = new Object();
     protected Queue<Integer> stateLockQueue = new ArrayDeque<Integer>();
@@ -1476,6 +1485,8 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+        areasCache.put(TUIAreas.PLAY_AREA_VIEW, res);
+
         }
     }
 
@@ -1497,6 +1508,8 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
+        areasCache.put(TUIAreas.PLAYERS_INFO, res);
+
     }
 
     @Override
@@ -1507,6 +1520,8 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
+        areasCache.put(TUIAreas.GOLD_DECK, res);
+        
     }
 
     @Override
@@ -1517,6 +1532,8 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
+        areasCache.put(TUIAreas.RES_DECK, res);
+
     }
 
     @Override
@@ -1551,6 +1568,8 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+        areasCache.put(TUIAreas.HAND, res);
+
         }
     }
 
@@ -1568,7 +1587,9 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+            areasCache.put(TUIAreas.OBJ, res);
         }
+
     }
 
     @Override
@@ -1598,7 +1619,9 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+            areasCache.put(TUIAreas.CHOSE_OBJ, res);
         }
+
     }
 
     @Override
@@ -1620,6 +1643,8 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
+        areasCache.put(TUIAreas.COMMON_OBJ, res);
+
     }
 
     @Override
@@ -1637,6 +1662,8 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+        areasCache.put(TUIAreas.STARTER, res);
+
         }
     }
 
@@ -1704,6 +1731,7 @@ public class TUI extends UI {
         // }
         // }
         // state.stateNotify();
+        //FIXME
     }
 
     @Override
@@ -1741,6 +1769,8 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+        areasCache.put(TUIAreas.PLAYER_STATE, res);
+
         }
     }
 
@@ -1762,10 +1792,14 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
+
+        areasCache.put(TUIAreas.PLAYERS_INFO, res);
+
     }
 
     @Override
     public void show_invalidAction(String message) {
+    printToCmdLineOut(serverWrite("INVALID ACTION"));
 
     }
 
