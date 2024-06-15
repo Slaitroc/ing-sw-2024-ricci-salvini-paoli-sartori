@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: it.polimi.ingsw.gc31.Client
+Main-Class: it.polimi.ingsw.gc31.view.Prova
 

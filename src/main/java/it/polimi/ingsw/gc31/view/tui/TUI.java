@@ -93,6 +93,11 @@ public class TUI extends UI {
     private final int ACHIEVED_RESOURCES_END_ROW = 42;
     private final int ACHIEVED_RESOURCES_END_COLUMN = 144;
 
+    private final int GAME_OVER_INITIAL_ROW = 14;
+    private final int GAME_OVER_INITIAL_COLUMN = 1;
+    private final int GAME_OVER_END_ROW = 34;
+    private final int GAME_OVER_END_COLUMN = 67;
+
     // CONSTANTS
     private final int CMD_LINE_EFFECTIVE_WIDTH = CMD_LINE_WIDTH - 2;
     private final int CMD_LINE_INPUT_ROW = CMD_LINE_INITIAL_ROW + CMD_LINE_LINES;
@@ -806,7 +811,7 @@ public class TUI extends UI {
                 ? System.console().charset()
                 : Charset.defaultCharset()).println(ansi().fg(YELLOW).a("""
                         █▀▀▀▀█  █▀▀▀▀█  █▀▀▀▄   █▀▀▀▀▀  █    █
-                        █       █    █  █    █  █        ▀▄▄▀
+                        █       █    █  █    █  █        ▀▄▄▀ 
                         █       █    █  █    █  █▀▀▀▀▀   ▄▀▀▄
                         █▄▄▄▄█  █▄▄▄▄█  █▄▄▄▀   █▄▄▄▄▄  █    █
                             """).reset());
@@ -1487,16 +1492,14 @@ public class TUI extends UI {
             res.append(print_PlacedCards(playArea));
             placedCards = playArea;
 
-            res.append(clearArea(ACHIEVED_RESOURCES_INITIAL_ROW, ACHIEVED_RESOURCES_INITIAL_COLUMN,
-                    ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
-            res.append(print_Borders("", ACHIEVED_RESOURCES_INITIAL_ROW, ACHIEVED_RESOURCES_INITIAL_COLUMN,
-                    ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
-            int index = 0;
-            for (Map.Entry<Resources, Integer> entry : achievedResources.entrySet()) {
-                res.append(
-                        ansi().cursor(ACHIEVED_RESOURCES_INITIAL_ROW + 1 + index, ACHIEVED_RESOURCES_INITIAL_COLUMN + 1)
-                                .a(entry.getKey().getSymbol() + ": " + entry.getValue()));
-                index++;
+            if (achievedResources != null) {
+                res.append(clearArea(ACHIEVED_RESOURCES_INITIAL_ROW, ACHIEVED_RESOURCES_INITIAL_COLUMN, ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
+                res.append(print_Borders("", ACHIEVED_RESOURCES_INITIAL_ROW, ACHIEVED_RESOURCES_INITIAL_COLUMN, ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
+                int index = 0;
+                for (Map.Entry<Resources, Integer> entry : achievedResources.entrySet()) {
+                    res.append(ansi().cursor(ACHIEVED_RESOURCES_INITIAL_ROW + 1 + index, ACHIEVED_RESOURCES_INITIAL_COLUMN + 1).a(entry.getKey().getSymbol() + ": " + entry.getValue()));
+                    index++;
+                }
             }
             synchronized (playViewUpdate) {
                 playViewUpdate.add(res);
@@ -1527,6 +1530,12 @@ public class TUI extends UI {
         }
         areasCache.put(TUIAreas.PLAYERS_INFO, res);
 
+    }
+
+    @Override
+    public void update_ToPlayingState() {
+        this.state = new PlayingState(this);
+        state.command_showCommandsInfo();
     }
 
     @Override
@@ -1706,19 +1715,11 @@ public class TUI extends UI {
         state = new JoinedToGameState(this);
         state.command_showCommandsInfo();
         state.stateNotify();
-        chatBoardThread.start();
 
     }
 
-    // NOTE è un memo per quando creerò il metodo
     @Override
     public void show_quitFromGame(int id) {
-        printToCmdLineOut(serverWrite("Quit from game: " + id));
-        chatBoardThread.interrupt();
-        chatBoardThread = chatBoardThreadBuilder(); // mi sembra di ricordare da qualche vecchia lezione che se il
-                                                    // thread muore l'assegnazione all'oggetto sparisce e va rifatta
-        state = new InitState(this);
-        state.stateNotify();
 
     }
 
@@ -1735,7 +1736,6 @@ public class TUI extends UI {
         state = new JoinedToGameState(this);
         state.command_showCommandsInfo();
         state.stateNotify();
-        chatBoardThread.start();
     }
 
     @Override
@@ -1749,13 +1749,6 @@ public class TUI extends UI {
         // }
         // state.stateNotify();
         //FIXME
-    }
-
-    @Override
-    public void update_ToPlayingState() {
-        this.state = new PlayingState(this);
-        state.command_showCommandsInfo();
-
     }
 
     @Override
@@ -1821,9 +1814,19 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_GameIsOver() {
+    public void show_GameIsOver(String username) {
         StringBuilder res = new StringBuilder();
-        res.append(ansi().cursor(1, 1).a("Game Is Over"));
+        res.append(clearArea(GAME_OVER_INITIAL_ROW, GAME_OVER_INITIAL_COLUMN, GAME_OVER_END_ROW,
+                GAME_OVER_END_COLUMN));
+        res.append(print_Borders("", GAME_OVER_INITIAL_ROW, GAME_OVER_INITIAL_COLUMN,
+                GAME_OVER_END_ROW, GAME_OVER_END_COLUMN));
+
+        if (client.getUsername().equals(username)) {
+            res.append(ansi().cursor(GOLD_DECK_INITIAL_ROW+1, GAME_OVER_INITIAL_COLUMN+1).a("You are the winner"));
+        } else {
+            res.append(ansi().cursor(GOLD_DECK_INITIAL_ROW+1, GAME_OVER_INITIAL_COLUMN+1).a("You lost!"));
+        }
+
         synchronized (playViewUpdate) {
             playViewUpdate.add(res);
             playViewUpdate.notify();
@@ -1838,19 +1841,19 @@ public class TUI extends UI {
 
     @Override
     public void show_heartBeat() {
-        StringBuilder res = new StringBuilder();
-        if (heart == false) {
-            res.append(ansi().cursor(1, 1).a("💚"));
-            heart = true;
-        } else {
-            res.append(ansi().cursor(1, 1).a("💔"));
-            heart = false;
-
-        }
-        synchronized (playViewUpdate) {
-            playViewUpdate.add(res);
-            playViewUpdate.notify();
-        }
+//        StringBuilder res = new StringBuilder();
+//        if (heart == false) {
+//            res.append(ansi().cursor(1, 1).a("💚"));
+//            heart = true;
+//        } else {
+//            res.append(ansi().cursor(1, 1).a("💔"));
+//            heart = false;
+//
+//        }
+//        synchronized (playViewUpdate) {
+//            playViewUpdate.add(res);
+//            playViewUpdate.notify();
+//        }
     }
     // Thread HeartBeat = new Thread(()->{
 
