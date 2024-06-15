@@ -121,7 +121,7 @@ public class TUI extends UI {
         System.out.print("\033[H\033[2J");
         System.out.flush();
         try {
-            Thread.sleep(2000);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -132,6 +132,10 @@ public class TUI extends UI {
             playViewUpdate.notify();
         }
         moveCursorToCmdLine();
+        state.command_showCommandsInfo();
+        if(state.stateName.equals("Joined To Game State")){
+            print_ChatBorders();
+        }
         state.stateNotify();
 
     }
