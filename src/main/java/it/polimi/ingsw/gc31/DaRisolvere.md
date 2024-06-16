@@ -10,7 +10,7 @@
 - [x] se un utente logga e non inserisce il nome prima dell'altro blocca quello successivo (in rmi non sembra succedere ma in tcp si)--> potrebbe succedere anche in RMI ma è molto improbabile (dovrebbero loggare in istanti vicinissimi)
       SOLUZIONE (IDEA):
       ---> scrivi la soluzione corretta
-- [ ] alla disconnessione del client il server printa uno stack trace ma sarebbe meglio scrivere un messaggio di log con le info
+- [x] alla disconnessione del client il server printa uno stack trace ma sarebbe meglio scrivere un messaggio di log con le info
 - [x] impostare i valori di default per la connessione se non viene inserito nessun input
       SOLUZIONE: ora ci sono due nuovi valori di DV per forzare l'ip dei server
 
@@ -18,7 +18,7 @@
 - [ ] feedback e storico delle mosse lo vogliamo mettere?
 - [x] qualcosa che ricorda che carta viene selezionata
 - [x] (controllare le starter card---> soprattutto le risorse centrali...vengono stampate?)
-- [ ] il log del server non scrive quando viene creato un nuovo game
+- [x] il log del server non scrive quando viene creato un nuovo game
 - [ ] scrivere di chi è il turno anche agli altri player
 - [ ] il log del server quando qualcuno chiama un'azione che non è nello stato corretto scrive che è stato fatto ma non specifica chi lo ha fatto (lo togliamo o lo implementiamo?)
 - [ ] fixare gli input sbagliati nei comandi (cathare l'input vuoto soprattutto)
@@ -43,4 +43,17 @@
 - [x] controllare show down (quando qualcuno raggiunge 20 pt)
 - [x] poi si finisce il giro dei turni e si gioca un solo turno aggiuntivo
 - [ ] poi devono venir stampati punti sia sul client che sul server (non succede)
-- [ ] va creata la tui di resoconto finale
+- [ ] va creata la UI di resoconto finale
+
+
+## Nuove 
+- [ ] al termine della partita chiedere se rigiocare e in caso contrario eliminare dal gamecontroller i player che non vogliono. Se tutti non vogliono cancellare il gamecontroller
+- [ ] timer che fa vincere l'unico giocatore rimasto se tutti gli altri sono disconnessi. E direi timer per terminare la partita e cancellare il gamecontroller se sono tutti disconnessi
+- [ ] aggiustare wrong input nelle fasi iniziali di lancio del client (rmi tc) (tui gui)
+
+## GUI
+
+
+## TUI
+
+

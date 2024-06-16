@@ -120,6 +120,31 @@ public class TUI extends UI {
     private LinkedHashMap<Point, PlayableCard> placedCards = null;
 
     // PRINT METHODS
+    Map<TUIareas, StringBuilder> areasCache = new HashMap<>();
+    protected Map<TUIcommands, Boolean> commandsCache = new HashMap<>();
+
+    protected void forceRefreshTUI() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        synchronized (playViewUpdate) {
+            for (Map.Entry<TUIareas, StringBuilder> area : areasCache.entrySet()) {
+                playViewUpdate.add(area.getValue());
+            }
+            playViewUpdate.notify();
+        }
+        moveCursorToCmdLine();
+        state.command_showCommandsInfo();
+        if (state.stateName.equals("Joined To Game State")) {
+            print_ChatBorders();
+        }
+        state.stateNotify();
+
+    }
 
     private void erase_ChatBoard() {
         for (int i = -1; i < CHAT_BOARD_LINES + 1; i++) {
@@ -786,7 +811,7 @@ public class TUI extends UI {
                 ? System.console().charset()
                 : Charset.defaultCharset()).println(ansi().fg(YELLOW).a("""
                         █▀▀▀▀█  █▀▀▀▀█  █▀▀▀▄   █▀▀▀▀▀  █    █
-                        █       █    █  █    █  █        ▀▄▄▀ 
+                        █       █    █  █    █  █        ▀▄▄▀
                         █       █    █  █    █  █▀▀▀▀▀   ▄▀▀▄
                         █▄▄▄▄█  █▄▄▄▄█  █▄▄▄▀   █▄▄▄▄▄  █    █
                             """).reset());
@@ -1467,11 +1492,15 @@ public class TUI extends UI {
             placedCards = playArea;
 
             if (achievedResources != null) {
-                res.append(clearArea(ACHIEVED_RESOURCES_INITIAL_ROW, ACHIEVED_RESOURCES_INITIAL_COLUMN, ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
-                res.append(print_Borders("", ACHIEVED_RESOURCES_INITIAL_ROW, ACHIEVED_RESOURCES_INITIAL_COLUMN, ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
+                res.append(clearArea(ACHIEVED_RESOURCES_INITIAL_ROW, ACHIEVED_RESOURCES_INITIAL_COLUMN,
+                        ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
+                res.append(print_Borders("", ACHIEVED_RESOURCES_INITIAL_ROW, ACHIEVED_RESOURCES_INITIAL_COLUMN,
+                        ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
                 int index = 0;
                 for (Map.Entry<Resources, Integer> entry : achievedResources.entrySet()) {
-                    res.append(ansi().cursor(ACHIEVED_RESOURCES_INITIAL_ROW + 1 + index, ACHIEVED_RESOURCES_INITIAL_COLUMN + 1).a(entry.getKey().getSymbol() + ": " + entry.getValue()));
+                    res.append(ansi()
+                            .cursor(ACHIEVED_RESOURCES_INITIAL_ROW + 1 + index, ACHIEVED_RESOURCES_INITIAL_COLUMN + 1)
+                            .a(entry.getKey().getSymbol() + ": " + entry.getValue()));
                     index++;
                 }
             }
@@ -1479,6 +1508,8 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+            areasCache.put(TUIareas.PLAY_AREA_VIEW, res);
+
         }
     }
 
@@ -1500,6 +1531,8 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
+        areasCache.put(TUIareas.PLAYERS_INFO, res);
+
     }
 
     @Override
@@ -1516,6 +1549,8 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
+        areasCache.put(TUIareas.GOLD_DECK, res);
+
     }
 
     @Override
@@ -1526,6 +1561,8 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
+        areasCache.put(TUIareas.RES_DECK, res);
+
     }
 
     @Override
@@ -1560,6 +1597,8 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+            areasCache.put(TUIareas.HAND, res);
+
         }
     }
 
@@ -1577,7 +1616,9 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+            areasCache.put(TUIareas.OBJ, res);
         }
+
     }
 
     @Override
@@ -1607,7 +1648,9 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+            areasCache.put(TUIareas.CHOSE_OBJ, res);
         }
+
     }
 
     @Override
@@ -1629,6 +1672,8 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
+        areasCache.put(TUIareas.COMMON_OBJ, res);
+
     }
 
     @Override
@@ -1646,6 +1691,8 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+            areasCache.put(TUIareas.STARTER, res);
+
         }
     }
 
@@ -1676,7 +1723,10 @@ public class TUI extends UI {
 
     @Override
     public void show_quitFromGame(int id) {
-
+        state = new InitState(this);
+        state.command_showCommandsInfo();
+        // TODO: erase player info
+        state.stateNotify();
     }
 
     @Override
@@ -1704,6 +1754,7 @@ public class TUI extends UI {
         // }
         // }
         // state.stateNotify();
+        // FIXME
     }
 
     @Override
@@ -1734,6 +1785,8 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+            areasCache.put(TUIareas.PLAYER_STATE, res);
+
         }
     }
 
@@ -1755,10 +1808,14 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
+
+        areasCache.put(TUIareas.PLAYERS_INFO, res);
+
     }
 
     @Override
     public void show_invalidAction(String message) {
+        printToCmdLineOut(serverWrite("INVALID ACTION"));
 
     }
 
@@ -1771,9 +1828,9 @@ public class TUI extends UI {
                 GAME_OVER_END_ROW, GAME_OVER_END_COLUMN));
 
         if (client.getUsername().equals(username)) {
-            res.append(ansi().cursor(GOLD_DECK_INITIAL_ROW+1, GAME_OVER_INITIAL_COLUMN+1).a("You are the winner"));
+            res.append(ansi().cursor(GOLD_DECK_INITIAL_ROW + 1, GAME_OVER_INITIAL_COLUMN + 1).a("You are the winner"));
         } else {
-            res.append(ansi().cursor(GOLD_DECK_INITIAL_ROW+1, GAME_OVER_INITIAL_COLUMN+1).a("You lost!"));
+            res.append(ansi().cursor(GOLD_DECK_INITIAL_ROW + 1, GAME_OVER_INITIAL_COLUMN + 1).a("You lost!"));
         }
 
         synchronized (playViewUpdate) {
@@ -1790,19 +1847,19 @@ public class TUI extends UI {
 
     @Override
     public void show_heartBeat() {
-//        StringBuilder res = new StringBuilder();
-//        if (heart == false) {
-//            res.append(ansi().cursor(1, 1).a("💚"));
-//            heart = true;
-//        } else {
-//            res.append(ansi().cursor(1, 1).a("💔"));
-//            heart = false;
-//
-//        }
-//        synchronized (playViewUpdate) {
-//            playViewUpdate.add(res);
-//            playViewUpdate.notify();
-//        }
+        // StringBuilder res = new StringBuilder();
+        // if (heart == false) {
+        // res.append(ansi().cursor(1, 1).a("💚"));
+        // heart = true;
+        // } else {
+        // res.append(ansi().cursor(1, 1).a("💔"));
+        // heart = false;
+        //
+        // }
+        // synchronized (playViewUpdate) {
+        // playViewUpdate.add(res);
+        // playViewUpdate.notify();
+        // }
     }
     // Thread HeartBeat = new Thread(()->{
 
