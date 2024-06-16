@@ -142,7 +142,7 @@ public class InitState extends TuiState {
     }
 
     @Override
-    protected void command_refreshTUI() {
+    protected void command_refresh() {
     }
 
 }

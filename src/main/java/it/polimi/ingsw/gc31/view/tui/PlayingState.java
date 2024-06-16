@@ -21,7 +21,7 @@ public class PlayingState extends TuiState {
     protected void initialize() {
         commandsMap = new LinkedHashMap<>();
         commandsMap.put(("help").toLowerCase(), this::command_showCommandsInfo);
-        commandsMap.put("ref", this::command_refreshTUI);
+        commandsMap.put("ref", this::command_refresh);
         commandsMap.put("dg", this::command_drawGold);
         commandsMap.put("dr", this::command_drawResource);
         commandsMap.put("co", this::command_chooseSecreteObjective);
@@ -121,6 +121,7 @@ public class PlayingState extends TuiState {
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+        tui.commandsCache.put(TUIcommands.CHOOSE_SERCRET_OBJ, true);
         stateNotify();
     }
 
@@ -131,6 +132,7 @@ public class PlayingState extends TuiState {
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+        tui.commandsCache.put(TUIcommands.PLAY_STARTER, true);
         stateNotify();
     }
 
@@ -241,7 +243,7 @@ public class PlayingState extends TuiState {
     }
 
     @Override
-    protected void command_refreshTUI() {
+    protected void command_refresh() {
         tui.forceRefreshTUI();
     }
 

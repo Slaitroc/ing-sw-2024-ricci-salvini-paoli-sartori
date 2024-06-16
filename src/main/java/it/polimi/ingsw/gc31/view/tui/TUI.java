@@ -120,7 +120,9 @@ public class TUI extends UI {
     private LinkedHashMap<Point, PlayableCard> placedCards = null;
 
     // PRINT METHODS
-    Map<TUIAreas, StringBuilder> areasCache = new HashMap<>();
+    Map<TUIareas, StringBuilder> areasCache = new HashMap<>();
+    protected Map<TUIcommands, Boolean> commandsCache = new HashMap<>();
+
 
     protected void forceRefreshTUI(){
         System.out.print("\033[H\033[2J");
@@ -131,7 +133,7 @@ public class TUI extends UI {
             e.printStackTrace();
         }
         synchronized(playViewUpdate){
-        for (Map.Entry<TUIAreas, StringBuilder> area : areasCache.entrySet()) {
+        for (Map.Entry<TUIareas, StringBuilder> area : areasCache.entrySet()) {
                 playViewUpdate.add(area.getValue());
             }
             playViewUpdate.notify();
@@ -1505,7 +1507,7 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
-        areasCache.put(TUIAreas.PLAY_AREA_VIEW, res);
+        areasCache.put(TUIareas.PLAY_AREA_VIEW, res);
 
         }
     }
@@ -1528,7 +1530,7 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
-        areasCache.put(TUIAreas.PLAYERS_INFO, res);
+        areasCache.put(TUIareas.PLAYERS_INFO, res);
 
     }
 
@@ -1546,7 +1548,7 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
-        areasCache.put(TUIAreas.GOLD_DECK, res);
+        areasCache.put(TUIareas.GOLD_DECK, res);
         
     }
 
@@ -1558,7 +1560,7 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
-        areasCache.put(TUIAreas.RES_DECK, res);
+        areasCache.put(TUIareas.RES_DECK, res);
 
     }
 
@@ -1594,7 +1596,7 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
-        areasCache.put(TUIAreas.HAND, res);
+        areasCache.put(TUIareas.HAND, res);
 
         }
     }
@@ -1613,7 +1615,7 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
-            areasCache.put(TUIAreas.OBJ, res);
+            areasCache.put(TUIareas.OBJ, res);
         }
 
     }
@@ -1645,7 +1647,7 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
-            areasCache.put(TUIAreas.CHOSE_OBJ, res);
+            areasCache.put(TUIareas.CHOSE_OBJ, res);
         }
 
     }
@@ -1669,7 +1671,7 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
-        areasCache.put(TUIAreas.COMMON_OBJ, res);
+        areasCache.put(TUIareas.COMMON_OBJ, res);
 
     }
 
@@ -1688,7 +1690,7 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
-        areasCache.put(TUIAreas.STARTER, res);
+        areasCache.put(TUIareas.STARTER, res);
 
         }
     }
@@ -1779,7 +1781,7 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
-        areasCache.put(TUIAreas.PLAYER_STATE, res);
+        areasCache.put(TUIareas.PLAYER_STATE, res);
 
         }
     }
@@ -1803,7 +1805,7 @@ public class TUI extends UI {
             playViewUpdate.notify();
         }
 
-        areasCache.put(TUIAreas.PLAYERS_INFO, res);
+        areasCache.put(TUIareas.PLAYERS_INFO, res);
 
     }
 

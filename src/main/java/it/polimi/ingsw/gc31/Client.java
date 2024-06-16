@@ -24,10 +24,11 @@ public class Client {
         CliPrint.coloredPrintPurple("Write Server IP (leave empty if localhost)");
         String ipaddress = scanner.nextLine();
 
-        // if the player does not enter anything, then ipAddress has the value of localhost
+        // if the player does not enter anything, then ipAddress has the value of
+        // localhost
         if (ipaddress.isEmpty()) {
             ipaddress = "127.0.0.1";
-            System.out.println("localhost: "+ipaddress);
+            System.out.println("localhost: " + ipaddress);
         }
 
         CliPrint.coloredPrintPurple("Chose connection:");

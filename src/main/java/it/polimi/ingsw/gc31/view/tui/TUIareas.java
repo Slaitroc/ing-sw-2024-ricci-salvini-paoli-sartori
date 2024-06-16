@@ -1,6 +1,6 @@
 package it.polimi.ingsw.gc31.view.tui;
 
-public enum TUIAreas {
+public enum TUIareas {
     CHAT,
     CMD_LINE,
     PLAY_AREA_VIEW,

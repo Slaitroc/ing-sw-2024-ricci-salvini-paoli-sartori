@@ -28,7 +28,7 @@ public class JoinedToGameState extends TuiState {
         commandsMap.put("ready", this::command_ready);
         commandsMap.put("quit", this::command_quitGame);
         commandsMap.put("invalid", this::command_invalidCommand);
-        commandsMap.put("ref", this::command_refreshTUI);
+        commandsMap.put("ref", this::command_refresh);
 
         // info map
         commandsInfo = new LinkedHashMap<>();
@@ -141,7 +141,7 @@ public class JoinedToGameState extends TuiState {
     }
 
     @Override
-    protected void command_refreshTUI() {
+    protected void command_refresh() {
         tui.forceRefreshTUI();
     }
 
