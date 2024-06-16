@@ -240,6 +240,11 @@ public class PlayingState extends TuiState {
 
     @Override
     protected void command_quitGame() {
+        try {
+            tui.getClient().quitGame();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
