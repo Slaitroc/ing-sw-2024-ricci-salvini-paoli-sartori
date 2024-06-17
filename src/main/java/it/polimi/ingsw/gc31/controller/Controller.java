@@ -308,7 +308,7 @@ public class Controller extends UnicastRemoteObject implements IController {
         if (!clientsHeartBeat.containsKey(client))
             System.out.println("Il client da cui è arrivato l'HeartBeat non è presente nella mappa");
         clientsHeartBeat.replace(client, System.currentTimeMillis());
-        System.out.println(Ansi.ansi().cursor(1, 1).a("\\033[5m💚\\033[0m\\").reset());
+        //System.out.println(Ansi.ansi().cursor(1, 1).a("\\033[5m💚\\033[0m\\").reset());
         // System.out.println("HeartBeat ricevuto");
         client.sendCommand(new HeartBeatObj());
     }
