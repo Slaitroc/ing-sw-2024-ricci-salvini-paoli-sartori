@@ -228,7 +228,7 @@ public class GUI extends UI {
     @Override
     public void show_quitFromGame(int id) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show_quitFromGame'");
+        Platform.runLater(() -> System.out.println("show_quitFromGame called"));
     }
 
     @Override
