@@ -153,6 +153,7 @@ public class GUIApplication extends Application {
 
     public void setListGames(List<String> gamesList) {
         gameInstances.clear();
+        if(gamesList.getFirst().equals("NO GAMES AVAILABLE")) return;
         for (String game : gamesList) {
             String gameID = game.split(" ")[0];
             String players = game.split(" ")[1] + game.split(" ")[2] + game.split(" ")[3];
