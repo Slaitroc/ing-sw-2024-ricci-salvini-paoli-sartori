@@ -15,5 +15,4 @@ public class GoldCard extends PlayableCard {
         else
             return null;
     }
-
 }

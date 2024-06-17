@@ -12,5 +12,4 @@ public class StarterCard extends PlayableCard {
     public Objective getObjective() {
         return null;
     }
-
 }

@@ -68,7 +68,6 @@ public class GameModel {
     }
 
     public void setNextPlayingPlayer() {
-        // TODO potrebbe funzionare il todo
         do {
             if (turnPlayer == null) {
                 turnPlayer = new ArrayList<>();
@@ -182,6 +181,17 @@ public class GameModel {
     public void changStarterSide(String username) throws IllegalStateOperationException {
         gameState.changeStarterSide(this, username);
         listeners.get(username).notifyStarterCardListener(this);
+    }
+
+    public void disconnectPlayer(String username) {
+        playerConnection.put(username, false);
+        if (turnPlayer == null) {
+            // TODO fare scelte di default per il player disconnesso
+        } else {
+            if (getCurrPlayer().getUsername().equals(username)) {
+                setNextPlayingPlayer();
+            }
+        }
     }
 
     public void notifyAllGameListeners() {

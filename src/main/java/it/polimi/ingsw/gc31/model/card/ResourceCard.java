@@ -16,5 +16,4 @@ public class ResourceCard extends PlayableCard {
     public Objective getObjective() {
         return null;
     }
-
 }
