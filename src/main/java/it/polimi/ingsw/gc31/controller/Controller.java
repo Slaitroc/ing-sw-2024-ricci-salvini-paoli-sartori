@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
+import javafx.util.Pair;
 import org.fusesource.jansi.Ansi;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;

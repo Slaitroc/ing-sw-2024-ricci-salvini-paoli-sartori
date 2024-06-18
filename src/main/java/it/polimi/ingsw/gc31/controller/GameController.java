@@ -106,6 +106,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         clientList.remove(username, client);
         readyStatus.remove(username, false);
         Controller.getController().quitGame(username, idGame, client);
+        model.disconnectPlayer(username);
         notifyListPlayers();
     }
 
