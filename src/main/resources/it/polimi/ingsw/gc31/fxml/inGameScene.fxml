@@ -906,6 +906,7 @@
             <Button onMouseClicked="#showHideControls" prefHeight="30.0" prefWidth="100.0" text="Controls" />
             <Button prefHeight="30.0" prefWidth="100.0" text="Quit Game" />
             <Button onMouseClicked="#showHideMenu" prefHeight="30.0" prefWidth="100.0" text="Close Settings" />
+            <Button onMouseClicked="#changeResolution" prefHeight="30.0" prefWidth="100.0" text="Change Resolution" />
         </VBox>
         <VBox fx:id="controlsVBox" alignment="CENTER" managed="false" mouseTransparent="true" spacing="30.0" visible="false">
             <ListView fx:id="controls">
