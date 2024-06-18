@@ -79,7 +79,6 @@ public class EndGameModelState implements GameModelState {
             player.calculateObjectiveCard(model.commonObjectives.get(0));
             player.calculateObjectiveCard(model.commonObjectives.get(1));
         }
-        model.notifyAllGameListeners();
         String usernameWinner = null;
         int maxPoint = 0;
         for (Player player: model.getPlayers().values()) {

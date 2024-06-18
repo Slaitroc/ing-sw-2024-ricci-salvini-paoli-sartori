@@ -287,6 +287,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         }
     }
 
+    public void disconnectPlayer(String username) {
+        model.disconnectPlayer(username);
+    }
+
     public GameModel getModel() {
         return model;
     }
