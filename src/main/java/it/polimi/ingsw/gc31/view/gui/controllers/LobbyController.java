@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.view.gui.controllers;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -293,7 +294,6 @@ public class LobbyController extends ViewController {
                 app.loadScene(SceneTag.GAME);
             }
         }
-
     }
 
 
@@ -311,6 +311,24 @@ public class LobbyController extends ViewController {
      */
     @Override
     public void updateLobby() {
+
+        //Reset lobby state to empty
+        disableStackPane(inGamePlayer2);
+        enableStackPane(waitingPlayer2);
+        iconPlayer1.setVisible(false);
+        iconPlayer2.setVisible(false);
+        iconPlayer3.setVisible(false);
+        iconPlayer4.setVisible(false);
+        if(app.getNumberOfPlayers()>=3){
+            disableStackPane(inGamePlayer3);
+            enableStackPane(waitingPlayer3);
+            if(app.getNumberOfPlayers()==4){
+                disableStackPane(inGamePlayer4);
+                enableStackPane(waitingPlayer4);
+            }
+        }
+
+        //Repopulate lobby
         int count = 1;
         for (Map.Entry<String, Boolean> player : app.getPlayerList().entrySet()) {
             switch (count) {
@@ -319,7 +337,6 @@ public class LobbyController extends ViewController {
                     if (player.getKey().equals(app.getUsername())) {
                         imPlayerNumber = 1;
                         iconPlayer1.setVisible(true);
-
                     }
                     break;
                 case 2:
@@ -352,6 +369,16 @@ public class LobbyController extends ViewController {
             }
             showReady(player.getKey(), player.getValue());
             count++;
+        }
+    }
+
+    public void quit() {
+        try {
+            client.quitGame();
+            app.loadScene(SceneTag.MAINMENU);
+            app.setDefaultWindowSize();
+        } catch (RemoteException e) {
+            show_ServerCrashWarning();
         }
     }
 }

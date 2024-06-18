@@ -10,6 +10,7 @@ module it.polimi.ingsw.gc31 {
     requires org.fusesource.jansi;
     requires jdk.compiler;
     requires org.jline;
+    requires javafx.base;
 
     opens it.polimi.ingsw.gc31.view.gui to javafx.fxml;
     opens it.polimi.ingsw.gc31.view.gui.controllers to javafx.fxml;
