@@ -138,11 +138,10 @@ public class TUI extends UI {
             playViewUpdate.notify();
         }
         moveCursorToCmdLine();
-        state.command_showCommandsInfo();
         if (state.stateName.equals("Joined To Game State")) {
             print_ChatBorders();
         }
-        state.stateNotify();
+        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
 
     }
 
@@ -1163,7 +1162,7 @@ public class TUI extends UI {
      * If the command is "chat", it moves the cursor to the chat input area.
      */
     Thread cmdLineProcessThread = new Thread(() -> {
-        state.command_initial();
+        commandToProcess(TUIcommands.INITIAL, false);
         while (true) {
             String cmd = null;
             synchronized (cmdLineMessages) {
@@ -1181,6 +1180,27 @@ public class TUI extends UI {
             }
         }
     });
+
+    /**
+     * Sends the corresponding TUIcommand to be executed to the ProcessThread and
+     * notify the commands queue.
+     *
+     * @param cmd         The TUI command to process.
+     * @param stateNotify A boolean indicating whether to notify the state or not.
+     */
+    private void commandToProcess(TUIcommands cmd, boolean stateNotify) {
+        synchronized (cmdLineMessages) {
+            if (!stateNotify) {
+                cmdLineMessages.add(cmd.toString());
+                cmdLineMessages.notify();
+            } else {
+                cmdLineMessages.add(cmd.toString());
+                cmdLineMessages.add(TUIcommands.NOTIFY.toString());
+                cmdLineMessages.notify();
+            }
+        }
+    }
+
     /**
      * This thread is used to read the input from the system input and add it to the
      * <code>cmdLineMessages</code> queue.
@@ -1232,6 +1252,9 @@ public class TUI extends UI {
                 } else {
                     synchronized (cmdLineMessages) {
                         cmdLineMessages.add(input.trim());
+                        if (input.trim().equals(TUIcommands.SHOW_COMMAND_INFO.toString())) {
+                            cmdLineMessages.add(TUIcommands.NOTIFY.toString());
+                        }
                         cmdLineMessages.notify();
                     }
                 }
@@ -1363,22 +1386,18 @@ public class TUI extends UI {
      * @param command
      */
     private void execute_command(String command) {
-        if (command.isEmpty() || command.equals("help")) {
+        if (command.isEmpty()) {
             state.command_showCommandsInfo();
             state.stateNotify();
+        } else if (command.equals(TUIcommands.INITIAL.toString()) && state.stateName.equals("Init State")) {
+            state.command_initial();
         } else if (state.commandsMap.containsKey(command)) {
             state.commandsMap.get(command).run();
+        } else if (command.equals(TUIcommands.NOTIFY.toString())) {
+            state.stateNotify();
         } else {
-            state.commandsMap.get("invalid").run();
+            state.commandsMap.get(TUIcommands.INVALID.toString()).run();
         }
-
-        // if (state.commandsMap.containsKey(command)) {
-        // state.commandsMap.get(command).run();
-        // } else if (command.isEmpty() || command.equals("help")) {
-        // state.stateNotify();
-        // } else {
-        // state.commandsMap.get("invalid").run();
-        // }
     }
 
     /**
@@ -1476,7 +1495,7 @@ public class TUI extends UI {
         for (String string : listGame) {
             printToCmdLineOut(string);
         }
-        state.stateNotify();
+        commandToProcess(TUIcommands.NOTIFY, false);
 
     }
 
@@ -1538,7 +1557,9 @@ public class TUI extends UI {
     @Override
     public void update_ToPlayingState() {
         this.state = new PlayingState(this);
-        state.command_showCommandsInfo();
+        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, false);
+        // qui lo state notify non serve perché lo chiama già il metodo triggerato
+        // dall'oggetto risposta di ready
     }
 
     @Override
@@ -1701,38 +1722,37 @@ public class TUI extends UI {
         printToCmdLineOut(serverWrite("Username accepted"));
         printToCmdLineOut(tuiWrite("Your name is: " + username));
         client.setUsernameResponse(username);
-        state.command_showCommandsInfo();
-        state.stateNotify();
+        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
 
     }
 
     @Override
     public void show_wrongUsername(String username) {
         printToCmdLineOut(serverWrite("Username " + username + " already taken, try again"));
-        state.setUsername();
+        commandToProcess(TUIcommands.INITIAL, false);
+
     }
 
     @Override
     public void show_joinedToGame(int id, int maxNumberOfPlayers) {
         printToCmdLineOut(serverWrite("Joined to game: " + id));
         state = new JoinedToGameState(this);
-        state.command_showCommandsInfo();
-        state.stateNotify();
+        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
 
     }
 
     @Override
     public void show_quitFromGame(int id) {
         state = new InitState(this);
-        state.command_showCommandsInfo();
         // TODO: erase player info
-        state.stateNotify();
+        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+
     }
 
     @Override
     public void show_gameIsFull(int id) {
         printToCmdLineOut(serverWrite(serverWrite("Game " + id + " is full")));
-        state.stateNotify();
+        commandToProcess(TUIcommands.NOTIFY, false);
 
     }
 
@@ -1740,8 +1760,8 @@ public class TUI extends UI {
     public void show_gameCreated(int gameID) {
         printToCmdLineOut(serverWrite("New game created with ID: " + gameID));
         state = new JoinedToGameState(this);
-        state.command_showCommandsInfo();
-        state.stateNotify();
+        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+
     }
 
     @Override
@@ -1760,13 +1780,15 @@ public class TUI extends UI {
     @Override
     public void show_gameDoesNotExist() {
         printToCmdLineOut(serverWrite("Game does not exist"));
-        state.stateNotify();
+        commandToProcess(TUIcommands.NOTIFY, false);
+
     }
 
     @Override
     public void show_wrongGameSize() {
         printToCmdLineOut(serverWrite("Game size must be between 2 and 4"));
-        state.stateNotify();
+        commandToProcess(TUIcommands.NOTIFY, false);
+
     }
 
     @Override
