@@ -263,6 +263,7 @@ public class InGameController extends ViewController {
     @Override
     public void setUp() {
 
+        size = ResolutionSizes.HD;
         secretObjective.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_102.jpg"))));
         handCards = new ArrayList<>(Arrays.asList(
                 handCard1, handCard2, handCard3,
@@ -347,7 +348,6 @@ public class InGameController extends ViewController {
         addHandCardDragListener(handCard2);
         addHandCardDragListener(handCard3);
 
-        size = ResolutionSizes.HD;
         changeResolution();
     }
 
@@ -973,10 +973,10 @@ public class InGameController extends ViewController {
 
             //Create a New StackPane of the dimensions of the cell (Smaller than the card image)
             pane = new StackPane();
-            pane.setMaxHeight(60);
-            pane.setMaxWidth(113);
-            pane.setMinHeight(60);
-            pane.setMinWidth(113);
+            pane.setMaxHeight(size.getPaneHeight());
+            pane.setMaxWidth(size.getPaneWidth());
+            pane.setMinHeight(size.getPaneHeight());
+            pane.setMinWidth(size.getPaneWidth());
             pane.getChildren().add(this);
 
             //Insert invisible image to the stackPane (Set the image dimensions bigger than the stackPane, set his viewPort, and his clip (for round corners))
@@ -984,8 +984,8 @@ public class InGameController extends ViewController {
             this.setImage(cardImage);
             this.setPreserveRatio(true);
             this.setViewport(cardViewportSD);
-            this.setFitWidth(149); // set the card width
-            this.setFitHeight(100); // Set the card height
+            this.setFitWidth(size.getWidth()); // set the card width
+            this.setFitHeight(size.getHeight()); // Set the card height
             setClipToImageView(this);
 
             //If the cell belongs to player1, it is set to accept drag and drop events
