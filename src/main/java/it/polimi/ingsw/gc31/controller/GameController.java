@@ -123,7 +123,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void checkReady() throws RemoteException {
         int counter = 0;
         for (Boolean status : readyStatus.values()) {
-            if (status == true) {
+            if (status) {
                 counter++;
             }
         }
@@ -193,7 +193,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.drawResource(username, index);
         } catch (IllegalStateOperationException e) {
-            throw new RuntimeException(e);
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
         }
     }
 
@@ -255,7 +255,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             model.setSelectCard(username, index);
         } catch (IllegalStateOperationException e) {
             try {
-                clientList.get(username).sendCommand(new ShowInvalidActionObj("You are in the wrong state"));
+                clientList.get(username).sendCommand(new ShowInvalidActionObj("You can't select a card"));
             } catch (RemoteException ex) {
                 // TODO occuparsi dell'eccezione
                 throw new RuntimeException(ex);

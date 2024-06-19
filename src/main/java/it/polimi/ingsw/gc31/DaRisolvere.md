@@ -55,5 +55,5 @@
 
 
 ## TUI
-
+Cosa succde quando hai piazzato la carta e provi a selezionare la terza carta in mano?
 

@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import java.rmi.RemoteException;
 import java.util.*;
 
+import it.polimi.ingsw.gc31.model.card.GoldCard;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.strategies.*;
 import it.polimi.ingsw.gc31.utility.DV;
@@ -24,6 +25,7 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.view.UI;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class TUI extends UI {
 
     // MODIFICABILI
@@ -114,7 +116,7 @@ public class TUI extends UI {
     // shift of the StarterCard along the y-axis relative to the center
     private int OFFSET_Y_PLAYAREA = 0;
 
-    // private final int[] RGB_COLOR_GOLD = { 181, 148, 16 };
+    private final int[] RGB_COLOR_GOLD = { 181, 148, 16 };
 
     // FIXME temporaneo
     private LinkedHashMap<Point, PlayableCard> placedCards = null;
@@ -361,6 +363,7 @@ public class TUI extends UI {
         int[] cornerUpDxColor;
         int[] cornerDownSxColor;
         int[] cornerDownDxColor;
+        int[] borderColor = {255,255,255};
 
         if (!resources.get(0).equals(Resources.HIDDEN)) {
             cornerUpDxColor = RGB_COLOR_CORNER;
@@ -381,6 +384,11 @@ public class TUI extends UI {
             cornerUpSxColor = RGB_COLOR_CORNER;
         } else {
             cornerUpSxColor = cardColor;
+        }
+
+        // TODO da cambiare è temporaneo
+        if (card instanceof GoldCard) {
+            borderColor = RGB_COLOR_GOLD;
         }
 
         // if the card entirely exceeds the limits of the playArea it is not printed
@@ -443,9 +451,11 @@ public class TUI extends UI {
 
                 } else {
                     res.append(ansi().cursor(relative_y, relative_x)
+                            .fgRgb(borderColor[0], borderColor[1],borderColor[2])
                             .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine)
                             .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
-                            .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine));
+                            .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine)
+                            .reset());
                 }
             }
 
@@ -692,9 +702,11 @@ public class TUI extends UI {
                     }
                 } else {
                     res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
+                            .fgRgb(borderColor[0], borderColor[1],borderColor[2])
                             .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine)
                             .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
-                            .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine));
+                            .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine)
+                            .reset());
                 }
             }
 
@@ -1815,7 +1827,7 @@ public class TUI extends UI {
 
     @Override
     public void show_invalidAction(String message) {
-        printToCmdLineOut(serverWrite("INVALID ACTION"));
+        printToCmdLineOut(serverWrite(message));
 
     }
 

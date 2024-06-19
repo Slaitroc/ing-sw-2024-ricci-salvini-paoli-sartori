@@ -54,10 +54,10 @@ class DeckTest {
         assertDoesNotThrow(starterDeck::draw);
 
         // the 7th card of goldDeck should be null
-        /*for (int i=0; i<4; i++) {
+        for (int i=0; i<3; i++) {
             assertDoesNotThrow(starterDeck::draw);
         }
-        assertThrowsExactly(EmptyDeckException.class, starterDeck::draw);*/
+        assertThrowsExactly(EmptyDeckException.class, starterDeck::draw);
 
         // the objectiveDeck has 16 cards
         Deck<ObjectiveCard> objectiveDeck = new Deck<>(CardType.OBJECTIVE);
@@ -75,31 +75,79 @@ class DeckTest {
             assertDoesNotThrow(objectiveDeck::draw);
         }
         assertThrowsExactly(EmptyDeckException.class, objectiveDeck::draw);
+        assertTrue(objectiveDeck.isEmpty());
     }
 
     @Test
-    void flipCard1() {
+    void replaceDeck() {
         Deck<PlayableCard> goldDeck = new Deck<>(CardType.GOLD);
-        goldDeck.refill();
+        Deck<PlayableCard> resourceDeck = new Deck<>(CardType.RESOURCE);
 
-        // the Card 1 must be on the true side by default
-        assertTrue(goldDeck.peekCard1().getSide());
-
-        // after fliCard1, Card1 must be on the false side
-        goldDeck.flipCard1();
-        assertFalse(goldDeck.peekCard1().getSide());
+        goldDeck.replaceDeck(resourceDeck.getQueueDeck());
+        assertInstanceOf(ResourceCard.class, goldDeck.draw());
     }
 
     @Test
-    void flipCard2() {
+    void refill() {
+    }
+
+    @Test
+    void getCard1() {
         Deck<PlayableCard> goldDeck = new Deck<>(CardType.GOLD);
         goldDeck.refill();
 
-        // the Card 2 must be on the true side by default
-        assertTrue(goldDeck.peekCard2().getSide());
+        assertEquals(38, goldDeck.getQueueDeck().size());
+        // this method returns card 1 and removes it from deck
+        goldDeck.getCard1();
+        assertEquals(37, goldDeck.getQueueDeck().size());
 
-        // after fliCard1, Card2 must be on the false side
-        goldDeck.flipCard2();
-        assertFalse(goldDeck.peekCard2().getSide());
+        // refill is automatically called
+        assertNotNull(goldDeck.getCard1());
+    }
+
+    @Test
+    void getCard2() {
+        Deck<PlayableCard> goldDeck = new Deck<>(CardType.GOLD);
+        goldDeck.refill();
+
+        assertEquals(38, goldDeck.getQueueDeck().size());
+        // this method returns card 2 and removes it from deck
+        goldDeck.getCard2();
+        assertEquals(37, goldDeck.getQueueDeck().size());
+
+        // refill is automatically called
+        assertNotNull(goldDeck.getCard2());
+    }
+
+    @Test
+    void peekCard() {
+        // this method returns the card on the top of the deck but doesn't remove it from deck
+        Deck<PlayableCard> goldDeck = new Deck<>(CardType.GOLD);
+
+        assertEquals(40, goldDeck.getQueueDeck().size());
+        goldDeck.peekCard();
+        assertEquals(40, goldDeck.getQueueDeck().size());
+    }
+
+    @Test
+    void peekCard1() {
+        // this method returns card 1 but doesn't remove it from deck
+        Deck<PlayableCard> goldDeck = new Deck<>(CardType.GOLD);
+        goldDeck.refill();
+
+        assertEquals(38, goldDeck.getQueueDeck().size());
+        goldDeck.peekCard1();
+        assertEquals(38, goldDeck.getQueueDeck().size());
+    }
+
+    @Test
+    void peekCard2() {
+        // this method returns card 2 but doesn't remove it from deck
+        Deck<PlayableCard> goldDeck = new Deck<>(CardType.GOLD);
+        goldDeck.refill();
+
+        assertEquals(38, goldDeck.getQueueDeck().size());
+        goldDeck.peekCard2();
+        assertEquals(38, goldDeck.getQueueDeck().size());
     }
 }

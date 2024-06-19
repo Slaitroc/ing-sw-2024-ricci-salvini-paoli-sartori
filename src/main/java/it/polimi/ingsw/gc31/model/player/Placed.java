@@ -16,17 +16,12 @@ public class Placed extends PlayerState {
     }
 
     @Override
-    public void addToHand(Deck<PlayableCard> deck, Player player, int index)
+    public void addToHand(Deck<PlayableCard> deck, Deck<PlayableCard> substituteDeck, Player player, int index)
             throws FullHandException, NullPointerException {
-        executeAddToHand(deck, player, index);
+        executeAddToHand(deck, substituteDeck, player, index);
         player.setInGameState(new Waiting());
         //System.out.println("PLAYER: " + player.getUsername() + " HAS JUST DRAWN A CARD, IS NOW WAITING.");
     }
-
-//    @Override
-//    public void moveCardInHand(Player player) {
-//        executeMoveCardInHand(player);
-//    }
 
     @Override
     public void play(Point point, Player player) throws IllegalStateOperationException {
