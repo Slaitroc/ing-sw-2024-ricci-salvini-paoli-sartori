@@ -31,10 +31,10 @@ public class GameListController extends ViewController {
         gameIDColumn.setCellValueFactory(cellData -> cellData.getValue().gameIDProperty());
         playersColumn.setCellValueFactory(cellData -> cellData.getValue().playersProperty());
 
-        actionColumn.setCellFactory(new Callback<TableColumn<GameInstance, Void>, TableCell<GameInstance, Void>>() {
+        actionColumn.setCellFactory(new Callback<>() {
             @Override
             public TableCell<GameInstance, Void> call(final TableColumn<GameInstance, Void> param) {
-                final TableCell<GameInstance, Void> cell = new TableCell<GameInstance, Void>() {
+                return new TableCell<>() {
                     private final Button btn = new Button("Join");
 
                     {
@@ -57,7 +57,6 @@ public class GameListController extends ViewController {
                         }
                     }
                 };
-                return cell;
             }
         });
     }

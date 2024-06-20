@@ -856,17 +856,6 @@ public class InGameController extends ViewController {
         }
     }
 
-    /*private void changeResWindowBorder(int playerNumber, String info) {
-        switch (info) {
-            case "waiting":
-                resourceWindows.get(playerNumber).setBorder(new Border(new BorderStroke(javafx.scene.paint.Color.YELLOW, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-                break;
-            case "Not Placed":
-                resourceWindows.get(playerNumber).setBorder(new Border(new BorderStroke(javafx.scene.paint.Color.BLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-                break;
-        }
-    }*/
-
     private void hideHand(List<PlayableCard> hand) {
         for (PlayableCard playableCard : hand) {
             if (playableCard.getSide()) {
@@ -933,8 +922,8 @@ public class InGameController extends ViewController {
     }
 
     private void resizeCard(ImageView card) {
-        //System.out.println("card.getFitWidth(): "+card.getFitWidth()+" \ncard.getFitHeight(): " + card.getFitHeight());
-        //System.out.println("card.getImage().getWidth(): "+card.getImage().getWidth()+" \ncard.getImage().getHeight() " + card.getImage().getHeight());
+        //System.out.println("card.getFitWidth(): "+card.getFitWidth()+" \n card.getFitHeight(): " + card.getFitHeight());
+        //System.out.println("card.getImage().getWidth(): "+card.getImage().getWidth()+" \n card.getImage().getHeight() " + card.getImage().getHeight())
         card.setFitHeight(size.getHeight());
         card.setFitWidth(size.getWidth());
         setClipToImageView(card);

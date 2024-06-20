@@ -17,6 +17,7 @@ import it.polimi.ingsw.gc31.view.gui.controllers.ViewController;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class GUIApplication extends Application {
 
@@ -27,7 +28,7 @@ public class GUIApplication extends Application {
     private static String username;
     private static Integer numberOfPlayers;
     private static Integer currentGameID;
-    private static ObservableList<GameInstance> gameInstances = FXCollections.observableArrayList();
+    private static final ObservableList<GameInstance> gameInstances = FXCollections.observableArrayList();
     private static ViewController currentController;
     private static LinkedHashMap<String, Boolean> playerList = new LinkedHashMap<>();
 
@@ -53,7 +54,7 @@ public class GUIApplication extends Application {
         // Set Title and AppIcon
         primaryStage.setTitle("CODEX Naturalis");
         Image icon = new Image(
-                getClass().getResource("/it/polimi/ingsw/gc31/Images/AppIcons/icon.png").toExternalForm());
+                Objects.requireNonNull(getClass().getResource("/it/polimi/ingsw/gc31/Images/AppIcons/icon.png")).toExternalForm());
         primaryStage.getIcons().add(icon);
         // primaryStage.resizableProperty().setValue(Boolean.FALSE);
 
@@ -62,9 +63,9 @@ public class GUIApplication extends Application {
     }
 
     private void initializeGUIResources() {
-        Font.loadFont(getClass().getResource("/it/polimi/ingsw/gc31/Fonts/FrakturNo2.ttf").toExternalForm(),
+        Font.loadFont(Objects.requireNonNull(getClass().getResource("/it/polimi/ingsw/gc31/Fonts/FrakturNo2.ttf")).toExternalForm(),
                 10);
-        Font.loadFont(getClass().getResource("/it/polimi/ingsw/gc31/Fonts/glimmerOfLight.otf").toExternalForm(),
+        Font.loadFont(Objects.requireNonNull(getClass().getResource("/it/polimi/ingsw/gc31/Fonts/glimmerOfLight.otf")).toExternalForm(),
                 10);
     }
 
