@@ -1260,6 +1260,39 @@ public class TUI extends UI {
         }
     }
 
+    private final Queue<StringBuilder> statusBar = new ArrayDeque<StringBuilder>();
+    Thread statusBarThread = new Thread(() -> {
+        while (true) {
+            synchronized (statusBar) {
+                while (statusBar.isEmpty()) {
+                    try {
+                        statusBar.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            System.out.println(statusBar.poll());
+            resetCursor();
+        }
+
+    });
+
+    Thread statusBarUpdateThread = new Thread(() -> {
+        while (true) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            // AnsiConsole.out().print(ansi().cursor(1, 17).a("💔"));
+
+            // resetCursor();
+
+        }
+
+    });
+
     /**
      * This thread is used to read the input from the system input and add it to the
      * <code>cmdLineMessages</code> queue.
@@ -1303,6 +1336,17 @@ public class TUI extends UI {
                 if (input.equals("chat")) {
                     // printToCmdLineOut("comando " + input + " eseguito", Ansi.Color.CYAN);
                     printToCmdLineIn("comando chat");
+
+                    /////
+                    StringBuilder chatNotify = new StringBuilder();
+                    chatNotify.append(
+                            Ansi.ansi().cursor(1, 20).a(" ".repeat("🔵-> New Chat Messages".length())).toString());
+                    synchronized (statusBar) {
+                        statusBar.add(chatNotify);
+                        statusBar.notify();
+                    }
+
+                    ////
                     removeFromCmdLineAreaSelection();
                     comingFromChat = true;
                     addToChatAreaSelection();
@@ -1428,7 +1472,19 @@ public class TUI extends UI {
     public void show_chatMessage(String username, String message) {
         synchronized (chatNeedsUpdate) {
             chatMessages.add(username + ": " + message);
-            chatNeedsUpdate.notifyAll();
+        }
+        if (chatAreaSelection.isEmpty()) {
+
+            StringBuilder chatNotify = new StringBuilder();
+            chatNotify.append(Ansi.ansi().cursor(1, 20).a("🔵-> New Chat Messages").toString());
+            synchronized (statusBar) {
+                statusBar.add(chatNotify);
+                statusBar.notify();
+            }
+        } else {
+            synchronized (chatNeedsUpdate) {
+                chatNeedsUpdate.notifyAll();
+            }
         }
     }
 
@@ -1510,6 +1566,8 @@ public class TUI extends UI {
         // chatBoardThread.start();
         chatReaderThread.start();
         playViewThread.start();
+        statusBarThread.start();
+        statusBarUpdateThread.start();
         cmdLineOutThread.start();
 
     }
@@ -1920,10 +1978,14 @@ public class TUI extends UI {
         client.setToken(token);
     }
 
-    private boolean heart = false;
-
     @Override
     public void show_heartBeat() {
+        StringBuilder heart = new StringBuilder();
+        heart.append(Ansi.ansi().cursor(1, 17).a("💚"));
+        synchronized (statusBar) {
+            statusBar.add(heart);
+            statusBar.notify();
+        }
         // StringBuilder res = new StringBuilder();
         // if (heart == false) {
         // res.append(ansi().cursor(1, 1).a("💚"));
@@ -1938,7 +2000,5 @@ public class TUI extends UI {
         // playViewUpdate.notify();
         // }
     }
-    // Thread HeartBeat = new Thread(()->{
 
-    // });
 }
