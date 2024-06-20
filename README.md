@@ -10,7 +10,7 @@
     <h5><a href="https://github.com/AleSarto">Sartori Alessanro</a></h5>
 </div>
 
-## Features
+## Features <img src="https://i.ibb.co/RzyJZXm/imp.png" align="right" alt="logo" width="130" height = "139" style = "border: none; float: right;">
 
 | Feature | Implemented  |
 | -------- | -------- | 
@@ -27,6 +27,8 @@
 [RuleBook ENG PDF](./documents/CODEX_Rulebook_EN.pdf)
 🔵
 [RuleBook IT PDF](./documents/CODEX_Rulebook_IT.pdf)
+
+# How To Use <img src="https://i.ibb.co/QHmskqv/run.png" align="right" alt="logo" width="130" height = "139" style = "border: none; float: right;">
 
 
 
