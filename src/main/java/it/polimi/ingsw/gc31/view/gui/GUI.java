@@ -22,7 +22,7 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void uiRunUI() {
+    public void runUI() {
         app = new GUIApplication();
         app.setClient(client);
         client.setUI(this);
@@ -133,11 +133,13 @@ public class GUI extends UI {
 
     @Override
     public void show_handPlayer(String username, List<PlayableCard> hand, int selectedCard) {
-        /*System.out.println("Player " + username + " hand: ");
-        for(PlayableCard card : hand){
-            System.out.println(card.getSide());
-        }
-        System.out.println("Selected card: " + selectedCard + "\n");*/
+        /*
+         * System.out.println("Player " + username + " hand: ");
+         * for(PlayableCard card : hand){
+         * System.out.println(card.getSide());
+         * }
+         * System.out.println("Selected card: " + selectedCard + "\n");
+         */
         Platform.runLater(() -> {
             app.getCurrentController().show_handPlayer(username, hand);
             // System.out.println("show_handPlayer called");
@@ -174,7 +176,8 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea, Map<Resources, Integer> achievedResources) {
+    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea,
+            Map<Resources, Integer> achievedResources) {
         Platform.runLater(() -> app.getCurrentController().show_playArea(username, playArea, achievedResources));
         // System.out.println("show_playArea called");
         // System.out.println("Player "+ username + " achievedResources: " +

@@ -249,7 +249,7 @@ public class PlayingState extends TuiState {
 
     @Override
     protected void command_refresh() {
-        tui.forceRefreshTUI();
+        tui.forceRefreshTUI(true);
     }
 
 }
