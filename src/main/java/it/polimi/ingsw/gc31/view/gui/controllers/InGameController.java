@@ -224,12 +224,14 @@ public class InGameController extends ViewController {
     @FXML
     public Tab tab4;
 
-    private final List<String> otherPlayers = new ArrayList<>();
-
     @FXML
     public Button playStarterButton;
 
     public VBox initialChoise;
+
+    private final List<String> otherPlayers = new ArrayList<>();
+
+    private ResolutionSizes size;
 
 
     /* NOTE
@@ -252,7 +254,7 @@ public class InGameController extends ViewController {
     private final Map<Pair<Integer, Integer>, Cell> cells4 = new HashMap<>();
     private final List<Map<Pair<Integer, Integer>, Cell>> cellList = new ArrayList<>(Arrays.asList(cells1, cells2, cells3, cells4));
 
-    Rectangle2D cardViewport = new Rectangle2D(69, 79, 894, 600);
+    Rectangle2D cardViewportSD = new Rectangle2D(69, 79, 894, 600);
 
     @Override
     protected void initialize() {
@@ -261,6 +263,7 @@ public class InGameController extends ViewController {
     @Override
     public void setUp() {
 
+        size = ResolutionSizes.HD;
         secretObjective.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_102.jpg"))));
         handCards = new ArrayList<>(Arrays.asList(
                 handCard1, handCard2, handCard3,
@@ -270,21 +273,9 @@ public class InGameController extends ViewController {
         ));
 
         // Set the clip of the ImageViews to a rectangle with rounded corners
-        for(ImageView handCard: handCards){
+        for (ImageView handCard : handCards) {
             setClipToImageView(handCard);
         }
-        setClipToImageView(deckGold);
-        setClipToImageView(deckGoldCard1);
-        setClipToImageView(deckGoldCard2);
-        setClipToImageView(deckResource);
-        setClipToImageView(deckResourceCard1);
-        setClipToImageView(deckResourceCard2);
-        setClipToImageView(secretObj1);
-        setClipToImageView(secretObj2);
-        setClipToImageView(commonObjCard1);
-        setClipToImageView(commonObjCard2);
-        setClipToImageView(starterCard);
-        setClipToImageView(secretObjective);
 
         controls.getItems().add("Flip Card:   \tRight Click");
         controls.getItems().add("Draw Card:   \tLeft Click");
@@ -357,6 +348,7 @@ public class InGameController extends ViewController {
         addHandCardDragListener(handCard2);
         addHandCardDragListener(handCard3);
 
+        changeResolution();
     }
 
 
@@ -471,11 +463,11 @@ public class InGameController extends ViewController {
         //System.out.println("Hello, I'm player " + app.getUsername() + " and I received the message that " + username + " is in state " + info);
         if (username.equals(app.getUsername())) {
             playingPlayer1Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
-        }else if (username.equals(otherPlayers.getFirst())) {
+        } else if (username.equals(otherPlayers.getFirst())) {
             playingPlayer2Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
-        }else if (username.equals(otherPlayers.get(1))) {
+        } else if (username.equals(otherPlayers.get(1))) {
             playingPlayer3Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
-        }else if (username.equals(otherPlayers.get(2))) {
+        } else if (username.equals(otherPlayers.get(2))) {
             playingPlayer4Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
         }
     }
@@ -653,6 +645,35 @@ public class InGameController extends ViewController {
         showHidePane(controlsVBox);
     }
 
+    public void changeResolution() {
+        if(size == ResolutionSizes.HD) size = ResolutionSizes.SD;
+        else  size = ResolutionSizes.HD;
+
+        resizeCard(handCard1);
+        resizeCard(handCard2);
+        resizeCard(handCard3);
+        resizeCard(deckGold);
+        resizeCard(deckGoldCard1);
+        resizeCard(deckGoldCard2);
+        resizeCard(deckResource);
+        resizeCard(deckResourceCard1);
+        resizeCard(deckResourceCard2);
+        resizeCard(secretObj1);
+        resizeCard(secretObj2);
+        resizeCard(commonObjCard1);
+        resizeCard(commonObjCard2);
+        resizeCard(starterCard);
+        resizeCard(secretObjective);
+        for (int x = 0; x < player1PlayAreaGrid.getColumnCount(); x++) {
+            for (int y = 0; y < player1PlayAreaGrid.getRowCount(); y++) {
+                resizeCard(cells1.get(new Pair<>(x, y)));
+                cells1.get(new Pair<>(x, y)).setPaneResolution();
+                //System.out.println("Cell [" + x + ";" + y + "] set to invisible image");
+            }
+        }
+
+    }
+
     //PRIVATE METHODS:__________________________________________________________________________________________________
 
     /**
@@ -814,9 +835,9 @@ public class InGameController extends ViewController {
         for (PlayableCard card : hand) {
             //System.out.println("Updating hand card " + i + " for player " + playerNumber + " resulting in: " + (i + (playerNumber * 3)));
             setCardImage(card, handCards.get(i + (playerNumber * 3)));
-            i ++;
+            i++;
         }
-        if(hand.size()==2){
+        if (hand.size() == 2) {
             //System.out.println("Hiding card " + 2 + " for player " + playerNumber + " resulting in: " + (2 + (playerNumber * 3)));
             handCards.get(2 + (playerNumber) * 3).setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/CardPlaceHolder1.png"))));
         }
@@ -898,6 +919,14 @@ public class InGameController extends ViewController {
         });
     }
 
+    private void resizeCard(ImageView card) {
+        //System.out.println("card.getFitWidth(): "+card.getFitWidth()+" \ncard.getFitHeight(): " + card.getFitHeight());
+        //System.out.println("card.getImage().getWidth(): "+card.getImage().getWidth()+" \ncard.getImage().getHeight() " + card.getImage().getHeight());
+        card.setFitHeight(size.getHeight());
+        card.setFitWidth(size.getWidth());
+        setClipToImageView(card);
+    }
+
     private void lockMotherPaneSize() {
         motherPane.setMinSize(motherPane.getWidth(), motherPane.getHeight());
         motherPane.setMaxSize(motherPane.getWidth(), motherPane.getHeight());
@@ -944,19 +973,19 @@ public class InGameController extends ViewController {
 
             //Create a New StackPane of the dimensions of the cell (Smaller than the card image)
             pane = new StackPane();
-            pane.setMaxHeight(60);
-            pane.setMaxWidth(113);
-            pane.setMinHeight(60);
-            pane.setMinWidth(113);
+            pane.setMaxHeight(size.getPaneHeight());
+            pane.setMaxWidth(size.getPaneWidth());
+            pane.setMinHeight(size.getPaneHeight());
+            pane.setMinWidth(size.getPaneWidth());
             pane.getChildren().add(this);
 
             //Insert invisible image to the stackPane (Set the image dimensions bigger than the stackPane, set his viewPort, and his clip (for round corners))
             cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/CardPlaceHolder1.png")));
             this.setImage(cardImage);
             this.setPreserveRatio(true);
-            this.setViewport(cardViewport);
-            this.setFitWidth(149); // set the card width
-            this.setFitHeight(100); // Set the card height
+            this.setViewport(cardViewportSD);
+            this.setFitWidth(size.getWidth()); // set the card width
+            this.setFitHeight(size.getHeight()); // Set the card height
             setClipToImageView(this);
 
             //If the cell belongs to player1, it is set to accept drag and drop events
@@ -996,6 +1025,13 @@ public class InGameController extends ViewController {
             pane.toFront();
             this.cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(cardImageUrl)));
             this.setImage(cardImage);
+        }
+
+        public void setPaneResolution(){
+            pane.setMaxHeight(size.getPaneHeight());
+            pane.setMaxWidth(size.getPaneWidth());
+            pane.setMinHeight(size.getPaneHeight());
+            pane.setMinWidth(size.getPaneWidth());
         }
 
         public void hideImage() {
