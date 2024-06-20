@@ -23,13 +23,13 @@ import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
  * It manages the gameModel and the game states.
  */
 public class GameController extends UnicastRemoteObject implements IGameController {
-    private final GameModel model;
-    private final LinkedHashMap<String, VirtualClient> clientList;
+    protected final GameModel model;
+    protected final LinkedHashMap<String, VirtualClient> clientList;
     @SuppressWarnings("unused")
     private final int maxNumberPlayers;
     private final int idGame;
-    private final LinkedBlockingQueue<ServerQueueObject> callsList;
-    private final LinkedHashMap<String, Boolean> readyStatus;
+    protected final LinkedBlockingQueue<ServerQueueObject> callsList;
+    protected final LinkedHashMap<String, Boolean> readyStatus;
 
     /**
      * Constructor for the GameController class.
