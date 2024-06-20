@@ -19,11 +19,6 @@ public class Waiting extends PlayerState {
         throw new IllegalStateOperationException();
     }
 
-//    @Override
-//    public void moveCardInHand(Player player) {
-//        executeMoveCardInHand(player);
-//    }
-
     @Override
     public void play(Point point, Player player) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();

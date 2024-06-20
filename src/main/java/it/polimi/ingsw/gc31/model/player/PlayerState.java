@@ -62,27 +62,6 @@ public abstract class PlayerState {
     public abstract String stateInfo();
     // Notice: Intellij gives me a warning if I copy the same code multiple times
 
-//    /**
-//     * Executes the move card in hand operation.
-//     * This method is common to all states and therefore is implemented in this
-//     * class.
-//     *
-//     * @param player the player to move the card for.
-//     */
-//    public void executeMoveCardInHand(Player player) {
-//        System.out.println("Insert position of the first card [1-3]: ");
-//        int cardPosition1 = OurScanner.scanner.nextInt();
-//        PlayableCard card1 = player.hand.get(cardPosition1);
-//
-//        System.out.println("Insert position of the second card [1-3]: ");
-//        int cardPosition2 = OurScanner.scanner.nextInt();
-//        PlayableCard card2 = player.hand.get(cardPosition2);
-//
-//        player.hand.set(cardPosition1, card2);
-//        player.hand.set(cardPosition2, card1);
-//        System.out.println("New Hand disposition: " + player.hand);
-//    }
-
     /**
      * Executes the addToHand operation.
      * This method is common to all states and therefore is implemented in this

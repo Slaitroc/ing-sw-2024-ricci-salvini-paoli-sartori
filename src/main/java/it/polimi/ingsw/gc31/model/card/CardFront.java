@@ -65,9 +65,10 @@ public class CardFront {
     }
 
     /**
-     * @param corner is the index (0 to 3) of the 4 corners of the card (central
-     *               resources included from number 4 to 7)
-     * @return The type of Resource that has been covered
+     * Sets the corner to hidden because a card covering it has been placed
+     *
+     * @param corner The index (0 to 3) of the corner to be covered.
+     * @return The type of resource that has been covered.
      */
     public Resources coverCorner(int corner) {
         Resources ret = resources.get(corner);
@@ -75,6 +76,11 @@ public class CardFront {
         return ret;
     }
 
+    /**
+     * Returns a list of non-hidden and non-empty resources available in the card back.
+     *
+     * @return a list of {@code Resources} objects representing the available resources
+     */
     public List<Resources> getResources() {
         List<Resources> res = new ArrayList<>();
         for (Resources val : resources) {
@@ -85,22 +91,47 @@ public class CardFront {
         return res;
     }
 
+    /**
+     * Retrieves the requirements of the card.
+     *
+     * @return A map of Resources and their required quantity.
+     */
     public Map<Resources, Integer> getRequirements() {
         return requirements;
     }
 
+    /**
+     * Retrieves the objective associated with the card.
+     *
+     * @return The objective of the card.
+     */
     public Objective getObjective() {
         return objective;
     }
 
+    /**
+     * Retrieves the path of the image associated with the back side of the card.
+     *
+     * @return The path of the image.
+     */
     public String getImage() {
         return this.dirImg;
     }
 
+    /**
+     * Retrieves the score of the card if the objective is satisfied.
+     *
+     * @return The score of the card.
+     */
     public int getScore() {
         return this.score;
     }
 
+    /**
+     * Retrieves the list of resources representing the corners of the card.
+     *
+     * @return A list of {@code Resources} objects representing the corners of the card.
+     */
     public List<Resources> getCorners() {
         return resources;
     }
