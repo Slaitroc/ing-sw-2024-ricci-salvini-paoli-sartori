@@ -130,10 +130,6 @@ public class LobbyController extends ViewController {
         }
 
         updateLobby();
-        //System.out.println("I'm player number " + imPlayerNumber);
-        //System.out.println("This is lobby number " + app.getCurrentGameID());
-        //System.out.println("In this lobby there are supposed to be " + app.getNumberOfPlayers() + " players");
-        //System.out.println("In this lobby there are " + app.getPlayerList().size() + " players");
         textField.requestFocus();
     }
 

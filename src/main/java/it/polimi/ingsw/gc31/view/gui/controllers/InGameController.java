@@ -616,6 +616,7 @@ public class InGameController extends ViewController {
             chatPopUp.setVisible(true);
             chatPopUp.setMouseTransparent(false);
             chatButtonImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/AppIcons/iconMessage.png"))));
+            chatField.requestFocus();
         }
     }
 
@@ -888,7 +889,6 @@ public class InGameController extends ViewController {
         );
         clip.setArcWidth(15);
         clip.setArcHeight(15);
-
         target.setClip(clip);
     }
 
