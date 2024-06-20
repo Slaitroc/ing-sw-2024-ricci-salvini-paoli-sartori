@@ -143,6 +143,12 @@ public class TUI extends UI {
             for (Map.Entry<TUIareas, StringBuilder> area : areasCache.entrySet()) {
                 playViewUpdate.add(area.getValue());
             }
+            try {
+
+                playViewUpdate.add(areasCache.get(TUIareas.PLAY_AREA_VIEW));
+            } catch (NullPointerException e) {
+
+            }
             playViewUpdate.notify();
         }
         moveCursorToCmdLine();
