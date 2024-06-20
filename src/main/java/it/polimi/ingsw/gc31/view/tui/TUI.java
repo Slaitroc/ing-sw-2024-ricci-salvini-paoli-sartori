@@ -74,7 +74,7 @@ public class TUI extends UI {
     private final int CHOOSE_OBJECTIVE_END_ROW = CHOOSE_OBJECTIVE_INITIAL_ROW + 17;
     private final int CHOOSE_OBJECTIVE_END_COLUMN = 184;
 
-    private final int HAND_INITIAL_ROW = OBJECTIVE_INITIAL_ROW + 1;
+    private final int HAND_INITIAL_ROW = OBJECTIVE_INITIAL_ROW - 2;
     private final int HAND_INITIAL_COLUMN = 70;
     private final int HAND_END_ROW = HAND_INITIAL_ROW + 9;
     private final int HAND_END_COLUMN = 137;
