@@ -126,7 +126,7 @@ public class GameModel {
         return currPlayingPlayer;
     }
 
-    protected void setGameState(GameModelState gameState) {
+    public void setGameState(GameModelState gameState) {
         this.gameState = gameState;
     }
 

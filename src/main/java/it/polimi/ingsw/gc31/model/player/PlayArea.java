@@ -46,8 +46,6 @@ public class PlayArea{
         for (Resources r : card.getResources()) {
             achievedResources.put(r, achievedResources.get(r) + 1);
         }
-
-
     }
 
     /**
