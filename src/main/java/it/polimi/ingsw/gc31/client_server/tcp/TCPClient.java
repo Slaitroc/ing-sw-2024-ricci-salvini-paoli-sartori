@@ -343,10 +343,13 @@ public class TCPClient implements ClientCommands {
         tcp_sendCommand(new ChatMessage(this.username, message), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method sends the object, which quit the specific client from the game
+     * lobby, to the server
+     */
     @Override
-    public void quitGame() throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'quitGame'");
+    public void quitGame() {
+        tcp_sendCommand(new QuitGameObj(this.username), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
     /**
@@ -363,13 +366,18 @@ public class TCPClient implements ClientCommands {
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 tcp_sendCommand(new HeartBeatObj(username), DV.RECIPIENT_HEARTBEAT);
-                System.out.println("HeartBeat inviato");
+                // System.out.println("HeartBeat inviato");
             }
         }, 0, 5000);
     }
 
     // Metodi per token
 
+    /**
+     * This method set the token of the client to the value received by parameter
+     *
+     * @param token is the value to be set as the token of the client
+     */
     @Override
     public void setToken(int token) {
         this.token = token;

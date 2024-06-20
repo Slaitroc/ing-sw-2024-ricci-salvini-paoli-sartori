@@ -7,7 +7,6 @@ import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
-import it.polimi.ingsw.gc31.utility.OurScanner;
 
 import java.awt.*;
 
@@ -37,17 +36,8 @@ public abstract class PlayerState {
      * @throws FullHandException              if the player’s hand is full.
      * @throws InvalidCardDraw                if the card cannot be drawn.
      */
-    public abstract void addToHand(Deck<PlayableCard> deck, Player player, int index)
+    public abstract void addToHand(Deck<PlayableCard> deck, Deck<PlayableCard> substituteDeck, Player player, int index)
             throws IllegalStateOperationException, FullHandException, InvalidCardDraw;
-
-//    /**
-//     * Moves a card in the player's hand.
-//     *
-//     * @param player the player to move the card for.
-//     * @throws IllegalStateOperationException if the operation is not allowed in the
-//     *                                        current state.
-//     */
-//    public abstract void moveCardInHand(Player player) throws IllegalStateOperationException;
 
     /**
      * Plays a card in the designated player's PlayArea.
@@ -103,7 +93,7 @@ public abstract class PlayerState {
      * @throws NullPointerException if the card is null.
      * @throws FullHandException    if the player's hand is full.
      */
-    public void executeAddToHand(Deck<PlayableCard> deck, Player player, int index) throws NullPointerException, FullHandException {
+    public void executeAddToHand(Deck<PlayableCard> deck, Deck<PlayableCard> subsistuteDeck, Player player, int index) throws NullPointerException, FullHandException {
         if (player.hand.size() > 2) {
             throw new FullHandException();
         }
@@ -118,5 +108,10 @@ public abstract class PlayerState {
             System.out.println("There was a problem adding card in hand (is card null?)");
             e.getStackTrace();
         }
+
+        if (deck.isEmpty()) {
+            deck.replaceDeck(subsistuteDeck.getQueueDeck());
+        }
+        // TODO aggiungere qualcosa quando tutti e due i deck sono vuoti?
     }
 }

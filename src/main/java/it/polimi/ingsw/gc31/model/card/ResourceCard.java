@@ -13,8 +13,12 @@ public class ResourceCard extends PlayableCard {
     }
 
     @Override
+    public Map<Resources, Integer> getRequirements() {
+        return Collections.emptyMap();
+    }
+
+    @Override
     public Objective getObjective() {
         return null;
     }
-
 }

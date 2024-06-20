@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import java.rmi.RemoteException;
 import java.util.*;
 
+import it.polimi.ingsw.gc31.model.card.GoldCard;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.strategies.*;
 import it.polimi.ingsw.gc31.utility.DV;
@@ -24,17 +25,14 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.view.UI;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class TUI extends UI {
 
     // MODIFICABILI
-    private final int CMD_LINE_INITIAL_ROW = 1;
+    private final int CMD_LINE_INITIAL_ROW = 2;
     private final int CMD_LINE_INITIAL_COLUMN = 1;
-    private final int CMD_LINE_LINES = 10;
-    private final int CMD_LINE_WIDTH = 60;
-    private final int CHAT_BOARD_INITIAL_ROW = 16;
-    private final int CHAT_BOARD_INITIAL_COLUMN = 1;
-    private final int CHAT_BOARD_LINES = 10;
-    private final int CHAT_BOARD_WIDTH = 60;
+    private final int CMD_LINE_LINES = 14;
+    private final int CMD_LINE_WIDTH = 67;
 
     private final int PLAYAREA_INITIAL_ROW = 2;
     private final int PLAYAREA_INITIAL_COLUMN = 70;
@@ -48,50 +46,60 @@ public class TUI extends UI {
     // the misalignment along y between two cards
     private final int CARD_Y_OFFSET = 4;
 
-    private final int HAND_INITIAL_ROW = 33;
-    private final int HAND_INITIAL_COLUMN = 68;
-    private final int HAND_END_ROW = 42;
-    private final int HAND_END_COLUMN = 135;
+    private final int GOLD_DECK_INITIAL_ROW = 19;
+    private final int GOLD_DECK_INITIAL_COLUMN = 1;
+    private final int GOLD_DECK_END_ROW = GOLD_DECK_INITIAL_ROW + 9;
+    private final int GOLD_DECK_END_COLUMN = 67;
+
+    private final int CHAT_BOARD_INITIAL_ROW = GOLD_DECK_INITIAL_ROW;
+    private final int CHAT_BOARD_INITIAL_COLUMN = 1;
+    private final int CHAT_BOARD_LINES = 20;
+    private final int CHAT_BOARD_WIDTH = CMD_LINE_WIDTH;
+
+    private final int RESOURCE_DECK_INITIAL_ROW = GOLD_DECK_END_ROW + 2;
+    private final int RESOURCE_DECK_INITIAL_COLUMN = 1;
+    private final int RESOURCE_DECK_END_ROW = RESOURCE_DECK_INITIAL_ROW + 9;
+    private final int RESOURCE_DECK_END_COLUMN = 67;
+
+    private final int OBJECTIVE_INITIAL_ROW = 40;
+    private final int OBJECTIVE_INITIAL_COLUMN = 46;
+    private final int OBJECTIVE_END_ROW = OBJECTIVE_INITIAL_ROW + 9;
+    private final int OBJECTIVE_END_COLUMN = 69;
+
+    private final int COMMON_OBJECTIVE_INITIAL_ROW = OBJECTIVE_INITIAL_ROW;
+    private final int COMMON_OBJECTIVE_INITIAL_COLUMN = 1;
+    private final int COMMON_OBJECTIVE_END_ROW = OBJECTIVE_END_ROW;
+    private final int COMMON_OBJECTIVE_END_COLUMN = 45;
+
+    private final int CHOOSE_OBJECTIVE_INITIAL_ROW = 2;
+    private final int CHOOSE_OBJECTIVE_INITIAL_COLUMN = 161;
+    private final int CHOOSE_OBJECTIVE_END_ROW = CHOOSE_OBJECTIVE_INITIAL_ROW + 17;
+    private final int CHOOSE_OBJECTIVE_END_COLUMN = 184;
+
+    private final int HAND_INITIAL_ROW = OBJECTIVE_INITIAL_ROW - 2;
+    private final int HAND_INITIAL_COLUMN = 70;
+    private final int HAND_END_ROW = HAND_INITIAL_ROW + 9;
+    private final int HAND_END_COLUMN = 137;
 
     private final int STARTER_CARD_INITIAL_ROW = 10;
     private final int STARTER_CARD_INITIAL_COLUMN = 111;
     private final int STARTER_CARD_END_ROW = 19;
     private final int STARTER_CARD_END_COLUMN = 134;
 
-    private final int CHOOSE_OBJECTIVE_INITIAL_ROW = 2;
-    private final int CHOOSE_OBJECTIVE_INITIAL_COLUMN = 161;
-    private final int CHOOSE_OBJECTIVE_END_ROW = 19;
-    private final int CHOOSE_OBJECTIVE_END_COLUMN = 184;
-
-    private final int OBJECTIVE_INITIAL_ROW = 35;
-    private final int OBJECTIVE_INITIAL_COLUMN = 46;
-    private final int OBJECTIVE_END_ROW = 43;
-    private final int OBJECTIVE_END_COLUMN = 69;
-
-    private final int COMMON_OBJECTIVE_INITIAL_ROW = 35;
-    private final int COMMON_OBJECTIVE_INITIAL_COLUMN = 1;
-    private final int COMMON_OBJECTIVE_END_ROW = 43;
-    private final int COMMON_OBJECTIVE_END_COLUMN = 45;
-
-    private final int GOLD_DECK_INITIAL_ROW = 14;
-    private final int GOLD_DECK_INITIAL_COLUMN = 1;
-    private final int GOLD_DECK_END_ROW = 23;
-    private final int GOLD_DECK_END_COLUMN = 67;
-
-    private final int RESOURCE_DECK_INITIAL_ROW = 25;
-    private final int RESOURCE_DECK_INITIAL_COLUMN = 1;
-    private final int RESOURCE_DECK_END_ROW = 34;
-    private final int RESOURCE_DECK_END_COLUMN = 67;
-
-    private final int PLAYERS_INFO_INITIAL_ROW = 33;
-    private final int PLAYERS_INFO_INITIAL_COLUMN = 145;
-    private final int PLAYERS_INFO_END_ROW = 40;
+    private final int PLAYERS_INFO_INITIAL_ROW = HAND_INITIAL_ROW;
+    private final int PLAYERS_INFO_INITIAL_COLUMN = 147;
+    private final int PLAYERS_INFO_END_ROW = PLAYERS_INFO_INITIAL_ROW + 5;
     private final int PLAYERS_INFO_END_COLUMN = 184;
 
-    private final int ACHIEVED_RESOURCES_INITIAL_ROW = 33;
-    private final int ACHIEVED_RESOURCES_INITIAL_COLUMN = 136;
-    private final int ACHIEVED_RESOURCES_END_ROW = 42;
-    private final int ACHIEVED_RESOURCES_END_COLUMN = 144;
+    private final int ACHIEVED_RESOURCES_INITIAL_ROW = HAND_INITIAL_ROW;
+    private final int ACHIEVED_RESOURCES_INITIAL_COLUMN = HAND_END_COLUMN + 1;
+    private final int ACHIEVED_RESOURCES_END_ROW = ACHIEVED_RESOURCES_INITIAL_ROW + 9;
+    private final int ACHIEVED_RESOURCES_END_COLUMN = 146;
+
+    private final int GAME_OVER_INITIAL_ROW = 14;
+    private final int GAME_OVER_INITIAL_COLUMN = 1;
+    private final int GAME_OVER_END_ROW = 34;
+    private final int GAME_OVER_END_COLUMN = 67;
 
     // CONSTANTS
     private final int CMD_LINE_EFFECTIVE_WIDTH = CMD_LINE_WIDTH - 2;
@@ -109,15 +117,52 @@ public class TUI extends UI {
     // shift of the StarterCard along the y-axis relative to the center
     private int OFFSET_Y_PLAYAREA = 0;
 
-    // private final int[] RGB_COLOR_GOLD = { 181, 148, 16 };
+    private final int[] RGB_COLOR_GOLD = { 181, 148, 16 };
+
+    // COLORS
+    int[] greyText = null;
+    // int[] greyText = new int[] { 192, 192, 192 };
+    int[] goldText = new int[] { 233, 227, 38 };
+    int[] blueText = new int[] { 51, 153, 255 };
+    int[] violetText = new int[] { 153, 153, 255 };
 
     // FIXME temporaneo
     private LinkedHashMap<Point, PlayableCard> placedCards = null;
 
     // PRINT METHODS
+    Map<TUIareas, StringBuilder> areasCache = new HashMap<>();
+    protected Map<TUIcommands, Boolean> commandsCache = new HashMap<>();
+
+    protected void forceRefreshTUI(boolean stateNotify) {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        synchronized (playViewUpdate) {
+            for (Map.Entry<TUIareas, StringBuilder> area : areasCache.entrySet()) {
+                playViewUpdate.add(area.getValue());
+            }
+            try {
+
+                playViewUpdate.add(areasCache.get(TUIareas.PLAY_AREA_VIEW));
+            } catch (NullPointerException e) {
+
+            }
+            playViewUpdate.notify();
+        }
+        moveCursorToCmdLine();
+        if (state.stateName.equals("Joined To Game State")) {
+            print_ChatBorders();
+        }
+        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, stateNotify);
+
+    }
 
     private void erase_ChatBoard() {
-        for (int i = -1; i < CHAT_BOARD_LINES + 1; i++) {
+        for (int i = -2; i < CHAT_BOARD_LINES + 1; i++) {
             AnsiConsole.out().print(
                     Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW + 1 + i, CHAT_BOARD_INITIAL_COLUMN)
                             .a(" " + " ".repeat(CHAT_BOARD_EFFECTIVE_WIDTH) + " "));
@@ -129,6 +174,9 @@ public class TUI extends UI {
      */
     private void print_ChatBorders() {
         erase_ChatBoard();
+        AnsiConsole.out()
+                .print(Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW - 1, CHAT_BOARD_INITIAL_COLUMN).fgBrightCyan()
+                        .a("CHAT").reset());
         AnsiConsole.out()
                 .print(Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW, CHAT_BOARD_INITIAL_COLUMN)
                         .a("┌" + "─".repeat(CHAT_BOARD_EFFECTIVE_WIDTH) + "┐"));
@@ -148,6 +196,9 @@ public class TUI extends UI {
      */
     private void print_CmdLineBorders() {
         AnsiConsole.out()
+                .print(Ansi.ansi().cursor(CMD_LINE_INITIAL_ROW - 1, CMD_LINE_INITIAL_COLUMN)
+                        .a("COMMAND LINE"));
+        AnsiConsole.out()
                 .print(Ansi.ansi().cursor(CMD_LINE_INITIAL_ROW, CMD_LINE_INITIAL_COLUMN)
                         .a("┌" + "─".repeat(CMD_LINE_EFFECTIVE_WIDTH) + "┐"));
         for (int i = 0; i < CMD_LINE_LINES; i++) {
@@ -160,9 +211,7 @@ public class TUI extends UI {
 
     }
 
-    // TODO fare una sola funzione
-
-    private StringBuilder print_Borders(String titleArea, int initialRow, int initialColumn, int endRow,
+    private StringBuilder print_Borders(String titleArea, int[] color, int initialRow, int initialColumn, int endRow,
             int endColumn) {
         StringBuilder res = new StringBuilder();
         res.append(ansi().cursor(initialRow, initialColumn).fg(WHITE).a("┌")
@@ -174,7 +223,12 @@ public class TUI extends UI {
         }
         res.append(ansi().cursor(endRow, initialColumn).fg(WHITE).a("└")
                 .a(("─").repeat(endColumn - initialColumn - 1)).a("┘"));
-        res.append(ansi().cursor(initialRow - 1, initialColumn + 1).a(titleArea.toUpperCase()));
+        if (color != null) {
+            res.append(ansi().cursor(initialRow - 1, initialColumn + 1).bgRgb(color[0], color[1], color[2])
+                    .a(titleArea.toUpperCase()).reset());
+        } else {
+            res.append(ansi().cursor(initialRow - 1, initialColumn + 1).a(titleArea.toUpperCase()).reset());
+        }
         return res;
     }
 
@@ -331,6 +385,7 @@ public class TUI extends UI {
         int[] cornerUpDxColor;
         int[] cornerDownSxColor;
         int[] cornerDownDxColor;
+        int[] borderColor = {255,255,255};
 
         if (!resources.get(0).equals(Resources.HIDDEN)) {
             cornerUpDxColor = RGB_COLOR_CORNER;
@@ -351,6 +406,11 @@ public class TUI extends UI {
             cornerUpSxColor = RGB_COLOR_CORNER;
         } else {
             cornerUpSxColor = cardColor;
+        }
+
+        // TODO da cambiare è temporaneo
+        if (card instanceof GoldCard) {
+            borderColor = RGB_COLOR_GOLD;
         }
 
         // if the card entirely exceeds the limits of the playArea it is not printed
@@ -413,9 +473,11 @@ public class TUI extends UI {
 
                 } else {
                     res.append(ansi().cursor(relative_y, relative_x)
+                            .fgRgb(borderColor[0], borderColor[1],borderColor[2])
                             .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine)
                             .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
-                            .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine));
+                            .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine)
+                            .reset());
                 }
             }
 
@@ -662,9 +724,11 @@ public class TUI extends UI {
                     }
                 } else {
                     res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
+                            .fgRgb(borderColor[0], borderColor[1],borderColor[2])
                             .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine)
                             .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
-                            .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine));
+                            .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine)
+                            .reset());
                 }
             }
 
@@ -749,11 +813,12 @@ public class TUI extends UI {
         return res;
     }
 
-    private StringBuilder print_Deck(String title, PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2,
+    private StringBuilder print_Deck(String title, int[] titleColor, PlayableCard firstCardDeck, PlayableCard card1,
+            PlayableCard card2,
             int initial_row, int initial_col, int end_row, int end_col) {
         StringBuilder res = new StringBuilder();
         res.append(clearArea(initial_row, initial_col, end_row, end_col));
-        res.append(print_Borders(title, initial_row, initial_col, end_row, end_col));
+        res.append(print_Borders(title, titleColor, initial_row, initial_col, end_row, end_col));
         if (firstCardDeck != null) {
             res.append(print_PlayableCard(firstCardDeck, initial_col + 1, initial_row + 1, initial_row, end_row,
                     initial_col, end_col));
@@ -856,24 +921,6 @@ public class TUI extends UI {
         return this.client;
     }
 
-    // /**
-    // * State's command may need to access the TUI to change to a new state
-    // *
-    // * @param state
-    // */
-    // public void setState(TuiState state) {
-    // this.state = state;
-    // synchronized (isStateChangedLock) {
-    // this.isStateChanged = true;
-    // }
-    // }
-
-    // credo sia stata utilizzata solo per debugging
-    public TUI(TuiState state, ClientCommands client) {
-        this.client = client;
-        this.state = state;
-    }
-
     public TUI(ClientCommands client) {
         AnsiConsole.systemInstall();
 
@@ -893,6 +940,20 @@ public class TUI extends UI {
         AnsiConsole.out().print(
                 Ansi.ansi().cursor(CMD_LINE_INPUT_ROW, CMD_LINE_INPUT_COLUMN).a(" ".repeat(CMD_LINE_EFFECTIVE_WIDTH)));
         AnsiConsole.out().print(Ansi.ansi().cursor(CMD_LINE_INPUT_ROW, CMD_LINE_INPUT_COLUMN).a("> "));
+    }
+
+    /**
+     * This method is used to move the cursor to the command line input area.
+     * <p>
+     * It also clears the command line input area and update the
+     * <code>terminalAreaSelection</code> variable.
+     */
+    protected void moveCursorToCmdLine(String prefix) {
+        AnsiConsole.out().print(
+                Ansi.ansi().cursor(CMD_LINE_INPUT_ROW, CMD_LINE_INPUT_COLUMN).a(" ".repeat(CMD_LINE_EFFECTIVE_WIDTH)));
+        AnsiConsole.out()
+                .print(Ansi.ansi().cursor(CMD_LINE_INPUT_ROW, CMD_LINE_INPUT_COLUMN).fgBrightCyan().a(prefix + "> ")
+                        .reset());
     }
 
     /**
@@ -962,6 +1023,22 @@ public class TUI extends UI {
      * State methods must use this method to print their messages.
      *
      * @param message
+     * @param color
+     */
+    protected void printToCmdLineOut(String message, Ansi.Color color, boolean wakeChat) {
+        synchronized (cmdLineOut) {
+            cmdLineOut.add(Ansi.ansi().fg(color).a(message).reset().toString());
+            cmdLineOut.notifyAll();
+        }
+    }
+
+    /**
+     * This method is used to add a message to the <code>commandLineOut</code>
+     * thread's queue.
+     * <p>
+     * State methods must use this method to print their messages.
+     *
+     * @param message
      */
     protected void printToCmdLineOut(String message) {
         synchronized (cmdLineOut) {
@@ -973,7 +1050,7 @@ public class TUI extends UI {
 
     // probabilmente non necessario al momento ma potrebbe essere utile in futuro
     protected void printToCmdLineIn(String message) {
-        moveCursorToChatLine(message);
+        moveCursorToCmdLine(message);
 
     }
 
@@ -1052,7 +1129,7 @@ public class TUI extends UI {
         }
     }
 
-    private Queue<Integer> cmdLineAreaSelection = new ArrayDeque<Integer>();
+    private volatile Queue<Integer> cmdLineAreaSelection = new ArrayDeque<Integer>();
 
     private void addToCmdLineAreaSelection() {
         synchronized (cmdLineAreaSelection) {
@@ -1069,7 +1146,7 @@ public class TUI extends UI {
         }
     }
 
-    private Queue<Integer> chatAreaSelection = new ArrayDeque<Integer>();
+    private volatile Queue<Integer> chatAreaSelection = new ArrayDeque<Integer>();
 
     private void addToChatAreaSelection() {
         synchronized (chatAreaSelection) {
@@ -1101,7 +1178,7 @@ public class TUI extends UI {
      * Right now this is the simplest implementation that comes to my mind, but it
      * would be better to use a specific class for the chat messages.
      */
-    private final Queue<String> chatMessages = new ArrayDeque<String>();
+    private Queue<String> chatMessages = new ArrayDeque<String>();
     /**
      * This variable is used to manage the command line output messages.
      * <p>
@@ -1133,13 +1210,13 @@ public class TUI extends UI {
      * If the command is "chat", it moves the cursor to the chat input area.
      */
     Thread cmdLineProcessThread = new Thread(() -> {
-        state.command_initial();
+        commandToProcess(TUIcommands.INITIAL, false);
         while (true) {
             String cmd = null;
             synchronized (cmdLineMessages) {
                 while (cmdLineMessages.isEmpty()) {
                     try {
-                        cmdLineMessages.wait(); // Attendi che ci sia un nuovo comando
+                        cmdLineMessages.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -1151,6 +1228,83 @@ public class TUI extends UI {
             }
         }
     });
+
+    /**
+     * This method searches for the command in the state's commands map and executes
+     * it.
+     * <p>
+     * If the command is not found, it prints "Command not recognized".
+     *
+     * @param command
+     */
+    private void execute_command(String command) {
+        if (command.isEmpty()) {
+            state.command_showCommandsInfo();
+            state.stateNotify();
+        } else if (command.equals(TUIcommands.INITIAL.toString()) && state.stateName.equals("Init State")) {
+            state.command_initial();
+        } else if (state.commandsMap.containsKey(command)) {
+            state.commandsMap.get(command).run();
+        } else if (command.equals(TUIcommands.NOTIFY.toString())) {
+            state.stateNotify();
+        } else {
+            state.commandsMap.get(TUIcommands.INVALID.toString()).run();
+        }
+    }
+
+    /**
+     * Sends the corresponding TUIcommand to be executed to the ProcessThread and
+     * notify the commands queue.
+     *
+     * @param cmd         The TUI command to process.
+     * @param stateNotify A boolean indicating whether to notify the state or not.
+     */
+    protected void commandToProcess(TUIcommands cmd, boolean stateNotify) {
+        synchronized (cmdLineMessages) {
+            if (!stateNotify) {
+                cmdLineMessages.add(cmd.toString());
+                cmdLineMessages.notify();
+            } else {
+                cmdLineMessages.add(cmd.toString());
+                cmdLineMessages.add(TUIcommands.NOTIFY.toString());
+                cmdLineMessages.notify();
+            }
+        }
+    }
+
+    private final Queue<StringBuilder> statusBar = new ArrayDeque<StringBuilder>();
+    Thread statusBarThread = new Thread(() -> {
+        while (true) {
+            synchronized (statusBar) {
+                while (statusBar.isEmpty()) {
+                    try {
+                        statusBar.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            System.out.println(statusBar.poll());
+            resetCursor();
+        }
+
+    });
+
+    Thread statusBarUpdateThread = new Thread(() -> {
+        while (true) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            // AnsiConsole.out().print(ansi().cursor(1, 17).a("💔"));
+
+            // resetCursor();
+
+        }
+
+    });
+
     /**
      * This thread is used to read the input from the system input and add it to the
      * <code>cmdLineMessages</code> queue.
@@ -1172,9 +1326,8 @@ public class TUI extends UI {
                     }
                 }
             }
-
             if (comingFromChat == false) {
-                // if a is running a command, it waits for the command to be finished
+                // if a command is running it waits for the command to be finished
                 // This is necessary to let each command get its input
                 synchronized (stateLock) {
                     addToStateLockQueue();
@@ -1188,20 +1341,36 @@ public class TUI extends UI {
             comingFromChat = false;
             String input = null;
             moveCursorToCmdLine();
-
             input = cmdScanner.nextLine();
             // Sends the input to the command line process thread and waits for the command
             // to be executed
             if (input != null) {
                 if (input.equals("chat")) {
-                    printToCmdLineOut("comando " + input + " eseguito", Ansi.Color.CYAN);
+                    // printToCmdLineOut("comando " + input + " eseguito", Ansi.Color.CYAN);
+                    printToCmdLineIn("comando chat");
+
+                    /////
+                    StringBuilder chatNotify = new StringBuilder();
+                    chatNotify.append(
+                            Ansi.ansi().cursor(1, 20).a(" ".repeat("🔵-> New Chat Messages".length())).toString());
+                    synchronized (statusBar) {
+                        statusBar.add(chatNotify);
+                        statusBar.notify();
+                    }
+
+                    ////
                     removeFromCmdLineAreaSelection();
-                    addToChatAreaSelection();
-                    moveCursorToChatLine();
                     comingFromChat = true;
+                    addToChatAreaSelection();
+                    synchronized (chatNeedsUpdate) {
+                        chatNeedsUpdate.notify();
+                    }
                 } else {
                     synchronized (cmdLineMessages) {
                         cmdLineMessages.add(input.trim());
+                        if (input.trim().equals(TUIcommands.SHOW_COMMAND_INFO.toString())) {
+                            cmdLineMessages.add(TUIcommands.NOTIFY.toString());
+                        }
                         cmdLineMessages.notify();
                     }
                 }
@@ -1221,135 +1390,17 @@ public class TUI extends UI {
                         print_CmdLineBorders();
                         cmdLineAreaSelection.add(0);
                         cmdLineReaderThread.start();
-                        ; // solo al lancio del thread command line out la lista cmdLineOut è
-                          // vuota, quindi entra in questo if solo una volta
                         cmdLineOut.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 } else {
                     print_CmdLineBorders();
-                    updateCmdLineOut(); // sembra looppare all'infinito
+                    updateCmdLineOut();
                 }
             }
         }
     });
-
-    private Thread chatBoardThreadBuilder() {
-        return new Thread(() -> {
-            print_ChatBorders();
-            moveCursorToCmdLine();
-            while (!Thread.currentThread().isInterrupted()) {
-                synchronized (chatNeedsUpdate) {
-                    try {
-                        chatNeedsUpdate.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                print_ChatBorders();
-                updateChatBoardOut();
-            }
-            erase_ChatBoard();
-        });
-
-    }
-
-    /**
-     * This thread is used to print the chat board messages the right way and in the
-     * right position.
-     */
-    Thread chatBoardThread = chatBoardThreadBuilder();
-    /**
-     * This thread is used to read the input from the system input and add it to the
-     * <code>chatMessages</code> queue.
-     */
-    Thread chatReaderThread = new Thread(() -> {
-        Scanner chatScanner = new Scanner(System.in);
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            chatScanner.close();
-        }));
-        while (!Thread.currentThread().isInterrupted()) {
-            synchronized (chatAreaSelection) {
-                if (chatAreaSelection.isEmpty()) {
-                    try {
-                        chatAreaSelection.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                String input = chatScanner.nextLine();
-                if (!input.isEmpty()) {
-                    if (input.equals("ccc")) {
-                        removeFromChatAreaSelection();
-                        addToCmdLineAreaSelection();
-                        moveCursorToCmdLine();
-                    } else {
-                        try {
-                            client.sendChatMessage(getClient().getUsername(), input.trim());
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-
-        }
-    });
-
-    Thread playViewThread = new Thread(() -> {
-        while (true) {
-            synchronized (playViewUpdate) {
-                while (playViewUpdate.isEmpty()) {
-                    try {
-                        playViewUpdate.wait();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                System.out.println(playViewUpdate.poll());
-                resetCursor();
-            }
-        }
-
-    });
-
-    @Override
-    public void show_chatMessage(String username, String message) {
-        chatMessages.add(username + ": " + message);
-        synchronized (chatNeedsUpdate) {
-            chatNeedsUpdate.notify();
-        }
-    }
-
-    // THREADS UTILITIES
-
-    /**
-     * This method searches for the command in the state's commands map and executes
-     * it.
-     * <p>
-     * If the command is not found, it prints "Command not recognized".
-     *
-     * @param command
-     */
-    private void execute_command(String command) {
-        if (command.isEmpty() || command.equals("help")) {
-            state.command_showCommandsInfo();
-            state.stateNotify();
-        } else if (state.commandsMap.containsKey(command)) {
-            state.commandsMap.get(command).run();
-        } else {
-            state.commandsMap.get("invalid").run();
-        }
-
-        // if (state.commandsMap.containsKey(command)) {
-        // state.commandsMap.get(command).run();
-        // } else if (command.isEmpty() || command.equals("help")) {
-        // state.stateNotify();
-        // } else {
-        // state.commandsMap.get("invalid").run();
-        // }
-    }
 
     /**
      * This method is used to update the command line output messages.
@@ -1383,28 +1434,134 @@ public class TUI extends UI {
         }
     }
 
+    private Thread chatBoardThreadBuilder() {
+        return new Thread(() -> {
+            print_ChatBorders();
+            moveCursorToCmdLine();
+            while (!Thread.currentThread().isInterrupted()) {
+                synchronized (chatNeedsUpdate) {
+                    try {
+                        chatNeedsUpdate.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                print_ChatBorders();
+                updateChatBoardOut();
+            }
+            erase_ChatBoard();
+        });
+
+    }
+
+    /**
+     * This thread is used to print the chat board messages the right way and in the
+     * right position.
+     */
+    Thread chatBoardThread = chatBoardThreadBuilder();
+
     /**
      * This method is used to update the chat board output messages.
      * <p>
      * It prints the messages in the right position of the console.
      */
     private void updateChatBoardOut() {
-        for (int i = 0; i < chatMessages.size() && i < CHAT_BOARD_OUT_LINES; i++) {
+        for (int i = 0; i < CHAT_BOARD_OUT_LINES; i++) {
             AnsiConsole.out()
                     .print(Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW - 1 - i, CHAT_BOARD_INPUT_COLUMN)
                             .a(" ".repeat(CHAT_BOARD_EFFECTIVE_WIDTH)));
+        }
+        for (int i = 0; i < chatMessages.size() && i < CHAT_BOARD_OUT_LINES; i++) {
             AnsiConsole.out().print(
                     Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW - 1 - i, CHAT_BOARD_INPUT_COLUMN)
                             .a(chatMessages.toArray()[chatMessages.size() - 1 - i]));
         }
-        // chatNeedsUpdate = false;
         resetCursor();
+
     }
+
+    @Override
+    public void show_chatMessage(String username, String message) {
+        synchronized (chatNeedsUpdate) {
+            chatMessages.add(username + ": " + message);
+        }
+        if (chatAreaSelection.isEmpty()) {
+
+            StringBuilder chatNotify = new StringBuilder();
+            chatNotify.append(Ansi.ansi().cursor(1, 20).a("🔵-> New Chat Messages").toString());
+            synchronized (statusBar) {
+                statusBar.add(chatNotify);
+                statusBar.notify();
+            }
+        } else {
+            synchronized (chatNeedsUpdate) {
+                chatNeedsUpdate.notifyAll();
+            }
+        }
+    }
+
+    /**
+     * This thread is used to read the input from the system input and add it to the
+     * <code>chatMessages</code> queue.
+     */
+    Thread chatReaderThread = new Thread(() -> {
+        Scanner chatScanner = new Scanner(System.in);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            chatScanner.close();
+        }));
+        while (!Thread.currentThread().isInterrupted()) {
+            synchronized (chatAreaSelection) {
+                if (chatAreaSelection.isEmpty()) {
+                    try {
+                        chatAreaSelection.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            moveCursorToChatLine();
+            String input = chatScanner.nextLine();
+            if (!input.isEmpty()) {
+                if (input.equals("ccc")) {
+                    forceRefreshTUI(false);
+                    removeFromChatAreaSelection();
+                    addToCmdLineAreaSelection();
+                    moveCursorToCmdLine();
+                } else {
+                    try {
+                        client.sendChatMessage(getClient().getUsername(), input.trim());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        }
+    });
+
+    Thread playViewThread = new Thread(() -> {
+        while (true) {
+            synchronized (playViewUpdate) {
+                while (playViewUpdate.isEmpty()) {
+                    try {
+                        playViewUpdate.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                System.out.println(playViewUpdate.poll());
+                resetCursor();
+            }
+        }
+
+    });
+
+    // THREADS UTILITIES
 
     // UTILITIES
 
     @Override
-    protected void uiRunUI() {
+    public void runUI() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
         AnsiConsole.systemInstall();
@@ -1415,10 +1572,14 @@ public class TUI extends UI {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
 
         // chatBoardThread.start();
         chatReaderThread.start();
         playViewThread.start();
+        statusBarThread.start();
+        statusBarUpdateThread.start();
         cmdLineOutThread.start();
 
     }
@@ -1446,7 +1607,7 @@ public class TUI extends UI {
         for (String string : listGame) {
             printToCmdLineOut(string);
         }
-        state.stateNotify();
+        commandToProcess(TUIcommands.NOTIFY, false);
 
     }
 
@@ -1456,26 +1617,32 @@ public class TUI extends UI {
         if (client.getUsername().equals(username)) {
             StringBuilder res = new StringBuilder();
             res.append(clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
-            res.append(print_Borders("Play Area", PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW,
+            res.append(print_Borders("Play Area", greyText, PLAYAREA_INITIAL_ROW,
+                    PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW,
                     PLAYAREA_END_COLUMN));
             res.append(print_PlacedCards(playArea));
             placedCards = playArea;
 
-            res.append(clearArea(ACHIEVED_RESOURCES_INITIAL_ROW, ACHIEVED_RESOURCES_INITIAL_COLUMN,
-                    ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
-            res.append(print_Borders("", ACHIEVED_RESOURCES_INITIAL_ROW, ACHIEVED_RESOURCES_INITIAL_COLUMN,
-                    ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
-            int index = 0;
-            for (Map.Entry<Resources, Integer> entry : achievedResources.entrySet()) {
-                res.append(
-                        ansi().cursor(ACHIEVED_RESOURCES_INITIAL_ROW + 1 + index, ACHIEVED_RESOURCES_INITIAL_COLUMN + 1)
-                                .a(entry.getKey().getSymbol() + ": " + entry.getValue()));
-                index++;
+            if (achievedResources != null) {
+                res.append(clearArea(ACHIEVED_RESOURCES_INITIAL_ROW, ACHIEVED_RESOURCES_INITIAL_COLUMN,
+                        ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
+                res.append(print_Borders("", greyText, ACHIEVED_RESOURCES_INITIAL_ROW,
+                        ACHIEVED_RESOURCES_INITIAL_COLUMN,
+                        ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
+                int index = 0;
+                for (Map.Entry<Resources, Integer> entry : achievedResources.entrySet()) {
+                    res.append(ansi()
+                            .cursor(ACHIEVED_RESOURCES_INITIAL_ROW + 1 + index, ACHIEVED_RESOURCES_INITIAL_COLUMN + 1)
+                            .a(entry.getKey().getSymbol() + ": " + entry.getValue()));
+                    index++;
+                }
             }
             synchronized (playViewUpdate) {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+            areasCache.put(TUIareas.PLAY_AREA_VIEW, res);
+
         }
     }
 
@@ -1484,7 +1651,8 @@ public class TUI extends UI {
         StringBuilder res = new StringBuilder();
         res.append(clearArea(PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN, PLAYERS_INFO_END_ROW,
                 PLAYERS_INFO_END_COLUMN));
-        res.append(print_Borders("Players info", PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN,
+        res.append(print_Borders("Players info", greyText, PLAYERS_INFO_INITIAL_ROW,
+                PLAYERS_INFO_INITIAL_COLUMN,
                 PLAYERS_INFO_END_ROW, PLAYERS_INFO_END_COLUMN));
         int index = 1;
         for (String player : scores.keySet()) {
@@ -1497,26 +1665,42 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
+        areasCache.put(TUIareas.PLAYERS_INFO, res);
+
+    }
+
+    @Override
+    public void update_ToPlayingState() {
+        this.state = new PlayingState(this);
+        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, false);
+        // qui lo state notify non serve perché lo chiama già il metodo triggerato
+        // dall'oggetto risposta di ready
     }
 
     @Override
     public void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
-        StringBuilder res = print_Deck("Gold Deck", firstCardDeck, card1, card2, GOLD_DECK_INITIAL_ROW,
+        StringBuilder res = print_Deck("Gold Deck", greyText, firstCardDeck, card1, card2,
+                GOLD_DECK_INITIAL_ROW,
                 GOLD_DECK_INITIAL_COLUMN, GOLD_DECK_END_ROW, GOLD_DECK_END_COLUMN);
         synchronized (playViewUpdate) {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
+        areasCache.put(TUIareas.GOLD_DECK, res);
+
     }
 
     @Override
     public void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
-        StringBuilder res = print_Deck("Resource Deck", firstCardDeck, card1, card2, RESOURCE_DECK_INITIAL_ROW,
+        StringBuilder res = print_Deck("Resource Deck", greyText, firstCardDeck, card1, card2,
+                RESOURCE_DECK_INITIAL_ROW,
                 RESOURCE_DECK_INITIAL_COLUMN, RESOURCE_DECK_END_ROW, RESOURCE_DECK_END_COLUMN);
         synchronized (playViewUpdate) {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
+        areasCache.put(TUIareas.RES_DECK, res);
+
     }
 
     @Override
@@ -1525,7 +1709,8 @@ public class TUI extends UI {
             StringBuilder res = new StringBuilder();
             int index = 0;
             res.append(clearArea(HAND_INITIAL_ROW, HAND_INITIAL_COLUMN, HAND_END_ROW, HAND_END_COLUMN));
-            res.append(print_Borders("HAND: " + username, HAND_INITIAL_ROW, HAND_INITIAL_COLUMN, HAND_END_ROW,
+            res.append(print_Borders("HAND: " + username, greyText, HAND_INITIAL_ROW,
+                    HAND_INITIAL_COLUMN, HAND_END_ROW,
                     HAND_END_COLUMN));
             for (PlayableCard card : hand) {
                 res.append(print_PlayableCard(card, HAND_INITIAL_COLUMN + 1 + (CARD_LENGTH + 1) * index,
@@ -1551,6 +1736,8 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+            areasCache.put(TUIareas.HAND, res);
+
         }
     }
 
@@ -1568,7 +1755,9 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+            areasCache.put(TUIareas.OBJ, res);
         }
+
     }
 
     @Override
@@ -1578,7 +1767,7 @@ public class TUI extends UI {
             res.append(
                     clearArea(CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN, CHOOSE_OBJECTIVE_END_ROW,
                             CHOOSE_OBJECTIVE_END_COLUMN));
-            res.append(print_Borders("Choose Objective Card: ", CHOOSE_OBJECTIVE_INITIAL_ROW,
+            res.append(print_Borders("Choose Objective Card:", greyText, CHOOSE_OBJECTIVE_INITIAL_ROW,
                     CHOOSE_OBJECTIVE_INITIAL_COLUMN, CHOOSE_OBJECTIVE_END_ROW, CHOOSE_OBJECTIVE_END_COLUMN));
             res.append(print_ObjectiveCard(objectiveCard1, CHOOSE_OBJECTIVE_INITIAL_COLUMN + 1,
                     CHOOSE_OBJECTIVE_INITIAL_ROW + 1, CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_END_ROW,
@@ -1598,7 +1787,9 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+            areasCache.put(TUIareas.CHOSE_OBJ, res);
         }
+
     }
 
     @Override
@@ -1620,6 +1811,8 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
+        areasCache.put(TUIareas.COMMON_OBJ, res);
+
     }
 
     @Override
@@ -1637,6 +1830,8 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+            areasCache.put(TUIareas.STARTER, res);
+
         }
     }
 
@@ -1645,53 +1840,53 @@ public class TUI extends UI {
         printToCmdLineOut(serverWrite("Username accepted"));
         printToCmdLineOut(tuiWrite("Your name is: " + username));
         client.setUsernameResponse(username);
-        state.command_showCommandsInfo();
-        state.stateNotify();
+        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
 
     }
 
     @Override
     public void show_wrongUsername(String username) {
         printToCmdLineOut(serverWrite("Username " + username + " already taken, try again"));
-        state.setUsername();
+        commandToProcess(TUIcommands.INITIAL, false);
+
     }
 
     @Override
     public void show_joinedToGame(int id, int maxNumberOfPlayers) {
         printToCmdLineOut(serverWrite("Joined to game: " + id));
-        state = new JoinedToGameState(this);
-        state.command_showCommandsInfo();
-        state.stateNotify();
+        chatBoardThread = chatBoardThreadBuilder();
         chatBoardThread.start();
+        state = new JoinedToGameState(this);
+        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
 
     }
 
-    // NOTE è un memo per quando creerò il metodo
     @Override
     public void show_quitFromGame(int id) {
-        printToCmdLineOut(serverWrite("Quit from game: " + id));
-        chatBoardThread.interrupt();
-        chatBoardThread = chatBoardThreadBuilder(); // mi sembra di ricordare da qualche vecchia lezione che se il
-                                                    // thread muore l'assegnazione all'oggetto sparisce e va rifatta
         state = new InitState(this);
-        state.stateNotify();
+        chatBoardThread.interrupt();
+        chatMessages = new ArrayDeque<String>();
+
+        // TODO: erase player info
+        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
 
     }
 
     @Override
     public void show_gameIsFull(int id) {
         printToCmdLineOut(serverWrite(serverWrite("Game " + id + " is full")));
-        state.stateNotify();
+        commandToProcess(TUIcommands.NOTIFY, false);
 
     }
 
     @Override
     public void show_gameCreated(int gameID) {
         printToCmdLineOut(serverWrite("New game created with ID: " + gameID));
-        state = new JoinedToGameState(this);
-        state.command_showCommandsInfo();
-        state.stateNotify();
+        chatBoardThread = chatBoardThreadBuilder();
         chatBoardThread.start();
+        state = new JoinedToGameState(this);
+        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+
     }
 
     @Override
@@ -1704,43 +1899,41 @@ public class TUI extends UI {
         // }
         // }
         // state.stateNotify();
-    }
-
-    @Override
-    public void update_ToPlayingState() {
-        this.state = new PlayingState(this);
-        state.command_showCommandsInfo();
-
+        // FIXME
     }
 
     @Override
     public void show_gameDoesNotExist() {
         printToCmdLineOut(serverWrite("Game does not exist"));
-        state.stateNotify();
+        commandToProcess(TUIcommands.NOTIFY, false);
+
     }
 
     @Override
     public void show_wrongGameSize() {
         printToCmdLineOut(serverWrite("Game size must be between 2 and 4"));
-        state.stateNotify();
+        commandToProcess(TUIcommands.NOTIFY, false);
+
     }
 
     @Override
     public void show_playerTurn(String username, String info) {
         if (client.getUsername().equals(username)) {
             StringBuilder res = new StringBuilder();
-            res.append(ansi().cursor(ACHIEVED_RESOURCES_END_ROW - 1, ACHIEVED_RESOURCES_END_COLUMN + 1)
+            res.append(ansi().cursor(PLAYERS_INFO_END_ROW + 1, ACHIEVED_RESOURCES_END_COLUMN + 1)
                     .a("              "));
             res.append(
                     ansi().cursor(ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN + 1).a("              "));
-            res.append(ansi().cursor(ACHIEVED_RESOURCES_END_ROW - 1, ACHIEVED_RESOURCES_END_COLUMN + 1)
+            res.append(ansi().cursor(PLAYERS_INFO_END_ROW + 1, ACHIEVED_RESOURCES_END_COLUMN + 1)
                     .a("Player state:"));
-            res.append(ansi().cursor(ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN + 1).a(info));
+            res.append(ansi().cursor(PLAYERS_INFO_END_ROW + 2, ACHIEVED_RESOURCES_END_COLUMN + 1).a(info));
 
             synchronized (playViewUpdate) {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
+            areasCache.put(TUIareas.PLAYER_STATE, res);
+
         }
     }
 
@@ -1749,7 +1942,7 @@ public class TUI extends UI {
         StringBuilder res = new StringBuilder();
         res.append(clearArea(PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN, PLAYERS_INFO_END_ROW,
                 PLAYERS_INFO_END_COLUMN));
-        res.append(print_Borders("Players info", PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN,
+        res.append(print_Borders("Players info", greyText, PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN,
                 PLAYERS_INFO_END_ROW, PLAYERS_INFO_END_COLUMN));
         int index = 1;
         for (String player : players.keySet()) {
@@ -1762,17 +1955,31 @@ public class TUI extends UI {
             playViewUpdate.add(res);
             playViewUpdate.notify();
         }
+
+        areasCache.put(TUIareas.PLAYERS_INFO, res);
+
     }
 
     @Override
     public void show_invalidAction(String message) {
+        printToCmdLineOut(serverWrite(message));
 
     }
 
     @Override
-    public void show_GameIsOver() {
+    public void show_GameIsOver(String username) {
         StringBuilder res = new StringBuilder();
-        res.append(ansi().cursor(1, 1).a("Game Is Over"));
+        res.append(clearArea(GAME_OVER_INITIAL_ROW, GAME_OVER_INITIAL_COLUMN, GAME_OVER_END_ROW,
+                GAME_OVER_END_COLUMN));
+        res.append(print_Borders("", greyText, GAME_OVER_INITIAL_ROW, GAME_OVER_INITIAL_COLUMN,
+                GAME_OVER_END_ROW, GAME_OVER_END_COLUMN));
+
+        if (client.getUsername().equals(username)) {
+            res.append(ansi().cursor(GOLD_DECK_INITIAL_ROW + 1, GAME_OVER_INITIAL_COLUMN + 1).a("You are the winner"));
+        } else {
+            res.append(ansi().cursor(GOLD_DECK_INITIAL_ROW + 1, GAME_OVER_INITIAL_COLUMN + 1).a("You lost!"));
+        }
+
         synchronized (playViewUpdate) {
             playViewUpdate.add(res);
             playViewUpdate.notify();
@@ -1783,25 +1990,27 @@ public class TUI extends UI {
         client.setToken(token);
     }
 
-    private boolean heart = false;
-
     @Override
     public void show_heartBeat() {
-        StringBuilder res = new StringBuilder();
-        if (heart == false) {
-            res.append(ansi().cursor(1, 1).a("💚"));
-            heart = true;
-        } else {
-            res.append(ansi().cursor(1, 1).a("💔"));
-            heart = false;
-
+        StringBuilder heart = new StringBuilder();
+        heart.append(Ansi.ansi().cursor(1, 17).a("💚"));
+        synchronized (statusBar) {
+            statusBar.add(heart);
+            statusBar.notify();
         }
-        synchronized (playViewUpdate) {
-            playViewUpdate.add(res);
-            playViewUpdate.notify();
-        }
+        // StringBuilder res = new StringBuilder();
+        // if (heart == false) {
+        // res.append(ansi().cursor(1, 1).a("💚"));
+        // heart = true;
+        // } else {
+        // res.append(ansi().cursor(1, 1).a("💔"));
+        // heart = false;
+        //
+        // }
+        // synchronized (playViewUpdate) {
+        // playViewUpdate.add(res);
+        // playViewUpdate.notify();
+        // }
     }
-    // Thread HeartBeat = new Thread(()->{
 
-    // });
 }

@@ -45,18 +45,13 @@ public class CardFront {
      */
     public CardFront(int score, List<Resources> resources, Map<Resources, Integer> requirements, String dirImg,
             Objective ob)
-    // throws WrongNumberOfCornerException
-    // , DirImgValueMissingException
     {
         this.score = score;
 
-        // if (resources.size() != 4) throw new WrongNumberOfCornerException();
-        this.resources = listDeepCopy(resources);
-        this.requirements = mapDeepCopy(requirements);
+        this.resources = resources;
+        this.requirements = requirements;
 
-        // if (dirImg == null) throw new DirImgValueMissingException();
         this.dirImg = dirImg;
-        // TODO implementare depp copy per ob
         this.objective = ob;
     }
 
@@ -83,7 +78,6 @@ public class CardFront {
         return ret;
     }
 
-    // TODO provare con programmazione funzionale e usando listDeepCopy
     public List<Resources> getResources() {
         List<Resources> res = new ArrayList<>();
         for (Resources val : resources) {
@@ -95,7 +89,7 @@ public class CardFront {
     }
 
     public Map<Resources, Integer> getRequirements() {
-        return mapDeepCopy(requirements);
+        return requirements;
     }
 
     public Objective getObjective() {
@@ -108,22 +102,6 @@ public class CardFront {
 
     public int getScore() {
         return this.score;
-    }
-
-    private List<Resources> listDeepCopy(List<Resources> listToCopy) {
-        List<Resources> newList = new ArrayList<>();
-        for (Resources val : listToCopy) {
-            newList.add(val);
-        }
-        return newList;
-    }
-
-    private Map<Resources, Integer> mapDeepCopy(Map<Resources, Integer> mapToCopy) {
-        Map<Resources, Integer> newMap = new HashMap<>();
-        for (Map.Entry<Resources, Integer> val : mapToCopy.entrySet()) {
-            newMap.put(val.getKey(), Integer.valueOf(val.getValue()));
-        }
-        return newMap;
     }
 
     public List<Resources> getCorners() {

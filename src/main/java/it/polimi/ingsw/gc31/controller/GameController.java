@@ -4,8 +4,10 @@ import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import it.polimi.ingsw.gc31.Client;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
@@ -21,13 +23,13 @@ import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
  * It manages the gameModel and the game states.
  */
 public class GameController extends UnicastRemoteObject implements IGameController {
-    private final GameModel model;
-    private final LinkedHashMap<String, VirtualClient> clientList;
+    protected final GameModel model;
+    protected final LinkedHashMap<String, VirtualClient> clientList;
     @SuppressWarnings("unused")
     private final int maxNumberPlayers;
     private final int idGame;
-    private final LinkedBlockingQueue<ServerQueueObject> callsList;
-    private final LinkedHashMap<String, Boolean> readyStatus;
+    protected final LinkedBlockingQueue<ServerQueueObject> callsList;
+    protected final LinkedHashMap<String, Boolean> readyStatus;
 
     /**
      * Constructor for the GameController class.
@@ -104,8 +106,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void quitGame(String username) throws RemoteException {
         VirtualClient client = clientList.get(username);
         clientList.remove(username, client);
-        readyStatus.remove(username, false);
+        readyStatus.remove(username);
         Controller.getController().quitGame(username, idGame, client);
+        model.disconnectPlayer(username);
+        notifyListPlayers();
     }
 
     public void setReadyStatus(boolean ready, String username) throws RemoteException, IllegalStateOperationException {
@@ -121,7 +125,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void checkReady() throws RemoteException {
         int counter = 0;
         for (Boolean status : readyStatus.values()) {
-            if (status == true) {
+            if (status) {
                 counter++;
             }
         }
@@ -191,7 +195,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.drawResource(username, index);
         } catch (IllegalStateOperationException e) {
-            throw new RuntimeException(e);
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
         }
     }
 
@@ -253,7 +257,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             model.setSelectCard(username, index);
         } catch (IllegalStateOperationException e) {
             try {
-                clientList.get(username).sendCommand(new ShowInvalidActionObj("You are in the wrong state"));
+                clientList.get(username).sendCommand(new ShowInvalidActionObj("You can't select a card"));
             } catch (RemoteException ex) {
                 // TODO occuparsi dell'eccezione
                 throw new RuntimeException(ex);
@@ -282,6 +286,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         } catch (IllegalStateOperationException e) {
             ServerLog.gControllerWrite(e.getMessage(), idGame);
         }
+    }
+
+    public void disconnectPlayer(String username) {
+        model.disconnectPlayer(username);
     }
 
     public GameModel getModel() {
