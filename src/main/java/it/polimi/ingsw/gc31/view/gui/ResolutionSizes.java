@@ -1,4 +1,4 @@
-package it.polimi.ingsw.gc31.view.gui.controllers;
+package it.polimi.ingsw.gc31.view.gui;
 
 public enum ResolutionSizes {
     FHD("FHD"),
@@ -12,23 +12,23 @@ public enum ResolutionSizes {
     public Integer getWidth(){
         if(size.equals("FHD")) return 240;
         if(size.equals("HD")) return 210;
-        return 150;
+        return 135;
     }
     public Integer getPaneWidth(){
         if(size.equals("FHD")) return 180;
         if(size.equals("HD")) return 158;
-        return 113;
+        return 102;
     }
 
     public Integer getHeight(){
         if(size.equals("FHD")) return 160;
         if(size.equals("HD")) return 140;
-        return 100;
+        return 90;
     }
 
     public Integer getPaneHeight(){
         if(size.equals("FHD")) return 96;
         if(size.equals("HD")) return 84;
-        return 60;
+        return 54;
     }
 }

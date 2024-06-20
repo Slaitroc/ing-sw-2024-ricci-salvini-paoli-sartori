@@ -5,6 +5,7 @@ import it.polimi.ingsw.gc31.model.card.Card;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import it.polimi.ingsw.gc31.view.gui.ResolutionSizes;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.SnapshotParameters;
@@ -645,6 +646,9 @@ public class InGameController extends ViewController {
         showHidePane(controlsVBox);
     }
 
+    /**
+     * Change resolution to all imageViews on screen
+    */
     public void changeResolution() {
         if(size == ResolutionSizes.HD) size = ResolutionSizes.SD;
         else  size = ResolutionSizes.HD;
@@ -664,14 +668,23 @@ public class InGameController extends ViewController {
         resizeCard(commonObjCard2);
         resizeCard(starterCard);
         resizeCard(secretObjective);
-        for (int x = 0; x < player1PlayAreaGrid.getColumnCount(); x++) {
-            for (int y = 0; y < player1PlayAreaGrid.getRowCount(); y++) {
-                resizeCard(cells1.get(new Pair<>(x, y)));
-                cells1.get(new Pair<>(x, y)).setPaneResolution();
-                //System.out.println("Cell [" + x + ";" + y + "] set to invisible image");
+        changeGridResolution(player1PlayAreaGrid, cells1);
+        changeGridResolution(player2PlayAreaGrid, cells2);
+        if (app.getNumberOfPlayers()>=3) changeGridResolution(player3PlayAreaGrid, cells3);
+        if (app.getNumberOfPlayers()==4) changeGridResolution(player4PlayAreaGrid, cells4);
+
+    }
+
+    /**
+     * Support method to change resolution to one single GridPane
+     * */
+    void changeGridResolution(GridPane grid, Map<Pair<Integer, Integer>, Cell> cells){
+        for (int x = 0; x < grid.getColumnCount(); x++) {
+            for (int y = 0; y < grid.getRowCount(); y++) {
+                resizeCard(cells.get(new Pair<>(x, y)));
+                cells.get(new Pair<>(x, y)).setPaneResolution();
             }
         }
-
     }
 
     //PRIVATE METHODS:__________________________________________________________________________________________________

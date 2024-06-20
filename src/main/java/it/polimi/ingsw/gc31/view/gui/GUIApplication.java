@@ -2,7 +2,6 @@ package it.polimi.ingsw.gc31.view.gui;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.utility.DV;
-import it.polimi.ingsw.gc31.view.gui.controllers.GameInstance;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

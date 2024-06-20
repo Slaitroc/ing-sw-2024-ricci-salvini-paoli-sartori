@@ -5,6 +5,7 @@ import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.view.gui.GUIApplication;
+import it.polimi.ingsw.gc31.view.gui.GameInstance;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 

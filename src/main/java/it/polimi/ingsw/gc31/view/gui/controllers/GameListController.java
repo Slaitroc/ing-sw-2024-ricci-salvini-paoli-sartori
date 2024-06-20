@@ -1,7 +1,7 @@
 package it.polimi.ingsw.gc31.view.gui.controllers;
 
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
-import it.polimi.ingsw.gc31.view.gui.GUIApplication;
+import it.polimi.ingsw.gc31.view.gui.GameInstance;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.gc31.view.gui.controllers;
+package it.polimi.ingsw.gc31.view.gui;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
