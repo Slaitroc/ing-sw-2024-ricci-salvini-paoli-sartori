@@ -1,14 +1,32 @@
 package it.polimi.ingsw.gc31.view;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
+import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
+import it.polimi.ingsw.gc31.model.player.Placed;
+import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.view.tui.TUI;
 import org.fusesource.jansi.AnsiConsole;
 
 public class Prova {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IllegalStateOperationException {
+        Board board = new Board();
+        Player player1 = new Player(PawnColor.BLUE, "sslvo", board);
+
+        board.getDeckGold().refill();
+        for (int i=0; i<37; i++) {
+            board.getDeckGold().draw();
+        }
+        player1.setInGameState(new Placed());
+        player1.drawGold(1);
+
+        player1.setInGameState(new Placed());
+        player1.drawGold(1);
+        System.out.println("ok");
     }
 
     public static class ProvaTui extends TUI {

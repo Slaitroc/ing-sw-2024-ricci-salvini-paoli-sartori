@@ -12,17 +12,16 @@ public interface Card {
      * This method is used to determine which side of the card is visible.
      * @return the value of the attribute side
      */
-    public boolean getSide();
+    boolean getSide();
 
     /**
      * This method change the side of a card, which means that it change the visible side of a card
      */
-    public void changeSide();
+    void changeSide();
 
     /**
-     *
-     * @return
+     * @return the path of the png of the visible side of the card
      */
-    public String getImage();
+    String getImage();
 
 }
