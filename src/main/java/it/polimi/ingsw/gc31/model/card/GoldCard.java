@@ -11,18 +11,4 @@ public class GoldCard extends PlayableCard {
     public GoldCard(CardColor cardColor, CardFront front, CardBack back) {
         super(cardColor, front, back);
     }
-
-    @Override
-    public Objective getObjective() {
-        if (side)
-            return front.getObjective();
-        else
-            return null;
-    }
-    public Map<Resources, Integer> getRequirements() {
-        if (side)
-            return front.getRequirements();
-        else
-            return Collections.emptyMap();
-    }
 }

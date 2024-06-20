@@ -40,9 +40,6 @@ public class CardFront {
      */
     private final Objective objective;
 
-    /**
-     * Constructor of the class
-     */
     public CardFront(int score, List<Resources> resources, Map<Resources, Integer> requirements, String dirImg,
             Objective ob)
     {

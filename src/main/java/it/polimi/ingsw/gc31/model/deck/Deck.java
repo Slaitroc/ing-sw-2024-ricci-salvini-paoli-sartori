@@ -96,7 +96,7 @@ public class Deck<T extends Card>{
         if (deck.isEmpty())
             throw new EmptyDeckException();
         T card = deck.poll();
-        card.changeSide();
+//        card.changeSide();
         return card;
     }
 

@@ -20,11 +20,6 @@ public class NotPlaced extends PlayerState {
         throw new IllegalStateOperationException();
     }
 
-//    @Override
-//    public void moveCardInHand(Player player) {
-//        executeMoveCardInHand(player);
-//    }
-
     @Override
     public void play(Point point, Player player) {
         PlayableCard card = player.getSelectedCard();

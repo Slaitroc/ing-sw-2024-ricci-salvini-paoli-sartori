@@ -11,14 +11,4 @@ public class ResourceCard extends PlayableCard {
     public ResourceCard(CardColor cardColor, CardFront front, CardBack back) {
         super(cardColor, front, back);
     }
-
-    @Override
-    public Map<Resources, Integer> getRequirements() {
-        return Collections.emptyMap();
-    }
-
-    @Override
-    public Objective getObjective() {
-        return null;
-    }
 }

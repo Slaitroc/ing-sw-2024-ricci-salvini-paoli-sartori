@@ -4,6 +4,7 @@ import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -86,9 +87,19 @@ public abstract class PlayableCard implements Card {
             return back.getResources();
     }
 
-    abstract public Map<Resources, Integer> getRequirements();
+    public Map<Resources, Integer> getRequirements() {
+        if (side)
+            return front.getRequirements();
+        else
+            return Collections.emptyMap();
+    }
 
-    abstract public Objective getObjective();
+    public Objective getObjective() {
+        if (side)
+            return front.getObjective();
+        else
+            return null;
+    }
 
     @Override
     public boolean getSide() {

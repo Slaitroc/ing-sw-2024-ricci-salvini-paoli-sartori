@@ -10,7 +10,7 @@ public class CardBack {
     private final String dirImg;
 
     public CardBack(List<Resources> resources, String dirImg) {
-        this.resources = listDeepCopy(resources);
+        this.resources = resources;
         this.dirImg = dirImg;
     }
 
@@ -36,14 +36,6 @@ public class CardBack {
 
     public String getImage() {
         return this.dirImg;
-    }
-
-    private List<Resources> listDeepCopy(List<Resources> listToCopy) {
-        List<Resources> newList = new ArrayList<>();
-        for (Resources val : listToCopy) {
-            newList.add(val);
-        }
-        return newList;
     }
 
     public List<Resources> getCorners() {
