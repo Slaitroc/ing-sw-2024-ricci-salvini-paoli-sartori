@@ -10,7 +10,19 @@
 }
 
 #resource-box{
+    -fx-font: 12px 'glimmer of light';
+    -fx-text-fill: -black;
     -fx-background-color: -light-beige;
     -fx-background-radius: 10;
     -fx-border-radius: 2;
 }
+
+#highlighted-box{
+    -fx-background-color: -light-green;
+    -fx-background-radius: 10;
+    -fx-border-color: -gold;
+    -fx-border-width: 4;
+    -fx-border-radius: 10;
+    -fx-padding: 10;
+}
+

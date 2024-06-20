@@ -1,23 +1,35 @@
 package it.polimi.ingsw.gc31.view.tui;
 
 public enum TUIcommands {
-    INVALID,
-    SHOW_COMMAND_INFO,
-    INITIAL,
-    REFRESH,
-    SET_USERNAME,
-    CREATE_GAME,
-    JOIN_GAME,
-    SHOW_GAME,
-    QUIT_GAME,
-    READY,
-    DRAW_GOLD,
-    DRAW_RESOURCES,
-    CHOOSE_SERCRET_OBJ,
-    PLAY_STARTER,
-    PLAY,
-    SELECT_CARD,
-    CHANGE_SIDE,
-    CHANGE_STARTER_SIDE,
-    MOVE_PLAY_AREA;
+    NOTIFY("notify"),
+    INVALID("invalid"),
+    SHOW_COMMAND_INFO("help"),
+    INITIAL("initial"),
+    REFRESH("ref"),
+    SET_USERNAME("set username"),
+    CREATE_GAME("create game"),
+    JOIN_GAME("join game"),
+    SHOW_GAMES("show games"),
+    QUIT_GAME("quit"),
+    READY("ready"),
+    DRAW_GOLD("dg"),
+    DRAW_RESOURCES("dr"),
+    CHOOSE_SERCRET_OBJ("co"),
+    PLAY_STARTER("ps"),
+    PLAY("p"),
+    SELECT_CARD("s"),
+    CHANGE_SIDE("c"),
+    CHANGE_STARTER_SIDE("cs"),
+    MOVE_PLAY_AREA("mv");
+
+    private final String tag;
+
+    TUIcommands(String tag) {
+        this.tag = tag;
+    }
+
+    @Override
+    public String toString() {
+        return tag;
+    }
 }

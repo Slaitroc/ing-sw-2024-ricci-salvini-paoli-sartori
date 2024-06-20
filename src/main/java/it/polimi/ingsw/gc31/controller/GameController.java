@@ -4,8 +4,10 @@ import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import it.polimi.ingsw.gc31.Client;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
@@ -104,7 +106,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void quitGame(String username) throws RemoteException {
         VirtualClient client = clientList.get(username);
         clientList.remove(username, client);
-        readyStatus.remove(username, false);
+        readyStatus.remove(username);
         Controller.getController().quitGame(username, idGame, client);
         model.disconnectPlayer(username);
         notifyListPlayers();
