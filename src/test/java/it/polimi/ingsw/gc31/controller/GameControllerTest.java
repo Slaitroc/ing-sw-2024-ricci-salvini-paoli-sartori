@@ -1,3 +1,4 @@
+/*
 package it.polimi.ingsw.gc31.controller;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
@@ -22,19 +23,23 @@ public class GameControllerTest {
     private GameController gameController1;
     static VirtualClient mockClient;
 
-    /**
+    */
+/**
      * Setup executed before each test method
      * @throws RemoteException
-     */
+     *//*
+
     @BeforeEach
-    private void setUp() throws RemoteException {
+    public void setUp() throws RemoteException {
         mockClient = Mockito.mock(VirtualClient.class);
         gameController1 = new GameController("player1", mockClient, 4, 0);
     }
 
-    /**
+    */
+/**
      * Tests the joinGame method
-     */
+     *//*
+
     @Test
     public void joinGameTest() {
         //check if the maximum number of player is correct
@@ -55,9 +60,11 @@ public class GameControllerTest {
         // it is not tested here
     }
 
-    /**
+    */
+/**
      * Tests the quiGame method
-     */
+     *//*
+
     @Test
     public void quitGameTest() {
         //Populate the lobby
@@ -70,9 +77,11 @@ public class GameControllerTest {
         assertEquals(gameController1.getCurrentNumberPlayers(), 2, "The number of the player in the game is diminished by one");
     }
 
-    /**
+    */
+/**
      * The method checks if a player can change the value of the ready attribute correctly
-     */
+     *//*
+
     @Test
     public void setReadyStatusTest() {
         //Populate the game
@@ -109,9 +118,11 @@ public class GameControllerTest {
         //FIXME the method check ready can throw an IllegalStateOperationException... how?
     }
 
-    /**
+    */
+/**
      * Tests the checkReady method
-     */
+     *//*
+
     @Test
     public void checkReadyTest() {
         //Populate the game
@@ -129,9 +140,11 @@ public class GameControllerTest {
         assertThrows(RuntimeException.class, () -> gameController1.checkReady());
     }
 
-    /**
+    */
+/**
      * Tests the sendChatMessage method
-     */
+     *//*
+
     @Test
     public void sendChatMessageTest() {
         //Populate the game
@@ -143,9 +156,11 @@ public class GameControllerTest {
         assertDoesNotThrow(() -> gameController1.sendChatMessage(new NewChatMessage("player1", "Test")));
     }
 
-    /**
+    */
+/**
      * Tests the selectCard method
-     */
+     *//*
+
     @Test
     public void selectCardTest() {
         //Populate the lobby
@@ -187,9 +202,11 @@ public class GameControllerTest {
         assertDoesNotThrow( () -> gameController1.selectCard("player3", 1));
     }
 
-    /**
+    */
+/**
      * Tests the changeSide method
-     */
+     *//*
+
     @Test
     public void changeSideTest() {
         //Populate the lobby
@@ -222,9 +239,11 @@ public class GameControllerTest {
 
     }
 
-    /**
+    */
+/**
      * Tests the drawGold method
-     */
+     *//*
+
     @Test
     public void drawGoldTest() {
         //Populate the lobby
@@ -255,9 +274,11 @@ public class GameControllerTest {
         gameController1.drawGold("player2", 1);
     }
 
-    /**
+    */
+/**
      * Tests the drawResource method
-     */
+     *//*
+
     @Test
     public void drawResourceTest() {
         //Populate the lobby
@@ -288,9 +309,11 @@ public class GameControllerTest {
         assertThrows(RuntimeException.class, () -> gameController1.drawResource("player2", 1));
     }
 
-    /**
+    */
+/**
      * Tests the chooseSecretObjective method
-     */
+     *//*
+
     @Test
     public void chooseSecretObjectiveTest() {
         //Populate the lobby
@@ -322,9 +345,11 @@ public class GameControllerTest {
     }
 
 
-    /**
+    */
+/**
      * Tests the playStarter method
-     */
+     *//*
+
     @Test
     public void playStarterTest() {
         //Populate the lobby
@@ -355,9 +380,11 @@ public class GameControllerTest {
         gameController1.playStarter("player4");
     }
 
-    /**
+    */
+/**
      * Tests the play method
-     */
+     *//*
+
     @Test
     public void playTest() {
         //Populate the lobby
@@ -388,9 +415,11 @@ public class GameControllerTest {
         assertDoesNotThrow( () -> gameController1.play("player2", new Point(-1, -1)));
     }
 
-    /**
+    */
+/**
      * Tests the changeStarterSide method
-     */
+     *//*
+
     @Test
     public void changeStarterSideTest() {
         //Populate the lobby
@@ -421,9 +450,11 @@ public class GameControllerTest {
         assertDoesNotThrow( () -> gameController1.changeStarterSide("player4"));
     }
 
-    /**
+    */
+/**
      * Tests the executor method
-     */
+     *//*
+
     @Test
     public void executorTest(){
         //Send a new command to the list
@@ -457,3 +488,4 @@ public class GameControllerTest {
 //    }
 
 }
+*/

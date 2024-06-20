@@ -69,7 +69,7 @@ public class PlayerTest {
      * 3 cards at a time (3 cards should be the maximum size of the hand)
      */
     @Test
-    public void drawResourceTest(){
+    public void drawResourceTest() throws IllegalStateOperationException{
         //check if the index are considered correctly
         assertFalse(player.drawResource(-1), "Index out of bound");
         assertFalse(player.drawResource(3), "Index out of bound");
@@ -102,7 +102,7 @@ public class PlayerTest {
      * Checks if the player can play a card in the wrong state (an exception should be launched)
      */
     @Test
-    public void playTest() {
+    public void playTest() throws IllegalStateOperationException {
         //check if the player can play in the wrong states
         player.setInGameState(new Waiting());
         assertThrows(IllegalStateOperationException.class, () -> player.play(new Point(1, 1)),
