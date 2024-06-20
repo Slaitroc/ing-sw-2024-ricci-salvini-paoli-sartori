@@ -1,12 +1,9 @@
 package it.polimi.ingsw.gc31.model.card;
 
-import com.google.gson.JsonObject;
-
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -89,12 +86,7 @@ public abstract class PlayableCard implements Card {
             return back.getResources();
     }
 
-    public Map<Resources, Integer> getRequirements() {
-        if (side)
-            return front.getRequirements();
-        else
-            return Collections.emptyMap();
-    }
+    abstract public Map<Resources, Integer> getRequirements();
 
     abstract public Objective getObjective();
 

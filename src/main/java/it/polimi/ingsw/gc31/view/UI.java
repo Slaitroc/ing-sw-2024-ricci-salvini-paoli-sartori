@@ -27,19 +27,10 @@ public abstract class UI implements ShowUpdate {
      * Run a new scene/view. Should be using {@link #inGame} to choose between
      * scenes/views.
      * 
-     * @apiNote override {@link #uiRunUI()} to implement this method
+     * 
      * 
      * @Slaitroc
      */
-    public void runUI() {
-        uiRunUI();
-    }
-
-    /**
-     * Implementation of {@link #runUI()}
-     * 
-     * @Slaitroc
-     */
-    protected abstract void uiRunUI();
+    public abstract void runUI();
 
 }
