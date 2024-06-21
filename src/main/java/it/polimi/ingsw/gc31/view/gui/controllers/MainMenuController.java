@@ -15,6 +15,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 
 public class MainMenuController extends ViewController {
@@ -71,8 +72,8 @@ public class MainMenuController extends ViewController {
                 /*app.loadScene(SceneTag.LOBBY);*/ //DOES NOT WORK LIKE THIS
 
             } catch (IOException e) {
-                e.printStackTrace();
-                show_ServerCrashWarning();
+                show_ServerCrashWarning(e.toString());
+                e.getStackTrace();
             }
         }
     }

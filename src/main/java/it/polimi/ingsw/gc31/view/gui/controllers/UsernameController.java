@@ -8,7 +8,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.io.IOException;
-
+import java.util.Arrays;
 
 
 public class UsernameController extends ViewController {
@@ -30,8 +30,8 @@ public class UsernameController extends ViewController {
                 client.setUsernameCall(usernameField.getText());
                 client.setUsernameResponse(usernameField.getText());
             } catch (IOException e) {
-                e.printStackTrace();
-                show_ServerCrashWarning();
+                show_ServerCrashWarning(e.toString());
+                e.getStackTrace();
             }
         }
     }

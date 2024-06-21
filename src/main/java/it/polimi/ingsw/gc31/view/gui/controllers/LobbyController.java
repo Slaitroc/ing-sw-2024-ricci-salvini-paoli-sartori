@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import java.rmi.RemoteException;
+import java.util.Arrays;
 import java.util.Map;
 
 public class LobbyController extends ViewController {
@@ -155,7 +156,8 @@ public class LobbyController extends ViewController {
         try {
             client.sendChatMessage(client.getUsername(), message);
         } catch (RemoteException e) {
-            show_ServerCrashWarning();
+            show_ServerCrashWarning(e.toString());
+            e.getStackTrace();
         }
     }
 
@@ -232,7 +234,8 @@ public class LobbyController extends ViewController {
             //System.out.println("Hey, I'm " + app.getUsername() + ", Player Number " + imPlayerNumber + ". I am setting my status from " + ready.getText());
             client.setReady(ready.getText().equals("Not Ready"));
         } catch (RemoteException e) {
-            show_ServerCrashWarning();
+            show_ServerCrashWarning(e.toString());
+            e.getStackTrace();
         }
     }
 
@@ -374,7 +377,8 @@ public class LobbyController extends ViewController {
             app.loadScene(SceneTag.MAINMENU);
             app.setDefaultWindowSize();
         } catch (RemoteException e) {
-            show_ServerCrashWarning();
+            show_ServerCrashWarning(e.toString());
+            e.getStackTrace();
         }
     }
 }

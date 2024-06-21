@@ -9,6 +9,7 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.Arrays;
 
 public class GameListController extends ViewController {
 
@@ -70,8 +71,8 @@ public class GameListController extends ViewController {
         try {
             client.joinGame(id);
         } catch (RemoteException e) {
-            e.printStackTrace();
-            show_ServerCrashWarning();
+            show_ServerCrashWarning(e.toString());
+            e.getStackTrace();
         }
 
     }

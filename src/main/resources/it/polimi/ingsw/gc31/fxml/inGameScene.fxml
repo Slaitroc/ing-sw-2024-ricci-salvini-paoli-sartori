@@ -84,16 +84,17 @@
 
                             <!-- Chat PopUp-->
                             <VBox fx:id="chatPopUp" fillWidth="false" mouseTransparent="true" prefHeight="200.0"
-                                  prefWidth="100.0" spacing="20.0" visible="false" StackPane.alignment="CENTER_RIGHT">
+                                  prefWidth="100.0" spacing="20.0" visible="false" StackPane.alignment="CENTER_RIGHT"
+                                  stylesheets="@../css/Chat.css">
                                 <padding>
                                     <Insets left="10.0" top="10.0"/>
                                 </padding>
-                                <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" prefHeight="460.0"
-                                            prefWidth="250.0">
+                                <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true"
+                                            prefHeight="460.0" prefWidth="250.0" styleClass="chat-scroll-pane">
                                     <TextFlow fx:id="chatField" prefHeight="200.0" prefWidth="207.0"/>
                                 </ScrollPane>
-                                <MFXTextField fx:id="textField" onKeyPressed="#handleEnterKeyPressed" prefHeight="49.0"
-                                              prefWidth="250.0"/>
+                                <MFXTextField fx:id="textField" onKeyPressed="#handleEnterKeyPressed"
+                                              prefHeight="49.0" prefWidth="250.0" styleClass="lobby-chat-background"/>
                             </VBox>
                         </StackPane>
                     </Tab>

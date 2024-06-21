@@ -240,7 +240,7 @@ public class InGameController extends ViewController {
      * gridDimensions.get(grid).get(0) = minX
      * gridDimensions.get(grid).get(1) = minY
      * gridDimensions.get(grid).get(2) = maxX
-     * gridDimensions.get(grid).get(3) = gridDimensions.get(grid).get(3)
+     * gridDimensions.get(grid).get(3) = maxY
      */
     private final LinkedHashMap<GridPane, ArrayList<Integer>> gridDimensions = new LinkedHashMap<>();
 
@@ -529,8 +529,8 @@ public class InGameController extends ViewController {
                     client.changeStarterSide();
                 }
             } catch (RemoteException e) {
-                e.printStackTrace();
-                show_ServerCrashWarning();
+                show_ServerCrashWarning(e.toString());
+                e.getStackTrace();
             }
         }
     }
@@ -569,8 +569,8 @@ public class InGameController extends ViewController {
                     client.drawGold(2);
                 }
             } catch (RemoteException e) {
-                e.printStackTrace();
-                show_ServerCrashWarning();
+                show_ServerCrashWarning(e.toString());
+                e.getStackTrace();
             }
         }
     }
@@ -596,8 +596,8 @@ public class InGameController extends ViewController {
             secretObj2.setManaged(false);
             secretObj2.setVisible(false);
         } catch (RemoteException e) {
-            e.printStackTrace();
-            show_ServerCrashWarning();
+            show_ServerCrashWarning(e.toString());
+            e.getStackTrace();
         }
     }
 
@@ -649,10 +649,10 @@ public class InGameController extends ViewController {
 
     /**
      * Change resolution to all imageViews on screen
-    */
+     */
     public void changeResolution() {
-        if(size == ResolutionSizes.HD) size = ResolutionSizes.SD;
-        else  size = ResolutionSizes.HD;
+        if (size == ResolutionSizes.HD) size = ResolutionSizes.SD;
+        else size = ResolutionSizes.HD;
 
         resizeCard(handCard1);
         resizeCard(handCard2);
@@ -671,15 +671,15 @@ public class InGameController extends ViewController {
         resizeCard(secretObjective);
         changeGridResolution(player1PlayAreaGrid, cells1);
         changeGridResolution(player2PlayAreaGrid, cells2);
-        if (app.getNumberOfPlayers()>=3) changeGridResolution(player3PlayAreaGrid, cells3);
-        if (app.getNumberOfPlayers()==4) changeGridResolution(player4PlayAreaGrid, cells4);
+        if (app.getNumberOfPlayers() >= 3) changeGridResolution(player3PlayAreaGrid, cells3);
+        if (app.getNumberOfPlayers() == 4) changeGridResolution(player4PlayAreaGrid, cells4);
 
     }
 
     /**
      * Support method to change resolution to one single GridPane
-     * */
-    void changeGridResolution(GridPane grid, Map<Pair<Integer, Integer>, Cell> cells){
+     */
+    void changeGridResolution(GridPane grid, Map<Pair<Integer, Integer>, Cell> cells) {
         for (int x = 0; x < grid.getColumnCount(); x++) {
             for (int y = 0; y < grid.getRowCount(); y++) {
                 resizeCard(cells.get(new Pair<>(x, y)));
@@ -701,8 +701,8 @@ public class InGameController extends ViewController {
             initialChoise.setMouseTransparent(true);
             player1PlayAreaGrid.setVisible(true);
         } catch (RemoteException e) {
-            e.printStackTrace();
-            show_ServerCrashWarning();
+            show_ServerCrashWarning(e.toString());
+            e.getStackTrace();
         }
     }
 
@@ -762,20 +762,25 @@ public class InGameController extends ViewController {
      * @param playArea The map representing the play area.
      */
     private void updateGrid(GridPane grid, Map<Pair<Integer, Integer>, Cell> cells, Map<Point, PlayableCard> playArea) {
+        //System.out.println("UPDATE_GRID CALL");
         for (Map.Entry<Point, PlayableCard> placedCard : playArea.entrySet()) {
-            if (placedCard.getKey().x <= gridDimensions.get(grid).getFirst()) {
+            if (placedCard.getKey().x < gridDimensions.get(grid).getFirst()) {
                 gridDimensions.get(grid).set(0, placedCard.getKey().x);
+                System.out.println("Adding Column");
                 addColumn(grid, cells, gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2);
             }
-            if (placedCard.getKey().y <= gridDimensions.get(grid).get(1)) {
+            if (placedCard.getKey().y < gridDimensions.get(grid).get(1)) {
+                System.out.println("Adding Row");
                 gridDimensions.get(grid).set(1, placedCard.getKey().y);
                 addRow(grid, cells, gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2);
             }
-            if (placedCard.getKey().x >= gridDimensions.get(grid).get(2)) {
+            if (placedCard.getKey().x > gridDimensions.get(grid).get(2)) {
+                System.out.println("Adding Column");
                 gridDimensions.get(grid).set(2, placedCard.getKey().x);
                 addColumn(grid, cells, gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2);
             }
-            if (placedCard.getKey().y >= gridDimensions.get(grid).get(3)) {
+            if (placedCard.getKey().y > gridDimensions.get(grid).get(3)) {
+                System.out.println("Adding Row");
                 gridDimensions.get(grid).set(3, placedCard.getKey().y);
                 addRow(grid, cells, gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2);
             }
@@ -792,18 +797,22 @@ public class InGameController extends ViewController {
         System.out.println("(gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2): " + (gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2));
         System.out.println("(gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2): " + (gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2));*/
 
+        //int debug = 0;
         for (int x = 0; x < grid.getColumnCount(); x++) {
             for (int y = 0; y < grid.getRowCount(); y++) {
+                //System.out.println("Hiding image [" + x + " " + y + "]");
+                //debug++;
                 cells.get(new Pair<>(x, y)).hideImage();
                 //System.out.println("Cell [" + x + ";" + y + "] set to invisible image");
             }
         }
+        //System.out.println("UPDATED GRID with " + debug + " iterations");
         int newCoordinateX;
         int newCoordinateY;
         for (Map.Entry<Point, PlayableCard> placedCard : playArea.entrySet()) {
             newCoordinateX = placedCard.getKey().x - gridDimensions.get(grid).getFirst() + 1;
             newCoordinateY = gridDimensions.get(grid).get(3) - placedCard.getKey().y + 1;
-            //System.out.println("Adding card that was on Point: " + placedCard.getKey() + " on cell [" + newCoordinateX + ";" + newCoordinateY + "]")
+            //System.out.println("Adding card that was on Point: " + placedCard.getKey() + " on cell [" + newCoordinateX + ";" + newCoordinateY + "]");
             //System.out.println("Card Image Path: " + placedCard.getValue().getImage());
             cells.get(new Pair<>(newCoordinateX, newCoordinateY)).setCardImage(placedCard.getValue().getImage());
         }
@@ -874,7 +883,8 @@ public class InGameController extends ViewController {
         try {
             client.sendChatMessage(client.getUsername(), message);
         } catch (RemoteException e) {
-            show_ServerCrashWarning();
+            show_ServerCrashWarning(e.toString());
+            e.getStackTrace();
         }
     }
 
@@ -915,7 +925,8 @@ public class InGameController extends ViewController {
                 else if (card.equals(handCard2)) client.selectCard(1);
                 else if (card.equals(handCard3)) client.selectCard(2);
             } catch (RemoteException e) {
-                show_ServerCrashWarning();
+                show_ServerCrashWarning(e.toString());
+                e.getStackTrace();
             }
             event.consume();
         });
@@ -1006,8 +1017,8 @@ public class InGameController extends ViewController {
                         try {
                             client.play(new Point(positionX + gridDimensions.get(grid).getFirst() - 1, gridDimensions.get(grid).get(3) - positionY + 1));
                         } catch (RemoteException e) {
-                            e.printStackTrace();
-                            show_ServerCrashWarning();
+                            show_ServerCrashWarning(e.toString());
+                            e.getStackTrace();
                         }
                         event.setDropCompleted(true);
                     } else {
@@ -1029,7 +1040,7 @@ public class InGameController extends ViewController {
             this.setImage(cardImage);
         }
 
-        public void setPaneResolution(){
+        public void setPaneResolution() {
             pane.setMaxHeight(size.getPaneHeight());
             pane.setMaxWidth(size.getPaneWidth());
             pane.setMinHeight(size.getPaneHeight());
