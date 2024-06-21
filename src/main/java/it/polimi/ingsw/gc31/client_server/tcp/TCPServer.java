@@ -15,12 +15,26 @@ public class TCPServer {
     final ServerSocket listenSocket;
     private final List<SocketClientHandler> handlers = new ArrayList<>();
 
+    /**
+     * This method writes on System.Out a specific type of string characterizing the TCP communications
+     *
+     * @param text is the text to write on System.Out
+     */
     public void TCPserverWrite(String text) {
         System.out.println(DV.ANSI_YELLOW + DV.TCP_SERVER_TAG + DV.ANSI_RESET + text);
     }
 
     // TODO Gestire meglio eccezioni
-    public TCPServer(String ipaddress) throws NumberFormatException, UnknownHostException, IOException {
+
+    /**
+     * This method is the constructor of the class. The method creates the TCP server and writes on System.Out the
+     * ip of the server and the port used
+     *
+     * @param ipaddress is the ip of the server
+     * @throws NumberFormatException if a string does not have the appropriate type to be converted in number
+     * @throws IOException if an error occurs during the ServerSocket creation
+     */
+    public TCPServer(String ipaddress) throws NumberFormatException, IOException {
         this.listenSocket = new ServerSocket(DV.TCP_PORT, 50, InetAddress.getByName("0.0.0.0"));
         TCPserverWrite("Server IP " + ipaddress);
         TCPserverWrite("Server in ascolto sulla porta " + DV.TCP_PORT);
@@ -29,9 +43,18 @@ public class TCPServer {
             runServer();
         } catch (IOException e) {
             e.printStackTrace();
+//            TCPserverWrite(" ERROR: An error occurred launching the TCP server");
         }
     }
 
+    /**
+     * This method is invoked right after the creation of the TCP server.
+     * It creates a thread that accept all the new TCP connections arriving.
+     * For every connection detected the method creates a SocketClientHandler for the specific client and add it to
+     * the list of all the handlers.
+     *
+     * @throws IOException
+     */
     public void runServer() throws IOException {
         TCPserverWrite("Server created");
         new Thread(() -> {

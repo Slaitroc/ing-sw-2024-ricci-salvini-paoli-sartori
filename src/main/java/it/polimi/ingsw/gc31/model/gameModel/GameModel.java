@@ -33,7 +33,7 @@ public class GameModel {
     protected List<String> turnPlayer;
     protected Map<String, Boolean> playerConnection;
     private int currPlayingPlayer = 0;
-    private GameModelState gameState;
+    protected GameModelState gameState;
     private final Map<String, GameListenerHandler> listeners;
 
     /**

@@ -296,7 +296,7 @@ public class Controller extends UnicastRemoteObject implements IController {
         return newConnections.get(token);
     }
 
-    // Risorse per heartbeat
+    // Heartbeat resources
     // FIXME spostare in cima attributi e metodi
     private ConcurrentHashMap<VirtualClient, Long> clientsHeartBeat;
     private ScheduledExecutorService scheduler;

@@ -5,12 +5,13 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.NewChatMessage;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChatMessage;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.HeartBeatObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.QuitGameObj;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.gameModel.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.Mockito;
+
+import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.awt.*;
 
@@ -21,6 +22,58 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GameControllerTest {
     private GameController gameController1;
     static VirtualClient mockClient;
+
+//    public static class FakeGameModel extends GameModel {
+//        public FakeGameModel(){
+//            super();
+//        }
+//
+//        @Override
+//        public void setGameState(GameModelState gameState){
+//            this.gameState = gameState;
+//        }
+//
+//        @Override
+//        public void drawResource(String username, int index){
+//            gameState.drawResource(this, username, index);
+//            listeners.values().forEach(listener -> listener.notifyResourcedDeckListener(this));
+//            listeners.get(username).notifyHandListener(this);
+//        }
+//    }
+
+//    public static class FakeGameController extends GameController {
+//        private FakeGameModel fakeModel;
+//        /**
+//         * Constructor for the GameController class.
+//         * It initializes the game model, players, clientList, and game states.
+//         *
+//         * @param username         the username of the player.
+//         * @param client           the client of the player.
+//         * @param maxNumberPlayers the maximum number of players.
+//         * @param idGame           the id of the game.
+//         */
+//        public FakeGameController(String username, VirtualClient client, int maxNumberPlayers, int idGame) throws RemoteException {
+//            super(username, client, maxNumberPlayers, idGame);
+//            fakeModel = (FakeGameModel) super.getModel();
+//        }
+//
+//        @Override
+//        public FakeGameModel getModel(){
+//            return fakeModel;
+//        }
+//    }
+//
+//    private Method publicates(GameModel model){
+//        Class<?> clazz = model.getClass();
+//        try{
+//            Method method = clazz.getMethod("setGameState");
+//            method.setAccessible(true);
+//            return method;
+//        } catch (NoSuchMethodException e) {
+//            e.printStackTrace();
+//            return  null;
+//        }
+//    }
 
     /**
      * Setup executed before each test method

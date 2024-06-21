@@ -26,7 +26,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     @SuppressWarnings("unused")
     private final int maxNumberPlayers;
     private final int idGame;
-    protected final LinkedBlockingQueue<ServerQueueObject> callsList;
+    private final LinkedBlockingQueue<ServerQueueObject> callsList;
     protected final LinkedHashMap<String, Boolean> readyStatus;
 
     /**
