@@ -74,4 +74,9 @@ public class ShowDownGameModelState implements GameModelState {
     public void endGame(GameModel model) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
+
+    @Override
+    public void disconnectPlayer(GameModel model, String username) {
+        model.executeDisconnectPlayer(username);
+    }
 }

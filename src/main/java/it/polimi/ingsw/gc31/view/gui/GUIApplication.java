@@ -114,13 +114,13 @@ public class GUIApplication extends Application {
     public void setLobbyWindowSize() {
         primaryStage.setWidth(1280);
         primaryStage.setHeight(720);
-        primaryStage.setMinWidth(1200);
+        primaryStage.setMinWidth(1280);
         primaryStage.setMinHeight(720);
         primaryStage.centerOnScreen();
     }
 
     public void setFullScreen(){
-        primaryStage.setFullScreen(true);
+        primaryStage.setFullScreen(!primaryStage.isFullScreen());
     }
 
     public String getUsername() {
@@ -153,6 +153,7 @@ public class GUIApplication extends Application {
 
     public void setListGames(List<String> gamesList) {
         gameInstances.clear();
+        if(gamesList.getFirst().equals("NO GAMES AVAILABLE")) return;
         for (String game : gamesList) {
             String gameID = game.split(" ")[0];
             String players = game.split(" ")[1] + game.split(" ")[2] + game.split(" ")[3];

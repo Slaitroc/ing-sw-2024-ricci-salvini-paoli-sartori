@@ -104,8 +104,11 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void quitGame(String username) throws RemoteException {
         VirtualClient client = clientList.get(username);
         clientList.remove(username, client);
-        readyStatus.remove(username, false);
+        readyStatus.remove(username);
         Controller.getController().quitGame(username, idGame, client);
+        model.disconnectPlayer(username);
+        notifyListPlayers();
+        ServerLog.gControllerWrite("Player "+username+" has quited from the game", idGame);
     }
 
     public void setReadyStatus(boolean ready, String username) throws RemoteException, IllegalStateOperationException {
@@ -121,7 +124,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void checkReady() throws RemoteException {
         int counter = 0;
         for (Boolean status : readyStatus.values()) {
-            if (status == true) {
+            if (status) {
                 counter++;
             }
         }
@@ -187,11 +190,11 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      *
      * @throws RemoteException If a remote invocation error occurs.
      */
-    public void drawResource(String username, int index) throws RemoteException {
+    public void drawResource(String username, int index){
         try {
             model.drawResource(username, index);
         } catch (IllegalStateOperationException e) {
-            throw new RuntimeException(e);
+            ServerLog.gControllerWrite(e.getMessage(), idGame);
         }
     }
 
@@ -253,7 +256,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             model.setSelectCard(username, index);
         } catch (IllegalStateOperationException e) {
             try {
-                clientList.get(username).sendCommand(new ShowInvalidActionObj("You are in the wrong state"));
+                clientList.get(username).sendCommand(new ShowInvalidActionObj("You can't select a card"));
             } catch (RemoteException ex) {
                 // TODO occuparsi dell'eccezione
                 throw new RuntimeException(ex);
@@ -282,6 +285,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         } catch (IllegalStateOperationException e) {
             ServerLog.gControllerWrite(e.getMessage(), idGame);
         }
+    }
+
+    public void disconnectPlayer(String username) {
+        model.disconnectPlayer(username);
     }
 
     public GameModel getModel() {

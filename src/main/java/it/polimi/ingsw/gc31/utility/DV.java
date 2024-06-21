@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class DV {
 
-    public static final int GamePoints = 5;
+    public static final int GamePoints = 20;
 
     // JSON directories
     public static final String DIRJsonGoldCard = "/it/polimi/ingsw/gc31/CardsJson/GoldCard.json";
@@ -113,6 +113,6 @@ public class DV {
     public final static int defaultToken = 0000;
 
     public final static boolean forceIP = false;
-    public final static String forcedIP = "192.168.192.197";
+    public final static String forcedIP = "192.168.192.165";
 
 }

@@ -21,7 +21,7 @@
 - [x] il log del server non scrive quando viene creato un nuovo game
 - [ ] scrivere di chi è il turno anche agli altri player
 - [ ] il log del server quando qualcuno chiama un'azione che non è nello stato corretto scrive che è stato fatto ma non specifica chi lo ha fatto (lo togliamo o lo implementiamo?)
-- [ ] fixare gli input sbagliati nei comandi (cathare l'input vuoto soprattutto)
+- [x] fixare gli input sbagliati nei comandi (cathare l'input vuoto soprattutto)
 - [ ] per risolvere le bestemmie sul size della tui forzare lo zoom della tui (e forse il font)
 - [ ] previsione dei punti calcolati a fine partita????? (slaitrocka non vuole aspettare ne contare da solo)
 - [ ] scrivere in giallo gold deck (chri dice che riesce a fare i contorni crazyyy)
@@ -43,4 +43,18 @@
 - [x] controllare show down (quando qualcuno raggiunge 20 pt)
 - [x] poi si finisce il giro dei turni e si gioca un solo turno aggiuntivo
 - [ ] poi devono venir stampati punti sia sul client che sul server (non succede)
-- [ ] va creata la tui di resoconto finale
+- [ ] va creata la UI di resoconto finale
+
+## Nuove
+
+- [ ] al termine della partita chiedere se rigiocare e in caso contrario eliminare dal gamecontroller i player che non vogliono. Se tutti non vogliono cancellare il gamecontroller
+- [ ] timer che fa vincere l'unico giocatore rimasto se tutti gli altri sono disconnessi. E direi timer per terminare la partita e cancellare il gamecontroller se sono tutti disconnessi
+- [ ] aggiustare wrong input nelle fasi iniziali di lancio del client (rmi tc) (tui gui)
+- [ ] se un client termina il programma sembra che non lo tolga dal gameController se il game non è ancora stato avviato (ho un solo client e comunque quando faccio show games vedo che c'è un client ancora connesso ma è impossibile)
+
+## GUI
+
+
+## TUI
+Cosa succde quando hai piazzato la carta e provi a selezionare la terza carta in mano?
+

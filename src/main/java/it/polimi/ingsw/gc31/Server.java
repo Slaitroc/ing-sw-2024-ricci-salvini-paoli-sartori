@@ -15,12 +15,7 @@ import it.polimi.ingsw.gc31.utility.DV;
 
 public class Server {
 
-    public static void main(String[] args) {
-        // pulisce il terminale
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-        String ipAddress = null;
-
+    public static String findIP(){
         Enumeration<NetworkInterface> networkInterfaces;
         try {
             networkInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -38,7 +33,7 @@ public class Server {
                     // Verificare se l'indirizzo è un indirizzo locale
                     if (inetAddress.isSiteLocalAddress()) {
                         // Stampa dell'indirizzo IP locale
-                        ipAddress = inetAddress.getHostAddress();
+                        return inetAddress.getHostAddress();
                     }
                 }
             }
@@ -46,6 +41,16 @@ public class Server {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        // pulisce il terminale
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        String ipAddress = findIP();
+
+       
 
         if (DV.forceIP) {
             try {

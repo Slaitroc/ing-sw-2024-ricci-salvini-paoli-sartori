@@ -99,6 +99,13 @@ public class CreationGameModelState implements GameModelState {
     public void endGame(GameModel model) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
+
+    @Override
+    public void disconnectPlayer(GameModel model, String username) {
+//        if disconnectPlayer is called in this state it means that the game has not yet started,
+//        so there is no need to remove the player from the gameModel
+    }
+
     private Map<String, Player> createPlayers(GameModel model, Set<String> setUsername) {
         Map<String, Player> players = new HashMap<>();
         for (String username : setUsername) {

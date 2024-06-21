@@ -1,6 +1,8 @@
 package it.polimi.ingsw.gc31.client_server.listeners;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsOverObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowCommonObjectiveCardObj;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
@@ -26,15 +28,15 @@ public class CommonObjectiveCardListener extends Listener{
      *
      * @param model The game model from which to extract the data,
      * @param username The username of the player whose play area is being updated.
-     * @throws RemoteException if there is a remote communication error.
      */
     @Override
-    public void update(GameModel model, String username) throws RemoteException {
-        clients.get(username).sendCommand(
-                new ShowCommonObjectiveCardObj(
-                        gsonTranslater.toJson(model.getCommonObjectives().get(0), ObjectiveCard.class),
-                        gsonTranslater.toJson(model.getCommonObjectives().get(1), ObjectiveCard.class)
-                )
+    public void update(GameModel model, String username){
+        ClientQueueObject clientQueueObject = new ShowCommonObjectiveCardObj(
+                gsonTranslater.toJson(model.getCommonObjectives().get(0), ObjectiveCard.class),
+                gsonTranslater.toJson(model.getCommonObjectives().get(1), ObjectiveCard.class)
         );
+//        if (model.getPlayerConnection().get(username)) {
+            sendUpdate(model, username, clients.get(username), clientQueueObject);
+//        }
     }
 }

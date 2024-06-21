@@ -18,7 +18,6 @@ public class PlayArea{
     private final LinkedHashMap<Point, PlayableCard> placedCards;
     private final Map<Resources, Integer> achievedResources;
     private final Point lastPlaced = new Point(0, 0);
-    private final List<Point> cardOrder;
 
     /**
      * Constructor for the PlayArea class.
@@ -27,8 +26,6 @@ public class PlayArea{
     public PlayArea() {
         this.placedCards = new LinkedHashMap<>();
         this.achievedResources = new HashMap<>();
-        this.cardOrder = new ArrayList<>();
-        cardOrder.add(new Point(0, 0));
         achievedResources.put(Resources.ANIMAL, 0);
         achievedResources.put(Resources.INSECT, 0);
         achievedResources.put(Resources.INK, 0);
@@ -86,7 +83,6 @@ public class PlayArea{
                 placedCards.put(new Point(point), card);
                 updateAvailableRes(card, point);
                 lastPlaced.setLocation(point);
-                cardOrder.add(new Point(point));
                 if (card.getObjective() != null) {
                     return card.getObjective().isObjectiveDone(getPlacedCards(), point, getAchievedResources());
                 }
@@ -227,10 +223,4 @@ public class PlayArea{
     public Map<Resources, Integer> getAchievedResources() {
         return new HashMap<>(achievedResources);
     }
-
-    // FIXME forse non serve
-    public List<Point> getCardOrder() {
-        return new ArrayList<>(cardOrder);
-    }
-
 }

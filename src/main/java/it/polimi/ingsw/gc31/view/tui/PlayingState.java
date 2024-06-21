@@ -21,6 +21,8 @@ public class PlayingState extends TuiState {
     protected void initialize() {
         commandsMap = new LinkedHashMap<>();
         commandsMap.put(("help").toLowerCase(), this::command_showCommandsInfo);
+        commandsMap.put("quit", this::command_quitGame);
+        commandsMap.put("ref", this::command_refresh);
         commandsMap.put("dg", this::command_drawGold);
         commandsMap.put("dr", this::command_drawResource);
         commandsMap.put("co", this::command_chooseSecreteObjective);
@@ -34,6 +36,8 @@ public class PlayingState extends TuiState {
 
         commandsInfo = new LinkedHashMap<>();
         commandsInfo.put("help", "Shows commands info");
+        commandsInfo.put("quit", "quit the game");
+        commandsInfo.put("ref", "refresh tui");
         commandsInfo.put("dg -> draw gold", "Draw a gold card");
         commandsInfo.put("dr -> draw resource", "Draw a resource card");
         commandsInfo.put("co ->", "Choose secrete objective");
@@ -118,6 +122,7 @@ public class PlayingState extends TuiState {
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+        tui.commandsCache.put(TUIcommands.CHOOSE_SERCRET_OBJ, true);
         stateNotify();
     }
 
@@ -128,6 +133,7 @@ public class PlayingState extends TuiState {
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+        tui.commandsCache.put(TUIcommands.PLAY_STARTER, true);
         stateNotify();
     }
 
@@ -235,6 +241,16 @@ public class PlayingState extends TuiState {
 
     @Override
     protected void command_quitGame() {
+        try {
+            tui.getClient().quitGame();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void command_refresh() {
+        tui.forceRefreshTUI(true);
     }
 
 }

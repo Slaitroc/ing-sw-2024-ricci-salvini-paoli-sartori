@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.polimi.ingsw.gc31.utility.DV;
-import it.polimi.ingsw.gc31.utility.OurScanner;
+
 
 public class TCPServer {
     final ServerSocket listenSocket;

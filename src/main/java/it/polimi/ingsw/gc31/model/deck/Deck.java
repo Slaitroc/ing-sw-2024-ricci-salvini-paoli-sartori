@@ -7,7 +7,6 @@ import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.utility.DV;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,9 +16,12 @@ import java.util.*;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
+/**
+ * This class represents a deck of cards of type T.
+ *
+ * @param <T> the type of cards in the deck, must extend the Card interface
+ */
 public class Deck<T extends Card>{
-
-    // TODO cambiare implementazione con queue
     private Queue<T> deck;
     private T card1;
     private T card2;
@@ -28,43 +30,41 @@ public class Deck<T extends Card>{
         List<T> tempDeck = new ArrayList<>();
         this.card1 = null;
         this.card2 = null;
-        Reader fileReader = null;
-        InputStream is = null;
-        // classe delle carte che formeranno il deck
-        Type type = null;
+        Reader fileReader;
+        InputStream is;
+        Type type;
 
         this.deck = new ArrayDeque<>();
         try {
             switch (cardType) {
                 case GOLD:
                     is = getClass().getResourceAsStream(DV.DIRJsonGoldCard);
-                    fileReader = new InputStreamReader(is);
                     type = GoldCard.class;
                     break;
                 case RESOURCE:
                     is = getClass().getResourceAsStream(DV.DIRJsonResourceCard);
-                    fileReader = new InputStreamReader(is);
                     type = ResourceCard.class;
                     break;
                 case STARTER:
                     is = getClass().getResourceAsStream(DV.DIRJsonStarterCard);
-                    fileReader = new InputStreamReader(is);
                     type = StarterCard.class;
                     break;
                 case OBJECTIVE:
                     is = getClass().getResourceAsStream(DV.DIRJsonObjectiveCard);
-                    fileReader = new InputStreamReader(is);
                     type = ObjectiveCard.class;
                     break;
                 default:
-                    // TODO aggiungere default
-                    break;
+                    throw new RuntimeException("Unknown card type");
+            }
+            if (is != null) {
+                fileReader = new InputStreamReader(is);
+            } else {
+                throw new RuntimeException();
             }
 
             JsonElement jsonElement = JsonParser.parseReader(fileReader);
             fileReader.close();
 
-            // TODO aggiungere else con exception?
             if (jsonElement.isJsonArray()) {
                 JsonArray jsonArray = jsonElement.getAsJsonArray();
 
@@ -79,15 +79,10 @@ public class Deck<T extends Card>{
                     }
                 }
 
-                // TODO, tradurre: Mischio le carte
                 Collections.shuffle(tempDeck);
-                for (T card : tempDeck) {
-                    deck.add(card);
-                }
+                deck.addAll(tempDeck);
             }
 
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -96,7 +91,6 @@ public class Deck<T extends Card>{
 
     public void replaceDeck(Queue<T> deck) {
         this.deck = deck;
-        refill();
     }
 
     public Queue<T> getQueueDeck() {
@@ -106,9 +100,9 @@ public class Deck<T extends Card>{
     public T draw() throws EmptyDeckException {
         if (deck.isEmpty())
             throw new EmptyDeckException();
-        T card = deck.poll();
-//        notifyListeners(this);
-        return card;
+//        T card = deck.poll();
+//        card.changeSide();
+        return deck.poll();
     }
 
     public void refill() {
@@ -128,7 +122,6 @@ public class Deck<T extends Card>{
                 card1 = null;
             }
         }
-//        notifyListeners(this);
     }
 
     public T getCard1() {
@@ -145,14 +138,6 @@ public class Deck<T extends Card>{
         return retCard;
     }
 
-    public void flipCard1() {
-        this.card1.changeSide();
-    }
-
-    public void flipCard2() {
-        this.card2.changeSide();
-    }
-
     public T peekCard() {
         return this.deck.peek();
     }
@@ -163,5 +148,9 @@ public class Deck<T extends Card>{
 
     public T peekCard2() {
         return this.card2;
+    }
+
+    public boolean isEmpty() {
+        return deck.isEmpty();
     }
 }

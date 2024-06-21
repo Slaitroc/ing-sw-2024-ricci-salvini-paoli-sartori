@@ -1,6 +1,8 @@
 package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
+import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsOverObj;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.player.Player;
@@ -12,8 +14,13 @@ import java.util.List;
 import java.util.Map;
 
 public class EndGameModelState implements GameModelState {
-    public EndGameModelState() {
+    public EndGameModelState(GameModel model) {
         System.out.println("Game changed to END GAME");
+
+        for (String username: model.getListeners().keySet()) {
+            model.getListeners().get(username).removeGoldDeckListener();
+            model.getListeners().get(username).removeResourcedDeckListener();
+        }
     }
     @Override
     public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
@@ -72,13 +79,26 @@ public class EndGameModelState implements GameModelState {
             player.calculateObjectiveCard(model.commonObjectives.get(0));
             player.calculateObjectiveCard(model.commonObjectives.get(1));
         }
+        String usernameWinner = null;
+        int maxPoint = 0;
+        for (Player player: model.getPlayers().values()) {
+            if (player.getScore() >= maxPoint) {
+                maxPoint = player.getScore();
+                usernameWinner = player.getUsername();
+            }
+        }
 
         for (String username: model.clients.keySet()) {
             try {
-                model.clients.get(username).sendCommand(new GameIsOverObj());
+                model.clients.get(username).sendCommand(new GameIsOverObj(usernameWinner));
             } catch (RemoteException e) {
                 System.out.println("Error sending game is over");
             }
         }
+    }
+
+    @Override
+    public void disconnectPlayer(GameModel model, String username) {
+
     }
 }

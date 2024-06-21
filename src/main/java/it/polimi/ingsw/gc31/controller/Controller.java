@@ -6,8 +6,8 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
+import javafx.util.Pair;
 import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.AnsiConsole;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
@@ -59,7 +59,8 @@ public class Controller extends UnicastRemoteObject implements IController {
     private final Map<Integer, VirtualClient> newConnections;
 
     /**
-     * This method generates a unique token (from 0 to 999) every time a new client connects with the server
+     * This method generates a unique token (from 0 to 999) every time a new client
+     * connects with the server
      * Every token value is associated with its client in the newConnections map
      *
      * @param newConnection is the VirtualClient that just connected to the server
@@ -77,7 +78,8 @@ public class Controller extends UnicastRemoteObject implements IController {
 
     /**
      * This method is invoked every time a client wants to set its username
-     * The method finds and sends the token associated with the VirtualClient that tries to set its username
+     * The method finds and sends the token associated with the VirtualClient that
+     * tries to set its username
      *
      * @param newConnection is the VirtualClient that is trying to set its username
      */
@@ -115,7 +117,8 @@ public class Controller extends UnicastRemoteObject implements IController {
     }
 
     /**
-     * This method request to add to the list of object the new object received from a client
+     * This method request to add to the list of object the new object received from
+     * a client
      *
      * @param obj is the new object to be added
      * @throws RemoteException if an error occurs in the rmi connection
@@ -239,10 +242,12 @@ public class Controller extends UnicastRemoteObject implements IController {
     }
 
     /**
-     * This method add the client (that just quit a game lobby) to the map tempClients
+     * This method add the client (that just quit a game lobby) to the map
+     * tempClients
+     * 
      * @param username is the username of the player that just quit
-     * @param idGame is the id of the game which was joined by the player
-     * @param client is the client that requested to quit from a lobby
+     * @param idGame   is the id of the game which was joined by the player
+     * @param client   is the client that requested to quit from a lobby
      * @throws RemoteException if an error occurs in the rmi connection
      */
     public void quitGame(String username, int idGame, VirtualClient client) throws RemoteException {
@@ -285,8 +290,10 @@ public class Controller extends UnicastRemoteObject implements IController {
     }
 
     /**
-     * This method return the specific VirtualClient associated with the unique token received as a parameter
-     * The newConnections map contains every client connected with the server and the unique token associated with it
+     * This method return the specific VirtualClient associated with the unique
+     * token received as a parameter
+     * The newConnections map contains every client connected with the server and
+     * the unique token associated with it
      *
      * @param token is the token associated to the VirtualClient t
      * @return the VirtualClient that has the given token
@@ -347,7 +354,8 @@ public class Controller extends UnicastRemoteObject implements IController {
         if (!clientsHeartBeat.containsKey(client))
             System.out.println("Il client da cui è arrivato l'HeartBeat non è presente nella mappa");
         clientsHeartBeat.replace(client, System.currentTimeMillis());
-//        System.out.println(Ansi.ansi().cursor(1, 1).a("\\033[5m💚\\033[0m\\").reset());
+        // System.out.println(Ansi.ansi().cursor(1,
+        // 1).a("\\033[5m💚\\033[0m\\").reset());
         // System.out.println("HeartBeat ricevuto");
         client.sendCommand(new HeartBeatObj());
     }

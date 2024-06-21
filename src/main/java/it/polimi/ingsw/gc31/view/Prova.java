@@ -1,39 +1,32 @@
 package it.polimi.ingsw.gc31.view;
 
-import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
-import it.polimi.ingsw.gc31.model.card.Card;
+import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
-import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
+import it.polimi.ingsw.gc31.model.player.Placed;
 import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.view.tui.TUI;
-import it.polimi.ingsw.gc31.view.tui.TuiState;
 import org.fusesource.jansi.AnsiConsole;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
-
 public class Prova {
-    public static void main(String[] args) {
-//        ProvaTui provaTui = new ProvaTui(null);
-//        // provaTui.printStarter();
-//        provaTui.printGold();
-//
-//        AnsiConsole.systemUninstall();
-//
+    public static void main(String[] args) throws IllegalStateOperationException {
+        Board board = new Board();
+        Player player1 = new Player(PawnColor.BLUE, "sslvo", board);
 
-        Map<Resources, Integer> achievedResources = new HashMap<>();
-        achievedResources.put(Resources.ANIMAL, 0);
-        achievedResources.put(Resources.MUSHROOM, 0);
+        board.getDeckGold().refill();
+        for (int i=0; i<37; i++) {
+            board.getDeckGold().draw();
+        }
+        player1.setInGameState(new Placed());
+        player1.drawGold(1);
 
-        String toJson = gsonTranslater.toJson(achievedResources);
-        System.out.println(toJson);
-
-        Map<Resources, Integer> resources = gsonTranslater.fromJson(toJson, new TypeToken<Map<Resources, Integer>>(){}.getType());
+        player1.setInGameState(new Placed());
+        player1.drawGold(1);
+        System.out.println("ok");
     }
 
     public static class ProvaTui extends TUI {

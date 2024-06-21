@@ -20,6 +20,8 @@ public class PlayerStateTest {
 
     @BeforeAll
     public static void setUp() throws EmptyDeckException {
+        Player player = new Player(PawnColor.BLUE, "Ssolvo", null);
+
 /*        Board board = new Board();
         board.getDeckResource().refill();
         board.getDeckGold().refill();

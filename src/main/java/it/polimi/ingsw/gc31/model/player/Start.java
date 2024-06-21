@@ -23,14 +23,14 @@ public class Start extends PlayerState {
     }
 
     @Override
-    public void addToHand(Deck<PlayableCard> deck, Player player, int index) throws FullHandException, InvalidCardDraw {
+    public void addToHand(Deck<PlayableCard> deck, Deck<PlayableCard> subsistuteDeck, Player player, int index) throws FullHandException, InvalidCardDraw {
         if (index != 0) {
             throw new InvalidCardDraw();
         }
         if (player.hand.size() > 3) {
             throw new FullHandException();
         }
-        executeAddToHand(deck, player, index);
+        executeAddToHand(deck, subsistuteDeck, player, index);
     }
 
 //    @Override

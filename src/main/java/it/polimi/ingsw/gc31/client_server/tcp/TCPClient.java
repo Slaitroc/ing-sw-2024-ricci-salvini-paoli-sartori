@@ -341,7 +341,8 @@ public class TCPClient implements ClientCommands {
     }
 
     /**
-     * This method sends the object, which quit the specific client from the game lobby, to the server
+     * This method sends the object, which quit the specific client from the game
+     * lobby, to the server
      */
     @Override
     public void quitGame() {
@@ -362,7 +363,7 @@ public class TCPClient implements ClientCommands {
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 tcp_sendCommand(new HeartBeatObj(username), DV.RECIPIENT_HEARTBEAT);
-//                System.out.println("HeartBeat inviato");
+                // System.out.println("HeartBeat inviato");
             }
         }, 0, 5000);
     }
