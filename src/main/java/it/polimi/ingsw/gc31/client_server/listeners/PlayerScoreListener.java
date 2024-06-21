@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.listeners;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowScorePlayerObj;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 
@@ -28,7 +29,8 @@ public class PlayerScoreListener extends Listener {
      * @throws RemoteException if there is a remote communication error.
      */
     @Override
-    public void update(GameModel model, String username) throws RemoteException {
-        clients.get(username).sendCommand(new ShowScorePlayerObj(model.getBoard().getPlayersScore()));
+    public void update(GameModel model, String username) {
+        ClientQueueObject clientQueueObject = new ShowScorePlayerObj(model.getBoard().getPlayersScore());
+        sendUpdate(model, username, clients.get(username), clientQueueObject);
     }
 }

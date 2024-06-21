@@ -668,7 +668,6 @@ class GameModelTest {
         assertEquals(model.getPlayers().get(turnPlayer.get(1)).getScore(), 4);
         assertEquals(model.getPlayers().get(turnPlayer.get(2)).getScore(), 0);
         assertEquals(model.getPlayers().get(turnPlayer.get(3)).getScore(), 26);
-        System.out.println("\n\n\n\n");
     }
 
     public static class FakeGameModel extends GameModel {

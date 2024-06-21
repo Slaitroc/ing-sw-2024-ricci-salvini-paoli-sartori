@@ -4,10 +4,8 @@ import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import it.polimi.ingsw.gc31.Client;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
@@ -110,6 +108,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         Controller.getController().quitGame(username, idGame, client);
         model.disconnectPlayer(username);
         notifyListPlayers();
+        ServerLog.gControllerWrite("Player "+username+" has quited from the game", idGame);
     }
 
     public void setReadyStatus(boolean ready, String username) throws RemoteException, IllegalStateOperationException {
@@ -191,7 +190,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      *
      * @throws RemoteException If a remote invocation error occurs.
      */
-    public void drawResource(String username, int index) throws RemoteException {
+    public void drawResource(String username, int index){
         try {
             model.drawResource(username, index);
         } catch (IllegalStateOperationException e) {

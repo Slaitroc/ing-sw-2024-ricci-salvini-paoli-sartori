@@ -98,7 +98,7 @@ public class EndGameModelState implements GameModelState {
     }
 
     @Override
-    public void disconnectPlayer(GameModel model, String username) throws IllegalStateOperationException {
+    public void disconnectPlayer(GameModel model, String username) {
 
     }
 }

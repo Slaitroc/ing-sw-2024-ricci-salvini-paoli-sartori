@@ -29,18 +29,17 @@ public class PlayerChooseObjectiveCardListener extends Listener {
      *
      * @param model The game model from which to extract the data,
      * @param username The username of the player whose play area is being updated.
-     * @throws RemoteException if there is a remote communication error.
      */
     @Override
-    public void update(GameModel model, String username) throws RemoteException {
+    public void update(GameModel model, String username) {
         Player player = model.getPlayers().get(username);
         ClientQueueObject clientQueueObject = new ShowChooseSecretObjectiveCardObj(
                 username,
                 gsonTranslater.toJson(player.getChooseSecretObjective().get(0), ObjectiveCard.class),
                 gsonTranslater.toJson(player.getChooseSecretObjective().get(1), ObjectiveCard.class)
         );
-        for (VirtualClient client: clients.values()) {
-            client.sendCommand(clientQueueObject);
+        for (Map.Entry<String, VirtualClient> clients: clients.entrySet()) {
+            sendUpdate(model, clients.getKey(), clients.getValue(), clientQueueObject);
         }
     }
 }

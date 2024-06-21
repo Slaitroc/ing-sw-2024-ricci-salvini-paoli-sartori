@@ -80,7 +80,7 @@ public class LastTurnGameModelState implements GameModelState {
     }
 
     @Override
-    public void disconnectPlayer(GameModel model, String username) throws IllegalStateOperationException {
-        model.disconnectPlayer(username);
+    public void disconnectPlayer(GameModel model, String username) {
+        model.executeDisconnectPlayer(username);
     }
 }

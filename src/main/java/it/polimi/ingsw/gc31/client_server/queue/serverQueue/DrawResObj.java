@@ -17,11 +17,7 @@ public class DrawResObj extends ServerQueueObject {
 
     @Override
     public void execute(GameController gameController) {
-        try {
-            gameController.drawResource(username, index);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        gameController.drawResource(username, index);
     }
 
     @Override

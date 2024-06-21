@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.listeners;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowPlayerTurnObj;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 
@@ -23,12 +24,12 @@ public class PlayerTurnListener extends Listener{
      *
      * @param model The game model from which to extract the data,
      * @param username The username of the player whose play area is being updated.
-     * @throws RemoteException if there is a remote communication error.
      */
     @Override
-    public void update(GameModel model, String username) throws RemoteException {
-        for (VirtualClient client : clients.values()) {
-            client.sendCommand(new ShowPlayerTurnObj(username, model.getPlayers().get(username).infoState()));
+    public void update(GameModel model, String username) {
+        ClientQueueObject clientQueueObject = new ShowPlayerTurnObj(username, model.getPlayers().get(username).infoState());
+        for (Map.Entry<String, VirtualClient> clients: clients.entrySet()) {
+            sendUpdate(model, clients.getKey(), clients.getValue(), clientQueueObject);
         }
     }
 }
