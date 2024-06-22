@@ -86,12 +86,4 @@ public class StairUp extends Objective {
                         .fgRgb(cardColor[0], cardColor[1], cardColor[2]).a("└──┘"));
         return res.toString();
     }
-
-    @Override
-    public JsonObject serializeToJson() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("color1", cardColor.toString());
-        jsonObject.addProperty("type", "STAIRUP");
-        return jsonObject;
-    }
 }

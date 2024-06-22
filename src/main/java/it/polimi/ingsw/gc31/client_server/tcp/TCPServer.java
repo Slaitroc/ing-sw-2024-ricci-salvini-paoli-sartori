@@ -39,12 +39,7 @@ public class TCPServer {
         TCPserverWrite("Server IP " + ipaddress);
         TCPserverWrite("Server in ascolto sulla porta " + DV.TCP_PORT);
 
-        try {
-            runServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-//            TCPserverWrite(" ERROR: An error occurred launching the TCP server");
-        }
+        runServer();
     }
 
     /**
@@ -52,10 +47,8 @@ public class TCPServer {
      * It creates a thread that accept all the new TCP connections arriving.
      * For every connection detected the method creates a SocketClientHandler for the specific client and add it to
      * the list of all the handlers.
-     *
-     * @throws IOException
      */
-    public void runServer() throws IOException {
+    public void runServer() {
         TCPserverWrite("Server created");
         new Thread(() -> {
 

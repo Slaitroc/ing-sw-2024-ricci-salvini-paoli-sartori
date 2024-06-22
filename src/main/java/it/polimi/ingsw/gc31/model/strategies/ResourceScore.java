@@ -54,12 +54,4 @@ public class ResourceScore extends Objective {
     public String print() {
         return resource.getSymbol();
     }
-
-    @Override
-    public JsonObject serializeToJson() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", "RESOURCESCORE");
-        jsonObject.addProperty("resources", resource.toString());
-        return jsonObject;
-    }
 }

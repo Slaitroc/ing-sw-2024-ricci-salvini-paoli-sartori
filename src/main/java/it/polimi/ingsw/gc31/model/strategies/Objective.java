@@ -92,5 +92,4 @@ public abstract class Objective {
     }
 
     public abstract String print();
-    public abstract JsonObject serializeToJson();
 }
