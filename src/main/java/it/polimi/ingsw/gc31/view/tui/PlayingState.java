@@ -21,6 +21,7 @@ public class PlayingState extends TuiState {
     protected void initialize() {
         commandsMap = new LinkedHashMap<>();
         commandsMap.put(("help").toLowerCase(), this::command_showCommandsInfo);
+        commandsMap.put("quit", this::command_quitGame);
         commandsMap.put("ref", this::command_refresh);
         commandsMap.put("dg", this::command_drawGold);
         commandsMap.put("dr", this::command_drawResource);

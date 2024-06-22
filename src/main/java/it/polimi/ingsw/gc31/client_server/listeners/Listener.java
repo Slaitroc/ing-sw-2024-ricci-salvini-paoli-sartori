@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.listeners;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 
 import java.rmi.RemoteException;
@@ -33,11 +34,46 @@ public abstract class Listener {
     /**
      * This abstract method defines the behavior for handling updates from the game model.
      * Concrete subclasses must implement this method to retrieve a specific data, of the player identified by the username, from the game
-     * model and send it to all clients.
+     * model and send it to all clients using the method sendUpdate.
      *
      * @param model The current game model object containing the updated information.
      * @param username The username of the player associated with the update.
-     * @throws RemoteException This exception is thrown if a communication error occurs while interacting with the remote client.
      */
-    abstract void update(GameModel model, String username) throws RemoteException;
+    abstract void update(GameModel model, String username);
+
+    /**
+     * Sends an update to the specified virtual client.
+     * The update is sent asynchronously using a thread because it does not have to block the game in case the client is disconnected.
+     * If the timeout expires and a remote exception is thrown, the disconnectPlayer method is called to notify the model of the player's disconnection.
+     * If the thread notices, before sending the update, that the player has already been declared disconnected, the update is not sent.
+     *
+     * @param model The game model of the player
+     * @param username The username of the player associated with the update.
+     * @param client The virtual client to send the update to.
+     * @param clientQueueObject The updated data to be sent to the client.
+     */
+    protected void sendUpdate(GameModel model, String username, VirtualClient client, ClientQueueObject clientQueueObject) {
+        new Thread(() -> {
+            try {
+                Boolean isConnected;
+                synchronized (model.getPlayerConnection()) {
+                    isConnected = model.getPlayerConnection().get(username);
+                }
+                if (isConnected) {
+                    client.sendCommand(clientQueueObject);
+                } else {
+                    System.out.println("Update not sent, client is already disconnected");
+                }
+            } catch (RemoteException e) {
+
+                synchronized (model.getPlayerConnection()) {
+                    if (!model.getPlayerConnection().get(username)) {
+                        System.out.println("Client already disconnected");
+                    } else {
+                        model.disconnectPlayer(username);
+                    }
+                }
+            }
+        }).start();
+    }
 }

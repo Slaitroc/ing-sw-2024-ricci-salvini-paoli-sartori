@@ -15,24 +15,19 @@ public class GameListenerHandler{
     }
 
     public void notifyAllListeners(GameModel model) {
-        for (Listener listener : listeners.values()) {
-            try {
+//        if (model.getPlayerConnection().get(username)) {
+            for (Listener listener : listeners.values()) {
                 listener.update(model, username);
-            } catch (RemoteException e) {
-                System.out.println(e.getMessage());
             }
-        }
+//        }
     }
 
     private void notifyListener(String type, GameModel model){
-        if (listeners.containsKey(type)) {
-            try {
+//        if (model.getPlayerConnection().get(username)) {
+            if (listeners.containsKey(type)) {
                 listeners.get(type).update(model, username);
-            } catch (RemoteException e) {
-                // TODO cosa fare?
-                System.out.println(e.getMessage());
             }
-        }
+//        }
     }
 
     public void addPlayAreaListener(Listener listener){

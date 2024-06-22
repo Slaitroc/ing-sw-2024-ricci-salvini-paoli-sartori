@@ -101,7 +101,9 @@ public class CreationGameModelState implements GameModelState {
     }
 
     @Override
-    public void disconnectPlayer(GameModel model, String username) throws IllegalStateOperationException {
+    public void disconnectPlayer(GameModel model, String username) {
+//        if disconnectPlayer is called in this state it means that the game has not yet started,
+//        so there is no need to remove the player from the gameModel
     }
 
     private Map<String, Player> createPlayers(GameModel model, Set<String> setUsername) {

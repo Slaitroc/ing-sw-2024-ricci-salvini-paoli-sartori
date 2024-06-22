@@ -71,13 +71,13 @@ public class SocketClientHandler implements VirtualClient {
      * executed
      */
     @Override
-    public void sendCommand(ClientQueueObject obj) throws RemoteException {
+    public synchronized void sendCommand(ClientQueueObject obj) throws RemoteException {
         try {
             output.writeObject(obj);
             output.reset();
             output.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RemoteException();
         }
     }
 
