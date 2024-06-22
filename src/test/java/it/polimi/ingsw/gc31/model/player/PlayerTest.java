@@ -59,7 +59,7 @@ public class PlayerTest {
 
         //check if the player can draw a car in the wrong state
         player.setInGameState(new Waiting());
-        assertTrue(player.drawGold(1), "Try to draw in a wrong state");
+        assertThrows(IllegalStateOperationException.class, () -> player.drawGold(1), "Try to draw in a wrong state");
         assertEquals(player.hand.size(), 3, "Still 3 cards in hand");
     }
 
@@ -93,7 +93,7 @@ public class PlayerTest {
 
         //check if the player can draw a car in the wrong state
         player.setInGameState(new Waiting());
-        assertTrue(player.drawResource(1), "Try to draw in a wrong state");
+        assertThrows(IllegalStateOperationException.class, () -> player.drawResource(1), "Try to draw in a wrong state");
         assertEquals(player.hand.size(), 3, "Still 3 cards in hand");
     }
 
@@ -115,7 +115,6 @@ public class PlayerTest {
                 "Tried to play a card in the wrong state");
 
         //check if the player can correctly invoke the method play if it is in the correct state
-        //FIXME se la carta pescata casualmente non potesse essere giocata nella posizione 1 1 cosa succederebbe?
         player.setInGameState(new Placed());
         player.drawResource(0);
         player.setInGameState(new NotPlaced());

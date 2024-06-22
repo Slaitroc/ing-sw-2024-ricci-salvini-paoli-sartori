@@ -236,7 +236,7 @@ public class GameControllerTest {
         //Checks if the IllegalStateOperationException is caught when necessary
         gameController1.getModel().setGameState(new CreationGameModelState());
         assertDoesNotThrow( () -> gameController1.selectCard("player1", 2));
-        gameController1.getModel().setGameState(new EndGameModelState());
+        gameController1.getModel().setGameState(new EndGameModelState(gameController1.getModel()));
         assertDoesNotThrow( () -> gameController1.selectCard("player3", 1));
     }
 
@@ -267,7 +267,7 @@ public class GameControllerTest {
         gameController1.changeSide("player4");
 
         //Checks if the catch branch is executed when necessary, if the game state is incorrect
-        gameController1.getModel().setGameState(new EndGameModelState());
+        gameController1.getModel().setGameState(new EndGameModelState(gameController1.getModel()));
         gameController1.changeSide("player1");
         gameController1.getModel().setGameState(new CreationGameModelState());
         gameController1.changeSide("player2");
@@ -300,7 +300,7 @@ public class GameControllerTest {
         gameController1.drawGold("player3", 0);
 
         //Checks if the IllegalStateOperationException branch is executed when needed
-        gameController1.getModel().setGameState(new EndGameModelState());
+        gameController1.getModel().setGameState(new EndGameModelState(gameController1.getModel()));
         gameController1.drawGold("player1", 0);
         gameController1.getModel().setGameState(new CreationGameModelState());
         gameController1.drawGold("player4", 2);
@@ -333,12 +333,12 @@ public class GameControllerTest {
         assertDoesNotThrow( () -> gameController1.drawResource("player3", 0));
 
         //Checks if the IllegalStateOperationException branch is executed when needed
-        gameController1.getModel().setGameState(new EndGameModelState());
-        assertThrows(RuntimeException.class, () -> gameController1.drawResource("player1", 0));
+        gameController1.getModel().setGameState(new EndGameModelState(gameController1.getModel()));
+        assertDoesNotThrow( () -> gameController1.drawResource("player1", 0));
         gameController1.getModel().setGameState(new CreationGameModelState());
-        assertThrows(RuntimeException.class, () -> gameController1.drawResource("player4", 2));
+        assertDoesNotThrow( () -> gameController1.drawResource("player4", 2));
         gameController1.getModel().setGameState(new SetupGameModelState(gameController1.getModel()));
-        assertThrows(RuntimeException.class, () -> gameController1.drawResource("player2", 1));
+        assertDoesNotThrow( () -> gameController1.drawResource("player2", 1));
     }
 
     /**
@@ -368,7 +368,7 @@ public class GameControllerTest {
         assertDoesNotThrow( () -> gameController1.chooseSecretObjective("player2", 1));
         gameController1.getModel().setGameState(new LastTurnGameModelState());
         assertDoesNotThrow( () -> gameController1.chooseSecretObjective("player3", 0));
-        gameController1.getModel().setGameState(new EndGameModelState());
+        gameController1.getModel().setGameState(new EndGameModelState(gameController1.getModel()));
         assertDoesNotThrow( () -> gameController1.chooseSecretObjective("player1", 0));
         gameController1.getModel().setGameState(new CreationGameModelState());
         assertDoesNotThrow( () -> gameController1.chooseSecretObjective("player4", 1));
@@ -398,7 +398,7 @@ public class GameControllerTest {
         gameController1.playStarter("player2");
         gameController1.getModel().setGameState(new LastTurnGameModelState());
         gameController1.playStarter("player3");
-        gameController1.getModel().setGameState(new EndGameModelState());
+        gameController1.getModel().setGameState(new EndGameModelState(gameController1.getModel()));
         gameController1.playStarter("player4");
         gameController1.getModel().setGameState(new CreationGameModelState());
         gameController1.playStarter("player1");
@@ -433,7 +433,7 @@ public class GameControllerTest {
         assertDoesNotThrow( () -> gameController1.play("player3", new Point(1, 1)));
 
         //Checks if the IllegalStateOperationException branch is executed when needed
-        gameController1.getModel().setGameState(new EndGameModelState());
+        gameController1.getModel().setGameState(new EndGameModelState(gameController1.getModel()));
         assertDoesNotThrow( () -> gameController1.play("player1", new Point(-1, -1)));
         gameController1.getModel().setGameState(new CreationGameModelState());
         assertDoesNotThrow( () -> gameController1.play("player4", new Point(-1, -1)));
@@ -468,7 +468,7 @@ public class GameControllerTest {
         assertDoesNotThrow( () -> gameController1.changeStarterSide("player2"));
         gameController1.getModel().setGameState(new LastTurnGameModelState());
         assertDoesNotThrow( () -> gameController1.changeStarterSide("player3"));
-        gameController1.getModel().setGameState(new EndGameModelState());
+        gameController1.getModel().setGameState(new EndGameModelState(gameController1.getModel()));
         assertDoesNotThrow( () -> gameController1.changeStarterSide("player1"));
         gameController1.getModel().setGameState(new CreationGameModelState());
         assertDoesNotThrow( () -> gameController1.changeStarterSide("player4"));
