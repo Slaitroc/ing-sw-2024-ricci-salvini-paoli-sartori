@@ -5,6 +5,7 @@ import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.view.gui.GUIApplication;
+import it.polimi.ingsw.gc31.view.gui.GameInstance;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 
@@ -38,11 +39,11 @@ public abstract class ViewController {
      * Handling for Remote Exceptions. Shows a PopUp windows to display error message
      * and ask you to restart the application
      */
-    protected void show_ServerCrashWarning(){
+    protected void show_ServerCrashWarning(String details){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error 505");
         alert.setHeaderText("Server Error");
-        alert.setContentText("Server has crashed. Please restart application");
+        alert.setContentText("Server has crashed. Please restart application \n\n\n" + details);
 
         alert.showAndWait();
     }

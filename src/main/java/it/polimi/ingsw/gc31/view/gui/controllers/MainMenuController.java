@@ -15,6 +15,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 
 public class MainMenuController extends ViewController {
@@ -66,13 +67,13 @@ public class MainMenuController extends ViewController {
         if (app.getNumberOfPlayers() != null) {
             try {
                 app.getClient().createGame(app.getNumberOfPlayers());
-                /*app.setCurrentGameID(app.getClient().getGameID());
+                /*app.setCurrentGameID(app.getClient().getGameID())
                 System.out.println("GameID: " + app.getCurrentGameID());*/
                 /*app.loadScene(SceneTag.LOBBY);*/ //DOES NOT WORK LIKE THIS
 
             } catch (IOException e) {
-                e.printStackTrace();
-                show_ServerCrashWarning();
+                show_ServerCrashWarning(e.toString());
+                e.getStackTrace();
             }
         }
     }

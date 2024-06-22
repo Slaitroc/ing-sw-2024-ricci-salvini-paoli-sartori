@@ -1,7 +1,7 @@
 package it.polimi.ingsw.gc31.view.gui.controllers;
 
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
-import it.polimi.ingsw.gc31.view.gui.GUIApplication;
+import it.polimi.ingsw.gc31.view.gui.GameInstance;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -9,6 +9,7 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.Arrays;
 
 public class GameListController extends ViewController {
 
@@ -31,10 +32,10 @@ public class GameListController extends ViewController {
         gameIDColumn.setCellValueFactory(cellData -> cellData.getValue().gameIDProperty());
         playersColumn.setCellValueFactory(cellData -> cellData.getValue().playersProperty());
 
-        actionColumn.setCellFactory(new Callback<TableColumn<GameInstance, Void>, TableCell<GameInstance, Void>>() {
+        actionColumn.setCellFactory(new Callback<>() {
             @Override
             public TableCell<GameInstance, Void> call(final TableColumn<GameInstance, Void> param) {
-                final TableCell<GameInstance, Void> cell = new TableCell<GameInstance, Void>() {
+                return new TableCell<>() {
                     private final Button btn = new Button("Join");
 
                     {
@@ -57,7 +58,6 @@ public class GameListController extends ViewController {
                         }
                     }
                 };
-                return cell;
             }
         });
     }
@@ -71,8 +71,8 @@ public class GameListController extends ViewController {
         try {
             client.joinGame(id);
         } catch (RemoteException e) {
-            e.printStackTrace();
-            show_ServerCrashWarning();
+            show_ServerCrashWarning(e.toString());
+            e.getStackTrace();
         }
 
     }

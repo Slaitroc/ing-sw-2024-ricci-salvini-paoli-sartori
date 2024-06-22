@@ -42,14 +42,14 @@
             </ImageView>
         </StackPane>
         <HBox alignment="BOTTOM_CENTER" spacing="400">
-            <MFXButton fx:id="prevButton" layoutX="100.0" layoutY="200.0"
+            <MFXButton layoutX="100.0" layoutY="200.0"
                        text="Prev" styleClass="rounded-button, small-button" prefWidth="150"
                        onAction="#prevImage"/>
-            <MFXButton fx:id="nextButton" layoutX="100.0" layoutY="200.0"
+            <MFXButton layoutX="100.0" layoutY="200.0"
                        text="Next" styleClass="rounded-button, small-button" prefWidth="150"
                        onAction="#nextImage"/>
         </HBox>
-        <MFXButton fx:id="backButton" layoutX="100.0" layoutY="200.0"
+        <MFXButton layoutX="100.0" layoutY="200.0"
                    text="Back" styleClass="rounded-button, small-button" prefWidth="150"
                    onAction="#loadMainMenuScene"/>
     </VBox>
