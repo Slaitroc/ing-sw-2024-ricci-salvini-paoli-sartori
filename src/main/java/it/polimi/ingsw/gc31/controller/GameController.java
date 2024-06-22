@@ -97,18 +97,22 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             ServerLog.gControllerWrite("The number of players for the game " + maxNumberPlayers + " has been reached",
                     idGame);
         }
-
         notifyListPlayers();
     }
 
     public void quitGame(String username) throws RemoteException {
-        VirtualClient client = clientList.get(username);
-        clientList.remove(username, client);
-        readyStatus.remove(username);
-        Controller.getController().quitGame(username, idGame, client);
-        model.disconnectPlayer(username);
-        notifyListPlayers();
-        ServerLog.gControllerWrite("Player "+username+" has quited from the game", idGame);
+        if (model.isStarted()) {
+            ServerLog.gControllerWrite("Player "+username+" has quited from the game, will he ever come back?", idGame);
+            model.disconnectPlayer(username);
+        } else {
+            VirtualClient client = clientList.get(username);
+            clientList.remove(username, client);
+            readyStatus.remove(username);
+            Controller.getController().quitGame(username, idGame, client);
+            model.disconnectPlayer(username);
+            notifyListPlayers();
+            ServerLog.gControllerWrite("Player "+username+" has quited forever from the game", idGame);
+        }
     }
 
     public void setReadyStatus(boolean ready, String username) throws RemoteException, IllegalStateOperationException {
@@ -129,13 +133,13 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             }
         }
         if (counter == maxNumberPlayers) {
-            for (VirtualClient clients : clientList.values()) {
-                clients.sendCommand(new StartGameObj());
-            }
-            // TODO occuparsi dell'eccezione
             try {
                 model.initGame(clientList);
                 ServerLog.gControllerWrite("The game has started", idGame);
+
+                for (VirtualClient clients : clientList.values()) {
+                    clients.sendCommand(new StartGameObj());
+                }
             } catch (IllegalStateOperationException e) {
                 throw new RuntimeException(e);
             }
@@ -187,8 +191,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     /**
      * Draws a resource card from the deck for the player and then shows the
      * player's hand.
-     *
-     * @throws RemoteException If a remote invocation error occurs.
      */
     public void drawResource(String username, int index){
         try {

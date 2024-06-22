@@ -35,6 +35,7 @@ public class GameModel {
     private int currPlayingPlayer = 0;
     protected GameModelState gameState;
     private final Map<String, GameListenerHandler> listeners;
+    private boolean isStarted = false;
 
     /**
      * Constructor for the GameModel class.
@@ -55,6 +56,8 @@ public class GameModel {
         this.clients = clients;
         players = gameState.initGame(this, clients);
         notifyAllGameListeners();
+
+        isStarted = true;
     }
 
     protected void endGame() throws IllegalStateOperationException {
@@ -245,6 +248,9 @@ public class GameModel {
 
     public Map<String, Boolean> getPlayerConnection() {
         return playerConnection;
+    }
+    public boolean isStarted() {
+        return isStarted;
     }
     // Test methods
     GameModelState getGameState() {
