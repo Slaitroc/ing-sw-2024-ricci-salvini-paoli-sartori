@@ -49,6 +49,7 @@
 - [ ] thread per send commands
 - [ ] swappare socket nella riconnessione tcp
 - [ ] salvare il token nel client 
+- [ ] da implementare quit game di fine partita --> dobbiamo rimettere i client da gamecontroller in tempclient di controller
 
 ## GUI
 
