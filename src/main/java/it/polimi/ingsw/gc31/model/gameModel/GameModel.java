@@ -62,6 +62,7 @@ public class GameModel {
 
     protected void endGame() throws IllegalStateOperationException {
         gameState.endGame(this);
+        listeners.values().forEach(listener -> listener.notifyPlayerScoreListener(this));
     }
 
     /**
