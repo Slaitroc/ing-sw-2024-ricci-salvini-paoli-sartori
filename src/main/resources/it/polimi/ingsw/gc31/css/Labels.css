@@ -16,3 +16,16 @@
     -fx-border-width: 2;
     -fx-border-color: -light-blue;
 }
+
+.winning-label{
+    -fx-background-color: -dark-green;
+    -fx-font: 40px 'glimmer of light';
+    -fx-text-fill: -white;
+    -fx-text-alignment: center;
+    -mfx-button-type: RAISED;
+    -mfx-depth-level: LEVEL5;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+    -fx-border-color: -black;
+}
