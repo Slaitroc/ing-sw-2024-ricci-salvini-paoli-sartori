@@ -64,9 +64,11 @@
 - [ ] fixare heartbeat stampa verde e in caso il rosso rotto
 - [ ] mostrare info altri player
 - [ ] input del token in tui setusername 
-- [ ] visualizzare input di altri player nella tui 
+- [ ] visualizzare input di altri player nella tui
+- [ ] sistemare tui area cache per ref command 
 
 ## Opzionali e finali
+
 - [ ] feedback e storico delle mosse lo vogliamo mettere?
 - [ ] aggiungere suono che notifica il player quando p il suo turno
 - [ ] previsione dei punti calcolati a fine partita????? (slaitrocka non vuole aspettare ne contare da solo)
