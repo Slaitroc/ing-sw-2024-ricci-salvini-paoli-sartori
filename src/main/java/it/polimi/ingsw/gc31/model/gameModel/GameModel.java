@@ -67,7 +67,8 @@ public class GameModel {
 
     /**
      * Ends the current turn of the game.
-     * This method detects if the game has ended, sets the next playing player, and notifies player score listeners.
+     * This method detects if the game has ended, sets the next playing player, and
+     * notifies player score listeners.
      *
      * @throws IllegalStateOperationException if the game is not in the right state
      */
@@ -79,11 +80,14 @@ public class GameModel {
 
     /**
      * Sets the next playing player.
-     * If the turnPlayer is null, which means that it is the first time this method is called, it initializes the turnPlayer list
-     * with all the players and sets the currPlayingPlayer index to 0. Otherwise, it increments the currPlayingPlayer index by 1
+     * If the turnPlayer is null, which means that it is the first time this method
+     * is called, it initializes the turnPlayer list
+     * with all the players and sets the currPlayingPlayer index to 0. Otherwise, it
+     * increments the currPlayingPlayer index by 1
      * and wraps it around if it exceeds the number of players.
      * Disconnected players are skipped so the rest of the players can play
-     * Once it finds the next playing player, sets the state of all players to waiting, while the state of the new current player is set to not placed.
+     * Once it finds the next playing player, sets the state of all players to
+     * waiting, while the state of the new current player is set to not placed.
      */
     public void setNextPlayingPlayer() {
         synchronized (playerConnection) {
@@ -205,6 +209,7 @@ public class GameModel {
 
     /**
      * Disconnects a player from the game based on the game state.
+     * 
      * @param username The username of the player who disconnected
      */
     public void disconnectPlayer(String username) {
@@ -212,9 +217,13 @@ public class GameModel {
     }
 
     /**
-     * Executes the disconnection of a player by setting their connection status to false in the playerConnection map.
-     * If the disconnected player is the current turn player, it sets the next playing player.
-     * If the game is in the setup state (turnPlayer == null), it makes default decisions for the secret objective card and for the placement of the starter card.
+     * Executes the disconnection of a player by setting their connection status to
+     * false in the playerConnection map.
+     * If the disconnected player is the current turn player, it sets the next
+     * playing player.
+     * If the game is in the setup state (turnPlayer == null), it makes default
+     * decisions for the secret objective card and for the placement of the starter
+     * card.
      * If the disconnected player is not the current turn player, it does nothing.
      *
      * @param username The username of the player who disconnected
@@ -226,7 +235,7 @@ public class GameModel {
                 try {
                     chooseSecretObjective(username, 0);
                     playStarter(username);
-                    System.out.println("Default chooses for "+username);
+                    System.out.println("Default chooses for " + username);
                 } catch (IllegalStateOperationException | ObjectiveCardNotChosenException e) {
                     e.printStackTrace();
                 }
@@ -236,12 +245,13 @@ public class GameModel {
                 }
             }
         }
-        System.out.println("Player "+username+" has disconnected");
+        System.out.println("Player " + username + " has disconnected");
     }
 
     /**
      * Notifies all game listeners.
-     * This method invokes the notifyAllListeners method of each listener in the listeners map.
+     * This method invokes the notifyAllListeners method of each listener in the
+     * listeners map.
      */
     public void notifyAllGameListeners() {
         listeners.values().forEach(listener -> listener.notifyAllListeners(this));
@@ -250,9 +260,11 @@ public class GameModel {
     public Map<String, Boolean> getPlayerConnection() {
         return playerConnection;
     }
+
     public boolean isStarted() {
         return isStarted;
     }
+
     // Test methods
     GameModelState getGameState() {
         return gameState;
