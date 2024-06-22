@@ -332,7 +332,7 @@
                             </padding>
                         </Label>
                         <!--POINTS BOX-->
-                        <HBox id="resource-box" alignment="CENTER">
+                        <HBox id="resource-box" alignment="CENTER" spacing="5">
                             <padding>
                                 <Insets right="10.0"/>
                             </padding>
@@ -451,467 +451,484 @@
             </VBox>
 
             <!--PLAYER 2 BOX-->
-            <VBox id="resource-count-window" fx:id="player2Resources" spacing="5">
+            <StackPane>
+                <VBox id="resource-count-window" fx:id="player2Resources" spacing="5">
+                    <!--Name Points and Playing Icon-->
+                    <AnchorPane>
+                        <VBox fillWidth="false" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <Label id="resource-box" fx:id="player2Name" text=" Player 2 ">
+                                <padding>
+                                    <Insets left="5.0" right="5.0"/>
+                                </padding>
+                            </Label>
+                            <!--POINTS BOX-->
+                            <HBox id="resource-box" alignment="CENTER" spacing="5">
+                                <padding>
+                                    <Insets right="10.0"/>
+                                </padding>
+                                <!--POINTS ICON-->
+                                <ImageView fitHeight="20" fitWidth="20">
+                                    <Image url="@../Images/AppIcons/iconPoints.png"/>
+                                </ImageView>
+                                <!--COUNT POINTS-->
+                                <Label fx:id="player2Points" text="0"/>
+                            </HBox>
+                        </VBox>
+                        <ImageView fx:id="playingPlayer2Icon" fitHeight="40" fitWidth="40" visible="false"
+                                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <Image url="@../Images/AppIcons/loading-gif.gif"/>
+                        </ImageView>
+                    </AnchorPane>
 
-                <!--Name Points and Playing Icon-->
-                <AnchorPane>
-                    <VBox fillWidth="false" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-                        <Label id="resource-box" fx:id="player2Name" text=" Player 2 ">
+                    <!--RESOURCES PLAYER 2-->
+                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                        <!--MUSHROOM BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
                             <padding>
-                                <Insets left="5.0" right="5.0"/>
+                                <Insets left="5.0" right="10.0"/>
                             </padding>
-                        </Label>
-                        <!--POINTS BOX-->
-                        <HBox id="resource-box" alignment="CENTER">
-                            <padding>
-                                <Insets right="10.0"/>
-                            </padding>
-                            <!--POINTS ICON-->
+                            <!--MUSHROOM ICON-->
                             <ImageView fitHeight="20" fitWidth="20">
-                                <Image url="@../Images/AppIcons/iconPoints.png"/>
+                                <Image url="@../Images/AppIcons/iconMushroom.png"/>
                             </ImageView>
-                            <!--COUNT POINTS-->
-                            <Label fx:id="player2Points" text="0"/>
+                            <!--COUNT MUSHROOMS-->
+                            <Label fx:id="mushCount2" text="0">
+                            </Label>
                         </HBox>
-                    </VBox>
-                    <ImageView fx:id="playingPlayer2Icon" fitHeight="40" fitWidth="40" visible="false"
-                               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                        <Image url="@../Images/AppIcons/loading-gif.gif"/>
-                    </ImageView>
-                </AnchorPane>
+                        <!--ANIMAL BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--ANIMAL ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconAnimal.png"/>
+                            </ImageView>
+                            <!--COUNT ANIMALS-->
+                            <Label fx:id="animalCount2" text="0">
+                            </Label>
+                        </HBox>
+                        <!--PLANT BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--PLANT ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconPlant.png"/>
+                            </ImageView>
+                            <!--COUNT PLANTS-->
+                            <Label fx:id="plantCount2" text="0">
+                            </Label>
+                        </HBox>
+                        <!--INSECT BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--INSECT ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconInsect.png"/>
+                            </ImageView>
+                            <!--COUNT INSECTS-->
+                            <Label fx:id="insectCount2" text="0">
+                            </Label>
+                        </HBox>
+                    </HBox>
 
-                <!--RESOURCES PLAYER 2-->
-                <HBox alignment="CENTER_LEFT" spacing="12.0">
-                    <!--MUSHROOM BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--MUSHROOM ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconMushroom.png"/>
-                        </ImageView>
-                        <!--COUNT MUSHROOMS-->
-                        <Label fx:id="mushCount2" text="0">
-                        </Label>
+                    <!--ITEMS PLAYER 2-->
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <!--INK BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--INK ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconInk.png"/>
+                            </ImageView>
+                            <!--COUNT INKWELLS-->
+                            <Label fx:id="inkCount2" text="0">
+                            </Label>
+                        </HBox>
+                        <!--QUILL BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--QUILL ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconQuill.png"/>
+                            </ImageView>
+                            <!--COUNT QUILLS-->
+                            <Label fx:id="quillCount2" text="0">
+                            </Label>
+                        </HBox>
+                        <!--SCROLL BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--SCROLL ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconScroll.png"/>
+                            </ImageView>
+                            <!--COUNT SCROLLS-->
+                            <Label fx:id="scrollCount2" text="0">
+                            </Label>
+                        </HBox>
                     </HBox>
-                    <!--ANIMAL BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--ANIMAL ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconAnimal.png"/>
-                        </ImageView>
-                        <!--COUNT ANIMALS-->
-                        <Label fx:id="animalCount2" text="0">
-                        </Label>
-                    </HBox>
-                    <!--PLANT BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--PLANT ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconPlant.png"/>
-                        </ImageView>
-                        <!--COUNT PLANTS-->
-                        <Label fx:id="plantCount2" text="0">
-                        </Label>
-                    </HBox>
-                    <!--INSECT BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--INSECT ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconInsect.png"/>
-                        </ImageView>
-                        <!--COUNT INSECTS-->
-                        <Label fx:id="insectCount2" text="0">
-                        </Label>
-                    </HBox>
-                </HBox>
 
-                <!--ITEMS PLAYER 2-->
-                <HBox alignment="CENTER_LEFT" spacing="12">
-                    <!--INK BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--INK ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconInk.png"/>
+                    <!--Player 2 Cards in hand-->
+                    <HBox spacing="10">
+                        <!-- Hand Card 1-->
+                        <ImageView fx:id="player2HandCard1" fitHeight="50" fitWidth="75">
+                            <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
+                            <viewport>
+                                <Rectangle2D height="600" minX="69" minY="79" width="894"/>
+                            </viewport>
                         </ImageView>
-                        <!--COUNT INKWELLS-->
-                        <Label fx:id="inkCount2" text="0">
-                        </Label>
-                    </HBox>
-                    <!--QUILL BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--QUILL ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconQuill.png"/>
+                        <!-- Hand Card 2-->
+                        <ImageView fx:id="player2HandCard2" fitHeight="50" fitWidth="75">
+                            <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
+                            <viewport>
+                                <Rectangle2D height="600" minX="69" minY="79" width="894"/>
+                            </viewport>
                         </ImageView>
-                        <!--COUNT QUILLS-->
-                        <Label fx:id="quillCount2" text="0">
-                        </Label>
-                    </HBox>
-                    <!--SCROLL BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--SCROLL ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconScroll.png"/>
+                        <!-- Hand Card 3-->
+                        <ImageView fx:id="player2HandCard3" fitHeight="50" fitWidth="75">
+                            <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
+                            <viewport>
+                                <Rectangle2D height="600" minX="69" minY="79" width="894"/>
+                            </viewport>
                         </ImageView>
-                        <!--COUNT SCROLLS-->
-                        <Label fx:id="scrollCount2" text="0">
-                        </Label>
                     </HBox>
-                </HBox>
+                </VBox>
+                <ImageView fx:id="afkP2" visible="false" opacity="0.5" preserveRatio="true" fitWidth="310">
+                    <Image url="@../Images/Misc/disconnectedPlayer.gif"/>
+                </ImageView>
+            </StackPane>
 
-                <!--Player 2 Cards in hand-->
-                <HBox spacing="10">
-                    <!-- Hand Card 1-->
-                    <ImageView fx:id="player2HandCard1" fitHeight="50" fitWidth="75">
-                        <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
-                        <viewport>
-                            <Rectangle2D height="600" minX="69" minY="79" width="894"/>
-                        </viewport>
-                    </ImageView>
-                    <!-- Hand Card 2-->
-                    <ImageView fx:id="player2HandCard2" fitHeight="50" fitWidth="75">
-                        <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
-                        <viewport>
-                            <Rectangle2D height="600" minX="69" minY="79" width="894"/>
-                        </viewport>
-                    </ImageView>
-                    <!-- Hand Card 3-->
-                    <ImageView fx:id="player2HandCard3" fitHeight="50" fitWidth="75">
-                        <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
-                        <viewport>
-                            <Rectangle2D height="600" minX="69" minY="79" width="894"/>
-                        </viewport>
-                    </ImageView>
-                </HBox>
-            </VBox>
 
             <!--PLAYER 3 BOX-->
-            <VBox id="resource-count-window" fx:id="player3Resources" spacing="5">
+            <StackPane>
+                <VBox id="resource-count-window" fx:id="player3Resources" spacing="5">
 
-                <!--Name Points and Playing Icon-->
-                <AnchorPane>
-                    <VBox fillWidth="false" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-                        <Label id="resource-box" fx:id="player3Name" text=" Player 3 ">
+                    <!--Name Points and Playing Icon-->
+                    <AnchorPane>
+                        <VBox fillWidth="false" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <Label id="resource-box" fx:id="player3Name" text=" Player 3 ">
+                                <padding>
+                                    <Insets left="5.0" right="5.0"/>
+                                </padding>
+                            </Label>
+                            <!--POINTS BOX-->
+                            <HBox id="resource-box" alignment="CENTER" spacing="5">
+                                <padding>
+                                    <Insets right="5"/>
+                                </padding>
+                                <!--POINTS ICON-->
+                                <ImageView fitHeight="20" fitWidth="20">
+                                    <Image url="@../Images/AppIcons/iconPoints.png"/>
+                                </ImageView>
+                                <!--COUNT POINTS-->
+                                <Label fx:id="player3Points" text="0"/>
+                            </HBox>
+                        </VBox>
+                        <ImageView fx:id="playingPlayer3Icon" fitHeight="40" fitWidth="40" visible="false"
+                                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <Image url="@../Images/AppIcons/loading-gif.gif"/>
+                        </ImageView>
+                    </AnchorPane>
+
+                    <!--RESOURCES PLAYER 3-->
+                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                        <!--MUSHROOM BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
                             <padding>
-                                <Insets left="5.0" right="5.0"/>
+                                <Insets left="5.0" right="10.0"/>
                             </padding>
-                        </Label>
-                        <!--POINTS BOX-->
-                        <HBox id="resource-box" alignment="CENTER">
-                            <padding>
-                                <Insets right="5"/>
-                            </padding>
-                            <!--POINTS ICON-->
+                            <!--MUSHROOM ICON-->
                             <ImageView fitHeight="20" fitWidth="20">
-                                <Image url="@../Images/AppIcons/iconPoints.png"/>
+                                <Image url="@../Images/AppIcons/iconMushroom.png"/>
                             </ImageView>
-                            <!--COUNT POINTS-->
-                            <Label fx:id="player3Points" text="0"/>
+                            <!--COUNT MUSHROOMS-->
+                            <Label fx:id="mushCount3" text="0">
+                            </Label>
                         </HBox>
-                    </VBox>
-                    <ImageView fx:id="playingPlayer3Icon" fitHeight="40" fitWidth="40" visible="false"
-                               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                        <Image url="@../Images/AppIcons/loading-gif.gif"/>
-                    </ImageView>
-                </AnchorPane>
+                        <!--ANIMAL BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--ANIMAL ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconAnimal.png"/>
+                            </ImageView>
+                            <!--COUNT ANIMALS-->
+                            <Label fx:id="animalCount3" text="0">
+                            </Label>
+                        </HBox>
+                        <!--PLANT BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--PLANT ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconPlant.png"/>
+                            </ImageView>
+                            <!--COUNT PLANTS-->
+                            <Label fx:id="plantCount3" text="0">
+                            </Label>
+                        </HBox>
+                        <!--INSECT BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--INSECT ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconInsect.png"/>
+                            </ImageView>
+                            <!--COUNT INSECTS-->
+                            <Label fx:id="insectCount3" text="0">
+                            </Label>
+                        </HBox>
+                    </HBox>
 
-                <!--RESOURCES PLAYER 3-->
-                <HBox alignment="CENTER_LEFT" spacing="12.0">
-                    <!--MUSHROOM BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--MUSHROOM ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconMushroom.png"/>
-                        </ImageView>
-                        <!--COUNT MUSHROOMS-->
-                        <Label fx:id="mushCount3" text="0">
-                        </Label>
+                    <!--ITEMS PLAYER 3-->
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <!--INK BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--INK ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconInk.png"/>
+                            </ImageView>
+                            <!--COUNT INKWELLS-->
+                            <Label fx:id="inkCount3" text="0">
+                            </Label>
+                        </HBox>
+                        <!--QUILL BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--QUILL ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconQuill.png"/>
+                            </ImageView>
+                            <!--COUNT QUILLS-->
+                            <Label fx:id="quillCount3" text="0">
+                            </Label>
+                        </HBox>
+                        <!--SCROLL BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--SCROLL ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconScroll.png"/>
+                            </ImageView>
+                            <!--COUNT SCROLLS-->
+                            <Label fx:id="scrollCount3" text="0">
+                            </Label>
+                        </HBox>
                     </HBox>
-                    <!--ANIMAL BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--ANIMAL ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconAnimal.png"/>
-                        </ImageView>
-                        <!--COUNT ANIMALS-->
-                        <Label fx:id="animalCount3" text="0">
-                        </Label>
-                    </HBox>
-                    <!--PLANT BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--PLANT ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconPlant.png"/>
-                        </ImageView>
-                        <!--COUNT PLANTS-->
-                        <Label fx:id="plantCount3" text="0">
-                        </Label>
-                    </HBox>
-                    <!--INSECT BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--INSECT ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconInsect.png"/>
-                        </ImageView>
-                        <!--COUNT INSECTS-->
-                        <Label fx:id="insectCount3" text="0">
-                        </Label>
-                    </HBox>
-                </HBox>
 
-                <!--ITEMS PLAYER 3-->
-                <HBox alignment="CENTER_LEFT" spacing="12">
-                    <!--INK BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--INK ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconInk.png"/>
+                    <!--Player 3 Cards in hand-->
+                    <HBox spacing="10">
+                        <!-- Hand Card 1-->
+                        <ImageView fx:id="player3HandCard1" fitHeight="50" fitWidth="75">
+                            <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
+                            <viewport>
+                                <Rectangle2D height="600" minX="69" minY="79" width="894"/>
+                            </viewport>
                         </ImageView>
-                        <!--COUNT INKWELLS-->
-                        <Label fx:id="inkCount3" text="0">
-                        </Label>
-                    </HBox>
-                    <!--QUILL BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--QUILL ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconQuill.png"/>
+                        <!-- Hand Card 2-->
+                        <ImageView fx:id="player3HandCard2" fitHeight="50" fitWidth="75">
+                            <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
+                            <viewport>
+                                <Rectangle2D height="600" minX="69" minY="79" width="894"/>
+                            </viewport>
                         </ImageView>
-                        <!--COUNT QUILLS-->
-                        <Label fx:id="quillCount3" text="0">
-                        </Label>
-                    </HBox>
-                    <!--SCROLL BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--SCROLL ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconScroll.png"/>
+                        <!-- Hand Card 3-->
+                        <ImageView fx:id="player3HandCard3" fitHeight="50" fitWidth="75">
+                            <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
+                            <viewport>
+                                <Rectangle2D height="600" minX="69" minY="79" width="894"/>
+                            </viewport>
                         </ImageView>
-                        <!--COUNT SCROLLS-->
-                        <Label fx:id="scrollCount3" text="0">
-                        </Label>
                     </HBox>
-                </HBox>
+                </VBox>
+                <ImageView fx:id="afkP3" visible="false" opacity="0.5" preserveRatio="true" fitWidth="310">
+                    <Image url="@../Images/Misc/disconnectedPlayer.gif"/>
+                </ImageView>
+            </StackPane>
 
-                <!--Player 3 Cards in hand-->
-                <HBox spacing="10">
-                    <!-- Hand Card 1-->
-                    <ImageView fx:id="player3HandCard1" fitHeight="50" fitWidth="75">
-                        <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
-                        <viewport>
-                            <Rectangle2D height="600" minX="69" minY="79" width="894"/>
-                        </viewport>
-                    </ImageView>
-                    <!-- Hand Card 2-->
-                    <ImageView fx:id="player3HandCard2" fitHeight="50" fitWidth="75">
-                        <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
-                        <viewport>
-                            <Rectangle2D height="600" minX="69" minY="79" width="894"/>
-                        </viewport>
-                    </ImageView>
-                    <!-- Hand Card 3-->
-                    <ImageView fx:id="player3HandCard3" fitHeight="50" fitWidth="75">
-                        <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
-                        <viewport>
-                            <Rectangle2D height="600" minX="69" minY="79" width="894"/>
-                        </viewport>
-                    </ImageView>
-                </HBox>
-            </VBox>
 
             <!--PLAYER 4 BOX-->
-            <VBox id="resource-count-window" fx:id="player4Resources" spacing="5">
+            <StackPane>
+                <VBox id="resource-count-window" fx:id="player4Resources" spacing="5">
 
-                <!--Name Points and Playing Icon-->
-                <AnchorPane>
-                    <VBox fillWidth="false" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-                        <Label id="resource-box" fx:id="player4Name" text=" Player 4 ">
+                    <!--Name Points and Playing Icon-->
+                    <AnchorPane>
+                        <VBox fillWidth="false" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <Label id="resource-box" fx:id="player4Name" text=" Player 4 ">
+                                <padding>
+                                    <Insets left="5.0" right="5.0"/>
+                                </padding>
+                            </Label>
+                            <!--POINTS BOX-->
+                            <HBox id="resource-box" alignment="CENTER" spacing="5">
+                                <padding>
+                                    <Insets right="5"/>
+                                </padding>
+                                <!--POINTS ICON-->
+                                <ImageView fitHeight="20" fitWidth="20">
+                                    <Image url="@../Images/AppIcons/iconPoints.png"/>
+                                </ImageView>
+                                <!--COUNT POINTS-->
+                                <Label fx:id="player4Points" text="0"/>
+                            </HBox>
+                        </VBox>
+                        <ImageView fx:id="playingPlayer4Icon" fitHeight="40" fitWidth="40" visible="false"
+                                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <Image url="@../Images/AppIcons/loading-gif.gif"/>
+                        </ImageView>
+                    </AnchorPane>
+
+                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                        <!--MUSHROOM BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
                             <padding>
-                                <Insets left="5.0" right="5.0"/>
+                                <Insets left="5.0" right="10.0"/>
                             </padding>
-                        </Label>
-                        <!--POINTS BOX-->
-                        <HBox id="resource-box" alignment="CENTER">
-                            <padding>
-                                <Insets right="5"/>
-                            </padding>
-                            <!--POINTS ICON-->
+                            <!--MUSHROOM ICON-->
                             <ImageView fitHeight="20" fitWidth="20">
-                                <Image url="@../Images/AppIcons/iconPoints.png"/>
+                                <Image url="@../Images/AppIcons/iconMushroom.png"/>
                             </ImageView>
-                            <!--COUNT POINTS-->
-                            <Label fx:id="player4Points" text="0"/>
+                            <!--COUNT MUSHROOMS-->
+                            <Label fx:id="mushCount4" text="0">
+                            </Label>
                         </HBox>
-                    </VBox>
-                    <ImageView fx:id="playingPlayer4Icon" fitHeight="40" fitWidth="40" visible="false"
-                               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                        <Image url="@../Images/AppIcons/loading-gif.gif"/>
-                    </ImageView>
-                </AnchorPane>
+                        <!--ANIMAL BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--ANIMAL ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconAnimal.png"/>
+                            </ImageView>
+                            <!--COUNT ANIMALS-->
+                            <Label fx:id="animalCount4" text="0">
+                            </Label>
+                        </HBox>
+                        <!--PLANT BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--PLANT ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconPlant.png"/>
+                            </ImageView>
+                            <!--COUNT PLANTS-->
+                            <Label fx:id="plantCount4" text="0">
+                            </Label>
+                        </HBox>
+                        <!--INSECT BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--INSECT ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconInsect.png"/>
+                            </ImageView>
+                            <!--COUNT INSECTS-->
+                            <Label fx:id="insectCount4" text="0">
+                            </Label>
+                        </HBox>
+                    </HBox>
+                    <!--RESOURCES PLAYER 2-->
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <!--INK BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--INK ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconInk.png"/>
+                            </ImageView>
+                            <!--COUNT INKWELLS-->
+                            <Label fx:id="inkCount4" text="0">
+                            </Label>
+                        </HBox>
+                        <!--QUILL BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--QUILL ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconQuill.png"/>
+                            </ImageView>
+                            <!--COUNT QUILLS-->
+                            <Label fx:id="quillCount4" text="0">
+                            </Label>
+                        </HBox>
+                        <!--SCROLL BOX-->
+                        <HBox id="resource-box" alignment="CENTER" spacing="5.0">
+                            <padding>
+                                <Insets left="5.0" right="10.0"/>
+                            </padding>
+                            <!--SCROLL ICON-->
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@../Images/AppIcons/iconScroll.png"/>
+                            </ImageView>
+                            <!--COUNT SCROLLS-->
+                            <Label fx:id="scrollCount4" text="0">
+                            </Label>
+                        </HBox>
+                    </HBox>
 
-                <HBox alignment="CENTER_LEFT" spacing="12.0">
-                    <!--MUSHROOM BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--MUSHROOM ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconMushroom.png"/>
+                    <!--Player4 Cards in hand-->
+                    <HBox spacing="10">
+                        <!-- Hand Card 1-->
+                        <ImageView fx:id="player4HandCard1" fitHeight="50" fitWidth="75">
+                            <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
+                            <viewport>
+                                <Rectangle2D height="600" minX="69" minY="79" width="894"/>
+                            </viewport>
                         </ImageView>
-                        <!--COUNT MUSHROOMS-->
-                        <Label fx:id="mushCount4" text="0">
-                        </Label>
-                    </HBox>
-                    <!--ANIMAL BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--ANIMAL ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconAnimal.png"/>
+                        <!-- Hand Card 2-->
+                        <ImageView fx:id="player4HandCard2" fitHeight="50" fitWidth="75">
+                            <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
+                            <viewport>
+                                <Rectangle2D height="600" minX="69" minY="79" width="894"/>
+                            </viewport>
                         </ImageView>
-                        <!--COUNT ANIMALS-->
-                        <Label fx:id="animalCount4" text="0">
-                        </Label>
-                    </HBox>
-                    <!--PLANT BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--PLANT ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconPlant.png"/>
+                        <!-- Hand Card 3-->
+                        <ImageView fx:id="player4HandCard3" fitHeight="50" fitWidth="75">
+                            <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
+                            <viewport>
+                                <Rectangle2D height="600" minX="69" minY="79" width="894"/>
+                            </viewport>
                         </ImageView>
-                        <!--COUNT PLANTS-->
-                        <Label fx:id="plantCount4" text="0">
-                        </Label>
                     </HBox>
-                    <!--INSECT BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--INSECT ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconInsect.png"/>
-                        </ImageView>
-                        <!--COUNT INSECTS-->
-                        <Label fx:id="insectCount4" text="0">
-                        </Label>
-                    </HBox>
-                </HBox>
-                <!--RESOURCES PLAYER 2-->
-                <HBox alignment="CENTER_LEFT" spacing="12">
-                    <!--INK BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--INK ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconInk.png"/>
-                        </ImageView>
-                        <!--COUNT INKWELLS-->
-                        <Label fx:id="inkCount4" text="0">
-                        </Label>
-                    </HBox>
-                    <!--QUILL BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--QUILL ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconQuill.png"/>
-                        </ImageView>
-                        <!--COUNT QUILLS-->
-                        <Label fx:id="quillCount4" text="0">
-                        </Label>
-                    </HBox>
-                    <!--SCROLL BOX-->
-                    <HBox id="resource-box" alignment="CENTER" spacing="5.0">
-                        <padding>
-                            <Insets left="5.0" right="10.0"/>
-                        </padding>
-                        <!--SCROLL ICON-->
-                        <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../Images/AppIcons/iconScroll.png"/>
-                        </ImageView>
-                        <!--COUNT SCROLLS-->
-                        <Label fx:id="scrollCount4" text="0">
-                        </Label>
-                    </HBox>
-                </HBox>
+                </VBox>
+                <ImageView fx:id="afkP4" visible="false" opacity="0.5" preserveRatio="true" fitWidth="310">
+                    <Image url="@../Images/Misc/disconnectedPlayer.gif"/>
+                </ImageView>
+            </StackPane>
 
-                <!--Player4 Cards in hand-->
-                <HBox spacing="10">
-                    <!-- Hand Card 1-->
-                    <ImageView fx:id="player4HandCard1" fitHeight="50" fitWidth="75">
-                        <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
-                        <viewport>
-                            <Rectangle2D height="600" minX="69" minY="79" width="894"/>
-                        </viewport>
-                    </ImageView>
-                    <!-- Hand Card 2-->
-                    <ImageView fx:id="player4HandCard2" fitHeight="50" fitWidth="75">
-                        <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
-                        <viewport>
-                            <Rectangle2D height="600" minX="69" minY="79" width="894"/>
-                        </viewport>
-                    </ImageView>
-                    <!-- Hand Card 3-->
-                    <ImageView fx:id="player4HandCard3" fitHeight="50" fitWidth="75">
-                        <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
-                        <viewport>
-                            <Rectangle2D height="600" minX="69" minY="79" width="894"/>
-                        </viewport>
-                    </ImageView>
-                </HBox>
-            </VBox>
 
         </VBox>
     </HBox>
@@ -933,7 +950,7 @@
                     prefHeight="30.0" prefWidth="100.0"/>
             <Button onMouseClicked="#showHideControls" text="Controls" styleClass="really-small-button"
                     prefHeight="30.0" prefWidth="100.0"/>
-            <Button text="Quit Game" styleClass="really-small-button"
+            <Button onMouseClicked="#quit" text="Quit Game" styleClass="really-small-button"
                     prefHeight="30.0" prefWidth="100.0"/>
             <Button onMouseClicked="#changeResolution" text="Change Resolution" styleClass="really-small-button"
                     prefHeight="30.0" prefWidth="100.0"/>
@@ -949,6 +966,14 @@
             <Button onMouseClicked="#showHideControls" text="Back" styleClass="really-small-button"
                     prefHeight="30.0" prefWidth="100.0"/>
         </VBox>
+    </StackPane>
+    <StackPane fx:id="youWon" stylesheets="@../css/Panes.css" id="winningPane"
+               visible="false" managed="false" mouseTransparent="true">
+            <Label text="YOU WIN" stylesheets="@../css/Labels.css" styleClass="winning-label"/>
+    </StackPane>
+    <StackPane fx:id="otherWinner"
+               visible="false" managed="false" mouseTransparent="true">
+        <Label fx:id="winnerLabel" stylesheets="@../css/Labels.css" styleClass="winning-label"/>
     </StackPane>
 
 </StackPane>

@@ -38,3 +38,7 @@
     -fx-background-image: url(../Images/Misc/Codex_esploso.png);
     -fx-background-size: cover;
 }
+
+#winningPane{
+    -fx-background-image: url(../Images/Misc/NaturalisNoBackground.gif);
+}

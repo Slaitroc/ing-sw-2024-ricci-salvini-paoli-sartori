@@ -6,6 +6,7 @@ import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.view.gui.ResolutionSizes;
+import it.polimi.ingsw.gc31.view.gui.SceneTag;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.SnapshotParameters;
@@ -112,6 +113,14 @@ public class InGameController extends ViewController {
     @FXML
     public VBox player4Resources;
     List<VBox> resourceWindows = new ArrayList<>();
+
+    //AFK GIF___________________________________________________________________________________________________________
+    @FXML
+    public ImageView afkP2;
+    @FXML
+    public ImageView afkP3;
+    @FXML
+    public ImageView afkP4;
 
     //Player Names Labels_______________________________________________________________________________________________
     @FXML
@@ -224,6 +233,11 @@ public class InGameController extends ViewController {
     public Tab tab3;
     @FXML
     public Tab tab4;
+
+    //EndGame Panes_____________________________________________________________________________________________________
+    public StackPane youWon;
+    public StackPane otherWinner;
+    public Label winnerLabel;
 
     @FXML
     public Button playStarterButton;
@@ -473,7 +487,6 @@ public class InGameController extends ViewController {
         }
     }
 
-
     @Override
     public void updateChat(String username, String message) {
         Text usernameText = new Text(username + ": ");
@@ -496,6 +509,20 @@ public class InGameController extends ViewController {
         if (!chatPopUp.isVisible()) {
             chatButtonImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/AppIcons/iconMessagePending.png"))));
         }
+    }
+
+    @Override
+    public void showWinner(String username){
+        if(username.equals(app.getUsername())) {
+            showHidePane(youWon);
+            youWon.setMouseTransparent(true);
+        }
+        else {
+            winnerLabel.setText(username + "won");
+            showHidePane(otherWinner);
+            otherWinner.setMouseTransparent(true);
+        }
+
     }
 
 
@@ -549,15 +576,12 @@ public class InGameController extends ViewController {
                 if (card == deckResource) {
                     //System.out.println("Called on deckResource");
                     client.drawResource(0);
-                    client.changeSide();
                 } else if (card == deckResourceCard1) {
                     //System.out.println("Called on deckResourceCard1");
                     client.drawResource(1);
-                    client.changeSide();
                 } else if (card == deckResourceCard2) {
                     //System.out.println("Called on deckResourceCard2");
                     client.drawResource(2);
-                    client.changeSide();
                 } else if (card == deckGold) {
                     //System.out.println("Called on deckGold");
                     client.drawGold(0);
@@ -684,6 +708,27 @@ public class InGameController extends ViewController {
             for (int y = 0; y < grid.getRowCount(); y++) {
                 resizeCard(cells.get(new Pair<>(x, y)));
                 cells.get(new Pair<>(x, y)).setPaneResolution();
+            }
+        }
+    }
+
+    public void quit() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Quitting game");
+        alert.setHeaderText("Are you sure to quit the game?");
+        alert.setContentText("You will not be able to rejoin the game.\nAre you sure you want to quit?");
+        alert.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
+        alert.showAndWait();
+
+        ButtonType result = alert.getResult();
+        if (result == ButtonType.OK) {
+            try {
+                client.quitGame();
+                app.loadScene(SceneTag.MAINMENU);
+                app.setDefaultWindowSize();
+            } catch (RemoteException e) {
+                show_ServerCrashWarning(e.toString());
+                e.getStackTrace();
             }
         }
     }

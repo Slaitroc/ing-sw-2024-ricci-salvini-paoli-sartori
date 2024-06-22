@@ -81,4 +81,5 @@ public abstract class ViewController {
     public void show_commonObjectives(ObjectiveCard commonObjectiveCard1, ObjectiveCard commonObjectiveCard2) {}
     public void show_objectiveCard(String username, ObjectiveCard objectiveCard) {}
     public void playerStateInfo(String username, String info) {}
+    public void showWinner(String username) {}
 }
