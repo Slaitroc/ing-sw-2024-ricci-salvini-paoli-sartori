@@ -51,6 +51,7 @@
 - [ ] salvare il token nel client 
 
 ## GUI
+- [ ] da girare le carte nei deck e allo startup
 
 ## TUI
 
