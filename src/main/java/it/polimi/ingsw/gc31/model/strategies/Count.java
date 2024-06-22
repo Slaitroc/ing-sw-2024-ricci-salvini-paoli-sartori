@@ -52,28 +52,6 @@ public class Count extends Objective {
         return countFIS(placedCard, achievedResources);
     }
 
-    @Override
-    public String print() {
-        StringBuilder res = new StringBuilder();
-        res.append(ansi().restoreCursorPosition().cursorMove(2,3).a(resources.get(0).getSymbol()));
-        res.append(ansi().restoreCursorPosition().cursorMove(6,3).a(resources.get(1).getSymbol()));
-        if (resources.size() == 3) res.append(ansi().restoreCursorPosition().cursorMove(4,2).a(resources.get(2).getSymbol()));
-        return res.toString();
-    }
-
-    @Override
-    public JsonObject serializeToJson() {
-        JsonObject jsonObject = new JsonObject();
-
-        JsonArray resourcesArray = new JsonArray();
-        for (Resources res : this.resources) {
-            resourcesArray.add(res.toString());
-        }
-        jsonObject.add("resources", resourcesArray);
-        jsonObject.addProperty("type", "COUNT");
-        return jsonObject;
-    }
-
     /**
      * This method check the objective in the particular case where the list of
      * resources contains only Animal,
@@ -131,7 +109,7 @@ public class Count extends Objective {
      * the objective is of a golden card, and the player gains 1 point for every
      * resource of the spicified
      * type is possessed by the player.
-     * 
+     *
      * @param achievedResources is the map that contains the resource as a key and
      *                          the number of occurrences
      *                          of that resources
@@ -139,5 +117,14 @@ public class Count extends Objective {
      */
     private int goldenCount(Map<Resources, Integer> achievedResources) {
         return achievedResources.get(resources.get(0));
+    }
+
+    @Override
+    public String print() {
+        StringBuilder res = new StringBuilder();
+        res.append(ansi().restoreCursorPosition().cursorMove(2,3).a(resources.get(0).getSymbol()));
+        res.append(ansi().restoreCursorPosition().cursorMove(6,3).a(resources.get(1).getSymbol()));
+        if (resources.size() == 3) res.append(ansi().restoreCursorPosition().cursorMove(4,2).a(resources.get(2).getSymbol()));
+        return res.toString();
     }
 }

@@ -2,7 +2,6 @@ package it.polimi.ingsw.gc31.view.gui.controllers;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -16,6 +15,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import java.rmi.RemoteException;
+import java.util.Arrays;
 import java.util.Map;
 
 public class LobbyController extends ViewController {
@@ -131,10 +131,6 @@ public class LobbyController extends ViewController {
         }
 
         updateLobby();
-        //System.out.println("I'm player number " + imPlayerNumber);
-        //System.out.println("This is lobby number " + app.getCurrentGameID());
-        //System.out.println("In this lobby there are supposed to be " + app.getNumberOfPlayers() + " players");
-        //System.out.println("In this lobby there are " + app.getPlayerList().size() + " players");
         textField.requestFocus();
     }
 
@@ -160,7 +156,8 @@ public class LobbyController extends ViewController {
         try {
             client.sendChatMessage(client.getUsername(), message);
         } catch (RemoteException e) {
-            show_ServerCrashWarning();
+            show_ServerCrashWarning(e.toString());
+            e.getStackTrace();
         }
     }
 
@@ -237,7 +234,8 @@ public class LobbyController extends ViewController {
             //System.out.println("Hey, I'm " + app.getUsername() + ", Player Number " + imPlayerNumber + ". I am setting my status from " + ready.getText());
             client.setReady(ready.getText().equals("Not Ready"));
         } catch (RemoteException e) {
-            show_ServerCrashWarning();
+            show_ServerCrashWarning(e.toString());
+            e.getStackTrace();
         }
     }
 
@@ -379,7 +377,8 @@ public class LobbyController extends ViewController {
             app.loadScene(SceneTag.MAINMENU);
             app.setDefaultWindowSize();
         } catch (RemoteException e) {
-            show_ServerCrashWarning();
+            show_ServerCrashWarning(e.toString());
+            e.getStackTrace();
         }
     }
 }

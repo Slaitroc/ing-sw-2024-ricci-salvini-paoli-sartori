@@ -14,6 +14,7 @@ import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import it.polimi.ingsw.gc31.model.player.Placed;
 import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.model.strategies.Count;
 import org.junit.jupiter.api.BeforeEach;
@@ -356,11 +357,7 @@ class GameModelTest {
             }
         }
         assertDoesNotThrow(() -> model.play(model.getCurrPlayer().getUsername(), new Point(1, 1)));
-        try {
-            model.drawGold(model.getCurrPlayer().getUsername(), 0);
-        } catch (IllegalStateOperationException e) {
-            fail("Exception should not have been thrown");
-        }
+        model.setNextPlayingPlayer();
 
         model.setGameState(new ShowDownGameModelState());
 
@@ -370,11 +367,7 @@ class GameModelTest {
             }
         }
         assertDoesNotThrow(() -> model.play(model.getCurrPlayer().getUsername(), new Point(1, 1)));
-        try {
-            model.drawGold(model.getCurrPlayer().getUsername(), 0);
-        } catch (IllegalStateOperationException e) {
-            fail("Exception should not have been thrown");
-        }
+        model.setNextPlayingPlayer();
 
         model.setGameState(new LastTurnGameModelState());
 
@@ -384,11 +377,7 @@ class GameModelTest {
             }
         }
         assertDoesNotThrow(() -> model.play(model.getCurrPlayer().getUsername(), new Point(1, 1)));
-        try {
-            model.drawGold(model.getCurrPlayer().getUsername(), 0);
-        } catch (IllegalStateOperationException e) {
-            fail("Exception should not have been thrown");
-        }
+        model.setNextPlayingPlayer();
 
         model.setGameState(new EndGameModelState(model));
         for (String username : clients.keySet()) {
@@ -408,61 +397,36 @@ class GameModelTest {
         }
         utilitySkipSetupGame();
 
-        for (String username : clients.keySet()) {
-            if (!username.equals(model.getCurrPlayer().getUsername())) {
-                assertThrowsExactly(IllegalStateOperationException.class, () -> model.play(username, new Point(1, 1)));
-            }
-        }
+        // draw resource change current player
+        assertEquals(model.getCurrIndexPlayer(), 0);
+        model.getCurrPlayer().setInGameState(new Placed());
         try {
-            model.play(model.getCurrPlayer().getUsername(), new Point(1, 1));
+            model.drawGold(model.getCurrPlayer().getUsername(), 0);
         } catch (IllegalStateOperationException e) {
             fail("Exception should not have been thrown");
         }
+        assertEquals(model.getCurrIndexPlayer(), 1);
 
         // wrong index doesn't end the player turn
+        model.getCurrPlayer().setInGameState(new Placed());
         try {
-            int beforeIndexPlayer = model.getCurrIndexPlayer();
             model.drawGold(model.getCurrPlayer().getUsername(), 3);
-            assertEquals(model.getCurrIndexPlayer(), beforeIndexPlayer);
         } catch (IllegalStateOperationException e) {
             fail("Exception should not have been thrown");
         }
-
-        // drawGold change the player in turn
-        int beforeIndexPlayer = model.getCurrIndexPlayer();
-        assertDoesNotThrow(() -> model.drawGold(model.getCurrPlayer().getUsername(), 0));
-        assertNotEquals(model.getCurrIndexPlayer(), beforeIndexPlayer);
+        assertEquals(model.getCurrIndexPlayer(), 1);
 
         model.setGameState(new ShowDownGameModelState());
-        for (String username : clients.keySet()) {
-            if (!username.equals(model.getCurrPlayer().getUsername())) {
-                assertThrowsExactly(IllegalStateOperationException.class, () -> model.play(username, new Point(1, 1)));
-            }
-        }
-        try {
-            model.play(model.getCurrPlayer().getUsername(), new Point(1, 1));
-        } catch (IllegalStateOperationException e) {
-            fail("Exception should not have been thrown");
-        }
+        model.getCurrPlayer().setInGameState(new Placed());
         assertDoesNotThrow(() -> model.drawGold(model.getCurrPlayer().getUsername(), 0));
 
         model.setGameState(new LastTurnGameModelState());
-        for (String username : clients.keySet()) {
-            if (!username.equals(model.getCurrPlayer().getUsername())) {
-                assertThrowsExactly(IllegalStateOperationException.class, () -> model.play(username, new Point(1, 1)));
-            }
-        }
-        try {
-            model.play(model.getCurrPlayer().getUsername(), new Point(1, 1));
-        } catch (IllegalStateOperationException e) {
-            fail("Exception should not have been thrown");
-        }
+        model.getCurrPlayer().setInGameState(new Placed());
         assertDoesNotThrow(() -> model.drawGold(model.getCurrPlayer().getUsername(), 0));
 
         model.setGameState(new EndGameModelState(model));
-        for (String username : clients.keySet()) {
-            assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawGold(username, 0));
-        }
+        model.getCurrPlayer().setInGameState(new Placed());
+        assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawGold(model.getCurrPlayer().getUsername(), 0));
     }
 
     @Test
@@ -477,61 +441,36 @@ class GameModelTest {
         }
         utilitySkipSetupGame();
 
-        for (String username : clients.keySet()) {
-            if (!username.equals(model.getCurrPlayer().getUsername())) {
-                assertThrowsExactly(IllegalStateOperationException.class, () -> model.play(username, new Point(1, 1)));
-            }
-        }
+        // draw resource change current player
+        assertEquals(model.getCurrIndexPlayer(), 0);
+        model.getCurrPlayer().setInGameState(new Placed());
         try {
-            model.play(model.getCurrPlayer().getUsername(), new Point(1, 1));
+            model.drawResource(model.getCurrPlayer().getUsername(), 0);
         } catch (IllegalStateOperationException e) {
             fail("Exception should not have been thrown");
         }
+        assertEquals(model.getCurrIndexPlayer(), 1);
 
         // wrong index doesn't end the player turn
+        model.getCurrPlayer().setInGameState(new Placed());
         try {
-            int beforeIndexPlayer = model.getCurrIndexPlayer();
             model.drawResource(model.getCurrPlayer().getUsername(), 3);
-            assertEquals(model.getCurrIndexPlayer(), beforeIndexPlayer);
         } catch (IllegalStateOperationException e) {
             fail("Exception should not have been thrown");
         }
-
-        // drawResource(); change the player in turn
-        int beforeIndexPlayer = model.getCurrIndexPlayer();
-        assertDoesNotThrow(() -> model.drawResource(model.getCurrPlayer().getUsername(), 0));
-        assertNotEquals(model.getCurrIndexPlayer(), beforeIndexPlayer);
+        assertEquals(model.getCurrIndexPlayer(), 1);
 
         model.setGameState(new ShowDownGameModelState());
-        for (String username : clients.keySet()) {
-            if (!username.equals(model.getCurrPlayer().getUsername())) {
-                assertThrowsExactly(IllegalStateOperationException.class, () -> model.play(username, new Point(1, 1)));
-            }
-        }
-        try {
-            model.play(model.getCurrPlayer().getUsername(), new Point(1, 1));
-        } catch (IllegalStateOperationException e) {
-            fail("Exception should not have been thrown");
-        }
+        model.getCurrPlayer().setInGameState(new Placed());
         assertDoesNotThrow(() -> model.drawResource(model.getCurrPlayer().getUsername(), 0));
 
         model.setGameState(new LastTurnGameModelState());
-        for (String username : clients.keySet()) {
-            if (!username.equals(model.getCurrPlayer().getUsername())) {
-                assertThrowsExactly(IllegalStateOperationException.class, () -> model.play(username, new Point(1, 1)));
-            }
-        }
-        try {
-            model.play(model.getCurrPlayer().getUsername(), new Point(1, 1));
-        } catch (IllegalStateOperationException e) {
-            fail("Exception should not have been thrown");
-        }
+        model.getCurrPlayer().setInGameState(new Placed());
         assertDoesNotThrow(() -> model.drawResource(model.getCurrPlayer().getUsername(), 0));
 
         model.setGameState(new EndGameModelState(model));
-        for (String username : clients.keySet()) {
-            assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawResource(username, 0));
-        }
+        model.getCurrPlayer().setInGameState(new Placed());
+        assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawResource(model.getCurrPlayer().getUsername(), 0));
     }
 
     @Test
@@ -729,7 +668,6 @@ class GameModelTest {
         assertEquals(model.getPlayers().get(turnPlayer.get(1)).getScore(), 4);
         assertEquals(model.getPlayers().get(turnPlayer.get(2)).getScore(), 0);
         assertEquals(model.getPlayers().get(turnPlayer.get(3)).getScore(), 26);
-        System.out.println("\n\n\n\n");
     }
 
     public static class FakeGameModel extends GameModel {

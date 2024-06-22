@@ -303,7 +303,7 @@ public class Controller extends UnicastRemoteObject implements IController {
         return newConnections.get(token);
     }
 
-    // Risorse per heartbeat
+    // Heartbeat resources
     // FIXME spostare in cima attributi e metodi
     private ConcurrentHashMap<VirtualClient, Long> clientsHeartBeat;
     private ScheduledExecutorService scheduler;
@@ -334,6 +334,11 @@ public class Controller extends UnicastRemoteObject implements IController {
                 /*
                  * try "chiudi connessione al client disconnesso"
                  */
+                for(String username : tempClients.keySet()){
+                    if((tempClients.get(username)).equals(client))
+
+                        disconnectFromGame(username);
+                }
                 System.out.println("Client disconnesso per timeout");
             }
         }
@@ -358,6 +363,22 @@ public class Controller extends UnicastRemoteObject implements IController {
         // 1).a("\\033[5m💚\\033[0m\\").reset());
         // System.out.println("HeartBeat ricevuto");
         client.sendCommand(new HeartBeatObj());
+    }
+
+    /**
+     * This method is invoked if a check on the heart beat is met.
+     * The method searches for the gameController of the client that needs to be disconnected,
+     * if the gameController and the correct couple username/VirtualClient is found
+     * the method disconnectPlayer is invoked.
+     *
+     * @param username is the username of the client to be disconnected
+     */
+    private void disconnectFromGame(String username) {
+        for (int i = 0; i < gameControlList.size(); i++) {
+            for(String u : gameControlList.get(i).clientList.keySet())
+                if(u.equals(username))
+                    gameControlList.get(i).disconnectPlayer(username);
+        }
     }
 
 }

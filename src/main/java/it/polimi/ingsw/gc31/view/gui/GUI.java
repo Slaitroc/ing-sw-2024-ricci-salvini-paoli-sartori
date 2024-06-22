@@ -85,7 +85,7 @@ public class GUI extends UI {
     @Override
     public void show_inGamePlayers(LinkedHashMap<String, Boolean> players) {
         Platform.runLater(() -> {
-            // System.out.println("show_inGamePlayers triggered!!!!: values" + players);
+            System.out.println("show_inGamePlayers triggered!!!!: values" + players);
             app.setPlayerList(players);
             app.getCurrentController().updateLobby();
         });
@@ -98,7 +98,10 @@ public class GUI extends UI {
 
     @Override
     public void show_GameIsOver(String username) {
-
+        Platform.runLater(() -> {
+            // System.out.println("show_inGamePlayers triggered!!!!: values" + players);
+            app.getCurrentController().showWinner(username);
+        });
     }
 
     @Override
@@ -127,6 +130,8 @@ public class GUI extends UI {
              * System.out.println("firstCardDeck specifics: " +
              * firstCardDeck.backSerializeToJson());
              */
+            card1.changeSide();
+            card2.changeSide();
             app.getCurrentController().show_goldDeck(firstCardDeck, card1, card2);
         });
     }
@@ -187,6 +192,8 @@ public class GUI extends UI {
     @Override
     public void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
         Platform.runLater(() -> {
+            card1.changeSide();
+            card2.changeSide();
             app.getCurrentController().show_resourceDeck(firstCardDeck, card1, card2);
             // System.out.println("show_resourceDeck called");
         });

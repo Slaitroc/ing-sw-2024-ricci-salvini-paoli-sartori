@@ -162,8 +162,6 @@ public class TCPClient implements ClientCommands {
      * username ane exception is launched
      *
      * @param username is the username set by the client
-     * @throws IOException if there is an error reading the
-     *                     client handler messages
      */
     @Override
     public void setUsernameCall(String username) {
@@ -180,10 +178,9 @@ public class TCPClient implements ClientCommands {
      * create game request
      *
      * @param maxNumberPlayer is the max number of the players for the new game
-     * @throws IOException if there is an error reading the server messages
      */
     @Override
-    public void createGame(int maxNumberPlayer) throws IOException {
+    public void createGame(int maxNumberPlayer) {
         tcp_sendCommand(new CreateGameObj(this.username, maxNumberPlayer), DV.RECIPIENT_CONTROLLER);
     }
 
@@ -242,7 +239,7 @@ public class TCPClient implements ClientCommands {
      * index = 2 : drawing the second gold card on the board.
      */
     @Override
-    public void drawGold(int index) throws RemoteException {
+    public void drawGold(int index) {
         tcp_sendCommand(new DrawGoldObj(this.username, index), DV.RECIPIENT_GAME_CONTROLLER);
     }
 

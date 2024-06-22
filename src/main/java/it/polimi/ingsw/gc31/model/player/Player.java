@@ -82,9 +82,6 @@ public class Player{
 
     public boolean drawGold(int index) throws EmptyDeckException, IllegalStateOperationException {
         if (index < 0 || index > 2) return false;
-//        if (deck.peekCard() == null) {
-//            deck.replaceDeck(board.getDeckResource().getQueueDeck());
-//        }
 
         addToHand(board.getDeckGold(), board.getDeckResource(), index);
         return true;
@@ -98,9 +95,6 @@ public class Player{
      */
     public boolean drawResource(int index) throws EmptyDeckException, IllegalStateOperationException {
         if (index < 0 || index > 2) return false;
-//        if (deck.peekCard() == null) {
-//            deck.replaceDeck(board.getDeckGold().getQueueDeck());
-//        }
 
         addToHand(board.getDeckResource(), board.getDeckGold(), index);
         return true;

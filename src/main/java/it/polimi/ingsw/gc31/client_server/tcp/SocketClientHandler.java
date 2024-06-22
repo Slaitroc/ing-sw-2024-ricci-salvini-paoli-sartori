@@ -71,13 +71,13 @@ public class SocketClientHandler implements VirtualClient {
      * executed
      */
     @Override
-    public void sendCommand(ClientQueueObject obj) throws RemoteException {
+    public synchronized void sendCommand(ClientQueueObject obj) throws RemoteException {
         try {
             output.writeObject(obj);
             output.reset();
             output.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RemoteException();
         }
     }
 
@@ -123,12 +123,7 @@ public class SocketClientHandler implements VirtualClient {
                         Controller.getController().updateHeartBeat(this);
                     }
                 }
-
-                // se oggetto letto è null la connessione è caduta
-                // TODO aggiungere wait per aspettare x minuti che il client si riconnetta,
-                // se dopo x minuti il client non si è riconnesso chiudo la connessione.
-                // Altrimenti
-                // devo riconnettere il client alla partita a cui stava giocando
+                // If the object red is null the client disconnected
             } catch (IOException | ClassNotFoundException e) {
                 // e.printStackTrace();
                 System.out.println("A TCP client disconnected");
@@ -142,7 +137,7 @@ public class SocketClientHandler implements VirtualClient {
      * @param gameID is the value that needs to be set
      */
     @Override
-    public void setGameID(int gameID) throws RemoteException {
+    public void setGameID(int gameID) {
         this.idGame = gameID;
     }
 
@@ -167,15 +162,26 @@ public class SocketClientHandler implements VirtualClient {
         this.gameController = gameController;
     }
 
+    /**
+     * Method used at the start of the rmi connections but useless in the TCP implementation.
+     * Inherited from the VirtualClient interface.
+     * In TCP implementation the VirtualClient (is server side so it...) can get the controller via the singleton.
+     *
+     * @param controller is the controller the client needs to get
+     */
     @Override
-    public void setController(IController controller) throws RemoteException {
-        // non serve in Tcp perché il VirtualClient è server side e si prende il
-        // controller con
-        // il singleton
+    public void setController(IController controller) {
+
     }
 
+    /**
+     * Method used at the start of the rmi connections but useless in the TCP implementation.
+     * Inherited from the VirtualClient interface.
+     *
+     * @param token value to assign to the client specific token, used mainly for reconnections
+     */
     @Override
-    public void setRmiToken(int token) throws RemoteException {
+    public void setRmiToken(int token) {
     }
 
 }

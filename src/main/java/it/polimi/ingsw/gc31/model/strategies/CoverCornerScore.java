@@ -56,11 +56,4 @@ public class CoverCornerScore extends Objective {
     public String print() {
         return "⟔";
     }
-
-    @Override
-    public JsonObject serializeToJson() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", "COVERCORNERSCORE");
-        return jsonObject;
-    }
 }

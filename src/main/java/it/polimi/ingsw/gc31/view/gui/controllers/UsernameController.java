@@ -1,8 +1,6 @@
 package it.polimi.ingsw.gc31.view.gui.controllers;
 
-import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
-import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -10,10 +8,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.io.IOException;
+import java.util.Arrays;
 
-//import static it.polimi.ingsw.gc31.OurScanner.scanner;
-// import javafx.scene.image.Image;
-// import javafx.scene.image.ImageView;
 
 public class UsernameController extends ViewController {
 
@@ -34,8 +30,8 @@ public class UsernameController extends ViewController {
                 client.setUsernameCall(usernameField.getText());
                 client.setUsernameResponse(usernameField.getText());
             } catch (IOException e) {
-                e.printStackTrace();
-                show_ServerCrashWarning();
+                show_ServerCrashWarning(e.toString());
+                e.getStackTrace();
             }
         }
     }
@@ -54,11 +50,6 @@ public class UsernameController extends ViewController {
     @Override
     @FXML
     protected void initialize() {
-    }
-
-    @FXML
-    private void loadMainMenuScene() {
-        app.loadScene(SceneTag.MAINMENU);
     }
 
     @FXML

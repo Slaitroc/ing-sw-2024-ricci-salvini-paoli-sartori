@@ -7,7 +7,6 @@ package it.polimi.ingsw.gc31.model.card;
  * @author Christian Salvini
  */
 public interface Card {
-
     /**
      * This method is used to determine which side of the card is visible.
      * @return the value of the attribute side
@@ -23,5 +22,4 @@ public interface Card {
      * @return the path of the png of the visible side of the card
      */
     String getImage();
-
 }

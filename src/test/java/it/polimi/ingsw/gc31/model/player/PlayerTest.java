@@ -59,7 +59,7 @@ public class PlayerTest {
 
         //check if the player can draw a car in the wrong state
         player.setInGameState(new Waiting());
-        assertTrue(player.drawGold(1), "Try to draw in a wrong state");
+        assertThrows(IllegalStateOperationException.class, () -> player.drawGold(1), "Try to draw in a wrong state");
         assertEquals(player.hand.size(), 3, "Still 3 cards in hand");
     }
 
@@ -69,7 +69,7 @@ public class PlayerTest {
      * 3 cards at a time (3 cards should be the maximum size of the hand)
      */
     @Test
-    public void drawResourceTest(){
+    public void drawResourceTest() throws IllegalStateOperationException{
         //check if the index are considered correctly
         assertFalse(player.drawResource(-1), "Index out of bound");
         assertFalse(player.drawResource(3), "Index out of bound");
@@ -93,7 +93,7 @@ public class PlayerTest {
 
         //check if the player can draw a car in the wrong state
         player.setInGameState(new Waiting());
-        assertTrue(player.drawResource(1), "Try to draw in a wrong state");
+        assertThrows(IllegalStateOperationException.class, () -> player.drawResource(1), "Try to draw in a wrong state");
         assertEquals(player.hand.size(), 3, "Still 3 cards in hand");
     }
 
@@ -102,7 +102,7 @@ public class PlayerTest {
      * Checks if the player can play a card in the wrong state (an exception should be launched)
      */
     @Test
-    public void playTest() {
+    public void playTest() throws IllegalStateOperationException {
         //check if the player can play in the wrong states
         player.setInGameState(new Waiting());
         assertThrows(IllegalStateOperationException.class, () -> player.play(new Point(1, 1)),
@@ -115,7 +115,6 @@ public class PlayerTest {
                 "Tried to play a card in the wrong state");
 
         //check if the player can correctly invoke the method play if it is in the correct state
-        //FIXME se la carta pescata casualmente non potesse essere giocata nella posizione 1 1 cosa succederebbe?
         player.setInGameState(new Placed());
         player.drawResource(0);
         player.setInGameState(new NotPlaced());

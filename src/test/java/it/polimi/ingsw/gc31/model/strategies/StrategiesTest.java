@@ -539,4 +539,48 @@ class StrategiesTest {
 
         return new ResourceCard(color, front, back);
     }
+
+    @Test
+    public void PrintTest(){
+        //checks if the method print of the Count class works properly
+        List<Resources> list = new ArrayList<>();
+        list.add(Resources.ANIMAL);
+        list.add(Resources.ANIMAL);
+        list.add(Resources.ANIMAL);
+        assertNotEquals(null, new Count(list).print());
+
+        //checks if the method print of the CoverCornerScore class works properly
+        assertNotEquals(null, new CoverCornerScore().print());
+
+        //checks if the method print of the LShape class works properly
+        assertNotEquals(null, new LShape().print());
+
+        //checks if the method print of the LShapeReverse class works properly
+        assertNotEquals(null, new LShapeReverse().print());
+
+        //checks if the method print of the ResourceScore class works properly
+        assertEquals(Resources.INSECT.getSymbol(), new ResourceScore(Resources.INSECT).print());
+        assertEquals(Resources.PLANT.getSymbol(), new ResourceScore(Resources.PLANT).print());
+        assertEquals(Resources.ANIMAL.getSymbol(), new ResourceScore(Resources.ANIMAL).print());
+        assertEquals(Resources.MUSHROOM.getSymbol(), new ResourceScore(Resources.MUSHROOM).print());
+
+        //checks if the method print of the Seven class works properly
+        assertNotEquals(null, new Seven().print());
+
+        //checks if the method print of the SevenReverse class works properly
+        assertNotEquals(null, new SevenReverse().print());
+
+        //checks if the method print of the StairDown class works properly
+        assertNotEquals(null, new StairDown(CardColor.GREEN).print());
+        assertNotEquals(null, new StairDown(CardColor.PURPLE).print());
+        assertNotEquals(null, new StairDown(CardColor.BLUE).print());
+        assertNotEquals(null, new StairDown(CardColor.RED).print());
+
+        //checks if the method print of the StairUp class works properly
+        assertNotEquals(null, new StairUp(CardColor.GREEN).print());
+        assertNotEquals(null, new StairUp(CardColor.BLUE).print());
+        assertNotEquals(null, new StairUp(CardColor.PURPLE).print());
+        assertNotEquals(null, new StairUp(CardColor.RED).print());
+    }
+
 }

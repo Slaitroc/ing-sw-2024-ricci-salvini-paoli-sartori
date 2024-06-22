@@ -16,6 +16,11 @@ import java.util.*;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
+/**
+ * This class represents a deck of cards of type T.
+ *
+ * @param <T> the type of cards in the deck, must extend the Card interface
+ */
 public class Deck<T extends Card>{
     private Queue<T> deck;
     private T card1;
@@ -95,9 +100,9 @@ public class Deck<T extends Card>{
     public T draw() throws EmptyDeckException {
         if (deck.isEmpty())
             throw new EmptyDeckException();
-        T card = deck.poll();
-        card.changeSide();
-        return card;
+//        T card = deck.poll();
+//        card.changeSide();
+        return deck.poll();
     }
 
     public void refill() {

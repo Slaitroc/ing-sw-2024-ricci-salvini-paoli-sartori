@@ -95,11 +95,4 @@ public class LShapeReverse extends Objective {
                         .fgRgb(color2[0], color2[1], color2[2]).a("└──┘"));
         return res.toString();
     }
-
-    @Override
-    public JsonObject serializeToJson() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", "LSHAPEREVERSE");
-        return jsonObject;
-    }
 }

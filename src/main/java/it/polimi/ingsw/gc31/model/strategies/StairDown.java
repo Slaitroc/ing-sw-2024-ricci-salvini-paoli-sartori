@@ -72,6 +72,7 @@ public class StairDown extends Objective {
     @Override
     public String print() {
         int[] cardColor = getRgbColor(this.cardColor);
+        serializeToJson();
         StringBuilder res = new StringBuilder();
         res.append(
                 ansi().restoreCursorPosition().fgRgb(cardColor[0], cardColor[1], cardColor[2]).a("┌──┐"));
@@ -85,13 +86,5 @@ public class StairDown extends Objective {
                 ansi().restoreCursorPosition().cursorDown(3)
                         .fgRgb(cardColor[0], cardColor[1], cardColor[2]).a("      └──┘"));
         return res.toString();
-    }
-
-    @Override
-    public JsonObject serializeToJson() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("color1", cardColor.toString());
-        jsonObject.addProperty("type", "STAIRDOWN");
-        return jsonObject;
     }
 }

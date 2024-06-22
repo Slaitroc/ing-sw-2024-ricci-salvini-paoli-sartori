@@ -1,20 +1,22 @@
 @import "Colors.css";
 
 #resource-count-window {
-    -fx-background-color: -light-green;
     -fx-background-radius: 10;
+    -fx-background-color: -light-green;
+    -fx-border-radius: 10;
     -fx-border-color: -gold;
     -fx-border-width: 2;
-    -fx-border-radius: 10;
     -fx-padding: 10;
 }
 
 #resource-box{
     -fx-font: 12px 'glimmer of light';
     -fx-text-fill: -black;
-    -fx-background-color: -light-beige;
     -fx-background-radius: 10;
-    -fx-border-radius: 2;
+    -fx-background-color: -light-beige;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-border-color: -black;
 }
 
 #highlighted-box{

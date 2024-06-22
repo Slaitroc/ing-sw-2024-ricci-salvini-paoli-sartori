@@ -97,11 +97,4 @@ public class SevenReverse extends Objective {
                         .fgRgb(color1[0], color1[1], color1[2]).a("└──┘"));
         return res.toString();
     }
-
-    @Override
-    public JsonObject serializeToJson() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", "SEVENREVERSE");
-        return jsonObject;
-    }
 }
