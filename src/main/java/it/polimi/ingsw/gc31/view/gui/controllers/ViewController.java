@@ -20,7 +20,6 @@ public abstract class ViewController {
     protected ClientCommands client;
 
 
-
     protected ObservableList<GameInstance> gamesList;
 
     protected abstract void initialize();
@@ -28,9 +27,11 @@ public abstract class ViewController {
     public void setGUIApplication(GUIApplication app) {
         this.app = app;
     }
+
     public void setClient(ClientCommands client) {
         this.client = client;
     }
+
     public ClientCommands getClient() {
         return this.client;
     }
@@ -39,7 +40,7 @@ public abstract class ViewController {
      * Handling for Remote Exceptions. Shows a PopUp windows to display error message
      * and ask you to restart the application
      */
-    protected void show_ServerCrashWarning(String details){
+    protected void show_ServerCrashWarning(String details) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error 505");
         alert.setHeaderText("Server Error");
@@ -52,13 +53,16 @@ public abstract class ViewController {
      * Method necessary to set up UI elements otherwise not
      * editable from the initiate method. Called right after scene is created
      */
-    public void setUp(){}
+    public void setUp() {
+    }
 
     /**
      * Used generally to display a warning sign.
+     *
      * @param message Message to be shown
      */
-    public void setMessage(String message){}
+    public void setMessage(String message) {
+    }
 
     /**
      * Updates the chat with a new message. Color Usernames.
@@ -68,18 +72,50 @@ public abstract class ViewController {
      * @param username The username of the sender.
      * @param message  The message.
      */
-    public void updateChat(String username, String message){}
-    public void updateLobby(){}
-    public void showReady(String username, boolean status){}
-    public void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2){}
-    public void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2){}
-    public void show_handPlayer(String username, List<PlayableCard> hand){}
-    public void show_scorePlayer(LinkedHashMap<String, Integer> scores){}
-    public void show_starterCard(String username, PlayableCard starterCard) {}
-    public void show_playArea(String username, Map<Point, PlayableCard> playArea, Map<Resources, Integer> achievedResources) {}
-    public void show_chooseObjectiveCard(String username, ObjectiveCard secretObjectiveCard1, ObjectiveCard secretObjectiveCard2) {}
-    public void show_commonObjectives(ObjectiveCard commonObjectiveCard1, ObjectiveCard commonObjectiveCard2) {}
-    public void show_objectiveCard(String username, ObjectiveCard objectiveCard) {}
-    public void playerStateInfo(String username, String info) {}
-    public void showWinner(String username) {}
+    public void updateChat(String username, String message) {
+    }
+
+    public void showReady(String username, boolean status) {
+    }
+
+    public void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
+    }
+
+    public void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
+    }
+
+    public void show_handPlayer(String username, List<PlayableCard> hand) {
+    }
+
+    public void show_scorePlayer(LinkedHashMap<String, Integer> scores) {
+    }
+
+    public void show_starterCard(String username, PlayableCard starterCard) {
+    }
+
+    public void show_playArea(String username, Map<Point, PlayableCard> playArea, Map<Resources, Integer> achievedResources) {
+    }
+
+    public void show_chooseObjectiveCard(String username, ObjectiveCard secretObjectiveCard1, ObjectiveCard secretObjectiveCard2) {
+    }
+
+    public void show_commonObjectives(ObjectiveCard commonObjectiveCard1, ObjectiveCard commonObjectiveCard2) {
+    }
+
+    public void show_objectiveCard(String username, ObjectiveCard objectiveCard) {
+    }
+
+    public void playerStateInfo(String username, String info) {
+    }
+
+    public void showWinner(String username) {
+    }
+
+    /**
+     * This method is implemented in GameList and MainMenu controllers to just set the player list, in Lobby
+     * controller to modify the player list and update the lobby
+     * and in InGamePlayer to show disconnected and surrendered players
+     */
+    public void handleInGamePlayers(LinkedHashMap<String, Boolean> players) {
+    }
 }

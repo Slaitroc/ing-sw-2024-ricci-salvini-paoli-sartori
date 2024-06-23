@@ -112,7 +112,6 @@ public class InGameController extends ViewController {
     public VBox player3Resources;
     @FXML
     public VBox player4Resources;
-    List<VBox> resourceWindows = new ArrayList<>();
 
     //STATUS IMAGES_____________________________________________________________________________________________________
     @FXML
@@ -121,6 +120,7 @@ public class InGameController extends ViewController {
     public ImageView statusP3;
     @FXML
     public ImageView statusP4;
+    private final List<ImageView> statusPanes = new ArrayList<>();
 
     //Player Names Labels_______________________________________________________________________________________________
     @FXML
@@ -242,6 +242,7 @@ public class InGameController extends ViewController {
     @FXML
     public Button playStarterButton;
 
+    @FXML
     public VBox initialChoise;
 
     private final List<String> otherPlayers = new ArrayList<>();
@@ -317,8 +318,7 @@ public class InGameController extends ViewController {
         //Also hides the resources of the players not in game
         gridDimensions.put(player1PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
         gridDimensions.put(player2PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
-        resourceWindows.add(player1Resources);
-        resourceWindows.add(player2Resources);
+        statusPanes.add(statusP2);
         player1Name.setText(app.getUsername());
         player2Name.setText(otherPlayers.getFirst());
         if (app.getNumberOfPlayers() == 2) {
@@ -327,13 +327,13 @@ public class InGameController extends ViewController {
         } else if (app.getNumberOfPlayers() == 3) {
             player4Resources.setVisible(false);
             player3Name.setText(otherPlayers.get(1));
-            resourceWindows.add(player3Resources);
+            statusPanes.add(statusP3);
             gridDimensions.put(player3PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
         } else if (app.getNumberOfPlayers() == 4) {
-            resourceWindows.add(player3Resources);
-            resourceWindows.add(player4Resources);
             player3Name.setText(otherPlayers.get(1));
             player4Name.setText(otherPlayers.get(2));
+            statusPanes.add(statusP3);
+            statusPanes.add(statusP4);
             gridDimensions.put(player3PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
             gridDimensions.put(player4PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
         }
@@ -508,6 +508,19 @@ public class InGameController extends ViewController {
         scrollPane.setVvalue(1.0);
         if (!chatPopUp.isVisible()) {
             chatButtonImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/AppIcons/iconMessagePending.png"))));
+        }
+    }
+
+    @Override
+    public void handleInGamePlayers(LinkedHashMap<String, Boolean> players){
+        int i=0;
+        for(String player : otherPlayers){
+            if(players.containsKey(player)) statusPanes.get(i).setVisible(false);
+            else {
+                statusPanes.get(i).setVisible(true);
+                statusPanes.get(i).setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/Misc/quittedPlayer.jpg"))));
+            }
+            i++;
         }
     }
 

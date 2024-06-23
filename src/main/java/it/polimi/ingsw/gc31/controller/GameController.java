@@ -149,9 +149,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         }
         if (counter == maxNumberPlayers) {
             try {
+                sendUpdateToClient(new StartGameObj());
                 model.initGame(clientList);
                 ServerLog.gControllerWrite("The game has started", idGame);
-                sendUpdateToClient(new StartGameObj());
             } catch (IllegalStateOperationException e) {
 //                throw new RuntimeException(e);
             }

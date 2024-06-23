@@ -15,7 +15,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.LinkedHashMap;
 
 
 public class MainMenuController extends ViewController {
@@ -170,6 +170,11 @@ public class MainMenuController extends ViewController {
     public void setMessage(String message){
         warningLabel.setText(message);
         warningLabel.setVisible(true);
+    }
+
+    @Override
+    public void handleInGamePlayers(LinkedHashMap<String, Boolean> players){
+        app.setPlayerList(players);
     }
 
     @FXML

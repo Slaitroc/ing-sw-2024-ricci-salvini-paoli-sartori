@@ -15,7 +15,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import java.rmi.RemoteException;
-import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class LobbyController extends ViewController {
@@ -295,6 +295,12 @@ public class LobbyController extends ViewController {
         }
     }
 
+    @Override
+    public void handleInGamePlayers(LinkedHashMap<String, Boolean> players) {
+        app.setPlayerList(players);
+        updateLobby();
+    }
+
 
     /**
      * Updates the lobby with the current players and their statuses.
@@ -304,11 +310,11 @@ public class LobbyController extends ViewController {
      * The method performs the following actions:
      * 1. Sets the player's name in the corresponding label.
      * 2. Updates the visibility of icons to indicate which player corresponds to the current user.
-     * 3. Enables or disables specific UI components (StackPane) based on the player's presence in the game.
+     * 3. Enables inGamePlayers Panes when players are in lobby, waitingPlayers Panes for free spaces in the lobby
+     *    (LockedPlayers are handled only in setup phases as # of player cannot change)
      * 4. Calls the showReady method to update the player's ready status.
      * The player list is a map with player names as keys and their ready status as values.
      */
-    @Override
     public void updateLobby() {
 
         //Reset lobby state to empty

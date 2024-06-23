@@ -86,8 +86,7 @@ public class GUI extends UI {
     public void show_inGamePlayers(LinkedHashMap<String, Boolean> players) {
         Platform.runLater(() -> {
             System.out.println("show_inGamePlayers triggered!!!!: values" + players);
-            app.setPlayerList(players);
-            app.getCurrentController().updateLobby();
+            app.getCurrentController().handleInGamePlayers(players);
         });
     }
 
@@ -244,7 +243,8 @@ public class GUI extends UI {
     @Override
     public void showGenericClientResonse(String response) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showGenericClientResonse'");
+        System.out.println(response);
+        //throw new UnsupportedOperationException("Unimplemented method 'showGenericClientResponse'");
     }
 
 }

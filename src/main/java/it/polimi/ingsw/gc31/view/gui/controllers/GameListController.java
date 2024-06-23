@@ -9,7 +9,7 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.Arrays;
+import java.util.LinkedHashMap;
 
 public class GameListController extends ViewController {
 
@@ -84,6 +84,11 @@ public class GameListController extends ViewController {
     public void setUp() {
         gamesList = app.getListGames();
         tableView.setItems(gamesList);
+    }
+
+    @Override
+    public void handleInGamePlayers(LinkedHashMap<String, Boolean> players){
+        app.setPlayerList(players);
     }
 
     public void goMainMenu() {
