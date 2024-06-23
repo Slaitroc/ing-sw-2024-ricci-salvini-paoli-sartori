@@ -3,11 +3,14 @@ package it.polimi.ingsw.gc31.client_server.tcp;
 import java.awt.*;
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
@@ -360,12 +363,13 @@ public class TCPClient implements ClientCommands {
     // FIXME aggiungere metodo close che esegue "timer.cancel();" quando si vuole
     // chiudere la connessione
     private void startHeartBeat() {
+        long sendTime = (DV.testHB) ? DV.sendTimeTest : DV.sendTime;
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 tcp_sendCommand(new HeartBeatObj(username), DV.RECIPIENT_HEARTBEAT);
                 // System.out.println("HeartBeat inviato");
             }
-        }, 0, 5000);
+        }, 0, sendTime);
     }
 
     // Metodi per token
@@ -378,5 +382,34 @@ public class TCPClient implements ClientCommands {
     @Override
     public void setToken(int token) {
         this.token = token;
+        String userHome = System.getProperty("user.home");
+        String desktopPath = DV.getDesktopPath(userHome);
+        String folderName = "CodexNaturalis";
+        String fileName = "Token.txt";
+        // Crea il percorso completo della cartella e del file
+        Path folderPath = Paths.get(desktopPath, folderName);
+        Path filePath = Paths.get(desktopPath, folderName, fileName);
+        if (Files.exists(filePath)) {
+            try {
+                Files.delete(filePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ui.showGenericClientResonse("File esistente eliminato.");
+        }
+        try {
+            Files.createDirectories(folderPath);
+        } catch (IOException e) {
+            ui.showGenericClientResonse("Errore nel salvataggio del token!");
+            e.printStackTrace();
+        }
+        try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE,
+                StandardOpenOption.APPEND)) {
+            writer.write("" + token);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
+        ui.showGenericClientResonse(filePath.toString());
     }
 }

@@ -8,6 +8,12 @@ import it.polimi.ingsw.gc31.utility.DV;
 import it.polimi.ingsw.gc31.view.UI;
 
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -221,16 +227,18 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         gameController.sendCommand(new QuitGameObj(username));
     }
 
-
     // Risorse per heartbeat
     // FIXME spostare in cima attributi e metodi per heartbeat
     private Timer timer;
 
     /**
-     * This method starts the process that "sends" the heart beat periodically to the server
-     * A heart beat is sent immediately on the first execution and every 2 seconds after it
+     * This method starts the process that "sends" the heart beat periodically to
+     * the server
+     * A heart beat is sent immediately on the first execution and every 2 seconds
+     * after it
      */
     public void startHeartBeat() {
+        long sendTime = (DV.testHB) ? DV.sendTimeTest : DV.sendTime;
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -240,11 +248,13 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
                     throw new RuntimeException(e);
                 }
             }
-        }, 0, 2000);
+        }, 0, sendTime);
     }
 
     /**
-     * This method sends to the controller the heart beat associated with the VirtualClient that is sending it
+     * This method sends to the controller the heart beat associated with the
+     * VirtualClient that is sending it
+     * 
      * @throws RemoteException
      */
     private void sendHeartBeat() throws RemoteException {
@@ -252,11 +262,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         // System.out.println("HeartBeat inviato");
     }
 
-
     // Metodi per token
 
     /**
      * This method sets the token of the client to the value received as a parameter
+     * 
      * @param token is the value needed to be set as the client's token
      */
     @Override
@@ -266,6 +276,35 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void setToken(int token) {
+        String userHome = System.getProperty("user.home");
+        String desktopPath = DV.getDesktopPath(userHome);
+        String folderName = "CodexNaturalis";
+        String fileName = "Token.txt";
+        // Crea il percorso completo della cartella e del file
+        Path folderPath = Paths.get(desktopPath, folderName);
+        Path filePath = Paths.get(desktopPath, folderName, fileName);
+        if (Files.exists(filePath)) {
+            try {
+                Files.delete(filePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ui.showGenericClientResonse("File esistente eliminato.");
+        }
+        try {
+            Files.createDirectories(folderPath);
+        } catch (IOException e) {
+            ui.showGenericClientResonse("Errore nel salvataggio del token!");
+            e.printStackTrace();
+        }
+        try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE,
+                StandardOpenOption.APPEND)) {
+            writer.write("" + token);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
+        ui.showGenericClientResonse(filePath.toString());
 
     }
 }

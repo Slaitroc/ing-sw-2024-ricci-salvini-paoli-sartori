@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.model.gameModel;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
+import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.player.Player;
@@ -16,15 +17,18 @@ public class RunningGameModelSate implements GameModelState {
     public RunningGameModelSate(GameModel model) {
         System.out.println("Game changed to RUNNING");
 
-        for (String username: model.getListeners().keySet()) {
-            GameListenerHandler gameListener = model.getListeners().get(username);
-            model.getListeners().get(username).removeStarterCardListener();
-            model.getListeners().get(username).removeChooseObjectiveListener();
-
-            gameListener.addPlayerScoreListener(new PlayerScoreListener(model.clients));
-        }
-
-        model.notifyAllGameListeners();
+        model.getListeners().values().forEach(GameListenerHandler::removeStarterCardListener);
+        model.getListeners().values().forEach(GameListenerHandler::removeChooseObjectiveListener);
+        model.getListeners().values().forEach(listener -> listener.addPlayerScoreListener(new PlayerScoreListener(model.clients)));
+//        for (String username: model.getListeners().keySet()) {
+//            GameListenerHandler gameListener = model.getListeners().get(username);
+//            model.getListeners().get(username).removeStarterCardListener();
+//            model.getListeners().get(username).removeChooseObjectiveListener();
+//
+//
+//            gameListener.addPlayerScoreListener(new PlayerScoreListener(model.clients));
+//        }
+//        model.notifyAllGameListeners();
     }
     @Override
     public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
@@ -42,7 +46,7 @@ public class RunningGameModelSate implements GameModelState {
     }
 
     @Override
-    public void play(GameModel model, String username, Point point) throws IllegalStateOperationException {
+    public void play(GameModel model, String username, Point point) throws IllegalStateOperationException, IllegalPlaceCardException {
         model.getPlayers().get(username).play(point);
     }
 
@@ -92,5 +96,10 @@ public class RunningGameModelSate implements GameModelState {
     @Override
     public void disconnectPlayer(GameModel model, String username) {
         model.executeDisconnectPlayer(username);
+    }
+
+    @Override
+    public void reconnectPlayer(GameModel model, String username) {
+        model.executeReconnectPlayer(username);
     }
 }

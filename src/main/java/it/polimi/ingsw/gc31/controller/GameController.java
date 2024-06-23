@@ -4,7 +4,6 @@ import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
@@ -12,6 +11,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.*;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
+import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
@@ -48,7 +48,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         this.clientList.put(username, client);
         this.readyStatus = new LinkedHashMap<>();
         this.readyStatus.put(username, false);
-        this.model = new GameModel();
+        this.model = new GameModel(idGame);
         new Thread(this::executor).start();
 
         notifyListPlayers();
@@ -91,7 +91,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * @param username the username of the player.
      * @param client   the client of the player.
      */
-    public void joinGame(String username, VirtualClient client) throws RemoteException {
+    public void joinGame(String username, VirtualClient client){
         clientList.put(username, client);
         readyStatus.put(username, false);
         if (maxNumberPlayers == this.clientList.size()) {
@@ -101,32 +101,46 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         notifyListPlayers();
     }
 
-    public void quitGame(String username) throws RemoteException {
-        if (model.isStarted()) {
-            ServerLog.gControllerWrite("Player "+username+" has quited from the game, will he ever come back?", idGame);
-            model.disconnectPlayer(username);
+    // un giocatore può riconettersi alla partita solo se si è disconnesso per un problema di rete
+    // se il virtual client del giocatore che vuole riconettersi non è presente nella mappa dei virtualclient
+    // vuol dire che si è disconesso usando il tasto quit e quindi non può riconettersi.
+    // se il giocatore si era disconnesso per un problema di rete nella lobby allora entra come
+    public void reJoinGame(String username, VirtualClient newClient) {
+        // TODO controllare se il client era presente nella lista? oppure viene fatto nel controller
+        // TODO cosa fare con readyStatus?
+        if (clientList.containsKey(username)) {
+            clientList.put(username, newClient);
+            model.reconnectPlayer(username);
+            ServerLog.gControllerWrite("Welcome back "+username+"!", idGame);
         } else {
-            VirtualClient client = clientList.get(username);
-            clientList.remove(username, client);
-            readyStatus.remove(username);
-            Controller.getController().quitGame(username, client);
-            model.disconnectPlayer(username);
-            notifyListPlayers();
-            ServerLog.gControllerWrite("Player "+username+" has quited forever from the game", idGame);
+            ServerLog.gControllerWrite("C'è stato qualche problema con la rejoin di "+username, idGame);
         }
     }
 
-    public void setReadyStatus(boolean ready, String username) throws RemoteException, IllegalStateOperationException {
-        readyStatus.replace(username, ready);
+    // se un giocatore si disconnette quando la partita è già iniziata non ha la possibilità di rientrare
+    public void quitGame(String username) throws RemoteException {
+        VirtualClient client = clientList.get(username);
+        clientList.remove(username);
+        readyStatus.remove(username);
+        Controller.getController().quitGame(username, idGame, client);
 
-        notifyListPlayers();
-        for (String client : clientList.keySet()) {
-            clientList.get(client).sendCommand(new ShowReadyStatusObj(username, readyStatus.get(username)));
+        if (model.isStarted()) {
+            ServerLog.gControllerWrite("Player "+username+" has quited from the game, but the game has already started", idGame);
+            model.disconnectPlayer(username);
+        } else {
+            ServerLog.gControllerWrite("Player " + username + " has quited from the game, but the game has not started yet", idGame);
         }
+        notifyListPlayers();
+    }
+
+    public void setReadyStatus(boolean ready, String username) {
+        readyStatus.replace(username, ready);
+        notifyListPlayers();
+        sendUpdateToClient(new ShowReadyStatusObj(username, readyStatus.get(username)));
         checkReady();
     }
 
-    public void checkReady() throws RemoteException {
+    public void checkReady(){
         int counter = 0;
         for (Boolean status : readyStatus.values()) {
             if (status) {
@@ -135,25 +149,17 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         }
         if (counter == maxNumberPlayers) {
             try {
-                for (VirtualClient clients : clientList.values()) {
-                    clients.sendCommand(new StartGameObj());
-                }
                 model.initGame(clientList);
                 ServerLog.gControllerWrite("The game has started", idGame);
+                sendUpdateToClient(new StartGameObj());
             } catch (IllegalStateOperationException e) {
-                throw new RuntimeException(e);
+//                throw new RuntimeException(e);
             }
         }
     }
 
     public void sendChatMessage(NewChatMessage message) {
-        for (VirtualClient client : clientList.values()) {
-            try {
-                client.sendCommand(message);
-            } catch (RemoteException e) {
-                e.printStackTrace(); // TODO da gestire
-            }
-        }
+        sendUpdateToClient(message);
     }
 
     /**
@@ -170,10 +176,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         return clientList.size();
     }
 
-    // WARNING: methods receive username in input, instead of using
-    // model.currPlayingPlayer.drawGold() etc.
-    // because otherwise clients could play the turn of others
-
     /**
      * Draws a gold card from the deck for the player and then shows the player's
      * hand.
@@ -183,7 +185,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.drawGold(username, index);
         } catch (IllegalStateOperationException e) {
-            ServerLog.gControllerWrite(e.getMessage(), idGame);
+            sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj(e.getMessage()));
         }
     }
 
@@ -195,7 +197,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.drawResource(username, index);
         } catch (IllegalStateOperationException e) {
-            ServerLog.gControllerWrite(e.getMessage(), idGame);
+            sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj(e.getMessage()));
         }
     }
 
@@ -203,20 +205,15 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.chooseSecretObjective(username, index);
         } catch (IllegalStateOperationException e) {
-            ServerLog.gControllerWrite(e.getMessage(), idGame);
+            sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj(e.getMessage()));
         }
     }
 
     public void play(String username, Point point) {
         try {
             model.play(username, point);
-        } catch (IllegalStateOperationException e) {
-            try {
-                clientList.get(username).sendCommand(new ShowInvalidActionObj("You are in the wrong state"));
-            } catch (RemoteException ex) {
-                // TODO occuparsi dell'eccezione
-                throw new RuntimeException(ex);
-            }
+        } catch (IllegalStateOperationException | IllegalPlaceCardException e) {
+            sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj(e.getMessage()));
         }
     }
 
@@ -225,30 +222,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             model.playStarter(username);
             ServerLog.gControllerWrite("Player" + username + " has played starter card", idGame);
         } catch (IllegalStateOperationException e) {
-            try {
-                clientList.get(username).sendCommand(new ShowInvalidActionObj("You are in the wrong state"));
-            } catch (RemoteException ex) {
-                // TODO occuparsi dell'eccezione
-                throw new RuntimeException(ex);
-            }
+            sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj("You are in the wrong state"));
         } catch (ObjectiveCardNotChosenException e) {
-            try {
-                clientList.get(username)
-                        .sendCommand(new ShowInvalidActionObj("You must first choose your secret objective"));
-            } catch (RemoteException ex) {
-                // TODO occuparsi dell'eccezione
-                throw new RuntimeException(ex);
-            }
-        }
-    }
-
-    private void notifyListPlayers() {
-        for (VirtualClient client : clientList.values()) {
-            try {
-                client.sendCommand(new ShowInGamePlayerObj(readyStatus));
-            } catch (RemoteException e) {
-                ServerLog.gControllerWrite(e.getMessage(), idGame);
-            }
+            sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj("You must first choose your secret objective"));
         }
     }
 
@@ -256,19 +232,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.setSelectCard(username, index);
         } catch (IllegalStateOperationException e) {
-            try {
-                clientList.get(username).sendCommand(new ShowInvalidActionObj("You can't select a card"));
-            } catch (RemoteException ex) {
-                // TODO occuparsi dell'eccezione
-                throw new RuntimeException(ex);
-            }
+            // TODO gestire meglio messaggio di questa eccezione
+            sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj("You can't select a card"));
         } catch (WrongIndexSelectedCard e) {
-            try {
-                clientList.get(username).sendCommand(new ShowInvalidActionObj("Selected index out of bounds"));
-            } catch (RemoteException ex) {
-                // TODO occuparsi dell'eccezione
-                throw new RuntimeException(ex);
-            }
+            sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj(e.getMessage()));
         }
     }
 
@@ -285,6 +252,25 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             model.changStarterSide(username);
         } catch (IllegalStateOperationException e) {
             ServerLog.gControllerWrite(e.getMessage(), idGame);
+        }
+    }
+
+    private void notifyListPlayers() {
+        sendUpdateToClient(new ShowInGamePlayerObj(readyStatus));
+    }
+
+    private void sendUpdateToClient(VirtualClient client, ClientQueueObject clientQueueObject) {
+        new Thread(() -> {
+            try {
+                client.sendCommand(clientQueueObject);
+            } catch (RemoteException e) {
+
+            }
+        }).start();
+    }
+    private void sendUpdateToClient(ClientQueueObject clientQueueObject) {
+        for (VirtualClient client: clientList.values()) {
+            sendUpdateToClient(client, clientQueueObject);
         }
     }
 

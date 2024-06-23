@@ -118,8 +118,9 @@ public class PlayerTest {
         player.setInGameState(new Placed());
         player.drawResource(0);
         player.setInGameState(new NotPlaced());
-        assertDoesNotThrow(() -> player.play(new Point(1, 1)),
-                "The correct invocation of the method does not throw anything");
+        assertThrowsExactly(IllegalPlaceCardException.class, () -> player.play(new Point(1,1)));
+//        assertDoesNotThrow(() -> player.play(new Point(1, 1)),
+//                "The correct invocation of the method does not throw anything");
     }
 
     /**

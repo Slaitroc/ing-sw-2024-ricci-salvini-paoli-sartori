@@ -33,4 +33,6 @@ public abstract class UI implements ShowUpdate {
      */
     public abstract void runUI();
 
+    public abstract void showGenericClientResonse(String response);
+
 }

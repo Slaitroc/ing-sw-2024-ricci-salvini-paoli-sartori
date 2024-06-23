@@ -241,6 +241,12 @@ public class GUI extends UI {
         // TODO Auto-generated method stub
     }
 
+    @Override
+    public void showGenericClientResonse(String response) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'showGenericClientResonse'");
+    }
+
 }
 
 // TODO show_inGamePlayers (when i join a match lobby I want to know the string

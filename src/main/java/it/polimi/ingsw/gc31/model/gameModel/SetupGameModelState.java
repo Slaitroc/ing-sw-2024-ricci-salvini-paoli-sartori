@@ -100,4 +100,9 @@ public class SetupGameModelState implements GameModelState{
     public void disconnectPlayer(GameModel model, String username) {
         model.executeDisconnectPlayer(username);
     }
+
+    @Override
+    public void reconnectPlayer(GameModel model, String username) {
+        model.executeReconnectPlayer(username);
+    }
 }
