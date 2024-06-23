@@ -41,7 +41,7 @@ public interface ShowUpdate {
 
     void show_joinedToGame(int id, int maxNumberOfPlayers);
 
-    void show_quitFromGame(int id);
+    void show_quitFromGame(String username);
 
     void show_gameIsFull(int id);
 

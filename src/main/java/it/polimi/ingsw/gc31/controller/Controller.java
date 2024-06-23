@@ -246,15 +246,13 @@ public class Controller extends UnicastRemoteObject implements IController {
      * tempClients
      * 
      * @param username is the username of the player that just quit
-     * @param idGame   is the id of the game which was joined by the player
      * @param client   is the client that requested to quit from a lobby
      * @throws RemoteException if an error occurs in the rmi connection
      */
-    public void quitGame(String username, int idGame, VirtualClient client) throws RemoteException {
+    public void quitGame(String username, VirtualClient client) throws RemoteException {
         tempClients.put(username, client);
         // se il gioco era costituito da una sola persona va eliminato il gamecontroller
         // corrispondente
-        client.sendCommand(new QuitFromGameRObj(idGame));
     }
 
     // GETTERS
@@ -339,7 +337,7 @@ public class Controller extends UnicastRemoteObject implements IController {
 
                         disconnectFromGame(username);
                 }
-                System.out.println("Client disconnesso per timeout");
+                System.out.println("Client disconnected due to timeout");
             }
         }
     }

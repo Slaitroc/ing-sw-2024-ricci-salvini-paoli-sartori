@@ -1862,7 +1862,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_quitFromGame(int id) {
+    public void show_quitFromGame(String username) {
         state = new InitState(this);
         chatBoardThread.interrupt();
         chatMessages = new ArrayDeque<String>();
