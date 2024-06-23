@@ -360,12 +360,13 @@ public class TCPClient implements ClientCommands {
     // FIXME aggiungere metodo close che esegue "timer.cancel();" quando si vuole
     // chiudere la connessione
     private void startHeartBeat() {
+        long sendTime = (DV.testHB) ? DV.sendTimeTest : DV.sendTime;
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 tcp_sendCommand(new HeartBeatObj(username), DV.RECIPIENT_HEARTBEAT);
                 // System.out.println("HeartBeat inviato");
             }
-        }, 0, 5000);
+        }, 0, sendTime);
     }
 
     // Metodi per token

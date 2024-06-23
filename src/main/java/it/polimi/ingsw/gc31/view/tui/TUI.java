@@ -1273,7 +1273,9 @@ public class TUI extends UI {
     }
 
     private volatile boolean chatNotification = false;
-    private volatile boolean noHeartBeat = false;
+    private volatile boolean newChatMessage = false;
+    private volatile boolean heartBeatReceived = false;
+
     private final Object statusBar = new Object();
     Thread statusBarThread = new Thread(() -> {
         StringBuilder heart = new StringBuilder();
@@ -1286,7 +1288,7 @@ public class TUI extends UI {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                if (!chatNotification) {
+                if (!chatNotification & newChatMessage) {
                     StringBuilder chatNotify = new StringBuilder();
                     chatNotify.append(Ansi.ansi().cursor(1, 20).a("🔵-> New Chat Messages").toString());
                     System.out.println(chatNotify);
@@ -1294,21 +1296,9 @@ public class TUI extends UI {
                     resetCursor();
 
                 }
-
-            }
-        }
-
-    });
-    private volatile boolean heartBeatReceived = false;
-    Thread timerThread = new Thread(() -> {
-        Timer timer = new Timer();
-        TimerTask updateStatusBar = new TimerTask() {
-            @Override
-            public void run() {
                 if (!heartBeatReceived) {
-                    StringBuilder heart = new StringBuilder();
+                    heart = new StringBuilder();
                     heart.append(Ansi.ansi().cursor(1, 17).a("💔"));
-                    noHeartBeat = true;
                     synchronized (statusBar) {
                         System.out.println(heart);
                     }
@@ -1316,19 +1306,34 @@ public class TUI extends UI {
                 }
 
             }
+        }
+
+    });
+    Thread timerThread = new Thread(() -> {
+        Timer timer = new Timer();
+        TimerTask updateStatusBar = new TimerTask() {
+            @Override
+            public void run() {
+                heartBeatReceived = false;
+                synchronized (statusBar) {
+                    statusBar.notify();
+                }
+            }
         };
         timer.scheduleAtFixedRate(updateStatusBar, 0, 6000);
     });
 
     @Override
     public void show_heartBeat() {
-        heartBeatReceived = true;
-        if (noHeartBeat) {
+
+        if (!heartBeatReceived) {
             StringBuilder heart = new StringBuilder();
             heart.append(Ansi.ansi().cursor(1, 17).a("💚"));
             System.out.println(heart);
+            resetCursor();
 
         }
+        heartBeatReceived = true;
     }
 
     /**
@@ -1381,6 +1386,7 @@ public class TUI extends UI {
                             Ansi.ansi().cursor(1, 20).a(" ".repeat("🔵-> New Chat Messages".length())).toString());
                     System.out.println(chatNotify);
                     chatNotification = false;
+                    newChatMessage = false;
 
                     ////
                     removeFromCmdLineAreaSelection();
@@ -1508,6 +1514,7 @@ public class TUI extends UI {
     public void show_chatMessage(String username, String message) {
         synchronized (chatNeedsUpdate) {
             chatMessages.add(username + ": " + message);
+            newChatMessage = true;
         }
         if (chatAreaSelection.isEmpty()) {
             if (!chatNotification) {

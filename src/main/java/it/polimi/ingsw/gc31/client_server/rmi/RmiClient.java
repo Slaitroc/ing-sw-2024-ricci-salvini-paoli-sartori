@@ -221,16 +221,18 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         gameController.sendCommand(new QuitGameObj(username));
     }
 
-
     // Risorse per heartbeat
     // FIXME spostare in cima attributi e metodi per heartbeat
     private Timer timer;
 
     /**
-     * This method starts the process that "sends" the heart beat periodically to the server
-     * A heart beat is sent immediately on the first execution and every 2 seconds after it
+     * This method starts the process that "sends" the heart beat periodically to
+     * the server
+     * A heart beat is sent immediately on the first execution and every 2 seconds
+     * after it
      */
     public void startHeartBeat() {
+        long sendTime = (DV.testHB) ? DV.sendTimeTest : DV.sendTime;
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -240,11 +242,13 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
                     throw new RuntimeException(e);
                 }
             }
-        }, 0, 2000);
+        }, 0, sendTime);
     }
 
     /**
-     * This method sends to the controller the heart beat associated with the VirtualClient that is sending it
+     * This method sends to the controller the heart beat associated with the
+     * VirtualClient that is sending it
+     * 
      * @throws RemoteException
      */
     private void sendHeartBeat() throws RemoteException {
@@ -252,11 +256,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         // System.out.println("HeartBeat inviato");
     }
 
-
     // Metodi per token
 
     /**
      * This method sets the token of the client to the value received as a parameter
+     * 
      * @param token is the value needed to be set as the client's token
      */
     @Override
