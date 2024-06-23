@@ -1514,9 +1514,10 @@ public class TUI extends UI {
     public void show_chatMessage(String username, String message) {
         synchronized (chatNeedsUpdate) {
             chatMessages.add(username + ": " + message);
-            newChatMessage = true;
+
         }
         if (chatAreaSelection.isEmpty()) {
+            newChatMessage = true;
             if (!chatNotification) {
                 synchronized (statusBar) {
                     statusBar.notify();
