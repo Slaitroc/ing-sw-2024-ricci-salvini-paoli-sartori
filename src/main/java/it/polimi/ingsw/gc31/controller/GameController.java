@@ -173,6 +173,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * @return the current number of players.
      */
     public int getCurrentNumberPlayers() {
+        if (model.isStarted()) {
+            return model.getPlayerConnection().size();
+        }
         return clientList.size();
     }
 
