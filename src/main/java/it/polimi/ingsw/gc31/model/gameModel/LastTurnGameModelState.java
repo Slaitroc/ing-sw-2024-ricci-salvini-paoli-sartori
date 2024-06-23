@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.model.gameModel;
 
+import it.polimi.ingsw.gc31.Server;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
@@ -13,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 public class LastTurnGameModelState implements GameModelState {
-    public LastTurnGameModelState() {
-        System.out.println("Game changed to LAST TURN");
+    public LastTurnGameModelState(GameModel model) {
+        ServerLog.gControllerWrite("Game changed to LAST TURN", model.getIdGame());
     }
 
     @Override

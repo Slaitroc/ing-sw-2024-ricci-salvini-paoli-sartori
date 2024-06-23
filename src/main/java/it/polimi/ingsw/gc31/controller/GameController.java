@@ -91,9 +91,11 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * @param username the username of the player.
      * @param client   the client of the player.
      */
-    public void joinGame(String username, VirtualClient client) {
+    public void joinGame(String username, VirtualClient client) throws RemoteException{
         clientList.put(username, client);
         readyStatus.put(username, false);
+        client.setGameController(this);
+        sendUpdateToClient(client, new JoinedToGameObj(idGame, maxNumberPlayers));
         if (maxNumberPlayers == this.clientList.size()) {
             ServerLog.gControllerWrite("The number of players for the game " + maxNumberPlayers + " has been reached",
                     idGame);
@@ -109,14 +111,16 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     // riconettersi.
     // se il giocatore si era disconnesso per un problema di rete nella lobby allora
     // entra come
-    public void reJoinGame(String username, VirtualClient newClient) {
+    public void reJoinGame(String username, VirtualClient newClient) throws RemoteException {
         // TODO controllare se il client era presente nella lista? oppure viene fatto
         // nel controller
         // TODO cosa fare con readyStatus?
         if (clientList.containsKey(username)) {
             clientList.put(username, newClient);
             model.reconnectPlayer(username);
-            ServerLog.gControllerWrite("Welcome back " + username + "!", idGame);
+            newClient.setGameController(this);
+            sendUpdateToClient(newClient, new JoinedToGameObj(idGame, getMaxNumberPlayers()));
+            ServerLog.gControllerWrite("Welcome back "+username+"!", idGame);
         } else {
             ServerLog.gControllerWrite("C'è stato qualche problema con la rejoin di " + username, idGame);
         }
@@ -298,4 +302,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public GameModel getModel() {
         return model;
     }
+
+    protected int getIdGame(){ return idGame; }
 }
