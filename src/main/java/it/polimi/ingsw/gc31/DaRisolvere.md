@@ -43,16 +43,18 @@
 ## Nuove
 
 - [x] dare la possibilità di quittare un game prima che parta (prima di playing state (tui))
+- [x] aggiustare wrong input nelle fasi iniziali di lancio del client (rmi tc) (tui gui)
+- [x] salvare il token nel client 
 
 - [ ] al termine della partita chiedere se rigiocare e in caso contrario eliminare dal gamecontroller i player che non vogliono. Se tutti non vogliono cancellare il gamecontroller
 - [ ] timer che fa vincere l'unico giocatore rimasto se tutti gli altri sono disconnessi. E direi timer per terminare la partita e cancellare il gamecontroller se sono tutti disconnessi
-- [ ] aggiustare wrong input nelle fasi iniziali di lancio del client (rmi tc) (tui gui)
 - [ ] se un client termina il programma sembra che non lo tolga dal gameController se il game non è ancora stato avviato (ho un solo client e comunque quando faccio show games vedo che c'è un client ancora connesso ma è impossibile)
 - [ ] thread per send commands
 - [ ] swappare socket nella riconnessione tcp
-- [ ] salvare il token nel client 
+- [ ] da implementare quit game di fine partita --> dobbiamo rimettere i client da gamecontroller in tempclient di controller
 
 ## GUI
+- [ ] da girare le carte nei deck e allo startup
 
 ## TUI
 
@@ -63,7 +65,7 @@
 - [x] togliere la chat prima di playing state
 
 - [ ] scrivere di chi è il turno anche agli altri player
-- [ ] fixare heartbeat stampa verde e in caso il rosso rotto
+- [x] fixare heartbeat stampa verde e in caso il rosso rotto
 - [ ] mostrare info altri player
 - [ ] input del token in tui setusername 
 - [ ] visualizzare input di altri player nella tui

@@ -40,7 +40,7 @@ public class ConnectObj extends ServerQueueObject {
     public void execute(Controller controller) {
 
         try {
-            if (controller.connect(controller.getRightConnection(token), username)) {
+            if (controller.connect(controller.getRightConnection(token), username, token)) {
                 ServerLog.tcpWrite("New user connected: " + username);
             } else {
                 ServerLog.tcpWrite("New connection refused");
@@ -53,7 +53,7 @@ public class ConnectObj extends ServerQueueObject {
     @Override
     public void execute(RmiServer server) {
         try {
-            if (server.connect(server.getRightConnection(token), username)) {
+            if (server.connect(server.getRightConnection(token), username, token)) {
                 ServerLog.rmiWrite("New user connected: " + username);
             } else {
                 ServerLog.rmiWrite("New connection refused");

@@ -7,6 +7,7 @@ public enum TUIcommands {
     INITIAL("initial"),
     REFRESH("ref"),
     SET_USERNAME("set username"),
+    RECONNECT("reconnect"),
     CREATE_GAME("create game"),
     JOIN_GAME("join game"),
     SHOW_GAMES("show games"),
