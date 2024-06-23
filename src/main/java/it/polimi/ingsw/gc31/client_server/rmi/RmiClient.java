@@ -329,6 +329,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void reconnect(boolean reconnect) throws RemoteException {
-        controller.sendCommand(null);
+        controller.sendCommand(new ReconnectObj(reconnect, username, token));
     }
 }

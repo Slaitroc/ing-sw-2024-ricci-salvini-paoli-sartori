@@ -19,7 +19,8 @@ public class ReconnectObj extends ServerQueueObject {
 
     @Override
     public void execute(Controller controller) {
-        controller.rejoin(username, token);
+
+        controller.rejoin(username, token, esito);
     }
 
     @Override

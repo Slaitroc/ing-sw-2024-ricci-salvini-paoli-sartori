@@ -415,7 +415,6 @@ public class TCPClient implements ClientCommands {
 
     @Override
     public void reconnect(boolean reconnect) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'reconnect'");
+        tcp_sendCommand(new ReconnectObj(reconnect, username, token), DV.RECIPIENT_CONTROLLER);
     }
 }

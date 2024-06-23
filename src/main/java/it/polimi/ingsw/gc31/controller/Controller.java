@@ -9,11 +9,9 @@ import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.*;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ReconnectObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
-import javafx.util.Pair;
 
 //NOTE creation of GameController for match creation
 // Does the GameController related to the first match get created immediately after the first player has logged in?
@@ -46,7 +44,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     private final Set<String> nicknames;
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
     private final Map<Integer, VirtualClient> newConnections; // FIXME
-    private final Map<Integer, Integer> disconnected;
+    private final Map<Integer, Integer> disconnected; // token - gameID
 
     /**
      * This method generates a unique token (from 0 to 999) every time a new client
@@ -163,6 +161,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      */
     public boolean connect(VirtualClient client, String username)
             throws RemoteException {
+        // client.sendCommand(new WantsReconnectObjI())
         sendToken(client);
         if (nicknames.add(username)) {
             tempClients.put(username, client);
@@ -176,6 +175,7 @@ public class Controller extends UnicastRemoteObject implements IController {
             client.sendCommand(new WrongUsernameObj(username));
             return false;
             // FIX PlayerAlreadyExistsException non più necessaria (da verificare)
+
         }
     }
 
@@ -191,13 +191,13 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @param username
      * @param token
      */
-    public void rejoin(String username, int token) {
+    public void rejoin(String username, int token, boolean esito) {
         VirtualClient client = newConnections.get(token); // FIXME non so se è il modo correto di prendere il virtual
                                                           // client
                                                           // giusto (non i ricordo come e quando si swappa)
-        boolean tutto_bene = true;
-        if (tutto_bene) {
+        if (esito) {
             try {
+                // TODO cose che permettono di rejoinare qui
                 client.sendCommand(new ReJoinedObj(true)); // mandare questo è importante perché la ui fa cose in
                                                            // risposta a questo update
             } catch (RemoteException e) {
@@ -361,7 +361,9 @@ public class Controller extends UnicastRemoteObject implements IController {
                  */
                 for (String username : tempClients.keySet()) {
                     if ((tempClients.get(username)).equals(client)) {
-
+                        // gc.disconnectPlayer(...)
+                        // gc.getid()
+                        // disconnect(username, id, token )
                     }
                 }
             }
@@ -409,9 +411,7 @@ public class Controller extends UnicastRemoteObject implements IController {
 
     public void disconnect(String username, int idGame, int token) {
         disconnected.put(token, idGame);
-        ServerLog.controllerWrite(username);
         ServerLog.controllerWrite("Client disconnesso per timeout" + username);
-
     }
 
 }
