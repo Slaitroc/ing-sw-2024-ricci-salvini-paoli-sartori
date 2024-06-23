@@ -4,6 +4,7 @@ import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
@@ -108,7 +109,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             VirtualClient client = clientList.get(username);
             clientList.remove(username, client);
             readyStatus.remove(username);
-            Controller.getController().quitGame(username, idGame, client);
+            Controller.getController().quitGame(username, client);
             model.disconnectPlayer(username);
             notifyListPlayers();
             ServerLog.gControllerWrite("Player "+username+" has quited forever from the game", idGame);
@@ -134,12 +135,11 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         }
         if (counter == maxNumberPlayers) {
             try {
-                model.initGame(clientList);
-                ServerLog.gControllerWrite("The game has started", idGame);
-
                 for (VirtualClient clients : clientList.values()) {
                     clients.sendCommand(new StartGameObj());
                 }
+                model.initGame(clientList);
+                ServerLog.gControllerWrite("The game has started", idGame);
             } catch (IllegalStateOperationException e) {
                 throw new RuntimeException(e);
             }
@@ -153,7 +153,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             } catch (RemoteException e) {
                 e.printStackTrace(); // TODO da gestire
             }
-
         }
     }
 
