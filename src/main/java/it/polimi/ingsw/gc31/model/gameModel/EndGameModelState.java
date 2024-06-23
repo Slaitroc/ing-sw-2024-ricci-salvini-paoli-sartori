@@ -90,7 +90,7 @@ public class EndGameModelState implements GameModelState {
 
         for (String username: model.clients.keySet()) {
             try {
-                model.clients.get(username).sendCommand(new GameIsOverObj(usernameWinner));
+                model.clients.get(username).sendCommand(new GameIsOverObj(usernameWinner, model.getBoard().getPlayersScore()));
             } catch (RemoteException e) {
                 System.out.println("Error sending game is over");
             }
