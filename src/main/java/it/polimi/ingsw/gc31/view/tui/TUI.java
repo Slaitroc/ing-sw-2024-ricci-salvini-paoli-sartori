@@ -385,7 +385,7 @@ public class TUI extends UI {
         int[] cornerUpDxColor;
         int[] cornerDownSxColor;
         int[] cornerDownDxColor;
-        int[] borderColor = {255,255,255};
+        int[] borderColor = { 255, 255, 255 };
 
         if (!resources.get(0).equals(Resources.HIDDEN)) {
             cornerUpDxColor = RGB_COLOR_CORNER;
@@ -473,7 +473,7 @@ public class TUI extends UI {
 
                 } else {
                     res.append(ansi().cursor(relative_y, relative_x)
-                            .fgRgb(borderColor[0], borderColor[1],borderColor[2])
+                            .fgRgb(borderColor[0], borderColor[1], borderColor[2])
                             .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine)
                             .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
                             .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine)
@@ -724,7 +724,7 @@ public class TUI extends UI {
                     }
                 } else {
                     res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
-                            .fgRgb(borderColor[0], borderColor[1],borderColor[2])
+                            .fgRgb(borderColor[0], borderColor[1], borderColor[2])
                             .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine)
                             .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
                             .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine)
@@ -1272,38 +1272,64 @@ public class TUI extends UI {
         }
     }
 
-    private final Queue<StringBuilder> statusBar = new ArrayDeque<StringBuilder>();
+    private volatile boolean chatNotification = false;
+    private volatile boolean noHeartBeat = false;
+    private final Object statusBar = new Object();
     Thread statusBarThread = new Thread(() -> {
+        StringBuilder heart = new StringBuilder();
+        heart.append(Ansi.ansi().cursor(1, 17).a("💚"));
+        System.out.println(heart);
         while (true) {
             synchronized (statusBar) {
-                while (statusBar.isEmpty()) {
-                    try {
-                        statusBar.wait();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                try {
+                    statusBar.wait();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
+                if (!chatNotification) {
+                    StringBuilder chatNotify = new StringBuilder();
+                    chatNotify.append(Ansi.ansi().cursor(1, 20).a("🔵-> New Chat Messages").toString());
+                    System.out.println(chatNotify);
+                    chatNotification = true;
+                    resetCursor();
+
+                }
+
             }
-            System.out.println(statusBar.poll());
-            resetCursor();
         }
 
     });
+    private volatile boolean heartBeatReceived = false;
+    Thread timerThread = new Thread(() -> {
+        Timer timer = new Timer();
+        TimerTask updateStatusBar = new TimerTask() {
+            @Override
+            public void run() {
+                if (!heartBeatReceived) {
+                    StringBuilder heart = new StringBuilder();
+                    heart.append(Ansi.ansi().cursor(1, 17).a("💔"));
+                    noHeartBeat = true;
+                    synchronized (statusBar) {
+                        System.out.println(heart);
+                    }
+                    resetCursor();
+                }
 
-    Thread statusBarUpdateThread = new Thread(() -> {
-        while (true) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
-            // AnsiConsole.out().print(ansi().cursor(1, 17).a("💔"));
+        };
+        timer.scheduleAtFixedRate(updateStatusBar, 0, 6000);
+    });
 
-            // resetCursor();
+    @Override
+    public void show_heartBeat() {
+        heartBeatReceived = true;
+        if (noHeartBeat) {
+            StringBuilder heart = new StringBuilder();
+            heart.append(Ansi.ansi().cursor(1, 17).a("💚"));
+            System.out.println(heart);
 
         }
-
-    });
+    }
 
     /**
      * This thread is used to read the input from the system input and add it to the
@@ -1353,10 +1379,8 @@ public class TUI extends UI {
                     StringBuilder chatNotify = new StringBuilder();
                     chatNotify.append(
                             Ansi.ansi().cursor(1, 20).a(" ".repeat("🔵-> New Chat Messages".length())).toString());
-                    synchronized (statusBar) {
-                        statusBar.add(chatNotify);
-                        statusBar.notify();
-                    }
+                    System.out.println(chatNotify);
+                    chatNotification = false;
 
                     ////
                     removeFromCmdLineAreaSelection();
@@ -1486,12 +1510,10 @@ public class TUI extends UI {
             chatMessages.add(username + ": " + message);
         }
         if (chatAreaSelection.isEmpty()) {
-
-            StringBuilder chatNotify = new StringBuilder();
-            chatNotify.append(Ansi.ansi().cursor(1, 20).a("🔵-> New Chat Messages").toString());
-            synchronized (statusBar) {
-                statusBar.add(chatNotify);
-                statusBar.notify();
+            if (!chatNotification) {
+                synchronized (statusBar) {
+                    statusBar.notify();
+                }
             }
         } else {
             synchronized (chatNeedsUpdate) {
@@ -1579,7 +1601,7 @@ public class TUI extends UI {
         chatReaderThread.start();
         playViewThread.start();
         statusBarThread.start();
-        statusBarUpdateThread.start();
+        timerThread.start();
         cmdLineOutThread.start();
 
     }
@@ -1920,8 +1942,9 @@ public class TUI extends UI {
     public void show_playerTurn(String username, String info) {
         if (client.getUsername().equals(username)) {
             StringBuilder res = new StringBuilder();
-//            res.append(ansi().cursor(PLAYERS_INFO_END_ROW + 1, ACHIEVED_RESOURCES_END_COLUMN + 1)
-//                    .a("                  "));
+            // res.append(ansi().cursor(PLAYERS_INFO_END_ROW + 1,
+            // ACHIEVED_RESOURCES_END_COLUMN + 1)
+            // .a(" "));
             res.append(
                     ansi().cursor(PLAYERS_INFO_END_ROW + 2, ACHIEVED_RESOURCES_END_COLUMN + 1).a("                  "));
             res.append(ansi().cursor(PLAYERS_INFO_END_ROW + 1, ACHIEVED_RESOURCES_END_COLUMN + 1)
@@ -1988,29 +2011,6 @@ public class TUI extends UI {
 
     public void receiveToken(int token) {
         client.setToken(token);
-    }
-
-    @Override
-    public void show_heartBeat() {
-        StringBuilder heart = new StringBuilder();
-        heart.append(Ansi.ansi().cursor(1, 17).a("💚"));
-        synchronized (statusBar) {
-            statusBar.add(heart);
-            statusBar.notify();
-        }
-        // StringBuilder res = new StringBuilder();
-        // if (heart == false) {
-        // res.append(ansi().cursor(1, 1).a("💚"));
-        // heart = true;
-        // } else {
-        // res.append(ansi().cursor(1, 1).a("💔"));
-        // heart = false;
-        //
-        // }
-        // synchronized (playViewUpdate) {
-        // playViewUpdate.add(res);
-        // playViewUpdate.notify();
-        // }
     }
 
 }
