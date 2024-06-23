@@ -11,6 +11,6 @@ public class ReJoinedObj extends ClientQueueObject {
 
     @Override
     public void execute(UI ui) {
-        ui.show_rejoined();
+        ui.show_rejoined(reconnect);
     }
 }

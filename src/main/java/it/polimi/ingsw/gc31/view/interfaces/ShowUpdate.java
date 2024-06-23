@@ -68,6 +68,6 @@ public interface ShowUpdate {
 
     void show_wantReconnect();
 
-    void show_rejoined();
+    void show_rejoined(boolean esito);
 
 }

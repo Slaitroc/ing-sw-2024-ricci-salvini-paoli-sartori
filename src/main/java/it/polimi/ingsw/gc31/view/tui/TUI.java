@@ -2085,7 +2085,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_rejoined() {
+    public void show_rejoined(boolean esito) {
         // TODO cambiare stato tui
         state = new PlayingState(this);
         commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
