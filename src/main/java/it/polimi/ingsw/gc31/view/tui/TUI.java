@@ -2000,7 +2000,8 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_GameIsOver(String username) {
+    public void show_GameIsOver(String username, Map<String, Integer> playersScore) {
+        // TODO aggiungere punteggio giocatori
         StringBuilder res = new StringBuilder();
         res.append(clearArea(GAME_OVER_INITIAL_ROW, GAME_OVER_INITIAL_COLUMN, GAME_OVER_END_ROW,
                 GAME_OVER_END_COLUMN));

@@ -67,6 +67,10 @@ public class GameModel {
     protected void endGame() throws IllegalStateOperationException {
         gameState.endGame(this);
         listeners.values().forEach(listener -> listener.notifyPlayerScoreListener(this));
+
+        for (String player: players.keySet()) {
+            System.out.println("player: " + player + " has scored "+players.get(player).getScore());
+        }
     }
 
     /**
@@ -76,9 +80,15 @@ public class GameModel {
      * @throws IllegalStateOperationException if the game is not in the right state
      */
     public void endTurn() throws IllegalStateOperationException {
-        gameState.detectEndGame(this);
-        setNextPlayingPlayer();
+        synchronized (playerConnection) {
+            do {
+                gameState.detectEndGame(this);
+                setNextPlayingPlayer();
+
+            } while (!playerConnection.get(getCurrPlayer().getUsername()));
+        }
         listeners.values().forEach(listener -> listener.notifyPlayerScoreListener(this));
+        listeners.values().forEach(listener -> listener.notifyTurnListener(this));
     }
 
     /**
@@ -90,8 +100,8 @@ public class GameModel {
      * Once it finds the next playing player, sets the state of all players to waiting, while the state of the new current player is set to not placed.
      */
     public void setNextPlayingPlayer() {
-        synchronized (playerConnection) {
-            do {
+//        synchronized (playerConnection) {
+//            do {
                 if (turnPlayer == null) {
                     turnPlayer = new ArrayList<>();
                     turnPlayer.addAll(players.keySet());
@@ -99,8 +109,8 @@ public class GameModel {
                 } else {
                     currPlayingPlayer = (currPlayingPlayer + 1) % players.size();
                 }
-            } while (!playerConnection.get(getCurrPlayer().getUsername()));
-        }
+//            } while (!playerConnection.get(getCurrPlayer().getUsername()));
+//        }
 
         // set all players to waiting state
         for (Player player : players.values()) {
@@ -108,7 +118,7 @@ public class GameModel {
         }
         // set in game player to notPlaced state
         players.get(turnPlayer.get(currPlayingPlayer)).setInGameState(new NotPlaced());
-        listeners.values().forEach(listener -> listener.notifyTurnListener(this));
+//        listeners.values().forEach(listener -> listener.notifyTurnListener(this));
 //        notifyAllGameListeners();
     }
 
@@ -287,7 +297,12 @@ public class GameModel {
                 ServerLog.gControllerWrite("Default chooses for "+username, idGame);
             } else {
                 if (getCurrPlayer().getUsername().equals(username)) {
-                    setNextPlayingPlayer();
+                    try {
+                        endTurn();
+                    } catch (IllegalStateOperationException e) {
+
+                    }
+//                    setNextPlayingPlayer();
                 }
             }
         }

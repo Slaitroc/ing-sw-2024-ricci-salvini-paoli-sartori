@@ -97,7 +97,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_GameIsOver(String username) {
+    public void show_GameIsOver(String username, Map<String, Integer> playersScorec) {
         Platform.runLater(() -> {
             // System.out.println("show_inGamePlayers triggered!!!!: values" + players);
             app.getCurrentController().showWinner(username);
