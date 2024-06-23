@@ -49,6 +49,8 @@ public interface ShowUpdate {
 
     void show_chatMessage(String username, String message);
 
+    void show_privateChatMessage(String fromUsername, String toUsername, String message);
+
     void show_gameDoesNotExist();
 
     void show_wrongGameSize();

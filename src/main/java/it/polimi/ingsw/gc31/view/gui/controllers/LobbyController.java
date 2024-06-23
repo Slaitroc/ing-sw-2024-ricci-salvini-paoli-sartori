@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -79,7 +78,6 @@ public class LobbyController extends ViewController {
     // Player number in the game
     private int imPlayerNumber;
 
-
     @FXML
     @Override
     protected void initialize() {
@@ -131,6 +129,7 @@ public class LobbyController extends ViewController {
         }
 
         updateLobby();
+        textField.addEventFilter(KeyEvent.KEY_PRESSED, this::handleEnterKeyPressed);
         textField.requestFocus();
     }
 
@@ -141,24 +140,7 @@ public class LobbyController extends ViewController {
      */
     @FXML
     private void handleEnterKeyPressed(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER && !textField.getText().isEmpty()) {
-            sendText(textField.getText());
-            textField.clear();
-        }
-    }
-
-    /**
-     * Sends a chat message.
-     *
-     * @param message The message to send.
-     */
-    private void sendText(String message) {
-        try {
-            client.sendChatMessage(client.getUsername(), message);
-        } catch (RemoteException e) {
-            show_ServerCrashWarning(e.toString());
-            e.getStackTrace();
-        }
+        sendMessage(event, textField);
     }
 
     /**
@@ -185,6 +167,28 @@ public class LobbyController extends ViewController {
     @Override
     public void updateChat(String username, String message) {
         Text usernameText = new Text(username + ": ");
+        populateChat(username, message, usernameText);
+    }
+
+    @Override
+    public void updateChat(String fromUsername, String toUsername, String message) {
+        Text usernameText;
+        String colorUsername;
+        //If my username is the toUsername, => fromUsername is trying to send me a message then I will print [From: X]: message
+        if (toUsername.equals(app.getUsername())) {
+            colorUsername = toUsername;
+            usernameText = new Text("[From: " + fromUsername + "]: ");
+        }
+        //If my username is the fromUsername, => I'm trying to send me a message to toUsername then I will print [To: Y]: message
+        else if (fromUsername.equals(app.getUsername())) {
+            colorUsername = fromUsername;
+            usernameText = new Text("[To: " + toUsername + "]: ");
+        } else return;
+
+        populateChat(colorUsername, message, usernameText);
+    }
+
+    private void populateChat(String username, String message, Text usernameText){
         if (username.equals(app.getPlayerList().keySet().stream().toList().getFirst())) {
             usernameText.setFill(Color.GREEN);
         } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(1))) {
@@ -288,7 +292,7 @@ public class LobbyController extends ViewController {
     }
 
     private void checkAllReady() {
-        if(app.getPlayerList().size() == app.getNumberOfPlayers()){
+        if (app.getPlayerList().size() == app.getNumberOfPlayers()) {
             if (ready1.getText().equals("Ready") && ready2.getText().equals("Ready") && ready3.getText().equals("Ready") && ready4.getText().equals("Ready")) {
                 app.loadScene(SceneTag.GAME);
             }
@@ -311,7 +315,7 @@ public class LobbyController extends ViewController {
      * 1. Sets the player's name in the corresponding label.
      * 2. Updates the visibility of icons to indicate which player corresponds to the current user.
      * 3. Enables inGamePlayers Panes when players are in lobby, waitingPlayers Panes for free spaces in the lobby
-     *    (LockedPlayers are handled only in setup phases as # of player cannot change)
+     * (LockedPlayers are handled only in setup phases as # of player cannot change)
      * 4. Calls the showReady method to update the player's ready status.
      * The player list is a map with player names as keys and their ready status as values.
      */
@@ -324,10 +328,10 @@ public class LobbyController extends ViewController {
         iconPlayer2.setVisible(false);
         iconPlayer3.setVisible(false);
         iconPlayer4.setVisible(false);
-        if(app.getNumberOfPlayers()>=3){
+        if (app.getNumberOfPlayers() >= 3) {
             disableStackPane(inGamePlayer3);
             enableStackPane(waitingPlayer3);
-            if(app.getNumberOfPlayers()==4){
+            if (app.getNumberOfPlayers() == 4) {
                 disableStackPane(inGamePlayer4);
                 enableStackPane(waitingPlayer4);
             }

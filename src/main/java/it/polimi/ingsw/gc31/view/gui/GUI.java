@@ -219,6 +219,12 @@ public class GUI extends UI {
     }
 
     @Override
+    public void show_privateChatMessage(String fromUsername, String toUsername, String message) {
+        System.out.println("New message from: " + fromUsername + " to: " + toUsername + ": " + message);
+        Platform.runLater(() -> app.getCurrentController().updateChat(fromUsername, toUsername, message));
+    }
+
+    @Override
     public void show_gameDoesNotExist() {
         Platform.runLater(() -> app.getCurrentController().setMessage("Game does not exist!"));
     }

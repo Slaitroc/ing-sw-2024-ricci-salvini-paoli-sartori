@@ -389,12 +389,12 @@ public class TUI extends UI {
      * The card is made of n strings of length m, where n is equals to {@link #CARD_HEIGHT} and m is equals to {@link #CARD_LENGTH}.
      * If a character of the strings that composes the card goes outside the limits it is not printed.
      *
-     * @param card         The playable card to be printed.
-     * @param relative_x   The x-coordinate of the top left corner of the card relative to the play area.
-     * @param relative_y   The y-coordinate of the top left corner of the card relative to the play area.
-     * @param overFlowUp   The upper overflow limit of the play area.
-     * @param overFlowDown The lower overflow limit of the play area.
-     * @param overFlowLeft The left overflow limit of the play area.
+     * @param card          The playable card to be printed.
+     * @param relative_x    The x-coordinate of the top left corner of the card relative to the play area.
+     * @param relative_y    The y-coordinate of the top left corner of the card relative to the play area.
+     * @param overFlowUp    The upper overflow limit of the play area.
+     * @param overFlowDown  The lower overflow limit of the play area.
+     * @param overFlowLeft  The left overflow limit of the play area.
      * @param overFlowRight The right overflow limit of the play area.
      * @return A StringBuilder containing the generated ANSI escape sequences to print the card on the console.
      */
@@ -1561,6 +1561,11 @@ public class TUI extends UI {
                 chatNeedsUpdate.notifyAll();
             }
         }
+    }
+
+    @Override
+    public void show_privateChatMessage(String fromUsername, String toUsername, String message) {
+        // TODO Auto-generated method stub
     }
 
     /**

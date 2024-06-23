@@ -382,6 +382,7 @@ public class InGameController extends ViewController {
         addHandCardDragListener(handCard3);
 
         assignPion();
+        textField.addEventFilter(KeyEvent.KEY_PRESSED, this::handleEnterKeyPressed);
         changeResolution();
     }
 
@@ -497,25 +498,25 @@ public class InGameController extends ViewController {
         //System.out.println("Hello, I'm player " + app.getUsername() + " and I received the message that " + username + " is in state " + info);
         if (username.equals(app.getUsername())) {
             playingPlayer1Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
-            if(firstPlayer) {
+            if (firstPlayer) {
                 noirPion1.setVisible(true);
                 firstPlayer = false;
             }
         } else if (username.equals(otherPlayers.getFirst())) {
             playingPlayer2Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
-            if(firstPlayer) {
+            if (firstPlayer) {
                 noirPion2.setVisible(true);
                 firstPlayer = false;
             }
         } else if (username.equals(otherPlayers.get(1))) {
             playingPlayer3Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
-            if(firstPlayer) {
+            if (firstPlayer) {
                 noirPion3.setVisible(true);
                 firstPlayer = false;
             }
         } else if (username.equals(otherPlayers.get(2))) {
             playingPlayer4Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
-            if(firstPlayer) {
+            if (firstPlayer) {
                 noirPion4.setVisible(true);
                 firstPlayer = false;
             }
@@ -525,32 +526,33 @@ public class InGameController extends ViewController {
     @Override
     public void updateChat(String username, String message) {
         Text usernameText = new Text(username + ": ");
-        if (username.equals(app.getPlayerList().keySet().stream().toList().getFirst())) {
-            usernameText.setFill(javafx.scene.paint.Color.GREEN);
-        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(1))) {
-            usernameText.setFill(javafx.scene.paint.Color.VIOLET);
-        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(2))) {
-            usernameText.setFill(javafx.scene.paint.Color.RED);
-        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(3))) {
-            usernameText.setFill(javafx.scene.paint.Color.BLUE);
-        }
-        Text messageText = new Text(message + "\n");
-        messageText.setFill(Color.BLACK);
+        populateChat(username, message, usernameText);
 
-        chatField.getChildren().add(usernameText);
-        chatField.getChildren().add(messageText);
-        scrollPane.layout();
-        scrollPane.setVvalue(1.0);
-        if (!chatPopUp.isVisible()) {
-            chatButtonImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/AppIcons/iconMessagePending.png"))));
-        }
     }
 
     @Override
-    public void handleInGamePlayers(LinkedHashMap<String, Boolean> players){
-        int i=0;
-        for(String player : otherPlayers){
-            if(players.containsKey(player)) statusPanes.get(i).setVisible(false);
+    public void updateChat(String fromUsername, String toUsername, String message) {
+        Text usernameText;
+        String colorUsername;
+        //If my username is the toUsername, => fromUsername is trying to send me a message then I will print [From: X]: message
+        if (toUsername.equals(app.getUsername())) {
+            colorUsername = toUsername;
+            usernameText = new Text("[From: " + fromUsername + "]: ");
+        }
+        //If my username is the fromUsername, => I'm trying to send me a message to toUsername then I will print [To: Y]: message
+        else if (fromUsername.equals(app.getUsername())) {
+            colorUsername = fromUsername;
+            usernameText = new Text("[To: " + toUsername + "]: ");
+        } else return;
+
+        populateChat(colorUsername, message, usernameText);
+    }
+
+    @Override
+    public void handleInGamePlayers(LinkedHashMap<String, Boolean> players) {
+        int i = 0;
+        for (String player : otherPlayers) {
+            if (players.containsKey(player)) statusPanes.get(i).setVisible(false);
             else {
                 statusPanes.get(i).setVisible(true);
                 statusPanes.get(i).setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/Misc/quittedPlayer.jpg"))));
@@ -560,12 +562,11 @@ public class InGameController extends ViewController {
     }
 
     @Override
-    public void showWinner(String username){
-        if(username.equals(app.getUsername())) {
+    public void showWinner(String username) {
+        if (username.equals(app.getUsername())) {
             showHidePane(youWon);
             youWon.setMouseTransparent(true);
-        }
-        else {
+        } else {
             winnerLabel.setText(username + "won");
             showHidePane(otherWinner);
             otherWinner.setMouseTransparent(true);
@@ -699,10 +700,7 @@ public class InGameController extends ViewController {
      */
     @FXML
     private void handleEnterKeyPressed(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER && !textField.getText().isEmpty()) {
-            sendText(textField.getText());
-            textField.clear();
-        }
+        sendMessage(event, textField);
     }
 
     public void showHideMenu() {
@@ -967,20 +965,6 @@ public class InGameController extends ViewController {
     }
 
     /**
-     * Sends a chat message.
-     *
-     * @param message The message to send.
-     */
-    private void sendText(String message) {
-        try {
-            client.sendChatMessage(client.getUsername(), message);
-        } catch (RemoteException e) {
-            show_ServerCrashWarning(e.toString());
-            e.getStackTrace();
-        }
-    }
-
-    /**
      * Set the clip of the target ImageView to a rectangle with rounded corners.
      * Basically used to round the corners of the cards.
      * Change here to modify the shape of the cards.
@@ -1048,20 +1032,46 @@ public class InGameController extends ViewController {
         pane.setMouseTransparent(!pane.isMouseTransparent());
     }
 
-    private void assignPion(){
+    private void assignPion() {
         List<String> pionImages = new ArrayList<>();
         pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_vert.png");
         pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_jaune.png");
         pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_rouge.png");
         pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_bleu.png");
-        int i=0;
-        for(String player : app.getPlayerList().keySet()){
-            if(player.equals(player1Name.getText())) colorPion1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
-            else if(player.equals(player2Name.getText())) colorPion2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
-            else if(player.equals(player3Name.getText())) colorPion3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
-            else if(player.equals(player4Name.getText())) colorPion4.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+        int i = 0;
+        for (String player : app.getPlayerList().keySet()) {
+            if (player.equals(player1Name.getText()))
+                colorPion1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+            else if (player.equals(player2Name.getText()))
+                colorPion2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+            else if (player.equals(player3Name.getText()))
+                colorPion3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+            else if (player.equals(player4Name.getText()))
+                colorPion4.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
 
             i++;
+        }
+    }
+
+    private void populateChat(String username, String message, Text usernameText){
+        if (username.equals(app.getPlayerList().keySet().stream().toList().getFirst())) {
+            usernameText.setFill(Color.GREEN);
+        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(1))) {
+            usernameText.setFill(Color.VIOLET);
+        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(2))) {
+            usernameText.setFill(Color.RED);
+        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(3))) {
+            usernameText.setFill(Color.BLUE);
+        }
+        Text messageText = new Text(message + "\n");
+        messageText.setFill(Color.BLACK);
+
+        chatField.getChildren().add(usernameText);
+        chatField.getChildren().add(messageText);
+        scrollPane.layout();
+        scrollPane.setVvalue(1.0);
+        if (!chatPopUp.isVisible()) {
+            chatButtonImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/AppIcons/iconMessagePending.png"))));
         }
     }
 

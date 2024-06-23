@@ -343,6 +343,11 @@ public class TCPClient implements ClientCommands {
         tcp_sendCommand(new ChatMessage(this.username, message), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
+    @Override
+    public void sendChatMessage(String fromUsername, String toUsername, String message) throws RemoteException {
+        tcp_sendCommand(new ChatMessage(this.username, toUsername, message), DV.RECIPIENT_GAME_CONTROLLER);
+    }
+
     /**
      * This method sends the object, which quit the specific client from the game
      * lobby, to the server

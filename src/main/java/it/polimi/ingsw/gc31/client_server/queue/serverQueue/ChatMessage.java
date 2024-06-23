@@ -9,15 +9,25 @@ public class ChatMessage extends ServerQueueObject {
 
     private final String message;
     private final String username;
+    private String toUsername = null;
+
 
     public ChatMessage(String username, String message) {
         this.message = message;
         this.username = username;
     }
 
+    public ChatMessage(String fromUsername, String toUsername , String message) {
+        this.username = fromUsername;
+        this.toUsername = toUsername;
+        this.message = message;
+    }
+
     @Override
     public void execute(GameController gameController) {
-        gameController.sendChatMessage(new NewChatMessage(username, message));
+        if (toUsername == null)
+            gameController.sendChatMessage(new NewChatMessage(username, message));
+        else gameController.sendChatMessage(new NewChatMessage(username, toUsername, message));
     }
 
     @Override
