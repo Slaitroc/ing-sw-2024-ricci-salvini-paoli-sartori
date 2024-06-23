@@ -145,4 +145,29 @@ public class InitState extends TuiState {
     protected void command_refresh() {
     }
 
+    @Override
+    protected void reconnect() {
+        String message = "You disconnected from the last match :,( \n Would u like to rejoin the game? \n y/n)";
+        String input;
+        tui.printToCmdLineOut(tui.tuiWrite(message));
+        tui.moveCursorToCmdLine();
+        input = scanner.nextLine();
+        while (true) {
+            try {
+                if (input.trim().equals('y')) {
+                    tui.getClient().reconnect(true);
+                    break;
+                } else if (input.trim().equals('n')) {
+                    tui.getClient().reconnect(false);
+                    break;
+                } else {
+                    tui.printToCmdLineOut("Wrong Input");
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
 }

@@ -412,4 +412,10 @@ public class TCPClient implements ClientCommands {
         ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
         ui.showGenericClientResonse(filePath.toString());
     }
+
+    @Override
+    public void reconnect(boolean reconnect) throws RemoteException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'reconnect'");
+    }
 }

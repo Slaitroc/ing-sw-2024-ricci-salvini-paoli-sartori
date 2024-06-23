@@ -145,4 +145,8 @@ public class JoinedToGameState extends TuiState {
         tui.forceRefreshTUI(true);
     }
 
+    @Override
+    protected void reconnect() {
+    }
+
 }

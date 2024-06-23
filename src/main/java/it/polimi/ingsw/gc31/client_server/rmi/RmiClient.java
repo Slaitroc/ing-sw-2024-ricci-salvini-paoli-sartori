@@ -21,6 +21,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.Timer;
+import java.util.List;
 
 public class RmiClient extends UnicastRemoteObject implements VirtualClient, ClientCommands {
     private IController controller;
@@ -283,20 +284,38 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         // Crea il percorso completo della cartella e del file
         Path folderPath = Paths.get(desktopPath, folderName);
         Path filePath = Paths.get(desktopPath, folderName, fileName);
-        if (Files.exists(filePath)) {
+        if (!Files.exists(filePath)) {
             try {
-                Files.delete(filePath);
+                Files.createDirectories(folderPath);
             } catch (IOException e) {
+                ui.showGenericClientResonse("Errore nel salvataggio del token!");
                 e.printStackTrace();
             }
-            ui.showGenericClientResonse("File esistente eliminato.");
+        } else {
+            // try {
+            // long lines = Files.lines(filePath).count();
+            // ui.showGenericClientResonse("Numero di righe del file: " + lines);
+            // if (lines > 10) {
+            // java.util.List<String> lastNineLines = getLastNineLines(filePath);
+            // Path newFilePath = Paths.get(desktopPath, folderName, "LastNineLines.txt");
+            // try (BufferedWriter writer = Files.newBufferedWriter(newFilePath,
+            // StandardOpenOption.CREATE,
+            // StandardOpenOption.TRUNCATE_EXISTING)) {
+            // for (String line : lastNineLines) {
+            // writer.write(line);
+            // writer.newLine();
+            // }
+            // }
+            // ui.showGenericClientResonse(
+            // "Le ultime 9 righe sono state copiate nel file: " + newFilePath.toString());
+            // }
+            // // Files.delete(filePath);
+            // // ui.showGenericClientResonse("File esistente eliminato.");
+            // } catch (IOException e) {
+            // e.printStackTrace();
+            // }
         }
-        try {
-            Files.createDirectories(folderPath);
-        } catch (IOException e) {
-            ui.showGenericClientResonse("Errore nel salvataggio del token!");
-            e.printStackTrace();
-        }
+
         try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE,
                 StandardOpenOption.APPEND)) {
             writer.write("" + token);
@@ -306,5 +325,10 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
         ui.showGenericClientResonse(filePath.toString());
 
+    }
+
+    @Override
+    public void reconnect(boolean reconnect) throws RemoteException {
+        controller.sendCommand(null);
     }
 }

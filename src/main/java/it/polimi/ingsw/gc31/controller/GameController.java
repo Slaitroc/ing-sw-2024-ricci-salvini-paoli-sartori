@@ -91,7 +91,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * @param username the username of the player.
      * @param client   the client of the player.
      */
-    public void joinGame(String username, VirtualClient client){
+    public void joinGame(String username, VirtualClient client) {
         clientList.put(username, client);
         readyStatus.put(username, false);
         if (maxNumberPlayers == this.clientList.size()) {
@@ -101,23 +101,29 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         notifyListPlayers();
     }
 
-    // un giocatore può riconettersi alla partita solo se si è disconnesso per un problema di rete
-    // se il virtual client del giocatore che vuole riconettersi non è presente nella mappa dei virtualclient
-    // vuol dire che si è disconesso usando il tasto quit e quindi non può riconettersi.
-    // se il giocatore si era disconnesso per un problema di rete nella lobby allora entra come
+    // un giocatore può riconettersi alla partita solo se si è disconnesso per un
+    // problema di rete
+    // se il virtual client del giocatore che vuole riconettersi non è presente
+    // nella mappa dei virtualclient
+    // vuol dire che si è disconesso usando il tasto quit e quindi non può
+    // riconettersi.
+    // se il giocatore si era disconnesso per un problema di rete nella lobby allora
+    // entra come
     public void reJoinGame(String username, VirtualClient newClient) {
-        // TODO controllare se il client era presente nella lista? oppure viene fatto nel controller
+        // TODO controllare se il client era presente nella lista? oppure viene fatto
+        // nel controller
         // TODO cosa fare con readyStatus?
         if (clientList.containsKey(username)) {
             clientList.put(username, newClient);
             model.reconnectPlayer(username);
-            ServerLog.gControllerWrite("Welcome back "+username+"!", idGame);
+            ServerLog.gControllerWrite("Welcome back " + username + "!", idGame);
         } else {
-            ServerLog.gControllerWrite("C'è stato qualche problema con la rejoin di "+username, idGame);
+            ServerLog.gControllerWrite("C'è stato qualche problema con la rejoin di " + username, idGame);
         }
     }
 
-    // se un giocatore si disconnette quando la partita è già iniziata non ha la possibilità di rientrare
+    // se un giocatore si disconnette quando la partita è già iniziata non ha la
+    // possibilità di rientrare
     public void quitGame(String username) throws RemoteException {
         VirtualClient client = clientList.get(username);
         clientList.remove(username);
@@ -125,10 +131,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         Controller.getController().quitGame(username, idGame, client);
 
         if (model.isStarted()) {
-            ServerLog.gControllerWrite("Player "+username+" has quited from the game, but the game has already started", idGame);
+            ServerLog.gControllerWrite(
+                    "Player " + username + " has quited from the game, but the game has already started", idGame);
             model.disconnectPlayer(username);
         } else {
-            ServerLog.gControllerWrite("Player " + username + " has quited from the game, but the game has not started yet", idGame);
+            ServerLog.gControllerWrite(
+                    "Player " + username + " has quited from the game, but the game has not started yet", idGame);
         }
         notifyListPlayers();
     }
@@ -140,7 +148,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         checkReady();
     }
 
-    public void checkReady(){
+    public void checkReady() {
         int counter = 0;
         for (Boolean status : readyStatus.values()) {
             if (status) {
@@ -153,7 +161,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
                 ServerLog.gControllerWrite("The game has started", idGame);
                 sendUpdateToClient(new StartGameObj());
             } catch (IllegalStateOperationException e) {
-//                throw new RuntimeException(e);
+                // throw new RuntimeException(e);
             }
         }
     }
@@ -193,7 +201,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * Draws a resource card from the deck for the player and then shows the
      * player's hand.
      */
-    public void drawResource(String username, int index){
+    public void drawResource(String username, int index) {
         try {
             model.drawResource(username, index);
         } catch (IllegalStateOperationException e) {
@@ -224,7 +232,8 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         } catch (IllegalStateOperationException e) {
             sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj("You are in the wrong state"));
         } catch (ObjectiveCardNotChosenException e) {
-            sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj("You must first choose your secret objective"));
+            sendUpdateToClient(clientList.get(username),
+                    new ShowInvalidActionObj("You must first choose your secret objective"));
         }
     }
 
@@ -268,14 +277,19 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             }
         }).start();
     }
+
     private void sendUpdateToClient(ClientQueueObject clientQueueObject) {
-        for (VirtualClient client: clientList.values()) {
+        for (VirtualClient client : clientList.values()) {
             sendUpdateToClient(client, clientQueueObject);
         }
     }
 
     public void disconnectPlayer(String username) {
         model.disconnectPlayer(username);
+        // Controller.getController().disconnect(clientList.get(username), username,
+        // idGame, ); // FIX @AleSarto mettila nel
+        // // bruteforcing di
+        // // checkheartbeat
     }
 
     public GameModel getModel() {
