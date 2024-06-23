@@ -233,7 +233,18 @@ public class TUI extends UI {
     }
 
     /**
-     * Print the cards of PlacedCards in the playArea
+     * Returns a stringBuilder that allows you to print a
+     * {@link it.polimi.ingsw.gc31.model.player.PlayArea} in the playArea section of
+     * the tui.
+     * The cards are printed following the order of insertion on the map and
+     * positioned based on the point.
+     * PlaceHolders are printed before the cards to show the player the points in
+     * which he can play a card
+     *
+     * @param placedCards a LinkedHashMap of Point and PlayableCard representing the
+     *                    placed cards on the play area
+     * @return a StringBuilder containing the printed representation of the placed
+     *         cards
      */
     private StringBuilder print_PlacedCards(LinkedHashMap<Point, PlayableCard> placedCards) {
         StringBuilder res = new StringBuilder();
@@ -262,8 +273,27 @@ public class TUI extends UI {
     }
 
     /**
-     * Draws a card centered in X and Y
-     * x and y are relative to the board where the cards are drawn
+     * Returns a stringBuilder that allows you to print a {@link ObjectiveCard} on
+     * tui, in a certain position in a delimited area.
+     * The card is printed starting from the top left corner of the card.
+     * (relative_x,relative_y) = (0,0) corresponds to the top left corner of the
+     * area where the card is printed.
+     *
+     * The card is made of n strings of length m, where n is equals to
+     * {@link #CARD_HEIGHT} and m is equals to {@link #CARD_LENGTH}.
+     * If a character of the strings that composes the card goes outside the limits
+     * it is not printed.
+     *
+     * @param card          The objective card to be printed.
+     * @param relative_x    The relative x position of the card on the screen.
+     * @param relative_y    The relative y position of the card on the screen.
+     * @param overFlowUp    The upper limit of overflow on the screen.
+     * @param overFlowDown  The lower limit of overflow on the screen.
+     * @param overFlowLeft  The left limit of overflow on the screen.
+     * @param overFlowRight The right limit of overflow on the screen.
+     * @return StringBuilder The result of the printing operation in the form of a
+     *         string builder.
+     *         Returns null if the card exceeds the limits of the playArea.
      */
     protected StringBuilder print_ObjectiveCard(ObjectiveCard card, int relative_x, int relative_y, int overFlowUp,
             int overFlowDown, int overFlowLeft, int overFlowRight) {
@@ -362,6 +392,30 @@ public class TUI extends UI {
         return null;
     }
 
+    /**
+     * Returns a stringBuilder that allows you to print a {@link PlayableCard} on
+     * tui, in a certain position in a delimited area.
+     * The card is printed starting from the top left corner of the card.
+     * (relative_x,relative_y) = (0,0) corresponds to the top left corner of the
+     * area where the card is printed.
+     *
+     * The card is made of n strings of length m, where n is equals to
+     * {@link #CARD_HEIGHT} and m is equals to {@link #CARD_LENGTH}.
+     * If a character of the strings that composes the card goes outside the limits
+     * it is not printed.
+     *
+     * @param card          The playable card to be printed.
+     * @param relative_x    The x-coordinate of the top left corner of the card
+     *                      relative to the play area.
+     * @param relative_y    The y-coordinate of the top left corner of the card
+     *                      relative to the play area.
+     * @param overFlowUp    The upper overflow limit of the play area.
+     * @param overFlowDown  The lower overflow limit of the play area.
+     * @param overFlowLeft  The left overflow limit of the play area.
+     * @param overFlowRight The right overflow limit of the play area.
+     * @return A StringBuilder containing the generated ANSI escape sequences to
+     *         print the card on the console.
+     */
     protected StringBuilder print_PlayableCard(PlayableCard card, int relative_x, int relative_y, int overFlowUp,
             int overFlowDown,
             int overFlowLeft, int overFlowRight) {
@@ -385,7 +439,7 @@ public class TUI extends UI {
         int[] cornerUpDxColor;
         int[] cornerDownSxColor;
         int[] cornerDownDxColor;
-        int[] borderColor = {255,255,255};
+        int[] borderColor = { 255, 255, 255 };
 
         if (!resources.get(0).equals(Resources.HIDDEN)) {
             cornerUpDxColor = RGB_COLOR_CORNER;
@@ -473,7 +527,7 @@ public class TUI extends UI {
 
                 } else {
                     res.append(ansi().cursor(relative_y, relative_x)
-                            .fgRgb(borderColor[0], borderColor[1],borderColor[2])
+                            .fgRgb(borderColor[0], borderColor[1], borderColor[2])
                             .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine)
                             .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
                             .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine)
@@ -724,7 +778,7 @@ public class TUI extends UI {
                     }
                 } else {
                     res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
-                            .fgRgb(borderColor[0], borderColor[1],borderColor[2])
+                            .fgRgb(borderColor[0], borderColor[1], borderColor[2])
                             .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine)
                             .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
                             .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine)
@@ -732,9 +786,6 @@ public class TUI extends UI {
                 }
             }
 
-            // if there are resources in the center print them
-            // res.append(ansi().cursor(relative_y+CARD_HEIGHT/2,
-            // relative_x+CARD_LENGTH/2).a("."));
             if (resources.size() > 4) {
                 StringBuilder line = new StringBuilder();
                 for (Resources resource : resources.subList(4, resources.size())) {
@@ -1272,38 +1323,69 @@ public class TUI extends UI {
         }
     }
 
-    private final Queue<StringBuilder> statusBar = new ArrayDeque<StringBuilder>();
+    private volatile boolean chatNotification = false;
+    private volatile boolean newChatMessage = false;
+    private volatile boolean heartBeatReceived = false;
+
+    private final Object statusBar = new Object();
     Thread statusBarThread = new Thread(() -> {
+        StringBuilder heart = new StringBuilder();
+        heart.append(Ansi.ansi().cursor(1, 17).a("💚"));
+        System.out.println(heart);
         while (true) {
             synchronized (statusBar) {
-                while (statusBar.isEmpty()) {
-                    try {
-                        statusBar.wait();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                try {
+                    statusBar.wait();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if (!chatNotification & newChatMessage) {
+                    StringBuilder chatNotify = new StringBuilder();
+                    chatNotify.append(Ansi.ansi().cursor(1, 20).a("🔵-> New Chat Messages").toString());
+                    System.out.println(chatNotify);
+                    chatNotification = true;
+                    resetCursor();
+
+                }
+                if (!heartBeatReceived) {
+                    heart = new StringBuilder();
+                    heart.append(Ansi.ansi().cursor(1, 17).a("💔"));
+                    synchronized (statusBar) {
+                        System.out.println(heart);
                     }
+                    resetCursor();
+                }
+
+            }
+        }
+
+    });
+    Thread timerThread = new Thread(() -> {
+        Timer timer = new Timer();
+        TimerTask updateStatusBar = new TimerTask() {
+            @Override
+            public void run() {
+                heartBeatReceived = false;
+                synchronized (statusBar) {
+                    statusBar.notify();
                 }
             }
-            System.out.println(statusBar.poll());
+        };
+        timer.scheduleAtFixedRate(updateStatusBar, 0, 6000);
+    });
+
+    @Override
+    public void show_heartBeat() {
+
+        if (!heartBeatReceived) {
+            StringBuilder heart = new StringBuilder();
+            heart.append(Ansi.ansi().cursor(1, 17).a("💚"));
+            System.out.println(heart);
             resetCursor();
-        }
-
-    });
-
-    Thread statusBarUpdateThread = new Thread(() -> {
-        while (true) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            // AnsiConsole.out().print(ansi().cursor(1, 17).a("💔"));
-
-            // resetCursor();
 
         }
-
-    });
+        heartBeatReceived = true;
+    }
 
     /**
      * This thread is used to read the input from the system input and add it to the
@@ -1353,10 +1435,9 @@ public class TUI extends UI {
                     StringBuilder chatNotify = new StringBuilder();
                     chatNotify.append(
                             Ansi.ansi().cursor(1, 20).a(" ".repeat("🔵-> New Chat Messages".length())).toString());
-                    synchronized (statusBar) {
-                        statusBar.add(chatNotify);
-                        statusBar.notify();
-                    }
+                    System.out.println(chatNotify);
+                    chatNotification = false;
+                    newChatMessage = false;
 
                     ////
                     removeFromCmdLineAreaSelection();
@@ -1484,14 +1565,14 @@ public class TUI extends UI {
     public void show_chatMessage(String username, String message) {
         synchronized (chatNeedsUpdate) {
             chatMessages.add(username + ": " + message);
+
         }
         if (chatAreaSelection.isEmpty()) {
-
-            StringBuilder chatNotify = new StringBuilder();
-            chatNotify.append(Ansi.ansi().cursor(1, 20).a("🔵-> New Chat Messages").toString());
-            synchronized (statusBar) {
-                statusBar.add(chatNotify);
-                statusBar.notify();
+            newChatMessage = true;
+            if (!chatNotification) {
+                synchronized (statusBar) {
+                    statusBar.notify();
+                }
             }
         } else {
             synchronized (chatNeedsUpdate) {
@@ -1579,7 +1660,7 @@ public class TUI extends UI {
         chatReaderThread.start();
         playViewThread.start();
         statusBarThread.start();
-        statusBarUpdateThread.start();
+        timerThread.start();
         cmdLineOutThread.start();
 
     }
@@ -1787,7 +1868,9 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
-            areasCache.put(TUIareas.CHOSE_OBJ, res);
+            // FIXME problema per quando iniziano i turni della partita, l'area cache di
+            // choose objective card non deve venire ristampata
+            // areasCache.put(TUIareas.CHOSE_OBJ, res);
         }
 
     }
@@ -1920,8 +2003,9 @@ public class TUI extends UI {
     public void show_playerTurn(String username, String info) {
         if (client.getUsername().equals(username)) {
             StringBuilder res = new StringBuilder();
-//            res.append(ansi().cursor(PLAYERS_INFO_END_ROW + 1, ACHIEVED_RESOURCES_END_COLUMN + 1)
-//                    .a("                  "));
+            // res.append(ansi().cursor(PLAYERS_INFO_END_ROW + 1,
+            // ACHIEVED_RESOURCES_END_COLUMN + 1)
+            // .a(" "));
             res.append(
                     ansi().cursor(PLAYERS_INFO_END_ROW + 2, ACHIEVED_RESOURCES_END_COLUMN + 1).a("                  "));
             res.append(ansi().cursor(PLAYERS_INFO_END_ROW + 1, ACHIEVED_RESOURCES_END_COLUMN + 1)
@@ -1963,7 +2047,6 @@ public class TUI extends UI {
     @Override
     public void show_invalidAction(String message) {
         printToCmdLineOut(serverWrite(message));
-
     }
 
     @Override
@@ -1991,26 +2074,21 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_heartBeat() {
-        StringBuilder heart = new StringBuilder();
-        heart.append(Ansi.ansi().cursor(1, 17).a("💚"));
-        synchronized (statusBar) {
-            statusBar.add(heart);
-            statusBar.notify();
-        }
-        // StringBuilder res = new StringBuilder();
-        // if (heart == false) {
-        // res.append(ansi().cursor(1, 1).a("💚"));
-        // heart = true;
-        // } else {
-        // res.append(ansi().cursor(1, 1).a("💔"));
-        // heart = false;
-        //
-        // }
-        // synchronized (playViewUpdate) {
-        // playViewUpdate.add(res);
-        // playViewUpdate.notify();
-        // }
+    public void showGenericClientResonse(String response) {
+        printToCmdLineOut(tuiWrite(response));
+
+    }
+
+    @Override
+    public void show_wantReconnect() {
+        commandToProcess(TUIcommands.RECONNECT, false);
+    }
+
+    @Override
+    public void show_rejoined(boolean esito) {
+        // TODO cambiare stato tui
+        state = new PlayingState(this);
+        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
     }
 
 }

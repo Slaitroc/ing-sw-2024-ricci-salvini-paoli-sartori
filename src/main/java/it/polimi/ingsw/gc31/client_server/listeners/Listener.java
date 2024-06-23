@@ -1,6 +1,8 @@
 package it.polimi.ingsw.gc31.client_server.listeners;
 
+import it.polimi.ingsw.gc31.Server;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 
@@ -62,13 +64,12 @@ public abstract class Listener {
                 if (isConnected) {
                     client.sendCommand(clientQueueObject);
                 } else {
-                    System.out.println("Update not sent, client is already disconnected");
+                    ServerLog.gControllerWrite("Update not sent, client is already disconnected, "+username, model.getIdGame());
                 }
             } catch (RemoteException e) {
-
                 synchronized (model.getPlayerConnection()) {
                     if (!model.getPlayerConnection().get(username)) {
-                        System.out.println("Client already disconnected");
+                        ServerLog.gControllerWrite("Client already disconnected, "+username, model.getIdGame());
                     } else {
                         model.disconnectPlayer(username);
                     }

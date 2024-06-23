@@ -253,4 +253,8 @@ public class PlayingState extends TuiState {
         tui.forceRefreshTUI(true);
     }
 
+    @Override
+    protected void reconnect() {
+    }
+
 }

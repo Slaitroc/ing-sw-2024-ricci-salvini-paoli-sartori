@@ -104,7 +104,7 @@ public class Player{
      *
      * @param point: coordinate of where in the map to place the card
      */
-    public void play(Point point) throws IllegalStateOperationException {
+    public void play(Point point) throws IllegalStateOperationException, IllegalPlaceCardException {
         inGameState.play(point, this);
         board.updateScore(username, score);
     }

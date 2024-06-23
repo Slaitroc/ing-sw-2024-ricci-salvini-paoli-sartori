@@ -18,14 +18,7 @@ public class ReadyStatusObj extends ServerQueueObject {
 
     @Override
     public void execute(GameController gameController) {
-        try {
-            gameController.setReadyStatus(ready, username);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (IllegalStateOperationException e) {
-            e.printStackTrace();
-        }
-
+        gameController.setReadyStatus(ready, username);
     }
 
     @Override
