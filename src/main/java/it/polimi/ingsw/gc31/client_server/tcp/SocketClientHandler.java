@@ -99,7 +99,7 @@ public class SocketClientHandler implements VirtualClient {
                             try {
                                 ConnectObj connectObj = (ConnectObj) obj;
                                 if (connectObj.getToken() == DV.defaultToken) {
-                                    if (Controller.getController().connect(this, connectObj.getUsername())) {
+                                    if (Controller.getController().connect(this, connectObj.getUsername(), connectObj.getToken())) {
                                         ServerLog.tcpWrite("New user connected: " + connectObj.getUsername());
                                     } else {
                                         ServerLog.tcpWrite("New connection refused");

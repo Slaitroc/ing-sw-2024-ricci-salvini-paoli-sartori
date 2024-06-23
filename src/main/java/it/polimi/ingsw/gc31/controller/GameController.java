@@ -295,4 +295,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public GameModel getModel() {
         return model;
     }
+
+    protected int getIdGame(){ return idGame; }
 }
