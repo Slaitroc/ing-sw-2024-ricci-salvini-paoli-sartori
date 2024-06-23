@@ -14,13 +14,13 @@
 
 | Feature | Implemented  |
 | -------- | -------- | 
+| Complete Rules      | ✔️   | 
+| Socket and RMI   | ✔️   | 
+| TUI + GUI   | ✔️   | 
 | Multiple Games   | ✔️   | 
 | Resilience to clients disconnections   | ✔️   | 
-| Chat   | ✔️   | 
-| Socket and RMI   | ✔️   | 
-| Complete Rules      | ✔️   | 
-| TUI + GUI   | ✔️   | 
 | Server disconnections   | ❌   | 
+| Chat   | ✔️   | 
 
 [Requirements PDF](./documents/requirements.pdf)
 
