@@ -1581,6 +1581,11 @@ public class TUI extends UI {
         }
     }
 
+    @Override
+    public void show_privateChatMessage(String fromUsername, String toUsername, String message) {
+        // TODO Auto-generated method stub
+    }
+
     /**
      * This thread is used to read the input from the system input and add it to the
      * <code>chatMessages</code> queue.
@@ -1945,7 +1950,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_quitFromGame(int id) {
+    public void show_quitFromGame(String username) {
         state = new InitState(this);
         chatBoardThread.interrupt();
         chatMessages = new ArrayDeque<String>();

@@ -4,17 +4,26 @@ import it.polimi.ingsw.gc31.view.UI;
 
 public class NewChatMessage extends ClientQueueObject {
 
-    String username;
+    String fromUsername;
+    String toUsername = null;
     String message;
 
     public NewChatMessage(String username, String message) {
-        this.username = username;
+        this.fromUsername = username;
+        this.message = message;
+    }
+
+    public NewChatMessage(String fromUsername, String toUsername, String message){
+        this.fromUsername = fromUsername;
+        this.toUsername = toUsername;
         this.message = message;
     }
 
     @Override
     public void execute(UI ui) {
-        ui.show_chatMessage(username, message);
+        if (toUsername == null)
+            ui.show_chatMessage(fromUsername, message);
+        else ui.show_privateChatMessage(fromUsername, toUsername, message);
     }
 
 }

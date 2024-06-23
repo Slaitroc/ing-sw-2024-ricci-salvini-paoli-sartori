@@ -42,13 +42,15 @@ public interface ShowUpdate {
 
     void show_joinedToGame(int id, int maxNumberOfPlayers);
 
-    void show_quitFromGame(int id);
+    void show_quitFromGame(String username);
 
     void show_gameIsFull(int id);
 
     void show_readyStatus(String username, boolean status);
 
     void show_chatMessage(String username, String message);
+
+    void show_privateChatMessage(String fromUsername, String toUsername, String message);
 
     void show_gameDoesNotExist();
 

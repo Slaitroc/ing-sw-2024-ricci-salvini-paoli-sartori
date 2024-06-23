@@ -73,7 +73,7 @@ public class GUI extends UI {
 
     @Override
     public void show_readyStatus(String username, boolean status) {
-        System.out.println("show_readyStatus triggered!!!! VALUES: " + username + " " + status);
+        // System.out.println("show_readyStatus triggered!!!! VALUES: " + username + " " + status);
         Platform.runLater(() -> app.getCurrentController().showReady(username, status));
     }
 
@@ -86,20 +86,19 @@ public class GUI extends UI {
     public void show_inGamePlayers(LinkedHashMap<String, Boolean> players) {
         Platform.runLater(() -> {
             System.out.println("show_inGamePlayers triggered!!!!: values" + players);
-            app.setPlayerList(players);
-            app.getCurrentController().updateLobby();
+            app.getCurrentController().handleInGamePlayers(players);
         });
     }
 
     @Override
     public void show_invalidAction(String message) {
-        // System.out.println("show_invalidAction called");
+        System.out.println("show_invalidAction called");
     }
 
     @Override
     public void show_GameIsOver(String username) {
         Platform.runLater(() -> {
-            // System.out.println("show_inGamePlayers triggered!!!!: values" + players);
+            // System.out.println("show_inGamePlayers called");
             app.getCurrentController().showWinner(username);
         });
     }
@@ -123,15 +122,7 @@ public class GUI extends UI {
     @Override
     public void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
         Platform.runLater(() -> {
-            /*
-             * System.out.println("show_goldDeck called");
-             * System.out.println("firstCardDeck= "+ firstCardDeck);
-             * System.out.println("firstCardDeck dirImg: " + firstCardDeck.getImage());
-             * System.out.println("firstCardDeck specifics: " +
-             * firstCardDeck.backSerializeToJson());
-             */
-            card1.changeSide();
-            card2.changeSide();
+            // System.out.println("show_goldDeck called");
             app.getCurrentController().show_goldDeck(firstCardDeck, card1, card2);
         });
     }
@@ -139,28 +130,28 @@ public class GUI extends UI {
     @Override
     public void show_handPlayer(String username, List<PlayableCard> hand, int selectedCard) {
         /*
-         * System.out.println("Player " + username + " hand: ");
+         * // System.out.println("Player " + username + " hand: ");
          * for(PlayableCard card : hand){
-         * System.out.println(card.getSide());
+         * // System.out.println(card.getSide());
          * }
-         * System.out.println("Selected card: " + selectedCard + "\n");
+         * // System.out.println("Selected card: " + selectedCard + "\n");
          */
+
         Platform.runLater(() -> {
             app.getCurrentController().show_handPlayer(username, hand);
-            // System.out.println("show_handPlayer called");
+             // System.out.println("show_handPlayer called");
         });
     }
 
     @Override
     public void show_scorePlayer(LinkedHashMap<String, Integer> scores) {
-        // System.out.println("show_scorePlayer called");
-        Platform.runLater(() -> {
-            app.getCurrentController().show_scorePlayer(scores);
-        });
+
+        Platform.runLater(() -> app.getCurrentController().show_scorePlayer(scores));
     }
 
     @Override
     public void show_commonObjectiveCard(ObjectiveCard card1, ObjectiveCard card2) {
+
         Platform.runLater(() -> {
             if (card1 != null && !card1.getSide()) {
                 card1.changeSide();
@@ -169,13 +160,14 @@ public class GUI extends UI {
                 card2.changeSide();
             }
             app.getCurrentController().show_commonObjectives(card1, card2);
-            // System.out.println("show_objectiveDeck called");
+             // System.out.println("show_objectiveDeck called");
         });
 
     }
 
     @Override
     public void show_starterCard(String username, PlayableCard starterCard) {
+
         Platform.runLater(() -> app.getCurrentController().show_starterCard(username, starterCard));
         // System.out.println("show_starterCard called");
     }
@@ -183,34 +175,36 @@ public class GUI extends UI {
     @Override
     public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea,
             Map<Resources, Integer> achievedResources) {
+
         Platform.runLater(() -> app.getCurrentController().show_playArea(username, playArea, achievedResources));
-        // System.out.println("show_playArea called");
-        // System.out.println("Player "+ username + " achievedResources: " +
+         // System.out.println("show_playArea called");
+        // // System.out.println("Player "+ username + " achievedResources: " +
         // achievedResources);
     }
 
     @Override
     public void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
+
         Platform.runLater(() -> {
-            card1.changeSide();
-            card2.changeSide();
             app.getCurrentController().show_resourceDeck(firstCardDeck, card1, card2);
-            // System.out.println("show_resourceDeck called");
+             // System.out.println("show_resourceDeck called");
         });
     }
 
     @Override
     public void show_chooseObjectiveCard(String username, ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
+
         Platform.runLater(() -> {
             objectiveCard1.changeSide();
             objectiveCard2.changeSide();
             app.getCurrentController().show_chooseObjectiveCard(username, objectiveCard1, objectiveCard2);
-            // System.out.println("show_chooseObjectiveCard called");
+             // System.out.println("show_chooseObjectiveCard called");
         });
     }
 
     @Override
     public void show_objectiveCard(String username, ObjectiveCard objectiveCard) {
+
         Platform.runLater(() -> {
             objectiveCard.changeSide();
             app.getCurrentController().show_objectiveCard(username, objectiveCard);
@@ -225,6 +219,12 @@ public class GUI extends UI {
     }
 
     @Override
+    public void show_privateChatMessage(String fromUsername, String toUsername, String message) {
+        System.out.println("New message from: " + fromUsername + " to: " + toUsername + ": " + message);
+        Platform.runLater(() -> app.getCurrentController().updateChat(fromUsername, toUsername, message));
+    }
+
+    @Override
     public void show_gameDoesNotExist() {
         Platform.runLater(() -> app.getCurrentController().setMessage("Game does not exist!"));
     }
@@ -236,9 +236,9 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_quitFromGame(int id) {
+    public void show_quitFromGame(String username) {
         // TODO Auto-generated method stub
-        Platform.runLater(() -> System.out.println("show_quitFromGame called"));
+        Platform.runLater(() ->System.out.println("show_quitFromGame called: " + username));
     }
 
     @Override
@@ -249,7 +249,8 @@ public class GUI extends UI {
     @Override
     public void showGenericClientResonse(String response) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showGenericClientResonse'");
+        System.out.println(response);
+        //throw new UnsupportedOperationException("Unimplemented method 'showGenericClientResponse'");
     }
 
 }

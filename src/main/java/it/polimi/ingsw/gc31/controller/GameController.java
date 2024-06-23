@@ -128,7 +128,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         VirtualClient client = clientList.get(username);
         clientList.remove(username);
         readyStatus.remove(username);
-        Controller.getController().quitGame(username, idGame, client);
+        Controller.getController().quitGame(username, client);
 
         if (model.isStarted()) {
             ServerLog.gControllerWrite(
@@ -157,9 +157,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         }
         if (counter == maxNumberPlayers) {
             try {
+                sendUpdateToClient(new StartGameObj());
                 model.initGame(clientList);
                 ServerLog.gControllerWrite("The game has started", idGame);
-                sendUpdateToClient(new StartGameObj());
             } catch (IllegalStateOperationException e) {
                 // throw new RuntimeException(e);
             }
@@ -181,6 +181,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * @return the current number of players.
      */
     public int getCurrentNumberPlayers() {
+        if (model.isStarted()) {
+            return model.getPlayerConnection().size();
+        }
         return clientList.size();
     }
 
