@@ -2020,4 +2020,10 @@ public class TUI extends UI {
         client.setToken(token);
     }
 
+    @Override
+    public void showGenericClientResonse(String response) {
+        printToCmdLineOut(tuiWrite(response));
+
+    }
+
 }

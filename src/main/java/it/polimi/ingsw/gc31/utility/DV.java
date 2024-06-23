@@ -5,6 +5,7 @@ import java.util.Map;
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
 
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 public class DV {
@@ -118,5 +119,23 @@ public class DV {
     public final static boolean testHB = false;
     public final static long sendTimeTest = 8000;
     public final static long sendTime = 2000;
+
+    public static String getDesktopPath(String userHome) {
+        String osName = System.getProperty("os.name").toLowerCase();
+        String desktopPath = "";
+
+        if (osName.contains("win")) {
+            // Percorso desktop per Windows
+            desktopPath = Paths.get(userHome, "Desktop").toString();
+        } else if (osName.contains("mac")) {
+            // Percorso desktop per macOS
+            desktopPath = Paths.get(userHome, "Desktop").toString();
+        } else if (osName.contains("nix") || osName.contains("nux")) {
+            // Percorso desktop per Linux
+            desktopPath = Paths.get(userHome, "Desktop").toString();
+        }
+
+        return desktopPath;
+    }
 
 }
