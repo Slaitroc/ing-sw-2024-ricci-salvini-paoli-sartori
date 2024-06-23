@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.player.Player;
@@ -30,7 +31,7 @@ public class ShowDownGameModelState implements GameModelState {
     }
 
     @Override
-    public void play(GameModel model, String username, Point point) throws IllegalStateOperationException {
+    public void play(GameModel model, String username, Point point) throws IllegalStateOperationException, IllegalPlaceCardException {
         model.getPlayers().get(username).play(point);
     }
 
@@ -78,5 +79,10 @@ public class ShowDownGameModelState implements GameModelState {
     @Override
     public void disconnectPlayer(GameModel model, String username) {
         model.executeDisconnectPlayer(username);
+    }
+
+    @Override
+    public void reconnectPlayer(GameModel model, String username) {
+        model.executeReconnectPlayer(username);
     }
 }

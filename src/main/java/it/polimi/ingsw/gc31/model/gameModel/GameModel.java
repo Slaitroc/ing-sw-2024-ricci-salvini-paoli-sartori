@@ -6,6 +6,8 @@ import java.util.List;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
+import it.polimi.ingsw.gc31.client_server.log.ServerLog;
+import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
@@ -30,18 +32,21 @@ public class GameModel {
     protected Map<String, Player> players;
     protected Map<String, VirtualClient> clients;
     protected List<ObjectiveCard> commonObjectives;
+    // TODO rendere players Linked per usare quella per i turni
     protected List<String> turnPlayer;
     protected final Map<String, Boolean> playerConnection;
     private int currPlayingPlayer = 0;
     protected GameModelState gameState;
     private final Map<String, GameListenerHandler> listeners;
     private boolean isStarted = false;
+    private final int idGame;
 
     /**
      * Constructor for the GameModel class.
      * It initializes the board and the players map.
      */
-    public GameModel() {
+    public GameModel(int idGame) {
+        this.idGame = idGame;
         pawnSelector = 0;
         this.board = new Board();
         this.players = new HashMap<>();
@@ -55,13 +60,13 @@ public class GameModel {
     public void initGame(LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
         this.clients = clients;
         players = gameState.initGame(this, clients);
-        notifyAllGameListeners();
-
         isStarted = true;
+        notifyAllGameListeners();
     }
 
     protected void endGame() throws IllegalStateOperationException {
         gameState.endGame(this);
+        listeners.values().forEach(listener -> listener.notifyPlayerScoreListener(this));
         listeners.values().forEach(listener -> listener.notifyPlayerScoreListener(this));
     }
 
@@ -109,6 +114,7 @@ public class GameModel {
         // set in game player to notPlaced state
         players.get(turnPlayer.get(currPlayingPlayer)).setInGameState(new NotPlaced());
         listeners.values().forEach(listener -> listener.notifyTurnListener(this));
+        // notifyAllGameListeners();
     }
 
     /**
@@ -167,30 +173,73 @@ public class GameModel {
         listeners.get(username).notifyObjectiveCardListener(this);
     }
 
+    /**
+     * Plays the starter card for the specified username.
+     *
+     * @param username the username of the player
+     * @throws IllegalStateOperationException  if the game is not in the right state
+     * @throws ObjectiveCardNotChosenException if the player has not chosen a secret
+     *                                         objective card yet
+     */
     public void playStarter(String username) throws IllegalStateOperationException, ObjectiveCardNotChosenException {
         gameState.playStarter(this, username);
         listeners.get(username).notifyPlayAreaListener(this);
     }
 
-    public void play(String username, Point point) throws IllegalStateOperationException {
+    /**
+     * Plays a card on the game board for a specified player.
+     *
+     * @param username the username of the player
+     * @param point    the location on the game board where the card will be placed
+     * @throws IllegalStateOperationException if the game is not in the right state
+     *                                        for playing a card
+     * @throws IllegalPlaceCardException      if the card cannot be placed at the
+     *                                        specified location
+     */
+    public void play(String username, Point point) throws IllegalStateOperationException, IllegalPlaceCardException {
         gameState.play(this, username, point);
         listeners.get(username).notifyPlayAreaListener(this);
         listeners.get(username).notifyHandListener(this);
+        listeners.values().forEach(listener -> listener.notifyPlayerScoreListener(this));
         listeners.values().forEach(listener -> listener.notifyTurnListener(this));
     }
 
+    /**
+     * Draws a gold card from the deck for a specific player.
+     *
+     * @param username the username of the player
+     * @param index    the index of the gold card to be drawn
+     * @throws IllegalStateOperationException if the game is not in the right state
+     *                                        for drawing a gold card
+     */
     public void drawGold(String username, int index) throws IllegalStateOperationException {
         gameState.drawGold(this, username, index);
         listeners.values().forEach(listener -> listener.notifyGoldDeckListener(this));
         listeners.get(username).notifyHandListener(this);
     }
 
+    /**
+     * Draws a resource card from the deck for the specified player.
+     *
+     * @param username the username of the player
+     * @param index    the index of the resource card to be drawn
+     * @throws IllegalStateOperationException if the game is not in the right state
+     *                                        for drawing a resource card
+     */
     public void drawResource(String username, int index) throws IllegalStateOperationException {
         gameState.drawResource(this, username, index);
         listeners.values().forEach(listener -> listener.notifyResourcedDeckListener(this));
         listeners.get(username).notifyHandListener(this);
     }
 
+    /**
+     * Sets the selected card of the hand for the specified player.
+     *
+     * @param username the username of the player
+     * @param index    the index of the selected card
+     * @throws IllegalStateOperationException if the game is not in the right state
+     * @throws WrongIndexSelectedCard         if the selected index is wrong
+     */
     public void setSelectCard(String username, int index)
             throws IllegalStateOperationException, WrongIndexSelectedCard {
         gameState.setSelectCard(this, username, index);
@@ -216,6 +265,18 @@ public class GameModel {
         this.gameState.disconnectPlayer(this, username);
     }
 
+    public void reconnectPlayer(String username) {
+        this.gameState.reconnectPlayer(this, username);
+    }
+
+    protected void executeReconnectPlayer(String username) {
+        synchronized (playerConnection) {
+            playerConnection.put(username, false);
+        }
+        ServerLog.gControllerWrite("The player " + username + " has rejoined game", idGame);
+        notifyAllGameListeners();
+    }
+
     /**
      * Executes the disconnection of a player by setting their connection status to
      * false in the playerConnection map.
@@ -235,17 +296,18 @@ public class GameModel {
                 try {
                     chooseSecretObjective(username, 0);
                     playStarter(username);
-                    System.out.println("Default chooses for " + username);
                 } catch (IllegalStateOperationException | ObjectiveCardNotChosenException e) {
-                    e.printStackTrace();
+
                 }
+                ServerLog.gControllerWrite("Default chooses for " + username, idGame);
             } else {
                 if (getCurrPlayer().getUsername().equals(username)) {
                     setNextPlayingPlayer();
                 }
             }
         }
-        System.out.println("Player " + username + " has disconnected");
+        ServerLog.gControllerWrite("Player " + username + " has disconnected", idGame);
+        notifyAllGameListeners();
     }
 
     /**
@@ -263,6 +325,10 @@ public class GameModel {
 
     public boolean isStarted() {
         return isStarted;
+    }
+
+    public int getIdGame() {
+        return idGame;
     }
 
     // Test methods

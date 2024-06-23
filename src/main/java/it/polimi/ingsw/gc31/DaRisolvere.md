@@ -38,6 +38,8 @@
 - [ ] il log del server quando qualcuno chiama un'azione che non è nello stato corretto scrive che è stato fatto ma non specifica chi lo ha fatto (lo togliamo o lo implementiamo?)
 - [ ] Bisogna salvare nel model l'id del game
 
+- [ ] Quando il player rimane in partita da solo parte un countdown, scaduto il countdown il player vince
+
 ## Nuove
 
 - [x] dare la possibilità di quittare un game prima che parta (prima di playing state (tui))

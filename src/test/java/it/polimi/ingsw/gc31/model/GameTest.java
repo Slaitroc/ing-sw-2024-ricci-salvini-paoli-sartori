@@ -54,7 +54,7 @@ public class GameTest {
 
     @BeforeEach
     public void setUp() throws NotBoundException, RemoteException {
-        model = new GameModel();
+        model = new GameModel(0);
         clients = new LinkedHashMap<>();
 
         clients.put("Player1", new FakeClient());
