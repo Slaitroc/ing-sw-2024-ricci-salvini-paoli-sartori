@@ -20,7 +20,7 @@ public class ReJoinObj extends ServerQueueObject{
     @Override
     public void execute(GameController gameController) {
         try {
-            gameController.reJoinGame(client, username);
+            gameController.reJoinGame(username, client);
         } catch (RemoteException e) {
 
         }

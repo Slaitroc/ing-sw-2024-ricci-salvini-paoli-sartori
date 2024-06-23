@@ -111,7 +111,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     // riconettersi.
     // se il giocatore si era disconnesso per un problema di rete nella lobby allora
     // entra come
-    public void reJoinGame(String username, VirtualClient newClient) {
+    public void reJoinGame(String username, VirtualClient newClient) throws RemoteException {
         // TODO controllare se il client era presente nella lista? oppure viene fatto
         // nel controller
         // TODO cosa fare con readyStatus?

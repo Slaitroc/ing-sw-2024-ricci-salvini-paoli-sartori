@@ -247,6 +247,16 @@ public class GUI extends UI {
     }
 
     @Override
+    public void show_wantReconnect() {
+
+    }
+
+    @Override
+    public void show_rejoined(boolean esito) {
+
+    }
+
+    @Override
     public void showGenericClientResonse(String response) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'showGenericClientResonse'");
