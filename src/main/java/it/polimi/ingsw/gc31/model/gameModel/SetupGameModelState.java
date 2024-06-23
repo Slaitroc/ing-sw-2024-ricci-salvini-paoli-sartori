@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.listeners.*;
+import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
@@ -13,7 +14,7 @@ import java.util.Map;
 
 public class SetupGameModelState implements GameModelState{
     public SetupGameModelState(GameModel model) {
-        System.out.println("Game changed to SETUP");
+        ServerLog.gControllerWrite("Game changed to SETUP", model.getIdGame());
 
         for (String username: model.getListeners().keySet()) {
             GameListenerHandler gameListener = model.getListeners().get(username);
