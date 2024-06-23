@@ -604,7 +604,7 @@
                         </ImageView>
                     </HBox>
                 </VBox>
-                <ImageView fx:id="afkP2" visible="false" opacity="0.5" preserveRatio="true" fitWidth="310">
+                <ImageView fx:id="statusP2" visible="false" opacity="0.5" fitWidth="310" fitHeight="180">
                     <Image url="@../Images/Misc/disconnectedPlayer.gif"/>
                 </ImageView>
             </StackPane>
@@ -765,7 +765,7 @@
                         </ImageView>
                     </HBox>
                 </VBox>
-                <ImageView fx:id="afkP3" visible="false" opacity="0.5" preserveRatio="true" fitWidth="310">
+                <ImageView fx:id="statusP3" visible="false" opacity="0.5" fitWidth="310" fitHeight="180">
                     <Image url="@../Images/Misc/disconnectedPlayer.gif"/>
                 </ImageView>
             </StackPane>
@@ -924,7 +924,7 @@
                         </ImageView>
                     </HBox>
                 </VBox>
-                <ImageView fx:id="afkP4" visible="false" opacity="0.5" preserveRatio="true" fitWidth="310">
+                <ImageView fx:id="statusP4" visible="false" opacity="0.5" fitWidth="310" fitHeight="180">
                     <Image url="@../Images/Misc/disconnectedPlayer.gif"/>
                 </ImageView>
             </StackPane>
@@ -938,7 +938,7 @@
         <StackPane.margin>
             <Insets left="50.0" right="50.0"/>
         </StackPane.margin>
-        <VBox id="resource-count-window" fx:id="settingsVBox"
+        <VBox id="resource-count-window" fx:id="settingsVBox"   
               alignment="CENTER" fillWidth="false" maxHeight="400.0" maxWidth="350.0" spacing="30.0"
               visible="false" managed="false" mouseTransparent="true">
             <Label text="SETTINGS" id="resource-box">
@@ -946,16 +946,16 @@
                     <Insets left="5.0" right="5.0"/>
                 </padding>
             </Label>
-            <Button onMouseClicked="#setFullScreen" text="Fullscreen" styleClass="really-small-button"
-                    prefHeight="30.0" prefWidth="100.0"/>
-            <Button onMouseClicked="#showHideControls" text="Controls" styleClass="really-small-button"
-                    prefHeight="30.0" prefWidth="100.0"/>
-            <Button onMouseClicked="#quit" text="Quit Game" styleClass="really-small-button"
-                    prefHeight="30.0" prefWidth="100.0"/>
-            <Button onMouseClicked="#changeResolution" text="Change Resolution" styleClass="really-small-button"
-                    prefHeight="30.0" prefWidth="100.0"/>
-            <Button onMouseClicked="#showHideMenu" text="Close Settings" styleClass="really-small-button"
-                    prefHeight="30.0" prefWidth="100.0"/>
+            <Button onMouseClicked="#setFullScreen" text="Fullscreen" styleClass="really-small-button, rounded-button"
+                    prefHeight="30.0" prefWidth="200.0"/>
+            <Button onMouseClicked="#showHideControls" text="Controls" styleClass="really-small-button,rounded-button"
+                    prefHeight="30.0" prefWidth="200.0"/>
+            <Button onMouseClicked="#quit" text="Quit Game" styleClass="really-small-button, rounded-button"
+                    prefHeight="30.0" prefWidth="200.0"/>
+            <Button onMouseClicked="#changeResolution" text="Change Resolution" styleClass="really-small-button, rounded-button"
+                    prefHeight="30.0" prefWidth="200.0"/>
+            <Button onMouseClicked="#showHideMenu" text="Close Settings" styleClass="really-small-button, rounded-button"
+                    prefHeight="30.0" prefWidth="200.0"/>
 
         </VBox>
         <VBox id="resource-count-window" fx:id="controlsVBox"
@@ -969,11 +969,19 @@
     </StackPane>
     <StackPane fx:id="youWon" stylesheets="@../css/Panes.css" id="winningPane"
                visible="false" managed="false" mouseTransparent="true">
-            <Label text="YOU WIN" stylesheets="@../css/Labels.css" styleClass="winning-label"/>
+            <Label text="YOU WIN" stylesheets="@../css/Labels.css" styleClass="winning-label" translateY="-200">
+                <padding>
+                    <Insets left="10" right="10.0"/>
+                </padding>
+            </Label>
     </StackPane>
     <StackPane fx:id="otherWinner"
                visible="false" managed="false" mouseTransparent="true">
-        <Label fx:id="winnerLabel" stylesheets="@../css/Labels.css" styleClass="winning-label"/>
+        <Label fx:id="winnerLabel" stylesheets="@../css/Labels.css" styleClass="winning-label" translateY="-200">
+            <padding>
+                <Insets left="10" right="10.0"/>
+            </padding>
+        </Label>
     </StackPane>
 
 </StackPane>

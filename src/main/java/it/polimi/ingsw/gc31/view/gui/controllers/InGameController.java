@@ -114,13 +114,13 @@ public class InGameController extends ViewController {
     public VBox player4Resources;
     List<VBox> resourceWindows = new ArrayList<>();
 
-    //AFK GIF___________________________________________________________________________________________________________
+    //STATUS IMAGES_____________________________________________________________________________________________________
     @FXML
-    public ImageView afkP2;
+    public ImageView statusP2;
     @FXML
-    public ImageView afkP3;
+    public ImageView statusP3;
     @FXML
-    public ImageView afkP4;
+    public ImageView statusP4;
 
     //Player Names Labels_______________________________________________________________________________________________
     @FXML
@@ -333,7 +333,7 @@ public class InGameController extends ViewController {
             resourceWindows.add(player3Resources);
             resourceWindows.add(player4Resources);
             player3Name.setText(otherPlayers.get(1));
-            player3Name.setText(otherPlayers.get(2));
+            player4Name.setText(otherPlayers.get(2));
             gridDimensions.put(player3PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
             gridDimensions.put(player4PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
         }
@@ -810,22 +810,22 @@ public class InGameController extends ViewController {
         //System.out.println("UPDATE_GRID CALL");
         for (Map.Entry<Point, PlayableCard> placedCard : playArea.entrySet()) {
             if (placedCard.getKey().x < gridDimensions.get(grid).getFirst()) {
+                //System.out.println("Adding Column");
                 gridDimensions.get(grid).set(0, placedCard.getKey().x);
-                System.out.println("Adding Column");
                 addColumn(grid, cells, gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2);
             }
             if (placedCard.getKey().y < gridDimensions.get(grid).get(1)) {
-                System.out.println("Adding Row");
+                //System.out.println("Adding Row");
                 gridDimensions.get(grid).set(1, placedCard.getKey().y);
                 addRow(grid, cells, gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2);
             }
             if (placedCard.getKey().x > gridDimensions.get(grid).get(2)) {
-                System.out.println("Adding Column");
+                //System.out.println("Adding Column");
                 gridDimensions.get(grid).set(2, placedCard.getKey().x);
                 addColumn(grid, cells, gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2);
             }
             if (placedCard.getKey().y > gridDimensions.get(grid).get(3)) {
-                System.out.println("Adding Row");
+                //System.out.println("Adding Row");
                 gridDimensions.get(grid).set(3, placedCard.getKey().y);
                 addRow(grid, cells, gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2);
             }
@@ -845,7 +845,6 @@ public class InGameController extends ViewController {
         //int debug = 0;
         for (int x = 0; x < grid.getColumnCount(); x++) {
             for (int y = 0; y < grid.getRowCount(); y++) {
-                //System.out.println("Hiding image [" + x + " " + y + "]");
                 //debug++;
                 cells.get(new Pair<>(x, y)).hideImage();
                 //System.out.println("Cell [" + x + ";" + y + "] set to invisible image");
@@ -858,7 +857,6 @@ public class InGameController extends ViewController {
             newCoordinateX = placedCard.getKey().x - gridDimensions.get(grid).getFirst() + 1;
             newCoordinateY = gridDimensions.get(grid).get(3) - placedCard.getKey().y + 1;
             //System.out.println("Adding card that was on Point: " + placedCard.getKey() + " on cell [" + newCoordinateX + ";" + newCoordinateY + "]");
-            //System.out.println("Card Image Path: " + placedCard.getValue().getImage());
             cells.get(new Pair<>(newCoordinateX, newCoordinateY)).setCardImage(placedCard.getValue().getImage());
         }
     }
@@ -980,8 +978,8 @@ public class InGameController extends ViewController {
     private void resizeCard(ImageView card) {
         //System.out.println("card.getFitWidth(): "+card.getFitWidth()+" \n card.getFitHeight(): " + card.getFitHeight());
         //System.out.println("card.getImage().getWidth(): "+card.getImage().getWidth()+" \n card.getImage().getHeight() " + card.getImage().getHeight())
-        card.setFitHeight(size.getHeight());
-        card.setFitWidth(size.getWidth());
+        card.setFitHeight(size.getCardsHeight());
+        card.setFitWidth(size.getCardWidth());
         setClipToImageView(card);
     }
 
@@ -1042,8 +1040,8 @@ public class InGameController extends ViewController {
             this.setImage(cardImage);
             this.setPreserveRatio(true);
             this.setViewport(cardViewportSD);
-            this.setFitWidth(size.getWidth()); // set the card width
-            this.setFitHeight(size.getHeight()); // Set the card height
+            this.setFitWidth(size.getCardWidth()); // set the card width
+            this.setFitHeight(size.getCardsHeight()); // Set the card height
             setClipToImageView(this);
 
             //If the cell belongs to player1, it is set to accept drag and drop events

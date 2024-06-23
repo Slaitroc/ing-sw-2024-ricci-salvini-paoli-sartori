@@ -6,6 +6,7 @@ import java.util.List;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.QuitFromGameRObj;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
@@ -62,6 +63,7 @@ public class GameModel {
 
     protected void endGame() throws IllegalStateOperationException {
         gameState.endGame(this);
+        listeners.values().forEach(listener -> listener.notifyPlayerScoreListener(this));
     }
 
     /**
