@@ -59,7 +59,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         addQueueObj(obj);
     }
 
-    private void addQueueObj(ServerQueueObject obj) {
+    protected void addQueueObj(ServerQueueObject obj) {
         synchronized (callsList) {
             callsList.add(obj);
             callsList.notify();
@@ -91,9 +91,11 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * @param username the username of the player.
      * @param client   the client of the player.
      */
-    public void joinGame(String username, VirtualClient client){
+    public void joinGame(String username, VirtualClient client) throws RemoteException{
         clientList.put(username, client);
         readyStatus.put(username, false);
+        client.setGameController(this);
+        sendUpdateToClient(client, new JoinedToGameObj(idGame, maxNumberPlayers));
         if (maxNumberPlayers == this.clientList.size()) {
             ServerLog.gControllerWrite("The number of players for the game " + maxNumberPlayers + " has been reached",
                     idGame);
@@ -105,12 +107,16 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     // se il virtual client del giocatore che vuole riconettersi non è presente nella mappa dei virtualclient
     // vuol dire che si è disconesso usando il tasto quit e quindi non può riconettersi.
     // se il giocatore si era disconnesso per un problema di rete nella lobby allora entra come
-    public void reJoinGame(String username, VirtualClient newClient) {
+
+
+    public void reJoinGame(VirtualClient newClient, String username) throws RemoteException {
         // TODO controllare se il client era presente nella lista? oppure viene fatto nel controller
         // TODO cosa fare con readyStatus?
         if (clientList.containsKey(username)) {
             clientList.put(username, newClient);
             model.reconnectPlayer(username);
+            newClient.setGameController(this);
+            sendUpdateToClient(newClient, new JoinedToGameObj(idGame, getMaxNumberPlayers()));
             ServerLog.gControllerWrite("Welcome back "+username+"!", idGame);
         } else {
             ServerLog.gControllerWrite("C'è stato qualche problema con la rejoin di "+username, idGame);
