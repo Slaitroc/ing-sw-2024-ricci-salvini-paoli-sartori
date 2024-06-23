@@ -125,13 +125,10 @@ public class DV {
         String desktopPath = "";
 
         if (osName.contains("win")) {
-            // Percorso desktop per Windows
             desktopPath = Paths.get(userHome, "Desktop").toString();
         } else if (osName.contains("mac")) {
-            // Percorso desktop per macOS
             desktopPath = Paths.get(userHome, "Desktop").toString();
         } else if (osName.contains("nix") || osName.contains("nux")) {
-            // Percorso desktop per Linux
             desktopPath = Paths.get(userHome, "Desktop").toString();
         }
 

@@ -9,7 +9,6 @@ import it.polimi.ingsw.gc31.view.UI;
 
 import java.awt.*;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -281,8 +280,17 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         String desktopPath = DV.getDesktopPath(userHome);
         String folderName = "CodexNaturalis";
         String fileName = "Token.txt";
+        // Crea il percorso completo della cartella e del file
         Path folderPath = Paths.get(desktopPath, folderName);
         Path filePath = Paths.get(desktopPath, folderName, fileName);
+        if (Files.exists(filePath)) {
+            try {
+                Files.delete(filePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ui.showGenericClientResonse("File esistente eliminato.");
+        }
         try {
             Files.createDirectories(folderPath);
         } catch (IOException e) {
@@ -290,8 +298,8 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
             e.printStackTrace();
         }
         try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE,
-                StandardOpenOption.TRUNCATE_EXISTING)) {
-            writer.write("Your Token is " + token);
+                StandardOpenOption.APPEND)) {
+            writer.write("" + token);
         } catch (IOException e) {
             e.printStackTrace();
         }
