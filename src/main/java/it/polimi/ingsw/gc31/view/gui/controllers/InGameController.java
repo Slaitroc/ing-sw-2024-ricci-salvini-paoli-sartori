@@ -199,6 +199,22 @@ public class InGameController extends ViewController {
     public ImageView player4HandCard2;
     @FXML
     public ImageView player4HandCard3;
+    @FXML
+    public ImageView noirPion1;
+    @FXML
+    public ImageView noirPion2;
+    @FXML
+    public ImageView noirPion3;
+    @FXML
+    public ImageView noirPion4;
+    @FXML
+    public ImageView colorPion4;
+    @FXML
+    public ImageView colorPion3;
+    @FXML
+    public ImageView colorPion2;
+    @FXML
+    public ImageView colorPion1;
     //List of hand cards for each player
     private List<ImageView> handCards;
     @FXML
@@ -248,6 +264,8 @@ public class InGameController extends ViewController {
     private final List<String> otherPlayers = new ArrayList<>();
 
     private ResolutionSizes size;
+
+    boolean firstPlayer = true;
 
 
     /* NOTE
@@ -363,6 +381,7 @@ public class InGameController extends ViewController {
         addHandCardDragListener(handCard2);
         addHandCardDragListener(handCard3);
 
+        assignPion();
         changeResolution();
     }
 
@@ -478,12 +497,28 @@ public class InGameController extends ViewController {
         //System.out.println("Hello, I'm player " + app.getUsername() + " and I received the message that " + username + " is in state " + info);
         if (username.equals(app.getUsername())) {
             playingPlayer1Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            if(firstPlayer) {
+                noirPion1.setVisible(true);
+                firstPlayer = false;
+            }
         } else if (username.equals(otherPlayers.getFirst())) {
             playingPlayer2Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            if(firstPlayer) {
+                noirPion2.setVisible(true);
+                firstPlayer = false;
+            }
         } else if (username.equals(otherPlayers.get(1))) {
             playingPlayer3Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            if(firstPlayer) {
+                noirPion3.setVisible(true);
+                firstPlayer = false;
+            }
         } else if (username.equals(otherPlayers.get(2))) {
             playingPlayer4Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            if(firstPlayer) {
+                noirPion4.setVisible(true);
+                firstPlayer = false;
+            }
         }
     }
 
@@ -922,6 +957,7 @@ public class InGameController extends ViewController {
         }
     }
 
+    //private method to hide the hand of other players
     private void hideHand(List<PlayableCard> hand) {
         for (PlayableCard playableCard : hand) {
             if (playableCard.getSide()) {
@@ -1010,6 +1046,23 @@ public class InGameController extends ViewController {
         pane.setManaged(!pane.isManaged());
         pane.setVisible(!pane.isVisible());
         pane.setMouseTransparent(!pane.isMouseTransparent());
+    }
+
+    private void assignPion(){
+        List<String> pionImages = new ArrayList<>();
+        pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_vert.png");
+        pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_jaune.png");
+        pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_rouge.png");
+        pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_bleu.png");
+        int i=0;
+        for(String player : app.getPlayerList().keySet()){
+            if(player.equals(player1Name.getText())) colorPion1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+            else if(player.equals(player2Name.getText())) colorPion2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+            else if(player.equals(player3Name.getText())) colorPion3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+            else if(player.equals(player4Name.getText())) colorPion4.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+
+            i++;
+        }
     }
 
 
