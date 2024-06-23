@@ -51,9 +51,9 @@ public class SetupGameModelState implements GameModelState{
         }
 
         if (allPlayersPlayedStarter) {
+            model.setNextPlayingPlayer();
             model.setGameState(new RunningGameModelSate(model));
 //            model.endTurn();
-            model.setNextPlayingPlayer();
             model.notifyAllGameListeners();
         }
     }
