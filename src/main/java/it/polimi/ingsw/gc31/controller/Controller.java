@@ -336,7 +336,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                  */
                 for(String username : tempClients.keySet()){
                     if((tempClients.get(username)).equals(client))
-
+                        System.out.println("Client disconnesso azzo");
                         disconnectFromGame(username);
                 }
                 System.out.println("Client disconnesso per timeout");
