@@ -1,5 +1,8 @@
 package it.polimi.ingsw.gc31.model.enumeration;
 
+/**
+ * Represents the type of a card.
+ */
 public enum CardType {
     GOLD("GOLD"),
     RESOURCE("RESOURCE"),

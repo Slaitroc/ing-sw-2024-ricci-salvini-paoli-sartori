@@ -101,4 +101,9 @@ public class EndGameModelState implements GameModelState {
     public void disconnectPlayer(GameModel model, String username) {
 
     }
+
+    @Override
+    public void reconnectPlayer(GameModel model, String username) {
+
+    }
 }

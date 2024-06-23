@@ -106,6 +106,11 @@ public class CreationGameModelState implements GameModelState {
 //        so there is no need to remove the player from the gameModel
     }
 
+    @Override
+    public void reconnectPlayer(GameModel model, String username) {
+        model.executeReconnectPlayer(username);
+    }
+
     private Map<String, Player> createPlayers(GameModel model, Set<String> setUsername) {
         Map<String, Player> players = new HashMap<>();
         for (String username : setUsername) {

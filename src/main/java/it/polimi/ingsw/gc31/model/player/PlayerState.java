@@ -1,9 +1,6 @@
 package it.polimi.ingsw.gc31.model.player;
 
-import it.polimi.ingsw.gc31.exceptions.FullHandException;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
-import it.polimi.ingsw.gc31.exceptions.InvalidCardDraw;
-import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
+import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
@@ -47,7 +44,7 @@ public abstract class PlayerState {
      * @throws IllegalStateOperationException if the operation is not allowed in the
      *                                        current state.
      */
-    public abstract void play(Point point, Player player) throws IllegalStateOperationException;
+    public abstract void play(Point point, Player player) throws IllegalStateOperationException, IllegalPlaceCardException;
 
     /**
      * Plays the designated Player's starter card in his PlayArea.

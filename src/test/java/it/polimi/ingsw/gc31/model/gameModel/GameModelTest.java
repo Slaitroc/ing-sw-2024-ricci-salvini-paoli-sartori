@@ -33,7 +33,7 @@ class GameModelTest {
 
     @BeforeEach
     public void setUp() {
-        model = new GameModel();
+        model = new GameModel(0);
         clients = new LinkedHashMap<>();
 
         clients.put("Players1", new FakeClient());
@@ -672,7 +672,7 @@ class GameModelTest {
 
     public static class FakeGameModel extends GameModel {
         public FakeGameModel() {
-            super();
+            super(0);
         }
 
         public void initGame(LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
