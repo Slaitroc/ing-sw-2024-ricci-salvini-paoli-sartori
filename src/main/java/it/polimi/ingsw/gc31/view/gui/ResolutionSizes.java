@@ -9,7 +9,7 @@ public enum ResolutionSizes {
 
     ResolutionSizes(String size){this.size = size;}
 
-    public Integer getWidth(){
+    public Integer getCardWidth(){
         if(size.equals("FHD")) return 240;
         if(size.equals("HD")) return 210;
         return 135;
@@ -20,7 +20,7 @@ public enum ResolutionSizes {
         return 102;
     }
 
-    public Integer getHeight(){
+    public Integer getCardsHeight(){
         if(size.equals("FHD")) return 160;
         if(size.equals("HD")) return 140;
         return 90;

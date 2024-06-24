@@ -61,7 +61,7 @@ public class Player{
      * @param deck the deck to draw from.
      *
      */
-    private void addToHand(Deck<PlayableCard> deck,Deck<PlayableCard> subsistuteDeck, int index) throws IllegalStateOperationException{
+    private void addToHand(Deck<PlayableCard> deck,Deck<PlayableCard> subsistuteDeck, int index) throws IllegalStateOperationException {
         try {
             inGameState.addToHand(deck, subsistuteDeck, this, index);
         } catch (FullHandException e) {
@@ -80,7 +80,7 @@ public class Player{
      * @throws EmptyDeckException if the deck is empty.
      */
 
-    public boolean drawGold(int index) throws EmptyDeckException, IllegalStateOperationException {
+    public boolean drawGold(int index) throws EmptyDeckException, IllegalStateOperationException{
         if (index < 0 || index > 2) return false;
 
         addToHand(board.getDeckGold(), board.getDeckResource(), index);

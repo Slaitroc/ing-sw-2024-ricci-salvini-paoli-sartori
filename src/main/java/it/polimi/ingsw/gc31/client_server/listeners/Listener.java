@@ -1,6 +1,5 @@
 package it.polimi.ingsw.gc31.client_server.listeners;
 
-import it.polimi.ingsw.gc31.Server;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
@@ -55,26 +54,20 @@ public abstract class Listener {
      * @param clientQueueObject The updated data to be sent to the client.
      */
     protected void sendUpdate(GameModel model, String username, VirtualClient client, ClientQueueObject clientQueueObject) {
-        new Thread(() -> {
-            try {
-                Boolean isConnected;
-                synchronized (model.getPlayerConnection()) {
-                    isConnected = model.getPlayerConnection().get(username);
-                }
-                if (isConnected) {
+        if (model.getPlayerConnection().get(username)) {
+            new Thread(() -> {
+                try {
                     client.sendCommand(clientQueueObject);
-                } else {
-                    ServerLog.gControllerWrite("Update not sent, client is already disconnected, "+username, model.getIdGame());
-                }
-            } catch (RemoteException e) {
-                synchronized (model.getPlayerConnection()) {
-                    if (!model.getPlayerConnection().get(username)) {
-                        ServerLog.gControllerWrite("Client already disconnected, "+username, model.getIdGame());
-                    } else {
+                } catch (RemoteException e) {
+                    if (model.getPlayerConnection().get(username)) {
                         model.disconnectPlayer(username);
+                    } else {
+                        ServerLog.gControllerWrite("Client is already disconnected, "+username, model.getIdGame());
                     }
                 }
-            }
-        }).start();
+            }).start();
+        } else {
+            ServerLog.gControllerWrite("Update not sent, client is already disconnected, "+username, model.getIdGame());
+        }
     }
 }

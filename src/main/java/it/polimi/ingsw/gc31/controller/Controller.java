@@ -9,6 +9,7 @@ import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.*;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.JoinGameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
@@ -192,10 +193,10 @@ public class Controller extends UnicastRemoteObject implements IController {
      * WantsReconnectObj.java
      * Deve innescare gli update dei listener e mandare la risposta al client
      * (pseudocodice sotto)
-     * 
+     *
      * @param username is the username of the client
-     * @param token is the token of the client
-     * @param esito is true if the client wants to reconnect, false otherwise
+     * @param token    is the token of the client
+     * @param esito    is true if the client wants to reconnect, false otherwise
      */
     public void rejoin(String username, int token, boolean esito) {
         VirtualClient client = newConnections.get(token); // FIXME non so se è il modo correto di prendere il virtual
@@ -205,17 +206,19 @@ public class Controller extends UnicastRemoteObject implements IController {
             try {
                 // TODO Chri deve aggiungere il metodo di rejoin qua
                 client.sendCommand(new ReJoinedObj(true)); // mandare questo è importante perché la ui fa cose in
-                                                                    // risposta a questo update
+                                                           // risposta a questo update
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         } else {
             try {
-                //If the player doesn't want to reconnect to the game a RejoinedObj with parameter false is sent
-                //to the client
+                // If the player doesn't want to reconnect to the game a RejoinedObj with
+                // parameter false is sent
+                // to the client
                 client.sendCommand(new ReJoinedObj(false));
 
-                //At this point the Controller tries to connect the client as if it was the first connection of it
+                // At this point the Controller tries to connect the client as if it was the
+                // first connection of it
                 sendToken(client);
                 if (nicknames.add(username)) {
                     tempClients.put(username, client);
@@ -242,17 +245,17 @@ public class Controller extends UnicastRemoteObject implements IController {
     public void createGame(String username, int maxNumPlayer) throws RemoteException {
         VirtualClient client = tempClients.get(username);
         if (maxNumPlayer < 2 || maxNumPlayer > 4) {
-            client.sendCommand(new WrongGameSizeObj());
+            sendUpdateToClient(client, new WrongGameSizeObj());
         } else {
             try {
                 gameControlList.add(new GameController(username, client, maxNumPlayer,
                         gameControlList.size()));
                 client.setGameID(gameControlList.size() - 1);
             } catch (RemoteException e) {
-                e.printStackTrace();
+
             }
             tempClients.remove(username);
-            client.sendCommand(new GameCreatedObj(gameControlList.size() - 1));
+            sendUpdateToClient(client, new GameCreatedObj(gameControlList.size() - 1));
             client.setGameController(gameControlList.get(gameControlList.size() - 1));
             ServerLog.controllerWrite("A new game has been created with id: " + gameControlList.size());
         }
@@ -266,20 +269,17 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @throws RemoteException if an RMI error occurs.
      */
     public void joinGame(String username, int idGame) throws RemoteException {
-
         VirtualClient client = tempClients.get(username);
         if (idGame >= gameControlList.size() || idGame < 0) {
-            client.sendCommand(new GameDoesNotExistObj());
+            sendUpdateToClient(client, new GameDoesNotExistObj());
         } else {
 
             if (gameControlList.get(idGame).getCurrentNumberPlayers() != gameControlList.get(idGame)
                     .getMaxNumberPlayers()) {
-                gameControlList.get(idGame).joinGame(username, client);
-                client.setGameController(gameControlList.get(idGame));
-                client.sendCommand(new JoinedToGameObj(idGame, gameControlList.get(idGame).getMaxNumberPlayers()));
+                gameControlList.get(idGame).sendCommand(new JoinGameObj(client, username));
                 tempClients.remove(username);
             } else {
-                client.sendCommand(new GameIsFullObj(idGame));
+                sendUpdateToClient(client, new GameIsFullObj(idGame));
             }
         }
     }
@@ -289,16 +289,14 @@ public class Controller extends UnicastRemoteObject implements IController {
      * tempClients
      * 
      * @param username is the username of the player that just quit
-     * @param idGame   is the id of the game which was joined by the player
      * @param client   is the client that requested to quit from a lobby
      * @throws RemoteException if an error occurs in the rmi connection
      */
-    public void quitGame(String username, int idGame, VirtualClient client) throws RemoteException {
+    public void quitGame(String username, VirtualClient client) throws RemoteException {
         tempClients.put(username, client);
         // se il gioco era costituito da una sola persona va eliminato il gamecontroller
         // corrispondente
-        client.sendCommand(new QuitFromGameRObj(idGame));
-
+        sendUpdateToClient(client, new QuitFromGameRObj(username));
     }
 
     // GETTERS
@@ -317,20 +315,18 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @throws NoGamesException if there are no current games.
      */
     public void getGameList(String username) throws RemoteException, NoGamesException {
+        List<String> res = new ArrayList<>();
         if (gameControlList.isEmpty()) {
-            List<String> res = new ArrayList<>();
             res.add("NO GAMES AVAILABLE");
-            tempClients.get(username).sendCommand(new ShowGamesObj(res));
         } else {
-            List<String> res = new ArrayList<>();
             for (int i = 0; i < gameControlList.size(); i++) {
                 res.add(
                         i + " "
                                 + gameControlList.get(i).getCurrentNumberPlayers() + " / "
                                 + gameControlList.get(i).getMaxNumberPlayers());
             }
-            tempClients.get(username).sendCommand(new ShowGamesObj(res));
         }
+        sendUpdateToClient(tempClients.get(username), new ShowGamesObj(res));
     }
 
     /**
@@ -399,6 +395,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                 //disconnectPlayer method of the gameController is invoked with also the disconnect method of the Controller
                 if(!found) {
                     for (GameController gc : gameControlList) {
+                        // FIXME
                         synchronized (gc.clientList) {
                             for (String u : gc.clientList.keySet()) {
                                 if ((gc.clientList.get(u)).equals(client)) {
@@ -415,7 +412,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                         }
                     }
                 }
-                //^ Implementato sopra ^
+                // ^ Implementato sopra ^
                 // gc.disconnectPlayer(...)
                 // gc.getid()
                 // disconnect(username, id, token )
@@ -469,4 +466,13 @@ public class Controller extends UnicastRemoteObject implements IController {
         ServerLog.controllerWrite("Client disconnesso per timeout" + username);
     }
 
+    private void sendUpdateToClient(VirtualClient client, ClientQueueObject clientQueueObject) {
+        new Thread(() -> {
+            try {
+                client.sendCommand(clientQueueObject);
+            } catch (RemoteException e) {
+
+            }
+        }).start();
+    }
 }

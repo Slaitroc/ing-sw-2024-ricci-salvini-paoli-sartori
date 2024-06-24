@@ -1,0 +1,29 @@
+@import "Colors.css";
+
+/* Customize the TabPane */
+.tab-pane {
+    -fx-padding: 10; /* Padding around the TabPane */
+}
+
+/* Customize the Tab headers */
+.tab-pane .tab-header-area .tab {
+    -fx-background-color: -light-beige; /* Background color for tabs */
+    -fx-text-fill: -black; /* Text color */
+    -fx-padding: 5 10; /* Padding inside tabs */
+    -fx-border-radius: 3; /* Rounded corners */
+    -fx-background-radius: 3; /* Rounded corners */
+}
+
+.tab-pane .tab-header-area .tab:selected {
+    -fx-background-color: -dark-green; /* Background color for selected tab */
+    -fx-text-fill: -white; /* Text color for selected tab */
+}
+
+/* Customize the tab content area */
+.tab-pane .tab-content-area {
+    -fx-background-image: url(../Images/Misc/);
+    -fx-padding: 10; /* Padding inside content area */
+    -fx-border-color: #ccc; /* Border color */
+    -fx-border-width: 1; /* Border width */
+    -fx-border-radius: 3; /* Rounded corners */
+}

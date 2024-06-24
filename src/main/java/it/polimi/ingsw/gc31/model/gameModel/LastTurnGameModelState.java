@@ -8,17 +8,15 @@ import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class LastTurnGameModelState implements GameModelState {
-    public LastTurnGameModelState() {
-        System.out.println("Game changed to LAST TURN");
+    public LastTurnGameModelState(GameModel model) {
+        ServerLog.gControllerWrite("Game changed to LAST TURN", model.getIdGame());
     }
 
     @Override
-    public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients)
+    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock)
             throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
@@ -69,7 +67,7 @@ public class LastTurnGameModelState implements GameModelState {
     }
 
     @Override
-    public void detectEndGame(GameModel model) throws IllegalStateOperationException {
+    public void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException {
         if (model.getCurrIndexPlayer() == model.getPlayers().size() - 1) {
             model.setGameState(new EndGameModelState(model));
             model.endGame();

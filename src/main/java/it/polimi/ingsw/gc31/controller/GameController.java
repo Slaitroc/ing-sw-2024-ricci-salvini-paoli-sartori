@@ -3,7 +3,8 @@ package it.polimi.ingsw.gc31.controller;
 import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.LinkedHashMap;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
@@ -23,8 +24,13 @@ import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
  */
 public class GameController extends UnicastRemoteObject implements IGameController {
     protected final GameModel model;
-    protected final LinkedHashMap<String, VirtualClient> clientList;
-    @SuppressWarnings("unused")
+    // FIXME problema di sincronizzazione per la clientList
+    // FIXME ho campiato clientList in cuncurrentList così che mi ci posso sincronizzare
+    // aggiungre lista di stringhe per tenere l'ordine delle stringhe nel caso in cui serva, tipo mandare la lista dei player
+    protected final Map<String, VirtualClient> clientList;
+    protected final Object clientListLock = new Object();
+//    private final List<String>  clientListOrder;
+//    @SuppressWarnings("unused")
     private final int maxNumberPlayers;
     private final int idGame;
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
@@ -91,9 +97,13 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * @param username the username of the player.
      * @param client   the client of the player.
      */
-    public void joinGame(String username, VirtualClient client) {
-        clientList.put(username, client);
+    public void joinGame(String username, VirtualClient client) throws RemoteException{
+        synchronized (clientListLock) {
+            clientList.put(username, client);
+        }
         readyStatus.put(username, false);
+        client.setGameController(this);
+        sendUpdateToClient(username, new JoinedToGameObj(idGame, maxNumberPlayers));
         if (maxNumberPlayers == this.clientList.size()) {
             ServerLog.gControllerWrite("The number of players for the game " + maxNumberPlayers + " has been reached",
                     idGame);
@@ -109,26 +119,33 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     // riconettersi.
     // se il giocatore si era disconnesso per un problema di rete nella lobby allora
     // entra come
-    public void reJoinGame(String username, VirtualClient newClient) {
+    public void reJoinGame(String username, VirtualClient newClient) throws RemoteException {
         // TODO controllare se il client era presente nella lista? oppure viene fatto
         // nel controller
         // TODO cosa fare con readyStatus?
-        if (clientList.containsKey(username)) {
-            clientList.put(username, newClient);
-            model.reconnectPlayer(username);
-            ServerLog.gControllerWrite("Welcome back " + username + "!", idGame);
-        } else {
-            ServerLog.gControllerWrite("C'è stato qualche problema con la rejoin di " + username, idGame);
+        // the old client is replaced with the new one
+        synchronized (clientListLock) {
+            if (clientList.containsKey(username)) {
+                clientList.put(username, newClient);
+                model.reconnectPlayer(username);
+                newClient.setGameController(this);
+                newClient.sendCommand(new JoinedToGameObj(idGame, getMaxNumberPlayers()));
+                ServerLog.gControllerWrite("Welcome back "+username+"!", idGame);
+            } else {
+                ServerLog.gControllerWrite("C'è stato qualche problema con la rejoin di " + username, idGame);
+            }
         }
     }
 
     // se un giocatore si disconnette quando la partita è già iniziata non ha la
     // possibilità di rientrare
     public void quitGame(String username) throws RemoteException {
-        VirtualClient client = clientList.get(username);
-        clientList.remove(username);
-        readyStatus.remove(username);
-        Controller.getController().quitGame(username, idGame, client);
+        synchronized (clientListLock) {
+            VirtualClient client = clientList.get(username);
+            clientList.remove(username);
+            readyStatus.remove(username);
+            Controller.getController().quitGame(username, client);
+        }
 
         if (model.isStarted()) {
             ServerLog.gControllerWrite(
@@ -157,7 +174,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         }
         if (counter == maxNumberPlayers) {
             try {
-                model.initGame(clientList);
+                synchronized (clientListLock) {
+                    model.initGame(clientList, clientListLock);
+                }
                 ServerLog.gControllerWrite("The game has started", idGame);
                 sendUpdateToClient(new StartGameObj());
             } catch (IllegalStateOperationException e) {
@@ -181,7 +200,14 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * @return the current number of players.
      */
     public int getCurrentNumberPlayers() {
-        return clientList.size();
+        if (model.isStarted()) {
+            return model.getPlayerConnection().size();
+        }
+        int clientListSize;
+        synchronized (clientListLock) {
+            clientListSize = clientList.size();
+        }
+        return clientListSize;
     }
 
     /**
@@ -193,7 +219,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.drawGold(username, index);
         } catch (IllegalStateOperationException e) {
-            sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj(e.getMessage()));
+            sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
     }
 
@@ -205,7 +231,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.drawResource(username, index);
         } catch (IllegalStateOperationException e) {
-            sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj(e.getMessage()));
+            sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
     }
 
@@ -213,7 +239,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.chooseSecretObjective(username, index);
         } catch (IllegalStateOperationException e) {
-            sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj(e.getMessage()));
+            sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
     }
 
@@ -221,7 +247,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.play(username, point);
         } catch (IllegalStateOperationException | IllegalPlaceCardException e) {
-            sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj(e.getMessage()));
+            sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
     }
 
@@ -230,9 +256,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             model.playStarter(username);
             ServerLog.gControllerWrite("Player" + username + " has played starter card", idGame);
         } catch (IllegalStateOperationException e) {
-            sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj("You are in the wrong state"));
+            sendUpdateToClient(username, new ShowInvalidActionObj("You are in the wrong state"));
         } catch (ObjectiveCardNotChosenException e) {
-            sendUpdateToClient(clientList.get(username),
+            sendUpdateToClient(username,
                     new ShowInvalidActionObj("You must first choose your secret objective"));
         }
     }
@@ -242,9 +268,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             model.setSelectCard(username, index);
         } catch (IllegalStateOperationException e) {
             // TODO gestire meglio messaggio di questa eccezione
-            sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj("You can't select a card"));
+            sendUpdateToClient(username, new ShowInvalidActionObj("You can't select a card"));
         } catch (WrongIndexSelectedCard e) {
-            sendUpdateToClient(clientList.get(username), new ShowInvalidActionObj(e.getMessage()));
+            sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
     }
 
@@ -268,19 +294,27 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         sendUpdateToClient(new ShowInGamePlayerObj(readyStatus));
     }
 
-    private void sendUpdateToClient(VirtualClient client, ClientQueueObject clientQueueObject) {
+    private void sendUpdateToClient(String username, ClientQueueObject clientQueueObject) {
         new Thread(() -> {
+            VirtualClient client;
+            synchronized (clientListLock) {
+                client = clientList.get(username);
+            }
             try {
                 client.sendCommand(clientQueueObject);
-            } catch (RemoteException e) {
+            } catch (RemoteException ignored) {
 
             }
         }).start();
     }
 
     private void sendUpdateToClient(ClientQueueObject clientQueueObject) {
-        for (VirtualClient client : clientList.values()) {
-            sendUpdateToClient(client, clientQueueObject);
+        List<String> usernameList;
+        synchronized (clientListLock) {
+            usernameList = new ArrayList<>(clientList.keySet());
+        }
+        for (String username : usernameList) {
+            sendUpdateToClient(username, clientQueueObject);
         }
     }
 
@@ -296,5 +330,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         return model;
     }
 
+    // FIXME non sincronizzato
     protected int getIdGame(){ return idGame; }
 }

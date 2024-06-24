@@ -1,21 +1,18 @@
 package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
-import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
+import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsOverObj;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
 import java.rmi.RemoteException;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class EndGameModelState implements GameModelState {
     public EndGameModelState(GameModel model) {
-        System.out.println("Game changed to END GAME");
+        ServerLog.gControllerWrite("Game changed to END GAME", model.getIdGame());
 
         for (String username: model.getListeners().keySet()) {
             model.getListeners().get(username).removeGoldDeckListener();
@@ -23,7 +20,7 @@ public class EndGameModelState implements GameModelState {
         }
     }
     @Override
-    public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
+    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
@@ -68,7 +65,7 @@ public class EndGameModelState implements GameModelState {
     }
 
     @Override
-    public void detectEndGame(GameModel model) throws IllegalStateOperationException {
+    public void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
@@ -90,7 +87,7 @@ public class EndGameModelState implements GameModelState {
 
         for (String username: model.clients.keySet()) {
             try {
-                model.clients.get(username).sendCommand(new GameIsOverObj(usernameWinner));
+                model.clients.get(username).sendCommand(new GameIsOverObj(usernameWinner, model.getBoard().getPlayersScore()));
             } catch (RemoteException e) {
                 System.out.println("Error sending game is over");
             }

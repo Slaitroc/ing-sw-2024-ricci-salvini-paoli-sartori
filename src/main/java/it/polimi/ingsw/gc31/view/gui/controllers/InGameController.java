@@ -112,15 +112,15 @@ public class InGameController extends ViewController {
     public VBox player3Resources;
     @FXML
     public VBox player4Resources;
-    List<VBox> resourceWindows = new ArrayList<>();
 
-    //AFK GIF___________________________________________________________________________________________________________
+    //STATUS IMAGES_____________________________________________________________________________________________________
     @FXML
-    public ImageView afkP2;
+    public ImageView statusP2;
     @FXML
-    public ImageView afkP3;
+    public ImageView statusP3;
     @FXML
-    public ImageView afkP4;
+    public ImageView statusP4;
+    private final List<ImageView> statusPanes = new ArrayList<>();
 
     //Player Names Labels_______________________________________________________________________________________________
     @FXML
@@ -199,6 +199,22 @@ public class InGameController extends ViewController {
     public ImageView player4HandCard2;
     @FXML
     public ImageView player4HandCard3;
+    @FXML
+    public ImageView noirPion1;
+    @FXML
+    public ImageView noirPion2;
+    @FXML
+    public ImageView noirPion3;
+    @FXML
+    public ImageView noirPion4;
+    @FXML
+    public ImageView colorPion4;
+    @FXML
+    public ImageView colorPion3;
+    @FXML
+    public ImageView colorPion2;
+    @FXML
+    public ImageView colorPion1;
     //List of hand cards for each player
     private List<ImageView> handCards;
     @FXML
@@ -242,11 +258,14 @@ public class InGameController extends ViewController {
     @FXML
     public Button playStarterButton;
 
+    @FXML
     public VBox initialChoise;
 
     private final List<String> otherPlayers = new ArrayList<>();
 
     private ResolutionSizes size;
+
+    boolean firstPlayer = true;
 
 
     /* NOTE
@@ -317,8 +336,7 @@ public class InGameController extends ViewController {
         //Also hides the resources of the players not in game
         gridDimensions.put(player1PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
         gridDimensions.put(player2PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
-        resourceWindows.add(player1Resources);
-        resourceWindows.add(player2Resources);
+        statusPanes.add(statusP2);
         player1Name.setText(app.getUsername());
         player2Name.setText(otherPlayers.getFirst());
         if (app.getNumberOfPlayers() == 2) {
@@ -327,13 +345,13 @@ public class InGameController extends ViewController {
         } else if (app.getNumberOfPlayers() == 3) {
             player4Resources.setVisible(false);
             player3Name.setText(otherPlayers.get(1));
-            resourceWindows.add(player3Resources);
+            statusPanes.add(statusP3);
             gridDimensions.put(player3PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
         } else if (app.getNumberOfPlayers() == 4) {
-            resourceWindows.add(player3Resources);
-            resourceWindows.add(player4Resources);
             player3Name.setText(otherPlayers.get(1));
-            player3Name.setText(otherPlayers.get(2));
+            player4Name.setText(otherPlayers.get(2));
+            statusPanes.add(statusP3);
+            statusPanes.add(statusP4);
             gridDimensions.put(player3PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
             gridDimensions.put(player4PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
         }
@@ -363,6 +381,8 @@ public class InGameController extends ViewController {
         addHandCardDragListener(handCard2);
         addHandCardDragListener(handCard3);
 
+        assignPion();
+        textField.addEventFilter(KeyEvent.KEY_PRESSED, this::handleEnterKeyPressed);
         changeResolution();
     }
 
@@ -478,46 +498,75 @@ public class InGameController extends ViewController {
         //System.out.println("Hello, I'm player " + app.getUsername() + " and I received the message that " + username + " is in state " + info);
         if (username.equals(app.getUsername())) {
             playingPlayer1Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            if (firstPlayer) {
+                noirPion1.setVisible(true);
+                firstPlayer = false;
+            }
         } else if (username.equals(otherPlayers.getFirst())) {
             playingPlayer2Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            if (firstPlayer) {
+                noirPion2.setVisible(true);
+                firstPlayer = false;
+            }
         } else if (username.equals(otherPlayers.get(1))) {
             playingPlayer3Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            if (firstPlayer) {
+                noirPion3.setVisible(true);
+                firstPlayer = false;
+            }
         } else if (username.equals(otherPlayers.get(2))) {
             playingPlayer4Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            if (firstPlayer) {
+                noirPion4.setVisible(true);
+                firstPlayer = false;
+            }
         }
     }
 
     @Override
     public void updateChat(String username, String message) {
         Text usernameText = new Text(username + ": ");
-        if (username.equals(app.getPlayerList().keySet().stream().toList().getFirst())) {
-            usernameText.setFill(javafx.scene.paint.Color.GREEN);
-        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(1))) {
-            usernameText.setFill(javafx.scene.paint.Color.VIOLET);
-        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(2))) {
-            usernameText.setFill(javafx.scene.paint.Color.RED);
-        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(3))) {
-            usernameText.setFill(javafx.scene.paint.Color.BLUE);
-        }
-        Text messageText = new Text(message + "\n");
-        messageText.setFill(Color.BLACK);
+        populateChat(username, message, usernameText);
 
-        chatField.getChildren().add(usernameText);
-        chatField.getChildren().add(messageText);
-        scrollPane.layout();
-        scrollPane.setVvalue(1.0);
-        if (!chatPopUp.isVisible()) {
-            chatButtonImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/AppIcons/iconMessagePending.png"))));
+    }
+
+    @Override
+    public void updateChat(String fromUsername, String toUsername, String message) {
+        Text usernameText;
+        String colorUsername;
+        //If my username is the toUsername, => fromUsername is trying to send me a message then I will print [From: X]: message
+        if (toUsername.equals(app.getUsername())) {
+            colorUsername = toUsername;
+            usernameText = new Text("[From: " + fromUsername + "]: ");
+        }
+        //If my username is the fromUsername, => I'm trying to send me a message to toUsername then I will print [To: Y]: message
+        else if (fromUsername.equals(app.getUsername())) {
+            colorUsername = fromUsername;
+            usernameText = new Text("[To: " + toUsername + "]: ");
+        } else return;
+
+        populateChat(colorUsername, message, usernameText);
+    }
+
+    @Override
+    public void handleInGamePlayers(LinkedHashMap<String, Boolean> players) {
+        int i = 0;
+        for (String player : otherPlayers) {
+            if (players.containsKey(player)) statusPanes.get(i).setVisible(false);
+            else {
+                statusPanes.get(i).setVisible(true);
+                statusPanes.get(i).setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/Misc/quittedPlayer.jpg"))));
+            }
+            i++;
         }
     }
 
     @Override
-    public void showWinner(String username){
-        if(username.equals(app.getUsername())) {
+    public void showWinner(String username) {
+        if (username.equals(app.getUsername())) {
             showHidePane(youWon);
             youWon.setMouseTransparent(true);
-        }
-        else {
+        } else {
             winnerLabel.setText(username + "won");
             showHidePane(otherWinner);
             otherWinner.setMouseTransparent(true);
@@ -651,10 +700,7 @@ public class InGameController extends ViewController {
      */
     @FXML
     private void handleEnterKeyPressed(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER && !textField.getText().isEmpty()) {
-            sendText(textField.getText());
-            textField.clear();
-        }
+        sendMessage(event, textField);
     }
 
     public void showHideMenu() {
@@ -810,22 +856,22 @@ public class InGameController extends ViewController {
         //System.out.println("UPDATE_GRID CALL");
         for (Map.Entry<Point, PlayableCard> placedCard : playArea.entrySet()) {
             if (placedCard.getKey().x < gridDimensions.get(grid).getFirst()) {
+                //System.out.println("Adding Column");
                 gridDimensions.get(grid).set(0, placedCard.getKey().x);
-                System.out.println("Adding Column");
                 addColumn(grid, cells, gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2);
             }
             if (placedCard.getKey().y < gridDimensions.get(grid).get(1)) {
-                System.out.println("Adding Row");
+                //System.out.println("Adding Row");
                 gridDimensions.get(grid).set(1, placedCard.getKey().y);
                 addRow(grid, cells, gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2);
             }
             if (placedCard.getKey().x > gridDimensions.get(grid).get(2)) {
-                System.out.println("Adding Column");
+                //System.out.println("Adding Column");
                 gridDimensions.get(grid).set(2, placedCard.getKey().x);
                 addColumn(grid, cells, gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2);
             }
             if (placedCard.getKey().y > gridDimensions.get(grid).get(3)) {
-                System.out.println("Adding Row");
+                //System.out.println("Adding Row");
                 gridDimensions.get(grid).set(3, placedCard.getKey().y);
                 addRow(grid, cells, gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2);
             }
@@ -845,7 +891,6 @@ public class InGameController extends ViewController {
         //int debug = 0;
         for (int x = 0; x < grid.getColumnCount(); x++) {
             for (int y = 0; y < grid.getRowCount(); y++) {
-                //System.out.println("Hiding image [" + x + " " + y + "]");
                 //debug++;
                 cells.get(new Pair<>(x, y)).hideImage();
                 //System.out.println("Cell [" + x + ";" + y + "] set to invisible image");
@@ -858,7 +903,6 @@ public class InGameController extends ViewController {
             newCoordinateX = placedCard.getKey().x - gridDimensions.get(grid).getFirst() + 1;
             newCoordinateY = gridDimensions.get(grid).get(3) - placedCard.getKey().y + 1;
             //System.out.println("Adding card that was on Point: " + placedCard.getKey() + " on cell [" + newCoordinateX + ";" + newCoordinateY + "]");
-            //System.out.println("Card Image Path: " + placedCard.getValue().getImage());
             cells.get(new Pair<>(newCoordinateX, newCoordinateY)).setCardImage(placedCard.getValue().getImage());
         }
     }
@@ -911,25 +955,12 @@ public class InGameController extends ViewController {
         }
     }
 
+    //private method to hide the hand of other players
     private void hideHand(List<PlayableCard> hand) {
         for (PlayableCard playableCard : hand) {
             if (playableCard.getSide()) {
                 playableCard.changeSide();
             }
-        }
-    }
-
-    /**
-     * Sends a chat message.
-     *
-     * @param message The message to send.
-     */
-    private void sendText(String message) {
-        try {
-            client.sendChatMessage(client.getUsername(), message);
-        } catch (RemoteException e) {
-            show_ServerCrashWarning(e.toString());
-            e.getStackTrace();
         }
     }
 
@@ -980,8 +1011,8 @@ public class InGameController extends ViewController {
     private void resizeCard(ImageView card) {
         //System.out.println("card.getFitWidth(): "+card.getFitWidth()+" \n card.getFitHeight(): " + card.getFitHeight());
         //System.out.println("card.getImage().getWidth(): "+card.getImage().getWidth()+" \n card.getImage().getHeight() " + card.getImage().getHeight())
-        card.setFitHeight(size.getHeight());
-        card.setFitWidth(size.getWidth());
+        card.setFitHeight(size.getCardsHeight());
+        card.setFitWidth(size.getCardWidth());
         setClipToImageView(card);
     }
 
@@ -999,6 +1030,49 @@ public class InGameController extends ViewController {
         pane.setManaged(!pane.isManaged());
         pane.setVisible(!pane.isVisible());
         pane.setMouseTransparent(!pane.isMouseTransparent());
+    }
+
+    private void assignPion() {
+        List<String> pionImages = new ArrayList<>();
+        pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_vert.png");
+        pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_jaune.png");
+        pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_rouge.png");
+        pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_bleu.png");
+        int i = 0;
+        for (String player : app.getPlayerList().keySet()) {
+            if (player.equals(player1Name.getText()))
+                colorPion1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+            else if (player.equals(player2Name.getText()))
+                colorPion2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+            else if (player.equals(player3Name.getText()))
+                colorPion3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+            else if (player.equals(player4Name.getText()))
+                colorPion4.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+
+            i++;
+        }
+    }
+
+    private void populateChat(String username, String message, Text usernameText){
+        if (username.equals(app.getPlayerList().keySet().stream().toList().getFirst())) {
+            usernameText.setFill(Color.GREEN);
+        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(1))) {
+            usernameText.setFill(Color.VIOLET);
+        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(2))) {
+            usernameText.setFill(Color.RED);
+        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(3))) {
+            usernameText.setFill(Color.BLUE);
+        }
+        Text messageText = new Text(message + "\n");
+        messageText.setFill(Color.BLACK);
+
+        chatField.getChildren().add(usernameText);
+        chatField.getChildren().add(messageText);
+        scrollPane.layout();
+        scrollPane.setVvalue(1.0);
+        if (!chatPopUp.isVisible()) {
+            chatButtonImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/AppIcons/iconMessagePending.png"))));
+        }
     }
 
 
@@ -1042,8 +1116,8 @@ public class InGameController extends ViewController {
             this.setImage(cardImage);
             this.setPreserveRatio(true);
             this.setViewport(cardViewportSD);
-            this.setFitWidth(size.getWidth()); // set the card width
-            this.setFitHeight(size.getHeight()); // Set the card height
+            this.setFitWidth(size.getCardWidth()); // set the card width
+            this.setFitHeight(size.getCardsHeight()); // Set the card height
             setClipToImageView(this);
 
             //If the cell belongs to player1, it is set to accept drag and drop events

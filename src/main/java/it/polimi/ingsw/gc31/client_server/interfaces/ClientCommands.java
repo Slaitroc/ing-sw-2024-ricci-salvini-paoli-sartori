@@ -53,6 +53,8 @@ public interface ClientCommands {
 
     void sendChatMessage(String username, String message) throws RemoteException;
 
+    void sendChatMessage(String fromUsername, String toUsername, String message) throws RemoteException;
+
     void setToken(int token);
 
     void reconnect(boolean reconnect) throws RemoteException;

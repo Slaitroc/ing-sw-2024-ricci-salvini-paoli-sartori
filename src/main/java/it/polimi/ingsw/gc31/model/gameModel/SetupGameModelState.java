@@ -2,18 +2,18 @@ package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.listeners.*;
+import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SetupGameModelState implements GameModelState{
     public SetupGameModelState(GameModel model) {
-        System.out.println("Game changed to SETUP");
+        ServerLog.gControllerWrite("Game changed to SETUP", model.getIdGame());
 
         for (String username: model.getListeners().keySet()) {
             GameListenerHandler gameListener = model.getListeners().get(username);
@@ -30,7 +30,7 @@ public class SetupGameModelState implements GameModelState{
     }
 
     @Override
-    public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
+    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
@@ -51,8 +51,10 @@ public class SetupGameModelState implements GameModelState{
         }
 
         if (allPlayersPlayedStarter) {
+            model.endTurn();
+//            model.setNextPlayingPlayer();
             model.setGameState(new RunningGameModelSate(model));
-            model.setNextPlayingPlayer();
+            model.notifyAllGameListeners();
         }
     }
 
@@ -87,8 +89,8 @@ public class SetupGameModelState implements GameModelState{
     }
 
     @Override
-    public void detectEndGame(GameModel model) throws IllegalStateOperationException {
-        throw new IllegalStateOperationException();
+    public void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException {
+
     }
 
     @Override

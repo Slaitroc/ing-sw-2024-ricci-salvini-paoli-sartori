@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.model.gameModel;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
+import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
@@ -10,12 +11,11 @@ import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.utility.DV;
 
 import java.awt.*;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class RunningGameModelSate implements GameModelState {
     public RunningGameModelSate(GameModel model) {
-        System.out.println("Game changed to RUNNING");
+        ServerLog.gControllerWrite("Game changed to RUNNING", model.getIdGame());
 
         model.getListeners().values().forEach(GameListenerHandler::removeStarterCardListener);
         model.getListeners().values().forEach(GameListenerHandler::removeChooseObjectiveListener);
@@ -31,7 +31,7 @@ public class RunningGameModelSate implements GameModelState {
 //        model.notifyAllGameListeners();
     }
     @Override
-    public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
+    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
@@ -80,11 +80,11 @@ public class RunningGameModelSate implements GameModelState {
     }
 
     @Override
-    public void detectEndGame(GameModel model) throws IllegalStateOperationException {
-        if (model.getCurrPlayer().getScore() >= DV.GamePoints && model.getCurrIndexPlayer() == model.getPlayers().size()-1) {
-            model.setGameState(new LastTurnGameModelState());
-        } else if (model.getCurrPlayer().getScore() >= DV.GamePoints){
-            model.setGameState(new ShowDownGameModelState());
+    public void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException {
+        if ((model.getCurrPlayer().getScore() >= DV.GamePoints || bothEmptyDeck) && model.getCurrIndexPlayer() == model.getPlayers().size()-1) {
+            model.setGameState(new LastTurnGameModelState(model));
+        } else if (model.getCurrPlayer().getScore() >= DV.GamePoints || bothEmptyDeck){
+            model.setGameState(new ShowDownGameModelState(model));
         }
     }
 

@@ -213,6 +213,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
+    public void sendChatMessage(String fromUsername, String toUsername, String message) throws RemoteException {
+        gameController.sendCommand(new ChatMessage(fromUsername, toUsername, message));
+    }
+
+    @Override
     public void setController(IController controller) throws RemoteException {
         this.controller = controller;
         startHeartBeat();
