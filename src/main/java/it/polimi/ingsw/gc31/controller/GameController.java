@@ -25,16 +25,19 @@ import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 public class GameController extends UnicastRemoteObject implements IGameController {
     protected final GameModel model;
     // FIXME problema di sincronizzazione per la clientList
-    // FIXME ho campiato clientList in cuncurrentList così che mi ci posso sincronizzare
-    // aggiungre lista di stringhe per tenere l'ordine delle stringhe nel caso in cui serva, tipo mandare la lista dei player
+    // FIXME ho campiato clientList in cuncurrentList così che mi ci posso
+    // sincronizzare
+    // aggiungre lista di stringhe per tenere l'ordine delle stringhe nel caso in
+    // cui serva, tipo mandare la lista dei player
     protected final Map<String, VirtualClient> clientList;
     protected final Object clientListLock = new Object();
-//    private final List<String>  clientListOrder;
-//    @SuppressWarnings("unused")
+    // private final List<String> clientListOrder;
+    // @SuppressWarnings("unused")
     private final int maxNumberPlayers;
     private final int idGame;
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
     protected final LinkedHashMap<String, Boolean> readyStatus;
+    public final Map<Integer, String> disconnected;
 
     /**
      * Constructor for the GameController class.
@@ -47,6 +50,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      */
     public GameController(String username, VirtualClient client, int maxNumberPlayers, int idGame)
             throws RemoteException {
+        this.disconnected = new HashMap<>();
         this.callsList = new LinkedBlockingQueue<>();
         this.maxNumberPlayers = maxNumberPlayers;
         this.idGame = idGame;
@@ -97,7 +101,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * @param username the username of the player.
      * @param client   the client of the player.
      */
-    public void joinGame(String username, VirtualClient client) throws RemoteException{
+    public void joinGame(String username, VirtualClient client) throws RemoteException {
         synchronized (clientListLock) {
             clientList.put(username, client);
         }
@@ -130,7 +134,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
                 model.reconnectPlayer(username);
                 newClient.setGameController(this);
                 newClient.sendCommand(new JoinedToGameObj(idGame, getMaxNumberPlayers()));
-                ServerLog.gControllerWrite("Welcome back "+username+"!", idGame);
+                ServerLog.gControllerWrite("Welcome back " + username + "!", idGame);
             } else {
                 ServerLog.gControllerWrite("C'è stato qualche problema con la rejoin di " + username, idGame);
             }
@@ -331,5 +335,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     }
 
     // FIXME non sincronizzato
-    protected int getIdGame(){ return idGame; }
+    protected int getIdGame() {
+        return idGame;
+    }
 }

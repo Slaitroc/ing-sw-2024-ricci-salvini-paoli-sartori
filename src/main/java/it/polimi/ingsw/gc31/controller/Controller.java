@@ -161,28 +161,45 @@ public class Controller extends UnicastRemoteObject implements IController {
      */
     public boolean connect(VirtualClient client, String username, Integer token)
             throws RemoteException {
-        // client.sendCommand(new WantsReconnectObjI())
-        if(disconnected.containsKey(token)) {
-            //The element in the newConnections map is updated with the new VirtualClient
-            newConnections.replace(token,client);
-            client.sendCommand(new WantsReconnectObj());
-            //Devo ritornare true o false?
-            return true;
-        } else {
+        if (token == -1) {
             sendToken(client);
-            if (nicknames.add(username)) {
-                tempClients.put(username, client);
-                client.setController(this);
-                client.sendCommand((new ValidUsernameObj(username)));
-
-                clientsHeartBeat.put(client, System.currentTimeMillis());
-
+            return usernameValidation(username, client);
+        } else {
+            if (disconnected.containsKey(token)) {
+                newConnections.replace(token, client);
+                client.sendCommand(new WantsReconnectObj());
+                ServerLog.controllerWrite(
+                        "old client " + gameControlList.get(disconnected.get(token)).disconnected.get(token)
+                                + "reconnected with name " + username);
                 return true;
             } else {
-                client.sendCommand(new WrongUsernameObj(username));
-                return false;
-                // FIX PlayerAlreadyExistsException non più necessaria (da verificare)
+                return usernameValidation(username, client);
             }
+        }
+    }
+
+    private boolean usernameValidation(String username, VirtualClient client) {
+        // sendToken(client); //NOTE ricordarsi che questo metodo non esegue questa
+        // riga!!!
+        if (nicknames.add(username)) {
+            tempClients.put(username, client);
+            try {
+                client.setController(this);
+                client.sendCommand((new ValidUsernameObj(username)));
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+
+            clientsHeartBeat.put(client, System.currentTimeMillis());
+
+            return true;
+        } else {
+            try {
+                client.sendCommand(new WrongUsernameObj(username));
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            return false;
         }
     }
 
@@ -369,31 +386,38 @@ public class Controller extends UnicastRemoteObject implements IController {
     protected void checkHeartBeats() {
         long now = System.currentTimeMillis();
 
-        //Checks for every active client if the last heart beat was received at most 10 seconds ago
-        //if the last heart beat was received more than 10 seconds ago the client is considered crashed
+        // Checks for every active client if the last heart beat was received at most 10
+        // seconds ago
+        // if the last heart beat was received more than 10 seconds ago the client is
+        // considered crashed
         for (VirtualClient client : clientsHeartBeat.keySet()) {
             if (now - clientsHeartBeat.get(client) > 10000) {
-                //The crashed client is removed from the map with all the active clients
+                // The crashed client is removed from the map with all the active clients
                 clientsHeartBeat.remove(client);
 
-                //I need to find the client, if it is in tempClients it can't be in any gameController.clientList
+                // I need to find the client, if it is in tempClients it can't be in any
+                // gameController.clientList
                 // so the second for will not be executed
                 boolean found = false;
 
-                //Checks if the disconnected client was in the tempClients map (it was not in a game)
+                // Checks if the disconnected client was in the tempClients map (it was not in a
+                // game)
                 for (String username : tempClients.keySet()) {
                     if ((tempClients.get(username)).equals(client)) {
-                        //If the client is found it is removed from the tempClients map
+                        // If the client is found it is removed from the tempClients map
                         tempClients.remove(username);
                         found = true;
                     }
                 }
 
-                //FIXME si può usare disconnected get(token) per ottenere subito il gameID
-                //If the client was not found in tempClients => it is in a clientList of a GameController (it was
-                //in a game). The for searches the client in all the gameController.clientList, if it is found the
-                //disconnectPlayer method of the gameController is invoked with also the disconnect method of the Controller
-                if(!found) {
+                // FIXME si può usare disconnected get(token) per ottenere subito il gameID
+                // If the client was not found in tempClients => it is in a clientList of a
+                // GameController (it was
+                // in a game). The for searches the client in all the gameController.clientList,
+                // if it is found the
+                // disconnectPlayer method of the gameController is invoked with also the
+                // disconnect method of the Controller
+                if (!found) {
                     for (GameController gc : gameControlList) {
                         // FIXME
                         synchronized (gc.clientList) {
@@ -401,7 +425,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                                 if ((gc.clientList.get(u)).equals(client)) {
                                     gc.disconnectPlayer(u);
 
-                                    //I need to know the token of the disconnected client for the disconnect method
+                                    // I need to know the token of the disconnected client for the disconnect method
                                     for (int t : newConnections.keySet()) {
                                         if ((newConnections.get(t)).equals(client)) {
                                             disconnect(u, gc.getIdGame(), t);
@@ -438,9 +462,9 @@ public class Controller extends UnicastRemoteObject implements IController {
         } else {
             clientsHeartBeat.replace(client, System.currentTimeMillis());
             client.sendCommand(new HeartBeatObj());
-        }// System.out.println(Ansi.ansi().cursor(1,
-        // 1).a("\\033[5m💚\\033[0m\\").reset());
-        // System.out.println("HeartBeat ricevuto");
+        } // System.out.println(Ansi.ansi().cursor(1,
+          // 1).a("\\033[5m💚\\033[0m\\").reset());
+          // System.out.println("HeartBeat ricevuto");
     }
 
     // /**
@@ -463,6 +487,7 @@ public class Controller extends UnicastRemoteObject implements IController {
 
     public void disconnect(String username, int idGame, int token) {
         disconnected.put(token, idGame);
+        gameControlList.get(idGame).disconnected.put(token, username);
         ServerLog.controllerWrite("Client disconnesso per timeout" + username);
     }
 
