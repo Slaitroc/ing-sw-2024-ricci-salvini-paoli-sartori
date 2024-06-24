@@ -1,4 +1,3 @@
-
 package it.polimi.ingsw.gc31.view.gui;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
@@ -139,7 +138,7 @@ public class GUI extends UI {
 
         Platform.runLater(() -> {
             app.getCurrentController().show_handPlayer(username, hand);
-             // System.out.println("show_handPlayer called");
+            // System.out.println("show_handPlayer called");
         });
     }
 
@@ -160,7 +159,7 @@ public class GUI extends UI {
                 card2.changeSide();
             }
             app.getCurrentController().show_commonObjectives(card1, card2);
-             // System.out.println("show_objectiveDeck called");
+            // System.out.println("show_objectiveDeck called");
         });
 
     }
@@ -173,11 +172,10 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea,
-            Map<Resources, Integer> achievedResources) {
+    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea, Map<Resources, Integer> achievedResources) {
 
         Platform.runLater(() -> app.getCurrentController().show_playArea(username, playArea, achievedResources));
-         // System.out.println("show_playArea called");
+        // System.out.println("show_playArea called");
         // // System.out.println("Player "+ username + " achievedResources: " +
         // achievedResources);
     }
@@ -187,7 +185,7 @@ public class GUI extends UI {
 
         Platform.runLater(() -> {
             app.getCurrentController().show_resourceDeck(firstCardDeck, card1, card2);
-             // System.out.println("show_resourceDeck called");
+            // System.out.println("show_resourceDeck called");
         });
     }
 
@@ -198,7 +196,7 @@ public class GUI extends UI {
             objectiveCard1.changeSide();
             objectiveCard2.changeSide();
             app.getCurrentController().show_chooseObjectiveCard(username, objectiveCard1, objectiveCard2);
-             // System.out.println("show_chooseObjectiveCard called");
+            // System.out.println("show_chooseObjectiveCard called");
         });
     }
 
@@ -238,7 +236,7 @@ public class GUI extends UI {
     @Override
     public void show_quitFromGame(String username) {
         // TODO Auto-generated method stub
-        Platform.runLater(() ->System.out.println("show_quitFromGame called: " + username));
+        Platform.runLater(() -> System.out.println("show_quitFromGame called: " + username));
     }
 
     @Override

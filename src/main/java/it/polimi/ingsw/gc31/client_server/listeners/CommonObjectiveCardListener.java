@@ -2,12 +2,10 @@ package it.polimi.ingsw.gc31.client_server.listeners;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
-import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsOverObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowCommonObjectiveCardObj;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 
-import java.rmi.RemoteException;
 import java.util.Map;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
@@ -35,8 +33,7 @@ public class CommonObjectiveCardListener extends Listener{
                 gsonTranslater.toJson(model.getCommonObjectives().get(0), ObjectiveCard.class),
                 gsonTranslater.toJson(model.getCommonObjectives().get(1), ObjectiveCard.class)
         );
-//        if (model.getPlayerConnection().get(username)) {
-            sendUpdate(model, username, clients.get(username), clientQueueObject);
-//        }
+
+        sendUpdate(model, username, clients.get(username), clientQueueObject);
     }
 }

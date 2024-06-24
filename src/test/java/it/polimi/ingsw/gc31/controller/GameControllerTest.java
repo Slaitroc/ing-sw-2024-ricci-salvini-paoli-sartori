@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 import org.mockito.Mockito;
 
-import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.awt.*;
 
@@ -178,8 +177,7 @@ public class GameControllerTest {
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player3"));
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player4"));
 
-        //FIXME why this method throw an RuntimeException?
-        assertThrows(RuntimeException.class, () -> gameController1.checkReady());
+        assertDoesNotThrow(() -> gameController1.checkReady());
     }
 
     /**

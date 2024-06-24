@@ -63,9 +63,9 @@ public class GameModel {
      * @param clients a LinkedHashMap containing the virtual clients mapped with their usernames
      * @throws IllegalStateOperationException if the game is not in the right state to be initialized
      */
-    public void initGame(LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
+    public void initGame(Map<String, VirtualClient> clients, Object lock) throws IllegalStateOperationException {
         this.clients = clients;
-        players = gameState.initGame(this, clients);
+        players = gameState.initGame(this, clients, lock);
         isStarted = true;
         notifyAllGameListeners();
     }
@@ -88,10 +88,16 @@ public class GameModel {
      * @throws IllegalStateOperationException if the game is not in the right state
      */
     public void endTurn() throws IllegalStateOperationException {
-        do {
-            gameState.detectEndGame(this);
-            setNextPlayingPlayer();
-        } while (!playerConnection.get(getCurrPlayer().getUsername()));
+        boolean bothEmptyDeck = false;
+        if (board.getDeckGold().isEmpty() && board.getDeckResource().isEmpty()) {
+            bothEmptyDeck = true;
+        }
+        synchronized (playerConnection) {
+            do {
+                gameState.detectEndGame(this, bothEmptyDeck);
+                setNextPlayingPlayer();
+            } while (!playerConnection.get(getCurrPlayer().getUsername()));
+        }
 
         listeners.values().forEach(listener -> listener.notifyPlayerScoreListener(this));
         listeners.values().forEach(listener -> listener.notifyTurnListener(this));
@@ -108,17 +114,13 @@ public class GameModel {
      * waiting, while the state of the new current player is set to not placed.
      */
     public void setNextPlayingPlayer() {
-//        synchronized (playerConnection) {
-//            do {
-                if (turnPlayer == null) {
-                    turnPlayer = new ArrayList<>();
-                    turnPlayer.addAll(players.keySet());
-                    currPlayingPlayer = 0;
-                } else {
-                    currPlayingPlayer = (currPlayingPlayer + 1) % players.size();
-                }
-//            } while (!playerConnection.get(getCurrPlayer().getUsername()));
-//        }
+        if (turnPlayer == null) {
+            turnPlayer = new ArrayList<>();
+            turnPlayer.addAll(players.keySet());
+            currPlayingPlayer = 0;
+        } else {
+            currPlayingPlayer = (currPlayingPlayer + 1) % players.size();
+        }
 
         // set all players to waiting state
         for (Player player : players.values()) {
@@ -298,7 +300,7 @@ public class GameModel {
             try {
                 chooseSecretObjective(username, 0);
                 playStarter(username);
-            } catch (IllegalStateOperationException | ObjectiveCardNotChosenException e) {
+            } catch (IllegalStateOperationException | ObjectiveCardNotChosenException ignored) {
 
             }
             ServerLog.gControllerWrite("Default chooses for " + username, idGame);
@@ -306,7 +308,7 @@ public class GameModel {
             if (getCurrPlayer().getUsername().equals(username)) {
                 try {
                     endTurn();
-                } catch (IllegalStateOperationException e) {
+                } catch (IllegalStateOperationException ignored) {
 
                 }
             }

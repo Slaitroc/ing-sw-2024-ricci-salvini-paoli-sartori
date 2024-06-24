@@ -9,7 +9,6 @@ import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SetupGameModelState implements GameModelState{
@@ -31,7 +30,7 @@ public class SetupGameModelState implements GameModelState{
     }
 
     @Override
-    public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
+    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
@@ -52,9 +51,9 @@ public class SetupGameModelState implements GameModelState{
         }
 
         if (allPlayersPlayedStarter) {
-            model.setNextPlayingPlayer();
+            model.endTurn();
+//            model.setNextPlayingPlayer();
             model.setGameState(new RunningGameModelSate(model));
-//            model.endTurn();
             model.notifyAllGameListeners();
         }
     }
@@ -90,8 +89,8 @@ public class SetupGameModelState implements GameModelState{
     }
 
     @Override
-    public void detectEndGame(GameModel model) throws IllegalStateOperationException {
-        throw new IllegalStateOperationException();
+    public void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException {
+
     }
 
     @Override

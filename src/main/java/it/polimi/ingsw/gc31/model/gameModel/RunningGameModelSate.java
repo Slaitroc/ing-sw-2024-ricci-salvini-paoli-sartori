@@ -11,7 +11,6 @@ import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.utility.DV;
 
 import java.awt.*;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class RunningGameModelSate implements GameModelState {
@@ -32,7 +31,7 @@ public class RunningGameModelSate implements GameModelState {
 //        model.notifyAllGameListeners();
     }
     @Override
-    public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
+    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
@@ -81,10 +80,10 @@ public class RunningGameModelSate implements GameModelState {
     }
 
     @Override
-    public void detectEndGame(GameModel model) throws IllegalStateOperationException {
-        if (model.getCurrPlayer().getScore() >= DV.GamePoints && model.getCurrIndexPlayer() == model.getPlayers().size()-1) {
+    public void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException {
+        if ((model.getCurrPlayer().getScore() >= DV.GamePoints || bothEmptyDeck) && model.getCurrIndexPlayer() == model.getPlayers().size()-1) {
             model.setGameState(new LastTurnGameModelState(model));
-        } else if (model.getCurrPlayer().getScore() >= DV.GamePoints){
+        } else if (model.getCurrPlayer().getScore() >= DV.GamePoints || bothEmptyDeck){
             model.setGameState(new ShowDownGameModelState(model));
         }
     }
