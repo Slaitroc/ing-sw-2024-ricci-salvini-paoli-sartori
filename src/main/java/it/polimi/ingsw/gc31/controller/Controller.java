@@ -163,11 +163,11 @@ public class Controller extends UnicastRemoteObject implements IController {
     public boolean connect(VirtualClient client, String username, Integer token)
             throws RemoteException {
         // client.sendCommand(new WantsReconnectObjI())
-        if(disconnected.containsKey(token)) {
-            //The element in the newConnections map is updated with the new VirtualClient
-            newConnections.replace(token,client);
+        if (disconnected.containsKey(token)) {
+            // The element in the newConnections map is updated with the new VirtualClient
+            newConnections.replace(token, client);
             client.sendCommand(new WantsReconnectObj());
-            //Devo ritornare true o false?
+            // Devo ritornare true o false?
             return true;
         } else {
             sendToken(client);
@@ -196,8 +196,8 @@ public class Controller extends UnicastRemoteObject implements IController {
      * (pseudocodice sotto)
      *
      * @param username is the username of the client
-     * @param token is the token of the client
-     * @param esito is true if the client wants to reconnect, false otherwise
+     * @param token    is the token of the client
+     * @param esito    is true if the client wants to reconnect, false otherwise
      */
     public void rejoin(String username, int token, boolean esito) {
         VirtualClient client = newConnections.get(token); // FIXME non so se è il modo correto di prendere il virtual
@@ -207,17 +207,19 @@ public class Controller extends UnicastRemoteObject implements IController {
             try {
                 // TODO Chri deve aggiungere il metodo di rejoin qua
                 client.sendCommand(new ReJoinedObj(true)); // mandare questo è importante perché la ui fa cose in
-                                                                    // risposta a questo update
+                                                           // risposta a questo update
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         } else {
             try {
-                //If the player doesn't want to reconnect to the game a RejoinedObj with parameter false is sent
-                //to the client
+                // If the player doesn't want to reconnect to the game a RejoinedObj with
+                // parameter false is sent
+                // to the client
                 client.sendCommand(new ReJoinedObj(false));
 
-                //At this point the Controller tries to connect the client as if it was the first connection of it
+                // At this point the Controller tries to connect the client as if it was the
+                // first connection of it
                 sendToken(client);
                 if (nicknames.add(username)) {
                     tempClients.put(username, client);
@@ -288,11 +290,10 @@ public class Controller extends UnicastRemoteObject implements IController {
      * tempClients
      * 
      * @param username is the username of the player that just quit
-     * @param idGame   is the id of the game which was joined by the player
      * @param client   is the client that requested to quit from a lobby
      * @throws RemoteException if an error occurs in the rmi connection
      */
-    public void quitGame(String username, int idGame, VirtualClient client) throws RemoteException {
+    public void quitGame(String username, VirtualClient client) throws RemoteException {
         tempClients.put(username, client);
         // se il gioco era costituito da una sola persona va eliminato il gamecontroller
         // corrispondente
@@ -369,37 +370,44 @@ public class Controller extends UnicastRemoteObject implements IController {
     private void checkHeartBeats() {
         long now = System.currentTimeMillis();
 
-        //Checks for every active client if the last heart beat was received at most 10 seconds ago
-        //if the last heart beat was received more than 10 seconds ago the client is considered crashed
+        // Checks for every active client if the last heart beat was received at most 10
+        // seconds ago
+        // if the last heart beat was received more than 10 seconds ago the client is
+        // considered crashed
         for (VirtualClient client : clientsHeartBeat.keySet()) {
             if (now - clientsHeartBeat.get(client) > 10000) {
-                //The crashed client is removed from the map with all the active clients
+                // The crashed client is removed from the map with all the active clients
                 clientsHeartBeat.remove(client);
 
-                //I need to find the client, if it is in tempClients it can't be in any gameController.clientList
+                // I need to find the client, if it is in tempClients it can't be in any
+                // gameController.clientList
                 // so the second for will not be executed
                 boolean found = false;
 
-                //Checks if the disconnected client was in the tempClients map (it was not in a game)
+                // Checks if the disconnected client was in the tempClients map (it was not in a
+                // game)
                 for (String username : tempClients.keySet()) {
                     if ((tempClients.get(username)).equals(client)) {
-                        //If the client is found it is removed from the tempClients map
+                        // If the client is found it is removed from the tempClients map
                         tempClients.remove(username);
                         found = true;
                     }
                 }
 
-                //If the client was not found in tempClients => it is in a clientList of a GameController (it was
-                //in a game). The for searches the client in all the gameController.clientList, if it is found the
-                //disconnectPlayer method of the gameController is invoked with also the disconnect method of the Controller
-                if(!found) {
+                // If the client was not found in tempClients => it is in a clientList of a
+                // GameController (it was
+                // in a game). The for searches the client in all the gameController.clientList,
+                // if it is found the
+                // disconnectPlayer method of the gameController is invoked with also the
+                // disconnect method of the Controller
+                if (!found) {
                     for (GameController gc : gameControlList) {
                         // FIXME sincronizzare accesso a clientList
                         for (String u : gc.clientList.keySet()) {
-                            if((gc.clientList.get(u)).equals(client)){
+                            if ((gc.clientList.get(u)).equals(client)) {
                                 gc.disconnectPlayer(u);
 
-                                //I need to know the token of the disconnected client for the disconnect method
+                                // I need to know the token of the disconnected client for the disconnect method
                                 for (int t : newConnections.keySet()) {
                                     if ((newConnections.get(t)).equals(client)) {
                                         disconnect(u, gc.getIdGame(), t);
@@ -409,7 +417,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                         }
                     }
                 }
-                //^ Implementato sopra ^
+                // ^ Implementato sopra ^
                 // gc.disconnectPlayer(...)
                 // gc.getid()
                 // disconnect(username, id, token )
