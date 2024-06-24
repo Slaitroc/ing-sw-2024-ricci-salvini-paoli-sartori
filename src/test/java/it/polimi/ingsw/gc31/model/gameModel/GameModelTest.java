@@ -457,7 +457,7 @@ class GameModelTest {
 
         model.setGameState(new LastTurnGameModelState(model));
         model.getCurrPlayer().setInGameState(new Placed());
-        assertDoesNotThrow(() -> model.drawGold(model.getCurrPlayer().getUsername(), 0));
+        assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawGold(model.getCurrPlayer().getUsername(), 0));
 
         model.setGameState(new EndGameModelState(model));
         model.getCurrPlayer().setInGameState(new Placed());
@@ -501,7 +501,7 @@ class GameModelTest {
 
         model.setGameState(new LastTurnGameModelState(model));
         model.getCurrPlayer().setInGameState(new Placed());
-        assertDoesNotThrow(() -> model.drawResource(model.getCurrPlayer().getUsername(), 0));
+        assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawResource(model.getCurrPlayer().getUsername(), 0));
 
         model.setGameState(new EndGameModelState(model));
         model.getCurrPlayer().setInGameState(new Placed());

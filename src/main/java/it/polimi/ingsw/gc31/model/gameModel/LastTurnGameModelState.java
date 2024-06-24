@@ -35,20 +35,23 @@ public class LastTurnGameModelState implements GameModelState {
     @Override
     public void play(GameModel model, String username, Point point) throws IllegalStateOperationException, IllegalPlaceCardException {
         model.getPlayers().get(username).play(point);
+        model.endTurn();
     }
 
     @Override
     public void drawGold(GameModel model, String username, int index) throws IllegalStateOperationException {
-        if (model.getPlayers().get(username).drawGold(index)) {
-            model.endTurn();
-        }
+//        if (model.getPlayers().get(username).drawGold(index)) {
+//            model.endTurn();
+//        }
+        throw new IllegalStateOperationException();
     }
 
     @Override
     public void drawResource(GameModel model, String username, int index) throws IllegalStateOperationException {
-        if (model.getPlayers().get(username).drawResource(index)) {
-            model.endTurn();
-        }
+//        if (model.getPlayers().get(username).drawResource(index)) {
+//            model.endTurn();
+//        }
+        throw new IllegalStateOperationException();
     }
 
     @Override

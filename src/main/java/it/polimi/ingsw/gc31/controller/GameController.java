@@ -135,6 +135,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
                 ServerLog.gControllerWrite("C'è stato qualche problema con la rejoin di " + username, idGame);
             }
         }
+        model.notifyAllGameListeners();
     }
 
     // se un giocatore si disconnette quando la partita è già iniziata non ha la
@@ -151,6 +152,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             ServerLog.gControllerWrite(
                     "Player " + username + " has quited from the game, but the game has already started", idGame);
             model.disconnectPlayer(username);
+            model.notifyAllGameListeners();
         } else {
             ServerLog.gControllerWrite(
                     "Player " + username + " has quited from the game, but the game has not started yet", idGame);
@@ -174,11 +176,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         }
         if (counter == maxNumberPlayers) {
             try {
+                sendUpdateToClient(new StartGameObj());
                 synchronized (clientListLock) {
                     model.initGame(clientList, clientListLock);
                 }
                 ServerLog.gControllerWrite("The game has started", idGame);
-                sendUpdateToClient(new StartGameObj());
+                model.notifyAllGameListeners();
             } catch (IllegalStateOperationException e) {
                 // throw new RuntimeException(e);
             }
@@ -189,26 +192,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         sendUpdateToClient(message);
     }
 
-    /**
-     * @return the maximum number of players.
-     */
-    public int getMaxNumberPlayers() {
-        return maxNumberPlayers;
-    }
 
-    /**
-     * @return the current number of players.
-     */
-    public int getCurrentNumberPlayers() {
-        if (model.isStarted()) {
-            return model.getPlayerConnection().size();
-        }
-        int clientListSize;
-        synchronized (clientListLock) {
-            clientListSize = clientList.size();
-        }
-        return clientListSize;
-    }
 
     /**
      * Draws a gold card from the deck for the player and then shows the player's
@@ -221,6 +205,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         } catch (IllegalStateOperationException e) {
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
+        model.notifyAllGameListeners();
     }
 
     /**
@@ -233,6 +218,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         } catch (IllegalStateOperationException e) {
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
+        model.notifyAllGameListeners();
     }
 
     public void chooseSecretObjective(String username, Integer index) {
@@ -241,6 +227,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         } catch (IllegalStateOperationException e) {
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
+        model.notifyAllGameListeners();
     }
 
     public void play(String username, Point point) {
@@ -249,6 +236,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         } catch (IllegalStateOperationException | IllegalPlaceCardException e) {
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
+        model.notifyAllGameListeners();
     }
 
     public void playStarter(String username) {
@@ -261,6 +249,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             sendUpdateToClient(username,
                     new ShowInvalidActionObj("You must first choose your secret objective"));
         }
+        model.notifyAllGameListeners();
     }
 
     public void selectCard(String username, int index) {
@@ -272,22 +261,27 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         } catch (WrongIndexSelectedCard e) {
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
+        model.notifyAllGameListeners();
     }
 
     public void changeSide(String username) {
         try {
             model.changeSide(username);
         } catch (IllegalStateOperationException e) {
-            ServerLog.gControllerWrite(e.getMessage(), idGame);
+//            ServerLog.gControllerWrite(e.getMessage(), idGame);
+            sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
+        model.notifyAllGameListeners();
     }
 
     public void changeStarterSide(String username) {
         try {
             model.changStarterSide(username);
         } catch (IllegalStateOperationException e) {
-            ServerLog.gControllerWrite(e.getMessage(), idGame);
+//            ServerLog.gControllerWrite(e.getMessage(), idGame);
+            sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
+        model.notifyAllGameListeners();
     }
 
     private void notifyListPlayers() {
@@ -324,6 +318,27 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         // idGame, ); // FIX @AleSarto mettila nel
         // // bruteforcing di
         // // checkheartbeat
+    }
+
+    /**
+     * @return the maximum number of players.
+     */
+    public int getMaxNumberPlayers() {
+        return maxNumberPlayers;
+    }
+
+    /**
+     * @return the current number of players.
+     */
+    public int getCurrentNumberPlayers() {
+        if (model.isStarted()) {
+            return model.getPlayerConnection().size();
+        }
+        int clientListSize;
+        synchronized (clientListLock) {
+            clientListSize = clientList.size();
+        }
+        return clientListSize;
     }
 
     public GameModel getModel() {

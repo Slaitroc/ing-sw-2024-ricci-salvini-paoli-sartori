@@ -67,7 +67,7 @@ public class GameModel {
         this.clients = clients;
         players = gameState.initGame(this, clients, lock);
         isStarted = true;
-        notifyAllGameListeners();
+//        notifyAllGameListeners();
     }
 
     /**
@@ -99,8 +99,8 @@ public class GameModel {
             } while (!playerConnection.get(getCurrPlayer().getUsername()));
         }
 
-        listeners.values().forEach(listener -> listener.notifyPlayerScoreListener(this));
-        listeners.values().forEach(listener -> listener.notifyTurnListener(this));
+//        listeners.values().forEach(listener -> listener.notifyPlayerScoreListener(this));
+//        listeners.values().forEach(listener -> listener.notifyTurnListener(this));
     }
 
     /**
@@ -159,7 +159,8 @@ public class GameModel {
      */
     public void chooseSecretObjective(String username, Integer index) throws IllegalStateOperationException {
         gameState.chooseSecretObjective(this, username, index);
-        listeners.get(username).notifyObjectiveCardListener(this);
+        listeners.get(username).removeChooseObjectiveListener();
+//        listeners.get(username).notifyObjectiveCardListener(this);
     }
 
     /**
@@ -172,7 +173,7 @@ public class GameModel {
      */
     public void playStarter(String username) throws IllegalStateOperationException, ObjectiveCardNotChosenException {
         gameState.playStarter(this, username);
-        listeners.get(username).notifyPlayAreaListener(this);
+//        listeners.get(username).notifyPlayAreaListener(this);
     }
 
     /**
@@ -187,10 +188,10 @@ public class GameModel {
      */
     public void play(String username, Point point) throws IllegalStateOperationException, IllegalPlaceCardException {
         gameState.play(this, username, point);
-        listeners.get(username).notifyPlayAreaListener(this);
-        listeners.get(username).notifyHandListener(this);
-        listeners.values().forEach(listener -> listener.notifyPlayerScoreListener(this));
-        listeners.values().forEach(listener -> listener.notifyTurnListener(this));
+//        listeners.get(username).notifyPlayAreaListener(this);
+//        listeners.get(username).notifyHandListener(this);
+//        listeners.values().forEach(listener -> listener.notifyPlayerScoreListener(this));
+//        listeners.values().forEach(listener -> listener.notifyTurnListener(this));
     }
 
     /**
@@ -203,8 +204,8 @@ public class GameModel {
      */
     public void drawGold(String username, int index) throws IllegalStateOperationException {
         gameState.drawGold(this, username, index);
-        listeners.values().forEach(listener -> listener.notifyGoldDeckListener(this));
-        listeners.get(username).notifyHandListener(this);
+//        listeners.values().forEach(listener -> listener.notifyGoldDeckListener(this));
+//        listeners.get(username).notifyHandListener(this);
     }
 
     /**
@@ -217,8 +218,8 @@ public class GameModel {
      */
     public void drawResource(String username, int index) throws IllegalStateOperationException {
         gameState.drawResource(this, username, index);
-        listeners.values().forEach(listener -> listener.notifyResourcedDeckListener(this));
-        listeners.get(username).notifyHandListener(this);
+//        listeners.values().forEach(listener -> listener.notifyResourcedDeckListener(this));
+//        listeners.get(username).notifyHandListener(this);
     }
 
     /**
@@ -232,7 +233,7 @@ public class GameModel {
     public void setSelectCard(String username, int index)
             throws IllegalStateOperationException, WrongIndexSelectedCard {
         gameState.setSelectCard(this, username, index);
-        listeners.get(username).notifyHandListener(this);
+//        listeners.get(username).notifyHandListener(this);
     }
 
     /**
@@ -243,7 +244,7 @@ public class GameModel {
      */
     public void changeSide(String username) throws IllegalStateOperationException {
         gameState.changeSide(this, username);
-        listeners.get(username).notifyHandListener(this);
+//        listeners.get(username).notifyHandListener(this);
     }
 
     /**
@@ -254,7 +255,7 @@ public class GameModel {
      */
     public void changStarterSide(String username) throws IllegalStateOperationException {
         gameState.changeStarterSide(this, username);
-        listeners.get(username).notifyStarterCardListener(this);
+//        listeners.get(username).notifyStarterCardListener(this);
     }
 
     /**
@@ -279,7 +280,7 @@ public class GameModel {
         playerConnection.put(username, false);
 
         ServerLog.gControllerWrite("The player " + username + " has rejoined game", idGame);
-        notifyAllGameListeners();
+//        notifyAllGameListeners();
     }
 
     /**

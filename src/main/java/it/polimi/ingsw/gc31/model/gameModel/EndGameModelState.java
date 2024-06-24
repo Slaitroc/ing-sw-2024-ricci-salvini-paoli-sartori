@@ -92,6 +92,10 @@ public class EndGameModelState implements GameModelState {
                 System.out.println("Error sending game is over");
             }
         }
+
+        // FIXME poi ai giocatori cosa succede?
+        // mandare il fine partita e disconnetere i giocatori?
+        // poi cosa farne del gameController?
     }
 
     @Override
