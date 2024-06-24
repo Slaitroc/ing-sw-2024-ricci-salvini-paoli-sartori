@@ -20,7 +20,7 @@ public interface GameModelState {
     void setSelectCard(GameModel model, String username, int index) throws IllegalStateOperationException, WrongIndexSelectedCard;
     void changeSide(GameModel model, String username) throws IllegalStateOperationException;
     void changeStarterSide(GameModel model, String username) throws IllegalStateOperationException;
-    void detectEndGame(GameModel model) throws IllegalStateOperationException;
+    void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException;
     void endGame(GameModel model) throws IllegalStateOperationException;
 
     // TODO forse non necessario

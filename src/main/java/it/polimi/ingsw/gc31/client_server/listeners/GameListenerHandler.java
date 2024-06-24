@@ -10,28 +10,26 @@ public class GameListenerHandler{
     private final String username;
     private final Object lock;
 
+    // TODO usare un enumeratore per i tipi di listener invece che mille metodi
+
     public GameListenerHandler(String username, Object lock) {
         this.username = username;
         this.lock = lock;
     }
 
     public void notifyAllListeners(GameModel model) {
-//        if (model.getPlayerConnection().get(username)) {
         synchronized (lock) {
             for (Listener listener : listeners.values()) {
                 listener.update(model, username);
             }
-//        }
-       }
+        }
     }
 
     private void notifyListener(String type, GameModel model){
         synchronized (lock) {
-//        if (model.getPlayerConnection().get(username)) {
             if (listeners.containsKey(type)) {
                 listeners.get(type).update(model, username);
             }
-//        }
         }
     }
 

@@ -67,7 +67,7 @@ public class LastTurnGameModelState implements GameModelState {
     }
 
     @Override
-    public void detectEndGame(GameModel model) throws IllegalStateOperationException {
+    public void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException {
         if (model.getCurrIndexPlayer() == model.getPlayers().size() - 1) {
             model.setGameState(new EndGameModelState(model));
             model.endGame();

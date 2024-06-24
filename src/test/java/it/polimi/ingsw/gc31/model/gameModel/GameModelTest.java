@@ -96,51 +96,26 @@ class GameModelTest {
     @Test
     void setNextPlayingPlayerDisconnections() {
         // FIXME agigustare il test, setNextPlayer non salta più il giocatore disconnesso, lo fa endturn
-//        utilityInitGame();
-//
-//        assertEquals(0, model.getCurrIndexPlayer());
-//
-//        utilitySkipSetupGame();
-//
-//        // disconnect first player
-//        assertEquals(0, model.getCurrIndexPlayer());
-//        model.playerConnection.put(model.getCurrPlayer().getUsername(), false);
-//
-//        model.setNextPlayingPlayer();
-//        model.setNextPlayingPlayer();
-//        model.setNextPlayingPlayer();
-//        assertEquals(3, model.getCurrIndexPlayer());
-//
-//        // player with index 0 is skipped
-//        model.setNextPlayingPlayer();
-//        assertEquals(1, model.getCurrIndexPlayer());
-//
-//        // disconnect last player
-//        model.setNextPlayingPlayer();
-//        model.setNextPlayingPlayer();
-//        assertEquals(3, model.getCurrIndexPlayer());
-//        model.playerConnection.put(model.getCurrPlayer().getUsername(), false);
-//
-//        // player with index 0 is skipped
-//        model.setNextPlayingPlayer();
-//        assertEquals(1, model.getCurrIndexPlayer());
-//        model.setNextPlayingPlayer();
-//        assertEquals(2, model.getCurrIndexPlayer());
-//        // player with index 3 and 0 are skipped
-//        model.setNextPlayingPlayer();
-//        assertEquals(1, model.getCurrIndexPlayer());
-//
-//        // player with index 0 and 3 are reconnected
-//        model.playerConnection.put(model.turnPlayer.get(0), true);
-//        model.playerConnection.put(model.turnPlayer.get(3), true);
-//
-//        // player with index 0 and 3 are not skipped any more
-//        model.setNextPlayingPlayer();
-//        assertEquals(2, model.getCurrIndexPlayer());
-//        model.setNextPlayingPlayer();
-//        assertEquals(3, model.getCurrIndexPlayer());
-//        model.setNextPlayingPlayer();
-//        assertEquals(0, model.getCurrIndexPlayer());
+        utilityInitGame();
+        assertEquals(0, model.getCurrIndexPlayer());
+
+        utilitySkipSetupGame();
+
+        for (int i=0; i<3; i++) {
+            assertEquals(i, model.getCurrIndexPlayer());
+            model.setNextPlayingPlayer();
+        }
+
+        assertEquals(3, model.getCurrIndexPlayer());
+        model.setNextPlayingPlayer();
+        assertEquals(0, model.getCurrIndexPlayer());
+
+        // all players are set to waiting, the player in turn is set to not-placed
+        assertEquals("notplaced", model.getCurrPlayer().infoState());
+        for (Player player : model.getPlayers().values()) {
+            if (!player.getUsername().equals(model.getCurrPlayer().getUsername()))
+                assertEquals("waiting", player.infoState());
+        }
     }
 
     @Test
@@ -252,6 +227,56 @@ class GameModelTest {
         assertNotNull(players);
 
         assertTrue(clients.keySet().containsAll(players.keySet()));
+    }
+
+    @Test
+    void endTurnBothDeckEmptyShowDown() {
+        utilityInitGame();
+        utilitySkipSetupGame();
+
+        for (int i=0; i<34; i++) {
+            model.getBoard().getDeckGold().draw();
+        }
+        for (int i=0; i<30; i++) {
+            model.getBoard().getDeckResource().draw();
+        }
+        assertTrue(model.getBoard().getDeckGold().isEmpty());
+        assertTrue(model.getBoard().getDeckResource().isEmpty());
+
+        assertEquals(0, model.getCurrIndexPlayer());
+        try {
+            model.endTurn();
+        } catch (IllegalStateOperationException e) {
+            fail("Exception should not have been thrown");
+        }
+        assertInstanceOf(ShowDownGameModelState.class, model.getGameState());
+
+    }
+    @Test
+    void endTurnBothDeckEmptyLastTurn() {
+        utilityInitGame();
+        utilitySkipSetupGame();
+
+        for (int i=0; i<34; i++) {
+            model.getBoard().getDeckGold().draw();
+        }
+        for (int i=0; i<30; i++) {
+            model.getBoard().getDeckResource().draw();
+        }
+        assertTrue(model.getBoard().getDeckGold().isEmpty());
+        assertTrue(model.getBoard().getDeckResource().isEmpty());
+
+        for (int i=0; i<3; i++) {
+            model.setNextPlayingPlayer();
+        }
+        assertEquals(3, model.getCurrIndexPlayer());
+        try {
+            model.endTurn();
+        } catch (IllegalStateOperationException e) {
+            fail("Exception should not have been thrown");
+        }
+        assertInstanceOf(LastTurnGameModelState.class, model.getGameState());
+
     }
 
     @Test
@@ -680,6 +705,50 @@ class GameModelTest {
         assertEquals(model.getPlayers().get(turnPlayer.get(3)).getScore(), 26);
     }
 
+    @Test
+    void executeReconnectPlayer() {
+        // TODO da fare
+    }
+
+    @Test
+    void executeDisconnectPlayerSetupState() {
+        for (String username : clients.keySet()) {
+            assertDoesNotThrow(() -> model.disconnectPlayer(username));
+        }
+        utilityInitGame();
+
+        Player player = model.getPlayers().get("Players1");
+
+        assertTrue(model.getPlayerConnection().get("Players1"));
+        assertNull(player.getObjectiveCard());
+        assertNull(player.getPlayArea().getPlacedCards().get(new Point(0,0)));
+        // if first player disconnect
+        model.disconnectPlayer("Players1");
+
+        assertFalse(model.getPlayerConnection().get("Players1"));
+        assertNotNull(player.getObjectiveCard());
+        assertNotNull(player.getPlayArea().getPlacedCards().get(new Point(0,0)));
+
+    }
+
+    @Test
+    void executeDisconnectPlayerAfterSetupState() {
+        for (String username : clients.keySet()) {
+            assertDoesNotThrow(() -> model.disconnectPlayer(username));
+        }
+        utilityInitGame();
+        utilitySkipSetupGame();
+
+        // if the player in turn disconnect
+        assertEquals(0, model.getCurrIndexPlayer());
+        model.disconnectPlayer("Players1");
+        assertEquals(1, model.getCurrIndexPlayer());
+
+        // if the player not in turn disconnect
+        model.disconnectPlayer("Players4");
+        assertEquals(1, model.getCurrIndexPlayer());
+    }
+
     public static class FakeGameModel extends GameModel {
         public FakeGameModel() {
             super(0);
@@ -724,6 +793,11 @@ class GameModelTest {
         public void setObjectiveCard(ObjectiveCard card) {
             super.setObjectiveCard(card);
         }
+
+//        @Override
+//        public void chooseSecretObjective(int index) {
+//
+//        }
 
         public void play(PlayableCard card) {
             getPlayArea().placeStarter(card);
