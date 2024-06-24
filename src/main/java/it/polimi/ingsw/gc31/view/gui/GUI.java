@@ -95,7 +95,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_GameIsOver(String username) {
+    public void show_GameIsOver(String username, Map<String, Integer> playersScorec) {
         Platform.runLater(() -> {
             // System.out.println("show_inGamePlayers called");
             app.getCurrentController().showWinner(username);
@@ -242,6 +242,16 @@ public class GUI extends UI {
     @Override
     public void show_heartBeat() {
         // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void show_wantReconnect() {
+
+    }
+
+    @Override
+    public void show_rejoined(boolean esito) {
+
     }
 
     @Override

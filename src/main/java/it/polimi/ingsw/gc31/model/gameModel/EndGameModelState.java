@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.model.gameModel;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
+import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsOverObj;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.player.Player;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 public class EndGameModelState implements GameModelState {
     public EndGameModelState(GameModel model) {
-        System.out.println("Game changed to END GAME");
+        ServerLog.gControllerWrite("Game changed to END GAME", model.getIdGame());
 
         for (String username: model.getListeners().keySet()) {
             model.getListeners().get(username).removeGoldDeckListener();
@@ -90,7 +91,7 @@ public class EndGameModelState implements GameModelState {
 
         for (String username: model.clients.keySet()) {
             try {
-                model.clients.get(username).sendCommand(new GameIsOverObj(usernameWinner));
+                model.clients.get(username).sendCommand(new GameIsOverObj(usernameWinner, model.getBoard().getPlayersScore()));
             } catch (RemoteException e) {
                 System.out.println("Error sending game is over");
             }

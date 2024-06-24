@@ -417,4 +417,9 @@ public class TCPClient implements ClientCommands {
         ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
         ui.showGenericClientResonse(filePath.toString());
     }
+
+    @Override
+    public void reconnect(boolean reconnect) throws RemoteException {
+        tcp_sendCommand(new ReconnectObj(reconnect, username, token), DV.RECIPIENT_CONTROLLER);
+    }
 }
