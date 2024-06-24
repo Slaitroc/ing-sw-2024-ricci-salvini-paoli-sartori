@@ -1,7 +1,6 @@
 package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
@@ -17,18 +16,7 @@ public class RunningGameModelSate implements GameModelState {
     public RunningGameModelSate(GameModel model) {
         ServerLog.gControllerWrite("Game changed to RUNNING", model.getIdGame());
 
-        model.getListeners().values().forEach(GameListenerHandler::removeStarterCardListener);
-        model.getListeners().values().forEach(GameListenerHandler::removeChooseObjectiveListener);
         model.getListeners().values().forEach(listener -> listener.addPlayerScoreListener(new PlayerScoreListener(model.clients)));
-//        for (String username: model.getListeners().keySet()) {
-//            GameListenerHandler gameListener = model.getListeners().get(username);
-//            model.getListeners().get(username).removeStarterCardListener();
-//            model.getListeners().get(username).removeChooseObjectiveListener();
-//
-//
-//            gameListener.addPlayerScoreListener(new PlayerScoreListener(model.clients));
-//        }
-//        model.notifyAllGameListeners();
     }
     @Override
     public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock) throws IllegalStateOperationException {

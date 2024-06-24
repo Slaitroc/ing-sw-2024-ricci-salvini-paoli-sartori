@@ -58,6 +58,7 @@
 
 ## TUI
 
+- [ ] se sbagli inserimenti nella join si rompe
 - [x] help non chiama la state.notify() --> risolto
 - [x] gold card bordi gold
 - [x] Bisogna ristampare i messaggi della chat se non si è in playing state e si chiama ref

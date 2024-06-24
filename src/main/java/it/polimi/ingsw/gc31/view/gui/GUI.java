@@ -6,6 +6,7 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.view.UI;
 import javafx.application.Platform;
+import javafx.util.Pair;
 
 import java.awt.*;
 import java.util.LinkedHashMap;
@@ -143,9 +144,9 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_scorePlayer(LinkedHashMap<String, Integer> scores) {
-
-        Platform.runLater(() -> app.getCurrentController().show_scorePlayer(scores));
+    public void show_scorePlayer(LinkedHashMap<String, Pair<Integer, Boolean>> scores) {
+        // FIXME
+//        Platform.runLater(() -> app.getCurrentController().show_scorePlayer(scores));
     }
 
     @Override

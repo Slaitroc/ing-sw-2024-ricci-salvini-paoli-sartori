@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.view.interfaces;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import javafx.util.Pair;
 
 import java.awt.*;
 import java.util.LinkedHashMap;
@@ -30,7 +31,7 @@ public interface ShowUpdate {
 
     void show_handPlayer(String username, List<PlayableCard> hand, int selectedCard);
 
-    void show_scorePlayer(LinkedHashMap<String, Integer> scores);
+    void show_scorePlayer(LinkedHashMap<String, Pair<Integer, Boolean>> scores);
 
     void show_listGame(List<String> listGame);
 

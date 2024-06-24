@@ -173,6 +173,7 @@ public class GameModel {
      */
     public void playStarter(String username) throws IllegalStateOperationException, ObjectiveCardNotChosenException {
         gameState.playStarter(this, username);
+        listeners.get(username).removeStarterCardListener();
 //        listeners.get(username).notifyPlayAreaListener(this);
     }
 
