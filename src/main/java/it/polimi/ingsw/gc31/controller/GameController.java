@@ -1,21 +1,21 @@
 package it.polimi.ingsw.gc31.controller;
 
-import java.awt.*;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.LinkedHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.*;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
+import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+
+import java.awt.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.LinkedHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * This class is the controller of one single game.
@@ -91,7 +91,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * @param username the username of the player.
      * @param client   the client of the player.
      */
-    public void joinGame(String username, VirtualClient client){
+    public void joinGame(String username, VirtualClient client) {
         clientList.put(username, client);
         readyStatus.put(username, false);
         if (maxNumberPlayers == this.clientList.size()) {
@@ -111,9 +111,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         if (clientList.containsKey(username)) {
             clientList.put(username, newClient);
             model.reconnectPlayer(username);
-            ServerLog.gControllerWrite("Welcome back "+username+"!", idGame);
+            ServerLog.gControllerWrite("Welcome back " + username + "!", idGame);
         } else {
-            ServerLog.gControllerWrite("C'è stato qualche problema con la rejoin di "+username, idGame);
+            ServerLog.gControllerWrite("C'è stato qualche problema con la rejoin di " + username, idGame);
         }
     }
 
@@ -125,7 +125,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         Controller.getController().quitGame(username, client);
 
         if (model.isStarted()) {
-            ServerLog.gControllerWrite("Player "+username+" has quited from the game, but the game has already started", idGame);
+            ServerLog.gControllerWrite("Player " + username + " has quited from the game, but the game has already started", idGame);
             model.disconnectPlayer(username);
         } else {
             ServerLog.gControllerWrite("Player " + username + " has quited from the game, but the game has not started yet", idGame);
@@ -140,7 +140,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         checkReady();
     }
 
-    public void checkReady(){
+    public void checkReady() {
         int counter = 0;
         for (Boolean status : readyStatus.values()) {
             if (status) {
@@ -182,7 +182,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     /**
      * Draws a gold card from the deck for the player and then shows the player's
      * hand.
-     *
      */
     public void drawGold(String username, int index) {
         try {
@@ -196,7 +195,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * Draws a resource card from the deck for the player and then shows the
      * player's hand.
      */
-    public void drawResource(String username, int index){
+    public void drawResource(String username, int index) {
         try {
             model.drawResource(username, index);
         } catch (IllegalStateOperationException e) {
@@ -271,8 +270,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             }
         }).start();
     }
+
     private void sendUpdateToClient(ClientQueueObject clientQueueObject) {
-        for (VirtualClient client: clientList.values()) {
+        for (VirtualClient client : clientList.values()) {
             sendUpdateToClient(client, clientQueueObject);
         }
     }

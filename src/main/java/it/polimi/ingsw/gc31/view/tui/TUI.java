@@ -119,6 +119,8 @@ public class TUI extends UI {
 
     private final int[] RGB_COLOR_GOLD = { 181, 148, 16 };
 
+    private List<String> playersUsernames = new ArrayList<>();
+
     // COLORS
     int[] greyText = null;
     // int[] greyText = new int[] { 192, 192, 192 };
@@ -379,6 +381,7 @@ public class TUI extends UI {
             return res;
         }
         return null;
+
     }
 
     /**
@@ -1565,7 +1568,25 @@ public class TUI extends UI {
 
     @Override
     public void show_privateChatMessage(String fromUsername, String toUsername, String message) {
-        // TODO Auto-generated method stub
+        synchronized (chatNeedsUpdate) {
+            if(fromUsername.equals(client.getUsername()))
+                chatMessages.add("[To: " + toUsername + "] : " + message);
+            else if(toUsername.equals(client.getUsername()))
+                chatMessages.add("[From: " + fromUsername + "] : " + message);
+            else return;
+        }
+        if (chatAreaSelection.isEmpty()) {
+            newChatMessage = true;
+            if (!chatNotification) {
+                synchronized (statusBar) {
+                    statusBar.notify();
+                }
+            }
+        } else {
+            synchronized (chatNeedsUpdate) {
+                chatNeedsUpdate.notifyAll();
+            }
+        }
     }
 
     /**
@@ -1589,6 +1610,7 @@ public class TUI extends UI {
             }
             moveCursorToChatLine();
             String input = chatScanner.nextLine();
+            Boolean privateMessage = false;
             if (!input.isEmpty()) {
                 if (input.equals("ccc")) {
                     forceRefreshTUI(false);
@@ -1596,10 +1618,25 @@ public class TUI extends UI {
                     addToCmdLineAreaSelection();
                     moveCursorToCmdLine();
                 } else {
-                    try {
-                        client.sendChatMessage(getClient().getUsername(), input.trim());
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
+                    for(String username : playersUsernames){
+                        if(input.trim().startsWith("/"+username)) {
+                            try {
+                                String message = input.substring(username.length()+1).trim();
+                                if(!message.isEmpty())
+                                    client.sendChatMessage(getClient().getUsername(), username, message);
+                            } catch (RemoteException e) {
+                                e.printStackTrace();
+                            }
+                            privateMessage = true;
+                            break;
+                        }
+                    }
+                    if(!privateMessage) {
+                        try {
+                            client.sendChatMessage(getClient().getUsername(), input.trim());
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
 
@@ -2009,6 +2046,7 @@ public class TUI extends UI {
 
     @Override
     public void show_inGamePlayers(LinkedHashMap<String, Boolean> players) {
+        playersUsernames = players.keySet().stream().toList();
         StringBuilder res = new StringBuilder();
         res.append(clearArea(PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN, PLAYERS_INFO_END_ROW,
                 PLAYERS_INFO_END_COLUMN));
