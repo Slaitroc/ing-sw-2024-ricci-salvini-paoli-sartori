@@ -9,6 +9,7 @@ import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.*;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.JoinGameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
@@ -291,11 +292,11 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @param client   is the client that requested to quit from a lobby
      * @throws RemoteException if an error occurs in the rmi connection
      */
-    public void quitGame(String username, int idGame, VirtualClient client) throws RemoteException {
+    public void quitGame(String username, VirtualClient client) throws RemoteException {
         tempClients.put(username, client);
         // se il gioco era costituito da una sola persona va eliminato il gamecontroller
         // corrispondente
-        sendUpdateToClient(client, new QuitFromGameRObj(idGame));
+        sendUpdateToClient(client, new QuitFromGameRObj(username));
     }
 
     // GETTERS

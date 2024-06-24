@@ -267,7 +267,7 @@ class ControllerTest {
 
         //Quit the game for the mockClient1. The client is removed from the game and is added
         //to the tempClients map
-        assertDoesNotThrow( () -> controller.quitGame("username1", 0, mockClient1));
+        assertDoesNotThrow( () -> controller.quitGame("username1", mockClient1));
         assertEquals(1, controller.tempClients.size());
     }
 

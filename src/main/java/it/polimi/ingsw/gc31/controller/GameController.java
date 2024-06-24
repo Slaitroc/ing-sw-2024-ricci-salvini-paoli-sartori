@@ -144,7 +144,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             VirtualClient client = clientList.get(username);
             clientList.remove(username);
             readyStatus.remove(username);
-            Controller.getController().quitGame(username, idGame, client);
+            Controller.getController().quitGame(username, client);
         }
 
         if (model.isStarted()) {
