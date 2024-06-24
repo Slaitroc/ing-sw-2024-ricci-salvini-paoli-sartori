@@ -177,9 +177,7 @@ public class GameControllerTest {
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player3"));
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player4"));
 
-        //FIXME why this method throw an RuntimeException?
-        gameController1.checkReady();
-//        assertThrows(RuntimeException.class, () -> gameController1.checkReady());
+        assertDoesNotThrow(() -> gameController1.checkReady());
     }
 
     /**
