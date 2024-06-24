@@ -1,8 +1,6 @@
 package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
-import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsOverObj;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
@@ -10,8 +8,6 @@ import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
 import java.rmi.RemoteException;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class EndGameModelState implements GameModelState {
@@ -24,7 +20,7 @@ public class EndGameModelState implements GameModelState {
         }
     }
     @Override
-    public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
+    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 

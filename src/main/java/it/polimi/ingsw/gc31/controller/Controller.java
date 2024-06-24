@@ -394,6 +394,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                 //disconnectPlayer method of the gameController is invoked with also the disconnect method of the Controller
                 if(!found) {
                     for (GameController gc : gameControlList) {
+                        // FIXME sincronizzare accesso a clientList
                         for (String u : gc.clientList.keySet()) {
                             if((gc.clientList.get(u)).equals(client)){
                                 gc.disconnectPlayer(u);

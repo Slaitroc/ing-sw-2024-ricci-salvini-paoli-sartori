@@ -63,9 +63,9 @@ public class GameModel {
      * @param clients a LinkedHashMap containing the virtual clients mapped with their usernames
      * @throws IllegalStateOperationException if the game is not in the right state to be initialized
      */
-    public void initGame(LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
+    public void initGame(Map<String, VirtualClient> clients, Object lock) throws IllegalStateOperationException {
         this.clients = clients;
-        players = gameState.initGame(this, clients);
+        players = gameState.initGame(this, clients, lock);
         isStarted = true;
         notifyAllGameListeners();
     }
@@ -88,10 +88,12 @@ public class GameModel {
      * @throws IllegalStateOperationException if the game is not in the right state
      */
     public void endTurn() throws IllegalStateOperationException {
-        do {
-            gameState.detectEndGame(this);
-            setNextPlayingPlayer();
-        } while (!playerConnection.get(getCurrPlayer().getUsername()));
+        synchronized (playerConnection) {
+            do {
+                gameState.detectEndGame(this);
+                setNextPlayingPlayer();
+            } while (!playerConnection.get(getCurrPlayer().getUsername()));
+        }
 
         listeners.values().forEach(listener -> listener.notifyPlayerScoreListener(this));
         listeners.values().forEach(listener -> listener.notifyTurnListener(this));

@@ -7,11 +7,10 @@ import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 public class CreationGameModelState implements GameModelState {
     @Override
-    public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients)
+    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock)
             throws IllegalStateOperationException {
         Map<String, Player> players = createPlayers(model, clients.keySet());
 
@@ -37,7 +36,7 @@ public class CreationGameModelState implements GameModelState {
         }
 
         for (String username: clients.keySet()) {
-            model.getListeners().put(username, new GameListenerHandler(username));
+            model.getListeners().put(username, new GameListenerHandler(username, lock));
         }
 
         for (String username: clients.keySet()) {

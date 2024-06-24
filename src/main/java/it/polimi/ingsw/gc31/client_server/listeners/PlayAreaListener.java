@@ -5,12 +5,10 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowPlayAreaObj;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
-import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
-import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -43,6 +41,7 @@ public class PlayAreaListener extends Listener {
                                 gsonTranslater.toJson(player.getPlayArea().getPlacedCards(), new TypeToken<LinkedHashMap<Point, PlayableCard>>(){}.getType()),
                                 gsonTranslater.toJson(player.getPlayArea().getAchievedResources())
                         );
+
 
                         for (Map.Entry<String, VirtualClient> clients: clients.entrySet()) {
                                 sendUpdate(model, clients.getKey(), clients.getValue(), clientQueueObject);

@@ -29,7 +29,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameModelTest {
     GameModel model;
-    LinkedHashMap<String, VirtualClient> clients;
+    Map<String, VirtualClient> clients;
+    Object lock = new Object();
 
     @BeforeEach
     public void setUp() {
@@ -45,22 +46,22 @@ class GameModelTest {
     @Test
     void initGame() {
         assertInstanceOf(CreationGameModelState.class, model.getGameState());
-        assertDoesNotThrow(() -> model.initGame(clients));
+        assertDoesNotThrow(() -> model.initGame(clients, lock));
 
         assertInstanceOf(SetupGameModelState.class, model.getGameState());
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.initGame(clients));
+        assertThrowsExactly(IllegalStateOperationException.class, () -> model.initGame(clients, lock));
 
         model.setGameState(new RunningGameModelSate(model));
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.initGame(clients));
+        assertThrowsExactly(IllegalStateOperationException.class, () -> model.initGame(clients, lock));
 
         model.setGameState(new ShowDownGameModelState(model));
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.initGame(clients));
+        assertThrowsExactly(IllegalStateOperationException.class, () -> model.initGame(clients, lock));
 
         model.setGameState(new LastTurnGameModelState(model));
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.initGame(clients));
+        assertThrowsExactly(IllegalStateOperationException.class, () -> model.initGame(clients, lock));
 
         model.setGameState(new EndGameModelState(model));
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.initGame(clients));
+        assertThrowsExactly(IllegalStateOperationException.class, () -> model.initGame(clients, lock));
     }
 
     @Test
@@ -152,37 +153,46 @@ class GameModelTest {
         utilityInitGame(model);
 
         assertInstanceOf(SetupGameModelState.class, model.getGameState());
-        assertThrowsExactly(IllegalStateOperationException.class, model::endTurn);
+        assertDoesNotThrow(model::endTurn);
 
         model.commonObjectives.add(deck.draw());
         model.commonObjectives.add(deck.draw());
 
         // if last player reach 20 points the state must change to Last turn
         model.setGameState(new RunningGameModelSate(model));
-        for (int i = 0; i < 4; i++) {
-            model.setNextPlayingPlayer();
-            player = (FakePlayer) model.getCurrPlayer();
+        assertEquals(0, model.getCurrIndexPlayer());
+        for (int i = 0; i < 3; i++) {
+            player = model.getCurrPlayer();
             player.setObjectiveCard(deck.draw());
+            model.setNextPlayingPlayer();
         }
-        assertEquals(model.getCurrIndexPlayer(), 3);
-        player = (FakePlayer) model.getCurrPlayer();
-        player.setScore(20);
 
-        for (int i = 0; i < 4; i++) {
+        assertEquals(3, model.getCurrIndexPlayer());
+        player = model.getCurrPlayer();
+        player.setObjectiveCard(deck.draw());
+        player.setScore(20);
+        try {
+            model.endTurn();
+        } catch (IllegalStateOperationException e) {
+            fail("Exception should not have been thrown");
+        }
+        assertInstanceOf(LastTurnGameModelState.class, model.getGameState());
+
+        for (int i = 0; i<3; i++) {
             try {
                 model.endTurn();
-                assertInstanceOf(LastTurnGameModelState.class, model.getGameState());
             } catch (IllegalStateOperationException e) {
                 fail("Exception should not have been thrown");
             }
         }
 
-        assertEquals(model.getCurrIndexPlayer(), 3);
+        assertEquals(3, model.getCurrIndexPlayer());
         try {
             model.endTurn();
         } catch (IllegalStateOperationException e) {
-            throw new RuntimeException(e);
+            fail("Exception should not have been thrown");
         }
+
         assertInstanceOf(EndGameModelState.class, model.getGameState());
         assertThrowsExactly(IllegalStateOperationException.class, model::endTurn);
 
@@ -194,21 +204,20 @@ class GameModelTest {
         model2.commonObjectives.add(deck.draw());
         model2.commonObjectives.add(deck.draw());
 
-        model2.setGameState(new RunningGameModelSate(model));
-        for (int i = 0; i < 4; i++) {
-            model2.setNextPlayingPlayer();
-            player = (FakePlayer) model2.getCurrPlayer();
-            player.setObjectiveCard(deck.draw());
-        }
-
-        // if first (or non-last) player reach 20 points the state must change to
-        // showDown
+        model2.setGameState(new RunningGameModelSate(model2));
         model2.setNextPlayingPlayer();
+        for (int i=0; i<4; i++) {
+            player = model2.getCurrPlayer();
+            player.setObjectiveCard(deck.draw());
+            model2.setNextPlayingPlayer();
+        }
         assertEquals(model2.getCurrIndexPlayer(), 0);
-        player = (FakePlayer) model2.getCurrPlayer();
+
+        // if first (or non-last player reach 20 points the state must change to showdown
+        player = model2.getCurrPlayer();
         player.setScore(20);
 
-        for (int i = 0; i < 3; i++) {
+        for (int i=0; i<3; i++) {
             try {
                 model2.endTurn();
                 assertInstanceOf(ShowDownGameModelState.class, model2.getGameState());
@@ -216,13 +225,14 @@ class GameModelTest {
                 fail("Exception should not have been thrown");
             }
         }
+        assertEquals(3, model2.getCurrIndexPlayer());
         try {
             model2.endTurn();
         } catch (IllegalStateOperationException e) {
             fail("Exception should not have been thrown");
         }
         assertInstanceOf(LastTurnGameModelState.class, model2.getGameState());
-        assertEquals(model2.getCurrIndexPlayer(), 0);
+        assertEquals(0, model2.getCurrIndexPlayer());
 
         for (int i = 0; i < 4; i++) {
             try {
@@ -577,9 +587,9 @@ class GameModelTest {
     void endGame() {
         FakeGameModel model = new FakeGameModel();
         FakePlayer player;
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.endGame());
+        assertThrowsExactly(IllegalStateOperationException.class, model::endGame);
         utilityInitGame(model);
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.endGame());
+        assertThrowsExactly(IllegalStateOperationException.class, model::endGame);
 
         model.commonObjectives.add(new ObjectiveCard(2,
                 new Count(Arrays.asList(Resources.MUSHROOM, Resources.MUSHROOM, Resources.MUSHROOM)), null, null));
@@ -588,13 +598,13 @@ class GameModelTest {
 
         // last player reach 20 points the game must directly enter in lastTurn state
         model.setGameState(new RunningGameModelSate(model));
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.endGame());
+        assertThrowsExactly(IllegalStateOperationException.class, model::endGame);
 
         // the first player reach 15 points and achieve his secret objective card
         // he achieves first common objective
         model.setNextPlayingPlayer();
         assertEquals(model.getCurrIndexPlayer(), 0);
-        player = (FakePlayer) model.getCurrPlayer();
+        player = model.getCurrPlayer();
         player.setScore(15);
         player.setObjectiveCard(new ObjectiveCard(2,
                 new Count(Arrays.asList(Resources.MUSHROOM, Resources.MUSHROOM, Resources.MUSHROOM)), null, null));
@@ -609,7 +619,7 @@ class GameModelTest {
         // he achieves second common objective
         model.setNextPlayingPlayer();
         assertEquals(model.getCurrIndexPlayer(), 1);
-        player = (FakePlayer) model.getCurrPlayer();
+        player = model.getCurrPlayer();
         player.setScore(0);
         player.setObjectiveCard(
                 new ObjectiveCard(2, new Count(Arrays.asList(Resources.SCROLL, Resources.SCROLL)), null, null));
@@ -621,7 +631,7 @@ class GameModelTest {
         // the third player reach 0 points and doesn't achieve any objective card
         model.setNextPlayingPlayer();
         assertEquals(model.getCurrIndexPlayer(), 2);
-        player = (FakePlayer) model.getCurrPlayer();
+        player = model.getCurrPlayer();
         player.setScore(0);
         player.setObjectiveCard(new ObjectiveCard(3,
                 new Count(Arrays.asList(Resources.FEATHER, Resources.INK, Resources.SCROLL)), null, null));
@@ -635,7 +645,7 @@ class GameModelTest {
         // he achieves also both common objective
         model.setNextPlayingPlayer();
         assertEquals(model.getCurrIndexPlayer(), 3);
-        player = (FakePlayer) model.getCurrPlayer();
+        player = model.getCurrPlayer();
         player.setScore(20);
         player.setObjectiveCard(new ObjectiveCard(2,
                 new Count(Arrays.asList(Resources.MUSHROOM, Resources.MUSHROOM, Resources.MUSHROOM)), null, null));
@@ -651,7 +661,7 @@ class GameModelTest {
             fail("Exception should not have been thrown");
         }
         assertInstanceOf(LastTurnGameModelState.class, model.getGameState());
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.endGame());
+        assertThrowsExactly(IllegalStateOperationException.class, model::endGame);
 
         for (int i = 0; i < 4; i++) {
             try {
@@ -675,7 +685,7 @@ class GameModelTest {
             super(0);
         }
 
-        public void initGame(LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
+        public void initGame(Map<String, VirtualClient> clients, Object lock){
             players = new HashMap<>();
             super.clients = new HashMap<>();
             for (String username : clients.keySet()) {
@@ -755,7 +765,7 @@ class GameModelTest {
 
     private void utilityInitGame() {
         try {
-            model.initGame(clients);
+            model.initGame(clients, lock);
         } catch (IllegalStateOperationException e) {
             fail("Exception should not have been thrown");
         }
@@ -763,7 +773,7 @@ class GameModelTest {
 
     private void utilityInitGame(GameModel model) {
         try {
-            model.initGame(clients);
+            model.initGame(clients, lock);
         } catch (IllegalStateOperationException e) {
             fail("Exception should not have been thrown");
         }

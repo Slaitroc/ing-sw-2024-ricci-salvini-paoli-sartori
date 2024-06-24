@@ -2,32 +2,37 @@ package it.polimi.ingsw.gc31.client_server.listeners;
 
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GameListenerHandler{
     private final Map<String, Listener> listeners = new HashMap<>();
     private final String username;
+    private final Object lock;
 
-    public GameListenerHandler(String username) {
+    public GameListenerHandler(String username, Object lock) {
         this.username = username;
+        this.lock = lock;
     }
 
     public void notifyAllListeners(GameModel model) {
 //        if (model.getPlayerConnection().get(username)) {
+        synchronized (lock) {
             for (Listener listener : listeners.values()) {
                 listener.update(model, username);
             }
 //        }
+       }
     }
 
     private void notifyListener(String type, GameModel model){
+        synchronized (lock) {
 //        if (model.getPlayerConnection().get(username)) {
             if (listeners.containsKey(type)) {
                 listeners.get(type).update(model, username);
             }
 //        }
+        }
     }
 
     public void addPlayAreaListener(Listener listener){
