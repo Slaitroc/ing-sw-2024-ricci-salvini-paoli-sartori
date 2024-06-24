@@ -80,7 +80,7 @@ public class GameControllerTest {
      * @throws RemoteException
      */
     @BeforeEach
-    private void setUp() throws RemoteException {
+    public void setUp() throws RemoteException {
         mockClient = Mockito.mock(VirtualClient.class);
         gameController1 = new GameController("player1", mockClient, 4, 0);
     }
@@ -178,8 +178,7 @@ public class GameControllerTest {
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player3"));
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player4"));
 
-        //FIXME why this method throw an RuntimeException?
-        assertThrows(RuntimeException.class, () -> gameController1.checkReady());
+        assertDoesNotThrow(() -> gameController1.checkReady());
     }
 
     /**
