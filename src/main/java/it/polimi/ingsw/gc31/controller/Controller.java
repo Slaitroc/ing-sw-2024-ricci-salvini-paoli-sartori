@@ -297,7 +297,7 @@ public class Controller extends UnicastRemoteObject implements IController {
         tempClients.put(username, client);
         // se il gioco era costituito da una sola persona va eliminato il gamecontroller
         // corrispondente
-        sendUpdateToClient(client, new QuitFromGameRObj(idGame));
+        sendUpdateToClient(client, new QuitFromGameRObj(username));
     }
 
     // GETTERS

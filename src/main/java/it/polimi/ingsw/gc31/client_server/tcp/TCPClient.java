@@ -19,14 +19,14 @@ import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.utility.DV;
 import it.polimi.ingsw.gc31.view.UI;
 
-public class TCPClient implements ClientCommands {
+public class TCPClient extends Token implements ClientCommands {
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
     private String username;
     private Integer idGame;
     private UI ui;
     private final Queue<ClientQueueObject> callsList;
-    private int token;
+    private Token token;
     private Timer timer;
     private boolean firstConnectionDone = false;
 
@@ -36,6 +36,7 @@ public class TCPClient implements ClientCommands {
      */
     @SuppressWarnings("resource")
     public TCPClient(String ipaddress) throws IOException {
+        this.token = new Token();
         this.username = DV.DEFAULT_USERNAME;
         Socket serverSocket = new Socket(ipaddress, DV.TCP_PORT);
         this.input = new ObjectInputStream(serverSocket.getInputStream());
@@ -169,7 +170,7 @@ public class TCPClient implements ClientCommands {
     @Override
     public void setUsernameCall(String username) {
         if (firstConnectionDone)
-            tcp_sendCommand(new ConnectObj(username, token), DV.RECIPIENT_CONTROLLER);
+            tcp_sendCommand(new ConnectObj(username, token.getToken()), DV.RECIPIENT_CONTROLLER);
         else {
             tcp_sendCommand(new ConnectObj(username), DV.RECIPIENT_CONTROLLER);
             firstConnectionDone = true;
@@ -386,7 +387,7 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void setToken(int token) {
-        this.token = token;
+        this.token.setToken(token);
         String userHome = System.getProperty("user.home");
         String desktopPath = DV.getDesktopPath(userHome);
         String folderName = "CodexNaturalis";
@@ -420,6 +421,16 @@ public class TCPClient implements ClientCommands {
 
     @Override
     public void reconnect(boolean reconnect) throws RemoteException {
-        tcp_sendCommand(new ReconnectObj(reconnect, username, token), DV.RECIPIENT_CONTROLLER);
+        tcp_sendCommand(new ReconnectObj(reconnect, username, token.getToken()), DV.RECIPIENT_CONTROLLER);
     }
+
+    @Override
+    public boolean hasToken() {
+        if (token.getToken() != -1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

@@ -4,6 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
+import it.polimi.ingsw.gc31.exceptions.NoTokenException;
 
 public interface VirtualClient extends Remote {
 

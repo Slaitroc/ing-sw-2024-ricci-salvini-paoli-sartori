@@ -5,6 +5,7 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.utility.DV;
+import it.polimi.ingsw.gc31.utility.FileUtility;
 import it.polimi.ingsw.gc31.view.UI;
 
 import java.awt.*;
@@ -12,7 +13,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -21,7 +21,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.Timer;
-import java.util.List;
 
 public class RmiClient extends UnicastRemoteObject implements VirtualClient, ClientCommands {
     private IController controller;
@@ -31,7 +30,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     private String username;
     private UI ui;
     private final LinkedBlockingQueue<ClientQueueObject> callsList;
-    private int token;
+    private Token token = new Token();
     private boolean firstConnectionDone = false;
 
     /**
@@ -98,7 +97,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public void setUsernameCall(String username) throws RemoteException {
         if (controller == null) {
-            server.sendCommand(new ConnectObj(username, token));
+            server.sendCommand(new ConnectObj(username, token.getToken()));
         }
 
     }
@@ -277,63 +276,72 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
      */
     @Override
     public void setRmiToken(int token) throws RemoteException {
-        this.token = token;
+        this.token.setToken(token);
     }
 
     @Override
     public void setToken(int token) {
-        String userHome = System.getProperty("user.home");
-        String desktopPath = DV.getDesktopPath(userHome);
-        String folderName = "CodexNaturalis";
-        String fileName = "Token.txt";
-        // Crea il percorso completo della cartella e del file
-        Path folderPath = Paths.get(desktopPath, folderName);
-        Path filePath = Paths.get(desktopPath, folderName, fileName);
-        if (!Files.exists(filePath)) {
+        Path folder = FileUtility.getCodexNaturalisPath();
+        if (!Files.exists(folder)) {
             try {
-                Files.createDirectories(folderPath);
+                Files.createDirectories(folder);
             } catch (IOException e) {
-                ui.showGenericClientResonse("Errore nel salvataggio del token!");
+                ui.showGenericClientResonse("Errore nella creazione della cartella!");
                 e.printStackTrace();
             }
         } else {
-            // try {
-            // long lines = Files.lines(filePath).count();
-            // ui.showGenericClientResonse("Numero di righe del file: " + lines);
-            // if (lines > 10) {
-            // java.util.List<String> lastNineLines = getLastNineLines(filePath);
-            // Path newFilePath = Paths.get(desktopPath, folderName, "LastNineLines.txt");
-            // try (BufferedWriter writer = Files.newBufferedWriter(newFilePath,
-            // StandardOpenOption.CREATE,
-            // StandardOpenOption.TRUNCATE_EXISTING)) {
-            // for (String line : lastNineLines) {
-            // writer.write(line);
-            // writer.newLine();
-            // }
-            // }
-            // ui.showGenericClientResonse(
-            // "Le ultime 9 righe sono state copiate nel file: " + newFilePath.toString());
-            // }
-            // // Files.delete(filePath);
-            // // ui.showGenericClientResonse("File esistente eliminato.");
-            // } catch (IOException e) {
-            // e.printStackTrace();
-            // }
-        }
+            Path file = FileUtility.getCodexTokenFile();
+            if ((!Files.exists(file))) {
+                try (BufferedWriter writer = Files.newBufferedWriter(file, StandardOpenOption.CREATE,
+                        StandardOpenOption.TRUNCATE_EXISTING)) {
+                    writer.write("" + token);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
+                ui.showGenericClientResonse(file.toString());
 
-        try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE,
-                StandardOpenOption.APPEND)) {
-            writer.write("" + token);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
-        ui.showGenericClientResonse(filePath.toString());
+            }
+            if (false) {
 
+                // try {
+                // long lines = Files.lines(filePath).count();
+                // ui.showGenericClientResonse("Numero di righe del file: " + lines);
+                // if (lines > 10) {
+                // java.util.List<String> lastNineLines = getLastNineLines(filePath);
+                // Path newFilePath = Paths.get(desktopPath, folderName, "LastNineLines.txt");
+                // try (BufferedWriter writer = Files.newBufferedWriter(newFilePath,
+                // StandardOpenOption.CREATE,
+                // StandardOpenOption.TRUNCATE_EXISTING)) {
+                // for (String line : lastNineLines) {
+                // writer.write(line);
+                // writer.newLine();
+                // }
+                // }
+                // ui.showGenericClientResonse(
+                // "Le ultime 9 righe sono state copiate nel file: " + newFilePath.toString());
+                // }
+                // // Files.delete(filePath);
+                // // ui.showGenericClientResonse("File esistente eliminato.");
+                // } catch (IOException e) {
+                // e.printStackTrace();
+                // }
+            }
+        }
     }
 
     @Override
     public void reconnect(boolean reconnect) throws RemoteException {
-        controller.sendCommand(new ReconnectObj(reconnect, username, token));
+        controller.sendCommand(new ReconnectObj(reconnect, username, token.getToken()));
     }
+
+    @Override
+    public boolean hasToken() {
+        if (token.getToken() != -1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

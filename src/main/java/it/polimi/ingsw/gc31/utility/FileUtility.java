@@ -6,7 +6,8 @@ import java.nio.file.Paths;
 
 public class FileUtility {
 
-    public static String getDesktopPath(String userHome) {
+    public static String getDesktopPath() {
+        String userHome = System.getProperty("user.home");
         String osName = System.getProperty("os.name").toLowerCase();
         String desktopPath = "";
 
@@ -19,6 +20,20 @@ public class FileUtility {
         }
 
         return desktopPath;
+    }
+
+    public static Path getCodexNaturalisPath() {
+        String folderName = "CodexNaturalis";
+        String fileName = "Token.txt";
+        // Crea il percorso completo della cartella e del file
+        return Paths.get(getDesktopPath(), folderName);
+    }
+
+    public static Path getCodexTokenFile() {
+        String folderName = "CodexNaturalis";
+        String fileName = "Token.txt";
+        // Crea il percorso completo della cartella e del file
+        return Paths.get(getDesktopPath(), folderName, fileName);
     }
 
     public static boolean exixts(Path path) {

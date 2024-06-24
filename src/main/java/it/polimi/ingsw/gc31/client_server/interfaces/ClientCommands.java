@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.interfaces;
 
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.exceptions.NoTokenException;
 import it.polimi.ingsw.gc31.view.UI;
 
 import java.awt.*;
@@ -56,6 +57,8 @@ public interface ClientCommands {
     void sendChatMessage(String fromUsername, String toUsername, String message) throws RemoteException;
 
     void setToken(int token);
+
+    boolean hasToken();
 
     void reconnect(boolean reconnect) throws RemoteException;
 

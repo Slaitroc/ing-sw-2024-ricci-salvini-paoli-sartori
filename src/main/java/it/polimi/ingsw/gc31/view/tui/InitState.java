@@ -147,6 +147,7 @@ public class InitState extends TuiState {
 
     @Override
     protected void reconnect() {
+
         String message = "You disconnected from the last match :,( \n Would u like to rejoin the game? \n y/n)";
         String input;
         tui.printToCmdLineOut(tui.tuiWrite(message));
@@ -158,6 +159,7 @@ public class InitState extends TuiState {
                     tui.getClient().reconnect(true);
                     break;
                 } else if (input.trim().equals('n')) {
+                    // TODO anche qui cose sul token
                     tui.getClient().reconnect(false);
                     break;
                 } else {
@@ -167,7 +169,6 @@ public class InitState extends TuiState {
                 e.printStackTrace();
             }
         }
-
     }
 
 }
