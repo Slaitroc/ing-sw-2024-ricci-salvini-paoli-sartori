@@ -24,6 +24,10 @@ class ControllerTest {
         controller.gameControlList.clear();
         controller.nicknames.clear();
     }
+
+    /**
+     * Tests the generateToken method, invoked every time a VirtualClient is created
+     */
     @Test
     void generateTokenTest() {
         //At the start the server doesn't have any client in the newConnections map
@@ -60,6 +64,10 @@ class ControllerTest {
         assertEquals(999, controller.generateToken(null));
     }
 
+    /**
+     * Tests the sendToken method, invoked every time a client tries to connect to the server. The corresponding token was generated previously by the
+     * generate token method
+     */
     @Test
     void sendTokenTest() {
         //Create 4 fake clients for testing
@@ -84,6 +92,9 @@ class ControllerTest {
         assertThrows(NullPointerException.class,  () -> controller.sendToken(mockClient3));
     }
 
+    /**
+     * Tests the connect method
+     */
     @Test
     void connectTest() {
         //Checks if the case where a player disconnected tries to reconnect.
@@ -153,6 +164,9 @@ class ControllerTest {
 
     }
 
+    /**
+     * Tests the rejoin method
+     */
     @Test
     void rejoinTest() {
         //Create a client and put it in the newConnections map
@@ -186,6 +200,9 @@ class ControllerTest {
         assertEquals(1, controller.clientsHeartBeat.size());
     }
 
+    /**
+     * Tests the createGame method
+     */
     @Test
     void createGameTest() {
         //Creates a new client and inserts the client in the newConnections and tempClients map
@@ -208,6 +225,9 @@ class ControllerTest {
         assertEquals(0, controller.tempClients.size());
     }
 
+    /**
+     * Tests the joinGame method
+     */
     @Test
     void joinGameTest() {
         //Create a new client and add it to the maps
@@ -254,6 +274,9 @@ class ControllerTest {
         assertEquals(3, controller.newConnections.size());
     }
 
+    /**
+     * Tests the quitGame method, which is invoked only by the GameController
+     */
     @Test
     void quitGameTest() {
         //Create a new player
@@ -271,6 +294,9 @@ class ControllerTest {
         assertEquals(1, controller.tempClients.size());
     }
 
+    /**
+     * Tests the getGameList method
+     */
     @Test
     void getGameListTest() {
         //The controller sends to the client a ShowGamesObj,
@@ -291,6 +317,9 @@ class ControllerTest {
         assertDoesNotThrow( () -> controller.getGameList("username1"));
     }
 
+    /**
+     * Tests the getRightConnection method
+     */
     @Test
     void getRightConnectionTest() {
         //Create 2 clients and add them to the newConnection map
@@ -306,6 +335,9 @@ class ControllerTest {
         assertNull(controller.getRightConnection(300));
     }
 
+    /**
+     * Tests the updateHeartBeat method which is invoked every time a heartBeatObj is received
+     */
     @Test
     void updateHeartBeatTest() {
         long value = 10;
@@ -352,6 +384,9 @@ class ControllerTest {
         assertEquals(1, controller.disconnected.size());
     }
 
+    /**
+     * Tests for the checkHeartBeats method. It is invoked every 10 seconds by a scheduler and starts on the controller creation
+     */
     @Test
     public void checkHeartBeatsTest(){
         long time = 1;
