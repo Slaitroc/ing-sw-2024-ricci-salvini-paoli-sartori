@@ -366,7 +366,7 @@ public class TCPClient implements ClientCommands {
      * all the others execution are performed every 5 seconds
      */
     // FIXME aggiungere metodo close che esegue "timer.cancel();" quando si vuole
-    // chiudere la connessione
+    //  chiudere la connessione
     private void startHeartBeat() {
         long sendTime = (DV.testHB) ? DV.sendTimeTest : DV.sendTime;
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -421,5 +421,16 @@ public class TCPClient implements ClientCommands {
     @Override
     public void reconnect(boolean reconnect) throws RemoteException {
         tcp_sendCommand(new ReconnectObj(reconnect, username, token), DV.RECIPIENT_CONTROLLER);
+    }
+
+    /**
+     * Method invoked by the ui with the response of the user regarding
+     * if the player wants to play another match with the same players
+     *
+     * @param wantsToRematch is the response of the player (true: wants to rematch, false otherwise)
+     */
+    @Override
+    public void anotherMatchResponse(Boolean wantsToRematch){
+        tcp_sendCommand(new AnotherMatchResponseObj(username, wantsToRematch), DV.RECIPIENT_GAME_CONTROLLER);
     }
 }

@@ -336,4 +336,15 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     public void reconnect(boolean reconnect) throws RemoteException {
         controller.sendCommand(new ReconnectObj(reconnect, username, token));
     }
+
+    /**
+     * Method invoked by the ui when the user specify if it wants to play another match or not
+     *
+     * @param wantsToRematch is the boolean value associated to the response (true: wants to rematch, false otherwise)
+     * @throws RemoteException if an error occurred during the rmi connection
+     */
+    @Override
+    public void anotherMatchResponse(Boolean wantsToRematch) throws RemoteException {
+        gameController.sendCommand(new AnotherMatchResponseObj(username, wantsToRematch));
+    }
 }

@@ -2135,4 +2135,16 @@ public class TUI extends UI {
         commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
     }
 
+    /**
+     * This method should ask the player if it wants
+     * to play another match with the same players after the current
+     * match is finished
+     */
+    //FIXME implementare metodo. Ho fallito miseramente
+    @Override
+    public void show_anotherMatch(){
+
+        printToCmdLineOut(tuiWrite("Do you want to play another match?"));
+    }
+
 }

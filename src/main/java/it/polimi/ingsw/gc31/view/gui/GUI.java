@@ -254,6 +254,15 @@ public class GUI extends UI {
 
     }
 
+    /**
+     * This method should ask if the player wants to play
+     * another match with the same opponents when the current game is finished
+     */
+    @Override
+    public void show_anotherMatch() {
+
+    }
+
     @Override
     public void showGenericClientResonse(String response) {
         // TODO Auto-generated method stub
