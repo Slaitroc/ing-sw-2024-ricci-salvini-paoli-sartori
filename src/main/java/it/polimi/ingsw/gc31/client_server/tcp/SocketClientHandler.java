@@ -17,9 +17,9 @@ ricevo
 deserializzo
 getto e check il recipient
 a seconda chiamo gamecontroller o controller sendobject
-
 eseguito da loro
  */
+
 /**
  * This class receives the inputs from the virtual socket server, executes the
  * methods requested by the client

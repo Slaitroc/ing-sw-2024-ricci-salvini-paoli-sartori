@@ -3,10 +3,6 @@ package it.polimi.ingsw.gc31.client_server.tcp;
 import java.awt.*;
 import java.io.*;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.Queue;
@@ -16,6 +12,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.exceptions.NoTokenException;
 import it.polimi.ingsw.gc31.utility.DV;
 import it.polimi.ingsw.gc31.utility.FileUtility;
 import it.polimi.ingsw.gc31.view.UI;
@@ -169,9 +166,9 @@ public class TCPClient extends Token implements ClientCommands {
      * @param username is the username set by the client
      */
     @Override
-    public void setUsernameCall(String username) {
-        if (firstConnectionDone)// FIX compatibile tempToken e aggiornamento token in tcp client?
-            tcp_sendCommand(new ConnectObj(username, token.getTempToken()), DV.RECIPIENT_CONTROLLER);
+    public void setUsernameCall(String username, int token) {
+        if (firstConnectionDone)
+            tcp_sendCommand(new ConnectObj(username, token), DV.RECIPIENT_CONTROLLER);
         else {
             tcp_sendCommand(new ConnectObj(username), DV.RECIPIENT_CONTROLLER);
             firstConnectionDone = true;
@@ -412,6 +409,11 @@ public class TCPClient extends Token implements ClientCommands {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public int readToken() throws NumberFormatException, NoTokenException {
+        return Integer.parseInt(token.getTokenLine());
     }
 
 }

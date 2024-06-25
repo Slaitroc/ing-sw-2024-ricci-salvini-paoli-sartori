@@ -12,7 +12,7 @@ public interface ClientCommands {
 
     void setUI(UI ui);
 
-    void setUsernameCall(String username) throws IOException;
+    void setUsernameCall(String username, int token) throws IOException;
 
     void setUsernameResponse(String username);
 
@@ -59,6 +59,8 @@ public interface ClientCommands {
     void setToken(int token, boolean temporary);
 
     boolean hasToken();
+
+    int readToken() throws NumberFormatException, NoTokenException;
 
     void reconnect(boolean reconnect) throws RemoteException;
 

@@ -72,4 +72,6 @@ public interface ShowUpdate {
 
     void show_rejoined(boolean esito);
 
+    void show_unableToReconnect();
+
 }

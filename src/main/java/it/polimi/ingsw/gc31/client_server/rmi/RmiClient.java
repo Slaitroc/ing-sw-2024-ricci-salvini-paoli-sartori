@@ -4,16 +4,12 @@ import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.exceptions.NoTokenException;
 import it.polimi.ingsw.gc31.utility.DV;
 import it.polimi.ingsw.gc31.utility.FileUtility;
 import it.polimi.ingsw.gc31.view.UI;
 
 import java.awt.*;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -30,7 +26,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     private String username;
     private UI ui;
     private final LinkedBlockingQueue<ClientQueueObject> callsList;
-    private Token token;
+    public Token token;
     private boolean firstConnectionDone = false;
 
     /**
@@ -45,7 +41,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         this.server = (VirtualServer) LocateRegistry.getRegistry(ipaddress, DV.RMI_PORT)
                 .lookup("VirtualServer");
         this.server.RMIserverWrite("New connection detected from ip: " + server.getClientIP());
-//        this.server.generateToken(this);
+        this.server.generateToken(this);
         this.token = new Token();
         this.username = DV.DEFAULT_USERNAME;
         this.controller = null;
@@ -96,14 +92,8 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
-    public void setUsernameCall(String username) throws RemoteException {
-        int token = 212;
-        if (controller == null) {
-            server.connect(this, username, token);
-        }
-//        if (controller == null) {
-//            server.sendCommand(new ConnectObj(username, token));
-//        }
+    public void setUsernameCall(String username, int token) throws RemoteException {
+        server.sendCommand(new ConnectObj(username, token));
     }
 
     @Override
@@ -308,6 +298,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         else
             return false;
 
+    }
+
+    @Override
+    public int readToken() throws NumberFormatException, NoTokenException {
+        return Integer.parseInt(token.getTokenLine());
     }
 
 }

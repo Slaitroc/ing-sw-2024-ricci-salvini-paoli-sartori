@@ -1297,6 +1297,8 @@ public class TUI extends UI {
             state.stateNotify();
         } else if (command.equals(TUIcommands.INITIAL.toString()) && state.stateName.equals("Init State")) {
             state.command_initial();
+        } else if (command.equals(TUIcommands.SET_USERNAME.toString()) && state.stateName.equals("Init State")) {
+            state.setUsername();
         } else if (state.commandsMap.containsKey(command)) {
             state.commandsMap.get(command).run();
         } else if (command.equals(TUIcommands.NOTIFY.toString())) {
@@ -2134,6 +2136,13 @@ public class TUI extends UI {
     public void show_rejoined(boolean esito) {
         state = new PlayingState(this);
         commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+    }
+
+    @Override
+    public void show_unableToReconnect() {
+        printToCmdLineOut(serverWrite("U were not in a game!"));
+        commandToProcess(TUIcommands.SET_USERNAME, false);
+
     }
 
 }
