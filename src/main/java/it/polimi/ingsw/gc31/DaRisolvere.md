@@ -51,7 +51,7 @@
 - [ ] se un client termina il programma sembra che non lo tolga dal gameController se il game non è ancora stato avviato (ho un solo client e comunque quando faccio show games vedo che c'è un client ancora connesso ma è impossibile)
 - [ ] thread per send commands
 - [ ] swappare socket nella riconnessione tcp
-- [ ] da implementare quit game di fine partita --> dobbiamo rimettere i client da gamecontroller in tempclient di controller
+- [x] da implementare quit game di fine partita --> dobbiamo rimettere i client da gamecontroller in tempclient di controller
 
 ## GUI
 - [ ] da girare le carte nei deck e allo startup

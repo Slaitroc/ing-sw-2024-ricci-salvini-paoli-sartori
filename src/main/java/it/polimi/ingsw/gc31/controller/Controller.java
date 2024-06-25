@@ -389,14 +389,12 @@ public class Controller extends UnicastRemoteObject implements IController {
                     }
                 }
 
-                //FIXME si può usare disconnected get(token) per ottenere subito il gameID
                 //If the client was not found in tempClients => it is in a clientList of a GameController (it was
                 //in a game). The for searches the client in all the gameController.clientList, if it is found the
                 //disconnectPlayer method of the gameController is invoked with also the disconnect method of the Controller
                 if(!found) {
                     for (GameController gc : gameControlList) {
-                        // FIXME
-                        synchronized (gc.clientList) {
+                        synchronized (gc.clientListLock) {
                             for (String u : gc.clientList.keySet()) {
                                 if ((gc.clientList.get(u)).equals(client)) {
                                     gc.disconnectPlayer(u);
