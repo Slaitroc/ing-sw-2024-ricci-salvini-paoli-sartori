@@ -118,6 +118,11 @@ public class InitState extends TuiState {
     }
 
     @Override
+    protected void command_changePlayArea() {
+
+    }
+
+    @Override
     protected void command_initial() {
         tui.getClient().setUI(this.tui);
         setUsername();

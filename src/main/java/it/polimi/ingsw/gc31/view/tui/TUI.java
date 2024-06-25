@@ -130,6 +130,8 @@ public class TUI extends UI {
     int[] violetText = new int[] { 153, 153, 255 };
 
     private LinkedHashMap<Point, PlayableCard> placedCards = null;
+    private Map<String, StringBuilder> playAreaAllPlayers = new HashMap<>();
+    private String activePlayArea = "";
 
     // PRINT METHODS
     Map<TUIareas, StringBuilder> areasCache = new HashMap<>();
@@ -1737,10 +1739,10 @@ public class TUI extends UI {
     @Override
     public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea,
             Map<Resources, Integer> achievedResources) {
-        if (client.getUsername().equals(username)) {
+//        if (client.getUsername().equals(username)) {
             StringBuilder res = new StringBuilder();
             res.append(clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
-            res.append(print_Borders("Play Area", greyText, PLAYAREA_INITIAL_ROW,
+            res.append(print_Borders("Play Area: "+username, greyText, PLAYAREA_INITIAL_ROW,
                     PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW,
                     PLAYAREA_END_COLUMN));
             res.append(print_PlacedCards(playArea));
@@ -1760,13 +1762,18 @@ public class TUI extends UI {
                     index++;
                 }
             }
-            synchronized (playViewUpdate) {
-                playViewUpdate.add(res);
-                playViewUpdate.notify();
-            }
-            areasCache.put(TUIareas.PLAY_AREA_VIEW, res);
 
-        }
+            playAreaAllPlayers.put(username, res);
+
+            if (activePlayArea.equals(username)) {
+                synchronized (playViewUpdate) {
+                    playViewUpdate.add(res);
+                    playViewUpdate.notify();
+                }
+                areasCache.put(TUIareas.PLAY_AREA_VIEW, res);
+            }
+
+//        }
     }
 
     @Override
@@ -1960,6 +1967,7 @@ public class TUI extends UI {
         printToCmdLineOut(serverWrite("Username accepted"));
         printToCmdLineOut(tuiWrite("Your name is: " + username));
         client.setUsernameResponse(username);
+        this.activePlayArea = username;
         commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
 
     }
@@ -2119,6 +2127,11 @@ public class TUI extends UI {
         // TODO cambiare stato tui
         state = new PlayingState(this);
         commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+    }
+
+    public void changeActivePlayArea(String username) {
+        activePlayArea = username;
+        areasCache.put(TUIareas.PLAY_AREA_VIEW, playAreaAllPlayers.get(username));
     }
 
 }
