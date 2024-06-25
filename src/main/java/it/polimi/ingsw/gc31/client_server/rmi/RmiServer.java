@@ -47,7 +47,7 @@ public class RmiServer implements VirtualServer {
         return Controller.getController().getRightConnection(token);
     }
 
-    // @Override
+     @Override
     public boolean connect(VirtualClient client, String username, Integer token)
             throws RemoteException {
         if (Controller.getController().connect(client, username, token)) {

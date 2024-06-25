@@ -276,7 +276,7 @@ public class GameModel {
     }
 
     protected void executeReconnectPlayer(String username) {
-        playerConnection.put(username, false);
+        playerConnection.put(username, true);
 
         ServerLog.gControllerWrite("The player " + username + " has rejoined game", idGame);
         notifyAllGameListeners();

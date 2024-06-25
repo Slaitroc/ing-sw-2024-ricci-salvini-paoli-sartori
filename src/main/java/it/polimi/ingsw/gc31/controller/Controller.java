@@ -61,8 +61,8 @@ public class Controller extends UnicastRemoteObject implements IController {
         while (newConnections.containsKey(token)) {
             token = (int) (Math.random() * 1000);
         }
-        this.newConnections.put(token, newConnection);
-        sendToken(newConnection, token, true);
+//        this.newConnections.put(token, newConnection);
+//        sendToken(newConnection, token, true);
 
         return token;
     }
@@ -164,15 +164,22 @@ public class Controller extends UnicastRemoteObject implements IController {
     public boolean connect(VirtualClient client, String username, Integer token)
             throws RemoteException {
         if (token == -1) {
-            sendToken(client, token, false);
+            int newToken = generateToken(client);
+            System.out.println("Client connesso senza token: "+username);
+            System.out.println("Player " + username + " nuovo token assegnato: "+newToken);
+            sendToken(client, newToken, false);
+            newConnections.put(newToken, client);
             return usernameValidation(username, client);
         } else {
             if (disconnected.containsKey(token)) {
+                System.out.println("Il player "+username+ " è tornato con token: "+token);
+                System.out.println("Stava giocando al game: "+disconnected.get(token));
                 newConnections.replace(token, client);
                 client.sendCommand(new WantsReconnectObj());
                 ServerLog.controllerWrite(
                         "old client " + gameControlList.get(disconnected.get(token)).disconnected.get(token)
                                 + "reconnected with name " + username);
+                gameControlList.get(disconnected.get(token)).reJoinGame(username, client);
                 return true;
             } else {
                 sendToken(client, token, false);
@@ -223,7 +230,8 @@ public class Controller extends UnicastRemoteObject implements IController {
         if (esito) {
             try {
                 client.sendCommand(new ReJoinedObj(true)); // mandare questo è importante perché la ui fa cose in //
-                                                           // risposta a questo update
+
+                // risposta a questo update
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

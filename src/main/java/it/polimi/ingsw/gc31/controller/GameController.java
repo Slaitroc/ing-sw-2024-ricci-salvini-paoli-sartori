@@ -130,10 +130,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         // the old client is replaced with the new one
         synchronized (clientListLock) {
             if (clientList.containsKey(username)) {
-                clientList.put(username, newClient);
+                clientList.replace(username, newClient);
                 model.reconnectPlayer(username);
                 newClient.setGameController(this);
-                newClient.sendCommand(new JoinedToGameObj(idGame, getMaxNumberPlayers()));
+                newClient.sendCommand(new ReJoinedObj(true));
                 ServerLog.gControllerWrite("Welcome back " + username + "!", idGame);
             } else {
                 ServerLog.gControllerWrite("C'è stato qualche problema con la rejoin di " + username, idGame);
