@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.view.interfaces;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import javafx.util.Pair;
 
 import java.awt.*;
 import java.util.LinkedHashMap;
@@ -87,7 +88,7 @@ public interface ShowUpdate {
     void show_handPlayer(String username, List<PlayableCard> hand, int selectedCard);
 
     //TODO
-    void show_scorePlayer(LinkedHashMap<String, Integer> scores);
+    void show_scorePlayer(LinkedHashMap<String, Pair<Integer, Boolean>> scores);
 
     /**
      * Provide a list of available games.
@@ -206,5 +207,9 @@ public interface ShowUpdate {
 
     //TODO
     void show_rejoined(boolean result);
+
+    void show_anotherMatch();
+
+    void show_timerLastPlayerConnected(Integer secondsLeft);
 
 }

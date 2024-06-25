@@ -4,8 +4,10 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowScorePlayerObj;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
+import javafx.util.Pair;
 
 import java.rmi.RemoteException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -30,7 +32,12 @@ public class PlayerScoreListener extends Listener {
      */
     @Override
     public void update(GameModel model, String username) {
-        ClientQueueObject clientQueueObject = new ShowScorePlayerObj(model.getBoard().getPlayersScore());
+        LinkedHashMap<String, Pair<Integer, Boolean>> res = new LinkedHashMap<>();
+        for (String usr : model.getBoard().getPlayersScore().keySet()) {
+            boolean inTurn = model.getPlayers().get(usr).infoState().equals("notplaced") || model.getPlayers().get(usr).infoState().equals("placed");
+            res.put(usr, new Pair<>(model.getBoard().getPlayersScore().get(usr), inTurn));
+        }
+        ClientQueueObject clientQueueObject = new ShowScorePlayerObj(res);
         sendUpdate(model, username, clients.get(username), clientQueueObject);
     }
 }

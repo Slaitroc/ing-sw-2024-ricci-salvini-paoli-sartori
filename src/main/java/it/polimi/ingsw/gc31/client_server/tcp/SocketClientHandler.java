@@ -87,7 +87,7 @@ public class SocketClientHandler implements VirtualClient {
      */
     private void tcpClient_reader() {
         new Thread(() -> {
-            ServerQueueObject obj = null;
+            ServerQueueObject obj;
 
             try {
                 while ((obj = (ServerQueueObject) input.readObject()) != null) {

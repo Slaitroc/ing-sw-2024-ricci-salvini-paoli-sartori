@@ -59,11 +59,16 @@ public abstract class Listener {
                 try {
                     client.sendCommand(clientQueueObject);
                 } catch (RemoteException e) {
-                    if (model.getPlayerConnection().get(username)) {
-                        model.disconnectPlayer(username);
-                    } else {
-                        ServerLog.gControllerWrite("Client is already disconnected, "+username, model.getIdGame());
-                    }
+                    // FIXME lasciare disconnettere il giocatore all'heatbeat?
+//                    if (model.getPlayerConnection().get(username)) {
+//                        try {
+//                            model.disconnectPlayer(username);
+//                        } catch (LastPlayerRemainedException ex) {
+//                            // todo fare qualcosa?
+//                        }
+//                    } else {
+//                        ServerLog.gControllerWrite("Client is already disconnected, "+username, model.getIdGame());
+//                    }
                 }
             }).start();
         } else {

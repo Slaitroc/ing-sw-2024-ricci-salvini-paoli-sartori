@@ -1,10 +1,7 @@
 package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
-import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
-import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
+import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
@@ -136,6 +133,7 @@ public interface GameModelState {
      * @throws IllegalStateOperationException if model is in {@code CreationGameModelState}, {@code SetupGameModelState} or {@code EndGameModelState}
      */
     void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException;
+    void endGame(GameModel model, String lastPlayerConnected) throws IllegalStateOperationException;
 
     /**
      * Ends the game and calculates the final scores for all players.
@@ -152,6 +150,7 @@ public interface GameModelState {
      */
     void endGame(GameModel model) throws IllegalStateOperationException;
 
+    void disconnectPlayer(GameModel model, String username) throws LastPlayerRemainedException;
     // TODO forse non necessario
 
     /**

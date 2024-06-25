@@ -4,6 +4,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.exceptions.LastPlayerRemainedException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.player.Player;
 
@@ -72,12 +73,12 @@ public class ShowDownGameModelState implements GameModelState {
     }
 
     @Override
-    public void endGame(GameModel model) throws IllegalStateOperationException {
+    public void endGame(GameModel model, String lastPlayerConnected) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
     @Override
-    public void disconnectPlayer(GameModel model, String username) {
+    public void disconnectPlayer(GameModel model, String username) throws LastPlayerRemainedException {
         model.executeDisconnectPlayer(username);
     }
 

@@ -32,6 +32,7 @@ public class PlayingState extends TuiState {
         commandsMap.put("c", this::command_changeSide);
         commandsMap.put("cs", this::command_changeStarterSide);
         commandsMap.put("mv", this::command_movePlayArea);
+        commandsMap.put("cp", this::command_changePlayArea);
         commandsMap.put("invalid", this::command_invalidCommand);
 
         commandsInfo = new LinkedHashMap<>();
@@ -221,6 +222,17 @@ public class PlayingState extends TuiState {
             tui.movePlayAreaDown();
         }
 
+        stateNotify();
+    }
+
+    @Override
+    protected void command_changePlayArea() {
+        tui.printToCmdLineOut(tui.tuiWrite("Which player do you want to see the playArea of?"));
+
+        String input = scanner.nextLine();
+        tui.printToCmdLineOut(tui.tuiWrite(input));
+
+        tui.changeActivePlayArea(input);
         stateNotify();
     }
 

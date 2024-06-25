@@ -17,6 +17,7 @@ import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.strategies.*;
 import it.polimi.ingsw.gc31.utility.DV;
 
+import javafx.util.Pair;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -36,7 +37,7 @@ public class TUI extends UI {
 
     private final int PLAYAREA_INITIAL_ROW = 2;
     private final int PLAYAREA_INITIAL_COLUMN = 70;
-    private final int PLAYAREA_END_ROW = 31;
+    private final int PLAYAREA_END_ROW = 35;
     private final int PLAYAREA_END_COLUMN = 184;
     private final int CARD_LENGTH = 21;
     private final int CARD_HEIGHT = 7;
@@ -128,8 +129,9 @@ public class TUI extends UI {
     int[] blueText = new int[] { 51, 153, 255 };
     int[] violetText = new int[] { 153, 153, 255 };
 
-    // FIXME temporaneo
     private LinkedHashMap<Point, PlayableCard> placedCards = null;
+    private Map<String, StringBuilder> playAreaAllPlayers = new HashMap<>();
+    private String activePlayArea = "";
 
     // PRINT METHODS
     Map<TUIareas, StringBuilder> areasCache = new HashMap<>();
@@ -280,6 +282,7 @@ public class TUI extends UI {
      * The card is printed starting from the top left corner of the card.
      * (relative_x,relative_y) = (0,0) corresponds to the top left corner of the
      * area where the card is printed.
+     * <p>
      * The card is made of n strings of length m, where n is equals to
      * {@link #CARD_HEIGHT} and m is equals to {@link #CARD_LENGTH}.
      * If a character of the strings that composes the card goes outside the limits
@@ -400,6 +403,7 @@ public class TUI extends UI {
      * The card is printed starting from the top left corner of the card.
      * (relative_x,relative_y) = (0,0) corresponds to the top left corner of the
      * area where the card is printed.
+     * <p>
      * The card is made of n strings of length m, where n is equals to
      * {@link #CARD_HEIGHT} and m is equals to {@link #CARD_LENGTH}.
      * If a character of the strings that composes the card goes outside the limits
@@ -1735,10 +1739,10 @@ public class TUI extends UI {
     @Override
     public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea,
             Map<Resources, Integer> achievedResources) {
-        if (client.getUsername().equals(username)) {
+//        if (client.getUsername().equals(username)) {
             StringBuilder res = new StringBuilder();
             res.append(clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
-            res.append(print_Borders("Play Area", greyText, PLAYAREA_INITIAL_ROW,
+            res.append(print_Borders("Play Area: "+username, greyText, PLAYAREA_INITIAL_ROW,
                     PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW,
                     PLAYAREA_END_COLUMN));
             res.append(print_PlacedCards(playArea));
@@ -1758,17 +1762,22 @@ public class TUI extends UI {
                     index++;
                 }
             }
-            synchronized (playViewUpdate) {
-                playViewUpdate.add(res);
-                playViewUpdate.notify();
-            }
-            areasCache.put(TUIareas.PLAY_AREA_VIEW, res);
 
-        }
+            playAreaAllPlayers.put(username, res);
+
+            if (activePlayArea.equals(username)) {
+                synchronized (playViewUpdate) {
+                    playViewUpdate.add(res);
+                    playViewUpdate.notify();
+                }
+                areasCache.put(TUIareas.PLAY_AREA_VIEW, res);
+            }
+
+//        }
     }
 
     @Override
-    public void show_scorePlayer(LinkedHashMap<String, Integer> scores) {
+    public void show_scorePlayer(LinkedHashMap<String, Pair<Integer, Boolean>> scores) {
         StringBuilder res = new StringBuilder();
         res.append(clearArea(PLAYERS_INFO_INITIAL_ROW, PLAYERS_INFO_INITIAL_COLUMN, PLAYERS_INFO_END_ROW,
                 PLAYERS_INFO_END_COLUMN));
@@ -1777,8 +1786,9 @@ public class TUI extends UI {
                 PLAYERS_INFO_END_ROW, PLAYERS_INFO_END_COLUMN));
         int index = 1;
         for (String player : scores.keySet()) {
+            String inTurn = scores.get(player).getValue() ? "\uD83D\uDFE2" : "  ";
             res.append(ansi().cursor(PLAYERS_INFO_INITIAL_ROW + index, PLAYERS_INFO_INITIAL_COLUMN + 1)
-                    .a(player + ": " + scores.get(player)));
+                    .a(inTurn + " "+ player + ": " + scores.get(player).getKey()));
             index++;
         }
 
@@ -1821,7 +1831,6 @@ public class TUI extends UI {
             playViewUpdate.notify();
         }
         areasCache.put(TUIareas.RES_DECK, res);
-
     }
 
     @Override
@@ -1866,9 +1875,7 @@ public class TUI extends UI {
     public void show_objectiveCard(String username, ObjectiveCard objectiveCard) {
         if (client.getUsername().equals(username)) {
             StringBuilder res = new StringBuilder();
-            res.append(
-                    clearArea(CHOOSE_OBJECTIVE_INITIAL_ROW, CHOOSE_OBJECTIVE_INITIAL_COLUMN, CHOOSE_OBJECTIVE_END_ROW,
-                            CHOOSE_OBJECTIVE_END_COLUMN));
+            res.append(clearArea(OBJECTIVE_INITIAL_ROW+1, OBJECTIVE_INITIAL_COLUMN, OBJECTIVE_END_ROW, OBJECTIVE_END_COLUMN));
             res.append(ansi().cursor(OBJECTIVE_INITIAL_ROW, OBJECTIVE_INITIAL_COLUMN + 1).a("Your Objective Card"));
             res.append(print_ObjectiveCard(objectiveCard, OBJECTIVE_INITIAL_COLUMN + 1, OBJECTIVE_INITIAL_ROW + 1,
                     OBJECTIVE_INITIAL_ROW, OBJECTIVE_END_ROW, OBJECTIVE_INITIAL_COLUMN, OBJECTIVE_END_COLUMN));
@@ -1878,7 +1885,6 @@ public class TUI extends UI {
             }
             areasCache.put(TUIareas.OBJ, res);
         }
-
     }
 
     @Override
@@ -1910,16 +1916,15 @@ public class TUI extends UI {
             }
             // FIXME problema per quando iniziano i turni della partita, l'area cache di
             // choose objective card non deve venire ristampata
-            // areasCache.put(TUIareas.CHOSE_OBJ, res);
+             areasCache.put(TUIareas.CHOSE_OBJ, res);
         }
-
     }
 
     @Override
     public void show_commonObjectiveCard(ObjectiveCard card1, ObjectiveCard card2) {
         StringBuilder res = new StringBuilder();
-        res.append(
-                ansi().cursor(COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_INITIAL_COLUMN + 1).a("COMMON OBJECTIVE"));
+        res.append(clearArea(COMMON_OBJECTIVE_INITIAL_ROW+1, COMMON_OBJECTIVE_INITIAL_COLUMN, COMMON_OBJECTIVE_END_ROW, COMMON_OBJECTIVE_END_COLUMN));
+        res.append(ansi().cursor(COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_INITIAL_COLUMN + 1).a("COMMON OBJECTIVE"));
         if (card1 != null) {
             res.append(print_ObjectiveCard(card1, COMMON_OBJECTIVE_INITIAL_COLUMN + 1,
                     COMMON_OBJECTIVE_INITIAL_ROW + 1, COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_END_ROW,
@@ -1935,7 +1940,6 @@ public class TUI extends UI {
             playViewUpdate.notify();
         }
         areasCache.put(TUIareas.COMMON_OBJ, res);
-
     }
 
     @Override
@@ -1963,6 +1967,7 @@ public class TUI extends UI {
         printToCmdLineOut(serverWrite("Username accepted"));
         printToCmdLineOut(tuiWrite("Your name is: " + username));
         client.setUsernameResponse(username);
+        this.activePlayArea = username;
         commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
 
     }
@@ -1986,13 +1991,13 @@ public class TUI extends UI {
 
     @Override
     public void show_quitFromGame(String username) {
+        // FIXME da problemi
         state = new InitState(this);
         chatBoardThread.interrupt();
         chatMessages = new ArrayDeque<String>();
 
         // TODO: erase player info
         commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
-
     }
 
     @Override
@@ -2043,21 +2048,13 @@ public class TUI extends UI {
     public void show_playerTurn(String username, String info) {
         if (client.getUsername().equals(username)) {
             StringBuilder res = new StringBuilder();
-            // res.append(ansi().cursor(PLAYERS_INFO_END_ROW + 1,
-            // ACHIEVED_RESOURCES_END_COLUMN + 1)
-            // .a(" "));
-            res.append(
-                    ansi().cursor(PLAYERS_INFO_END_ROW + 2, ACHIEVED_RESOURCES_END_COLUMN + 1).a("                  "));
-            res.append(ansi().cursor(PLAYERS_INFO_END_ROW + 1, ACHIEVED_RESOURCES_END_COLUMN + 1)
-                    .a("Player state:"));
-            res.append(ansi().cursor(PLAYERS_INFO_END_ROW + 2, ACHIEVED_RESOURCES_END_COLUMN + 1).a(info));
-
+            res.append(ansi().cursor(PLAYAREA_END_ROW + 1, PLAYAREA_INITIAL_COLUMN + 1).a(" ".repeat(PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN)));
+            res.append(ansi().cursor(PLAYAREA_END_ROW + 1, PLAYAREA_INITIAL_COLUMN + 1).a(info));
             synchronized (playViewUpdate) {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
             areasCache.put(TUIareas.PLAYER_STATE, res);
-
         }
     }
 
@@ -2131,6 +2128,38 @@ public class TUI extends UI {
         // TODO cambiare stato tui
         state = new PlayingState(this);
         commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+    }
+
+    @Override
+    public void show_timerLastPlayerConnected(Integer secondsLeft) {
+        StringBuilder res = new StringBuilder();
+        res.append(clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
+        res.append(print_Borders("ifneoirngoirngiowrngiorwngroignroignrignr", greyText, PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
+//        res.append(print_Borders("", greyText, PLAYAREA_INITIAL_ROW + 1, PLAYAREA_INITIAL_COLUMN + 1, PLAYAREA_END_ROW -1, PLAYAREA_END_COLUMN - 1));
+        res.append(ansi().cursor(
+                (PLAYAREA_END_ROW + PLAYAREA_INITIAL_ROW)/2,
+                (PLAYAREA_END_COLUMN + PLAYAREA_INITIAL_COLUMN)/2)
+                .a(secondsLeft));
+        synchronized (playViewUpdate) {
+            playViewUpdate.add(res);
+            playViewUpdate.notify();
+        }
+    }
+
+    public void changeActivePlayArea(String username) {
+        activePlayArea = username;
+        areasCache.put(TUIareas.PLAY_AREA_VIEW, playAreaAllPlayers.get(username));
+    }
+
+    /**
+     * This method should ask the player if it wants
+     * to play another match with the same players after the current
+     * match is finished
+     */
+    //FIXME implementare metodo. Ho fallito miseramente
+    @Override
+    public void show_anotherMatch(){
+        printToCmdLineOut(tuiWrite("Do you want to play another match?"));
     }
 
 }

@@ -106,4 +106,5 @@ public interface ClientCommands {
     //TODO
     void reconnect(boolean reconnect) throws RemoteException;
 
+    void anotherMatchResponse(Boolean wantsToRematch) throws RemoteException;
 }

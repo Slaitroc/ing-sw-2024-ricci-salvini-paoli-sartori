@@ -1,11 +1,11 @@
 package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.exceptions.LastPlayerRemainedException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.utility.DV;
@@ -17,18 +17,9 @@ public class RunningGameModelSate implements GameModelState {
     public RunningGameModelSate(GameModel model) {
         ServerLog.gControllerWrite("Game changed to RUNNING", model.getIdGame());
 
-        model.getListeners().values().forEach(GameListenerHandler::removeStarterCardListener);
-        model.getListeners().values().forEach(GameListenerHandler::removeChooseObjectiveListener);
-        model.getListeners().values().forEach(listener -> listener.addPlayerScoreListener(new PlayerScoreListener(model.clients)));
-//        for (String username: model.getListeners().keySet()) {
-//            GameListenerHandler gameListener = model.getListeners().get(username);
-//            model.getListeners().get(username).removeStarterCardListener();
-//            model.getListeners().get(username).removeChooseObjectiveListener();
-//
-//
-//            gameListener.addPlayerScoreListener(new PlayerScoreListener(model.clients));
-//        }
-//        model.notifyAllGameListeners();
+        synchronized (model.clientListLock) {
+            model.getListeners().values().forEach(listener -> listener.addPlayerScoreListener(new PlayerScoreListener(model.clients)));
+        }
     }
 
     @Override
@@ -90,12 +81,12 @@ public class RunningGameModelSate implements GameModelState {
     }
 
     @Override
-    public void endGame(GameModel model) throws IllegalStateOperationException {
+    public void endGame(GameModel model, String lastPlayerConnected) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
     @Override
-    public void disconnectPlayer(GameModel model, String username) {
+    public void disconnectPlayer(GameModel model, String username) throws LastPlayerRemainedException {
         model.executeDisconnectPlayer(username);
     }
 

@@ -27,7 +27,16 @@ public class PlayerTurnListener extends Listener{
      */
     @Override
     public void update(GameModel model, String username) {
-        ClientQueueObject clientQueueObject = new ShowPlayerTurnObj(username, model.getPlayers().get(username).infoState());
+        String turnInfo = "";
+        if (model.getPlayers().get(username).infoState().equals("notplaced"))
+            turnInfo = "Play a card";
+        else if (model.getPlayers().get(username).infoState().equals("placed"))
+            turnInfo = "Draw a card";
+        else if (model.getPlayers().get(username).infoState().equals("waiting"))
+            turnInfo = "It is not your turn";
+        else if (model.getPlayers().get(username).infoState().equals("start"))
+            turnInfo = "Choose an objective card and play the starter";
+        ClientQueueObject clientQueueObject = new ShowPlayerTurnObj(username, turnInfo);
         for (Map.Entry<String, VirtualClient> clients: clients.entrySet()) {
             sendUpdate(model, clients.getKey(), clients.getValue(), clientQueueObject);
         }
