@@ -133,7 +133,6 @@ public interface GameModelState {
      * @throws IllegalStateOperationException if model is in {@code CreationGameModelState}, {@code SetupGameModelState} or {@code EndGameModelState}
      */
     void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException;
-    void endGame(GameModel model, String lastPlayerConnected) throws IllegalStateOperationException;
 
     /**
      * Ends the game and calculates the final scores for all players.
@@ -148,11 +147,9 @@ public interface GameModelState {
      * @param model The game model containing the current state of the game.
      * @throws IllegalStateOperationException if model is in {@code CreationGameModelState}, {@code SetupGameModelState}, {@code RunningGameModelState}, {@code LastTurnGameModelState} or {@code ShowDownGameModelState}
      */
-    void endGame(GameModel model) throws IllegalStateOperationException;
+    void endGame(GameModel model, String lastPlayerConnected) throws IllegalStateOperationException;
 
-    void disconnectPlayer(GameModel model, String username) throws LastPlayerRemainedException;
     // TODO forse non necessario
-
     /**
      * Executes the disconnection of a player.
      * If the disconnected player is not the current turn player, it does nothing.
@@ -161,7 +158,7 @@ public interface GameModelState {
      * @param model    The game model containing the current state of the game.
      * @param username The username of the player who disconnected
      */
-    void disconnectPlayer(GameModel model, String username);
+    void disconnectPlayer(GameModel model, String username) throws LastPlayerRemainedException;
 
     /**
      * Executes the reconnection of a player.

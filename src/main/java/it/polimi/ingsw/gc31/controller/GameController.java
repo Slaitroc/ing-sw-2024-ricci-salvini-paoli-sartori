@@ -14,11 +14,9 @@ import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.*;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.EndGameOnePlayerLeftObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
-import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
-import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
-import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
+import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 
 import java.util.ArrayList;
