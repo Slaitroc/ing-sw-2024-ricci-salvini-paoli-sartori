@@ -256,6 +256,11 @@ public class GUI extends UI {
     }
 
     @Override
+    public void show_timerLastPlayerConnected(Integer secondsLeft) {
+
+    }
+
+    @Override
     public void showGenericClientResonse(String response) {
         // TODO Auto-generated method stub
         System.out.println(response);

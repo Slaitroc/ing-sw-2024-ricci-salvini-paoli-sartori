@@ -9,6 +9,7 @@ public class GameListenerHandler{
     private final Map<String, Listener> listeners = new HashMap<>();
     private final String username;
     private final Object lock;
+    private Boolean enabled = true;
 
     // TODO usare un enumeratore per i tipi di listener invece che mille metodi
 
@@ -18,17 +19,29 @@ public class GameListenerHandler{
     }
 
     public void notifyAllListeners(GameModel model) {
+        if (enabled) {
         synchronized (lock) {
             for (Listener listener : listeners.values()) {
                 listener.update(model, username);
             }
         }
+        }
+    }
+
+    public void setEnabled() {
+        enabled = true;
+    }
+
+    public void setDisabled() {
+        enabled = false;
     }
 
     private void notifyListener(String type, GameModel model){
-        synchronized (lock) {
-            if (listeners.containsKey(type)) {
-                listeners.get(type).update(model, username);
+        if (enabled) {
+            synchronized (lock) {
+                if (listeners.containsKey(type)) {
+                    listeners.get(type).update(model, username);
+                }
             }
         }
     }

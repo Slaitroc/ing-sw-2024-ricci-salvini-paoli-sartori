@@ -1991,6 +1991,7 @@ public class TUI extends UI {
 
     @Override
     public void show_quitFromGame(String username) {
+        // FIXME da problemi
         state = new InitState(this);
         chatBoardThread.interrupt();
         chatMessages = new ArrayDeque<String>();
@@ -2127,6 +2128,22 @@ public class TUI extends UI {
         // TODO cambiare stato tui
         state = new PlayingState(this);
         commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+    }
+
+    @Override
+    public void show_timerLastPlayerConnected(Integer secondsLeft) {
+        StringBuilder res = new StringBuilder();
+        res.append(clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
+        res.append(print_Borders("ifneoirngoirngiowrngiorwngroignroignrignr", greyText, PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
+//        res.append(print_Borders("", greyText, PLAYAREA_INITIAL_ROW + 1, PLAYAREA_INITIAL_COLUMN + 1, PLAYAREA_END_ROW -1, PLAYAREA_END_COLUMN - 1));
+        res.append(ansi().cursor(
+                (PLAYAREA_END_ROW + PLAYAREA_INITIAL_ROW)/2,
+                (PLAYAREA_END_COLUMN + PLAYAREA_INITIAL_COLUMN)/2)
+                .a(secondsLeft));
+        synchronized (playViewUpdate) {
+            playViewUpdate.add(res);
+            playViewUpdate.notify();
+        }
     }
 
     public void changeActivePlayArea(String username) {

@@ -4,6 +4,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.listeners.*;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.exceptions.LastPlayerRemainedException;
 import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.player.Player;
@@ -15,17 +16,19 @@ public class SetupGameModelState implements GameModelState{
     public SetupGameModelState(GameModel model) {
         ServerLog.gControllerWrite("Game changed to SETUP", model.getIdGame());
 
-        for (String username: model.getListeners().keySet()) {
-            GameListenerHandler gameListener = model.getListeners().get(username);
-            gameListener.addChooseObjectiveListener(new PlayerChooseObjectiveCardListener(model.clients));
-            gameListener.addCommonObjectiveCardListener(new CommonObjectiveCardListener(model.clients));
-            gameListener.addGoldDeckListener(new GoldDeckListener(model.clients));
-            gameListener.addResourcedDeckListener(new ResourceDeckListener(model.clients));
-            gameListener.addStarterCardListener(new PlayerStarterCardListener(model.clients));
-            gameListener.addHandListener(new PlayerHandListener(model.clients));
-            gameListener.addObjectiveCardListener(new PlayerObjectiveCardListener(model.clients));
-            gameListener.addPlayAreaListener(new PlayAreaListener(model.clients));
-            gameListener.addTurnListener(new PlayerTurnListener(model.clients));
+        synchronized (model.clientListLock) {
+            for (String username : model.getListeners().keySet()) {
+                GameListenerHandler gameListener = model.getListeners().get(username);
+                gameListener.addChooseObjectiveListener(new PlayerChooseObjectiveCardListener(model.clients));
+                gameListener.addCommonObjectiveCardListener(new CommonObjectiveCardListener(model.clients));
+                gameListener.addGoldDeckListener(new GoldDeckListener(model.clients));
+                gameListener.addResourcedDeckListener(new ResourceDeckListener(model.clients));
+                gameListener.addStarterCardListener(new PlayerStarterCardListener(model.clients));
+                gameListener.addHandListener(new PlayerHandListener(model.clients));
+                gameListener.addObjectiveCardListener(new PlayerObjectiveCardListener(model.clients));
+                gameListener.addPlayAreaListener(new PlayAreaListener(model.clients));
+                gameListener.addTurnListener(new PlayerTurnListener(model.clients));
+            }
         }
     }
 
@@ -94,12 +97,12 @@ public class SetupGameModelState implements GameModelState{
     }
 
     @Override
-    public void endGame(GameModel model) throws IllegalStateOperationException {
+    public void endGame(GameModel model, String lastPlayerConnected) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
     @Override
-    public void disconnectPlayer(GameModel model, String username) {
+    public void disconnectPlayer(GameModel model, String username) throws LastPlayerRemainedException {
         model.executeDisconnectPlayer(username);
     }
 

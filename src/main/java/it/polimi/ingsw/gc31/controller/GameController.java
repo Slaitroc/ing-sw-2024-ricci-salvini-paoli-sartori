@@ -5,18 +5,19 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.*;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.EndGameOnePlayerLeftObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
-import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
-import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
-import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
+import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 
 /**
  * This class is the controller of one single game.
@@ -24,17 +25,14 @@ import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
  */
 public class GameController extends UnicastRemoteObject implements IGameController {
     protected final GameModel model;
-    // FIXME problema di sincronizzazione per la clientList
-    // FIXME ho campiato clientList in cuncurrentList così che mi ci posso sincronizzare
-    // aggiungre lista di stringhe per tenere l'ordine delle stringhe nel caso in cui serva, tipo mandare la lista dei player
     protected final Map<String, VirtualClient> clientList;
     protected final Object clientListLock = new Object();
-//    private final List<String>  clientListOrder;
-//    @SuppressWarnings("unused")
     private final int maxNumberPlayers;
     private final int idGame;
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
     protected final LinkedHashMap<String, Boolean> readyStatus;
+
+    ScheduledExecutorService schedulerLastPlayerConnected = Executors.newScheduledThreadPool(1);
 
     /**
      * Constructor for the GameController class.
@@ -54,7 +52,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         this.clientList.put(username, client);
         this.readyStatus = new LinkedHashMap<>();
         this.readyStatus.put(username, false);
-        this.model = new GameModel(idGame);
+        this.model = new GameModel(clientListLock, idGame);
         new Thread(this::executor).start();
 
         notifyListPlayers();
@@ -126,6 +124,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         // the old client is replaced with the new one
         synchronized (clientListLock) {
             if (clientList.containsKey(username)) {
+                schedulerLastPlayerConnected.shutdownNow();
                 clientList.put(username, newClient);
                 model.reconnectPlayer(username);
                 newClient.setGameController(this);
@@ -151,7 +150,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         if (model.isStarted()) {
             ServerLog.gControllerWrite(
                     "Player " + username + " has quited from the game, but the game has already started", idGame);
-            model.disconnectPlayer(username);
+            try {
+                model.disconnectPlayer(username);
+            } catch (LastPlayerRemainedException ignored) {
+            }
             model.notifyAllGameListeners();
         } else {
             ServerLog.gControllerWrite(
@@ -256,7 +258,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.setSelectCard(username, index);
         } catch (IllegalStateOperationException e) {
-            // TODO gestire meglio messaggio di questa eccezione
             sendUpdateToClient(username, new ShowInvalidActionObj("You can't select a card"));
         } catch (WrongIndexSelectedCard e) {
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
@@ -268,7 +269,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.changeSide(username);
         } catch (IllegalStateOperationException e) {
-//            ServerLog.gControllerWrite(e.getMessage(), idGame);
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
         model.notifyAllGameListeners();
@@ -278,7 +278,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         try {
             model.changStarterSide(username);
         } catch (IllegalStateOperationException e) {
-//            ServerLog.gControllerWrite(e.getMessage(), idGame);
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
         model.notifyAllGameListeners();
@@ -313,11 +312,11 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     }
 
     public void disconnectPlayer(String username) {
-        model.disconnectPlayer(username);
-        // Controller.getController().disconnect(clientList.get(username), username,
-        // idGame, ); // FIX @AleSarto mettila nel
-        // // bruteforcing di
-        // // checkheartbeat
+        try {
+            model.disconnectPlayer(username);
+        } catch (LastPlayerRemainedException e) {
+            timerLastPlayerConnected(e.lastConnected);
+        }
     }
 
     /**
@@ -345,6 +344,48 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         return model;
     }
 
-    // FIXME non sincronizzato
-    protected int getIdGame(){ return idGame; }
+    protected synchronized int getIdGame(){ return idGame; }
+
+    public void timerLastPlayerConnected(String lastPlayerConnected) {
+        int period = 5;
+        int totalTime = 30;
+        final int[] remainingTime = {totalTime};
+//        final GameModelState savedGameModelState =  gameModelState;
+
+        Runnable periodiTask = () -> {
+            int numberConnected = 0;
+            synchronized (model.getPlayerConnection()) {
+                for (String user: model.getPlayerConnection().keySet()) {
+                    if (model.getPlayerConnection().get(user)) {
+                        numberConnected++;
+                    }
+                }
+            }
+            if (numberConnected == 1) {
+                ServerLog.gControllerWrite("no one has reconnected yet", idGame);
+                sendUpdateToClient(lastPlayerConnected, new TimerLastPlayerConnectedObj(remainingTime[0]));
+                remainingTime[0] -= period;
+            }
+//            else {
+//                // FIXME funziona????????
+//                try {
+//                    this.sendCommand(new RestartGameOnePlayerLeftObj(savedGameModelState));
+//                } catch (RemoteException ignored) {
+//                }
+//                ServerLog.gControllerWrite("Someone has reconnected", idGame);
+//                schedulerLastPlayerConnected.shutdownNow();
+//            }
+        };
+
+        Runnable finalTask = () -> {
+
+            try {
+                this.sendCommand(new EndGameOnePlayerLeftObj(lastPlayerConnected));
+            } catch (RemoteException ignored) {}
+            schedulerLastPlayerConnected.shutdownNow();
+        };
+
+        schedulerLastPlayerConnected.scheduleAtFixedRate(periodiTask, 0, period, TimeUnit.SECONDS);
+        schedulerLastPlayerConnected.schedule(finalTask, totalTime, TimeUnit.SECONDS);
+    }
 }
