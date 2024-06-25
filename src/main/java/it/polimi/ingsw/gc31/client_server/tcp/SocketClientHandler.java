@@ -1,23 +1,19 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
-import it.polimi.ingsw.gc31.client_server.interfaces.*;
+import it.polimi.ingsw.gc31.client_server.interfaces.IController;
+import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
+import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
-import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.utility.DV;
 
-import java.io.*;
-
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import io.github.palexdev.mfxcore.controls.Control;
 
 /*
 ricevo
@@ -27,6 +23,7 @@ a seconda chiamo gamecontroller o controller sendobject
 
 eseguito da loro
  */
+
 /**
  * This class receives the inputs from the virtual socket server, executes the
  * methods requested by the client

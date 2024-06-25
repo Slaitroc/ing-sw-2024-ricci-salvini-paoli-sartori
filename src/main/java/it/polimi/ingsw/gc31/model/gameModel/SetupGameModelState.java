@@ -11,11 +11,11 @@ import it.polimi.ingsw.gc31.model.player.Player;
 import java.awt.*;
 import java.util.Map;
 
-public class SetupGameModelState implements GameModelState{
+public class SetupGameModelState implements GameModelState {
     public SetupGameModelState(GameModel model) {
         ServerLog.gControllerWrite("Game changed to SETUP", model.getIdGame());
 
-        for (String username: model.getListeners().keySet()) {
+        for (String username : model.getListeners().keySet()) {
             GameListenerHandler gameListener = model.getListeners().get(username);
             gameListener.addChooseObjectiveListener(new PlayerChooseObjectiveCardListener(model.clients));
             gameListener.addCommonObjectiveCardListener(new CommonObjectiveCardListener(model.clients));

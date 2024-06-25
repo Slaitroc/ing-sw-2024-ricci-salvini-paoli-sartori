@@ -259,7 +259,7 @@ public class InGameController extends ViewController {
     public Button playStarterButton;
 
     @FXML
-    public VBox initialChoise;
+    public VBox initialChoice;
 
     private final List<String> otherPlayers = new ArrayList<>();
 
@@ -297,7 +297,7 @@ public class InGameController extends ViewController {
     @Override
     public void setUp() {
 
-        size = ResolutionSizes.HD;
+        size = ResolutionSizes.HD; //needed to be set at the start or cards will not know what size to be initialized
         secretObjective.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_102.jpg"))));
         handCards = new ArrayList<>(Arrays.asList(
                 handCard1, handCard2, handCard3,
@@ -311,9 +311,10 @@ public class InGameController extends ViewController {
             setClipToImageView(handCard);
         }
 
-        controls.getItems().add("Flip Card:   \tRight Click");
-        controls.getItems().add("Draw Card:   \tLeft Click");
-        controls.getItems().add("Place Card:  \tHold Left Click");
+        controls.getItems().add("Flip Card:     \tRight Click");
+        controls.getItems().add("Draw Card:     \tLeft Click");
+        controls.getItems().add("Place Card:    \tHold Left Click");
+        controls.getItems().add("Autofill chat: \tTab in chat");
 
         //Initializes the tabs titles and disable the not used ones
         List<Tab> tabs = new ArrayList<>(Arrays.asList(tab2, tab3, tab4));
@@ -376,7 +377,7 @@ public class InGameController extends ViewController {
         resourceLabels.put(4, Arrays.asList(mushCount4, animalCount4, insectCount4, plantCount4, inkCount4, quillCount4, scrollCount4));
 
         //Set 3 listeners for drag detection on the hand cards
-        // (outer stackPane is momentarily fixed inside this method to avoid a resize bug, I'm warning you)
+        // (outer stackPane is momentarily fixed inside this method to avoid a resize bug, I am warning you)
         addHandCardDragListener(handCard1);
         addHandCardDragListener(handCard2);
         addHandCardDragListener(handCard3);
@@ -495,7 +496,7 @@ public class InGameController extends ViewController {
 
     @Override
     public void playerStateInfo(String username, String info) {
-        //System.out.println("Hello, I'm player " + app.getUsername() + " and I received the message that " + username + " is in state " + info);
+        //System.out.println("Hello, I am player " + app.getUsername() + " and I received the message that " + username + " is in state " + info);
         if (username.equals(app.getUsername())) {
             playingPlayer1Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
             if (firstPlayer) {
@@ -523,6 +524,7 @@ public class InGameController extends ViewController {
         }
     }
 
+
     @Override
     public void updateChat(String username, String message) {
         Text usernameText = new Text(username + ": ");
@@ -534,12 +536,12 @@ public class InGameController extends ViewController {
     public void updateChat(String fromUsername, String toUsername, String message) {
         Text usernameText;
         String colorUsername;
-        //If my username is the toUsername, => fromUsername is trying to send me a message then I will print [From: X]: message
+        //If my username is the toUsername, → fromUsername is trying to send me a message then I will print [From: X]: message
         if (toUsername.equals(app.getUsername())) {
             colorUsername = toUsername;
             usernameText = new Text("[From: " + fromUsername + "]: ");
         }
-        //If my username is the fromUsername, => I'm trying to send me a message to toUsername then I will print [To: Y]: message
+        //If my username is the fromUsername, → I am trying to send me a message to toUsername then I will print [To: Y]: message
         else if (fromUsername.equals(app.getUsername())) {
             colorUsername = fromUsername;
             usernameText = new Text("[To: " + toUsername + "]: ");
@@ -555,7 +557,7 @@ public class InGameController extends ViewController {
             if (players.containsKey(player)) statusPanes.get(i).setVisible(false);
             else {
                 statusPanes.get(i).setVisible(true);
-                statusPanes.get(i).setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/Misc/quittedPlayer.jpg"))));
+                statusPanes.get(i).setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/Misc/quitPlayer.jpg"))));
             }
             i++;
         }
@@ -758,6 +760,13 @@ public class InGameController extends ViewController {
         }
     }
 
+
+    /**
+     * Handles the quitting process for a player, displaying a confirmation dialog and performing necessary actions if confirmed.
+     * Displays a confirmation alert to the player asking if they are sure they want to quit the game.
+     * If the player confirms, attempts to quit the game and navigates back to the main menu.
+     * Handles potential remote exceptions by showing a server crash warning.
+     */
     public void quit() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Quitting game");
@@ -787,9 +796,9 @@ public class InGameController extends ViewController {
     public void playStarter() {
         try {
             client.playStarter();
-            initialChoise.setVisible(false);
-            initialChoise.setManaged(false);
-            initialChoise.setMouseTransparent(true);
+            initialChoice.setVisible(false);
+            initialChoice.setManaged(false);
+            initialChoice.setMouseTransparent(true);
             player1PlayAreaGrid.setVisible(true);
         } catch (RemoteException e) {
             show_ServerCrashWarning(e.toString());
@@ -907,6 +916,14 @@ public class InGameController extends ViewController {
         }
     }
 
+    /**
+     * Updates the visual representation of a player's resources by setting the resource labels for the specified player.
+     * <li>Iterates through the map of achieved resources and updates the corresponding resource label based on the resource type.</li>
+     * <li>Sets the text of each resource label to reflect the current amount of the resource.</li>
+     *
+     * @param playerNumber      The number of the player whose resources are being updated.
+     * @param achievedResources A map containing the resources and their corresponding amounts that the player has achieved.
+     */
     private void updateResources(int playerNumber, Map<Resources, Integer> achievedResources) {
         for (Map.Entry<Resources, Integer> resource : achievedResources.entrySet()) {
             switch (resource.getKey()) {
@@ -942,6 +959,14 @@ public class InGameController extends ViewController {
         }
     }
 
+    /**
+     * Updates the visual representation of a player's hand by setting the card images for the specified player
+     * <li>Iterates through the list of playable cards and updates the corresponding image in the player's hand.</li>
+     * <li>If the player's hand contains only two cards, it sets a placeholder image for the Third card slot.</li>
+     *
+     * @param playerNumber The number of the player whose hand is being updated.
+     * @param hand         A list of playable cards representing the player's current hand.
+     */
     private void updateHand(int playerNumber, List<PlayableCard> hand) {
         int i = 0;
         for (PlayableCard card : hand) {
@@ -1008,6 +1033,13 @@ public class InGameController extends ViewController {
         });
     }
 
+    /**
+     * Resizes a card's image view to fit specified dimensions and sets a clipping region to ensure the image is displayed correctly.
+     * <li>Sets the fit height and width of the card image view based on predefined size values.</li>
+     * <li>Applies a clipping region to the card image view to ensure the image is properly displayed within the set dimensions.</li>
+     *
+     * @param card The ImageView representing the card to be resized.
+     */
     private void resizeCard(ImageView card) {
         //System.out.println("card.getFitWidth(): "+card.getFitWidth()+" \n card.getFitHeight(): " + card.getFitHeight());
         //System.out.println("card.getImage().getWidth(): "+card.getImage().getWidth()+" \n card.getImage().getHeight() " + card.getImage().getHeight())
@@ -1016,22 +1048,45 @@ public class InGameController extends ViewController {
         setClipToImageView(card);
     }
 
+
+    /**
+     * Locks the size of the mother pane to its current dimensions, preventing it from being resized.
+     * Used to prevent a little visual bug during drag and drop.
+     */
     private void lockMotherPaneSize() {
         motherPane.setMinSize(motherPane.getWidth(), motherPane.getHeight());
         motherPane.setMaxSize(motherPane.getWidth(), motherPane.getHeight());
     }
 
+    /**
+     * Unlocks the size of the mother pane to its current dimensions, allowing it to be resizable.
+     * Used to prevent a little visual bug during drag and drop.
+     */
     private void setMotherPaneResizable() {
         motherPane.setMinSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
         motherPane.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
     }
 
+    /**
+     * Supportive method used to hide or show a Pane
+     *
+     * @param pane generic Pane to hid or show
+     */
     private void showHidePane(Pane pane) {
         pane.setManaged(!pane.isManaged());
         pane.setVisible(!pane.isVisible());
         pane.setMouseTransparent(!pane.isMouseTransparent());
     }
 
+    /**
+     * Assigns a pion image to each player based on their name and updates the corresponding image view.
+     *
+     * <p>This method performs the following steps:</p>
+     * <ol>
+     *   <li>Creates a list of pion image paths.</li>
+     *   <li>Iterates through the list of players and assigns the corresponding pion image to each player's image view based on their name.</li>
+     * </ol>
+     */
     private void assignPion() {
         List<String> pionImages = new ArrayList<>();
         pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_vert.png");
@@ -1053,7 +1108,16 @@ public class InGameController extends ViewController {
         }
     }
 
-    private void populateChat(String username, String message, Text usernameText){
+    /**
+     * Populates the TextFlow, adding the prefix colored in a uniquely color and the message (suffix + \n)
+     * Then proceed to layout the new message among the others using the scrollPane
+     * Also shows the notification icon is the chat is closed at the moment
+     *
+     * @param username     The username of the player used to assign the color to the message prefix
+     * @param message      The message content to be added to the chat.
+     * @param usernameText The prefix of the message already modified
+     */
+    private void populateChat(String username, String message, Text usernameText) {
         if (username.equals(app.getPlayerList().keySet().stream().toList().getFirst())) {
             usernameText.setFill(Color.GREEN);
         } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(1))) {
@@ -1118,7 +1182,7 @@ public class InGameController extends ViewController {
             this.setViewport(cardViewportSD);
             this.setFitWidth(size.getCardWidth()); // set the card width
             this.setFitHeight(size.getCardsHeight()); // Set the card height
-            setClipToImageView(this);
+            setClipToImageView(this); // Round image boarder
 
             //If the cell belongs to player1, it is set to accept drag and drop events
             if (grid.equals(player1PlayAreaGrid)) {
@@ -1146,9 +1210,6 @@ public class InGameController extends ViewController {
                     event.consume();
                 });
             }
-
-
-            // Round image boarder
 
             grid.add(pane, x, y);
         }

@@ -10,6 +10,7 @@ public enum CardType {
     STARTER("STARTER");
 
     private final String stringName;
+
     CardType(String stringName) {
         this.stringName = stringName;
     }

@@ -9,6 +9,7 @@ package it.polimi.ingsw.gc31.model.card;
 public interface Card {
     /**
      * This method is used to determine which side of the card is visible.
+     *
      * @return the value of the attribute side
      */
     boolean getSide();

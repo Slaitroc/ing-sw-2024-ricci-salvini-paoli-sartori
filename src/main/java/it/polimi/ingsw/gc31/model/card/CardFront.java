@@ -3,7 +3,9 @@ package it.polimi.ingsw.gc31.model.card;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.model.strategies.Objective;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents the front side of card;
@@ -41,8 +43,7 @@ public class CardFront {
     private final Objective objective;
 
     public CardFront(int score, List<Resources> resources, Map<Resources, Integer> requirements, String dirImg,
-            Objective ob)
-    {
+                     Objective ob) {
         this.score = score;
 
         this.resources = resources;
@@ -58,7 +59,7 @@ public class CardFront {
      *
      * @param corner corner to be checked
      * @return true if it is possible to place a card on that corner, false
-     *         otherwise
+     * otherwise
      */
     public boolean checkCorner(int corner) {
         return resources.get(corner) != Resources.HIDDEN;

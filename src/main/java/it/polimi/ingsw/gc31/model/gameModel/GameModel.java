@@ -1,10 +1,5 @@
 package it.polimi.ingsw.gc31.model.gameModel;
 
-import java.awt.*;
-import java.util.*;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
@@ -18,6 +13,13 @@ import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
 import it.polimi.ingsw.gc31.model.player.NotPlaced;
 import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.model.player.Waiting;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class represents the game model of the application.

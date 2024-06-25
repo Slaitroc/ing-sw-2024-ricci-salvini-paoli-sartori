@@ -54,7 +54,7 @@
 - [ ] da implementare quit game di fine partita --> dobbiamo rimettere i client da gamecontroller in tempclient di controller
 
 ## GUI
-- [ ] da girare le carte nei deck e allo startup
+- [x] da girare le carte nei deck e allo startup
 
 ## TUI
 

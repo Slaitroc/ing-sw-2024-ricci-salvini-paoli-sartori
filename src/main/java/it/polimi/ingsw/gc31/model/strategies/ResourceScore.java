@@ -1,11 +1,10 @@
 package it.polimi.ingsw.gc31.model.strategies;
 
-import java.awt.*;
-import java.util.Map;
-
-import com.google.gson.JsonObject;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+
+import java.awt.*;
+import java.util.Map;
 
 /**
  * This class represents the objective where the player obtain points based on how many resources he holds of a

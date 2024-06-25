@@ -1,22 +1,24 @@
 package it.polimi.ingsw.gc31.controller;
 
-import java.awt.*;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.*;
-import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.*;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
+import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+
+import java.awt.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * This class is the controller of one single game.
@@ -29,7 +31,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     // aggiungre lista di stringhe per tenere l'ordine delle stringhe nel caso in cui serva, tipo mandare la lista dei player
     protected final Map<String, VirtualClient> clientList;
     protected final Object clientListLock = new Object();
-//    private final List<String>  clientListOrder;
+    //    private final List<String>  clientListOrder;
 //    @SuppressWarnings("unused")
     private final int maxNumberPlayers;
     private final int idGame;
@@ -97,7 +99,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * @param username the username of the player.
      * @param client   the client of the player.
      */
-    public void joinGame(String username, VirtualClient client) throws RemoteException{
+    public void joinGame(String username, VirtualClient client) throws RemoteException {
         synchronized (clientListLock) {
             clientList.put(username, client);
         }
@@ -130,15 +132,21 @@ public class GameController extends UnicastRemoteObject implements IGameControll
                 model.reconnectPlayer(username);
                 newClient.setGameController(this);
                 newClient.sendCommand(new JoinedToGameObj(idGame, getMaxNumberPlayers()));
-                ServerLog.gControllerWrite("Welcome back "+username+"!", idGame);
+                ServerLog.gControllerWrite("Welcome back " + username + "!", idGame);
             } else {
                 ServerLog.gControllerWrite("C'è stato qualche problema con la rejoin di " + username, idGame);
             }
         }
     }
 
-    // se un giocatore si disconnette quando la partita è già iniziata non ha la
-    // possibilità di rientrare
+    /**
+     * Make the current user quit from his game. If the game is started the player
+     * will not have the possibility to rejoin the game. If the game was not yet started, the player will
+     * quit the game with the possibility to rejoin the same match or another one
+     *
+     * @param username of the player that quitted
+     * @throws RemoteException for generic problem with server connection
+     */
     public void quitGame(String username) throws RemoteException {
         synchronized (clientListLock) {
             VirtualClient client = clientList.get(username);
@@ -158,6 +166,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         notifyListPlayers();
     }
 
+    /**
+     * Change the status from ready to not ready and vice versa
+     *
+     * @param ready    boolean value. If True, player is ready to start the game
+     * @param username Player in match that called this method
+     */
     public void setReadyStatus(boolean ready, String username) {
         readyStatus.replace(username, ready);
         notifyListPlayers();
@@ -165,6 +179,14 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         checkReady();
     }
 
+    /**
+     * <p>Checks if two conditions are met:</p>
+     * <ul>
+     * <li>If all the player in the lobby are ready</li>
+     * <li>If the maximum number of the players for the game has been reached</li>
+     * </ul>
+     * If both these conditions are true it starts the game for all players
+     */
     public void checkReady() {
         int counter = 0;
         for (Boolean status : readyStatus.values()) {
@@ -185,6 +207,11 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         }
     }
 
+    /**
+     * Same method used to send a public or a private message
+     *
+     * @param message ClientQueueObject containing fromUsername, toUsername (for PM) and message content
+     */
     public void sendChatMessage(NewChatMessage message) {
         sendUpdateToClient(message);
     }
@@ -213,7 +240,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     /**
      * Draws a gold card from the deck for the player and then shows the player's
      * hand.
-     *
      */
     public void drawGold(String username, int index) {
         try {
@@ -234,6 +260,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
     }
+
 
     public void chooseSecretObjective(String username, Integer index) {
         try {
@@ -308,6 +335,11 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         }).start();
     }
 
+    /**
+     * Sends an update, containing a specific ClientQueueObject to all clients.
+     *
+     * @param clientQueueObject The object containing the update information to be sent to the clients.
+     */
     private void sendUpdateToClient(ClientQueueObject clientQueueObject) {
         List<String> usernameList;
         synchronized (clientListLock) {
@@ -321,9 +353,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     public void disconnectPlayer(String username) {
         model.disconnectPlayer(username);
         // Controller.getController().disconnect(clientList.get(username), username,
-        // idGame, ); // FIX @AleSarto mettila nel
-        // // bruteforcing di
-        // // checkheartbeat
+        // idGame, );
     }
 
     public GameModel getModel() {
@@ -331,5 +361,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     }
 
     // FIXME non sincronizzato
-    protected int getIdGame(){ return idGame; }
+    protected int getIdGame() {
+        return idGame;
+    }
 }

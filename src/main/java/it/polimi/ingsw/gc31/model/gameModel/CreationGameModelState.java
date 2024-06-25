@@ -1,12 +1,14 @@
 package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.client_server.listeners.*;
+import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class CreationGameModelState implements GameModelState {
     @Override
@@ -35,11 +37,11 @@ public class CreationGameModelState implements GameModelState {
             model.getBoard().updateScore(username, 0);
         }
 
-        for (String username: clients.keySet()) {
+        for (String username : clients.keySet()) {
             model.getListeners().put(username, new GameListenerHandler(username, lock));
         }
 
-        for (String username: clients.keySet()) {
+        for (String username : clients.keySet()) {
             model.playerConnection.put(username, true);
         }
 

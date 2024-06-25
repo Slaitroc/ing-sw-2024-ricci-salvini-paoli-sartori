@@ -18,10 +18,9 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.Timer;
-import java.util.List;
 
 public class RmiClient extends UnicastRemoteObject implements VirtualClient, ClientCommands {
     private IController controller;
@@ -260,7 +259,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     /**
      * This method sends to the controller the heart beat associated with the
      * VirtualClient that is sending it
-     * 
+     *
      * @throws RemoteException
      */
     private void sendHeartBeat() throws RemoteException {
@@ -272,7 +271,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     /**
      * This method sets the token of the client to the value received as a parameter
-     * 
+     *
      * @param token is the value needed to be set as the client's token
      */
     @Override

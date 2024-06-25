@@ -24,10 +24,9 @@ public class NotPlaced extends PlayerState {
     public void play(Point point, Player player) throws IllegalPlaceCardException {
         PlayableCard card = player.getSelectedCard();
         // TODO togliere commenti
-//        try {
-            player.score += player.getPlayArea().place(card, point);
-            player.hand.remove(card);
-            player.setInGameState(new Placed());
+        player.score += player.getPlayArea().place(card, point);
+        player.hand.remove(card);
+        player.setInGameState(new Placed());
 //        } catch (IllegalPlaceCardException e) {
 //            System.out.println(e.getMessage());
 //        }

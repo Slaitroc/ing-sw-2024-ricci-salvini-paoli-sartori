@@ -1,23 +1,27 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
+import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
+import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.utility.DV;
+import it.polimi.ingsw.gc31.view.UI;
+
 import java.awt.*;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.rmi.RemoteException;
-import java.util.*;
 import java.util.Queue;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import it.polimi.ingsw.gc31.client_server.interfaces.*;
-import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
-import it.polimi.ingsw.gc31.exceptions.NoGamesException;
-import it.polimi.ingsw.gc31.utility.DV;
-import it.polimi.ingsw.gc31.view.UI;
 
 public class TCPClient implements ClientCommands {
     private final ObjectInputStream input;
@@ -206,17 +210,17 @@ public class TCPClient implements ClientCommands {
      * After that the method waits for the client handler's response, the response
      * can be an exception
      * (in this case the method launches the exception to the TUI) or the message
-     * "ok" otherwise.
+     * “ok” otherwise.
      * In this case the method reads every String sent by the client handler,
      * collect every
-     * String in "list" and then call the method of the ui.
+     * String in “list” and then call the method of the ui.
      *
-     * @throws IOException      is launched if an error is occurred in the readLine
+     * @throws RemoteException  is launched if an error is occurred in the readLine
      *                          method
      * @throws NoGamesException is launched if there are no created games
      */
     @Override
-    public void getGameList() throws IOException, NoGamesException {
+    public void getGameList() throws RemoteException, NoGamesException {
         tcp_sendCommand(new GetGameListObj(this.username), DV.RECIPIENT_CONTROLLER);
     }
 
@@ -236,7 +240,7 @@ public class TCPClient implements ClientCommands {
      * This method sends to the server a new DrawGoldObj object and the game
      * controller as a recipient
      * using the tcp_sendCommand method.
-     *
+     * <p>
      * index = 0 : drawing from the gold deck.
      * index = 1 : drawing the first gold card on the board.
      * index = 2 : drawing the second gold card on the board.
@@ -250,7 +254,7 @@ public class TCPClient implements ClientCommands {
      * This method sends to the server a new DrawResObj object and the game
      * controller as a recipient
      * using the tcp_sendCommand method.
-     *
+     * <p>
      * index = 0 : drawing from the resource deck.
      * index = 1 : drawing the first resource card on the board.
      * index = 2 : drawing the second resource card on the board.
@@ -264,7 +268,7 @@ public class TCPClient implements ClientCommands {
      * This method sends to the server a new ChooseSecretObjectiveObj object and the
      * game controller as a recipient
      * using the tcp_sendCommand method.
-     *
+     * <p>
      * index = 0 : choose first secret objective card.
      * index = 1 : choose second secret objective card.
      */
@@ -277,7 +281,7 @@ public class TCPClient implements ClientCommands {
      * This method sends to the server a new ChooseSecretObjectiveObj object and the
      * game controller as a recipient
      * using the tcp_sendCommand method.
-     *
+     * <p>
      * index = 0 : choose first secret objective card.
      * index = 1 : choose second secret objective card.
      */

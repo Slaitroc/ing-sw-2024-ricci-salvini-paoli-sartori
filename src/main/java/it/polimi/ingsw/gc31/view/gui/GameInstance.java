@@ -1,26 +1,33 @@
 package it.polimi.ingsw.gc31.view.gui;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+/**
+ * Class used to populate a TableCell of the TableView in GameListController
+ * A single instance of this class will be constructed from a string containing
+ * the game ID and #PlayerInGame / #MaxNumberOfPlayer
+ */
 public class GameInstance {
-    private final StringProperty gameID;
+    private final IntegerProperty gameID;
     private final StringProperty players;
 
-    public GameInstance(String gameID, String players) {
-        this.gameID = new SimpleStringProperty(gameID);
+    public GameInstance(Integer gameID, String players) {
+        this.gameID = new SimpleIntegerProperty(gameID);
         this.players = new SimpleStringProperty(players);
     }
 
-    public String getGameID() {
+    public Integer getGameID() {
         return gameID.get();
     }
 
-    public StringProperty gameIDProperty() {
+    public IntegerProperty gameIDProperty() {
         return gameID;
     }
 
-    public void setGameID(String gameID) {
+    public void setGameID(Integer gameID) {
         this.gameID.set(gameID);
     }
 

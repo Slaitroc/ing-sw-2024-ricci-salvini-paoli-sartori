@@ -14,6 +14,7 @@ public class ShowDownGameModelState implements GameModelState {
     public ShowDownGameModelState(GameModel model) {
         ServerLog.gControllerWrite("Game changed to SHOWDOWN", model.getIdGame());
     }
+
     @Override
     public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
@@ -65,7 +66,7 @@ public class ShowDownGameModelState implements GameModelState {
 
     @Override
     public void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException {
-        if (model.getCurrIndexPlayer() == model.getPlayers().size()-1) {
+        if (model.getCurrIndexPlayer() == model.getPlayers().size() - 1) {
             model.setGameState(new LastTurnGameModelState(model));
         }
     }

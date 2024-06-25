@@ -108,6 +108,7 @@ public abstract class PlayableCard implements Card {
 
     /**
      * Returns a list of non-hidden and non-empty resources available in the active side of the card.
+     *
      * @return a list of {@code Resources} objects representing the available resources
      */
     public List<Resources> getResources() {

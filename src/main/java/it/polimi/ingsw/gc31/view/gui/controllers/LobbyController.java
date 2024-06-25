@@ -163,7 +163,6 @@ public class LobbyController extends ViewController {
         pane.setManaged(false);
     }
 
-
     @Override
     public void updateChat(String username, String message) {
         Text usernameText = new Text(username + ": ");
@@ -188,7 +187,15 @@ public class LobbyController extends ViewController {
         populateChat(colorUsername, message, usernameText);
     }
 
-    private void populateChat(String username, String message, Text usernameText){
+    /**
+     * Populates the TextFlow, adding the prefix colored in a uniquely color and the message (suffix + \n)
+     * Then proceed to layout the new message among the others using the scrollPane
+     *
+     * @param username     The username of the player used to assign the color to the message prefix
+     * @param message      The message content to be added to the chat.
+     * @param usernameText The prefix of the message already modified
+     */
+    private void populateChat(String username, String message, Text usernameText) {
         if (username.equals(app.getPlayerList().keySet().stream().toList().getFirst())) {
             usernameText.setFill(Color.GREEN);
         } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(1))) {
@@ -243,19 +250,6 @@ public class LobbyController extends ViewController {
         }
     }
 
-    /**
-     * Updates the ready status of players in the lobby.
-     * This method sets the ready status text ("Ready" or "Not Ready") for each player in the lobby
-     * based on their current status. It checks which player has changed their status and updates
-     * the corresponding UI label accordingly.
-     * The method performs the following actions:
-     * 1. Retrieves the player's position in the list from the application.
-     * 2. Compares the given username with the usernames in the player list.
-     * 3. Sets the ready status text for the corresponding player based on the provided status.
-     *
-     * @param username the username of the player whose status has changed.
-     * @param status   the current ready status of the player (true if ready, false otherwise).
-     */
     @Override
     public void showReady(String username, boolean status) {
         //System.out.println("Hey, I'm " + app.getUsername() + ", Player Number " + imPlayerNumber + ". I am observing that player " + username + " is setting his status to " + status);
@@ -288,16 +282,8 @@ public class LobbyController extends ViewController {
                 ready4.setText("Not Ready");
             }
         }
-        checkAllReady();
     }
 
-    private void checkAllReady() {
-        if (app.getPlayerList().size() == app.getNumberOfPlayers()) {
-            if (ready1.getText().equals("Ready") && ready2.getText().equals("Ready") && ready3.getText().equals("Ready") && ready4.getText().equals("Ready")) {
-                app.loadScene(SceneTag.GAME);
-            }
-        }
-    }
 
     @Override
     public void handleInGamePlayers(LinkedHashMap<String, Boolean> players) {
@@ -307,17 +293,19 @@ public class LobbyController extends ViewController {
 
 
     /**
-     * Updates the lobby with the current players and their statuses.
-     * This method iterates through the player list obtained from the application,
-     * and for each player, it updates the lobby UI elements such as player names
-     * and visibility of specific icons based on the player’s position and status.
-     * The method performs the following actions:
-     * 1. Sets the player's name in the corresponding label.
-     * 2. Updates the visibility of icons to indicate which player corresponds to the current user.
-     * 3. Enables inGamePlayers Panes when players are in lobby, waitingPlayers Panes for free spaces in the lobby
-     * (LockedPlayers are handled only in setup phases as # of player cannot change)
-     * 4. Calls the showReady method to update the player's ready status.
-     * The player list is a map with player names as keys and their ready status as values.
+     * Updates the lobby interface with the current players and their statuses.
+     *
+     * <p>This method iterates through the player list obtained from the application
+     * and updates various UI elements in the lobby:</p>
+     * <ul>
+     *   <li>Sets each player's name in the corresponding label.</li>
+     *   <li>Adjusts the visibility of icons to indicate the current user's position.</li>
+     *   <li>Enables the display of in-game player panes for active players and waiting player panes for free spaces in the lobby.</li>
+     *   <li>Handles locked player panes during setup phases, as the number of players cannot change at that time.</li>
+     *   <li>Calls the {@link #showReady(String, boolean)} method to update each player's readiness status.</li>
+     * </ul>
+     *
+     * <p>The player list is represented as a map with player names as keys and their readiness statuses as values.</p>
      */
     public void updateLobby() {
 
@@ -381,6 +369,17 @@ public class LobbyController extends ViewController {
         }
     }
 
+    /**
+     * Handles the player's request to quit the game.
+     *
+     * <p>This method performs the following actions:</p>
+     * <ol>
+     *   <li>Attempts to quit the game by invoking the {@code quitGame()} method on the client.</li>
+     *   <li>Loads the main menu scene.</li>
+     *   <li>Resets the application window to its default size.</li>
+     * </ol>
+     * <p>If a {@link RemoteException} occurs during the quit operation, it shows a server crash warning and logs the stack trace.</p>
+     */
     public void quit() {
         try {
             client.quitGame();

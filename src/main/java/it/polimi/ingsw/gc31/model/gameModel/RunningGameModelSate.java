@@ -30,6 +30,7 @@ public class RunningGameModelSate implements GameModelState {
 //        }
 //        model.notifyAllGameListeners();
     }
+
     @Override
     public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
@@ -81,9 +82,9 @@ public class RunningGameModelSate implements GameModelState {
 
     @Override
     public void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException {
-        if ((model.getCurrPlayer().getScore() >= DV.GamePoints || bothEmptyDeck) && model.getCurrIndexPlayer() == model.getPlayers().size()-1) {
+        if ((model.getCurrPlayer().getScore() >= DV.GamePoints || bothEmptyDeck) && model.getCurrIndexPlayer() == model.getPlayers().size() - 1) {
             model.setGameState(new LastTurnGameModelState(model));
-        } else if (model.getCurrPlayer().getScore() >= DV.GamePoints || bothEmptyDeck){
+        } else if (model.getCurrPlayer().getScore() >= DV.GamePoints || bothEmptyDeck) {
             model.setGameState(new ShowDownGameModelState(model));
         }
     }

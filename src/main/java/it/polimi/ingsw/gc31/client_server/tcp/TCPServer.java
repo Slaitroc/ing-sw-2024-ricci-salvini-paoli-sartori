@@ -1,14 +1,15 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
-import java.io.*;
-import java.net.ServerSocket;
+import it.polimi.ingsw.gc31.utility.DV;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-
-import it.polimi.ingsw.gc31.utility.DV;
 
 
 public class TCPServer {
@@ -32,7 +33,7 @@ public class TCPServer {
      *
      * @param ipaddress is the ip of the server
      * @throws NumberFormatException if a string does not have the appropriate type to be converted in number
-     * @throws IOException if an error occurs during the ServerSocket creation
+     * @throws IOException           if an error occurs during the ServerSocket creation
      */
     public TCPServer(String ipaddress) throws NumberFormatException, IOException {
         this.listenSocket = new ServerSocket(DV.TCP_PORT, 50, InetAddress.getByName("0.0.0.0"));

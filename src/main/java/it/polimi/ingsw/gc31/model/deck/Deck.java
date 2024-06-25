@@ -1,7 +1,9 @@
 package it.polimi.ingsw.gc31.model.deck;
 
-import com.google.gson.*;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.CardType;
@@ -21,7 +23,7 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
  *
  * @param <T> the type of cards in the deck, must extend the Card interface
  */
-public class Deck<T extends Card>{
+public class Deck<T extends Card> {
     private Queue<T> deck;
     private T card1;
     private T card2;
@@ -89,14 +91,28 @@ public class Deck<T extends Card>{
 
     }
 
+    /**
+     * Method to call when one of the deck ends
+     * It replace this deck with the target deck
+     *
+     * @param deck target deck that will replace this deck
+     */
     public void replaceDeck(Queue<T> deck) {
         this.deck = deck;
     }
 
+    /*
+     * Return a queue of cards that represent the deck
+     */
     public Queue<T> getQueueDeck() {
         return deck;
     }
 
+    /**
+     * Retrieves and removes the top card of the deck
+     *
+     * @throws EmptyDeckException If the deck is empty
+     */
     public T draw() throws EmptyDeckException {
         if (deck.isEmpty())
             throw new EmptyDeckException();
@@ -105,6 +121,11 @@ public class Deck<T extends Card>{
         return deck.poll();
     }
 
+    /**
+     * Whenever one of card1 or card2 (representing the two cards face up)
+     * are null, a new card will be drawn from the deck and will be used to replace
+     * the missing card
+     */
     public void refill() {
         if (card1 == null) {
             try {
@@ -124,6 +145,11 @@ public class Deck<T extends Card>{
         }
     }
 
+    /**
+     * If the card1 is null calls refill() before
+     *
+     * @return Card face up number 1 of deck type T
+     */
     public T getCard1() {
         T retCard = card1;
         card1 = null;
@@ -131,6 +157,11 @@ public class Deck<T extends Card>{
         return retCard;
     }
 
+    /**
+     * If the card1 is null calls refill() before
+     *
+     * @return Card face up number 2 of deck type T
+     */
     public T getCard2() {
         T retCard = card2;
         card2 = null;
@@ -138,18 +169,33 @@ public class Deck<T extends Card>{
         return retCard;
     }
 
+    /**
+     * Retrieves, but does not remove, the head of this Deck,
+     * or returns null if this queue is empty.
+     *
+     * @return First card from deck of type T
+     */
     public T peekCard() {
         return this.deck.peek();
     }
 
+    /**
+     * @return Card1 from deck of type T without drawing it
+     */
     public T peekCard1() {
         return this.card1;
     }
 
+    /**
+     * @return Card2 from deck of type T without drawing it
+     */
     public T peekCard2() {
         return this.card2;
     }
 
+    /**
+     * @return True if deck does not contain cards
+     */
     public boolean isEmpty() {
         return deck.isEmpty();
     }

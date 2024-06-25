@@ -18,22 +18,22 @@
             <padding>
                 <Insets bottom="10" left="20" right="20" top="10" />
             </padding>
-            <ImageView fx:id="imageView1" fitHeight="508.0" fitWidth="1156.0" preserveRatio="true">
+            <ImageView fx:id="imageView1" fitHeight="500" preserveRatio="true">
                 <Image url="@../Images/RuleBookImages/pag1.jpg" />
             </ImageView>
-            <ImageView fx:id="imageView2" fitHeight="600" fitWidth="1200" visible="false">
+            <ImageView fx:id="imageView2" fitHeight="500" preserveRatio="true" visible="false">
                 <Image url="@../Images/RuleBookImages/pag2.jpg" />
             </ImageView>
-            <ImageView fx:id="imageView3" fitHeight="600" fitWidth="1200" visible="false">
+            <ImageView fx:id="imageView3" fitHeight="500" preserveRatio="true" visible="false">
                 <Image url="@../Images/RuleBookImages/pag3.jpg" />
             </ImageView>
-            <ImageView fx:id="imageView4" fitHeight="600" fitWidth="1200" visible="false">
+            <ImageView fx:id="imageView4" fitHeight="500" preserveRatio="true" visible="false">
                 <Image url="@../Images/RuleBookImages/pag4.jpg" />
             </ImageView>
-            <ImageView fx:id="imageView5" fitHeight="600" fitWidth="1200" visible="false">
+            <ImageView fx:id="imageView5" fitHeight="500" preserveRatio="true" visible="false">
                 <Image url="@../Images/RuleBookImages/pag5.jpg" />
             </ImageView>
-            <ImageView fx:id="imageView6" fitHeight="600" fitWidth="1200" visible="false">
+            <ImageView fx:id="imageView6" fitHeight="500" preserveRatio="true" visible="false">
                 <Image url="@../Images/RuleBookImages/pag6.jpg" />
             </ImageView>
         </StackPane>

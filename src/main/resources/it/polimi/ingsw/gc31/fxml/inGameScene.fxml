@@ -53,8 +53,8 @@
                                 </StackPane>
                             </ScrollPane>
 
-                            <!-- INITIAL CHOISE BOX-->
-                            <VBox fx:id="initialChoise" alignment="CENTER" spacing="20" VBox.vgrow="ALWAYS">
+                            <!-- INITIAL CHOICE BOX-->
+                            <VBox fx:id="initialChoice" alignment="CENTER" spacing="20" VBox.vgrow="ALWAYS">
                                 <ImageView fx:id="starterCard" fitHeight="100" fitWidth="149"
                                            onMouseClicked="#changeCardSide">
                                     <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>

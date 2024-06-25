@@ -150,7 +150,7 @@ public class TUI extends UI {
             try {
 
                 playViewUpdate.add(areasCache.get(TUIareas.PLAY_AREA_VIEW));
-            } catch (NullPointerException e) {
+            } catch (NullPointerException ignored) {
 
             }
             playViewUpdate.notify();
@@ -280,7 +280,6 @@ public class TUI extends UI {
      * The card is printed starting from the top left corner of the card.
      * (relative_x,relative_y) = (0,0) corresponds to the top left corner of the
      * area where the card is printed.
-     *
      * The card is made of n strings of length m, where n is equals to
      * {@link #CARD_HEIGHT} and m is equals to {@link #CARD_LENGTH}.
      * If a character of the strings that composes the card goes outside the limits
@@ -401,7 +400,6 @@ public class TUI extends UI {
      * The card is printed starting from the top left corner of the card.
      * (relative_x,relative_y) = (0,0) corresponds to the top left corner of the
      * area where the card is printed.
-     *
      * The card is made of n strings of length m, where n is equals to
      * {@link #CARD_HEIGHT} and m is equals to {@link #CARD_LENGTH}.
      * If a character of the strings that composes the card goes outside the limits
@@ -606,7 +604,7 @@ public class TUI extends UI {
                         && relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 2 > overFlowLeft + 1) {
                     res.append(ansi().cursor(relative_y + 1, relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 1)
                             .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2])
-                            .a(resources.get(0).getSymbol()));
+                            .a(resources.getFirst().getSymbol()));
                 }
 
                 // OBJECTIVE AREA
@@ -2129,7 +2127,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_rejoined(boolean esito) {
+    public void show_rejoined(boolean result) {
         // TODO cambiare stato tui
         state = new PlayingState(this);
         commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);

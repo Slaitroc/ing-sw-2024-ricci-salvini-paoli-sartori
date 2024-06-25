@@ -2,19 +2,17 @@ package it.polimi.ingsw.gc31.view.gui;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.utility.DV;
+import it.polimi.ingsw.gc31.view.gui.controllers.ViewController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.text.Font;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-
-import it.polimi.ingsw.gc31.view.gui.controllers.ViewController;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
@@ -81,7 +79,7 @@ public class GUIApplication extends Application {
             currentController.setUp();
             primaryStage.setScene(scene);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.getStackTrace();
         }
     }
 
@@ -119,7 +117,7 @@ public class GUIApplication extends Application {
         primaryStage.centerOnScreen();
     }
 
-    public void setFullScreen(){
+    public void setFullScreen() {
         primaryStage.setFullScreen(!primaryStage.isFullScreen());
     }
 
@@ -153,11 +151,11 @@ public class GUIApplication extends Application {
 
     public void setListGames(List<String> gamesList) {
         gameInstances.clear();
-        if(gamesList.getFirst().equals("NO GAMES AVAILABLE")) return;
+        if (gamesList.getFirst().equals("NO GAMES AVAILABLE")) return;
         for (String game : gamesList) {
             String gameID = game.split(" ")[0];
             String players = game.split(" ")[1] + game.split(" ")[2] + game.split(" ")[3];
-            gameInstances.add(new GameInstance(gameID, players));
+            gameInstances.add(new GameInstance(Integer.parseInt(gameID), players));
         }
     }
 

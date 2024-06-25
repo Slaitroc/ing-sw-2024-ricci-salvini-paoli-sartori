@@ -1,13 +1,11 @@
 package it.polimi.ingsw.gc31.model.strategies;
 
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
+import it.polimi.ingsw.gc31.model.enumeration.Resources;
+
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import it.polimi.ingsw.gc31.model.card.PlayableCard;
-import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -41,7 +39,7 @@ public class Count extends Objective {
      * @return the number of points obtained by the player
      */
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint,
-            Map<Resources, Integer> achievedResources) {
+                               Map<Resources, Integer> achievedResources) {
         if (resources.size() == 1) {
             return goldenCount(achievedResources);
         }
@@ -122,9 +120,10 @@ public class Count extends Objective {
     @Override
     public String print() {
         StringBuilder res = new StringBuilder();
-        res.append(ansi().restoreCursorPosition().cursorMove(2,3).a(resources.get(0).getSymbol()));
-        res.append(ansi().restoreCursorPosition().cursorMove(6,3).a(resources.get(1).getSymbol()));
-        if (resources.size() == 3) res.append(ansi().restoreCursorPosition().cursorMove(4,2).a(resources.get(2).getSymbol()));
+        res.append(ansi().restoreCursorPosition().cursorMove(2, 3).a(resources.get(0).getSymbol()));
+        res.append(ansi().restoreCursorPosition().cursorMove(6, 3).a(resources.get(1).getSymbol()));
+        if (resources.size() == 3)
+            res.append(ansi().restoreCursorPosition().cursorMove(4, 2).a(resources.get(2).getSymbol()));
         return res.toString();
     }
 }

@@ -1,14 +1,13 @@
 package it.polimi.ingsw.gc31.model.player;
 
-import java.awt.*;
-
 import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.model.Board;
-import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
+import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +16,7 @@ import java.util.List;
  * It manages the player's state, hand, score, and other game-related
  * attributes.
  */
-public class Player{
+public class Player {
 
     private final Board board;
     private int selectedCard;
@@ -59,9 +58,8 @@ public class Player{
      * Here are written the exceptions messages
      *
      * @param deck the deck to draw from.
-     *
      */
-    private void addToHand(Deck<PlayableCard> deck,Deck<PlayableCard> subsistuteDeck, int index) throws IllegalStateOperationException {
+    private void addToHand(Deck<PlayableCard> deck, Deck<PlayableCard> subsistuteDeck, int index) throws IllegalStateOperationException {
         try {
             inGameState.addToHand(deck, subsistuteDeck, this, index);
         } catch (FullHandException e) {
@@ -80,7 +78,7 @@ public class Player{
      * @throws EmptyDeckException if the deck is empty.
      */
 
-    public boolean drawGold(int index) throws EmptyDeckException, IllegalStateOperationException{
+    public boolean drawGold(int index) throws EmptyDeckException, IllegalStateOperationException {
         if (index < 0 || index > 2) return false;
 
         addToHand(board.getDeckGold(), board.getDeckResource(), index);
@@ -99,6 +97,7 @@ public class Player{
         addToHand(board.getDeckResource(), board.getDeckGold(), index);
         return true;
     }
+
     /**
      * Method let the player place the selectedCard in the map
      *
@@ -138,8 +137,8 @@ public class Player{
     public void calculateObjectiveCard() {
         score += objectiveCard.getObjective().isObjectiveDone(playArea.getPlacedCards(), null, playArea.getAchievedResources());
     }
+
     /**
-     *
      * Method to calculate the COMMON objective card of the game
      *
      * @param obj: Objective Card to calculate
@@ -207,6 +206,7 @@ public class Player{
     public void changeSide() {
         hand.get(selectedCard).changeSide();
     }
+
     public void changeStarterSide() {
         selectedStarterCard.changeSide();
     }

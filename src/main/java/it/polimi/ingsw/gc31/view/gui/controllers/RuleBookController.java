@@ -4,7 +4,7 @@ import it.polimi.ingsw.gc31.view.gui.SceneTag;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 
-public class RuleBookController extends ViewController{
+public class RuleBookController extends ViewController {
 
     @FXML
     private ImageView imageView1;
@@ -31,6 +31,10 @@ public class RuleBookController extends ViewController{
     protected void initialize() {
     }
 
+    /**
+     * Set visible the next page of the rulebook when button next is pressed
+     * and hides the current visible image
+     */
     @FXML
     public void nextImage() {
         switch (currentPage) {
@@ -64,6 +68,10 @@ public class RuleBookController extends ViewController{
         }
     }
 
+    /**
+     * Set visible the previous page of the rulebook when button next is pressed
+     * and hides the current visible image
+     */
     @FXML
     public void prevImage() {
         switch (currentPage) {
@@ -97,6 +105,9 @@ public class RuleBookController extends ViewController{
         }
     }
 
+    /**
+     * Set window size to Default and load MainMenuScene
+     */
     @FXML
     private void loadMainMenuScene() {
         app.setDefaultWindowSize();

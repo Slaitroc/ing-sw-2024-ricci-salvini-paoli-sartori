@@ -14,11 +14,12 @@ public class EndGameModelState implements GameModelState {
     public EndGameModelState(GameModel model) {
         ServerLog.gControllerWrite("Game changed to END GAME", model.getIdGame());
 
-        for (String username: model.getListeners().keySet()) {
+        for (String username : model.getListeners().keySet()) {
             model.getListeners().get(username).removeGoldDeckListener();
             model.getListeners().get(username).removeResourcedDeckListener();
         }
     }
+
     @Override
     public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
@@ -70,22 +71,22 @@ public class EndGameModelState implements GameModelState {
     }
 
     @Override
-    public void endGame(GameModel model){
-        for (Player player: model.getPlayers().values()) {
+    public void endGame(GameModel model) {
+        for (Player player : model.getPlayers().values()) {
             player.calculateObjectiveCard();
             player.calculateObjectiveCard(model.commonObjectives.get(0));
             player.calculateObjectiveCard(model.commonObjectives.get(1));
         }
         String usernameWinner = null;
         int maxPoint = 0;
-        for (Player player: model.getPlayers().values()) {
+        for (Player player : model.getPlayers().values()) {
             if (player.getScore() >= maxPoint) {
                 maxPoint = player.getScore();
                 usernameWinner = player.getUsername();
             }
         }
 
-        for (String username: model.clients.keySet()) {
+        for (String username : model.clients.keySet()) {
             try {
                 model.clients.get(username).sendCommand(new GameIsOverObj(usernameWinner, model.getBoard().getPlayersScore()));
             } catch (RemoteException e) {

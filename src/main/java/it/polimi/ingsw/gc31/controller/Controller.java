@@ -1,18 +1,18 @@
 package it.polimi.ingsw.gc31.controller;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.*;
-import java.util.concurrent.*;
-
-import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.*;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.JoinGameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.*;
+import java.util.concurrent.*;
 
 //NOTE creation of GameController for match creation
 // Does the GameController related to the first match get created immediately after the first player has logged in?
@@ -162,9 +162,9 @@ public class Controller extends UnicastRemoteObject implements IController {
     public boolean connect(VirtualClient client, String username, Integer token)
             throws RemoteException {
         // client.sendCommand(new WantsReconnectObjI())
-        if(disconnected.containsKey(token)) {
+        if (disconnected.containsKey(token)) {
             //The element in the newConnections map is updated with the new VirtualClient
-            newConnections.replace(token,client);
+            newConnections.replace(token, client);
             client.sendCommand(new WantsReconnectObj());
             //Devo ritornare true o false?
             return true;
@@ -200,13 +200,13 @@ public class Controller extends UnicastRemoteObject implements IController {
      */
     public void rejoin(String username, int token, boolean esito) {
         VirtualClient client = newConnections.get(token); // FIXME non so se è il modo correto di prendere il virtual
-                                                          // client
-                                                          // giusto (non i ricordo come e quando si swappa)
+        // client
+        // giusto (non i ricordo come e quando si swappa)
         if (esito) {
             try {
                 // TODO Chri deve aggiungere il metodo di rejoin qua
                 client.sendCommand(new ReJoinedObj(true)); // mandare questo è importante perché la ui fa cose in
-                                                           // risposta a questo update
+                // risposta a questo update
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -287,7 +287,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     /**
      * This method add the client (that just quit a game lobby) to the map
      * tempClients
-     * 
+     *
      * @param username is the username of the player that just quit
      * @param client   is the client that requested to quit from a lobby
      * @throws RemoteException if an error occurs in the rmi connection
@@ -393,7 +393,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                 //If the client was not found in tempClients => it is in a clientList of a GameController (it was
                 //in a game). The for searches the client in all the gameController.clientList, if it is found the
                 //disconnectPlayer method of the gameController is invoked with also the disconnect method of the Controller
-                if(!found) {
+                if (!found) {
                     for (GameController gc : gameControlList) {
                         // FIXME
                         synchronized (gc.clientList) {

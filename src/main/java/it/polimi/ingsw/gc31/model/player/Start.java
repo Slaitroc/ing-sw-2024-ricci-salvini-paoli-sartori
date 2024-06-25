@@ -1,7 +1,5 @@
 package it.polimi.ingsw.gc31.model.player;
 
-import java.awt.Point;
-
 import it.polimi.ingsw.gc31.exceptions.FullHandException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.InvalidCardDraw;
@@ -9,6 +7,8 @@ import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
+
+import java.awt.*;
 
 public class Start extends PlayerState {
     private boolean objectiveChosen = false;
@@ -19,7 +19,6 @@ public class Start extends PlayerState {
             player.setObjectiveCard(card);
             objectiveChosen = true;
         }
-        // TODO fare qualcosa se objective è gia stata scelta e si tenta di sceglier di nuovo la carta obbiettivo?
     }
 
     @Override
@@ -32,11 +31,6 @@ public class Start extends PlayerState {
         }
         executeAddToHand(deck, subsistuteDeck, player, index);
     }
-
-//    @Override
-//    public void moveCardInHand(Player player) throws IllegalStateOperationException {
-//        throw new IllegalStateOperationException();
-//    }
 
     @Override
     public void play(Point point, Player player) throws IllegalStateOperationException {
