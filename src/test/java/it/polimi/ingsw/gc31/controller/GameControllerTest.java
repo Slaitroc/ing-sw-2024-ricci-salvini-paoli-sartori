@@ -6,7 +6,6 @@ import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChatMessage;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.HeartBeatObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.QuitGameObj;
 import it.polimi.ingsw.gc31.model.gameModel.*;
-import net.bytebuddy.implementation.bind.MethodDelegationBinder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,68 +21,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GameControllerTest {
     private GameController gameController1;
+    private GameController gameController2;
     static VirtualClient mockClient;
-
-//    public static class FakeGameModel extends GameModel {
-//        public FakeGameModel(){
-//            super();
-//        }
-//
-//        @Override
-//        public void setGameState(GameModelState gameState){
-//            this.gameState = gameState;
-//        }
-//
-//        @Override
-//        public void drawResource(String username, int index){
-//            gameState.drawResource(this, username, index);
-//            listeners.values().forEach(listener -> listener.notifyResourcedDeckListener(this));
-//            listeners.get(username).notifyHandListener(this);
-//        }
-//    }
-
-//    public static class FakeGameController extends GameController {
-//        private FakeGameModel fakeModel;
-//        /**
-//         * Constructor for the GameController class.
-//         * It initializes the game model, players, clientList, and game states.
-//         *
-//         * @param username         the username of the player.
-//         * @param client           the client of the player.
-//         * @param maxNumberPlayers the maximum number of players.
-//         * @param idGame           the id of the game.
-//         */
-//        public FakeGameController(String username, VirtualClient client, int maxNumberPlayers, int idGame) throws RemoteException {
-//            super(username, client, maxNumberPlayers, idGame);
-//            fakeModel = (FakeGameModel) super.getModel();
-//        }
-//
-//        @Override
-//        public FakeGameModel getModel(){
-//            return fakeModel;
-//        }
-//    }
-//
-//    private Method publicates(GameModel model){
-//        Class<?> clazz = model.getClass();
-//        try{
-//            Method method = clazz.getMethod("setGameState");
-//            method.setAccessible(true);
-//            return method;
-//        } catch (NoSuchMethodException e) {
-//            e.printStackTrace();
-//            return  null;
-//        }
-//    }
 
     /**
      * Setup executed before each test method
-     * @throws RemoteException
+     *
+     * @throws RemoteException if an error occurs during the rmi communications
      */
     @BeforeEach
     public void setUp() throws RemoteException {
         mockClient = Mockito.mock(VirtualClient.class);
         gameController1 = new GameController("player1", mockClient, 4, 0);
+        gameController2 = new GameController("player10", mockClient, 2, 5);
     }
 
     /**
@@ -491,29 +441,11 @@ public class GameControllerTest {
         assertDoesNotThrow( () -> gameController1.sendCommand(new ChatMessage("player1", "Test")));
     }
 
-//Useless because the executor remove continuously object from the callsList
-//    @Test
-//    public void sendCommandTest(){
-//        //Expected 0 obj at the start of the game
-//        assertEquals(0, gameController1.callsList.size());
-//
-//        //Adding an object
-//        assertDoesNotThrow( () -> gameController1.sendCommand(new HeartBeatObj("player1")));
-//
-//        //Expecting an obj in the list
-//        assertEquals(1, gameController1.callsList.size());
-//
-//        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-//        assertDoesNotThrow( () -> gameController1.sendCommand(new QuitGameObj("player2")));
-//        assertDoesNotThrow( () -> gameController1.sendCommand(new FlipStarterCardObj("player2")));
-//        assertEquals(3, gameController1.callsList.size());
-//    }
-
     /**
-     *
+     * Tests the startRematchTimer
      */
     @Test
-    public void startRematchTimerTest() throws InterruptedException {
+    public void startRematchTimerTest() {
         //Create another client that join the game and all clients are ready to play
         assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
         assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
@@ -547,6 +479,9 @@ public class GameControllerTest {
 //        assertFalse(gameController1.rematchPlayers.get("player4"));
     }
 
+    /**
+     * Tests the anotherMatch method
+     */
     @Test
     public void anotherMatchTest(){
         //Create another client that join the game and all clients are ready to play
@@ -579,15 +514,38 @@ public class GameControllerTest {
         gameController1.anotherMatch("player3", false);
         assertEquals(3, gameController1.rematchAnswers);
 
-        //On the last invocation the startRematch is invoked and the new game is setted so the
+        //On the last invocation the startRematch is invoked and the new game is set so the
         //rematchAnswers is initialized to the value 0
         gameController1.anotherMatch("player4", false);
 
         assertFalse(gameController1.rematchPlayers.get("player3"));
         assertFalse(gameController1.rematchPlayers.get("player4"));
         assertEquals(0, gameController1.rematchAnswers);
+
+
+        //Tests the case where only or zero players remain for a new rematch
+        assertDoesNotThrow( () -> gameController2.joinGame("player20", mockClient));
+        assertDoesNotThrow( () -> gameController2.setReadyStatus(true, "player10"));
+        assertDoesNotThrow( () -> gameController2.setReadyStatus(true, "player20"));
+
+        //gameController2.getModel().setGameState(new EndGameModelState(gameController2.getModel()));
+        gameController2.anotherMatch("player10", true);
+
+        assertNotNull(gameController2.clientList.get("player10"));
+        assertNotNull(gameController2.clientList.get("player20"));
+        assertEquals(1, gameController2.rematchAnswers);
+        assertEquals(2, gameController2.rematchPlayers.size());
+        assertEquals(2, gameController2.clientList.size());
+
+        gameController2.anotherMatch("player20", false);
+
+        assertEquals(0, gameController2.clientList.size());
+        assertEquals(0, gameController2.readyStatus.size());
     }
 
+    /**
+     * Tests the startRematch method
+     */
     @Test
     public void startRematchTest(){
         //The method synchronizes to the callsList to be sure that no
