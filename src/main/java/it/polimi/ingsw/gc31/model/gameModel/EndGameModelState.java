@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.AnotherMatchObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsOverObj;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
@@ -89,11 +90,13 @@ public class EndGameModelState implements GameModelState {
 
             synchronized (model.clientListLock) {
                 for (String username : model.clients.keySet()) {
-                    ClientQueueObject clientQueueObject = new GameIsOverObj(usernameWinner, model.getBoard().getPlayersScore());
+                    ClientQueueObject clientQueueObject1 = new GameIsOverObj(usernameWinner, model.getBoard().getPlayersScore());
+                    ClientQueueObject clientQueueObject2 = new AnotherMatchObj(username);
                     new Thread(
                             () -> {
                                 try {
-                                    model.clients.get(username).sendCommand(clientQueueObject);
+                                    model.clients.get(username).sendCommand(clientQueueObject1);
+                                    model.clients.get(username).sendCommand(clientQueueObject2);
                                 } catch (RemoteException ignored) {
                                 }
                             }

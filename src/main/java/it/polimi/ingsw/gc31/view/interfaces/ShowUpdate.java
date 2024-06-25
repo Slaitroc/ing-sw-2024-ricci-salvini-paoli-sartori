@@ -71,6 +71,7 @@ public interface ShowUpdate {
     void show_wantReconnect();
 
     void show_rejoined(boolean esito);
+    void show_anotherMatch();
 
     void show_timerLastPlayerConnected(Integer secondsLeft);
 

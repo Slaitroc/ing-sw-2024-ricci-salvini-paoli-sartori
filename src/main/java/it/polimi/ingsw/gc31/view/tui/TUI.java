@@ -282,7 +282,7 @@ public class TUI extends UI {
      * The card is printed starting from the top left corner of the card.
      * (relative_x,relative_y) = (0,0) corresponds to the top left corner of the
      * area where the card is printed.
-     *
+     * <p>
      * The card is made of n strings of length m, where n is equals to
      * {@link #CARD_HEIGHT} and m is equals to {@link #CARD_LENGTH}.
      * If a character of the strings that composes the card goes outside the limits
@@ -403,7 +403,7 @@ public class TUI extends UI {
      * The card is printed starting from the top left corner of the card.
      * (relative_x,relative_y) = (0,0) corresponds to the top left corner of the
      * area where the card is printed.
-     *
+     * <p>
      * The card is made of n strings of length m, where n is equals to
      * {@link #CARD_HEIGHT} and m is equals to {@link #CARD_LENGTH}.
      * If a character of the strings that composes the card goes outside the limits
@@ -2149,6 +2149,18 @@ public class TUI extends UI {
     public void changeActivePlayArea(String username) {
         activePlayArea = username;
         areasCache.put(TUIareas.PLAY_AREA_VIEW, playAreaAllPlayers.get(username));
+    }
+
+    /**
+     * This method should ask the player if it wants
+     * to play another match with the same players after the current
+     * match is finished
+     */
+    //FIXME implementare metodo. Ho fallito miseramente
+    @Override
+    public void show_anotherMatch(){
+
+        printToCmdLineOut(tuiWrite("Do you want to play another match?"));
     }
 
 }

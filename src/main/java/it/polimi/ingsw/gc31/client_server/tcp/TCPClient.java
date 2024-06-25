@@ -27,7 +27,7 @@ public class TCPClient implements ClientCommands {
     private UI ui;
     private final Queue<ClientQueueObject> callsList;
     private int token;
-    private Timer timer;
+    private final Timer timer;
     private boolean firstConnectionDone = false;
 
     /**
@@ -236,7 +236,7 @@ public class TCPClient implements ClientCommands {
      * This method sends to the server a new DrawGoldObj object and the game
      * controller as a recipient
      * using the tcp_sendCommand method.
-     *
+     * <p>
      * index = 0 : drawing from the gold deck.
      * index = 1 : drawing the first gold card on the board.
      * index = 2 : drawing the second gold card on the board.
@@ -250,7 +250,7 @@ public class TCPClient implements ClientCommands {
      * This method sends to the server a new DrawResObj object and the game
      * controller as a recipient
      * using the tcp_sendCommand method.
-     *
+     * <p>
      * index = 0 : drawing from the resource deck.
      * index = 1 : drawing the first resource card on the board.
      * index = 2 : drawing the second resource card on the board.
@@ -264,7 +264,7 @@ public class TCPClient implements ClientCommands {
      * This method sends to the server a new ChooseSecretObjectiveObj object and the
      * game controller as a recipient
      * using the tcp_sendCommand method.
-     *
+     * <p>
      * index = 0 : choose first secret objective card.
      * index = 1 : choose second secret objective card.
      */
@@ -277,7 +277,7 @@ public class TCPClient implements ClientCommands {
      * This method sends to the server a new ChooseSecretObjectiveObj object and the
      * game controller as a recipient
      * using the tcp_sendCommand method.
-     *
+     * <p>
      * index = 0 : choose first secret objective card.
      * index = 1 : choose second secret objective card.
      */
@@ -344,7 +344,7 @@ public class TCPClient implements ClientCommands {
     }
 
     @Override
-    public void sendChatMessage(String fromUsername, String toUsername, String message) throws RemoteException {
+    public void sendChatMessage(String fromUsername, String toUsername, String message) {
         tcp_sendCommand(new ChatMessage(this.username, toUsername, message), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
@@ -366,7 +366,7 @@ public class TCPClient implements ClientCommands {
      * all the others execution are performed every 5 seconds
      */
     // FIXME aggiungere metodo close che esegue "timer.cancel();" quando si vuole
-    // chiudere la connessione
+    //  chiudere la connessione
     private void startHeartBeat() {
         long sendTime = (DV.testHB) ? DV.sendTimeTest : DV.sendTime;
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -421,5 +421,16 @@ public class TCPClient implements ClientCommands {
     @Override
     public void reconnect(boolean reconnect) throws RemoteException {
         tcp_sendCommand(new ReconnectObj(reconnect, username, token), DV.RECIPIENT_CONTROLLER);
+    }
+
+    /**
+     * Method invoked by the ui with the response of the user regarding
+     * if the player wants to play another match with the same players
+     *
+     * @param wantsToRematch is the response of the player (true: wants to rematch, false otherwise)
+     */
+    @Override
+    public void anotherMatchResponse(Boolean wantsToRematch){
+        tcp_sendCommand(new AnotherMatchResponseObj(username, wantsToRematch), DV.RECIPIENT_GAME_CONTROLLER);
     }
 }
