@@ -2159,7 +2159,6 @@ public class TUI extends UI {
     //FIXME implementare metodo. Ho fallito miseramente
     @Override
     public void show_anotherMatch(){
-
         printToCmdLineOut(tuiWrite("Do you want to play another match?"));
     }
 

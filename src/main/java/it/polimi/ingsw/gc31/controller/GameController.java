@@ -472,7 +472,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         this.rematchAnswers = 0;
 
         //In the end a new gameModel is created and notify is sent to all the players
-        this.model = new GameModel(idGame);
+        this.model = new GameModel(clientListLock, idGame);
         }
 
         notifyListPlayers();
