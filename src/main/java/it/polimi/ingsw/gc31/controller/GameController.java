@@ -33,7 +33,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 //    @SuppressWarnings("unused")
     private int maxNumberPlayers;
     private int idGame;
-    private final LinkedBlockingQueue<ServerQueueObject> callsList;
+    protected final LinkedBlockingQueue<ServerQueueObject> callsList;
     protected final LinkedHashMap<String, Boolean> readyStatus;
 
     /**
@@ -407,7 +407,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * values contained in the gameController accordingly to the remaining player in the game. The maxNumberPlayer is
      * modified and all the players that doesn't want to rematch are removed from all the maps
      */
-    private void startRematch() throws RemoteException {
+    protected void startRematch() throws RemoteException {
         //The callsList is re-initialized at the start of the new game
         synchronized (this.callsList) {
             this.callsList.clear();
