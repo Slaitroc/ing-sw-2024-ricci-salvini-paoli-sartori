@@ -371,7 +371,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
                     e.printStackTrace();
                 }
             }
-        }, 60000);
+        }, 120000);
     }
 
     /**
@@ -412,7 +412,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
             //If the number of players that wants a rematch is 1 or 0 a new game can't be created
             // and all the players are disconnected. At this point the gameController is refereeing
-            // an empty game so it's now useless and its reference is removed from the controller
+            // an empty game, so it's now useless and its reference is removed from the controller
             }
             else {
                 for (String user : rematchPlayers.keySet()){

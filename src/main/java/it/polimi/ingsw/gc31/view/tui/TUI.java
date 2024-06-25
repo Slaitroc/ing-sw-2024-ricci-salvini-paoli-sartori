@@ -280,7 +280,7 @@ public class TUI extends UI {
      * The card is printed starting from the top left corner of the card.
      * (relative_x,relative_y) = (0,0) corresponds to the top left corner of the
      * area where the card is printed.
-     *
+     * <p>
      * The card is made of n strings of length m, where n is equals to
      * {@link #CARD_HEIGHT} and m is equals to {@link #CARD_LENGTH}.
      * If a character of the strings that composes the card goes outside the limits
@@ -401,7 +401,7 @@ public class TUI extends UI {
      * The card is printed starting from the top left corner of the card.
      * (relative_x,relative_y) = (0,0) corresponds to the top left corner of the
      * area where the card is printed.
-     *
+     * <p>
      * The card is made of n strings of length m, where n is equals to
      * {@link #CARD_HEIGHT} and m is equals to {@link #CARD_LENGTH}.
      * If a character of the strings that composes the card goes outside the limits

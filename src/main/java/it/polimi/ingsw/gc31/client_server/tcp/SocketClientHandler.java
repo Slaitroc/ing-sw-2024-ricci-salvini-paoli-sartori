@@ -6,27 +6,12 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
-import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.utility.DV;
 
 import java.io.*;
 
 import java.rmi.RemoteException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
-import io.github.palexdev.mfxcore.controls.Control;
-
-/*
-ricevo
-deserializzo
-getto e check il recipient
-a seconda chiamo gamecontroller o controller sendobject
-
-eseguito da loro
- */
 /**
  * This class receives the inputs from the virtual socket server, executes the
  * methods requested by the client
@@ -90,7 +75,7 @@ public class SocketClientHandler implements VirtualClient {
      */
     private void tcpClient_reader() {
         new Thread(() -> {
-            ServerQueueObject obj = null;
+            ServerQueueObject obj;
 
             try {
                 while ((obj = (ServerQueueObject) input.readObject()) != null) {

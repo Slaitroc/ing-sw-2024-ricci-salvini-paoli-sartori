@@ -12,7 +12,6 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.*;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.JoinGameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
-import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
 
 //NOTE creation of GameController for match creation
 // Does the GameController related to the first match get created immediately after the first player has logged in?
@@ -156,8 +155,6 @@ public class Controller extends UnicastRemoteObject implements IController {
      *
      * @param client   the client to connect.
      * @param username the username of the client.
-     * @throws PlayerNicknameAlreadyExistsException if the username is already in
-     *                                              use.
      */
     public boolean connect(VirtualClient client, String username, Integer token)
             throws RemoteException {
@@ -192,14 +189,14 @@ public class Controller extends UnicastRemoteObject implements IController {
      * client ha specificato che vuole connettersi in risposta a
      * WantsReconnectObj.java
      * Deve innescare gli update dei listener e mandare la risposta al client
-     * (pseudocodice sotto)
+     * (pseudocode sotto)
      *
      * @param username is the username of the client
      * @param token    is the token of the client
      * @param esito    is true if the client wants to reconnect, false otherwise
      */
     public void rejoin(String username, int token, boolean esito) {
-        VirtualClient client = newConnections.get(token); // FIXME non so se è il modo correto di prendere il virtual
+        VirtualClient client = newConnections.get(token); // FIXME non so se è il modo corretto di prendere il virtual
                                                           // client
                                                           // giusto (non i ricordo come e quando si swappa)
         if (esito) {
@@ -294,7 +291,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      */
     public void quitGame(String username, VirtualClient client) throws RemoteException {
         tempClients.put(username, client);
-        // se il gioco era costituito da una sola persona va eliminato il gamecontroller
+        // se il gioco era costituito da una sola persona va eliminato il gameController
         // corrispondente
         sendUpdateToClient(client, new QuitFromGameRObj(username));
     }
@@ -346,14 +343,14 @@ public class Controller extends UnicastRemoteObject implements IController {
     // Heartbeat resources
     // FIXME spostare in cima attributi e metodi
     protected ConcurrentHashMap<VirtualClient, Long> clientsHeartBeat;
-    private ScheduledExecutorService scheduler;
+    private final ScheduledExecutorService scheduler;
 
     /**
      * This method creates a task that execute every 10 seconds the checkHeartBeats
      * method
      */
     private void startHeartBeatCheck() {
-        scheduler.scheduleAtFixedRate(() -> checkHeartBeats(), 0, 10, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::checkHeartBeats, 0, 10, TimeUnit.SECONDS);
     }
 
     /**
@@ -412,7 +409,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                 }
                 // ^ Implementato sopra ^
                 // gc.disconnectPlayer(...)
-                // gc.getid()
+                // gc.getId()
                 // disconnect(username, id, token )
 
             }
@@ -440,24 +437,6 @@ public class Controller extends UnicastRemoteObject implements IController {
         // 1).a("\\033[5m💚\\033[0m\\").reset());
         // System.out.println("HeartBeat ricevuto");
     }
-
-    // /**
-    // * This method is invoked if a check on the heart beat is met.
-    // * The method searches for the gameController of the client that needs to be
-    // * disconnected,
-    // * if the gameController and the correct couple username/VirtualClient is
-    // found
-    // * the method disconnectPlayer is invoked.
-    // *
-    // * @param username is the username of the client to be disconnected
-    // */
-    // private void disconnectFromGame(String username) {
-    // for (int i = 0; i < gameControlList.size(); i++) {
-    // for (String u : gameControlList.get(i).clientList.keySet())
-    // if (u.equals(username))
-    // gameControlList.get(i).disconnectPlayer(username);
-    // }
-    // }
 
     public void disconnect(String username, int idGame, int token) {
         disconnected.put(token, idGame);

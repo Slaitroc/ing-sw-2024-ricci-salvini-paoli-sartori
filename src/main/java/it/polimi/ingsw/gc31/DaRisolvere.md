@@ -26,7 +26,7 @@
 
 - [ ] provare a fare due partite da due in contemporanea
 - [ ] RMI ha dei problemi di connessione su ubuntu: la connessione di lookup viene rilevata ma non va oltre e lancia un'eccezione.
-- [ ] Cosa succde quando hai piazzato la carta e provi a selezionare la terza carta in mano?
+- [ ] Cosa succede quando hai piazzato la carta e provi a selezionare la terza carta in mano?
 
 ## Model
 

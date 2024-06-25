@@ -21,11 +21,10 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.Timer;
-import java.util.List;
 
 public class RmiClient extends UnicastRemoteObject implements VirtualClient, ClientCommands {
     private IController controller;
-    private VirtualServer server;
+    private final VirtualServer server;
     private IGameController gameController;
     private Integer idGame;
     private String username;
@@ -235,7 +234,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     // Risorse per heartbeat
     // FIXME spostare in cima attributi e metodi per heartbeat
-    private Timer timer;
+    private final Timer timer;
 
     /**
      * This method starts the process that "sends" the heart beat periodically to
@@ -261,7 +260,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
      * This method sends to the controller the heart beat associated with the
      * VirtualClient that is sending it
      * 
-     * @throws RemoteException
+     * @throws RemoteException if an error occurs during the rmi communication
      */
     private void sendHeartBeat() throws RemoteException {
         controller.updateHeartBeat(this);
@@ -299,7 +298,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         } else {
             // try {
             // long lines = Files.lines(filePath).count();
-            // ui.showGenericClientResonse("Numero di righe del file: " + lines);
+            // ui.showGenericClientResponse("Numero di righe del file: " + lines);
             // if (lines > 10) {
             // java.util.List<String> lastNineLines = getLastNineLines(filePath);
             // Path newFilePath = Paths.get(desktopPath, folderName, "LastNineLines.txt");
@@ -311,11 +310,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
             // writer.newLine();
             // }
             // }
-            // ui.showGenericClientResonse(
+            // ui.showGenericClientResponse(
             // "Le ultime 9 righe sono state copiate nel file: " + newFilePath.toString());
             // }
             // // Files.delete(filePath);
-            // // ui.showGenericClientResonse("File esistente eliminato.");
+            // // ui.showGenericClientResponse("File esistente eliminato.");
             // } catch (IOException e) {
             // e.printStackTrace();
             // }
