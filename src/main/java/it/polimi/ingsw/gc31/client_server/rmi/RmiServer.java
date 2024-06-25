@@ -40,11 +40,7 @@ public class RmiServer implements VirtualServer {
 
     @Override
     public void generateToken(VirtualClient newConnection) {
-        try {
-            newConnection.setRmiToken(Controller.getController().generateToken(newConnection));
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        Controller.getController().generateToken(newConnection);
     }
 
     public VirtualClient getRightConnection(int token) {

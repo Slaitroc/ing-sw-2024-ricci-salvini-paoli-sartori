@@ -62,6 +62,8 @@ public class Controller extends UnicastRemoteObject implements IController {
             token = (int) (Math.random() * 1000);
         }
         this.newConnections.put(token, newConnection);
+        sendToken(newConnection, token, true);
+
         return token;
     }
 
@@ -72,16 +74,16 @@ public class Controller extends UnicastRemoteObject implements IController {
      *
      * @param newConnection is the VirtualClient that is trying to set its username
      */
-    public void sendToken(VirtualClient newConnection) {
+    public void sendToken(VirtualClient newConnection, int token, boolean temporary) {
         try {
-            Integer getToken = null;
-            for (Map.Entry<Integer, VirtualClient> t : newConnections.entrySet()) {
-                if (t.getValue().equals(newConnection)) {
-                    getToken = t.getKey();
-                }
+            // Integer getToken = null;
+            // for (Map.Entry<Integer, VirtualClient> t : newConnections.entrySet()) {
+            // if (t.getValue().equals(newConnection)) {
+            // getToken = t.getKey();
+            // }
 
-            }
-            newConnection.sendCommand(new SaveToken(getToken));
+            // }
+            newConnection.sendCommand(new SaveToken(token, temporary));
         } catch (RemoteException e) {
             System.out.println("The token was not sent correctly");
         }
@@ -162,7 +164,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     public boolean connect(VirtualClient client, String username, Integer token)
             throws RemoteException {
         if (token == -1) {
-            sendToken(client);
+            sendToken(client, token, false);
             return usernameValidation(username, client);
         } else {
             if (disconnected.containsKey(token)) {
@@ -173,6 +175,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                                 + "reconnected with name " + username);
                 return true;
             } else {
+                sendToken(client, token, false);
                 return usernameValidation(username, client);
             }
         }
@@ -216,39 +219,26 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @param esito    is true if the client wants to reconnect, false otherwise
      */
     public void rejoin(String username, int token, boolean esito) {
-        VirtualClient client = newConnections.get(token); // FIXME non so se è il modo correto di prendere il virtual
-                                                          // client
-                                                          // giusto (non i ricordo come e quando si swappa)
+        VirtualClient client = newConnections.get(token);
         if (esito) {
             try {
-                // TODO Chri deve aggiungere il metodo di rejoin qua
-                client.sendCommand(new ReJoinedObj(true)); // mandare questo è importante perché la ui fa cose in
+                client.sendCommand(new ReJoinedObj(true)); // mandare questo è importante perché la ui fa cose in //
                                                            // risposta a questo update
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         } else {
+            // If the player doesn't want to reconnect to the game a RejoinedObj with
+            // parameter false is sent
+            // to the client
             try {
-                // If the player doesn't want to reconnect to the game a RejoinedObj with
-                // parameter false is sent
-                // to the client
                 client.sendCommand(new ReJoinedObj(false));
-
-                // At this point the Controller tries to connect the client as if it was the
-                // first connection of it
-                sendToken(client);
-                if (nicknames.add(username)) {
-                    tempClients.put(username, client);
-                    client.setController(this);
-                    client.sendCommand((new ValidUsernameObj(username)));
-
-                    clientsHeartBeat.put(client, System.currentTimeMillis());
-                } else {
-                    client.sendCommand(new WrongUsernameObj(username));
-                }
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+            // At this point the Controller tries to connect the client as if it was the
+            // first connection of it
+            usernameValidation(username, client);
         }
     }
 

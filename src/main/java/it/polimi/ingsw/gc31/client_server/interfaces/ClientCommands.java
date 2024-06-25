@@ -56,7 +56,7 @@ public interface ClientCommands {
 
     void sendChatMessage(String fromUsername, String toUsername, String message) throws RemoteException;
 
-    void setToken(int token);
+    void setToken(int token, boolean temporary);
 
     boolean hasToken();
 

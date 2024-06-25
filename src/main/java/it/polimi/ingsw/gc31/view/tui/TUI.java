@@ -1587,11 +1587,12 @@ public class TUI extends UI {
     @Override
     public void show_privateChatMessage(String fromUsername, String toUsername, String message) {
         synchronized (chatNeedsUpdate) {
-            if(fromUsername.equals(client.getUsername()))
+            if (fromUsername.equals(client.getUsername()))
                 chatMessages.add("[To: " + toUsername + "] : " + message);
-            else if(toUsername.equals(client.getUsername()))
+            else if (toUsername.equals(client.getUsername()))
                 chatMessages.add("[From: " + fromUsername + "] : " + message);
-            else return;
+            else
+                return;
         }
         if (chatAreaSelection.isEmpty()) {
             newChatMessage = true;
@@ -1636,11 +1637,11 @@ public class TUI extends UI {
                     addToCmdLineAreaSelection();
                     moveCursorToCmdLine();
                 } else {
-                    for(String username : playersUsernames){
-                        if(input.trim().startsWith("/"+username)) {
+                    for (String username : playersUsernames) {
+                        if (input.trim().startsWith("/" + username)) {
                             try {
-                                String message = input.substring(username.length()+1).trim();
-                                if(!message.isEmpty())
+                                String message = input.substring(username.length() + 1).trim();
+                                if (!message.isEmpty())
                                     client.sendChatMessage(getClient().getUsername(), username, message);
                             } catch (RemoteException e) {
                                 e.printStackTrace();
@@ -1649,7 +1650,7 @@ public class TUI extends UI {
                             break;
                         }
                     }
-                    if(!privateMessage) {
+                    if (!privateMessage) {
                         try {
                             client.sendChatMessage(getClient().getUsername(), input.trim());
                         } catch (RemoteException e) {
@@ -2113,8 +2114,9 @@ public class TUI extends UI {
         }
     }
 
-    public void receiveToken(int token) {
-        client.setToken(token);
+    @Override
+    public void receiveToken(int token, boolean temporary) {
+        client.setToken(token, temporary);
     }
 
     @Override
@@ -2130,7 +2132,6 @@ public class TUI extends UI {
 
     @Override
     public void show_rejoined(boolean esito) {
-        // TODO cambiare stato tui
         state = new PlayingState(this);
         commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
     }

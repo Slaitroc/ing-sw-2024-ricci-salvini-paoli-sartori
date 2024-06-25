@@ -61,9 +61,10 @@ public interface ShowUpdate {
     void show_inGamePlayers(LinkedHashMap<String, Boolean> players);
 
     void show_invalidAction(String message);
+
     void show_GameIsOver(String username, Map<String, Integer> playersScore);
 
-    void receiveToken(int token);
+    void receiveToken(int token, boolean temporary);
 
     void show_heartBeat();
 

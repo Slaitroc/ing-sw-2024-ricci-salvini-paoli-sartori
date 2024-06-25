@@ -17,6 +17,7 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.utility.DV;
+import it.polimi.ingsw.gc31.utility.FileUtility;
 import it.polimi.ingsw.gc31.view.UI;
 
 public class TCPClient extends Token implements ClientCommands {
@@ -26,7 +27,7 @@ public class TCPClient extends Token implements ClientCommands {
     private Integer idGame;
     private UI ui;
     private final Queue<ClientQueueObject> callsList;
-    private Token token;
+    private Token token = new Token();
     private Timer timer;
     private boolean firstConnectionDone = false;
 
@@ -35,8 +36,7 @@ public class TCPClient extends Token implements ClientCommands {
      * The timer is set as a daemon by the specific constructor in order to not
      */
     @SuppressWarnings("resource")
-    public TCPClient(String ipaddress) throws IOException {
-        this.token = new Token();
+    public TCPClient(final String ipaddress) throws IOException {
         this.username = DV.DEFAULT_USERNAME;
         Socket serverSocket = new Socket(ipaddress, DV.TCP_PORT);
         this.input = new ObjectInputStream(serverSocket.getInputStream());
@@ -126,6 +126,7 @@ public class TCPClient extends Token implements ClientCommands {
     @Override
     public void setUI(UI ui) {
         this.ui = ui;
+
     }
 
     /**
@@ -169,8 +170,8 @@ public class TCPClient extends Token implements ClientCommands {
      */
     @Override
     public void setUsernameCall(String username) {
-        if (firstConnectionDone)
-            tcp_sendCommand(new ConnectObj(username, token.getToken()), DV.RECIPIENT_CONTROLLER);
+        if (firstConnectionDone)// FIX compatibile tempToken e aggiornamento token in tcp client?
+            tcp_sendCommand(new ConnectObj(username, token.getTempToken()), DV.RECIPIENT_CONTROLLER);
         else {
             tcp_sendCommand(new ConnectObj(username), DV.RECIPIENT_CONTROLLER);
             firstConnectionDone = true;
@@ -386,37 +387,17 @@ public class TCPClient extends Token implements ClientCommands {
      * @param token is the value to be set as the token of the client
      */
     @Override
-    public void setToken(int token) {
-        this.token.setToken(token);
-        String userHome = System.getProperty("user.home");
-        String desktopPath = DV.getDesktopPath(userHome);
-        String folderName = "CodexNaturalis";
-        String fileName = "Token.txt";
-        // Crea il percorso completo della cartella e del file
-        Path folderPath = Paths.get(desktopPath, folderName);
-        Path filePath = Paths.get(desktopPath, folderName, fileName);
-        if (Files.exists(filePath)) {
-            try {
-                Files.delete(filePath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            ui.showGenericClientResonse("File esistente eliminato.");
+    public void setToken(int token, boolean temporary) {
+        if (!temporary) {
+            this.token.setToken(token);
+            if (this.token.rewriteTokenFile())
+                ui.showGenericClientResonse("File precedente eliminato");
+            ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
+            ui.showGenericClientResonse(FileUtility.getCodexTokenFilePath().toString());
+        } else {
+            this.token.setTempToken(token);
         }
-        try {
-            Files.createDirectories(folderPath);
-        } catch (IOException e) {
-            ui.showGenericClientResonse("Errore nel salvataggio del token!");
-            e.printStackTrace();
-        }
-        try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE,
-                StandardOpenOption.APPEND)) {
-            writer.write("" + token);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
-        ui.showGenericClientResonse(filePath.toString());
+
     }
 
     @Override

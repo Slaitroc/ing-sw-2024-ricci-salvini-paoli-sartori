@@ -6,18 +6,11 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
-import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.utility.DV;
 
 import java.io.*;
 
 import java.rmi.RemoteException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import io.github.palexdev.mfxcore.controls.Control;
 
 /*
 ricevo
@@ -99,7 +92,8 @@ public class SocketClientHandler implements VirtualClient {
                             try {
                                 ConnectObj connectObj = (ConnectObj) obj;
                                 if (connectObj.getToken() == DV.defaultToken) {
-                                    if (Controller.getController().connect(this, connectObj.getUsername(), connectObj.getToken())) {
+                                    if (Controller.getController().connect(this, connectObj.getUsername(),
+                                            connectObj.getToken())) {
                                         ServerLog.tcpWrite("New user connected: " + connectObj.getUsername());
                                     } else {
                                         ServerLog.tcpWrite("New connection refused");
@@ -163,9 +157,11 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     /**
-     * Method used at the start of the rmi connections but useless in the TCP implementation.
+     * Method used at the start of the rmi connections but useless in the TCP
+     * implementation.
      * Inherited from the VirtualClient interface.
-     * In TCP implementation the VirtualClient (is server side so it...) can get the controller via the singleton.
+     * In TCP implementation the VirtualClient (is server side so it...) can get the
+     * controller via the singleton.
      *
      * @param controller is the controller the client needs to get
      */
@@ -175,10 +171,12 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     /**
-     * Method used at the start of the rmi connections but useless in the TCP implementation.
+     * Method used at the start of the rmi connections but useless in the TCP
+     * implementation.
      * Inherited from the VirtualClient interface.
      *
-     * @param token value to assign to the client specific token, used mainly for reconnections
+     * @param token value to assign to the client specific token, used mainly for
+     *              reconnections
      */
     @Override
     public void setRmiToken(int token) {

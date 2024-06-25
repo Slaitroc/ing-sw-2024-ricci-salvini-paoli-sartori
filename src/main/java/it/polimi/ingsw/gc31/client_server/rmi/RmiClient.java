@@ -30,7 +30,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     private String username;
     private UI ui;
     private final LinkedBlockingQueue<ClientQueueObject> callsList;
-    private Token token = new Token();
+    private Token token;
     private boolean firstConnectionDone = false;
 
     /**
@@ -46,6 +46,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
                 .lookup("VirtualServer");
         this.server.RMIserverWrite("New connection detected from ip: " + server.getClientIP());
         this.server.generateToken(this);
+        this.token = new Token();
         this.username = DV.DEFAULT_USERNAME;
         this.controller = null;
         this.callsList = new LinkedBlockingQueue<>();
@@ -97,7 +98,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public void setUsernameCall(String username) throws RemoteException {
         if (controller == null) {
-            server.sendCommand(new ConnectObj(username, token.getToken()));
+            server.sendCommand(new ConnectObj(username, token.getTempToken()));
         }
 
     }
@@ -280,53 +281,15 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
-    public void setToken(int token) {
-        Path folder = FileUtility.getCodexNaturalisPath();
-        if (!Files.exists(folder)) {
-            try {
-                Files.createDirectories(folder);
-            } catch (IOException e) {
-                ui.showGenericClientResonse("Errore nella creazione della cartella!");
-                e.printStackTrace();
-            }
+    public void setToken(int token, boolean temporary) {
+        if (!temporary) {
+            this.token.setToken(token);
+            if (this.token.rewriteTokenFile())
+                ui.showGenericClientResonse("File precedente eliminato");
+            ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
+            ui.showGenericClientResonse(FileUtility.getCodexTokenFilePath().toString());
         } else {
-            Path file = FileUtility.getCodexTokenFile();
-            if ((!Files.exists(file))) {
-                try (BufferedWriter writer = Files.newBufferedWriter(file, StandardOpenOption.CREATE,
-                        StandardOpenOption.TRUNCATE_EXISTING)) {
-                    writer.write("" + token);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
-                ui.showGenericClientResonse(file.toString());
-
-            }
-            if (false) {
-
-                // try {
-                // long lines = Files.lines(filePath).count();
-                // ui.showGenericClientResonse("Numero di righe del file: " + lines);
-                // if (lines > 10) {
-                // java.util.List<String> lastNineLines = getLastNineLines(filePath);
-                // Path newFilePath = Paths.get(desktopPath, folderName, "LastNineLines.txt");
-                // try (BufferedWriter writer = Files.newBufferedWriter(newFilePath,
-                // StandardOpenOption.CREATE,
-                // StandardOpenOption.TRUNCATE_EXISTING)) {
-                // for (String line : lastNineLines) {
-                // writer.write(line);
-                // writer.newLine();
-                // }
-                // }
-                // ui.showGenericClientResonse(
-                // "Le ultime 9 righe sono state copiate nel file: " + newFilePath.toString());
-                // }
-                // // Files.delete(filePath);
-                // // ui.showGenericClientResonse("File esistente eliminato.");
-                // } catch (IOException e) {
-                // e.printStackTrace();
-                // }
-            }
+            this.token.setTempToken(token);
         }
     }
 
@@ -337,11 +300,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public boolean hasToken() {
-        if (token.getToken() != -1) {
+        if (token.doesTokenExists())
             return true;
-        } else {
+        else
             return false;
-        }
+
     }
 
 }

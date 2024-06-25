@@ -114,7 +114,6 @@ public class InitState extends TuiState {
 
     @Override
     protected void command_movePlayArea() {
-
     }
 
     @Override
@@ -147,7 +146,6 @@ public class InitState extends TuiState {
 
     @Override
     protected void reconnect() {
-
         String message = "You disconnected from the last match :,( \n Would u like to rejoin the game? \n y/n)";
         String input;
         tui.printToCmdLineOut(tui.tuiWrite(message));
