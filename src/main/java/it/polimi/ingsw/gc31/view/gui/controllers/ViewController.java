@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.util.Pair;
 
 import java.awt.*;
 import java.rmi.RemoteException;
@@ -144,11 +145,11 @@ public abstract class ViewController {
     }
 
     /**
-     * Displays the scores of all players.
+     * Displays the scores of all players and if it is their turn to play
      *
      * @param scores A {@link LinkedHashMap} where the keys are usernames and the values are scores.
      */
-    public void show_scorePlayer(LinkedHashMap<String, Integer> scores) {
+    public void show_scorePlayer(LinkedHashMap<String, Pair<Integer, Boolean>> scores) {
     }
 
     /**
@@ -316,5 +317,14 @@ public abstract class ViewController {
             show_ServerCrashWarning(e.toString());
             e.getStackTrace();
         }
+    }
+
+    public void showCountDown(Integer secondsLeft) {
+    }
+
+    public void playerRejoined(boolean result) {
+    }
+
+    public void showPing() {
     }
 }

@@ -197,13 +197,13 @@ public class Controller extends UnicastRemoteObject implements IController {
      */
     public void rejoin(String username, int token, boolean esito) {
         VirtualClient client = newConnections.get(token); // FIXME non so se è il modo corretto di prendere il virtual
-                                                          // client
-                                                          // giusto (non i ricordo come e quando si swappa)
+        // client
+        // giusto (non i ricordo come e quando si swappa)
         if (esito) {
             try {
                 // TODO Chri deve aggiungere il metodo di rejoin qua
                 client.sendCommand(new ReJoinedObj(true)); // mandare questo è importante perché la ui fa cose in
-                                                           // risposta a questo update
+                // risposta a questo update
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -254,7 +254,7 @@ public class Controller extends UnicastRemoteObject implements IController {
             tempClients.remove(username);
             sendUpdateToClient(client, new GameCreatedObj(gameControlList.size() - 1));
             client.setGameController(gameControlList.getLast());
-            ServerLog.controllerWrite("A new game has been created with id: " + gameControlList.size());
+            ServerLog.controllerWrite("A new game has been created with id: " + (gameControlList.size() - 1));
         }
     }
 
@@ -440,7 +440,7 @@ public class Controller extends UnicastRemoteObject implements IController {
 
     public void disconnect(String username, int idGame, int token) {
         disconnected.put(token, idGame);
-        ServerLog.controllerWrite("Client disconnesso per timeout" + username);
+        ServerLog.controllerWrite("Client disconnesso per timeout " + username);
     }
 
     private void sendUpdateToClient(VirtualClient client, ClientQueueObject clientQueueObject) {
