@@ -90,10 +90,7 @@ public class GameModel {
      * @throws IllegalStateOperationException if the game is not in the right state
      */
     public void endTurn() throws IllegalStateOperationException {
-        boolean bothEmptyDeck = false;
-        if (board.getDeckGold().isEmpty() && board.getDeckResource().isEmpty()) {
-            bothEmptyDeck = true;
-        }
+        boolean bothEmptyDeck = board.getDeckGold().isEmpty() && board.getDeckResource().isEmpty();
         synchronized (playerConnection) {
             do {
                 gameState.detectEndGame(this, bothEmptyDeck);
@@ -281,6 +278,7 @@ public class GameModel {
 
     protected void executeReconnectPlayer(String username) {
         playerConnection.put(username, true);
+
 
         ServerLog.gControllerWrite("The player " + username + " has rejoined game", idGame);
 //        notifyAllGameListeners();

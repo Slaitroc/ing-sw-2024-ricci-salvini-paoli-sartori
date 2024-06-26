@@ -493,4 +493,8 @@ public class Controller extends UnicastRemoteObject implements IController {
             }
         }).start();
     }
+
+    public void createReMatch(Map<String, VirtualClient> players) {
+        ServerLog.controllerWrite("Another game has been created");
+    }
 }

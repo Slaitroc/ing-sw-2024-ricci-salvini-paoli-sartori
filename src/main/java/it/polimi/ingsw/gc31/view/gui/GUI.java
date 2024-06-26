@@ -264,6 +264,11 @@ public class GUI extends UI {
     }
 
     @Override
+    public void show_requestAnotherMatch() {
+
+    }
+
+    @Override
     public void show_GenericClientResonse(String response) {
         // TODO Auto-generated method stub
         System.out.println(response);

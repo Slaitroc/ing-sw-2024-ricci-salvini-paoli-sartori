@@ -177,16 +177,20 @@ public class InitState extends TuiState {
                     tui.getClient().reconnect(true);
                     break;
                 } else if (input.trim().equals("n")) {
-                    // TODO anche qui cose sul token
                     tui.getClient().reconnect(false);
                     break;
                 } else {
                     tui.printToCmdLineOut("Wrong Input");
                 }
             } catch (RemoteException e) {
-                e.printStackTrace();
+                e.getStackTrace();
             }
         }
+    }
+
+    @Override
+    protected void reMatch() {
+
     }
 
 }

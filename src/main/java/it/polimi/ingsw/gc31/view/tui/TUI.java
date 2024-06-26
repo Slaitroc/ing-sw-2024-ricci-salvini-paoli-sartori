@@ -1308,7 +1308,10 @@ public class TUI extends UI {
             state.stateNotify();
         } else if (command.equals(TUIcommands.RECONNECT.toString()) && state.stateName.equals("Init State")) {
             state.reconnect();
-        } else {
+        } else if (command.equals(TUIcommands.ANOTHERMATCH.toString()) && state.stateName.equals("Playing State")) {
+            state.reMatch();
+        }
+        else {
             state.commandsMap.get(TUIcommands.INVALID.toString()).run();
         }
     }
@@ -2135,8 +2138,8 @@ public class TUI extends UI {
     @Override
     public void show_wantReconnect(String username) {
         getClient().setUsername(username);
+        activePlayArea = username;
         commandToProcess(TUIcommands.RECONNECT, false);
-        int i = 0;
     }
 
     @Override
@@ -2158,6 +2161,12 @@ public class TUI extends UI {
         client.getToken().setToken(DV.defaultToken);
         commandToProcess(TUIcommands.SET_USERNAME, false);
 
+    }
+
+    @Override
+    public void show_requestAnotherMatch() {
+        printToCmdLineOut(tuiWrite("Do you want to play another match?"));
+        commandToProcess(TUIcommands.ANOTHERMATCH, false);
     }
 
     @Override
@@ -2183,15 +2192,13 @@ public class TUI extends UI {
         areasCache.put(TUIareas.PLAY_AREA_VIEW, playAreaAllPlayers.get(username));
     }
 
+
     /**
      * This method should ask the player if it wants
      * to play another match with the same players after the current
      * match is finished
      */
     // FIXME implementare metodo. Ho fallito miseramente
-    @Override
     public void show_anotherMatch() {
-        printToCmdLineOut(tuiWrite("Do you want to play another match?"));
     }
-
 }
