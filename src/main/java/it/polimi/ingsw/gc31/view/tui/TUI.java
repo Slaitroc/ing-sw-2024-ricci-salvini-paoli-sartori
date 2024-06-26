@@ -21,6 +21,7 @@ import javafx.util.Pair;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
+import it.polimi.ingsw.gc31.client_server.Token;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
@@ -152,7 +153,7 @@ public class TUI extends UI {
             try {
 
                 playViewUpdate.add(areasCache.get(TUIareas.PLAY_AREA_VIEW));
-            } catch (NullPointerException ignored) {
+            } catch (NullPointerException e) {
 
             }
             playViewUpdate.notify();
@@ -608,7 +609,7 @@ public class TUI extends UI {
                         && relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 2 > overFlowLeft + 1) {
                     res.append(ansi().cursor(relative_y + 1, relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 1)
                             .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2])
-                            .a(resources.getFirst().getSymbol()));
+                            .a(resources.get(0).getSymbol()));
                 }
 
                 // OBJECTIVE AREA
@@ -1299,10 +1300,14 @@ public class TUI extends UI {
             state.stateNotify();
         } else if (command.equals(TUIcommands.INITIAL.toString()) && state.stateName.equals("Init State")) {
             state.command_initial();
+        } else if (command.equals(TUIcommands.SET_USERNAME.toString()) && state.stateName.equals("Init State")) {
+            state.setUsername();
         } else if (state.commandsMap.containsKey(command)) {
             state.commandsMap.get(command).run();
         } else if (command.equals(TUIcommands.NOTIFY.toString())) {
             state.stateNotify();
+        } else if (command.equals(TUIcommands.RECONNECT.toString()) && state.stateName.equals("Init State")) {
+            state.reconnect();
         } else {
             state.commandsMap.get(TUIcommands.INVALID.toString()).run();
         }
@@ -1589,11 +1594,12 @@ public class TUI extends UI {
     @Override
     public void show_privateChatMessage(String fromUsername, String toUsername, String message) {
         synchronized (chatNeedsUpdate) {
-            if(fromUsername.equals(client.getUsername()))
+            if (fromUsername.equals(client.getUsername()))
                 chatMessages.add("[To: " + toUsername + "] : " + message);
-            else if(toUsername.equals(client.getUsername()))
+            else if (toUsername.equals(client.getUsername()))
                 chatMessages.add("[From: " + fromUsername + "] : " + message);
-            else return;
+            else
+                return;
         }
         if (chatAreaSelection.isEmpty()) {
             newChatMessage = true;
@@ -1638,11 +1644,11 @@ public class TUI extends UI {
                     addToCmdLineAreaSelection();
                     moveCursorToCmdLine();
                 } else {
-                    for(String username : playersUsernames){
-                        if(input.trim().startsWith("/"+username)) {
+                    for (String username : playersUsernames) {
+                        if (input.trim().startsWith("/" + username)) {
                             try {
-                                String message = input.substring(username.length()+1).trim();
-                                if(!message.isEmpty())
+                                String message = input.substring(username.length() + 1).trim();
+                                if (!message.isEmpty())
                                     client.sendChatMessage(getClient().getUsername(), username, message);
                             } catch (RemoteException e) {
                                 e.printStackTrace();
@@ -1651,7 +1657,7 @@ public class TUI extends UI {
                             break;
                         }
                     }
-                    if(!privateMessage) {
+                    if (!privateMessage) {
                         try {
                             client.sendChatMessage(getClient().getUsername(), input.trim());
                         } catch (RemoteException e) {
@@ -2108,26 +2114,43 @@ public class TUI extends UI {
         }
     }
 
-    public void receiveToken(int token) {
-        client.setToken(token);
+    @Override
+    public void receiveToken(int token, boolean temporary) {
+        client.setToken(token, temporary);
     }
 
     @Override
-    public void showGenericClientResonse(String response) {
+    public void show_GenericClientResonse(String response) {
         printToCmdLineOut(tuiWrite(response));
 
     }
 
     @Override
-    public void show_wantReconnect() {
+    public void show_wantReconnect(String username) {
+        getClient().setUsername(username);
         commandToProcess(TUIcommands.RECONNECT, false);
+        int i = 0;
     }
 
     @Override
-    public void show_rejoined(boolean result) {
-        // TODO cambiare stato tui
-        state = new PlayingState(this);
-        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+    public void show_rejoined(boolean esito) {
+        if (esito) {
+            chatBoardThread = chatBoardThreadBuilder();
+            chatBoardThread.start();
+            state = new PlayingState(this);
+            commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+        } else {
+            getClient().getToken().setToken(DV.defaultToken);
+            commandToProcess(TUIcommands.SET_USERNAME, false);
+        }
+    }
+
+    @Override
+    public void show_unableToReconnect() {
+        printToCmdLineOut(serverWrite("U were not in a game!"));
+        client.getToken().setToken(DV.defaultToken);
+        commandToProcess(TUIcommands.SET_USERNAME, false);
+
     }
 
     @Override

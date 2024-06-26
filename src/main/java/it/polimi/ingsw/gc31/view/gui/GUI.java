@@ -105,8 +105,8 @@ public class GUI extends UI {
     }
 
     @Override
-    public void receiveToken(int token) {
-        client.setToken(token);
+    public void receiveToken(int token, boolean temporary) {
+
     }
 
     //Used to Load the InGameScene
@@ -158,7 +158,9 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea, Map<Resources, Integer> achievedResources) {
+    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea,
+            Map<Resources, Integer> achievedResources) {
+
         Platform.runLater(() -> app.getCurrentController().show_playArea(username, playArea, achievedResources));
     }
 
@@ -217,12 +219,12 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_wantReconnect() {
+    public void show_wantReconnect(String username) {
 
     }
 
     @Override
-    public void show_rejoined(boolean result) {
+    public void show_rejoined(boolean esito) {
 
     }
 
@@ -241,7 +243,12 @@ public class GUI extends UI {
     }
 
     @Override
-    public void showGenericClientResonse(String response) {
+    public void show_unableToReconnect() {
+
+    }
+
+    @Override
+    public void show_GenericClientResonse(String response) {
         // TODO Auto-generated method stub
         System.out.println(response);
     }

@@ -24,6 +24,12 @@ public class RmiServer implements VirtualServer {
 
     private final Queue<ServerQueueObject> callsList;
 
+    /**
+     * Creates the rmi registy
+     * 
+     * @param ipaddress
+     * @throws RemoteException
+     */
     public RmiServer(String ipaddress) throws RemoteException {
         System.setProperty("java.rmi.server.hostname", ipaddress);
         ServerLog.rmiWrite("Server IP " + ipaddress);
@@ -38,22 +44,18 @@ public class RmiServer implements VirtualServer {
     }
 
     @Override
-    public void generateToken(VirtualClient newConnection) {
-        try {
-            newConnection.setRmiToken(Controller.getController().generateToken(newConnection));
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+    public int generateToken(VirtualClient newConnection) {
+        return Controller.getController().generateToken(newConnection);
     }
 
     public VirtualClient getRightConnection(int token) {
         return Controller.getController().getRightConnection(token);
     }
 
-    // @Override
-    public boolean connect(VirtualClient client, String username, Integer token)
+    @Override
+    public boolean connect(VirtualClient client, String username, Integer tempoToken, Integer token)
             throws RemoteException {
-        if (Controller.getController().connect(client, username, token)) {
+        if (Controller.getController().connect(client, username, tempoToken, token )) {
             return true;
         } else {
             return false;
