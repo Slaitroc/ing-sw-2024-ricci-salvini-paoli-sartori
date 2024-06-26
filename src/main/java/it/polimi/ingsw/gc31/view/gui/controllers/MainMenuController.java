@@ -97,22 +97,19 @@ public class MainMenuController extends ViewController {
      * <p>This method performs the following actions based on the current state of {@code step1}:</p>
      * <ul>
      *   <li>If {@code step1} is {@code true}:</li>
-     *   <ul>
      *     <li>Displays the create game menu by setting its visibility and managed properties to {@code true}.</li>
      *     <li>Hides the general menu by setting its visibility and managed properties to {@code false}.</li>
      *     <li>Changes the text of the create game button to "Back".</li>
      *     <li>Updates the visibility of image views to reflect the current menu state.</li>
      *     <li>Sets {@code step1} to {@code false}.</li>
-     *   </ul>
+     *
      *   <li>If {@code step1} is {@code false}:</li>
-     *   <ul>
      *     <li>Hides the create game menu and join game menu by setting their visibility and managed properties to {@code false}.</li>
      *     <li>Displays the general menu by setting its visibility and managed properties to {@code true}.</li>
      *     <li>Changes the text of the create game button to "Create Game".</li>
      *     <li>Updates the visibility of image views to reflect the current menu state.</li>
      *     <li>Sets {@code step1} to {@code true}.</li>
      *   </ul>
-     * </ul>
      * <p>Additionally, this method hides the warning label.</p>
      */
     public void showCreateGameMenu() {

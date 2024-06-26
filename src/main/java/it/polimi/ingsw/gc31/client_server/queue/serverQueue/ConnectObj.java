@@ -8,10 +8,14 @@ import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.utility.DV;
 
+//TODO javaDoc
 public class ConnectObj extends ServerQueueObject {
 
     private final String username;
 
+    /**
+     * @return the username
+     */
     public String getUsername() {
         return username;
     }

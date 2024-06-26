@@ -275,9 +275,9 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
             this.token.setToken(token);
             this.token.setTempToken(token);
             if (this.token.rewriteTokenFile())
-                ui.show_GenericClientResonse("File precedente eliminato");
-            ui.show_GenericClientResonse("Token salvato correttamente nel percorso: ");
-            ui.show_GenericClientResonse(FileUtility.getCodexTokenFilePath().toString());
+                ui.show_GenericClientResponse("File precedente eliminato");
+            ui.show_GenericClientResponse("Token salvato correttamente nel percorso: ");
+            ui.show_GenericClientResponse(FileUtility.getCodexTokenFilePath().toString());
         } else {
             this.token.setTempToken(token);
         }

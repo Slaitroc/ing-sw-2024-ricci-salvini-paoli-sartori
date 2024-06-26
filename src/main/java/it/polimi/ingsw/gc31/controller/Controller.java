@@ -153,6 +153,8 @@ public class Controller extends UnicastRemoteObject implements IController {
      *
      * @param client   the client to connect.
      * @param username the username of the client.
+     * @return false if wrong username, true if connection is successful
+     * @throws RemoteException if general connection error occurs
      */
     // FIXME forse non serve client come parametro
     public boolean connect(VirtualClient client, String username, Integer tempToken, Integer token)
@@ -252,7 +254,9 @@ public class Controller extends UnicastRemoteObject implements IController {
         VirtualClient client = newConnections.get(token);
         if (esito) {
             try {
-                client.sendCommand(new ReJoinedObj(true)); // mandare questo è importante perché la ui fa cose in //
+                synchronized (gameControlList.get(disconnected.get(token).getValue()).clientListLock) {
+                    client.sendCommand(new ReJoinedObj(true, gameControlList.get(disconnected.get(token).getValue()).clientList.keySet().stream().toList()));
+                } // mandare questo è importante perché la ui fa cose in //
                 gameControlList.get(disconnected.get(token).getValue()).reJoinGame(disconnected.get(token).getKey(),
                         newConnections.get(token));
                 // risposta a questo update
@@ -264,7 +268,7 @@ public class Controller extends UnicastRemoteObject implements IController {
             // parameter false is sent
             // to the client
             try {
-                client.sendCommand(new ReJoinedObj(false));
+                client.sendCommand(new ReJoinedObj(false, null));
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -343,6 +347,8 @@ public class Controller extends UnicastRemoteObject implements IController {
     // GETTERS
 
     /**
+     * Controller getter
+     *
      * @return the singleton instance.
      */
     public static synchronized Controller getController() {
@@ -352,6 +358,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     /**
      * Returns a list of the current games.
      *
+     * @param username username of player to whom sent the message
      * @throws RemoteException  if an RMI error occurs.
      * @throws NoGamesException if there are no current games.
      */

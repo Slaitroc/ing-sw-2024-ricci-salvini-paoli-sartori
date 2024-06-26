@@ -5,14 +5,32 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 
-<VBox alignment="CENTER" spacing="20" xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.StartController"
-      stylesheets="@../css/Commons.css" styleClass="stackPane-default">
-    <ImageView>
-        <Image url="@../Images/Misc/CodexLogo.png"/>
-    </ImageView>
-    <MFXButton layoutX="188.0" layoutY="349.0" text="Play The Game"
-               stylesheets="@../css/Buttons.css" styleClass="title-button, rounded-button"
-               onAction="#loadLoginScene"/>
-</VBox>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.StartController" stylesheets="@../css/Commons.css" styleClass="stackPane-default">
+
+    <VBox fx:id="startVbox" alignment="CENTER" spacing="20">
+        <ImageView>
+            <Image url="@../Images/Misc/CodexLogo.png"/>
+        </ImageView>
+        <MFXButton layoutX="188.0" layoutY="349.0" text="Play The Game"
+                   stylesheets="@../css/Buttons.css" styleClass="title-button, rounded-button"
+                   onAction="#loadLoginScene"/>
+    </VBox>
+
+    <VBox fx:id="reconnectChoice" spacing="20" alignment="CENTER" stylesheets="@../css/Buttons.css, @../css/Labels.css" visible="false" managed="false">
+        <Label fx:id="helloName" styleClass="text-label"/>
+        <Label text="It seems you were disconnected from your last game." styleClass="text-label"/>
+        <Label text="Do you want to reconnect?" styleClass="text-label"/>
+        <HBox spacing="50" alignment="CENTER">
+            <MFXButton text="Yes"
+                       styleClass="title-button, rounded-button"
+                       onAction="#reconnect"/>
+            <MFXButton text="No"
+                       styleClass="title-button, rounded-button"
+                       onAction="#doNotReconnect"/>
+        </HBox>
+    </VBox>
+</StackPane>

@@ -4,6 +4,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import it.polimi.ingsw.gc31.utility.DV;
 import it.polimi.ingsw.gc31.view.UI;
 import javafx.application.Platform;
 import javafx.util.Pair;
@@ -29,7 +30,7 @@ public class GUI extends UI {
         GUIApplication.run();
     }
 
-    //Used to Load the GameListScene
+    // Used to Load the GameListScene
     @Override
     public void show_listGame(List<String> listGame) {
         System.out.println("show_listGame called");
@@ -39,7 +40,7 @@ public class GUI extends UI {
         });
     }
 
-    //Used to Load the LobbyScene
+    // Used to Load the LobbyScene
     @Override
     public void show_gameCreated(int gameID) {
         System.out.println("show_gameCreated called");
@@ -50,7 +51,7 @@ public class GUI extends UI {
         });
     }
 
-    //Used to Load the MainMenuScene
+    // Used to Load the MainMenuScene
     @Override
     public void show_validUsername(String username) {
         System.out.println("show_validUsername called");
@@ -63,7 +64,7 @@ public class GUI extends UI {
         Platform.runLater(() -> app.getCurrentController().setMessage("Username already taken!"));
     }
 
-    //Used to Load the LobbyScene
+    // Used to Load the LobbyScene
     @Override
     public void show_joinedToGame(int id, int maxNumberOfPlayers) {
         Platform.runLater(() -> {
@@ -102,7 +103,7 @@ public class GUI extends UI {
 
     @Override
     public void show_invalidAction(String message) {
-        System.out.println("show_invalidAction called");
+        Platform.runLater(() -> app.getCurrentController().setMessage(message));
     }
 
     @Override
@@ -113,10 +114,10 @@ public class GUI extends UI {
 
     @Override
     public void receiveToken(int token, boolean temporary) {
-
+        client.setToken(token, temporary);
     }
 
-    //Used to Load the InGameScene
+    // Used to Load the InGameScene
     @Override
     public void update_ToPlayingState() {
         System.out.println("update_ToPlayingState called");
@@ -144,7 +145,7 @@ public class GUI extends UI {
         Platform.runLater(() -> app.getCurrentController().show_scorePlayer(scores));
     }
 
-    //Change Side of the common objective cards if they are sent on the back
+    // Change Side of the common objective cards if they are sent on the back
     @Override
     public void show_commonObjectiveCard(ObjectiveCard card1, ObjectiveCard card2) {
         System.out.println("show_commonObjectiveCard called");
@@ -167,7 +168,8 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea, Map<Resources, Integer> achievedResources) {
+    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea,
+            Map<Resources, Integer> achievedResources) {
         System.out.println("show_playArea called");
         Platform.runLater(() -> app.getCurrentController().show_playArea(username, playArea, achievedResources));
     }
@@ -216,6 +218,47 @@ public class GUI extends UI {
     }
 
     @Override
+    public void show_heartBeat() {
+        Platform.runLater(() -> app.getCurrentController().showPing());
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void show_wantReconnect(String username) {
+        System.out.println("show_wantReconnect called");
+        Platform.runLater(() -> {
+            client.setUsername(username);
+            app.setUsername(username);
+            app.getCurrentController().setMessage(username);
+        });
+    }
+
+    @Override
+    public void show_rejoined(boolean result, List<String> players) {
+        System.out.println("show_rejoined called: " + result + players);
+        if (!result) {
+            Platform.runLater(() -> app.loadScene(SceneTag.USERNAME));
+        } else {
+            LinkedHashMap<String, Boolean> inGamePlayers = new LinkedHashMap<>();
+            for (String player : players) {
+                inGamePlayers.put(player, true);
+            }
+            Platform.runLater(() -> {
+                app.setPlayerList(inGamePlayers);
+                app.setNumberOfPlayers(players.size());
+                client.getToken().setToken(DV.defaultToken);
+                app.loadScene(SceneTag.GAME);
+                app.setLobbyWindowSize();
+                app.getCurrentController().playerRejoined();
+            });
+        }
+    }
+
+    /**
+     * This method should ask if the player wants to play
+     * another match with the same opponents when the current game is finished
+     */
+    @Override
     public void show_wrongGameSize() {
         System.out.println("show_wrongGameSize called");
         throw new UnsupportedOperationException("This method should never trigger in the GUI");
@@ -227,27 +270,6 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_heartBeat() {
-        Platform.runLater(() -> app.getCurrentController().showPing());
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void show_wantReconnect(String username) {
-
-    }
-
-    @Override
-    public void show_rejoined(boolean result) {
-        System.out.println("show_rejoined called: " + result);
-        Platform.runLater(()-> app.getCurrentController().playerRejoined(result));
-    }
-
-    /**
-     * This method should ask if the player wants to play
-     * another match with the same opponents when the current game is finished
-     */
-    @Override
     public void show_anotherMatch() {
         System.out.println("show_anotherMatch called");
     }
@@ -255,7 +277,7 @@ public class GUI extends UI {
     @Override
     public void show_timerLastPlayerConnected(Integer secondsLeft) {
         System.out.println("show_timerLastPlayerConnected called");
-        Platform.runLater(()-> app.getCurrentController().showCountDown(secondsLeft));
+        Platform.runLater(() -> app.getCurrentController().showCountDown(secondsLeft));
     }
 
     @Override
@@ -266,10 +288,12 @@ public class GUI extends UI {
     @Override
     public void show_requestAnotherMatch() {
 
+        client.getToken().setToken(DV.defaultToken);
+        Platform.runLater(() -> app.loadScene(SceneTag.USERNAME));
     }
 
     @Override
-    public void show_GenericClientResonse(String response) {
+    public void show_GenericClientResponse(String response) {
         // TODO Auto-generated method stub
         System.out.println(response);
     }

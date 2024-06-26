@@ -214,14 +214,14 @@ public class TCPClient implements ClientCommands {
      * "ok" otherwise.
      * In this case the method reads every String sent by the client handler,
      * collect every
-     * String in "list" and then call the method of the ui.
+     * String in “list” and then call the method of the ui.
      *
-     * @throws IOException      is launched if an error is occurred in the readLine
+     * @throws RemoteException  is launched if an error is occurred in the readLine
      *                          method
      * @throws NoGamesException is launched if there are no created games
      */
     @Override
-    public void getGameList() throws IOException, NoGamesException {
+    public void getGameList() throws RemoteException, NoGamesException {
         tcp_sendCommand(new GetGameListObj(this.username), DV.RECIPIENT_CONTROLLER);
     }
 
@@ -395,9 +395,9 @@ public class TCPClient implements ClientCommands {
             this.token.setToken(token);
             this.token.setTempToken(token);
             if (this.token.rewriteTokenFile())
-                ui.show_GenericClientResonse("File precedente eliminato");
-            ui.show_GenericClientResonse("Token salvato correttamente nel percorso: ");
-            ui.show_GenericClientResonse(FileUtility.getCodexTokenFilePath().toString());
+                ui.show_GenericClientResponse("File precedente eliminato");
+            ui.show_GenericClientResponse("Token salvato correttamente nel percorso: ");
+            ui.show_GenericClientResponse(FileUtility.getCodexTokenFilePath().toString());
         } else {
             this.token.setTempToken(token);
         }

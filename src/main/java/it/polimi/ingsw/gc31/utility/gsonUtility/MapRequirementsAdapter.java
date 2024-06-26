@@ -1,7 +1,6 @@
 package it.polimi.ingsw.gc31.utility.gsonUtility;
 
 import com.google.gson.*;
-
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
 import java.lang.reflect.Type;
@@ -20,19 +19,15 @@ import java.util.Map;
 public class MapRequirementsAdapter implements JsonDeserializer<Map<Resources, Integer>>, JsonSerializer<Map<Resources, Integer>> {
 
     /**
-     * Method that deserialize a map of the type Map<Resources, Integer>.
-     *
-     * @param jsonElement                an object of type JsonElement containing
-     *                                   the information to be extracted.
+     * @param jsonElement                an object of type JsonElement containing the information to be extracted.
      * @param type                       class of the object to be deserialized.
      * @param jsonDeserializationContext context
-     * @return it returns the deserialized object. It returns a map of the type
-     *         Map<Resources, Integer>.
-     * @throws JsonParseException
+     * @return The deserialized object. It returns a map of the type Map<Resources, Integer>.
+     * @throws JsonParseException If an error occurs while parsing json
      */
     @Override
     public Map<Resources, Integer> deserialize(JsonElement jsonElement, Type type,
-            JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+                                               JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         Map<Resources, Integer> res = new HashMap<>();
 
         JsonObject jsonObject = jsonElement.getAsJsonObject();
@@ -52,7 +47,7 @@ public class MapRequirementsAdapter implements JsonDeserializer<Map<Resources, I
     public JsonElement serialize(Map<Resources, Integer> resourcesIntegerMap, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonArray jsonArray = new JsonArray();
 
-        for (Map.Entry<Resources, Integer> entry: resourcesIntegerMap.entrySet()) {
+        for (Map.Entry<Resources, Integer> entry : resourcesIntegerMap.entrySet()) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("resource", entry.getKey().toString());
             jsonObject.addProperty("count", entry.getValue());

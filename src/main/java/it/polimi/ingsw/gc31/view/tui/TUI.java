@@ -152,7 +152,7 @@ public class TUI extends UI {
             try {
 
                 playViewUpdate.add(areasCache.get(TUIareas.PLAY_AREA_VIEW));
-            } catch (NullPointerException e) {
+            } catch (NullPointerException ignored) {
 
             }
             playViewUpdate.notify();
@@ -608,7 +608,7 @@ public class TUI extends UI {
                         && relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 2 > overFlowLeft + 1) {
                     res.append(ansi().cursor(relative_y + 1, relative_x + (CARD_LENGTH - CARD_CORNER_LENGTH) + 1)
                             .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2])
-                            .a(resources.get(0).getSymbol()));
+                            .a(resources.getFirst().getSymbol()));
                 }
 
                 // OBJECTIVE AREA
@@ -1734,8 +1734,6 @@ public class TUI extends UI {
      * <code>client.shoListGame(List gameList)</code> ->
      * <p>
      * <code>ui.showListGame(List gameList)</code>
-     *
-     * @Slaitroc
      */
     @Override
     public void show_listGame(List<String> listGame) {
@@ -2129,7 +2127,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_GenericClientResonse(String response) {
+    public void show_GenericClientResponse(String response) {
         printToCmdLineOut(tuiWrite(response));
 
     }
@@ -2142,8 +2140,8 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_rejoined(boolean esito) {
-        if (esito) {
+    public void show_rejoined(boolean result, List<String> players) {
+        if (result) {
             chatBoardThread = chatBoardThreadBuilder();
             chatBoardThread.start();
             state = new PlayingState(this);

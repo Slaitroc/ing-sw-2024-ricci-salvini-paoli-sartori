@@ -93,7 +93,7 @@
                                             prefHeight="460.0" prefWidth="250.0" styleClass="chat-scroll-pane">
                                     <TextFlow fx:id="chatField" prefHeight="200.0" prefWidth="207.0"/>
                                 </ScrollPane>
-                                <MFXTextField fx:id="textField" onKeyPressed="#handleEnterKeyPressed"
+                                <MFXTextField fx:id="textField" onKeyPressed="#handleChatKeyPressed"
                                               prefHeight="49.0" prefWidth="250.0" styleClass="lobby-chat-background"/>
                             </VBox>
                         </StackPane>
@@ -211,7 +211,7 @@
                     </VBox>
                     <VBox alignment="CENTER_LEFT" spacing="25.0" stylesheets="@../css/Buttons.css" accessibleText="false">
                         <TextField fx:id="infoText" text="Choose your secret objective" styleClass="small-button, rounded-button"/>
-                        <TextField fx:id="pingText" />
+                        <Label fx:id="pingText" />
                     </VBox>
                 </HBox>
             </VBox>
