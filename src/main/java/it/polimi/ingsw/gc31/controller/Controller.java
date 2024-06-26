@@ -35,7 +35,6 @@ public class Controller extends UnicastRemoteObject implements IController {
             singleton = new Controller();
         } catch (RemoteException e) {
             // Handle the exception appropriately
-            e.printStackTrace();
             throw new RuntimeException("Failed to create Controller instance.", e);
         }
     }
@@ -48,7 +47,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     protected final Map<Integer, Pair<String, Integer>> disconnected; // token - gameID
 
     protected ConcurrentHashMap<VirtualClient, Long> clientsHeartBeat;
-    private ScheduledExecutorService scheduler;
+    private final ScheduledExecutorService scheduler;
 
     /**
      * This method generates a unique token (from 0 to 999) every time a new client
@@ -187,7 +186,6 @@ public class Controller extends UnicastRemoteObject implements IController {
                 clientsHeartBeat.put(clientConnections, System.currentTimeMillis());
                 ServerLog.controllerWrite("Reconnection request to game with id=" + disconnected.get(token).getValue()
                         + " sent to " + disconnected.get(token).getKey());
-                disconnected.remove(token);
             } else {
                 ServerLog.controllerWrite("First connection of " + username + "with temporary token " + tempToken);
                 VirtualClient newConnectionClient = newConnections.get(tempToken);
