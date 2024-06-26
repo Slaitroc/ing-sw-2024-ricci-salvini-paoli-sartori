@@ -2181,6 +2181,7 @@ public class TUI extends UI {
     public void changeActivePlayArea(String username) {
         activePlayArea = username;
         areasCache.put(TUIareas.PLAY_AREA_VIEW, playAreaAllPlayers.get(username));
+        commandToProcess(TUIcommands.REFRESH, false);
     }
 
     /**

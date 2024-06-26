@@ -47,6 +47,7 @@ public class PlayingState extends TuiState {
         commandsInfo.put("s ->", "Select a card from hand");
         commandsInfo.put("c ->", "Change side select card");
         commandsInfo.put("cs ->", "Change side starter card");
+        commandsInfo.put("cp ->", "Change play area");
         commandsInfo.put("mv -> ", "Move play area");
     }
 
@@ -171,6 +172,7 @@ public class PlayingState extends TuiState {
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
+                        break;
                     } else {
                         tui.printToCmdLineOut("Wrong input!");
                     }
@@ -288,7 +290,7 @@ public class PlayingState extends TuiState {
         tui.printToCmdLineOut(tui.tuiWrite(input));
 
         tui.changeActivePlayArea(input);
-        stateNotify();
+        // stateNotify();
     }
 
     @Override
