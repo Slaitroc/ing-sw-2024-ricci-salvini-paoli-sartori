@@ -15,6 +15,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.*;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.EndGameOnePlayerLeftObj;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.QuitGameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
@@ -161,10 +162,8 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         if (model.isStarted()) {
             ServerLog.gControllerWrite(
                     "Player " + username + " has quited from the game, but the game has already started", idGame);
-            try {
-                model.disconnectPlayer(username);
-            } catch (LastPlayerRemainedException ignored) {
-            }
+            disconnectPlayer(username);
+//                model.disconnectPlayer(username);
             model.notifyAllGameListeners();
         } else {
             ServerLog.gControllerWrite(
@@ -361,10 +360,17 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     }
 
     public void disconnectPlayer(String username) {
-        try {
-            model.disconnectPlayer(username);
-        } catch (LastPlayerRemainedException e) {
-            timerLastPlayerConnected(e.lastConnected);
+        if (model.isStarted()) {
+            try {
+                model.disconnectPlayer(username);
+            } catch (LastPlayerRemainedException e) {
+                timerLastPlayerConnected(e.lastConnected);
+            }
+        } else {
+            try {
+                this.sendCommand(new QuitGameObj(username));
+            } catch (RemoteException ignored) {
+            }
         }
     }
 
