@@ -10,6 +10,6 @@ public class AnotherMatchObj extends ClientQueueObject{
     }
     @Override
     public void execute(UI ui) {
-        //ui.show_requestAnotherMatch();
+        ui.show_requestAnotherMatch();
     }
 }

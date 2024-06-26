@@ -21,7 +21,8 @@ public enum TUIcommands {
     SELECT_CARD("s"),
     CHANGE_SIDE("c"),
     CHANGE_STARTER_SIDE("cs"),
-    MOVE_PLAY_AREA("mv");
+    MOVE_PLAY_AREA("mv"),
+    ANOTHERMATCH("another match");
 
     private final String tag;
 

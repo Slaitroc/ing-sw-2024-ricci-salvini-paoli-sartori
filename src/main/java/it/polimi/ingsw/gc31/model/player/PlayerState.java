@@ -76,7 +76,7 @@ public abstract class PlayerState {
                 player.hand.add(deck.getCard1());
             else if (index == 2)
                 player.hand.add(deck.getCard2());
-        } catch (NullPointerException e) {
+        } catch (NullPointerException | EmptyDeckException e) {
             System.out.println("There was a problem adding card in hand (is card null?)");
             e.getStackTrace();
         }

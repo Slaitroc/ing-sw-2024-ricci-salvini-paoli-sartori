@@ -4,10 +4,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
-import it.polimi.ingsw.gc31.exceptions.LastPlayerRemainedException;
-import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
-import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
+import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.deck.Deck;
@@ -29,6 +26,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameModelTest {
+    // fixme aggiungere il test per quando il deck è empty
     GameModel model;
     Map<String, VirtualClient> clients;
     Object lock = new Object();
@@ -120,7 +118,7 @@ class GameModelTest {
     }
 
     @Test
-    void endTurn() {
+    void endTurn() throws EmptyDeckException {
         FakeGameModel model = new FakeGameModel();
         Deck<ObjectiveCard> deck = new Deck<>(CardType.OBJECTIVE);
         FakePlayer player;
@@ -231,7 +229,7 @@ class GameModelTest {
     }
 
     @Test
-    void endTurnBothDeckEmptyShowDown() {
+    void endTurnBothDeckEmptyShowDown() throws EmptyDeckException {
         utilityInitGame();
         utilitySkipSetupGame();
 
@@ -254,7 +252,7 @@ class GameModelTest {
 
     }
     @Test
-    void endTurnBothDeckEmptyLastTurn() {
+    void endTurnBothDeckEmptyLastTurn() throws EmptyDeckException {
         utilityInitGame();
         utilitySkipSetupGame();
 
@@ -422,7 +420,7 @@ class GameModelTest {
     }
 
     @Test
-    void drawGold() {
+    void drawGold() throws EmptyDeckException {
         for (String username : clients.keySet()) {
             assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawGold(username, 0));
         }
@@ -466,7 +464,7 @@ class GameModelTest {
     }
 
     @Test
-    void drawResource() {
+    void drawResource() throws EmptyDeckException {
         for (String username : clients.keySet()) {
             assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawResource(username, 0));
         }

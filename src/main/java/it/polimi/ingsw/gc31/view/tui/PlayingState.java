@@ -134,8 +134,6 @@ public class PlayingState extends TuiState {
                     } else {
                         tui.printToCmdLineOut("Wrong input!");
                     }
-                    if (input == -1)
-                        break;
                 }
             } catch (NumberFormatException e) {
                 tui.printToCmdLineOut("Wrong input");
@@ -152,12 +150,17 @@ public class PlayingState extends TuiState {
         tui.printToCmdLineOut("-1 -> quit command");
         while (true) {
             try {
-                int input = Integer.parseInt(scanner.nextLine());
-                if (input == -1) {
+                String input = scanner.nextLine();
+                if (input.isBlank()) {
+                    tui.printToCmdLineOut("Wrong input!");
+                    continue;
+                }
+                int inputInt = Integer.parseInt(input);
+                if (inputInt == -1) {
                     break;
                 } else {
 
-                    if (input == 1) {
+                    if (inputInt == 1) {
                         try {
                             tui.getClient().chooseSecretObjective1();
                             tui.commandsCache.put(TUIcommands.CHOOSE_SERCRET_OBJ, true);
@@ -165,7 +168,7 @@ public class PlayingState extends TuiState {
                             e.printStackTrace();
                         }
                         break;
-                    } else if (input == 2) {
+                    } else if (inputInt == 2) {
                         try {
                             tui.getClient().chooseSecretObjective2();
                             tui.commandsCache.put(TUIcommands.CHOOSE_SERCRET_OBJ, true);
@@ -229,12 +232,17 @@ public class PlayingState extends TuiState {
     @Override
     protected void command_selectCard() {
         tui.printToCmdLineOut(tui.tuiWrite("Type the index of the card:"));
-        int input = Integer.parseInt(scanner.nextLine());
         try {
-            tui.getClient().selectCard(input - 1);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            int input = Integer.parseInt(scanner.nextLine());
+            try {
+                tui.getClient().selectCard(input - 1);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (NumberFormatException e) {
+            tui.printToCmdLineOut("Wrong input");
         }
+
         stateNotify();
     }
 
@@ -324,6 +332,31 @@ public class PlayingState extends TuiState {
 
     @Override
     protected void reconnect() {
+    }
+
+    @Override
+    protected void reMatch() {
+        String input;
+        tui.printToCmdLineOut(tui.tuiWrite("Do you want to do another match? (y/n)"));
+        tui.moveCursorToCmdLine();
+        input = scanner.nextLine();
+        while (true) {
+            try {
+                if (input.trim().equals("y")) {
+                    tui.printToCmdLineOut(tui.tuiWrite("okokokoko"));
+                    tui.moveCursorToCmdLine();
+                    tui.getClient().anotherMatchResponse(true);
+                    break;
+                } else if (input.trim().equals("n")) {
+                    tui.getClient().anotherMatchResponse(false);
+                    break;
+                } else {
+                    tui.printToCmdLineOut("Wrong Input");
+                }
+            } catch (RemoteException e) {
+                e.getStackTrace();
+            }
+        }
     }
 
 }

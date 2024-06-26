@@ -154,4 +154,9 @@ public class JoinedToGameState extends TuiState {
     protected void reconnect() {
     }
 
+    @Override
+    protected void reMatch() {
+
+    }
+
 }

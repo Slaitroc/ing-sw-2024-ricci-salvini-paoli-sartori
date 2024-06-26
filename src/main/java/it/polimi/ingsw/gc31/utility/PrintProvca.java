@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.utility;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PrintProvca extends TUI {
-    public PrintProvca(ClientCommands client) {
+    public PrintProvca(ClientCommands client) throws EmptyDeckException {
         super(client);
         System.out.print("\033[H\033[2J");
         System.out.flush();
@@ -28,7 +29,7 @@ public class PrintProvca extends TUI {
         // printAllStarterCards();
     }
 
-    public void printAllObjectiveCard() {
+    public void printAllObjectiveCard() throws EmptyDeckException {
         Deck<ObjectiveCard> deck = new Deck<>(CardType.OBJECTIVE);
         print_ObjectiveCard(
                 deck.draw(), 65, 2, 0, 300, 0, 300);
@@ -76,7 +77,7 @@ public class PrintProvca extends TUI {
                 deck.draw(), 134, 30, 0, 300, 0, 300);
     }
 
-    public void printAllGoldCards() {
+    public void printAllGoldCards() throws EmptyDeckException {
         Deck<PlayableCard> deck = new Deck<>(CardType.GOLD);
         List<PlayableCard> redCard = new ArrayList<>();
         List<PlayableCard> greenCard = new ArrayList<>();
@@ -161,7 +162,7 @@ public class PrintProvca extends TUI {
         }
     }
 
-    public void printAllResourceCards() {
+    public void printAllResourceCards() throws EmptyDeckException {
         Deck<PlayableCard> deck = new Deck<>(CardType.RESOURCE);
         List<PlayableCard> redCard = new ArrayList<>();
         List<PlayableCard> greenCard = new ArrayList<>();
@@ -246,7 +247,7 @@ public class PrintProvca extends TUI {
         }
     }
 
-    public void printAllStarterCards() {
+    public void printAllStarterCards() throws EmptyDeckException {
         Deck<PlayableCard> deck = new Deck<>(CardType.STARTER);
         int row = 1;
         int col = 1;
@@ -269,7 +270,7 @@ public class PrintProvca extends TUI {
         }
     }
 
-    public static void main(String[] args) throws NotBoundException, RemoteException {
+    public static void main(String[] args) throws NotBoundException, RemoteException, EmptyDeckException {
         ClientCommands client = null;
 
         PrintProvca prova = new PrintProvca(client);

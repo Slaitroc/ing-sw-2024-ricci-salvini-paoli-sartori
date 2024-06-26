@@ -76,9 +76,9 @@ public interface GameModelState {
      * @param index    The index of the gold card to be drawn (0->deck, 1->Card1, 2->Card2).
      * @throws IllegalStateOperationException if model is in {@code CreationGameModelState}, {@code SetupGameModelState} or {@code EndGameModelState}
      */
-    void drawGold(GameModel model, String username, int index) throws IllegalStateOperationException;
+    void drawGold(GameModel model, String username, int index) throws IllegalStateOperationException, EmptyDeckException;
 
-    /**
+    /**EmptyDeckException
      * Allows a player to draw a resource card and ends their turn if the draw is successful.
      *
      * @param model    The game model containing the current state of the game.
@@ -86,7 +86,7 @@ public interface GameModelState {
      * @param index    The index of the resource card to be drawn (0->deck, 1->Card1, 2->Card2).
      * @throws IllegalStateOperationException if model is in {@code CreationGameModelState}, {@code SetupGameModelState} or {@code EndGameModelState}
      */
-    void drawResource(GameModel model, String username, int index) throws IllegalStateOperationException;
+    void drawResource(GameModel model, String username, int index) throws IllegalStateOperationException, EmptyDeckException;
 
     /**
      * Allows a player to select a card from their hand.

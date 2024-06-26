@@ -206,4 +206,5 @@ public interface ShowUpdate {
 
     void show_unableToReconnect();
 
+    void show_requestAnotherMatch();
 }

@@ -80,6 +80,8 @@ public class Player {
 
     public boolean drawGold(int index) throws EmptyDeckException, IllegalStateOperationException {
         if (index < 0 || index > 2) return false;
+        else if (board.getDeckGold().hasBeenReplaced() && index == 0)
+            throw new EmptyDeckException();
 
         addToHand(board.getDeckGold(), board.getDeckResource(), index);
         return true;
@@ -93,6 +95,8 @@ public class Player {
      */
     public boolean drawResource(int index) throws EmptyDeckException, IllegalStateOperationException {
         if (index < 0 || index > 2) return false;
+        else if (board.getDeckResource().hasBeenReplaced() && index == 0)
+            throw new EmptyDeckException();
 
         addToHand(board.getDeckResource(), board.getDeckGold(), index);
         return true;
@@ -126,8 +130,12 @@ public class Player {
      *
      */
     public void drawChooseObjectiveCards() {
-        objectiveCardToChoose.add(board.getDeckObjective().draw());
-        objectiveCardToChoose.add(board.getDeckObjective().draw());
+        try {
+            objectiveCardToChoose.add(board.getDeckObjective().draw());
+            objectiveCardToChoose.add(board.getDeckObjective().draw());
+        } catch (EmptyDeckException ignored) {
+
+        }
     }
 
     public List<ObjectiveCard> getChooseSecretObjective() {

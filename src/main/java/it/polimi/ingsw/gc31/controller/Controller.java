@@ -35,7 +35,6 @@ public class Controller extends UnicastRemoteObject implements IController {
             singleton = new Controller();
         } catch (RemoteException e) {
             // Handle the exception appropriately
-            e.printStackTrace();
             throw new RuntimeException("Failed to create Controller instance.", e);
         }
     }
@@ -48,7 +47,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     protected final Map<Integer, Pair<String, Integer>> disconnected; // token - gameID
 
     protected ConcurrentHashMap<VirtualClient, Long> clientsHeartBeat;
-    private ScheduledExecutorService scheduler;
+    private final ScheduledExecutorService scheduler;
 
     /**
      * This method generates a unique token (from 0 to 999) every time a new client
@@ -270,7 +269,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                 e.printStackTrace();
             }
             newConnections.remove(token);
-            newConnections.put(tempToken, client);
+                newConnections.put(tempToken, client);
             disconnected.remove(token);
             // At this point the Controller tries to connect the client as if it was the
             // first connection of it
@@ -329,7 +328,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     /**
      * This method add the client (that just quit a game lobby) to the map
      * tempClients
-     * 
+     *
      * @param username is the username of the player that just quit
      * @param client   is the client that requested to quit from a lobby
      * @throws RemoteException if an error occurs in the rmi connection
@@ -482,7 +481,6 @@ public class Controller extends UnicastRemoteObject implements IController {
 
     public void disconnect(String username, int idGame, int token) {
         disconnected.put(token, new Pair<>(username, idGame));
-        // gameControlList.get(idGame).disconnected.put(token, username);
         ServerLog.controllerWrite("Client disconnected due to timeout");
     }
 
@@ -494,5 +492,9 @@ public class Controller extends UnicastRemoteObject implements IController {
 
             }
         }).start();
+    }
+
+    public void createReMatch(Map<String, VirtualClient> players) {
+        ServerLog.controllerWrite("Another game has been created");
     }
 }
