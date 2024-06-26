@@ -1,10 +1,8 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
-import it.polimi.ingsw.gc31.client_server.Token;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.SaveToken;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
@@ -96,14 +94,6 @@ public class SocketClientHandler implements VirtualClient {
                         try {
                             try {
                                 ConnectObj connectObj = (ConnectObj) obj;
-//                                if (token == DV.defaultToken) {
-//                                    if (Controller.getController().connect(this, connectObj.getUsername(),
-//                                            tempToken, token)) {
-//                                        ServerLog.tcpWrite("New user connected: " + connectObj.getUsername());
-//                                    } else {
-//                                        ServerLog.tcpWrite("New connection refused");
-//                                    }
-//                                    continue;
                                 if (connectObj.getTempToken() == -1) {
                                     Controller.getController().connect(Controller.getController().getRightConnection(tempToken), connectObj.getUsername(), tempToken, connectObj.getToken());
                                     sendCommand(new SaveToken(tempToken, true));
@@ -111,7 +101,6 @@ public class SocketClientHandler implements VirtualClient {
                                     Controller.getController().connect(Controller.getController().getRightConnection(tempToken), connectObj.getUsername(), connectObj.getTempToken(), connectObj.getToken());
                                 }
                                 continue;
-//                                }
                             } catch (ClassCastException e) {
 
                             }
