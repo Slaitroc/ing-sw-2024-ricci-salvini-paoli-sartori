@@ -393,7 +393,7 @@ public class TCPClient implements ClientCommands {
     public void setToken(int token, boolean temporary) {
         if (!temporary) {
             this.token.setToken(token);
-//            this.token.setTempToken(token);
+            this.token.setTempToken(token);
             if (this.token.rewriteTokenFile())
                 ui.show_GenericClientResonse("File precedente eliminato");
             ui.show_GenericClientResonse("Token salvato correttamente nel percorso: ");
