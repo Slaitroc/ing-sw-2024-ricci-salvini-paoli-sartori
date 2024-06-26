@@ -483,7 +483,7 @@ public class Controller extends UnicastRemoteObject implements IController {
 
     public void disconnect(String username, int idGame, int token) {
         disconnected.put(token, new Pair<>(username, idGame));
-        gameControlList.get(idGame).disconnected.put(token, username);
+        // gameControlList.get(idGame).disconnected.put(token, username);
         ServerLog.controllerWrite("Client disconnected due to timeout");
     }
 
