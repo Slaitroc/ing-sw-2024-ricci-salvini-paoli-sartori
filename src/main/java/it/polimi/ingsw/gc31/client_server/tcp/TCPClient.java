@@ -2,7 +2,6 @@ package it.polimi.ingsw.gc31.client_server.tcp;
 
 import java.awt.*;
 import java.net.Socket;
-import java.rmi.RemoteException;
 import java.util.*;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -30,7 +29,6 @@ public class TCPClient implements ClientCommands {
     private final Queue<ClientQueueObject> callsList;
     private Token token;
     private final Timer timer;
-    private boolean firstConnectionDone = false;
 
     /**
      * This method is the constructor of the TCPClient.
@@ -348,6 +346,13 @@ public class TCPClient implements ClientCommands {
         tcp_sendCommand(new ChatMessage(this.username, message), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method sends a private message to a specific player
+     *
+     * @param fromUsername Username of the current user, which is sending the message
+     * @param toUsername   Username of the player the current user is sending the message to
+     * @param message      Content of the message that is being sent
+     */
     @Override
     public void sendChatMessage(String fromUsername, String toUsername, String message) {
         tcp_sendCommand(new ChatMessage(this.username, toUsername, message), DV.RECIPIENT_GAME_CONTROLLER);
@@ -370,8 +375,6 @@ public class TCPClient implements ClientCommands {
      * The first execution is done at the invocation of this method,
      * all the others execution are performed every 5 seconds
      */
-    // FIXME aggiungere metodo close che esegue "timer.cancel();" quando si vuole
-    //  chiudere la connessione
     private void startHeartBeat() {
         long sendTime = (DV.testHB) ? DV.sendTimeTest : DV.sendTime;
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -404,8 +407,13 @@ public class TCPClient implements ClientCommands {
 
     }
 
+    /**
+     * This method sends the ReconnectObj to the Controller
+     *
+     * @param reconnect is true if the player wants to reconnect, false otherwise
+     */
     @Override
-    public void reconnect(boolean reconnect) throws RemoteException {
+    public void reconnect(boolean reconnect) {
         tcp_sendCommand(new ReconnectObj(reconnect, username, token.getTempToken(), token.getToken()),
                 DV.RECIPIENT_CONTROLLER);
     }
@@ -436,6 +444,11 @@ public class TCPClient implements ClientCommands {
         return Integer.parseInt(token.getTokenLine());
     }
 
+    /**
+     * This method returns the Token of the client handler
+     *
+     * @return the Token of the client handler
+     */
     @Override
     public Token getToken() {
         return this.token;

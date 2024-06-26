@@ -11,9 +11,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import it.polimi.ingsw.gc31.utility.DV;
-
 public class TCPServer {
     final ServerSocket listenSocket;
     private final List<SocketClientHandler> handlers = new ArrayList<>();
@@ -27,8 +24,6 @@ public class TCPServer {
     public void TCPserverWrite(String text) {
         System.out.println(DV.ANSI_YELLOW + DV.TCP_SERVER_TAG + DV.ANSI_RESET + text);
     }
-
-    // TODO Gestire meglio eccezioni
 
     /**
      * This method is the constructor of the class. The method creates the TCP
