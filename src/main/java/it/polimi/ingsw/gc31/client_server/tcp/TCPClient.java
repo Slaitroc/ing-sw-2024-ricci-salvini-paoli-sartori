@@ -40,11 +40,13 @@ public class TCPClient implements ClientCommands {
     public TCPClient(final String ipaddress) throws IOException {
         this.username = DV.DEFAULT_USERNAME;
         this.token = new Token();
+        this.token.setTempToken(-1);
         Socket serverSocket = new Socket(ipaddress, DV.TCP_PORT);
         this.input = new ObjectInputStream(serverSocket.getInputStream());
         this.output = new ObjectOutputStream(serverSocket.getOutputStream());
         this.callsList = new LinkedBlockingQueue<>();
         this.timer = new Timer(true);
+
         clientHandler_reader();
         executor();
     }
@@ -170,18 +172,13 @@ public class TCPClient implements ClientCommands {
     /**
      * This method is the first called by the client, it sends the client handler
      * the request to execute the "connect" method. If the server has already this
-     * username ane exception is launched
+     * username an exception is launched
      *
      * @param username is the username set by the client
      */
     @Override
     public void setUsernameCall(String username) {
-        // if (firstConnectionDone)
-        // tcp_sendCommand(new ConnectObj(username, token), DV.RECIPIENT_CONTROLLER);
-        // else {
-        // tcp_sendCommand(new ConnectObj(username), DV.RECIPIENT_CONTROLLER);
-        // firstConnectionDone = true;
-        // }
+        tcp_sendCommand(new ConnectObj(username, this.token.getTempToken(), this.token.getToken()), DV.RECIPIENT_CONTROLLER);
     }
 
     /**
@@ -396,7 +393,7 @@ public class TCPClient implements ClientCommands {
     public void setToken(int token, boolean temporary) {
         if (!temporary) {
             this.token.setToken(token);
-            this.token.setTempToken(token);
+//            this.token.setTempToken(token);
             if (this.token.rewriteTokenFile())
                 ui.show_GenericClientResonse("File precedente eliminato");
             ui.show_GenericClientResonse("Token salvato correttamente nel percorso: ");
@@ -427,7 +424,7 @@ public class TCPClient implements ClientCommands {
 
     @Override
     public boolean hasToken() {
-        if (token.getToken() != -1) {
+        if (token.doesTokenExists()) {
             return true;
         } else {
             return false;

@@ -125,15 +125,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public void setReady(boolean ready) throws RemoteException {
         gameController.sendCommand(new ReadyStatusObj(ready, username));
-
-        // this.ready = ready;
-        // if (ready) {
-        // try {
-        // gameController.checkReady();
-        // } catch (RemoteException | IllegalStateOperationException e) {
-        // e.printStackTrace();
-        // }
-        // }
     }
 
     @Override

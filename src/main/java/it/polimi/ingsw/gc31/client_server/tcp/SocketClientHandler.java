@@ -1,10 +1,12 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
+import it.polimi.ingsw.gc31.client_server.Token;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.SaveToken;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
@@ -34,11 +36,9 @@ public class SocketClientHandler implements VirtualClient {
     private Integer idGame; // viene settata ma ancora non utilizzata
     // private String username;
     private boolean ready = false;
-    private int tempToken;
-    private int token;
-
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
+    private int tempToken;
 
     /**
      * This method is the constructor of the client handler
@@ -53,9 +53,6 @@ public class SocketClientHandler implements VirtualClient {
         this.output = output;
         tcpClient_reader();
         this.tempToken = Controller.getController().generateToken(this);
-
-        // alla prima connessione token = -1;
-        this.token = -1;
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
@@ -99,15 +96,22 @@ public class SocketClientHandler implements VirtualClient {
                         try {
                             try {
                                 ConnectObj connectObj = (ConnectObj) obj;
-                                if (token == DV.defaultToken) {
-                                    if (Controller.getController().connect(this, connectObj.getUsername(),
-                                            tempToken, token)) {
-                                        ServerLog.tcpWrite("New user connected: " + connectObj.getUsername());
-                                    } else {
-                                        ServerLog.tcpWrite("New connection refused");
-                                    }
-                                    continue;
+//                                if (token == DV.defaultToken) {
+//                                    if (Controller.getController().connect(this, connectObj.getUsername(),
+//                                            tempToken, token)) {
+//                                        ServerLog.tcpWrite("New user connected: " + connectObj.getUsername());
+//                                    } else {
+//                                        ServerLog.tcpWrite("New connection refused");
+//                                    }
+//                                    continue;
+                                if (connectObj.getTempToken() == -1) {
+                                    Controller.getController().connect(Controller.getController().getRightConnection(tempToken), connectObj.getUsername(), tempToken, connectObj.getToken());
+                                    sendCommand(new SaveToken(tempToken, true));
+                                } else {
+                                    Controller.getController().connect(Controller.getController().getRightConnection(tempToken), connectObj.getUsername(), connectObj.getTempToken(), connectObj.getToken());
                                 }
+                                continue;
+//                                }
                             } catch (ClassCastException e) {
 
                             }

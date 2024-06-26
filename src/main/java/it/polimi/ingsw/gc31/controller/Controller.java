@@ -270,7 +270,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                 e.printStackTrace();
             }
             newConnections.remove(token);
-            newConnections.put(tempToken, client);
+                newConnections.put(tempToken, client);
             disconnected.remove(token);
             // At this point the Controller tries to connect the client as if it was the
             // first connection of it
