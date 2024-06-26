@@ -1,22 +1,25 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
-import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import java.awt.*;
+import java.net.Socket;
+import java.rmi.RemoteException;
+import java.util.*;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import it.polimi.ingsw.gc31.client_server.Token;
+import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.NoTokenException;
 import it.polimi.ingsw.gc31.utility.DV;
+import it.polimi.ingsw.gc31.utility.FileUtility;
 import it.polimi.ingsw.gc31.view.UI;
 
-import java.awt.*;
-import it.polimi.ingsw.gc31.client_server.Token;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.rmi.RemoteException;
-import java.util.*;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class TCPClient implements ClientCommands {
     private final ObjectInputStream input;
@@ -216,7 +219,7 @@ public class TCPClient implements ClientCommands {
      * collect every
      * String in "list" and then call the method of the ui.
      *
-     * @throws RemoteException  is launched if an error is occurred in the readLine
+     * @throws IOException      is launched if an error is occurred in the readLine
      *                          method
      * @throws NoGamesException is launched if there are no created games
      */
@@ -391,17 +394,16 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void setToken(int token, boolean temporary) {
-        // usato per settaro solo il token definitivo e non quello temporaneo
-        this.token.setToken(token);
-        // if (!temporary) {
-        // this.token.setToken(token);
-        // if (this.token.rewriteTokenFile())
-        // ui.showGenericClientResonse("File precedente eliminato");
-        // ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
-        // ui.showGenericClientResonse(FileUtility.getCodexTokenFilePath().toString());
-        // } else {
-        // this.token.setTempToken(token);
-        // }
+        if (!temporary) {
+            this.token.setToken(token);
+            this.token.setTempToken(token);
+            if (this.token.rewriteTokenFile())
+                ui.show_GenericClientResonse("File precedente eliminato");
+            ui.show_GenericClientResonse("Token salvato correttamente nel percorso: ");
+            ui.show_GenericClientResonse(FileUtility.getCodexTokenFilePath().toString());
+        } else {
+            this.token.setTempToken(token);
+        }
 
     }
 
