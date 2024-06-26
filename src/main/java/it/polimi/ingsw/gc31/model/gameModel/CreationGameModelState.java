@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
+import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.player.Player;
 
@@ -17,12 +18,15 @@ public class CreationGameModelState implements GameModelState {
         Map<String, Player> players = createPlayers(model, clients.keySet());
 
         for (Player player : players.values()) {
-            player.setStarterCard();
-            player.drawGold(0);
-            player.drawResource(0);
-            player.drawResource(0);
+            try {
+                player.setStarterCard();
+                player.drawGold(0);
+                player.drawResource(0);
+                player.drawResource(0);
 
-            player.drawChooseObjectiveCards();
+                player.drawChooseObjectiveCards();
+            } catch (EmptyDeckException ignored) {
+            }
         }
 
         // The GoldCard1 and GoldCard1 are drawn on the board
@@ -30,8 +34,11 @@ public class CreationGameModelState implements GameModelState {
         // THe ResourceCar1 and ResourceCard2 are drawn on the board
         model.getBoard().getDeckResource().refill();
         // The Secrete Objective 1 and the Secrete Objective 2 are drawn
-        model.commonObjectives.add(model.getBoard().getDeckObjective().draw());
-        model.commonObjectives.add(model.getBoard().getDeckObjective().draw());
+        try {
+            model.commonObjectives.add(model.getBoard().getDeckObjective().draw());
+            model.commonObjectives.add(model.getBoard().getDeckObjective().draw());
+        } catch (EmptyDeckException ignored) {
+        }
 
         for (String username : clients.keySet()) {
             model.getBoard().updateScore(username, 0);

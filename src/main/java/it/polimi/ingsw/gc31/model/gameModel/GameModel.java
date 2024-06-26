@@ -205,7 +205,7 @@ public class GameModel {
      * @throws IllegalStateOperationException if the game is not in the right state
      *                                        for drawing a gold card
      */
-    public void drawGold(String username, int index) throws IllegalStateOperationException {
+    public void drawGold(String username, int index) throws IllegalStateOperationException, EmptyDeckException {
         gameState.drawGold(this, username, index);
 //        listeners.values().forEach(listener -> listener.notifyGoldDeckListener(this));
 //        listeners.get(username).notifyHandListener(this);
@@ -219,7 +219,7 @@ public class GameModel {
      * @throws IllegalStateOperationException if the game is not in the right state
      *                                        for drawing a resource card
      */
-    public void drawResource(String username, int index) throws IllegalStateOperationException {
+    public void drawResource(String username, int index) throws IllegalStateOperationException, EmptyDeckException {
         gameState.drawResource(this, username, index);
 //        listeners.values().forEach(listener -> listener.notifyResourcedDeckListener(this));
 //        listeners.get(username).notifyHandListener(this);

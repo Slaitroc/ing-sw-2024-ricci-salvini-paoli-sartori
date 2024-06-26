@@ -234,6 +234,8 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             model.drawGold(username, index);
         } catch (IllegalStateOperationException e) {
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
+        } catch (EmptyDeckException e) {
+            sendUpdateToClient(username, new ShowInvalidActionObj("Gold deck is empty"));
         }
         model.notifyAllGameListeners();
     }
@@ -247,6 +249,8 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             model.drawResource(username, index);
         } catch (IllegalStateOperationException e) {
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
+        } catch (EmptyDeckException e) {
+            sendUpdateToClient(username, new ShowInvalidActionObj("Resource deck is empty"));
         }
         model.notifyAllGameListeners();
     }

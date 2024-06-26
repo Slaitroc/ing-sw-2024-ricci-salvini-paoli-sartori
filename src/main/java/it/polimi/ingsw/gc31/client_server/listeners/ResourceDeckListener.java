@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.client_server.listeners;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowGoldDeckObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowResourceDeckObj;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
@@ -30,11 +31,19 @@ public class ResourceDeckListener extends Listener {
      */
     @Override
     public void update(GameModel model, String username) {
+        PlayableCard firstCardDeck;
+        if (model.getBoard().getDeckResource().hasBeenReplaced()) {
+            firstCardDeck = null;
+        } else {
+            firstCardDeck = model.getBoard().getDeckResource().peekCard();
+        }
+
         ClientQueueObject clientQueueObject = new ShowResourceDeckObj(
-                gsonTranslater.toJson(model.getBoard().getDeckResource().peekCard(), PlayableCard.class),
+                gsonTranslater.toJson(firstCardDeck, PlayableCard.class),
                 gsonTranslater.toJson(model.getBoard().getDeckResource().peekCard1(), PlayableCard.class),
                 gsonTranslater.toJson(model.getBoard().getDeckResource().peekCard2(), PlayableCard.class)
         );
-            sendUpdate(model, username, clients.get(username), clientQueueObject);
+
+        sendUpdate(model, username, clients.get(username), clientQueueObject);
     }
 }

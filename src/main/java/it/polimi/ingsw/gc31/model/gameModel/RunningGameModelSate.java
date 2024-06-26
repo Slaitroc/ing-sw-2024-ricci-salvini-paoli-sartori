@@ -3,10 +3,7 @@ package it.polimi.ingsw.gc31.model.gameModel;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
-import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
-import it.polimi.ingsw.gc31.exceptions.LastPlayerRemainedException;
-import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
+import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.utility.DV;
 
@@ -43,14 +40,14 @@ public class RunningGameModelSate implements GameModelState {
     }
 
     @Override
-    public void drawGold(GameModel model, String username, int index) throws IllegalStateOperationException {
+    public void drawGold(GameModel model, String username, int index) throws IllegalStateOperationException, EmptyDeckException {
         if (model.getPlayers().get(username).drawGold(index)) {
             model.endTurn();
         }
     }
 
     @Override
-    public void drawResource(GameModel model, String username, int index) throws IllegalStateOperationException {
+    public void drawResource(GameModel model, String username, int index) throws IllegalStateOperationException, EmptyDeckException {
         if (model.getPlayers().get(username).drawResource(index)) {
             model.endTurn();
         }
