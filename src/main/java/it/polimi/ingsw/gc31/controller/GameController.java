@@ -236,7 +236,11 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         } catch (IllegalStateOperationException e) {
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
-        model.notifyAllGameListeners();
+        model.getListeners().values().forEach(listener -> listener.notifyHandListener(model));
+        model.getListeners().values().forEach(listener -> listener.notifyGoldDeckListener(model));
+        model.getListeners().values().forEach(listener -> listener.notifyResourcedDeckListener(model));
+        model.getListeners().values().forEach(listener -> listener.notifyTurnListener(model));
+        model.getListeners().values().forEach(listener -> listener.notifyPlayerScoreListener(model));
     }
 
     /**
@@ -249,7 +253,11 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         } catch (IllegalStateOperationException e) {
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
-        model.notifyAllGameListeners();
+        model.getListeners().values().forEach(listener -> listener.notifyHandListener(model));
+        model.getListeners().values().forEach(listener -> listener.notifyGoldDeckListener(model));
+        model.getListeners().values().forEach(listener -> listener.notifyResourcedDeckListener(model));
+        model.getListeners().values().forEach(listener -> listener.notifyTurnListener(model));
+        model.getListeners().values().forEach(listener -> listener.notifyPlayerScoreListener(model));
     }
 
 
@@ -259,7 +267,8 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         } catch (IllegalStateOperationException e) {
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
-        model.notifyAllGameListeners();
+        model.getListeners().values().forEach(listener -> listener.notifyChooseObjectiveListener(model));
+        model.getListeners().values().forEach(listener -> listener.notifyObjectiveCardListener(model));
     }
 
     public void play(String username, Point point) {
@@ -268,7 +277,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         } catch (IllegalStateOperationException | IllegalPlaceCardException e) {
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
-        model.notifyAllGameListeners();
+        model.getListeners().get(username).notifyPlayAreaListener(model);
+        model.getListeners().get(username).notifyHandListener(model);
+        model.getListeners().values().forEach(listener -> listener.notifyPlayerScoreListener(model));
+        model.getListeners().values().forEach(listener -> listener.notifyTurnListener(model));
     }
 
     public void playStarter(String username) {
@@ -281,7 +293,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             sendUpdateToClient(username,
                     new ShowInvalidActionObj("You must first choose your secret objective"));
         }
-        model.notifyAllGameListeners();
+        model.getListeners().get(username).notifyPlayAreaListener(model);
+        model.getListeners().values().forEach(listener -> listener.notifyPlayerScoreListener(model));
+        model.getListeners().values().forEach(listener -> listener.notifyTurnListener(model));
     }
 
     public void selectCard(String username, int index) {
@@ -292,7 +306,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         } catch (WrongIndexSelectedCard e) {
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
-        model.notifyAllGameListeners();
+        model.getListeners().values().forEach(listener -> listener.notifyHandListener(model));
     }
 
     public void changeSide(String username) {
@@ -301,7 +315,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         } catch (IllegalStateOperationException e) {
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
-        model.notifyAllGameListeners();
+        model.getListeners().values().forEach(listener -> listener.notifyHandListener(model));
     }
 
     public void changeStarterSide(String username) {
@@ -310,7 +324,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         } catch (IllegalStateOperationException e) {
             sendUpdateToClient(username, new ShowInvalidActionObj(e.getMessage()));
         }
-        model.notifyAllGameListeners();
+        model.getListeners().values().forEach(listener -> listener.notifyStarterCardListener(model));
     }
 
     private void notifyListPlayers() {
