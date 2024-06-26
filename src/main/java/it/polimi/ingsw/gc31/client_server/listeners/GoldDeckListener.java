@@ -27,8 +27,15 @@ public class GoldDeckListener extends Listener {
      */
     @Override
     public void update(GameModel model, String username) {
+        PlayableCard firstCardDeck;
+        if (model.getBoard().getDeckGold().hasBeenReplaced()) {
+            firstCardDeck = null;
+        } else {
+            firstCardDeck = model.getBoard().getDeckGold().peekCard();
+        }
+
         ClientQueueObject clientQueueObject = new ShowGoldDeckObj(
-                gsonTranslater.toJson(model.getBoard().getDeckGold().peekCard(), PlayableCard.class),
+                gsonTranslater.toJson(firstCardDeck, PlayableCard.class),
                 gsonTranslater.toJson(model.getBoard().getDeckGold().peekCard1(), PlayableCard.class),
                 gsonTranslater.toJson(model.getBoard().getDeckGold().peekCard2(), PlayableCard.class)
         );

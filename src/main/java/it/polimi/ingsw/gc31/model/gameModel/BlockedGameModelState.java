@@ -79,5 +79,6 @@ public class BlockedGameModelState implements GameModelState{
     @Override
     public void reconnectPlayer(GameModel model, String username) {
         model.setGameState(savedGameState);
+        model.executeReconnectPlayer(username);
     }
 }

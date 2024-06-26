@@ -205,7 +205,7 @@ public class GameModel {
      * @throws IllegalStateOperationException if the game is not in the right state
      *                                        for drawing a gold card
      */
-    public void drawGold(String username, int index) throws IllegalStateOperationException {
+    public void drawGold(String username, int index) throws IllegalStateOperationException, EmptyDeckException {
         gameState.drawGold(this, username, index);
 //        listeners.values().forEach(listener -> listener.notifyGoldDeckListener(this));
 //        listeners.get(username).notifyHandListener(this);
@@ -219,7 +219,7 @@ public class GameModel {
      * @throws IllegalStateOperationException if the game is not in the right state
      *                                        for drawing a resource card
      */
-    public void drawResource(String username, int index) throws IllegalStateOperationException {
+    public void drawResource(String username, int index) throws IllegalStateOperationException, EmptyDeckException {
         gameState.drawResource(this, username, index);
 //        listeners.values().forEach(listener -> listener.notifyResourcedDeckListener(this));
 //        listeners.get(username).notifyHandListener(this);
@@ -283,7 +283,7 @@ public class GameModel {
         playerConnection.put(username, true);
 
         ServerLog.gControllerWrite("The player " + username + " has rejoined game", idGame);
-        notifyAllGameListeners();
+//        notifyAllGameListeners();
     }
 
     /**
@@ -300,24 +300,7 @@ public class GameModel {
      */
     protected synchronized void executeDisconnectPlayer(String username) throws LastPlayerRemainedException {
         playerConnection.put(username, false);
-        if (turnPlayer == null) {
-            try {
-                chooseSecretObjective(username, 0);
-                playStarter(username);
-            } catch (IllegalStateOperationException | ObjectiveCardNotChosenException ignored) {
 
-            }
-            ServerLog.gControllerWrite("Default chooses for " + username, idGame);
-        } else {
-            if (getCurrPlayer().getUsername().equals(username)) {
-                try {
-                    endTurn();
-                } catch (IllegalStateOperationException ignored) {
-
-                }
-            }
-        }
-        ServerLog.gControllerWrite("Player " + username + " has disconnected", idGame);
         int numberConnected = 0;
         String lastConnected = null;
         synchronized (playerConnection) {
@@ -328,6 +311,37 @@ public class GameModel {
                 }
             }
         }
+
+        if (turnPlayer == null) {
+            try {
+                chooseSecretObjective(username, 0);
+                playStarter(username);
+            } catch (IllegalStateOperationException | ObjectiveCardNotChosenException ignored) {
+
+            }
+            ServerLog.gControllerWrite("Default chooses for " + username, idGame);
+        } else {
+            if (numberConnected == 1 && getCurrPlayer().getUsername().equals(username)) {
+                if (getPlayers().get(username).infoState().equals("placed") && !board.getDeckGold().hasBeenReplaced()) {
+                    try {
+                        drawGold(username, 0);
+                    } catch (IllegalStateOperationException | EmptyDeckException ignored) {
+                    }
+                } else if (getPlayers().get(username).infoState().equals("placed") && !board.getDeckResource().hasBeenReplaced()) {
+                    try {
+                        drawResource(username, 0);
+                    } catch (IllegalStateOperationException | EmptyDeckException ignored) {
+                    }
+                }
+            }
+            if (getCurrPlayer().getUsername().equals(username)) {
+                try {
+                    endTurn();
+                } catch (IllegalStateOperationException ignored) {
+                }
+            }
+        }
+        ServerLog.gControllerWrite("Player " + username + " has disconnected", idGame);
         if (numberConnected == 1) {
             ServerLog.gControllerWrite("Player "+lastConnected+" is the last player connected left", idGame);
             setGameState(new BlockedGameModelState(this, gameState));

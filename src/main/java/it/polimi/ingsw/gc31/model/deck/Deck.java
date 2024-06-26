@@ -24,6 +24,7 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
  * @param <T> the type of cards in the deck, must extend the Card interface
  */
 public class Deck<T extends Card> {
+    private boolean hasBeenReplaced;
     private Queue<T> deck;
     private T card1;
     private T card2;
@@ -32,6 +33,7 @@ public class Deck<T extends Card> {
         List<T> tempDeck = new ArrayList<>();
         this.card1 = null;
         this.card2 = null;
+        this.hasBeenReplaced = false;
         Reader fileReader;
         InputStream is;
         Type type;
@@ -99,8 +101,12 @@ public class Deck<T extends Card> {
      */
     public void replaceDeck(Queue<T> deck) {
         this.deck = deck;
+        hasBeenReplaced = true;
     }
 
+    /**
+     * @return a queue of cards that represent the deck
+     */
     /*
      * Return a queue of cards that represent the deck
      */
@@ -116,8 +122,6 @@ public class Deck<T extends Card> {
     public T draw() throws EmptyDeckException {
         if (deck.isEmpty())
             throw new EmptyDeckException();
-//        T card = deck.poll();
-//        card.changeSide();
         return deck.poll();
     }
 
@@ -198,5 +202,12 @@ public class Deck<T extends Card> {
      */
     public boolean isEmpty() {
         return deck.isEmpty();
+    }
+
+    /**
+     * @return returns true if the deck was replaced after it was empty, otherwise return false
+     */
+    public boolean hasBeenReplaced() {
+        return hasBeenReplaced;
     }
 }

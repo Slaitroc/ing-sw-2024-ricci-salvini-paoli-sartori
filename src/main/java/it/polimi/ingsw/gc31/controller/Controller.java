@@ -189,6 +189,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                 clientsHeartBeat.put(clientConnections, System.currentTimeMillis());
                 ServerLog.controllerWrite("Reconnection request to game with id=" + disconnected.get(token).getValue()
                         + " sent to " + disconnected.get(token).getKey());
+                disconnected.remove(token);
             } else {
                 ServerLog.controllerWrite("First connection of " + username + "with temporary token " + tempToken);
                 VirtualClient newConnectionClient = newConnections.get(tempToken);
@@ -272,7 +273,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                 e.printStackTrace();
             }
             newConnections.remove(token);
-            newConnections.put(tempToken, client);
+                newConnections.put(tempToken, client);
             disconnected.remove(token);
             // At this point the Controller tries to connect the client as if it was the
             // first connection of it
@@ -301,7 +302,7 @@ public class Controller extends UnicastRemoteObject implements IController {
             tempClients.remove(username);
             sendUpdateToClient(client, new GameCreatedObj(gameControlList.size() - 1));
             client.setGameController(gameControlList.getLast());
-            ServerLog.controllerWrite("A new game has been created with id: " + (gameControlList.size() - 1));
+            ServerLog.controllerWrite("A new game has been created with id: " + gameControlList.size());
         }
     }
 
@@ -487,7 +488,6 @@ public class Controller extends UnicastRemoteObject implements IController {
 
     public void disconnect(String username, int idGame, int token) {
         disconnected.put(token, new Pair<>(username, idGame));
-        // gameControlList.get(idGame).disconnected.put(token, username);
         ServerLog.controllerWrite("Client disconnected due to timeout");
     }
 

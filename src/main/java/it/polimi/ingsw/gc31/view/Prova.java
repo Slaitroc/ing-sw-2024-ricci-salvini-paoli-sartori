@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.view;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
@@ -13,7 +14,7 @@ import it.polimi.ingsw.gc31.view.tui.TUI;
 import org.fusesource.jansi.AnsiConsole;
 
 public class Prova {
-    public static void main(String[] args) throws IllegalStateOperationException {
+    public static void main(String[] args) throws IllegalStateOperationException, EmptyDeckException {
         Board board = new Board();
         Player player1 = new Player(PawnColor.BLUE, "sslvo", board);
 
@@ -38,7 +39,7 @@ public class Prova {
             AnsiConsole.systemInstall();
         }
 
-        public void printGold() {
+        public void printGold() throws EmptyDeckException {
             Deck<PlayableCard> deck = new Deck<>(CardType.GOLD);
 
             StringBuilder res = new StringBuilder();
@@ -59,7 +60,7 @@ public class Prova {
             System.out.println(res);
         }
 
-        public void printStarter() {
+        public void printStarter() throws EmptyDeckException {
             Deck<PlayableCard> deck = new Deck<>(CardType.STARTER);
 
             StringBuilder res = new StringBuilder();

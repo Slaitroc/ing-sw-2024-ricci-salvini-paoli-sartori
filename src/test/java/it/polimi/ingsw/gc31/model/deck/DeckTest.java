@@ -79,7 +79,7 @@ class DeckTest {
     }
 
     @Test
-    void replaceDeck() {
+    void replaceDeck() throws EmptyDeckException {
         Deck<PlayableCard> goldDeck = new Deck<>(CardType.GOLD);
         Deck<PlayableCard> resourceDeck = new Deck<>(CardType.RESOURCE);
 

@@ -21,7 +21,7 @@ public class ConnectObj extends ServerQueueObject {
     }
 
     private final int token;
-    private final int tempToken;
+    private int tempToken;
 
 //    public int getToken() {
 //        return token;
@@ -68,5 +68,16 @@ public class ConnectObj extends ServerQueueObject {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getToken(){
+        return this.token;
+    }
+
+    public int getTempToken(){
+        return this.tempToken;
+    }
+    public void setTempToken(int tempToken){
+        this.tempToken = tempToken;
     }
 }
