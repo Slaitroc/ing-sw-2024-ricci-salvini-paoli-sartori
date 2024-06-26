@@ -2,7 +2,6 @@ package it.polimi.ingsw.gc31.client_server.tcp;
 
 import java.awt.*;
 import java.net.Socket;
-import java.rmi.RemoteException;
 import java.util.*;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
