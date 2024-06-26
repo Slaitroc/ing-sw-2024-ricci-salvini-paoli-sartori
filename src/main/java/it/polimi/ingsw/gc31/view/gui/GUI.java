@@ -260,7 +260,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void showGenericClientResonse(String response) {
+    public void showGenericClientResponse(String response) {
         // TODO Auto-generated method stub
         System.out.println(response);
     }

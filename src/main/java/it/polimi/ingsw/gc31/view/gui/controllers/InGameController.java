@@ -15,8 +15,8 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.*;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -270,11 +270,12 @@ public class InGameController extends ViewController {
 
     private ResolutionSizes size;
 
+    boolean shortcutDetected = false;
     boolean firstPlayer = true;
     boolean timerAlreadyStarted = false;
     private int seconds = 0;
     private int millis;
-    public TextField pingText;
+    public Label pingText;
     @FXML
     public TextField infoText;
     @FXML
@@ -324,10 +325,14 @@ public class InGameController extends ViewController {
             setClipToImageView(handCard);
         }
 
-        controls.getItems().add("Flip Card:     \tRight Click");
-        controls.getItems().add("Draw Card:     \tLeft Click");
-        controls.getItems().add("Place Card:    \tHold Left Click");
-        controls.getItems().add("Autofill chat: \tTab in chat");
+        controls.getItems().add("Flip Card:     \t\tRight Click");
+        controls.getItems().add("Draw Card:     \t\tLeft Click");
+        controls.getItems().add("Place Card:    \t\tHold Left Click");
+        controls.getItems().add("Autofill chat: \t\tTab in chat");
+        controls.getItems().add("Show Menu:     \tctrl + m / ctrl + s");
+        controls.getItems().add("Show Controls: \tctrl + c");
+        controls.getItems().add("Quit:          \t\tctrl + q");
+        controls.getItems().add("Fullscreen:    \t\tctrl + f");
 
         //Initializes the tabs titles and disable the not used ones
         List<Tab> tabs = new ArrayList<>(Arrays.asList(tab2, tab3, tab4));
@@ -396,13 +401,12 @@ public class InGameController extends ViewController {
         addHandCardDragListener(handCard3);
 
         assignPion();
-        textField.addEventFilter(KeyEvent.KEY_PRESSED, this::handleEnterKeyPressed);
+        textField.addEventFilter(KeyEvent.KEY_PRESSED, this::handleChatKeyPressed);
+        motherPane.addEventFilter(KeyEvent.KEY_PRESSED, this::handleShortcuts);
         changeResolution();
 
-        Timeline ping = new Timeline(new KeyFrame(Duration.millis(1), event -> {
-            millis++;
-        }));
-        ping.setCycleCount(Timeline.INDEFINITE);  // Esegui il timer indefinitamente
+        Timeline ping = new Timeline(new KeyFrame(Duration.millis(1), event -> millis++));
+        ping.setCycleCount(Timeline.INDEFINITE);
         ping.play();
     }
 
@@ -530,7 +534,8 @@ public class InGameController extends ViewController {
     public void playerStateInfo(String username, String info) {
         //System.out.println("Hello, I am player " + app.getUsername() + " and I received the message that " + username + " is in state " + info);
         if (username.equals(app.getUsername())) {
-            showInstructions(info);
+            //showInstructions(info);
+            infoText.setText(info);
             //playingPlayer1Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
             if (firstPlayer) {
                 noirPion1.setVisible(true);
@@ -598,26 +603,26 @@ public class InGameController extends ViewController {
     @Override
     public void showWinner(String username) {
         if (username.equals(app.getUsername())) {
-            showHidePane(youWon);
+            showPane(youWon);
             youWon.setMouseTransparent(true);
         } else {
             winnerLabel.setText(username + "won");
-            showHidePane(otherWinner);
+            showPane(otherWinner);
             otherWinner.setMouseTransparent(true);
         }
 
     }
 
     @Override
-    public void showCountDown(Integer secondsLeft){
-        if(!timerAlreadyStarted){
+    public void showCountDown(Integer secondsLeft) {
+        if (!timerAlreadyStarted) {
             timerAlreadyStarted = true;
             timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
                 seconds++;
                 infoText.setText("Game Paused: " + formatTime(secondsLeft - seconds));
                 if (secondsLeft == seconds) timeline.stop();
             }));
-            timeline.setCycleCount(Timeline.INDEFINITE);  // Esegui il timer indefinitamente
+            timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.play();
         }
     }
@@ -630,8 +635,8 @@ public class InGameController extends ViewController {
 
     @Override
     public void showPing() {
-        pingText.setText("Ping: " + millis + "ms");
-        millis=0;
+        pingText.setText("Ping: " + (millis - 2000) + "ms");
+        millis = 0;
     }
 
     //MOUSE COMMANDS:___________________________________________________________________________________________________
@@ -752,13 +757,54 @@ public class InGameController extends ViewController {
      * @param event The key event triggering the text send.
      */
     @FXML
-    private void handleEnterKeyPressed(KeyEvent event) {
+    private void handleChatKeyPressed(KeyEvent event) {
+        System.out.println("handleEnterKeyPressed called with value: " + event.getCode());
         sendMessage(event, textField);
     }
 
+    private void handleShortcuts(KeyEvent event) {
+        if(event.getCode() == KeyCode.CONTROL) {
+            shortcutDetected = !shortcutDetected;
+            event.consume();
+        }
+        else if(shortcutDetected && event.getCode() == KeyCode.C) {
+            showHideControls();
+            shortcutDetected = false;
+            event.consume();
+        }
+        else if(shortcutDetected && event.getCode() == KeyCode.M || event.getCode() == KeyCode.S) {
+            showHideMenu();
+            shortcutDetected = false;
+            event.consume();
+        }
+        else if(shortcutDetected && event.getCode() == KeyCode.R) {
+            changeResolution();
+            shortcutDetected = false;
+            event.consume();
+        }
+        else if(shortcutDetected && event.getCode() == KeyCode.Q) {
+            quit();
+            shortcutDetected = false;
+            event.consume();
+        }
+        else if(shortcutDetected && event.getCode() == KeyCode.F) {
+            app.setFullScreen();
+            shortcutDetected = false;
+            event.consume();
+        }
+
+    }
+
     public void showHideMenu() {
-        showHidePane(menuPane);
-        showHidePane(settingsVBox);
+        if(controlsVBox.isVisible()){
+            hidePane(controlsVBox);
+            showPane(settingsVBox);
+        }
+        else {
+            showHidePane(menuPane);
+            showHidePane(settingsVBox);
+        }
+        hidePane(controlsVBox);
     }
 
     public void setFullScreen() {
@@ -766,8 +812,15 @@ public class InGameController extends ViewController {
     }
 
     public void showHideControls() {
-        showHidePane(settingsVBox);
-        showHidePane(controlsVBox);
+        if(menuPane.isVisible()){
+            showHidePane(settingsVBox);
+            showHidePane(controlsVBox);
+        }
+        else {
+            showPane(menuPane);
+            showPane(controlsVBox);
+        }
+
     }
 
     /**
@@ -1128,6 +1181,16 @@ public class InGameController extends ViewController {
         pane.setVisible(!pane.isVisible());
         pane.setMouseTransparent(!pane.isMouseTransparent());
     }
+    private void showPane(Pane pane) {
+        pane.setManaged(true);
+        pane.setVisible(true);
+        pane.setMouseTransparent(false);
+    }
+    private void hidePane(Pane pane) {
+        pane.setManaged(false);
+        pane.setVisible(false);
+        pane.setMouseTransparent(true);
+    }
 
     /**
      * Assigns a pion image to each player based on their name and updates the corresponding image view.
@@ -1190,19 +1253,11 @@ public class InGameController extends ViewController {
         }
     }
 
-    private void showInstructions(String info) {
-        switch (info) {
-            case "notplaced" -> infoText.setText("Place a card on your board");
-            case "placed" -> infoText.setText("Draw a card");
-            case "waiting" -> infoText.setText("Wait for your turn");
-        }
-    }
-
     private String formatTime(int seconds) {
         int hrs = seconds / 3600;
-        int mins = (seconds % 3600) / 60;
+        int minutes = (seconds % 3600) / 60;
         int secs = seconds % 60;
-        return String.format("%02d:%02d:%02d", hrs, mins, secs);
+        return String.format("%02d:%02d:%02d", hrs, minutes, secs);
     }
 
     //INNER CLASSES:____________________________________________________________________________________________________
