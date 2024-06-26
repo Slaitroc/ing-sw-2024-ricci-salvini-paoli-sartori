@@ -199,7 +199,7 @@ public interface ShowUpdate {
 
     void show_wantReconnect(String username);
 
-    void show_rejoined(boolean esito);
+    void show_rejoined(boolean result);
     void show_anotherMatch();
 
     void show_timerLastPlayerConnected(Integer secondsLeft);

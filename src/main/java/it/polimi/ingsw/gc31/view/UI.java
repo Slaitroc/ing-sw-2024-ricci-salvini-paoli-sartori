@@ -26,6 +26,6 @@ public abstract class UI implements ShowUpdate {
      */
     public abstract void runUI();
 
-    public abstract void showGenericClientResponse(String response);
+    public abstract void show_GenericClientResponse(String response);
 
 }

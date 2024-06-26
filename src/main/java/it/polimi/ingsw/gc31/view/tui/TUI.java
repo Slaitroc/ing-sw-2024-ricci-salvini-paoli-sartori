@@ -2125,21 +2125,23 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_GenericClientResonse(String response) {
+    public void show_GenericClientResponse(String response) {
         printToCmdLineOut(tuiWrite(response));
 
     }
 
     @Override
     public void show_wantReconnect(String username) {
+        System.out.println("show_wantReconnect called");
         getClient().setUsername(username);
         commandToProcess(TUIcommands.RECONNECT, false);
         int i = 0;
     }
 
     @Override
-    public void show_rejoined(boolean esito) {
-        if (esito) {
+    public void show_rejoined(boolean result) {
+        System.out.println("show_rejoined called");
+        if (result) {
             chatBoardThread = chatBoardThreadBuilder();
             chatBoardThread.start();
             state = new PlayingState(this);

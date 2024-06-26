@@ -113,7 +113,7 @@ public class GUI extends UI {
 
     @Override
     public void receiveToken(int token, boolean temporary) {
-
+        client.setToken(token, temporary);
     }
 
     //Used to Load the InGameScene
@@ -216,17 +216,6 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_wrongGameSize() {
-        System.out.println("show_wrongGameSize called");
-        throw new UnsupportedOperationException("This method should never trigger in the GUI");
-    }
-
-    @Override
-    public void show_quitFromGame(String username) {
-        System.out.println("show_quitFromGame called");
-    }
-
-    @Override
     public void show_heartBeat() {
         Platform.runLater(() -> app.getCurrentController().showPing());
         // TODO Auto-generated method stub
@@ -248,6 +237,17 @@ public class GUI extends UI {
      * another match with the same opponents when the current game is finished
      */
     @Override
+    public void show_wrongGameSize() {
+        System.out.println("show_wrongGameSize called");
+        throw new UnsupportedOperationException("This method should never trigger in the GUI");
+    }
+
+    @Override
+    public void show_quitFromGame(String username) {
+        System.out.println("show_quitFromGame called");
+    }
+
+    @Override
     public void show_anotherMatch() {
         System.out.println("show_anotherMatch called");
     }
@@ -264,7 +264,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void showGenericClientResponse(String response) {
+    public void show_GenericClientResponse(String response) {
         // TODO Auto-generated method stub
         System.out.println(response);
     }
