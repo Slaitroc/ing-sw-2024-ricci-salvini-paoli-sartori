@@ -96,12 +96,12 @@ public class EndGameModelState implements GameModelState {
                 for (String username : model.clients.keySet()) {
                     ServerLog.controllerWrite("sto mandando a "+username);
                     ClientQueueObject clientQueueObject1 = new GameIsOverObj(usernameWinner, model.getBoard().getPlayersScore());
-                    ClientQueueObject clientQueueObject2 = new AnotherMatchObj(username);
+                    //ClientQueueObject clientQueueObject2 = new AnotherMatchObj(username);
                     new Thread(
                             () -> {
                                 try {
                                     model.clients.get(username).sendCommand(clientQueueObject1);
-                                    model.clients.get(username).sendCommand(clientQueueObject2);
+                                    //model.clients.get(username).sendCommand(clientQueueObject2);
                                 } catch (RemoteException ignored) {
                                 }
                             }
