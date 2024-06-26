@@ -8,8 +8,6 @@ import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 public abstract class UI implements ShowUpdate {
     /**
      * The client interacting with the UI
-     * 
-     * @Slaitroc
      */
     protected ClientCommands client;
     // /**
@@ -24,15 +22,10 @@ public abstract class UI implements ShowUpdate {
     // protected boolean inGame;
 
     /**
-     * Run a new scene/view. Should be using {@link #inGame} to choose between
-     * scenes/views.
-     * 
-     * 
-     * 
-     * @Slaitroc
+     * Run a new scene/view.
      */
     public abstract void runUI();
 
-    public abstract void showGenericClientResonse(String response);
+    public abstract void showGenericClientResponse(String response);
 
 }

@@ -155,6 +155,8 @@ public class Controller extends UnicastRemoteObject implements IController {
      *
      * @param client   the client to connect.
      * @param username the username of the client.
+     * @return false if wrong username, true if connection is successful
+     * @throws RemoteException if general connection error occurs
      */
     public boolean connect(VirtualClient client, String username, Integer token)
             throws RemoteException {
@@ -299,6 +301,8 @@ public class Controller extends UnicastRemoteObject implements IController {
     // GETTERS
 
     /**
+     * Controller getter
+     *
      * @return the singleton instance.
      */
     public static synchronized Controller getController() {
@@ -308,6 +312,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     /**
      * Returns a list of the current games.
      *
+     * @param username username of player to whom sent the message
      * @throws RemoteException  if an RMI error occurs.
      * @throws NoGamesException if there are no current games.
      */
@@ -340,7 +345,7 @@ public class Controller extends UnicastRemoteObject implements IController {
         return newConnections.get(token);
     }
 
-    // Heartbeat resources
+    // Heartbeat resourcesmain/java
     // FIXME spostare in cima attributi e metodi
     protected ConcurrentHashMap<VirtualClient, Long> clientsHeartBeat;
     private final ScheduledExecutorService scheduler;

@@ -1723,8 +1723,6 @@ public class TUI extends UI {
      * <code>client.shoListGame(List gameList)</code> ->
      * <p>
      * <code>ui.showListGame(List gameList)</code>
-     *
-     * @Slaitroc
      */
     @Override
     public void show_listGame(List<String> listGame) {
@@ -2113,7 +2111,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void showGenericClientResonse(String response) {
+    public void showGenericClientResponse(String response) {
         printToCmdLineOut(tuiWrite(response));
 
     }

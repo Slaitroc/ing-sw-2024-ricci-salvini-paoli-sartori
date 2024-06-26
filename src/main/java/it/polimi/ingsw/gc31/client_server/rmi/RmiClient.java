@@ -292,7 +292,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
             try {
                 Files.createDirectories(folderPath);
             } catch (IOException e) {
-                ui.showGenericClientResonse("Errore nel salvataggio del token!");
+                ui.showGenericClientResponse("Errore nel salvataggio del token!");
                 e.printStackTrace();
             }
         } else {
@@ -326,8 +326,8 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
-        ui.showGenericClientResonse(filePath.toString());
+        ui.showGenericClientResponse("Token salvato correttamente nel percorso: ");
+        ui.showGenericClientResponse(filePath.toString());
 
     }
 

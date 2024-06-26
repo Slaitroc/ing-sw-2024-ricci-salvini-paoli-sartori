@@ -404,12 +404,12 @@ public class TCPClient implements ClientCommands {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            ui.showGenericClientResonse("File esistente eliminato.");
+            ui.showGenericClientResponse("File esistente eliminato.");
         }
         try {
             Files.createDirectories(folderPath);
         } catch (IOException e) {
-            ui.showGenericClientResonse("Errore nel salvataggio del token!");
+            ui.showGenericClientResponse("Errore nel salvataggio del token!");
             e.printStackTrace();
         }
         try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE,
@@ -418,8 +418,8 @@ public class TCPClient implements ClientCommands {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
-        ui.showGenericClientResonse(filePath.toString());
+        ui.showGenericClientResponse("Token salvato correttamente nel percorso: ");
+        ui.showGenericClientResponse(filePath.toString());
     }
 
     @Override

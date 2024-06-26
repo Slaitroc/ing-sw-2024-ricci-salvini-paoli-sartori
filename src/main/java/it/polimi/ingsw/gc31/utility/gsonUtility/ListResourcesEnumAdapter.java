@@ -19,14 +19,11 @@ import java.util.List;
  */
 public class ListResourcesEnumAdapter implements JsonDeserializer<List<Resources>> {
     /**
-     * Method that deserialize a map of the type List<Resources>.
-     *
      * @param jsonElement                contains the information to be extracted
      * @param type                       class of the object to be deserialized
      * @param jsonDeserializationContext context
-     * @return it returns the deserialized object. It returns a list of the type
-     *         List<Resources>
-     * @throws JsonParseException
+     * @return it returns the deserialized object. It returns a list of the type {@link List}<{@link Resources}>
+     * @throws JsonParseException If an error occurs while parsing json
      */
     @Override
     public List<Resources> deserialize(JsonElement jsonElement, Type type,

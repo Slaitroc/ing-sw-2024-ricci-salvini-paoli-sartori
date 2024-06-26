@@ -28,7 +28,6 @@ public class PlayerScoreListener extends Listener {
      *
      * @param model    The game model from which to extract the data,
      * @param username The username of the player whose play area is being updated.
-     * @throws RemoteException if there is a remote communication error.
      */
     @Override
     public void update(GameModel model, String username) {
