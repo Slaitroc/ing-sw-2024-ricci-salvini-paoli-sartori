@@ -61,8 +61,8 @@ public class Controller extends UnicastRemoteObject implements IController {
         while (newConnections.containsKey(token)) {
             token = (int) (Math.random() * 1000);
         }
-        // this.newConnections.put(token, newConnection);
-        // sendToken(newConnection, token, true);
+        this.newConnections.put(token, newConnection);
+        // FIX
 
         return token;
     }
@@ -76,13 +76,6 @@ public class Controller extends UnicastRemoteObject implements IController {
      */
     public void sendToken(VirtualClient newConnection, int token, boolean temporary) {
         try {
-            // Integer getToken = null;
-            // for (Map.Entry<Integer, VirtualClient> t : newConnections.entrySet()) {
-            // if (t.getValue().equals(newConnection)) {
-            // getToken = t.getKey();
-            // }
-
-            // }
             newConnection.sendCommand(new SaveToken(token, temporary));
         } catch (RemoteException e) {
             ServerLog.controllerWrite("The token was not sent correctly");
@@ -161,7 +154,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @throws PlayerNicknameAlreadyExistsException if the username is already in
      *                                              use.
      */
-    public boolean connect(VirtualClient client, String username, Integer token)
+    public boolean connect(VirtualClient client, String username, Integer tempToken, Integer token)
             throws RemoteException {
         if (token == -1) {
             int newToken = generateToken(client);

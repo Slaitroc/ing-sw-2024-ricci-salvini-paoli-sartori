@@ -4,19 +4,16 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 
 import it.polimi.ingsw.gc31.utility.DV;
 
-
 public class TCPServer {
     final ServerSocket listenSocket;
-    private final List<SocketClientHandler> handlers = new ArrayList<>();
+    // private final List<SocketClientHandler> handlers = new ArrayList<>();
 
     /**
-     * This method writes on System.Out a specific type of string characterizing the TCP communications
+     * This method writes on System.Out a specific type of string characterizing the
+     * TCP communications
      *
      * @param text is the text to write on System.Out
      */
@@ -27,12 +24,15 @@ public class TCPServer {
     // TODO Gestire meglio eccezioni
 
     /**
-     * This method is the constructor of the class. The method creates the TCP server and writes on System.Out the
+     * This method is the constructor of the class. The method creates the TCP
+     * server and writes on System.Out the
      * ip of the server and the port used
      *
      * @param ipaddress is the ip of the server
-     * @throws NumberFormatException if a string does not have the appropriate type to be converted in number
-     * @throws IOException if an error occurs during the ServerSocket creation
+     * @throws NumberFormatException if a string does not have the appropriate type
+     *                               to be converted in number
+     * @throws IOException           if an error occurs during the ServerSocket
+     *                               creation
      */
     public TCPServer(String ipaddress) throws NumberFormatException, IOException {
         this.listenSocket = new ServerSocket(DV.TCP_PORT, 50, InetAddress.getByName("0.0.0.0"));
@@ -45,7 +45,8 @@ public class TCPServer {
     /**
      * This method is invoked right after the creation of the TCP server.
      * It creates a thread that accept all the new TCP connections arriving.
-     * For every connection detected the method creates a SocketClientHandler for the specific client and add it to
+     * For every connection detected the method creates a SocketClientHandler for
+     * the specific client and add it to
      * the list of all the handlers.
      */
     public void runServer() {
@@ -62,7 +63,7 @@ public class TCPServer {
                     ObjectInputStream socketRx = new ObjectInputStream(clientSocket.getInputStream());
 
                     SocketClientHandler handler = new SocketClientHandler(socketRx, socketTx);
-                    this.handlers.add(handler);
+                    // this.handlers.add(handler);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

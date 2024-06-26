@@ -45,8 +45,8 @@ public class RmiServer implements VirtualServer {
     }
 
     @Override
-    public void generateToken(VirtualClient newConnection) {
-        Controller.getController().generateToken(newConnection);
+    public int generateToken(VirtualClient newConnection) {
+        return Controller.getController().generateToken(newConnection);
     }
 
     public VirtualClient getRightConnection(int token) {

@@ -128,37 +128,46 @@ public class InitState extends TuiState {
     protected void setUsername() {
         String input;
         ClientCommands client = tui.getClient();
-        if (!rejoin) {
-            try {
-                int token = tui.getClient().readToken();
-                tui.printToCmdLineOut("Try rejoin with previous token: " + token + "?");
-                while (true) {
-                    input = scanner.nextLine();
-                    if (input.trim().equals("y")) {
-                        try {
-                            rejoin = true;
-                            client.setUsernameCall(null, token);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                    } else if (input.trim().equals("n")) {
-                        rejoin = true;
-                        askUsername(-1);
-                        break;
-                    } else {
-                        tui.printToCmdLineOut("Wrong Input");
-                    }
-                }
-            } catch (NumberFormatException | NoTokenException e) {
-                tui.printToCmdLineOut(tui.tuiWrite("Invalid previous token"));
-                rejoin = true;
-                askUsername(-1);
+        // if (!rejoin) {
+        // try {
+        // int token = tui.getClient().readToken();
+        // tui.printToCmdLineOut("Try rejoin with previous token: " + token + "?");
+        // while (true) {
+        // input = scanner.nextLine();
+        // if (input.trim().equals("y")) {
+        // try {
+        // rejoin = true;
+        // client.setUsernameCall(null, token);
+        // } catch (IOException e) {
+        // e.printStackTrace();
+        // }
+        // break;
+        // } else if (input.trim().equals("n")) {
+        // rejoin = true;
+        // askUsername(-1);
+        // break;
+        // } else {
+        // tui.printToCmdLineOut("Wrong Input");
+        // }
+        // }
+        // } catch (NumberFormatException | NoTokenException e) {
+        // tui.printToCmdLineOut(tui.tuiWrite("Invalid previous token"));
+        // rejoin = true;
+        // askUsername(-1);
 
-                // e.printStackTrace();
-            }
-        } else {
-            askUsername(-1);
+        // // e.printStackTrace();
+        // }
+        // } else {
+        // askUsername(-1);
+        // }
+        String message = "Type your username:";
+        tui.printToCmdLineOut(tui.tuiWrite(message));
+        tui.moveCursorToCmdLine();
+        input = scanner.nextLine();
+        try {
+            tui.getClient().setUsernameCall(input.trim(), tui.getClient().getToken().getTempToken());
+        } catch (IOException f) {
+            f.printStackTrace();
         }
 
     }

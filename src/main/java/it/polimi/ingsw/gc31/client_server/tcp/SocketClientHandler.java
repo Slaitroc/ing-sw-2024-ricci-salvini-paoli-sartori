@@ -31,6 +31,7 @@ public class SocketClientHandler implements VirtualClient {
     private Integer idGame; // viene settata ma ancora non utilizzata
     // private String username;
     private boolean ready = false;
+    private int tempToken;
 
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
@@ -47,7 +48,7 @@ public class SocketClientHandler implements VirtualClient {
         this.input = input;
         this.output = output;
         tcpClient_reader();
-        Controller.getController().generateToken(this);
+        this.tempToken = Controller.getController().generateToken(this);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
@@ -93,7 +94,7 @@ public class SocketClientHandler implements VirtualClient {
                                 ConnectObj connectObj = (ConnectObj) obj;
                                 if (connectObj.getToken() == DV.defaultToken) {
                                     if (Controller.getController().connect(this, connectObj.getUsername(),
-                                            connectObj.getToken())) {
+                                            tempToken)) {
                                         ServerLog.tcpWrite("New user connected: " + connectObj.getUsername());
                                     } else {
                                         ServerLog.tcpWrite("New connection refused");

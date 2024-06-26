@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.client_server.interfaces;
 
+import it.polimi.ingsw.gc31.client_server.Token;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.NoTokenException;
 import it.polimi.ingsw.gc31.view.UI;
@@ -59,6 +60,8 @@ public interface ClientCommands {
     void setToken(int token, boolean temporary);
 
     boolean hasToken();
+
+    Token getToken();
 
     int readToken() throws NumberFormatException, NoTokenException;
 

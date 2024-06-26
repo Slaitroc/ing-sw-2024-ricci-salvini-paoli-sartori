@@ -1,4 +1,4 @@
-package it.polimi.ingsw.gc31.client_server.interfaces;
+package it.polimi.ingsw.gc31.client_server;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -15,33 +15,16 @@ import it.polimi.ingsw.gc31.utility.FileUtility;
 public class Token {
 
     private int token;
-    private int tempToken;
-
-    public int getTempToken() {
-        return tempToken;
-    }
-
-    public void setTempToken(int tempToken) {
-        this.tempToken = tempToken;
-    }
-
-    public int getToken() {
-        return token;
-    }
-
-    public void setToken(int token) {
-        this.token = token;
-    }
-
-    public Token(int token) {
-        this.token = token;
-    }
+    private int tempToken = 0;
 
     public Token() {
         try {
             this.token = Integer.parseInt(getTokenLine());
         } catch (NumberFormatException e) {
             e.printStackTrace();
+            this.token = -1;
+            // TODO
+            // eliminare il file
         } catch (NoTokenException e) {
             this.token = -1;
         }
@@ -110,5 +93,25 @@ public class Token {
             e.printStackTrace();
         }
         return alreadyExists;
+    }
+
+    public int getTempToken() {
+        return tempToken;
+    }
+
+    public void setTempToken(int tempToken) {
+        this.tempToken = tempToken;
+    }
+
+    public int getToken() {
+        return token;
+    }
+
+    public void setToken(int token) {
+        this.token = token;
+    }
+
+    public Token(int token) {
+        this.token = token;
     }
 }

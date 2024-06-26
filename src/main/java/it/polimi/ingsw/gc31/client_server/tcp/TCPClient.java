@@ -5,26 +5,25 @@ import java.io.*;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.*;
-import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import it.polimi.ingsw.gc31.client_server.Token;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.NoTokenException;
 import it.polimi.ingsw.gc31.utility.DV;
-import it.polimi.ingsw.gc31.utility.FileUtility;
 import it.polimi.ingsw.gc31.view.UI;
 
-public class TCPClient extends Token implements ClientCommands {
+public class TCPClient implements ClientCommands {
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
     private String username;
     private Integer idGame;
     private UI ui;
     private final Queue<ClientQueueObject> callsList;
-    private Token token = new Token();
+    private Token token;
     private Timer timer;
     private boolean firstConnectionDone = false;
 
@@ -35,6 +34,7 @@ public class TCPClient extends Token implements ClientCommands {
     @SuppressWarnings("resource")
     public TCPClient(final String ipaddress) throws IOException {
         this.username = DV.DEFAULT_USERNAME;
+        this.token = new Token();
         Socket serverSocket = new Socket(ipaddress, DV.TCP_PORT);
         this.input = new ObjectInputStream(serverSocket.getInputStream());
         this.output = new ObjectOutputStream(serverSocket.getOutputStream());
@@ -385,15 +385,15 @@ public class TCPClient extends Token implements ClientCommands {
      */
     @Override
     public void setToken(int token, boolean temporary) {
-        if (!temporary) {
-            this.token.setToken(token);
-            if (this.token.rewriteTokenFile())
-                ui.showGenericClientResonse("File precedente eliminato");
-            ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
-            ui.showGenericClientResonse(FileUtility.getCodexTokenFilePath().toString());
-        } else {
-            this.token.setTempToken(token);
-        }
+        // if (!temporary) {
+        // this.token.setToken(token);
+        // if (this.token.rewriteTokenFile())
+        // ui.showGenericClientResonse("File precedente eliminato");
+        // ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
+        // ui.showGenericClientResonse(FileUtility.getCodexTokenFilePath().toString());
+        // } else {
+        // this.token.setTempToken(token);
+        // }
 
     }
 
@@ -414,6 +414,11 @@ public class TCPClient extends Token implements ClientCommands {
     @Override
     public int readToken() throws NumberFormatException, NoTokenException {
         return Integer.parseInt(token.getTokenLine());
+    }
+
+    @Override
+    public Token getToken() {
+        return this.token;
     }
 
 }

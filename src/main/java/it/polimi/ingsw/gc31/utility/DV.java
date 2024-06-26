@@ -113,7 +113,7 @@ public class DV {
     // Token
     public final static int defaultToken = 0000;
 
-    public final static boolean forceIP = false;
+    public final static boolean forceIP = true;
     public final static String forcedIP = "192.168.192.228";
 
     public final static boolean testHB = false;

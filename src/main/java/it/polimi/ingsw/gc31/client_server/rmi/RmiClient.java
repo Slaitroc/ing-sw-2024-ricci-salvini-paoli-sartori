@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gc31.client_server.rmi;
 
+import it.polimi.ingsw.gc31.client_server.Token;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
@@ -41,14 +42,13 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         this.server = (VirtualServer) LocateRegistry.getRegistry(ipaddress, DV.RMI_PORT)
                 .lookup("VirtualServer");
         this.server.RMIserverWrite("New connection detected from ip: " + server.getClientIP());
-        this.server.generateToken(this);
         this.token = new Token();
+        token.setTempToken(this.server.generateToken(this));
         this.username = DV.DEFAULT_USERNAME;
         this.controller = null;
         this.callsList = new LinkedBlockingQueue<>();
         timer = new Timer(true);
         new Thread(this::executor).start();
-
     }
 
     @Override
@@ -273,7 +273,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         this.token.setToken(token);
     }
 
-    @Override
+    @Override // save token??? // FIX
     public void setToken(int token, boolean temporary) {
         if (!temporary) {
             this.token.setToken(token);
@@ -303,6 +303,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public int readToken() throws NumberFormatException, NoTokenException {
         return Integer.parseInt(token.getTokenLine());
+    }
+
+    @Override
+    public Token getToken() {
+        return this.token;
     }
 
 }
