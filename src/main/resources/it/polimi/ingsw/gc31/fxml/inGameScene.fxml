@@ -209,6 +209,10 @@
                             </ImageView>
                         </HBox>
                     </VBox>
+                    <VBox alignment="CENTER_LEFT" spacing="25.0" stylesheets="@../css/Buttons.css" accessibleText="false">
+                        <TextField fx:id="infoText" text="Choose your secret objective" styleClass="small-button, rounded-button"/>
+                        <TextField fx:id="pingText" />
+                    </VBox>
                 </HBox>
             </VBox>
 

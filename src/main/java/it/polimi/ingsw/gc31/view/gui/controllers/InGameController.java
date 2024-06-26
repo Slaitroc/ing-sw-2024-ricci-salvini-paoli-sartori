@@ -7,6 +7,8 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.view.gui.ResolutionSizes;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.SnapshotParameters;
@@ -14,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.*;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -23,6 +26,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.util.Duration;
 import javafx.util.Pair;
 
 import java.awt.*;
@@ -215,6 +219,8 @@ public class InGameController extends ViewController {
     public ImageView colorPion2;
     @FXML
     public ImageView colorPion1;
+
+    //Main cards ImageViews_____________________________________________________________________________________________
     //List of hand cards for each player
     private List<ImageView> handCards;
     @FXML
@@ -257,7 +263,6 @@ public class InGameController extends ViewController {
 
     @FXML
     public Button playStarterButton;
-
     @FXML
     public VBox initialChoice;
 
@@ -266,6 +271,14 @@ public class InGameController extends ViewController {
     private ResolutionSizes size;
 
     boolean firstPlayer = true;
+    boolean timerAlreadyStarted = false;
+    private int seconds = 0;
+    private int millis;
+    public TextField pingText;
+    @FXML
+    public TextField infoText;
+    @FXML
+    private Timeline timeline;
 
 
     /* NOTE
@@ -385,6 +398,12 @@ public class InGameController extends ViewController {
         assignPion();
         textField.addEventFilter(KeyEvent.KEY_PRESSED, this::handleEnterKeyPressed);
         changeResolution();
+
+        Timeline ping = new Timeline(new KeyFrame(Duration.millis(1), event -> {
+            millis++;
+        }));
+        ping.setCycleCount(Timeline.INDEFINITE);  // Esegui il timer indefinitamente
+        ping.play();
     }
 
 
@@ -421,16 +440,20 @@ public class InGameController extends ViewController {
     }
 
     @Override
-    public void show_scorePlayer(LinkedHashMap<String, Integer> scores) {
-        for (Map.Entry<String, Integer> player : scores.entrySet()) {
+    public void show_scorePlayer(LinkedHashMap<String, Pair<Integer, Boolean>> scores) {
+        for (Map.Entry<String, Pair<Integer, Boolean>> player : scores.entrySet()) {
             if (player.getKey().equals(app.getUsername())) {
-                player1Points.setText(player.getValue().toString());
+                player1Points.setText(player.getValue().getKey().toString());
+                playingPlayer1Icon.setVisible(player.getValue().getValue());
             } else if (player.getKey().equals(otherPlayers.getFirst())) {
-                player2Points.setText(player.getValue().toString());
+                player2Points.setText(player.getValue().getKey().toString());
+                playingPlayer2Icon.setVisible(player.getValue().getValue());
             } else if (player.getKey().equals(otherPlayers.get(1))) {
-                player3Points.setText(player.getValue().toString());
+                player3Points.setText(player.getValue().getKey().toString());
+                playingPlayer3Icon.setVisible(player.getValue().getValue());
             } else if (player.getKey().equals(otherPlayers.get(2))) {
-                player4Points.setText(player.getValue().toString());
+                player4Points.setText(player.getValue().getKey().toString());
+                playingPlayer4Icon.setVisible(player.getValue().getValue());
             }
         }
     }
@@ -491,32 +514,42 @@ public class InGameController extends ViewController {
 
     @Override
     public void show_objectiveCard(String username, ObjectiveCard objectiveCard) {
-        if (username.equals(app.getUsername())) setCardImage(objectiveCard, secretObjective);
+        if (username.equals(app.getUsername())) {
+            playStarterButton.setVisible(true);
+            playStarterButton.setMouseTransparent(false);
+            secretObj1.setManaged(false);
+            secretObj1.setVisible(false);
+            secretObj2.setManaged(false);
+            secretObj2.setVisible(false);
+            infoText.setText("Choose side of your starter card");
+            setCardImage(objectiveCard, secretObjective);
+        }
     }
 
     @Override
     public void playerStateInfo(String username, String info) {
         //System.out.println("Hello, I am player " + app.getUsername() + " and I received the message that " + username + " is in state " + info);
         if (username.equals(app.getUsername())) {
-            playingPlayer1Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            showInstructions(info);
+            //playingPlayer1Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
             if (firstPlayer) {
                 noirPion1.setVisible(true);
                 firstPlayer = false;
             }
         } else if (username.equals(otherPlayers.getFirst())) {
-            playingPlayer2Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            //playingPlayer2Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
             if (firstPlayer) {
                 noirPion2.setVisible(true);
                 firstPlayer = false;
             }
         } else if (username.equals(otherPlayers.get(1))) {
-            playingPlayer3Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            //playingPlayer3Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
             if (firstPlayer) {
                 noirPion3.setVisible(true);
                 firstPlayer = false;
             }
         } else if (username.equals(otherPlayers.get(2))) {
-            playingPlayer4Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            //playingPlayer4Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
             if (firstPlayer) {
                 noirPion4.setVisible(true);
                 firstPlayer = false;
@@ -529,7 +562,6 @@ public class InGameController extends ViewController {
     public void updateChat(String username, String message) {
         Text usernameText = new Text(username + ": ");
         populateChat(username, message, usernameText);
-
     }
 
     @Override
@@ -576,6 +608,31 @@ public class InGameController extends ViewController {
 
     }
 
+    @Override
+    public void showCountDown(Integer secondsLeft){
+        if(!timerAlreadyStarted){
+            timerAlreadyStarted = true;
+            timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+                seconds++;
+                infoText.setText("Game Paused: " + formatTime(secondsLeft - seconds));
+                if (secondsLeft == seconds) timeline.stop();
+            }));
+            timeline.setCycleCount(Timeline.INDEFINITE);  // Esegui il timer indefinitamente
+            timeline.play();
+        }
+    }
+
+    @Override
+    public void playerRejoined(boolean result) {
+        timerAlreadyStarted = false;
+        seconds = 0;
+    }
+
+    @Override
+    public void showPing() {
+        pingText.setText("Ping: " + millis + "ms");
+        millis=0;
+    }
 
     //MOUSE COMMANDS:___________________________________________________________________________________________________
 
@@ -664,12 +721,6 @@ public class InGameController extends ViewController {
             } else {
                 client.chooseSecretObjective2();
             }
-            playStarterButton.setVisible(true);
-            playStarterButton.setMouseTransparent(false);
-            secretObj1.setManaged(false);
-            secretObj1.setVisible(false);
-            secretObj2.setManaged(false);
-            secretObj2.setVisible(false);
         } catch (RemoteException e) {
             show_ServerCrashWarning(e.toString());
             e.getStackTrace();
@@ -1139,6 +1190,20 @@ public class InGameController extends ViewController {
         }
     }
 
+    private void showInstructions(String info) {
+        switch (info) {
+            case "notplaced" -> infoText.setText("Place a card on your board");
+            case "placed" -> infoText.setText("Draw a card");
+            case "waiting" -> infoText.setText("Wait for your turn");
+        }
+    }
+
+    private String formatTime(int seconds) {
+        int hrs = seconds / 3600;
+        int mins = (seconds % 3600) / 60;
+        int secs = seconds % 60;
+        return String.format("%02d:%02d:%02d", hrs, mins, secs);
+    }
 
     //INNER CLASSES:____________________________________________________________________________________________________
     /*

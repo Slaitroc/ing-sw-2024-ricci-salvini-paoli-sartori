@@ -52,7 +52,6 @@ public class TCPServer {
     public void runServer() {
         TCPserverWrite("Server created");
         new Thread(() -> {
-
             while (true) {
                 try {
                     Socket clientSocket = this.listenSocket.accept();
@@ -67,9 +66,7 @@ public class TCPServer {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
-
         }).start();
     }
 }
