@@ -338,6 +338,7 @@ public class InGameController extends ViewController {
         List<Tab> tabs = new ArrayList<>(Arrays.asList(tab2, tab3, tab4));
         int k = 0;
         for (String player : app.getPlayerList().keySet()) {
+            System.out.println("player " + player);
             if (!player.equals(app.getUsername())) {
                 otherPlayers.add(player);
                 //System.out.println("Adding other player: " + player);
@@ -628,15 +629,24 @@ public class InGameController extends ViewController {
     }
 
     @Override
-    public void playerRejoined(boolean result) {
+    public void playerRejoined() {
         timerAlreadyStarted = false;
         seconds = 0;
+        initialChoice.setVisible(false);
+        initialChoice.setManaged(false);
+        initialChoice.setMouseTransparent(true);
+        player1PlayAreaGrid.setVisible(true);
     }
 
     @Override
     public void showPing() {
         pingText.setText("Ping: " + (millis - 2000) + "ms");
         millis = 0;
+    }
+
+    @Override
+    public void setMessage(String message){
+        infoText.setText(message);
     }
 
     //MOUSE COMMANDS:___________________________________________________________________________________________________
@@ -726,6 +736,22 @@ public class InGameController extends ViewController {
             } else {
                 client.chooseSecretObjective2();
             }
+        } catch (RemoteException e) {
+            show_ServerCrashWarning(e.toString());
+            e.getStackTrace();
+        }
+    }
+
+    /**
+     * Plays the starter card than hides the initial choice VBox and shows the player1PlayAreaGrid.
+     */
+    public void playStarter() {
+        try {
+            client.playStarter();
+            initialChoice.setVisible(false);
+            initialChoice.setManaged(false);
+            initialChoice.setMouseTransparent(true);
+            player1PlayAreaGrid.setVisible(true);
         } catch (RemoteException e) {
             show_ServerCrashWarning(e.toString());
             e.getStackTrace();
@@ -853,19 +879,6 @@ public class InGameController extends ViewController {
     }
 
     /**
-     * Support method to change resolution to one single GridPane
-     */
-    void changeGridResolution(GridPane grid, Map<Pair<Integer, Integer>, Cell> cells) {
-        for (int x = 0; x < grid.getColumnCount(); x++) {
-            for (int y = 0; y < grid.getRowCount(); y++) {
-                resizeCard(cells.get(new Pair<>(x, y)));
-                cells.get(new Pair<>(x, y)).setPaneResolution();
-            }
-        }
-    }
-
-
-    /**
      * Handles the quitting process for a player, displaying a confirmation dialog and performing necessary actions if confirmed.
      * Displays a confirmation alert to the player asking if they are sure they want to quit the game.
      * If the player confirms, attempts to quit the game and navigates back to the main menu.
@@ -893,22 +906,6 @@ public class InGameController extends ViewController {
     }
 
     //PRIVATE METHODS:__________________________________________________________________________________________________
-
-    /**
-     * Plays the starter card than hides the initial choice VBox and shows the player1PlayAreaGrid.
-     */
-    public void playStarter() {
-        try {
-            client.playStarter();
-            initialChoice.setVisible(false);
-            initialChoice.setManaged(false);
-            initialChoice.setMouseTransparent(true);
-            player1PlayAreaGrid.setVisible(true);
-        } catch (RemoteException e) {
-            show_ServerCrashWarning(e.toString());
-            e.getStackTrace();
-        }
-    }
 
     /**
      * Sets the image of a card to the specified target ImageView.
@@ -1084,6 +1081,18 @@ public class InGameController extends ViewController {
         }
     }
 
+    /**
+     * Support method to change resolution to one single GridPane
+     */
+    private void changeGridResolution(GridPane grid, Map<Pair<Integer, Integer>, Cell> cells) {
+        for (int x = 0; x < grid.getColumnCount(); x++) {
+            for (int y = 0; y < grid.getRowCount(); y++) {
+                resizeCard(cells.get(new Pair<>(x, y)));
+                cells.get(new Pair<>(x, y)).setPaneResolution();
+            }
+        }
+    }
+
     //private method to hide the hand of other players
     private void hideHand(List<PlayableCard> hand) {
         for (PlayableCard playableCard : hand) {
@@ -1151,7 +1160,6 @@ public class InGameController extends ViewController {
         card.setFitWidth(size.getCardWidth());
         setClipToImageView(card);
     }
-
 
     /**
      * Locks the size of the mother pane to its current dimensions, preventing it from being resized.

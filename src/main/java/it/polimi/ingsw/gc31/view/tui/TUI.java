@@ -2132,15 +2132,13 @@ public class TUI extends UI {
 
     @Override
     public void show_wantReconnect(String username) {
-        System.out.println("show_wantReconnect called");
         getClient().setUsername(username);
         commandToProcess(TUIcommands.RECONNECT, false);
         int i = 0;
     }
 
     @Override
-    public void show_rejoined(boolean result) {
-        System.out.println("show_rejoined called");
+    public void show_rejoined(boolean result, List<String> players) {
         if (result) {
             chatBoardThread = chatBoardThreadBuilder();
             chatBoardThread.start();

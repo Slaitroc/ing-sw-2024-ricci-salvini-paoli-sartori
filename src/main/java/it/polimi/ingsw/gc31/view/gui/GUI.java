@@ -4,6 +4,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+import it.polimi.ingsw.gc31.utility.DV;
 import it.polimi.ingsw.gc31.view.UI;
 import javafx.application.Platform;
 import javafx.util.Pair;
@@ -102,7 +103,7 @@ public class GUI extends UI {
 
     @Override
     public void show_invalidAction(String message) {
-        System.out.println("show_invalidAction called");
+        Platform.runLater(() -> app.getCurrentController().setMessage(message));
     }
 
     @Override
@@ -224,12 +225,32 @@ public class GUI extends UI {
     @Override
     public void show_wantReconnect(String username) {
         System.out.println("show_wantReconnect called");
+        Platform.runLater(() -> {
+            client.setUsername(username);
+            app.setUsername(username);
+            app.getCurrentController().setMessage(username);
+        });
     }
 
     @Override
-    public void show_rejoined(boolean result) {
-        System.out.println("show_rejoined called: " + result);
-        Platform.runLater(()-> app.getCurrentController().playerRejoined(result));
+    public void show_rejoined(boolean result, List<String> players) {
+        System.out.println("show_rejoined called: " + result + players);
+        if (!result) {
+            Platform.runLater(() -> app.loadScene(SceneTag.USERNAME));
+        } else {
+            LinkedHashMap<String, Boolean> inGamePlayers = new LinkedHashMap<>();
+            for (String player : players) {
+                inGamePlayers.put(player, true);
+            }
+            Platform.runLater(() -> {
+                app.setPlayerList(inGamePlayers);
+                app.setNumberOfPlayers(players.size());
+                client.getToken().setToken(DV.defaultToken);
+                app.loadScene(SceneTag.GAME);
+                app.setLobbyWindowSize();
+                app.getCurrentController().playerRejoined();
+            });
+        }
     }
 
     /**
@@ -255,12 +276,13 @@ public class GUI extends UI {
     @Override
     public void show_timerLastPlayerConnected(Integer secondsLeft) {
         System.out.println("show_timerLastPlayerConnected called");
-        Platform.runLater(()-> app.getCurrentController().showCountDown(secondsLeft));
+        Platform.runLater(() -> app.getCurrentController().showCountDown(secondsLeft));
     }
 
     @Override
     public void show_unableToReconnect() {
-
+        client.getToken().setToken(DV.defaultToken);
+        Platform.runLater(() -> app.loadScene(SceneTag.USERNAME));
     }
 
     @Override

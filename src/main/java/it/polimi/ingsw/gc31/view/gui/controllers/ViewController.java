@@ -322,7 +322,11 @@ public abstract class ViewController {
     public void showCountDown(Integer secondsLeft) {
     }
 
-    public void playerRejoined(boolean result) {
+    /**
+     * Method to differentiate the loading of inGameScene from conventional ways
+     * to the reconnection way
+     */
+    public void playerRejoined() {
     }
 
     public void showPing() {

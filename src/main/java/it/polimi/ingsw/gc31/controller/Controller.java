@@ -189,7 +189,6 @@ public class Controller extends UnicastRemoteObject implements IController {
                 clientsHeartBeat.put(clientConnections, System.currentTimeMillis());
                 ServerLog.controllerWrite("Reconnection request to game with id=" + disconnected.get(token).getValue()
                         + " sent to " + disconnected.get(token).getKey());
-                disconnected.remove(token);
             } else {
                 ServerLog.controllerWrite("First connection of " + username + "with temporary token " + tempToken);
                 VirtualClient newConnectionClient = newConnections.get(tempToken);
@@ -256,7 +255,9 @@ public class Controller extends UnicastRemoteObject implements IController {
         VirtualClient client = newConnections.get(token);
         if (esito) {
             try {
-                client.sendCommand(new ReJoinedObj(true)); // mandare questo è importante perché la ui fa cose in //
+                synchronized (gameControlList.get(disconnected.get(token).getValue()).clientListLock) {
+                    client.sendCommand(new ReJoinedObj(true, gameControlList.get(disconnected.get(token).getValue()).clientList.keySet().stream().toList()));
+                } // mandare questo è importante perché la ui fa cose in //
                 gameControlList.get(disconnected.get(token).getValue()).reJoinGame(disconnected.get(token).getKey(),
                         newConnections.get(token));
                 // risposta a questo update
@@ -268,7 +269,7 @@ public class Controller extends UnicastRemoteObject implements IController {
             // parameter false is sent
             // to the client
             try {
-                client.sendCommand(new ReJoinedObj(false));
+                client.sendCommand(new ReJoinedObj(false, null));
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

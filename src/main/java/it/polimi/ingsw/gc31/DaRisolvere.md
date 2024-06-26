@@ -51,6 +51,7 @@
 
 - [ ] al termine della partita chiedere se rigiocare e in caso contrario eliminare dal gamecontroller i player che non vogliono. Se tutti non vogliono cancellare il gamecontroller
 - [ ] timer che fa vincere l'unico giocatore rimasto se tutti gli altri sono disconnessi. E direi timer per terminare la partita e cancellare il gamecontroller se sono tutti disconnessi
+- [ ] Se un player si diconnette per piú di una volta dalla partita, puó sempre ricollegarsi ma il countdown per la vittoria del player rimasto viene triggerato solo alla prima disconnessione
 
 ## GUI
 - [x] da girare le carte nei deck e allo startup
