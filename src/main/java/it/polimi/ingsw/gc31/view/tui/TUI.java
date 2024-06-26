@@ -21,6 +21,7 @@ import javafx.util.Pair;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
+import it.polimi.ingsw.gc31.client_server.Token;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
@@ -1299,10 +1300,14 @@ public class TUI extends UI {
             state.stateNotify();
         } else if (command.equals(TUIcommands.INITIAL.toString()) && state.stateName.equals("Init State")) {
             state.command_initial();
+        } else if (command.equals(TUIcommands.SET_USERNAME.toString()) && state.stateName.equals("Init State")) {
+            state.setUsername();
         } else if (state.commandsMap.containsKey(command)) {
             state.commandsMap.get(command).run();
         } else if (command.equals(TUIcommands.NOTIFY.toString())) {
             state.stateNotify();
+        } else if (command.equals(TUIcommands.RECONNECT.toString()) && state.stateName.equals("Init State")) {
+            state.reconnect();
         } else {
             state.commandsMap.get(TUIcommands.INVALID.toString()).run();
         }
@@ -1331,12 +1336,12 @@ public class TUI extends UI {
     private volatile boolean chatNotification = false;
     private volatile boolean newChatMessage = false;
     private volatile boolean heartBeatReceived = false;
+    private volatile boolean HBprinted = false;
 
     private final Object statusBar = new Object();
     Thread statusBarThread = new Thread(() -> {
         StringBuilder heart = new StringBuilder();
-        heart.append(Ansi.ansi().cursor(1, 17).a("💚"));
-        System.out.println(heart);
+        heart.append(Ansi.ansi().cursor(1, 17).a("💔"));
         while (true) {
             synchronized (statusBar) {
                 try {
@@ -1358,6 +1363,7 @@ public class TUI extends UI {
                     synchronized (statusBar) {
                         System.out.println(heart);
                     }
+                    HBprinted = false;
                     resetCursor();
                 }
 
@@ -1370,24 +1376,26 @@ public class TUI extends UI {
         TimerTask updateStatusBar = new TimerTask() {
             @Override
             public void run() {
-                heartBeatReceived = false;
-                synchronized (statusBar) {
-                    statusBar.notify();
+                if (!HBprinted) {
+                    heartBeatReceived = false;
+                    synchronized (statusBar) {
+                        statusBar.notify();
+                    }
                 }
             }
         };
-        timer.scheduleAtFixedRate(updateStatusBar, 0, 6000);
+        timer.scheduleAtFixedRate(updateStatusBar, 0, DV.clientHBUpdate);
     });
 
     @Override
     public void show_heartBeat() {
 
-        if (!heartBeatReceived) {
+        if (!heartBeatReceived && !HBprinted) {
             StringBuilder heart = new StringBuilder();
             heart.append(Ansi.ansi().cursor(1, 17).a("💚"));
+            HBprinted = true;
             System.out.println(heart);
             resetCursor();
-
         }
         heartBeatReceived = true;
     }
@@ -1589,11 +1597,12 @@ public class TUI extends UI {
     @Override
     public void show_privateChatMessage(String fromUsername, String toUsername, String message) {
         synchronized (chatNeedsUpdate) {
-            if(fromUsername.equals(client.getUsername()))
+            if (fromUsername.equals(client.getUsername()))
                 chatMessages.add("[To: " + toUsername + "] : " + message);
-            else if(toUsername.equals(client.getUsername()))
+            else if (toUsername.equals(client.getUsername()))
                 chatMessages.add("[From: " + fromUsername + "] : " + message);
-            else return;
+            else
+                return;
         }
         if (chatAreaSelection.isEmpty()) {
             newChatMessage = true;
@@ -1638,11 +1647,11 @@ public class TUI extends UI {
                     addToCmdLineAreaSelection();
                     moveCursorToCmdLine();
                 } else {
-                    for(String username : playersUsernames){
-                        if(input.trim().startsWith("/"+username)) {
+                    for (String username : playersUsernames) {
+                        if (input.trim().startsWith("/" + username)) {
                             try {
-                                String message = input.substring(username.length()+1).trim();
-                                if(!message.isEmpty())
+                                String message = input.substring(username.length() + 1).trim();
+                                if (!message.isEmpty())
                                     client.sendChatMessage(getClient().getUsername(), username, message);
                             } catch (RemoteException e) {
                                 e.printStackTrace();
@@ -1651,7 +1660,7 @@ public class TUI extends UI {
                             break;
                         }
                     }
-                    if(!privateMessage) {
+                    if (!privateMessage) {
                         try {
                             client.sendChatMessage(getClient().getUsername(), input.trim());
                         } catch (RemoteException e) {
@@ -1737,41 +1746,41 @@ public class TUI extends UI {
     @Override
     public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea,
             Map<Resources, Integer> achievedResources) {
-//        if (client.getUsername().equals(username)) {
-            StringBuilder res = new StringBuilder();
-            res.append(clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
-            res.append(print_Borders("Play Area: "+username, greyText, PLAYAREA_INITIAL_ROW,
-                    PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW,
-                    PLAYAREA_END_COLUMN));
-            res.append(print_PlacedCards(playArea));
-            placedCards = playArea;
+        // if (client.getUsername().equals(username)) {
+        StringBuilder res = new StringBuilder();
+        res.append(clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
+        res.append(print_Borders("Play Area: " + username, greyText, PLAYAREA_INITIAL_ROW,
+                PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW,
+                PLAYAREA_END_COLUMN));
+        res.append(print_PlacedCards(playArea));
+        placedCards = playArea;
 
-            if (achievedResources != null) {
-                res.append(clearArea(ACHIEVED_RESOURCES_INITIAL_ROW, ACHIEVED_RESOURCES_INITIAL_COLUMN,
-                        ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
-                res.append(print_Borders("", greyText, ACHIEVED_RESOURCES_INITIAL_ROW,
-                        ACHIEVED_RESOURCES_INITIAL_COLUMN,
-                        ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
-                int index = 0;
-                for (Map.Entry<Resources, Integer> entry : achievedResources.entrySet()) {
-                    res.append(ansi()
-                            .cursor(ACHIEVED_RESOURCES_INITIAL_ROW + 1 + index, ACHIEVED_RESOURCES_INITIAL_COLUMN + 1)
-                            .a(entry.getKey().getSymbol() + ": " + entry.getValue()));
-                    index++;
-                }
+        if (achievedResources != null) {
+            res.append(clearArea(ACHIEVED_RESOURCES_INITIAL_ROW, ACHIEVED_RESOURCES_INITIAL_COLUMN,
+                    ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
+            res.append(print_Borders("", greyText, ACHIEVED_RESOURCES_INITIAL_ROW,
+                    ACHIEVED_RESOURCES_INITIAL_COLUMN,
+                    ACHIEVED_RESOURCES_END_ROW, ACHIEVED_RESOURCES_END_COLUMN));
+            int index = 0;
+            for (Map.Entry<Resources, Integer> entry : achievedResources.entrySet()) {
+                res.append(ansi()
+                        .cursor(ACHIEVED_RESOURCES_INITIAL_ROW + 1 + index, ACHIEVED_RESOURCES_INITIAL_COLUMN + 1)
+                        .a(entry.getKey().getSymbol() + ": " + entry.getValue()));
+                index++;
             }
+        }
 
-            playAreaAllPlayers.put(username, res);
+        playAreaAllPlayers.put(username, res);
 
-            if (activePlayArea.equals(username)) {
-                synchronized (playViewUpdate) {
-                    playViewUpdate.add(res);
-                    playViewUpdate.notify();
-                }
-                areasCache.put(TUIareas.PLAY_AREA_VIEW, res);
+        if (activePlayArea.equals(username)) {
+            synchronized (playViewUpdate) {
+                playViewUpdate.add(res);
+                playViewUpdate.notify();
             }
+            areasCache.put(TUIareas.PLAY_AREA_VIEW, res);
+        }
 
-//        }
+        // }
     }
 
     @Override
@@ -1786,7 +1795,7 @@ public class TUI extends UI {
         for (String player : scores.keySet()) {
             String inTurn = scores.get(player).getValue() ? "\uD83D\uDFE2" : "  ";
             res.append(ansi().cursor(PLAYERS_INFO_INITIAL_ROW + index, PLAYERS_INFO_INITIAL_COLUMN + 1)
-                    .a(inTurn + " "+ player + ": " + scores.get(player).getKey()));
+                    .a(inTurn + " " + player + ": " + scores.get(player).getKey()));
             index++;
         }
 
@@ -1873,7 +1882,8 @@ public class TUI extends UI {
     public void show_objectiveCard(String username, ObjectiveCard objectiveCard) {
         if (client.getUsername().equals(username)) {
             StringBuilder res = new StringBuilder();
-            res.append(clearArea(OBJECTIVE_INITIAL_ROW+1, OBJECTIVE_INITIAL_COLUMN, OBJECTIVE_END_ROW, OBJECTIVE_END_COLUMN));
+            res.append(clearArea(OBJECTIVE_INITIAL_ROW + 1, OBJECTIVE_INITIAL_COLUMN, OBJECTIVE_END_ROW,
+                    OBJECTIVE_END_COLUMN));
             res.append(ansi().cursor(OBJECTIVE_INITIAL_ROW, OBJECTIVE_INITIAL_COLUMN + 1).a("Your Objective Card"));
             res.append(print_ObjectiveCard(objectiveCard, OBJECTIVE_INITIAL_COLUMN + 1, OBJECTIVE_INITIAL_ROW + 1,
                     OBJECTIVE_INITIAL_ROW, OBJECTIVE_END_ROW, OBJECTIVE_INITIAL_COLUMN, OBJECTIVE_END_COLUMN));
@@ -1914,15 +1924,17 @@ public class TUI extends UI {
             }
             // FIXME problema per quando iniziano i turni della partita, l'area cache di
             // choose objective card non deve venire ristampata
-             areasCache.put(TUIareas.CHOSE_OBJ, res);
+            areasCache.put(TUIareas.CHOSE_OBJ, res);
         }
     }
 
     @Override
     public void show_commonObjectiveCard(ObjectiveCard card1, ObjectiveCard card2) {
         StringBuilder res = new StringBuilder();
-        res.append(clearArea(COMMON_OBJECTIVE_INITIAL_ROW+1, COMMON_OBJECTIVE_INITIAL_COLUMN, COMMON_OBJECTIVE_END_ROW, COMMON_OBJECTIVE_END_COLUMN));
-        res.append(ansi().cursor(COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_INITIAL_COLUMN + 1).a("COMMON OBJECTIVE"));
+        res.append(clearArea(COMMON_OBJECTIVE_INITIAL_ROW + 1, COMMON_OBJECTIVE_INITIAL_COLUMN,
+                COMMON_OBJECTIVE_END_ROW, COMMON_OBJECTIVE_END_COLUMN));
+        res.append(
+                ansi().cursor(COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_INITIAL_COLUMN + 1).a("COMMON OBJECTIVE"));
         if (card1 != null) {
             res.append(print_ObjectiveCard(card1, COMMON_OBJECTIVE_INITIAL_COLUMN + 1,
                     COMMON_OBJECTIVE_INITIAL_ROW + 1, COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_END_ROW,
@@ -2046,7 +2058,8 @@ public class TUI extends UI {
     public void show_playerTurn(String username, String info) {
         if (client.getUsername().equals(username)) {
             StringBuilder res = new StringBuilder();
-            res.append(ansi().cursor(PLAYAREA_END_ROW + 1, PLAYAREA_INITIAL_COLUMN + 1).a(" ".repeat(PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN)));
+            res.append(ansi().cursor(PLAYAREA_END_ROW + 1, PLAYAREA_INITIAL_COLUMN + 1)
+                    .a(" ".repeat(PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN)));
             res.append(ansi().cursor(PLAYAREA_END_ROW + 1, PLAYAREA_INITIAL_COLUMN + 1).a(info));
             synchronized (playViewUpdate) {
                 playViewUpdate.add(res);
@@ -2106,37 +2119,56 @@ public class TUI extends UI {
         }
     }
 
-    public void receiveToken(int token) {
-        client.setToken(token);
+    @Override
+    public void receiveToken(int token, boolean temporary) {
+        client.setToken(token, temporary);
     }
 
     @Override
-    public void showGenericClientResponse(String response) {
+    public void show_GenericClientResonse(String response) {
         printToCmdLineOut(tuiWrite(response));
 
     }
 
     @Override
-    public void show_wantReconnect() {
+    public void show_wantReconnect(String username) {
+        getClient().setUsername(username);
         commandToProcess(TUIcommands.RECONNECT, false);
+        int i = 0;
     }
 
     @Override
-    public void show_rejoined(boolean result) {
-        // TODO cambiare stato tui
-        state = new PlayingState(this);
-        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+    public void show_rejoined(boolean esito) {
+        if (esito) {
+            chatBoardThread = chatBoardThreadBuilder();
+            chatBoardThread.start();
+            state = new PlayingState(this);
+            commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+        } else {
+            getClient().getToken().setToken(DV.defaultToken);
+            commandToProcess(TUIcommands.SET_USERNAME, false);
+        }
+    }
+
+    @Override
+    public void show_unableToReconnect() {
+        printToCmdLineOut(serverWrite("U were not in a game!"));
+        client.getToken().setToken(DV.defaultToken);
+        commandToProcess(TUIcommands.SET_USERNAME, false);
+
     }
 
     @Override
     public void show_timerLastPlayerConnected(Integer secondsLeft) {
         StringBuilder res = new StringBuilder();
         res.append(clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
-        res.append(print_Borders("ifneoirngoirngiowrngiorwngroignroignrignr", greyText, PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
-//        res.append(print_Borders("", greyText, PLAYAREA_INITIAL_ROW + 1, PLAYAREA_INITIAL_COLUMN + 1, PLAYAREA_END_ROW -1, PLAYAREA_END_COLUMN - 1));
+        res.append(print_Borders("ifneoirngoirngiowrngiorwngroignroignrignr", greyText, PLAYAREA_INITIAL_ROW,
+                PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
+        // res.append(print_Borders("", greyText, PLAYAREA_INITIAL_ROW + 1,
+        // PLAYAREA_INITIAL_COLUMN + 1, PLAYAREA_END_ROW -1, PLAYAREA_END_COLUMN - 1));
         res.append(ansi().cursor(
-                (PLAYAREA_END_ROW + PLAYAREA_INITIAL_ROW)/2,
-                (PLAYAREA_END_COLUMN + PLAYAREA_INITIAL_COLUMN)/2)
+                (PLAYAREA_END_ROW + PLAYAREA_INITIAL_ROW) / 2,
+                (PLAYAREA_END_COLUMN + PLAYAREA_INITIAL_COLUMN) / 2)
                 .a(secondsLeft));
         synchronized (playViewUpdate) {
             playViewUpdate.add(res);
@@ -2147,6 +2179,7 @@ public class TUI extends UI {
     public void changeActivePlayArea(String username) {
         activePlayArea = username;
         areasCache.put(TUIareas.PLAY_AREA_VIEW, playAreaAllPlayers.get(username));
+        commandToProcess(TUIcommands.REFRESH, false);
     }
 
     /**
@@ -2154,9 +2187,9 @@ public class TUI extends UI {
      * to play another match with the same players after the current
      * match is finished
      */
-    //FIXME implementare metodo. Ho fallito miseramente
+    // FIXME implementare metodo. Ho fallito miseramente
     @Override
-    public void show_anotherMatch(){
+    public void show_anotherMatch() {
         printToCmdLineOut(tuiWrite("Do you want to play another match?"));
     }
 

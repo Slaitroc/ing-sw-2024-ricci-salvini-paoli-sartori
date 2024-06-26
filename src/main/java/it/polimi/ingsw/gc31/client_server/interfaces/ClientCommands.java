@@ -1,26 +1,31 @@
 package it.polimi.ingsw.gc31.client_server.interfaces;
 
+import it.polimi.ingsw.gc31.client_server.Token;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.exceptions.NoTokenException;
 import it.polimi.ingsw.gc31.view.UI;
 
 import java.awt.*;
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 public interface ClientCommands {
 
     void setUI(UI ui);
 
-    void setUsernameCall(String username) throws RemoteException;
+    void setUsernameCall(String username) throws IOException;
 
     void setUsernameResponse(String username);
 
-    void createGame(int maxNumberPlayer) throws RemoteException;
+    void setUsername(String username);
+
+    void createGame(int maxNumberPlayer) throws RemoteException, IOException;
 
     void joinGame(int gameId) throws RemoteException;
 
     void quitGame() throws RemoteException;
 
-    void getGameList() throws RemoteException, NoGamesException;
+    void getGameList() throws RemoteException, NoGamesException, IOException;
 
     void setReady(boolean ready) throws RemoteException;
 
@@ -100,10 +105,14 @@ public interface ClientCommands {
      */
     void sendChatMessage(String fromUsername, String toUsername, String message) throws RemoteException;
 
-    //TODO
-    void setToken(int token);
+    void setToken(int token, boolean temporary);
 
-    //TODO
+    boolean hasToken();
+
+    Token getToken();
+
+    int readToken() throws NumberFormatException, NoTokenException;
+
     void reconnect(boolean reconnect) throws RemoteException;
 
     void anotherMatchResponse(Boolean wantsToRematch) throws RemoteException;

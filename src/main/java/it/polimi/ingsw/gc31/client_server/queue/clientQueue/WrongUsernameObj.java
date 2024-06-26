@@ -12,7 +12,11 @@ public class WrongUsernameObj extends ClientQueueObject {
 
     @Override
     public void execute(UI ui) {
-        ui.show_wrongUsername(username);
+        if (username != null) {
+            ui.show_wrongUsername(username);
+        } else {
+            ui.show_unableToReconnect();
+        }
     }
 
 }

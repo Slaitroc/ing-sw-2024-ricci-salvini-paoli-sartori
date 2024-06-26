@@ -47,6 +47,7 @@ public class PlayingState extends TuiState {
         commandsInfo.put("s ->", "Select a card from hand");
         commandsInfo.put("c ->", "Change side select card");
         commandsInfo.put("cs ->", "Change side starter card");
+        commandsInfo.put("cp ->", "Change play area");
         commandsInfo.put("mv -> ", "Move play area");
     }
 
@@ -81,13 +82,31 @@ public class PlayingState extends TuiState {
         tui.printToCmdLineOut("0 -> from top of the deck");
         tui.printToCmdLineOut("1 -> card 1");
         tui.printToCmdLineOut("2 -> card 2");
-        int input = Integer.parseInt(scanner.nextLine());
+        tui.printToCmdLineOut("-1 -> quit command");
+        while (true) {
+            int input;
+            try {
+                input = Integer.parseInt(scanner.nextLine());
+                if (input == -1) {
+                    break;
+                } else {
 
-        try {
-            tui.getClient().drawGold(input);
-        } catch (RemoteException e) {
-            e.printStackTrace();
+                    if (input == 0 || input == 1 || input == 2) {
+                        try {
+                            tui.getClient().drawGold(input);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    } else {
+                        tui.printToCmdLineOut("Wrong input!");
+                    }
+                }
+            } catch (NumberFormatException e) {
+                tui.printToCmdLineOut("Wrong input!");
+            }
         }
+
         stateNotify();
     }
 
@@ -97,11 +116,30 @@ public class PlayingState extends TuiState {
         tui.printToCmdLineOut("0 -> from top of the deck");
         tui.printToCmdLineOut("1 -> card 1");
         tui.printToCmdLineOut("2 -> card 2");
-        int input = Integer.parseInt(scanner.nextLine());
-        try {
-            tui.getClient().drawResource(input);
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        tui.printToCmdLineOut("-1 -> quit command");
+        while (true) {
+            int input;
+            try {
+                input = Integer.parseInt(scanner.nextLine());
+                if (input == -1) {
+                    break;
+                } else {
+                    if (input == 0 || input == 1 || input == 2) {
+                        try {
+                            tui.getClient().drawResource(input);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    } else {
+                        tui.printToCmdLineOut("Wrong input!");
+                    }
+                    if (input == -1)
+                        break;
+                }
+            } catch (NumberFormatException e) {
+                tui.printToCmdLineOut("Wrong input");
+            }
         }
         stateNotify();
     }
@@ -111,19 +149,38 @@ public class PlayingState extends TuiState {
         tui.printToCmdLineOut("Which card do you want to choose?");
         tui.printToCmdLineOut("1 -> Secret Objective 1");
         tui.printToCmdLineOut("2 -> Secret Objective 2");
-        int input = Integer.parseInt(scanner.nextLine());
-        try {
-            if (input == 1) {
-                tui.getClient().chooseSecretObjective1();
-            } else if (input == 2) {
-                tui.getClient().chooseSecretObjective2();
-            } else {
-                tui.printToCmdLineOut("Invalid value");
+        tui.printToCmdLineOut("-1 -> quit command");
+        while (true) {
+            try {
+                int input = Integer.parseInt(scanner.nextLine());
+                if (input == -1) {
+                    break;
+                } else {
+
+                    if (input == 1) {
+                        try {
+                            tui.getClient().chooseSecretObjective1();
+                            tui.commandsCache.put(TUIcommands.CHOOSE_SERCRET_OBJ, true);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    } else if (input == 2) {
+                        try {
+                            tui.getClient().chooseSecretObjective2();
+                            tui.commandsCache.put(TUIcommands.CHOOSE_SERCRET_OBJ, true);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    } else {
+                        tui.printToCmdLineOut("Wrong input!");
+                    }
+                }
+            } catch (NumberFormatException e) {
+                tui.printToCmdLineOut("Wrong input!");
             }
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
         }
-        tui.commandsCache.put(TUIcommands.CHOOSE_SERCRET_OBJ, true);
         stateNotify();
     }
 
@@ -233,7 +290,7 @@ public class PlayingState extends TuiState {
         tui.printToCmdLineOut(tui.tuiWrite(input));
 
         tui.changeActivePlayArea(input);
-        stateNotify();
+        // stateNotify();
     }
 
     @Override

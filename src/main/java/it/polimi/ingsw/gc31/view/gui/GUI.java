@@ -112,9 +112,8 @@ public class GUI extends UI {
     }
 
     @Override
-    public void receiveToken(int token) {
-        System.out.println("receiveToken called");
-        client.setToken(token);
+    public void receiveToken(int token, boolean temporary) {
+
     }
 
     //Used to Load the InGameScene
@@ -234,7 +233,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_wantReconnect() {
+    public void show_wantReconnect(String username) {
         System.out.println("show_wantReconnect called");
     }
 
@@ -257,6 +256,11 @@ public class GUI extends UI {
     public void show_timerLastPlayerConnected(Integer secondsLeft) {
         System.out.println("show_timerLastPlayerConnected called");
         Platform.runLater(()-> app.getCurrentController().showCountDown(secondsLeft));
+    }
+
+    @Override
+    public void show_unableToReconnect() {
+
     }
 
     @Override

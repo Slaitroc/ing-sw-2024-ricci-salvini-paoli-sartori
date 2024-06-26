@@ -5,6 +5,7 @@ import java.util.Map;
 public abstract class TuiState {
     // debug
     protected String stateName;
+    protected boolean rejoin = false;
 
     protected Map<String, Runnable> commandsMap;
     protected Map<String, String> commandsInfo;

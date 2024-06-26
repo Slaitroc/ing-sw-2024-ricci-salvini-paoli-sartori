@@ -21,30 +21,21 @@ public class ConnectObj extends ServerQueueObject {
     }
 
     private final int token;
+    private final int tempToken;
 
-    /**
-     * Token getter
-     *
-     * @return the Token number
-     */
-    public int getToken() {
-        return token;
-    }
+//    public int getToken() {
+//        return token;
+//    }
 
-    /**
-     * @param username Username of player that wants to reconnect
-     * @param token int number of the token generated at firs connection
-     */
-    public ConnectObj(String username, int token) {
+    public ConnectObj(String username, int tempToken, int token) {
         this.username = username;
         this.token = token;
+        this.tempToken = tempToken;
     }
 
-    /**
-     * @param username Username of player that wants to connect
-     */
-    public ConnectObj(String username) {
+    public ConnectObj(String username, int tempToken) {
         this.username = username;
+        this.tempToken = tempToken;
         this.token = DV.defaultToken;
     }
 
@@ -56,7 +47,7 @@ public class ConnectObj extends ServerQueueObject {
     public void execute(Controller controller) {
 
         try {
-            if (controller.connect(controller.getRightConnection(token), username, token)) {
+            if (controller.connect(controller.getRightConnection(token), username, tempToken, token)) {
                 ServerLog.tcpWrite("New user connected: " + username);
             } else {
                 ServerLog.tcpWrite("New connection refused");
@@ -69,7 +60,7 @@ public class ConnectObj extends ServerQueueObject {
     @Override
     public void execute(RmiServer server) {
         try {
-            if (server.connect(server.getRightConnection(token), username, token)) {
+            if (server.connect(server.getRightConnection(token), username, tempToken, token)) {
                 ServerLog.rmiWrite("New user connected: " + username);
             } else {
                 ServerLog.rmiWrite("New connection refused");

@@ -20,7 +20,6 @@ ricevo
 deserializzo
 getto e check il recipient
 a seconda chiamo gamecontroller o controller sendobject
-
 eseguito da loro
  */
 
@@ -35,6 +34,8 @@ public class SocketClientHandler implements VirtualClient {
     private Integer idGame; // viene settata ma ancora non utilizzata
     // private String username;
     private boolean ready = false;
+    private int tempToken;
+    private int token;
 
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
@@ -51,7 +52,10 @@ public class SocketClientHandler implements VirtualClient {
         this.input = input;
         this.output = output;
         tcpClient_reader();
-        Controller.getController().generateToken(this);
+        this.tempToken = Controller.getController().generateToken(this);
+
+        // alla prima connessione token = -1;
+        this.token = -1;
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
@@ -95,8 +99,9 @@ public class SocketClientHandler implements VirtualClient {
                         try {
                             try {
                                 ConnectObj connectObj = (ConnectObj) obj;
-                                if (connectObj.getToken() == DV.defaultToken) {
-                                    if (Controller.getController().connect(this, connectObj.getUsername(), connectObj.getToken())) {
+                                if (token == DV.defaultToken) {
+                                    if (Controller.getController().connect(this, connectObj.getUsername(),
+                                            tempToken, token)) {
                                         ServerLog.tcpWrite("New user connected: " + connectObj.getUsername());
                                     } else {
                                         ServerLog.tcpWrite("New connection refused");
@@ -160,9 +165,11 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     /**
-     * Method used at the start of the rmi connections but useless in the TCP implementation.
+     * Method used at the start of the rmi connections but useless in the TCP
+     * implementation.
      * Inherited from the VirtualClient interface.
-     * In TCP implementation the VirtualClient (is server side so it...) can get the controller via the singleton.
+     * In TCP implementation the VirtualClient (is server side so it...) can get the
+     * controller via the singleton.
      *
      * @param controller is the controller the client needs to get
      */
@@ -172,10 +179,12 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     /**
-     * Method used at the start of the rmi connections but useless in the TCP implementation.
+     * Method used at the start of the rmi connections but useless in the TCP
+     * implementation.
      * Inherited from the VirtualClient interface.
      *
-     * @param token value to assign to the client specific token, used mainly for reconnections
+     * @param token value to assign to the client specific token, used mainly for
+     *              reconnections
      */
     @Override
     public void setRmiToken(int token) {

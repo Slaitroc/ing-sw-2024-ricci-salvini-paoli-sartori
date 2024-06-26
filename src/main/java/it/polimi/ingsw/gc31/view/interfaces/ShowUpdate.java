@@ -87,7 +87,6 @@ public interface ShowUpdate {
      */
     void show_handPlayer(String username, List<PlayableCard> hand, int selectedCard);
 
-    //TODO
     void show_scorePlayer(LinkedHashMap<String, Pair<Integer, Boolean>> scores);
 
     /**
@@ -175,7 +174,6 @@ public interface ShowUpdate {
      */
     void show_wrongGameSize();
 
-    //TODO
     void show_playerTurn(String username, String info);
 
     /**
@@ -193,23 +191,19 @@ public interface ShowUpdate {
      */
     void show_invalidAction(String message);
 
-    //TODO
     void show_GameIsOver(String username, Map<String, Integer> playersScore);
 
-    //TODO
-    void receiveToken(int token);
+    void receiveToken(int token, boolean temporary);
 
-    //TODO
     void show_heartBeat();
 
-    //TODO
-    void show_wantReconnect();
+    void show_wantReconnect(String username);
 
-    //TODO
-    void show_rejoined(boolean result);
-
+    void show_rejoined(boolean esito);
     void show_anotherMatch();
 
     void show_timerLastPlayerConnected(Integer secondsLeft);
+
+    void show_unableToReconnect();
 
 }

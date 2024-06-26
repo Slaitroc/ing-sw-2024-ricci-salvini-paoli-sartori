@@ -83,7 +83,7 @@ public class MainMenuController extends ViewController {
                 System.out.println("GameID: " + app.getCurrentGameID());*/
                 /*app.loadScene(SceneTag.LOBBY);*/ //DOES NOT WORK LIKE THIS
 
-            } catch (RemoteException e) {
+            } catch (IOException e) {
                 show_ServerCrashWarning(e.toString());
                 e.getStackTrace();
             }
