@@ -44,7 +44,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         this.server.RMIserverWrite("New connection detected from ip: " + server.getClientIP());
         this.token = new Token();
         token.setTempToken(this.server.generateToken(this));
-        token.setToken(641);
+        // token.setToken(641);
         this.username = DV.DEFAULT_USERNAME;
         this.controller = null;
         this.callsList = new LinkedBlockingQueue<>();
@@ -282,10 +282,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     public void setToken(int token, boolean temporary) {
         if (!temporary) {
             this.token.setToken(token);
+            this.token.setTempToken(token);
             if (this.token.rewriteTokenFile())
-                ui.showGenericClientResonse("File precedente eliminato");
-            ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
-            ui.showGenericClientResonse(FileUtility.getCodexTokenFilePath().toString());
+                ui.show_GenericClientResonse("File precedente eliminato");
+            ui.show_GenericClientResonse("Token salvato correttamente nel percorso: ");
+            ui.show_GenericClientResonse(FileUtility.getCodexTokenFilePath().toString());
         } else {
             this.token.setTempToken(token);
         }
@@ -293,7 +294,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void reconnect(boolean reconnect) throws RemoteException {
-        controller.sendCommand(new ReconnectObj(reconnect, username, token.getTempToken(),token.getToken()));
+        controller.sendCommand(new ReconnectObj(reconnect, username, token.getTempToken(), token.getToken()));
     }
 
     @Override

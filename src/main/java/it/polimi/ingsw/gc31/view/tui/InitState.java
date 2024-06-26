@@ -129,38 +129,7 @@ public class InitState extends TuiState {
     protected void setUsername() {
         String input;
         ClientCommands client = tui.getClient();
-        // if (!rejoin) {
-        // try {
-        // int token = tui.getClient().readToken();
-        // tui.printToCmdLineOut("Try rejoin with previous token: " + token + "?");
-        // while (true) {
-        // input = scanner.nextLine();
-        // if (input.trim().equals("y")) {
-        // try {
-        // rejoin = true;
-        // client.setUsernameCall(null, token);
-        // } catch (IOException e) {
-        // e.printStackTrace();
-        // }
-        // break;
-        // } else if (input.trim().equals("n")) {
-        // rejoin = true;
-        // askUsername(-1);
-        // break;
-        // } else {
-        // tui.printToCmdLineOut("Wrong Input");
-        // }
-        // }
-        // } catch (NumberFormatException | NoTokenException e) {
-        // tui.printToCmdLineOut(tui.tuiWrite("Invalid previous token"));
-        // rejoin = true;
-        // askUsername(-1);
 
-        // // e.printStackTrace();
-        // }
-        // } else {
-        // askUsername(-1);
-        // }
         if (tui.getClient().getToken().getToken() != DV.defaultToken) {
             try {
                 tui.getClient().setUsernameCall(null);
@@ -181,20 +150,6 @@ public class InitState extends TuiState {
 
     }
 
-    private void askUsername(int token) {
-        String input;
-        String message = "Type your username:";
-        input = scanner.nextLine();
-        tui.printToCmdLineOut(tui.tuiWrite(message));
-        tui.moveCursorToCmdLine();
-        try {
-            tui.getClient().setUsernameCall(input.trim());
-        } catch (IOException f) {
-            f.printStackTrace();
-        }
-
-    }
-
     @Override
     protected void command_quitGame() {
     }
@@ -206,7 +161,7 @@ public class InitState extends TuiState {
     @Override
     protected void reconnect() {
         String input;
-        tui.printToCmdLineOut(tui.tuiWrite("Welcome back "+tui.getClient().getUsername()));
+        tui.printToCmdLineOut(tui.tuiWrite("Welcome back " + tui.getClient().getUsername()));
         tui.printToCmdLineOut(tui.tuiWrite("You disconnected from the last match :,("));
         tui.printToCmdLineOut(tui.tuiWrite("Would u like to rejoin the game? (y/n)"));
         tui.moveCursorToCmdLine();

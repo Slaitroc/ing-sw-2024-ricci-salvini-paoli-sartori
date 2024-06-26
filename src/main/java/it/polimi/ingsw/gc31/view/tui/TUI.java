@@ -20,6 +20,7 @@ import it.polimi.ingsw.gc31.utility.DV;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
+import it.polimi.ingsw.gc31.client_server.Token;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
@@ -2124,7 +2125,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void showGenericClientResonse(String response) {
+    public void show_GenericClientResonse(String response) {
         printToCmdLineOut(tuiWrite(response));
 
     }
@@ -2139,6 +2140,8 @@ public class TUI extends UI {
     @Override
     public void show_rejoined(boolean esito) {
         if (esito) {
+            chatBoardThread = chatBoardThreadBuilder();
+            chatBoardThread.start();
             state = new PlayingState(this);
             commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
         } else {
@@ -2150,6 +2153,7 @@ public class TUI extends UI {
     @Override
     public void show_unableToReconnect() {
         printToCmdLineOut(serverWrite("U were not in a game!"));
+        client.getToken().setToken(DV.defaultToken);
         commandToProcess(TUIcommands.SET_USERNAME, false);
 
     }

@@ -72,7 +72,8 @@ public class GUI extends UI {
 
     @Override
     public void show_readyStatus(String username, boolean status) {
-        // System.out.println("show_readyStatus triggered!!!! VALUES: " + username + " " + status);
+        // System.out.println("show_readyStatus triggered!!!! VALUES: " + username + " "
+        // + status);
         Platform.runLater(() -> app.getCurrentController().showReady(username, status));
     }
 
@@ -107,10 +108,10 @@ public class GUI extends UI {
 
     }
 
-//    @Override
-//    public void receiveToken(int token) {
-//        client.setToken(token);
-//    }
+    // @Override
+    // public void receiveToken(int token) {
+    // client.setToken(token);
+    // }
 
     @Override
     public void update_ToPlayingState() {
@@ -177,7 +178,8 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea, Map<Resources, Integer> achievedResources) {
+    public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea,
+            Map<Resources, Integer> achievedResources) {
 
         Platform.runLater(() -> app.getCurrentController().show_playArea(username, playArea, achievedResources));
         // System.out.println("show_playArea called");
@@ -265,10 +267,11 @@ public class GUI extends UI {
     }
 
     @Override
-    public void showGenericClientResonse(String response) {
+    public void show_GenericClientResonse(String response) {
         // TODO Auto-generated method stub
         System.out.println(response);
-        //throw new UnsupportedOperationException("Unimplemented method 'showGenericClientResponse'");
+        // throw new UnsupportedOperationException("Unimplemented method
+        // 'showGenericClientResponse'");
     }
 
 }
