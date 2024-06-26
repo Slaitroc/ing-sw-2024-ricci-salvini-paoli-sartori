@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.*;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.EndGameOnePlayerLeftObj;
@@ -39,7 +40,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     protected final LinkedBlockingQueue<ServerQueueObject> callsList;
     protected final LinkedHashMap<String, Boolean> readyStatus;
 
-    ScheduledExecutorService schedulerLastPlayerConnected = Executors.newScheduledThreadPool(1);
+    ScheduledExecutorService schedulerLastPlayerConnected;
 
     /**
      * Constructor for the GameController class.
@@ -134,6 +135,8 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             if (clientList.containsKey(username)) {
                 schedulerLastPlayerConnected.shutdownNow();
                 clientList.put(username, newClient);
+//                model.setGameState();
+                model.getListeners().values().forEach(GameListenerHandler::setEnabled);
                 model.reconnectPlayer(username);
                 newClient.setGameController(this);
                 // newClient.sendCommand(new ReJoinedObj(true));
@@ -353,6 +356,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
             try {
                 model.disconnectPlayer(username);
             } catch (LastPlayerRemainedException e) {
+                schedulerLastPlayerConnected = Executors.newScheduledThreadPool(1);
                 timerLastPlayerConnected(e.lastConnected);
             }
         } else {

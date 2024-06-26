@@ -187,6 +187,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                 clientsHeartBeat.put(clientConnections, System.currentTimeMillis());
                 ServerLog.controllerWrite("Reconnection request to game with id=" + disconnected.get(token).getValue()
                         + " sent to " + disconnected.get(token).getKey());
+                disconnected.remove(token);
             } else {
                 ServerLog.controllerWrite("First connection of " + username + "with temporary token " + tempToken);
                 VirtualClient newConnectionClient = newConnections.get(tempToken);
