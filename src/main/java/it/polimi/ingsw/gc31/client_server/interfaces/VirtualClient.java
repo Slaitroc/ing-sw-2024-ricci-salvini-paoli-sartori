@@ -7,16 +7,16 @@ import java.rmi.RemoteException;
 
 public interface VirtualClient extends Remote {
 
-    boolean isReady() throws RemoteException;
+    public boolean isReady() throws RemoteException;
 
-    void setGameID(int gameID) throws RemoteException;
+    public void setGameID(int gameID) throws RemoteException;
 
-    void sendCommand(ClientQueueObject obj) throws RemoteException;
+    public void sendCommand(ClientQueueObject obj) throws RemoteException;
 
-    void setController(IController controller) throws RemoteException;
+    public void setController(IController controller) throws RemoteException;
 
-    void setGameController(IGameController gameController) throws RemoteException;
+    public void setGameController(IGameController gameController) throws RemoteException;
 
-    void setRmiToken(int token) throws RemoteException;
+    public void setRmiToken(int token) throws RemoteException;
 
 }

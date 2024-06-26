@@ -1,27 +1,25 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
-import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import java.awt.*;
+import java.net.Socket;
+import java.rmi.RemoteException;
+import java.util.*;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import it.polimi.ingsw.gc31.client_server.Token;
+import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.exceptions.NoTokenException;
 import it.polimi.ingsw.gc31.utility.DV;
+import it.polimi.ingsw.gc31.utility.FileUtility;
 import it.polimi.ingsw.gc31.view.UI;
 
-import java.awt.*;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.rmi.RemoteException;
-import java.util.Queue;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class TCPClient implements ClientCommands {
     private final ObjectInputStream input;
@@ -30,7 +28,7 @@ public class TCPClient implements ClientCommands {
     private Integer idGame;
     private UI ui;
     private final Queue<ClientQueueObject> callsList;
-    private int token;
+    private Token token;
     private final Timer timer;
     private boolean firstConnectionDone = false;
 
@@ -39,13 +37,16 @@ public class TCPClient implements ClientCommands {
      * The timer is set as a daemon by the specific constructor in order to not
      */
     @SuppressWarnings("resource")
-    public TCPClient(String ipaddress) throws IOException {
+    public TCPClient(final String ipaddress) throws IOException {
         this.username = DV.DEFAULT_USERNAME;
+        this.token = new Token();
+        this.token.setTempToken(-1);
         Socket serverSocket = new Socket(ipaddress, DV.TCP_PORT);
         this.input = new ObjectInputStream(serverSocket.getInputStream());
         this.output = new ObjectOutputStream(serverSocket.getOutputStream());
         this.callsList = new LinkedBlockingQueue<>();
         this.timer = new Timer(true);
+
         clientHandler_reader();
         executor();
     }
@@ -143,6 +144,11 @@ public class TCPClient implements ClientCommands {
         startHeartBeat();
     }
 
+    @Override
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     /**
      * This method returns the player's game idGame
      *
@@ -166,18 +172,13 @@ public class TCPClient implements ClientCommands {
     /**
      * This method is the first called by the client, it sends the client handler
      * the request to execute the "connect" method. If the server has already this
-     * username ane exception is launched
+     * username an exception is launched
      *
      * @param username is the username set by the client
      */
     @Override
     public void setUsernameCall(String username) {
-        if (firstConnectionDone)
-            tcp_sendCommand(new ConnectObj(username, token), DV.RECIPIENT_CONTROLLER);
-        else {
-            tcp_sendCommand(new ConnectObj(username), DV.RECIPIENT_CONTROLLER);
-            firstConnectionDone = true;
-        }
+        tcp_sendCommand(new ConnectObj(username, this.token.getTempToken(), this.token.getToken()), DV.RECIPIENT_CONTROLLER);
     }
 
     /**
@@ -210,17 +211,17 @@ public class TCPClient implements ClientCommands {
      * After that the method waits for the client handler's response, the response
      * can be an exception
      * (in this case the method launches the exception to the TUI) or the message
-     * “ok” otherwise.
+     * "ok" otherwise.
      * In this case the method reads every String sent by the client handler,
      * collect every
-     * String in “list” and then call the method of the ui.
+     * String in "list" and then call the method of the ui.
      *
-     * @throws RemoteException  is launched if an error is occurred in the readLine
+     * @throws IOException      is launched if an error is occurred in the readLine
      *                          method
      * @throws NoGamesException is launched if there are no created games
      */
     @Override
-    public void getGameList() throws RemoteException, NoGamesException {
+    public void getGameList() throws IOException, NoGamesException {
         tcp_sendCommand(new GetGameListObj(this.username), DV.RECIPIENT_CONTROLLER);
     }
 
@@ -389,52 +390,55 @@ public class TCPClient implements ClientCommands {
      * @param token is the value to be set as the token of the client
      */
     @Override
-    public void setToken(int token) {
-        this.token = token;
-        String userHome = System.getProperty("user.home");
-        String desktopPath = DV.getDesktopPath(userHome);
-        String folderName = "CodexNaturalis";
-        String fileName = "Token.txt";
-        // Crea il percorso completo della cartella e del file
-        Path folderPath = Paths.get(desktopPath, folderName);
-        Path filePath = Paths.get(desktopPath, folderName, fileName);
-        if (Files.exists(filePath)) {
-            try {
-                Files.delete(filePath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            ui.showGenericClientResonse("File esistente eliminato.");
+    public void setToken(int token, boolean temporary) {
+        if (!temporary) {
+            this.token.setToken(token);
+            this.token.setTempToken(token);
+            if (this.token.rewriteTokenFile())
+                ui.show_GenericClientResonse("File precedente eliminato");
+            ui.show_GenericClientResonse("Token salvato correttamente nel percorso: ");
+            ui.show_GenericClientResonse(FileUtility.getCodexTokenFilePath().toString());
+        } else {
+            this.token.setTempToken(token);
         }
-        try {
-            Files.createDirectories(folderPath);
-        } catch (IOException e) {
-            ui.showGenericClientResonse("Errore nel salvataggio del token!");
-            e.printStackTrace();
-        }
-        try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardOpenOption.CREATE,
-                StandardOpenOption.APPEND)) {
-            writer.write("" + token);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ui.showGenericClientResonse("Token salvato correttamente nel percorso: ");
-        ui.showGenericClientResonse(filePath.toString());
+
     }
 
     @Override
     public void reconnect(boolean reconnect) throws RemoteException {
-        tcp_sendCommand(new ReconnectObj(reconnect, username, token), DV.RECIPIENT_CONTROLLER);
+        tcp_sendCommand(new ReconnectObj(reconnect, username, token.getTempToken(), token.getToken()),
+                DV.RECIPIENT_CONTROLLER);
     }
 
     /**
      * Method invoked by the ui with the response of the user regarding
      * if the player wants to play another match with the same players
      *
-     * @param wantsToRematch is the response of the player (true: wants to rematch, false otherwise)
+     * @param wantsToRematch is the response of the player (true: wants to rematch,
+     *                       false otherwise)
      */
     @Override
-    public void anotherMatchResponse(Boolean wantsToRematch){
+    public void anotherMatchResponse(Boolean wantsToRematch) {
         tcp_sendCommand(new AnotherMatchResponseObj(username, wantsToRematch), DV.RECIPIENT_GAME_CONTROLLER);
     }
+
+    @Override
+    public boolean hasToken() {
+        if (token.doesTokenExists()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int readToken() throws NumberFormatException, NoTokenException {
+        return Integer.parseInt(token.getTokenLine());
+    }
+
+    @Override
+    public Token getToken() {
+        return this.token;
+    }
+
 }

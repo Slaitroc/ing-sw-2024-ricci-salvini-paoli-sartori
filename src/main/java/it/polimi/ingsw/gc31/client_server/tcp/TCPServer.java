@@ -12,12 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import it.polimi.ingsw.gc31.utility.DV;
+
 public class TCPServer {
     final ServerSocket listenSocket;
     private final List<SocketClientHandler> handlers = new ArrayList<>();
 
     /**
-     * This method writes on System.Out a specific type of string characterizing the TCP communications
+     * This method writes on System.Out a specific type of string characterizing the
+     * TCP communications
      *
      * @param text is the text to write on System.Out
      */
@@ -28,7 +31,8 @@ public class TCPServer {
     // TODO Gestire meglio eccezioni
 
     /**
-     * This method is the constructor of the class. The method creates the TCP server and writes on System.Out the
+     * This method is the constructor of the class. The method creates the TCP
+     * server and writes on System.Out the
      * ip of the server and the port used
      *
      * @param ipaddress is the ip of the server
@@ -46,7 +50,8 @@ public class TCPServer {
     /**
      * This method is invoked right after the creation of the TCP server.
      * It creates a thread that accept all the new TCP connections arriving.
-     * For every connection detected the method creates a SocketClientHandler for the specific client and add it to
+     * For every connection detected the method creates a SocketClientHandler for
+     * the specific client and add it to
      * the list of all the handlers.
      */
     public void runServer() {

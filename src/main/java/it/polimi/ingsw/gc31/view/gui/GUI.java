@@ -112,9 +112,8 @@ public class GUI extends UI {
     }
 
     @Override
-    public void receiveToken(int token) {
-        System.out.println("receiveToken called");
-        client.setToken(token);
+    public void receiveToken(int token, boolean temporary) {
+
     }
 
     //Used to Load the InGameScene
@@ -234,8 +233,8 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_wantReconnect() {
-        System.out.println("show_wantReconnect called");
+    public void show_wantReconnect(String username) {
+
     }
 
     @Override
@@ -260,7 +259,12 @@ public class GUI extends UI {
     }
 
     @Override
-    public void showGenericClientResonse(String response) {
+    public void show_unableToReconnect() {
+
+    }
+
+    @Override
+    public void show_GenericClientResonse(String response) {
         // TODO Auto-generated method stub
         System.out.println(response);
     }
