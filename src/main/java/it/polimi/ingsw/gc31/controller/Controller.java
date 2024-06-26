@@ -155,8 +155,6 @@ public class Controller extends UnicastRemoteObject implements IController {
      *
      * @param client   the client to connect.
      * @param username the username of the client.
-     * @throws PlayerNicknameAlreadyExistsException if the username is already in
-     *                                              use.
      */
     // FIXME forse non serve client come parametro
     public boolean connect(VirtualClient client, String username, Integer tempToken, Integer token)
@@ -247,7 +245,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * client ha specificato che vuole connettersi in risposta a
      * WantsReconnectObj.java
      * Deve innescare gli update dei listener e mandare la risposta al client
-     * (pseudocodice sotto)
+     * (pseudocode sotto)
      *
      * @param token is the token of the client
      * @param esito is true if the client wants to reconnect, false otherwise
@@ -339,7 +337,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      */
     public void quitGame(String username, VirtualClient client) throws RemoteException {
         tempClients.put(username, client);
-        // se il gioco era costituito da una sola persona va eliminato il gamecontroller
+        // se il gioco era costituito da una sola persona va eliminato il gameController
         // corrispondente
         sendUpdateToClient(client, new QuitFromGameRObj(username));
     }
@@ -394,7 +392,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * method
      */
     private void startHeartBeatCheck() {
-        scheduler.scheduleAtFixedRate(() -> checkHeartBeats(), 0, 10, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::checkHeartBeats, 0, 10, TimeUnit.SECONDS);
     }
 
     /**

@@ -26,7 +26,7 @@
 
 - [ ] provare a fare due partite da due in contemporanea
 - [ ] RMI ha dei problemi di connessione su ubuntu: la connessione di lookup viene rilevata ma non va oltre e lancia un'eccezione.
-- [ ] Cosa succde quando hai piazzato la carta e provi a selezionare la terza carta in mano?
+- [ ] Cosa succede quando hai piazzato la carta e provi a selezionare la terza carta in mano?
 
 ## Model
 
@@ -50,13 +50,14 @@
 - [x] se un client termina il programma sembra che non lo tolga dal gameController se il game non è ancora stato avviato (ho un solo client e comunque quando faccio show games vedo che c'è un client ancora connesso ma è impossibile)
 - [x] thread per send commands
 - [x] swappare socket nella riconnessione tcp
-- [ ] da implementare quit game di fine partita --> dobbiamo rimettere i client da gamecontroller in tempclient di controller
+- [x] da implementare quit game di fine partita --> dobbiamo rimettere i client da gamecontroller in tempclient di controller
 
 ## GUI
 - [x] da girare le carte nei deck e allo startup
 
 ## TUI
 
+- [ ] se sbagli inserimenti nella join si rompe
 - [x] help non chiama la state.notify() --> risolto
 - [x] gold card bordi gold
 - [x] Bisogna ristampare i messaggi della chat se non si è in playing state e si chiama ref

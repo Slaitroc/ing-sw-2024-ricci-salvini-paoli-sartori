@@ -5,6 +5,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
+import it.polimi.ingsw.gc31.exceptions.LastPlayerRemainedException;
 import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.Board;
@@ -34,7 +35,7 @@ class GameModelTest {
 
     @BeforeEach
     public void setUp() {
-        model = new GameModel(0);
+        model = new GameModel(lock, 0);
         clients = new LinkedHashMap<>();
 
         clients.put("Players1", new FakeClient());
@@ -457,7 +458,7 @@ class GameModelTest {
 
         model.setGameState(new LastTurnGameModelState(model));
         model.getCurrPlayer().setInGameState(new Placed());
-        assertDoesNotThrow(() -> model.drawGold(model.getCurrPlayer().getUsername(), 0));
+        assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawGold(model.getCurrPlayer().getUsername(), 0));
 
         model.setGameState(new EndGameModelState(model));
         model.getCurrPlayer().setInGameState(new Placed());
@@ -501,7 +502,7 @@ class GameModelTest {
 
         model.setGameState(new LastTurnGameModelState(model));
         model.getCurrPlayer().setInGameState(new Placed());
-        assertDoesNotThrow(() -> model.drawResource(model.getCurrPlayer().getUsername(), 0));
+        assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawResource(model.getCurrPlayer().getUsername(), 0));
 
         model.setGameState(new EndGameModelState(model));
         model.getCurrPlayer().setInGameState(new Placed());
@@ -612,9 +613,9 @@ class GameModelTest {
     void endGame() {
         FakeGameModel model = new FakeGameModel();
         FakePlayer player;
-        assertThrowsExactly(IllegalStateOperationException.class, model::endGame);
+        assertThrowsExactly(IllegalStateOperationException.class, () -> model.endGame(null));
         utilityInitGame(model);
-        assertThrowsExactly(IllegalStateOperationException.class, model::endGame);
+        assertThrowsExactly(IllegalStateOperationException.class, () -> model.endGame(null));
 
         model.commonObjectives.add(new ObjectiveCard(2,
                 new Count(Arrays.asList(Resources.MUSHROOM, Resources.MUSHROOM, Resources.MUSHROOM)), null, null));
@@ -623,7 +624,7 @@ class GameModelTest {
 
         // last player reach 20 points the game must directly enter in lastTurn state
         model.setGameState(new RunningGameModelSate(model));
-        assertThrowsExactly(IllegalStateOperationException.class, model::endGame);
+        assertThrowsExactly(IllegalStateOperationException.class, () -> model.endGame(null));
 
         // the first player reach 15 points and achieve his secret objective card
         // he achieves first common objective
@@ -686,7 +687,7 @@ class GameModelTest {
             fail("Exception should not have been thrown");
         }
         assertInstanceOf(LastTurnGameModelState.class, model.getGameState());
-        assertThrowsExactly(IllegalStateOperationException.class, model::endGame);
+        assertThrowsExactly(IllegalStateOperationException.class, () -> model.endGame(null));
 
         for (int i = 0; i < 4; i++) {
             try {
@@ -723,7 +724,11 @@ class GameModelTest {
         assertNull(player.getObjectiveCard());
         assertNull(player.getPlayArea().getPlacedCards().get(new Point(0,0)));
         // if first player disconnect
-        model.disconnectPlayer("Players1");
+        try {
+            model.disconnectPlayer("Players1");
+        } catch (LastPlayerRemainedException ignored) {
+
+        }
 
         assertFalse(model.getPlayerConnection().get("Players1"));
         assertNotNull(player.getObjectiveCard());
@@ -732,7 +737,8 @@ class GameModelTest {
     }
 
     @Test
-    void executeDisconnectPlayerAfterSetupState() {
+    void executeDisconnectPlayerAfterSetupState() throws LastPlayerRemainedException {
+        // FIXME rigurdare gestione LastPlayerRemainedExcpetion
         for (String username : clients.keySet()) {
             assertDoesNotThrow(() -> model.disconnectPlayer(username));
         }
@@ -751,7 +757,7 @@ class GameModelTest {
 
     public static class FakeGameModel extends GameModel {
         public FakeGameModel() {
-            super(0);
+            super(new Object(),0);
         }
 
         public void initGame(Map<String, VirtualClient> clients, Object lock){

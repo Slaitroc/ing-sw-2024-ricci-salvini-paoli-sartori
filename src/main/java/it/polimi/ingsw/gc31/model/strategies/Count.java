@@ -4,8 +4,6 @@ import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 
@@ -85,8 +83,8 @@ public class Count extends Objective {
      * @return the number of points obtained by the player
      */
     private int countFIS(Map<Point, PlayableCard> placedCard, Map<Resources, Integer> achievedResources) {
-        Resources seed = null;
-        int found = 0;
+        Resources seed;
+        int found;
 
         if (resources.size() == 2) {
             seed = resources.get(0);
@@ -107,7 +105,7 @@ public class Count extends Objective {
      * This method is invoked only if the number of resources to gain points is 1.
      * In this particular case
      * the objective is of a golden card, and the player gains 1 point for every
-     * resource of the spicified
+     * resource of the specified
      * type is possessed by the player.
      *
      * @param achievedResources is the map that contains the resource as a key and

@@ -2,6 +2,8 @@ package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.AnotherMatchObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsOverObj;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.player.Player;
@@ -70,26 +72,47 @@ public class EndGameModelState implements GameModelState {
     }
 
     @Override
-    public void endGame(GameModel model){
-        for (Player player: model.getPlayers().values()) {
-            player.calculateObjectiveCard();
-            player.calculateObjectiveCard(model.commonObjectives.get(0));
-            player.calculateObjectiveCard(model.commonObjectives.get(1));
-        }
-        String usernameWinner = null;
-        int maxPoint = 0;
-        for (Player player: model.getPlayers().values()) {
-            if (player.getScore() >= maxPoint) {
-                maxPoint = player.getScore();
-                usernameWinner = player.getUsername();
+    public void endGame(GameModel model, String lastPlayerConnected){
+        if (lastPlayerConnected == null) {
+            for (Player player : model.getPlayers().values()) {
+                player.calculateObjectiveCard();
+                player.calculateObjectiveCard(model.commonObjectives.get(0));
+                player.calculateObjectiveCard(model.commonObjectives.get(1));
             }
-        }
+            String usernameWinner = null;
+            int maxPoint = 0;
+            for (Player player : model.getPlayers().values()) {
+                if (player.getScore() >= maxPoint) {
+                    maxPoint = player.getScore();
+                    usernameWinner = player.getUsername();
+                }
+            }
 
-        for (String username: model.clients.keySet()) {
-            try {
-                model.clients.get(username).sendCommand(new GameIsOverObj(usernameWinner, model.getBoard().getPlayersScore()));
-            } catch (RemoteException e) {
-                System.out.println("Error sending game is over");
+            synchronized (model.clientListLock) {
+                for (String username : model.clients.keySet()) {
+                    ClientQueueObject clientQueueObject1 = new GameIsOverObj(usernameWinner, model.getBoard().getPlayersScore());
+                    ClientQueueObject clientQueueObject2 = new AnotherMatchObj(username);
+                    new Thread(
+                            () -> {
+                                try {
+                                    model.clients.get(username).sendCommand(clientQueueObject1);
+                                    model.clients.get(username).sendCommand(clientQueueObject2);
+                                } catch (RemoteException ignored) {
+                                }
+                            }
+                    ).start();
+                }
+            }
+        } else {
+            synchronized (model.clientListLock) {
+                new Thread(
+                        () -> {
+                            try {
+                                model.clients.get(lastPlayerConnected).sendCommand(new GameIsOverObj(lastPlayerConnected, model.getBoard().getPlayersScore()));
+                            } catch (RemoteException ignored) {
+                            }
+                        }
+                ).start();
             }
         }
     }

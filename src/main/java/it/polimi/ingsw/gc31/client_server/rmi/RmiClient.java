@@ -21,7 +21,7 @@ import java.util.Timer;
 
 public class RmiClient extends UnicastRemoteObject implements VirtualClient, ClientCommands {
     private IController controller;
-    private VirtualServer server;
+    private final VirtualServer server;
     private IGameController gameController;
     private Integer idGame;
     private String username;
@@ -233,7 +233,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     // Risorse per heartbeat
     // FIXME spostare in cima attributi e metodi per heartbeat
-    private Timer timer;
+    private final Timer timer;
 
     /**
      * This method starts the process that "sends" the heart beat periodically to
@@ -259,7 +259,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
      * This method sends to the controller the heart beat associated with the
      * VirtualClient that is sending it
      * 
-     * @throws RemoteException
+     * @throws RemoteException if an error occurs during the rmi communication
      */
     private void sendHeartBeat() throws RemoteException {
         controller.updateHeartBeat(this);
@@ -295,6 +295,19 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public void reconnect(boolean reconnect) throws RemoteException {
         controller.sendCommand(new ReconnectObj(reconnect, username, token.getTempToken(), token.getToken()));
+    }
+
+    /**
+     * Method invoked by the ui when the user specify if it wants to play another
+     * match or not
+     *
+     * @param wantsToRematch is the boolean value associated to the response (true:
+     *                       wants to rematch, false otherwise)
+     * @throws RemoteException if an error occurred during the rmi connection
+     */
+    @Override
+    public void anotherMatchResponse(Boolean wantsToRematch) throws RemoteException {
+        gameController.sendCommand(new AnotherMatchResponseObj(username, wantsToRematch));
     }
 
     @Override

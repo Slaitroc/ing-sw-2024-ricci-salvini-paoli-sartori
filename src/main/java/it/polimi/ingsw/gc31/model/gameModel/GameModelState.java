@@ -1,10 +1,7 @@
 package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
-import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
-import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
+import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
@@ -21,9 +18,8 @@ public interface GameModelState {
     void changeSide(GameModel model, String username) throws IllegalStateOperationException;
     void changeStarterSide(GameModel model, String username) throws IllegalStateOperationException;
     void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException;
-    void endGame(GameModel model) throws IllegalStateOperationException;
+    void endGame(GameModel model, String lastPlayerConnected) throws IllegalStateOperationException;
 
-    // TODO forse non necessario
-    void disconnectPlayer(GameModel model, String username);
+    void disconnectPlayer(GameModel model, String username) throws LastPlayerRemainedException;
     void reconnectPlayer(GameModel model, String username);
 }

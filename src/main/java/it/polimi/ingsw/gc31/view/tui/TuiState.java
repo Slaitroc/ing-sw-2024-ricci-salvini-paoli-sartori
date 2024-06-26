@@ -94,4 +94,6 @@ public abstract class TuiState {
     protected abstract void command_changeStarterSide();
 
     protected abstract void command_movePlayArea();
+
+    protected abstract void command_changePlayArea();
 }

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.gc31.controller;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import net.bytebuddy.implementation.bind.MethodDelegationBinder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

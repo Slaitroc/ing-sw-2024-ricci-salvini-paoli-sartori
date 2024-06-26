@@ -6,6 +6,7 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.view.UI;
 import javafx.application.Platform;
+import javafx.util.Pair;
 
 import java.awt.*;
 import java.util.LinkedHashMap;
@@ -149,9 +150,9 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_scorePlayer(LinkedHashMap<String, Integer> scores) {
-
-        Platform.runLater(() -> app.getCurrentController().show_scorePlayer(scores));
+    public void show_scorePlayer(LinkedHashMap<String, Pair<Integer, Boolean>> scores) {
+        // FIXME
+//        Platform.runLater(() -> app.getCurrentController().show_scorePlayer(scores));
     }
 
     @Override
@@ -258,6 +259,20 @@ public class GUI extends UI {
 
     @Override
     public void show_rejoined(boolean esito) {
+
+    }
+
+    /**
+     * This method should ask if the player wants to play
+     * another match with the same opponents when the current game is finished
+     */
+    @Override
+    public void show_anotherMatch() {
+
+    }
+
+    @Override
+    public void show_timerLastPlayerConnected(Integer secondsLeft) {
 
     }
 
