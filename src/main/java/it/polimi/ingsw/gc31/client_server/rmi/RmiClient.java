@@ -44,6 +44,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         this.server.RMIserverWrite("New connection detected from ip: " + server.getClientIP());
         this.token = new Token();
         token.setTempToken(this.server.generateToken(this));
+        token.setToken(641);
         this.username = DV.DEFAULT_USERNAME;
         this.controller = null;
         this.callsList = new LinkedBlockingQueue<>();
@@ -92,14 +93,18 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
-    public void setUsernameCall(String username, int token) throws RemoteException {
-        server.sendCommand(new ConnectObj(username, token));
+    public void setUsernameCall(String username) throws RemoteException {
+        server.sendCommand(new ConnectObj(username, this.token.getTempToken(), this.token.getToken()));
     }
 
     @Override
     public void setUsernameResponse(String username) {
         this.username = username;
+    }
 
+    @Override
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -288,7 +293,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void reconnect(boolean reconnect) throws RemoteException {
-        controller.sendCommand(new ReconnectObj(reconnect, username, token.getToken()));
+        controller.sendCommand(new ReconnectObj(reconnect, username, token.getTempToken(),token.getToken()));
     }
 
     @Override

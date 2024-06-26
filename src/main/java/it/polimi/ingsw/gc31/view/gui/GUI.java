@@ -250,12 +250,17 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_wantReconnect() {
+    public void show_wantReconnect(String username) {
 
     }
 
     @Override
     public void show_rejoined(boolean esito) {
+
+    }
+
+    @Override
+    public void show_unableToReconnect() {
 
     }
 

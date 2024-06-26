@@ -13,6 +13,7 @@ import it.polimi.ingsw.gc31.client_server.queue.serverQueue.JoinGameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.PlayerNicknameAlreadyExistsException;
+import javafx.util.Pair;
 
 //NOTE creation of GameController for match creation
 // Does the GameController related to the first match get created immediately after the first player has logged in?
@@ -44,8 +45,11 @@ public class Controller extends UnicastRemoteObject implements IController {
     protected Map<String, VirtualClient> tempClients;
     protected final Set<String> nicknames;
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
-    protected final Map<Integer, VirtualClient> newConnections; // FIXME
-    protected final Map<Integer, Integer> disconnected; // token - gameID
+    protected final Map<Integer, VirtualClient> newConnections;
+    protected final Map<Integer, Pair<String, Integer>> disconnected; // token - gameID
+
+    protected ConcurrentHashMap<VirtualClient, Long> clientsHeartBeat;
+    private ScheduledExecutorService scheduler;
 
     /**
      * This method generates a unique token (from 0 to 999) every time a new client
@@ -62,8 +66,7 @@ public class Controller extends UnicastRemoteObject implements IController {
             token = (int) (Math.random() * 1000);
         }
         this.newConnections.put(token, newConnection);
-        // FIX
-
+        ServerLog.controllerWrite("Generic token generated for the new connection: " + token);
         return token;
     }
 
@@ -75,6 +78,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @param newConnection is the VirtualClient that is trying to set its username
      */
     public void sendToken(VirtualClient newConnection, int token, boolean temporary) {
+        // sendToken usato per mandare il token definitivo e non quello temporaneo
         try {
             newConnection.sendCommand(new SaveToken(token, temporary));
         } catch (RemoteException e) {
@@ -154,30 +158,53 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @throws PlayerNicknameAlreadyExistsException if the username is already in
      *                                              use.
      */
+    // FIXME forse non serve client come parametro
     public boolean connect(VirtualClient client, String username, Integer tempToken, Integer token)
             throws RemoteException {
         if (token == -1) {
-            int newToken = generateToken(client);
-            ServerLog.controllerWrite("Client connesso senza token: " + username);
-            ServerLog.controllerWrite("Player " + username + " nuovo token assegnato: " + newToken);
-            sendToken(client, newToken, false);
-            newConnections.put(newToken, client);
-            return usernameValidation(username, client);
-        } else {
-            if (disconnected.containsKey(token)) {
-                ServerLog.controllerWrite("Il player " + username + " è tornato con token: " + token);
-                ServerLog.controllerWrite("Stava giocando al game: " + disconnected.get(token));
-                newConnections.replace(token, client);
-                client.sendCommand(new WantsReconnectObj());
-                ServerLog.controllerWrite(
-                        "old client " + gameControlList.get(disconnected.get(token)).disconnected.get(token)
-                                + "reconnected with name " + username);
-                // gameControlList.get(disconnected.get(token)).reJoinGame(username, client);
+            // se l'username è valido genero il nuovo token e lo mando
+            ServerLog.controllerWrite("First connection of " + username + " with temporary token "+ tempToken);
+            VirtualClient newConnectionClient = newConnections.get(tempToken);
+            if (usernameValidation(username, newConnectionClient)) {
+                int newToken = generateToken(client);
+
+                // tolgo da newConnection il vecchio token e metto quello nuovo
+                newConnections.remove(tempToken);
+                newConnections.put(newToken, newConnectionClient);
+                sendToken(newConnectionClient, newToken, false);
+                ServerLog.controllerWrite("Token sent and saved for user: " +username+" | "+ newToken);
                 return true;
-            } else {
-                sendToken(client, token, false);
-                return usernameValidation(username, client);
             }
+            else return false;
+        } else {
+            ServerLog.controllerWrite("Reconnection of: " + "temporary token = " + tempToken + " | "+ "token = " + token);
+            if (disconnected.containsKey(token)) {
+                // viene riconnesso alla partita
+                // trovo il nuovo client in newConnections
+                VirtualClient clientConnections = newConnections.get(tempToken);
+                newConnections.remove(tempToken);
+                newConnections.put(token, clientConnections);
+                clientConnections.sendCommand(new WantsReconnectObj(disconnected.get(token).getKey()));
+                clientConnections.setController(this);
+                clientsHeartBeat.put(clientConnections, System.currentTimeMillis());
+                ServerLog.controllerWrite("Reconnection request to game with id=" + disconnected.get(token).getValue() + " sent to " + disconnected.get(token).getKey());
+            } else {
+                ServerLog.controllerWrite("First connection of " + username + "with temporary token "+ tempToken);
+                VirtualClient newConnectionClient = newConnections.get(tempToken);
+                if (usernameValidation(username, newConnectionClient)) {
+                    int newToken = generateToken(client);
+                    ServerLog.controllerWrite("Generazione nuovo token per: " +username+" | "+ newToken);
+
+                    // tolgo da newConnection il vecchio token e metto quello nuovo
+                    newConnections.remove(tempToken);
+                    newConnections.put(newToken, newConnectionClient);
+                    sendToken(newConnectionClient, newToken, false);
+                    ServerLog.controllerWrite("Token sent and saved for user: " +username+" | "+ newToken);
+                    return true;
+                }
+                else return false;
+            }
+            return false;
         }
     }
 
@@ -222,16 +249,15 @@ public class Controller extends UnicastRemoteObject implements IController {
      * Deve innescare gli update dei listener e mandare la risposta al client
      * (pseudocodice sotto)
      *
-     * @param username is the username of the client
      * @param token    is the token of the client
      * @param esito    is true if the client wants to reconnect, false otherwise
      */
-    public void rejoin(String username, int token, boolean esito) {
+    public void rejoin(int tempToken, int token, boolean esito) {
         VirtualClient client = newConnections.get(token);
         if (esito) {
             try {
                 client.sendCommand(new ReJoinedObj(true)); // mandare questo è importante perché la ui fa cose in //
-
+                gameControlList.get(disconnected.get(token).getValue()).reJoinGame(disconnected.get(token).getKey(), newConnections.get(token));
                 // risposta a questo update
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -245,9 +271,11 @@ public class Controller extends UnicastRemoteObject implements IController {
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+            newConnections.remove(token);
+            newConnections.put(tempToken, client);
+            disconnected.remove(token);
             // At this point the Controller tries to connect the client as if it was the
             // first connection of it
-            usernameValidation(username, client);
         }
     }
 
@@ -360,10 +388,6 @@ public class Controller extends UnicastRemoteObject implements IController {
     }
 
     // Heartbeat resources
-    // FIXME spostare in cima attributi e metodi
-    protected ConcurrentHashMap<VirtualClient, Long> clientsHeartBeat;
-    private ScheduledExecutorService scheduler;
-
     /**
      * This method creates a task that execute every 10 seconds the checkHeartBeats
      * method
@@ -409,7 +433,6 @@ public class Controller extends UnicastRemoteObject implements IController {
                     }
                 }
 
-                // FIXME si può usare disconnected get(token) per ottenere subito il gameID
                 // If the client was not found in tempClients => it is in a clientList of a
                 // GameController (it was
                 // in a game). The for searches the client in all the gameController.clientList,
@@ -418,7 +441,6 @@ public class Controller extends UnicastRemoteObject implements IController {
                 // disconnect method of the Controller
                 if (!found) {
                     for (GameController gc : gameControlList) {
-                        // FIXME
                         synchronized (gc.clientList) {
                             for (String u : gc.clientList.keySet()) {
                                 if ((gc.clientList.get(u)).equals(client)) {
@@ -428,6 +450,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                                     for (int t : newConnections.keySet()) {
                                         if ((newConnections.get(t)).equals(client)) {
                                             disconnect(u, gc.getIdGame(), t);
+                                            ServerLog.controllerWrite("Client disconnected " + u + " | " + t);
                                         }
                                     }
                                 }
@@ -435,11 +458,6 @@ public class Controller extends UnicastRemoteObject implements IController {
                         }
                     }
                 }
-                // ^ Implementato sopra ^
-                // gc.disconnectPlayer(...)
-                // gc.getid()
-                // disconnect(username, id, token )
-
             }
         }
     }
@@ -457,37 +475,17 @@ public class Controller extends UnicastRemoteObject implements IController {
     @Override
     public void updateHeartBeat(VirtualClient client) throws RemoteException {
         if (!clientsHeartBeat.containsKey(client)) {
-            System.out.println("Il client da cui è arrivato l'HeartBeat non è presente nella mappa");
+            ServerLog.controllerWrite("HeartBeat received is not bound to any client");
         } else {
             clientsHeartBeat.replace(client, System.currentTimeMillis());
             client.sendCommand(new HeartBeatObj());
-        } // System.out.println(Ansi.ansi().cursor(1,
-          // 1).a("\\033[5m💚\\033[0m\\").reset());
-          // System.out.println("HeartBeat ricevuto");
+        }
     }
 
-    // /**
-    // * This method is invoked if a check on the heart beat is met.
-    // * The method searches for the gameController of the client that needs to be
-    // * disconnected,
-    // * if the gameController and the correct couple username/VirtualClient is
-    // found
-    // * the method disconnectPlayer is invoked.
-    // *
-    // * @param username is the username of the client to be disconnected
-    // */
-    // private void disconnectFromGame(String username) {
-    // for (int i = 0; i < gameControlList.size(); i++) {
-    // for (String u : gameControlList.get(i).clientList.keySet())
-    // if (u.equals(username))
-    // gameControlList.get(i).disconnectPlayer(username);
-    // }
-    // }
-
     public void disconnect(String username, int idGame, int token) {
-        disconnected.put(token, idGame);
+        disconnected.put(token, new Pair<>(username, idGame));
         gameControlList.get(idGame).disconnected.put(token, username);
-        ServerLog.controllerWrite("Client disconnesso per timeout" + username);
+        ServerLog.controllerWrite("Client disconnected due to timeout");
     }
 
     private void sendUpdateToClient(VirtualClient client, ClientQueueObject clientQueueObject) {

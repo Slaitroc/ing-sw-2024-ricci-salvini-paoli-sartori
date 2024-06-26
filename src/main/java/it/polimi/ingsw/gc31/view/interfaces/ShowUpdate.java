@@ -68,7 +68,7 @@ public interface ShowUpdate {
 
     void show_heartBeat();
 
-    void show_wantReconnect();
+    void show_wantReconnect(String username);
 
     void show_rejoined(boolean esito);
 

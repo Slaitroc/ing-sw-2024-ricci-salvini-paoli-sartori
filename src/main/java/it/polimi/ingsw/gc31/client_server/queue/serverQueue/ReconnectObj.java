@@ -7,20 +7,20 @@ import it.polimi.ingsw.gc31.controller.GameController;
 public class ReconnectObj extends ServerQueueObject {
 
     private boolean esito;
-    private String username;
     private int token;
+    private int tempToken;
 
-    public ReconnectObj(boolean esito, String username, int token) {
+    public ReconnectObj(boolean esito, String username,int tempToken, int token) {
         this.esito = esito;
         this.token = token;
-        this.username = username;
+        this.tempToken = tempToken;
 
     }
 
     @Override
     public void execute(Controller controller) {
 
-        controller.rejoin(username, token, esito);
+        controller.rejoin(tempToken, token, esito);
     }
 
     @Override

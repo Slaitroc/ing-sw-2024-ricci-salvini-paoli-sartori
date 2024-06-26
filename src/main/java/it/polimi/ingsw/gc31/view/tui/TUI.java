@@ -1303,6 +1303,8 @@ public class TUI extends UI {
             state.commandsMap.get(command).run();
         } else if (command.equals(TUIcommands.NOTIFY.toString())) {
             state.stateNotify();
+        } else if (command.equals(TUIcommands.RECONNECT.toString()) && state.stateName.equals("Init State")) {
+            state.reconnect();
         } else {
             state.commandsMap.get(TUIcommands.INVALID.toString()).run();
         }
@@ -2128,14 +2130,21 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_wantReconnect() {
+    public void show_wantReconnect(String username) {
+        getClient().setUsername(username);
         commandToProcess(TUIcommands.RECONNECT, false);
+        int i = 0;
     }
 
     @Override
     public void show_rejoined(boolean esito) {
-        state = new PlayingState(this);
-        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+        if (esito) {
+            state = new PlayingState(this);
+            commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+        } else {
+            getClient().getToken().setToken(DV.defaultToken);
+            commandToProcess(TUIcommands.SET_USERNAME, false);
+        }
     }
 
     @Override

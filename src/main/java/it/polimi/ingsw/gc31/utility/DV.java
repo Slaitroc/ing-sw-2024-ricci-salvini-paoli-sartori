@@ -111,9 +111,9 @@ public class DV {
     public final static int TCP_PORT = 1200;
 
     // Token
-    public final static int defaultToken = 0000;
+    public final static int defaultToken = -1;
 
-    public final static boolean forceIP = true;
+    public final static boolean forceIP = false;
     public final static String forcedIP = "192.168.192.228";
 
     public final static boolean testHB = false;

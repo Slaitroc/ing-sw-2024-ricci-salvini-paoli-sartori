@@ -13,9 +13,11 @@ public interface ClientCommands {
 
     void setUI(UI ui);
 
-    void setUsernameCall(String username, int token) throws IOException;
+    void setUsernameCall(String username) throws IOException;
 
     void setUsernameResponse(String username);
+
+    void setUsername(String username);
 
     void createGame(int maxNumberPlayer) throws RemoteException, IOException;
 

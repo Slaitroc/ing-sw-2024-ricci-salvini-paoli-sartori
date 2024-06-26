@@ -138,6 +138,11 @@ public class TCPClient implements ClientCommands {
         startHeartBeat();
     }
 
+    @Override
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     /**
      * This method returns the player's game idGame
      *
@@ -166,13 +171,13 @@ public class TCPClient implements ClientCommands {
      * @param username is the username set by the client
      */
     @Override
-    public void setUsernameCall(String username, int token) {
-        if (firstConnectionDone)
-            tcp_sendCommand(new ConnectObj(username, token), DV.RECIPIENT_CONTROLLER);
-        else {
-            tcp_sendCommand(new ConnectObj(username), DV.RECIPIENT_CONTROLLER);
-            firstConnectionDone = true;
-        }
+    public void setUsernameCall(String username) {
+//        if (firstConnectionDone)
+//            tcp_sendCommand(new ConnectObj(username, token), DV.RECIPIENT_CONTROLLER);
+//        else {
+//            tcp_sendCommand(new ConnectObj(username), DV.RECIPIENT_CONTROLLER);
+//            firstConnectionDone = true;
+//        }
     }
 
     /**
@@ -385,6 +390,8 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void setToken(int token, boolean temporary) {
+        // usato per settaro solo il token definitivo e non quello temporaneo
+        this.token.setToken(token);
         // if (!temporary) {
         // this.token.setToken(token);
         // if (this.token.rewriteTokenFile())
@@ -399,7 +406,7 @@ public class TCPClient implements ClientCommands {
 
     @Override
     public void reconnect(boolean reconnect) throws RemoteException {
-        tcp_sendCommand(new ReconnectObj(reconnect, username, token.getToken()), DV.RECIPIENT_CONTROLLER);
+        tcp_sendCommand(new ReconnectObj(reconnect, username, token.getTempToken() ,token.getToken()), DV.RECIPIENT_CONTROLLER);
     }
 
     @Override
