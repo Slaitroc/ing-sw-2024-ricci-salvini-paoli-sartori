@@ -21,7 +21,6 @@ import javafx.util.Pair;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
-import it.polimi.ingsw.gc31.client_server.Token;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
@@ -160,7 +159,7 @@ public class TUI extends UI {
         }
         moveCursorToCmdLine();
         if (state.stateName.equals("Joined To Game State")) {
-            print_ChatBorders();
+            // print_ChatBorders();
         }
         commandToProcess(TUIcommands.SHOW_COMMAND_INFO, stateNotify);
 
@@ -1530,7 +1529,7 @@ public class TUI extends UI {
 
     private Thread chatBoardThreadBuilder() {
         return new Thread(() -> {
-            print_ChatBorders();
+            // print_ChatBorders();
             moveCursorToCmdLine();
             while (!Thread.currentThread().isInterrupted()) {
                 synchronized (chatNeedsUpdate) {
