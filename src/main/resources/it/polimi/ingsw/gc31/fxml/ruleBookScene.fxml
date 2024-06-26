@@ -1,56 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<StackPane styleClass="stackPane-default" stylesheets="@../css/Commons.css, @../css/Buttons.css, @../css/Panes.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.RuleBookController">
 
-<?import javafx.geometry.Insets?>
-
-
-<StackPane xmlns="http://javafx.com/javafx"
-           xmlns:fx="http://javafx.com/fxml"
-           fx:controller="it.polimi.ingsw.gc31.view.gui.controllers.RuleBookController"
-           stylesheets="@../css/Commons.css, @../css/Buttons.css, @../css/Panes.css" styleClass="stackPane-default" >
-
-    <VBox  alignment="CENTER" spacing="5">
+    <VBox alignment="CENTER" spacing="5">
         <ImageView fitHeight="120" fitWidth="600">
-            <Image url="@../Images/Misc/border1.jpg"/>
+            <Image url="@../Images/Misc/border1.jpg" />
         </ImageView>
         <StackPane>
             <padding>
-                <Insets top="10" right="20" bottom="10" left="20"/>
+                <Insets bottom="10" left="20" right="20" top="10" />
             </padding>
-            <ImageView fx:id="imageView1" fitWidth="1200" fitHeight="600">
-                <Image url="@../Images/RuleBookImages/pag1.jpg"/>
+            <ImageView fx:id="imageView1" fitHeight="500" preserveRatio="true">
+                <Image url="@../Images/RuleBookImages/pag1.jpg" />
             </ImageView>
-            <ImageView fx:id="imageView2" visible="false" fitWidth="1200" fitHeight="600">
-                <Image url="@../Images/RuleBookImages/pag2.jpg"/>
+            <ImageView fx:id="imageView2" fitHeight="500" preserveRatio="true" visible="false">
+                <Image url="@../Images/RuleBookImages/pag2.jpg" />
             </ImageView>
-            <ImageView fx:id="imageView3" visible="false" fitWidth="1200" fitHeight="600">
-                <Image url="@../Images/RuleBookImages/pag3.jpg"/>
+            <ImageView fx:id="imageView3" fitHeight="500" preserveRatio="true" visible="false">
+                <Image url="@../Images/RuleBookImages/pag3.jpg" />
             </ImageView>
-            <ImageView fx:id="imageView4" visible="false" fitWidth="1200" fitHeight="600">
-                <Image url="@../Images/RuleBookImages/pag4.jpg"/>
+            <ImageView fx:id="imageView4" fitHeight="500" preserveRatio="true" visible="false">
+                <Image url="@../Images/RuleBookImages/pag4.jpg" />
             </ImageView>
-            <ImageView fx:id="imageView5" visible="false" fitWidth="1200" fitHeight="600">
-                <Image url="@../Images/RuleBookImages/pag5.jpg"/>
+            <ImageView fx:id="imageView5" fitHeight="500" preserveRatio="true" visible="false">
+                <Image url="@../Images/RuleBookImages/pag5.jpg" />
             </ImageView>
-            <ImageView fx:id="imageView6" visible="false" fitWidth="1200" fitHeight="600">
-                <Image url="@../Images/RuleBookImages/pag6.jpg"/>
+            <ImageView fx:id="imageView6" fitHeight="500" preserveRatio="true" visible="false">
+                <Image url="@../Images/RuleBookImages/pag6.jpg" />
             </ImageView>
         </StackPane>
         <HBox alignment="BOTTOM_CENTER" spacing="400">
-            <MFXButton layoutX="100.0" layoutY="200.0"
-                       text="Prev" styleClass="rounded-button, small-button" prefWidth="150"
-                       onAction="#prevImage"/>
-            <MFXButton layoutX="100.0" layoutY="200.0"
-                       text="Next" styleClass="rounded-button, small-button" prefWidth="150"
-                       onAction="#nextImage"/>
+            <MFXButton layoutX="100.0" layoutY="200.0" onAction="#prevImage" prefWidth="150" styleClass="rounded-button, small-button" text="Prev" />
+            <MFXButton layoutX="100.0" layoutY="200.0" onAction="#nextImage" prefWidth="150" styleClass="rounded-button, small-button" text="Next" />
         </HBox>
-        <MFXButton layoutX="100.0" layoutY="200.0"
-                   text="Back" styleClass="rounded-button, small-button" prefWidth="150"
-                   onAction="#loadMainMenuScene"/>
+        <MFXButton layoutX="100.0" layoutY="200.0" onAction="#loadMainMenuScene" prefWidth="150" styleClass="rounded-button, small-button" text="Back" />
     </VBox>
 </StackPane>

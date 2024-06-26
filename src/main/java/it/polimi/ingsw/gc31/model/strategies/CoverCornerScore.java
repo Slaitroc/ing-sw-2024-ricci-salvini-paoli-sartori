@@ -1,11 +1,10 @@
 package it.polimi.ingsw.gc31.model.strategies;
 
-import java.awt.*;
-import java.util.Map;
-
-import com.google.gson.JsonObject;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+
+import java.awt.*;
+import java.util.Map;
 
 /**
  * This class represents the Objective where the player gets points based on how
@@ -28,7 +27,7 @@ public class CoverCornerScore extends Objective {
      * @return the number of point obtained by the player
      */
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point point,
-            Map<Resources, Integer> achievedResources) {
+                               Map<Resources, Integer> achievedResources) {
         int count = 0;
 
         Point altoDx = new Point((int) point.getX() + 1, (int) point.getY() + 1);

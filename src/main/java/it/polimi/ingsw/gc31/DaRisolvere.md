@@ -26,7 +26,7 @@
 
 - [ ] provare a fare due partite da due in contemporanea
 - [ ] RMI ha dei problemi di connessione su ubuntu: la connessione di lookup viene rilevata ma non va oltre e lancia un'eccezione.
-- [ ] Cosa succde quando hai piazzato la carta e provi a selezionare la terza carta in mano?
+- [ ] Cosa succede quando hai piazzato la carta e provi a selezionare la terza carta in mano?
 
 ## Model
 
@@ -37,21 +37,24 @@
 - [ ] poi devono venir stampati punti sia sul client che sul server (non succede)
 - [ ] il log del server quando qualcuno chiama un'azione che non è nello stato corretto scrive che è stato fatto ma non specifica chi lo ha fatto (lo togliamo o lo implementiamo?)
 - [ ] Bisogna salvare nel model l'id del game
+- [ ] Quando il player rimane in partita da solo parte un countdown, scaduto il countdown il player vince
 
 ## Nuove
 
 - [x] dare la possibilità di quittare un game prima che parta (prima di playing state (tui))
+- [x] aggiustare wrong input nelle fasi iniziali di lancio del client (rmi tc) (tui gui)
+- [x] salvare il token nel client 
+- [x] se un client termina il programma sembra che non lo tolga dal gameController se il game non è ancora stato avviato (ho un solo client e comunque quando faccio show games vedo che c'è un client ancora connesso ma è impossibile)
+- [x] thread per send commands
+- [x] swappare socket nella riconnessione tcp
+- [x] da implementare quit game di fine partita --> dobbiamo rimettere i client da gamecontroller in tempclient di controller
 
 - [ ] al termine della partita chiedere se rigiocare e in caso contrario eliminare dal gamecontroller i player che non vogliono. Se tutti non vogliono cancellare il gamecontroller
 - [ ] timer che fa vincere l'unico giocatore rimasto se tutti gli altri sono disconnessi. E direi timer per terminare la partita e cancellare il gamecontroller se sono tutti disconnessi
-- [ ] aggiustare wrong input nelle fasi iniziali di lancio del client (rmi tc) (tui gui)
-- [ ] se un client termina il programma sembra che non lo tolga dal gameController se il game non è ancora stato avviato (ho un solo client e comunque quando faccio show games vedo che c'è un client ancora connesso ma è impossibile)
-- [ ] thread per send commands
-- [ ] swappare socket nella riconnessione tcp
-- [ ] salvare il token nel client 
-- [ ] da implementare quit game di fine partita --> dobbiamo rimettere i client da gamecontroller in tempclient di controller
+- [ ] Se un player si diconnette per piú di una volta dalla partita, puó sempre ricollegarsi ma il countdown per la vittoria del player rimasto viene triggerato solo alla prima disconnessione
 
 ## GUI
+- [x] da girare le carte nei deck e allo startup
 
 ## TUI
 
@@ -60,16 +63,17 @@
 - [x] Bisogna ristampare i messaggi della chat se non si è in playing state e si chiama ref
 - [x] Bisogna eliminare le cache della tui quando si quitta dal game e si chiama ref perché altrimenti rimangono le carte stampate (ora ref non sembra nemmeno implementata quando si è in init ma dovrebbe esserlo)
 - [x] togliere la chat prima di playing state
+- [x] scrivere di chi è il turno anche agli altri player
+- [x] fixare heartbeat stampa verde e in caso il rosso rotto
+- [x] mostrare info altri player
+- [x] select secret objective wrong input blocca tutto 
+- [x] se sbagli inserimenti nella join si rompe
 
-- [ ] scrivere di chi è il turno anche agli altri player
-- [ ] fixare heartbeat stampa verde e in caso il rosso rotto
-- [ ] mostrare info altri player
-- [ ] input del token in tui setusername 
-- [ ] visualizzare input di altri player nella tui
-- [ ] sistemare tui area cache per ref command 
+- [ ] sistemare tui area cache per ref command e cp ( se la play area non è ancora stata ricevuta lancia null pointer exceptions) 
 
 ## Opzionali e finali
 
+- [ ] visualizzare input di altri player nella tui
 - [ ] feedback e storico delle mosse lo vogliamo mettere?
 - [ ] aggiungere suono che notifica il player quando p il suo turno
 - [ ] previsione dei punti calcolati a fine partita????? (slaitrocka non vuole aspettare ne contare da solo)

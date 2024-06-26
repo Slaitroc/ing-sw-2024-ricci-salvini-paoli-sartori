@@ -1,27 +1,32 @@
 package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.client_server.listeners.*;
+import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
+import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
-import java.util.*;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class CreationGameModelState implements GameModelState {
     @Override
-    public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients)
+    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock)
             throws IllegalStateOperationException {
         Map<String, Player> players = createPlayers(model, clients.keySet());
 
         for (Player player : players.values()) {
-            player.setStarterCard();
-            player.drawGold(0);
-            player.drawResource(0);
-            player.drawResource(0);
+            try {
+                player.setStarterCard();
+                player.drawGold(0);
+                player.drawResource(0);
+                player.drawResource(0);
 
-            player.drawChooseObjectiveCards();
+                player.drawChooseObjectiveCards();
+            } catch (EmptyDeckException ignored) {
+            }
         }
 
         // The GoldCard1 and GoldCard1 are drawn on the board
@@ -29,18 +34,21 @@ public class CreationGameModelState implements GameModelState {
         // THe ResourceCar1 and ResourceCard2 are drawn on the board
         model.getBoard().getDeckResource().refill();
         // The Secrete Objective 1 and the Secrete Objective 2 are drawn
-        model.commonObjectives.add(model.getBoard().getDeckObjective().draw());
-        model.commonObjectives.add(model.getBoard().getDeckObjective().draw());
+        try {
+            model.commonObjectives.add(model.getBoard().getDeckObjective().draw());
+            model.commonObjectives.add(model.getBoard().getDeckObjective().draw());
+        } catch (EmptyDeckException ignored) {
+        }
 
         for (String username : clients.keySet()) {
             model.getBoard().updateScore(username, 0);
         }
 
-        for (String username: clients.keySet()) {
-            model.getListeners().put(username, new GameListenerHandler(username));
+        for (String username : clients.keySet()) {
+            model.getListeners().put(username, new GameListenerHandler(username, lock));
         }
 
-        for (String username: clients.keySet()) {
+        for (String username : clients.keySet()) {
             model.playerConnection.put(username, true);
         }
 
@@ -91,12 +99,12 @@ public class CreationGameModelState implements GameModelState {
     }
 
     @Override
-    public void detectEndGame(GameModel model) throws IllegalStateOperationException {
+    public void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
     @Override
-    public void endGame(GameModel model) throws IllegalStateOperationException {
+    public void endGame(GameModel model, String lastPlayerConnected) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
@@ -104,6 +112,11 @@ public class CreationGameModelState implements GameModelState {
     public void disconnectPlayer(GameModel model, String username) {
 //        if disconnectPlayer is called in this state it means that the game has not yet started,
 //        so there is no need to remove the player from the gameModel
+    }
+
+    @Override
+    public void reconnectPlayer(GameModel model, String username) {
+        model.executeReconnectPlayer(username);
     }
 
     private Map<String, Player> createPlayers(GameModel model, Set<String> setUsername) {

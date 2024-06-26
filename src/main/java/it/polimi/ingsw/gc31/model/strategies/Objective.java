@@ -1,11 +1,10 @@
 package it.polimi.ingsw.gc31.model.strategies;
 
-import java.awt.*;
-import java.util.Map;
-
-import com.google.gson.JsonObject;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+
+import java.awt.*;
+import java.util.Map;
 
 /**
  * This Class represents the generic Objective of the Card
@@ -25,7 +24,7 @@ public abstract class Objective {
      * @return the number of points obtained by the player
      */
     public abstract int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point point,
-            Map<Resources, Integer> achievedResources);
+                                        Map<Resources, Integer> achievedResources);
 
     /**
      * This method find the max X on the board

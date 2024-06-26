@@ -5,6 +5,7 @@ import java.util.Map;
 public abstract class TuiState {
     // debug
     protected String stateName;
+    protected boolean rejoin = false;
 
     protected Map<String, Runnable> commandsMap;
     protected Map<String, String> commandsInfo;
@@ -64,6 +65,10 @@ public abstract class TuiState {
 
     protected abstract void setUsername();
 
+    protected abstract void reconnect();
+
+    protected abstract void reMatch();
+
     protected abstract void command_createGame();
 
     protected abstract void command_showGames();
@@ -91,4 +96,6 @@ public abstract class TuiState {
     protected abstract void command_changeStarterSide();
 
     protected abstract void command_movePlayArea();
+
+    protected abstract void command_changePlayArea();
 }

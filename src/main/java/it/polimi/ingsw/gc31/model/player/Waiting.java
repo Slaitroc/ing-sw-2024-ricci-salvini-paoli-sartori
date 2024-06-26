@@ -30,7 +30,7 @@ public class Waiting extends PlayerState {
     }
 
     @Override
-    public String stateInfo()    {
+    public String stateInfo() {
         return "waiting";
     }
 

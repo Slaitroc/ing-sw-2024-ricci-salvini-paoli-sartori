@@ -1,32 +1,28 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
-import it.polimi.ingsw.gc31.client_server.interfaces.*;
-import it.polimi.ingsw.gc31.client_server.log.ServerLog;
+import it.polimi.ingsw.gc31.client_server.interfaces.IController;
+import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
+import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.SaveToken;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
-import it.polimi.ingsw.gc31.controller.GameController;
 import it.polimi.ingsw.gc31.utility.DV;
 
-import java.io.*;
-
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import io.github.palexdev.mfxcore.controls.Control;
 
 /*
 ricevo
 deserializzo
 getto e check il recipient
 a seconda chiamo gamecontroller o controller sendobject
-
 eseguito da loro
  */
+
 /**
  * This class receives the inputs from the virtual socket server, executes the
  * methods requested by the client
@@ -38,9 +34,9 @@ public class SocketClientHandler implements VirtualClient {
     private Integer idGame; // viene settata ma ancora non utilizzata
     // private String username;
     private boolean ready = false;
-
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
+    private int tempToken;
 
     /**
      * This method is the constructor of the client handler
@@ -54,7 +50,7 @@ public class SocketClientHandler implements VirtualClient {
         this.input = input;
         this.output = output;
         tcpClient_reader();
-        Controller.getController().generateToken(this);
+        this.tempToken = Controller.getController().generateToken(this);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
@@ -90,7 +86,7 @@ public class SocketClientHandler implements VirtualClient {
      */
     private void tcpClient_reader() {
         new Thread(() -> {
-            ServerQueueObject obj = null;
+            ServerQueueObject obj;
 
             try {
                 while ((obj = (ServerQueueObject) input.readObject()) != null) {
@@ -98,14 +94,13 @@ public class SocketClientHandler implements VirtualClient {
                         try {
                             try {
                                 ConnectObj connectObj = (ConnectObj) obj;
-                                if (connectObj.getToken() == DV.defaultToken) {
-                                    if (Controller.getController().connect(this, connectObj.getUsername())) {
-                                        ServerLog.tcpWrite("New user connected: " + connectObj.getUsername());
-                                    } else {
-                                        ServerLog.tcpWrite("New connection refused");
-                                    }
-                                    continue;
+                                if (connectObj.getTempToken() == -1) {
+                                    Controller.getController().connect(Controller.getController().getRightConnection(tempToken), connectObj.getUsername(), tempToken, connectObj.getToken());
+                                    sendCommand(new SaveToken(tempToken, true));
+                                } else {
+                                    Controller.getController().connect(Controller.getController().getRightConnection(tempToken), connectObj.getUsername(), connectObj.getTempToken(), connectObj.getToken());
                                 }
+                                continue;
                             } catch (ClassCastException e) {
 
                             }
@@ -163,9 +158,11 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     /**
-     * Method used at the start of the rmi connections but useless in the TCP implementation.
+     * Method used at the start of the rmi connections but useless in the TCP
+     * implementation.
      * Inherited from the VirtualClient interface.
-     * In TCP implementation the VirtualClient (is server side so it...) can get the controller via the singleton.
+     * In TCP implementation the VirtualClient (is server side so it...) can get the
+     * controller via the singleton.
      *
      * @param controller is the controller the client needs to get
      */
@@ -175,10 +172,12 @@ public class SocketClientHandler implements VirtualClient {
     }
 
     /**
-     * Method used at the start of the rmi connections but useless in the TCP implementation.
+     * Method used at the start of the rmi connections but useless in the TCP
+     * implementation.
      * Inherited from the VirtualClient interface.
      *
-     * @param token value to assign to the client specific token, used mainly for reconnections
+     * @param token value to assign to the client specific token, used mainly for
+     *              reconnections
      */
     @Override
     public void setRmiToken(int token) {

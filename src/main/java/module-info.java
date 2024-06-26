@@ -16,6 +16,8 @@ module it.polimi.ingsw.gc31 {
     opens it.polimi.ingsw.gc31.view.gui.controllers to javafx.fxml;
 
     exports it.polimi.ingsw.gc31;
+    exports it.polimi.ingsw.gc31.client_server.listeners;
+    exports it.polimi.ingsw.gc31.client_server;
     exports it.polimi.ingsw.gc31.controller;
     exports it.polimi.ingsw.gc31.exceptions;
     exports it.polimi.ingsw.gc31.view;

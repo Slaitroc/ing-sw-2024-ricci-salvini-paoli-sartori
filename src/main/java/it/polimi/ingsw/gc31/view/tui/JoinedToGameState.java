@@ -132,6 +132,11 @@ public class JoinedToGameState extends TuiState {
     }
 
     @Override
+    protected void command_changePlayArea() {
+
+    }
+
+    @Override
     protected void command_initial() {
         command_showCommandsInfo();
     }
@@ -143,6 +148,15 @@ public class JoinedToGameState extends TuiState {
     @Override
     protected void command_refresh() {
         tui.forceRefreshTUI(true);
+    }
+
+    @Override
+    protected void reconnect() {
+    }
+
+    @Override
+    protected void reMatch() {
+
     }
 
 }

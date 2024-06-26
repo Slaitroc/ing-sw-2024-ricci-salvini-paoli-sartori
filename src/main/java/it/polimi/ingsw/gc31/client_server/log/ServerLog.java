@@ -5,7 +5,6 @@ import it.polimi.ingsw.gc31.utility.DV;
 public class ServerLog {
 
     private ServerLog() {
-
     }
 
     public static void tcpWrite(String text) {
@@ -19,7 +18,7 @@ public class ServerLog {
     public static void controllerWrite(String text) {
 //        System.out.println(DV.ANSI_GREEN + DV.RMI_SERVER_TAG + DV.ANSI_BLUE
 //                + DV.CONTROLLER_TAG + DV.ANSI_RESET + text);
-        System.out.println( DV.ANSI_BLUE
+        System.out.println(DV.ANSI_BLUE
                 + DV.CONTROLLER_TAG + DV.ANSI_RESET + text);
 
     }

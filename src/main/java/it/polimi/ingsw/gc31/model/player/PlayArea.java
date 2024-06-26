@@ -1,11 +1,11 @@
 package it.polimi.ingsw.gc31.model.player;
 
-import java.awt.Point;
-import java.util.*;
-
 import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+
+import java.awt.*;
+import java.util.*;
 
 /**
  * This class represents the play area of a player in the game.
@@ -13,7 +13,7 @@ import it.polimi.ingsw.gc31.model.enumeration.Resources;
  *
  * @author Matteo Paoli
  */
-public class PlayArea{
+public class PlayArea {
 
     private final LinkedHashMap<Point, PlayableCard> placedCards;
     private final Map<Resources, Integer> achievedResources;
@@ -73,7 +73,7 @@ public class PlayArea{
      * Notice that player will have to call:
      * score += hisPlayArea.place(card, point) to add points at his score correctly
      *
-     * @param card the card to place.
+     * @param card  the card to place.
      * @param point the point to place the card at.
      * @return the score gained from the card.
      */
@@ -151,15 +151,15 @@ public class PlayArea{
 
     /**
      * Command update the value in the achievedResource map under the key (r) with
-     * its value +1 when adding resources (unless r == HIDDEN)
-     * than it checks all the cards that could have been covered by the new placed
+     * its value +1 when adding resources (unless r == HIDDEN).
+     * Then it checks all the cards that could have been covered by the new placed
      * card and update the value in the achievedResource map under the key (r)
-     * with its value -1
+     * with its value -1.
      * Notice that the condition of covering a not HIDDEN corner has already been
      * checked
      * (Method also calls coverCorner(int) to modify the card value)
      *
-     * @param card the card that is placed.
+     * @param card  the card that is placed.
      * @param point the point where the card is placed.
      */
     private void updateAvailableRes(PlayableCard card, Point point) {

@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
 
+import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.exceptions.NoTokenException;
+import it.polimi.ingsw.gc31.utility.DV;
 
 public class InitState extends TuiState {
 
@@ -114,6 +117,10 @@ public class InitState extends TuiState {
 
     @Override
     protected void command_movePlayArea() {
+    }
+
+    @Override
+    protected void command_changePlayArea() {
 
     }
 
@@ -125,16 +132,27 @@ public class InitState extends TuiState {
 
     @Override
     protected void setUsername() {
-        String message = "Type your username:";
         String input;
-        tui.printToCmdLineOut(tui.tuiWrite(message));
-        tui.moveCursorToCmdLine();
-        input = scanner.nextLine();
-        try {
-            tui.getClient().setUsernameCall(input.trim());
-        } catch (IOException e) {
-            e.printStackTrace();
+        ClientCommands client = tui.getClient();
+
+        if (tui.getClient().getToken().getToken() != DV.defaultToken) {
+            try {
+                tui.getClient().setUsernameCall(null);
+            } catch (IOException e) {
+
+            }
+        } else {
+            String message = "Type your username:";
+            tui.printToCmdLineOut(tui.tuiWrite(message));
+            tui.moveCursorToCmdLine();
+            input = scanner.nextLine();
+            try {
+                tui.getClient().setUsernameCall(input.trim());
+            } catch (IOException f) {
+                f.printStackTrace();
+            }
         }
+
     }
 
     @Override
@@ -143,6 +161,36 @@ public class InitState extends TuiState {
 
     @Override
     protected void command_refresh() {
+    }
+
+    @Override
+    protected void reconnect() {
+        String input;
+        tui.printToCmdLineOut(tui.tuiWrite("Welcome back " + tui.getClient().getUsername()));
+        tui.printToCmdLineOut(tui.tuiWrite("You disconnected from the last match :,("));
+        tui.printToCmdLineOut(tui.tuiWrite("Would u like to rejoin the game? (y/n)"));
+        tui.moveCursorToCmdLine();
+        input = scanner.nextLine();
+        while (true) {
+            try {
+                if (input.trim().equals("y")) {
+                    tui.getClient().reconnect(true);
+                    break;
+                } else if (input.trim().equals("n")) {
+                    tui.getClient().reconnect(false);
+                    break;
+                } else {
+                    tui.printToCmdLineOut("Wrong Input");
+                }
+            } catch (RemoteException e) {
+                e.getStackTrace();
+            }
+        }
+    }
+
+    @Override
+    protected void reMatch() {
+
     }
 
 }

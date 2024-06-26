@@ -1,21 +1,20 @@
 package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
-import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
+import it.polimi.ingsw.gc31.client_server.log.ServerLog;
+import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.model.player.Player;
 
 import java.awt.*;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ShowDownGameModelState implements GameModelState {
-    public ShowDownGameModelState() {
-        System.out.println("Game changed to SHOWDOWN");
+    public ShowDownGameModelState(GameModel model) {
+        ServerLog.gControllerWrite("Game changed to SHOWDOWN", model.getIdGame());
     }
+
     @Override
-    public Map<String, Player> initGame(GameModel model, LinkedHashMap<String, VirtualClient> clients) throws IllegalStateOperationException {
+    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
@@ -30,19 +29,19 @@ public class ShowDownGameModelState implements GameModelState {
     }
 
     @Override
-    public void play(GameModel model, String username, Point point) throws IllegalStateOperationException {
+    public void play(GameModel model, String username, Point point) throws IllegalStateOperationException, IllegalPlaceCardException {
         model.getPlayers().get(username).play(point);
     }
 
     @Override
-    public void drawGold(GameModel model, String username, int index) throws IllegalStateOperationException {
+    public void drawGold(GameModel model, String username, int index) throws IllegalStateOperationException, EmptyDeckException {
         if (model.getPlayers().get(username).drawGold(index)) {
             model.endTurn();
         }
     }
 
     @Override
-    public void drawResource(GameModel model, String username, int index) throws IllegalStateOperationException {
+    public void drawResource(GameModel model, String username, int index) throws IllegalStateOperationException, EmptyDeckException {
         if (model.getPlayers().get(username).drawResource(index)) {
             model.endTurn();
         }
@@ -64,19 +63,24 @@ public class ShowDownGameModelState implements GameModelState {
     }
 
     @Override
-    public void detectEndGame(GameModel model) throws IllegalStateOperationException {
-        if (model.getCurrIndexPlayer() == model.getPlayers().size()-1) {
-            model.setGameState(new LastTurnGameModelState());
+    public void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException {
+        if (model.getCurrIndexPlayer() == model.getPlayers().size() - 1) {
+            model.setGameState(new LastTurnGameModelState(model));
         }
     }
 
     @Override
-    public void endGame(GameModel model) throws IllegalStateOperationException {
+    public void endGame(GameModel model, String lastPlayerConnected) throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
     @Override
-    public void disconnectPlayer(GameModel model, String username) {
+    public void disconnectPlayer(GameModel model, String username) throws LastPlayerRemainedException {
         model.executeDisconnectPlayer(username);
+    }
+
+    @Override
+    public void reconnectPlayer(GameModel model, String username) {
+        model.executeReconnectPlayer(username);
     }
 }

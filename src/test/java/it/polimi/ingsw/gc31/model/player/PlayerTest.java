@@ -11,6 +11,7 @@ import java.awt.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerTest {
+    // FIXME testare la epmty deck
     private PlayArea playArea;
     private Board board;
     private Player player;
@@ -35,7 +36,7 @@ public class PlayerTest {
      * This method checks if the player can draw a goldCard correctly.
      */
     @Test
-    public void drawGoldTest() throws IllegalStateOperationException {
+    public void drawGoldTest() throws IllegalStateOperationException, EmptyDeckException {
         //check if the index are considered correctly
         assertFalse(player.drawGold(-1), "Index out of bound");
         assertFalse(player.drawGold(3), "Index out of bound");
@@ -69,7 +70,7 @@ public class PlayerTest {
      * 3 cards at a time (3 cards should be the maximum size of the hand)
      */
     @Test
-    public void drawResourceTest() throws IllegalStateOperationException{
+    public void drawResourceTest() throws IllegalStateOperationException, EmptyDeckException {
         //check if the index are considered correctly
         assertFalse(player.drawResource(-1), "Index out of bound");
         assertFalse(player.drawResource(3), "Index out of bound");
@@ -102,7 +103,7 @@ public class PlayerTest {
      * Checks if the player can play a card in the wrong state (an exception should be launched)
      */
     @Test
-    public void playTest() throws IllegalStateOperationException {
+    public void playTest() throws IllegalStateOperationException, EmptyDeckException {
         //check if the player can play in the wrong states
         player.setInGameState(new Waiting());
         assertThrows(IllegalStateOperationException.class, () -> player.play(new Point(1, 1)),
@@ -118,8 +119,9 @@ public class PlayerTest {
         player.setInGameState(new Placed());
         player.drawResource(0);
         player.setInGameState(new NotPlaced());
-        assertDoesNotThrow(() -> player.play(new Point(1, 1)),
-                "The correct invocation of the method does not throw anything");
+        assertThrowsExactly(IllegalPlaceCardException.class, () -> player.play(new Point(1,1)));
+//        assertDoesNotThrow(() -> player.play(new Point(1, 1)),
+//                "The correct invocation of the method does not throw anything");
     }
 
     /**
@@ -128,7 +130,7 @@ public class PlayerTest {
      * if the player can play the starter before the objective has been chosen
      */
     @Test
-    public void playStarterTest(){
+    public void playStarterTest() throws EmptyDeckException {
         //check if the player can play the starter card in the wrong states
         player.setInGameState(new Placed());
         assertThrows(IllegalStateOperationException.class, () -> player.playStarter());

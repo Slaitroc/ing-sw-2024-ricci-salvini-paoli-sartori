@@ -1,10 +1,13 @@
 package it.polimi.ingsw.gc31.client_server.rmi;
 
+import it.polimi.ingsw.gc31.client_server.Token;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.exceptions.NoTokenException;
 import it.polimi.ingsw.gc31.utility.DV;
+import it.polimi.ingsw.gc31.utility.FileUtility;
 import it.polimi.ingsw.gc31.view.UI;
 
 import java.awt.*;
@@ -12,19 +15,19 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.Timer;
 
 public class RmiClient extends UnicastRemoteObject implements VirtualClient, ClientCommands {
     private IController controller;
-    private VirtualServer server;
+    private final VirtualServer server;
     private IGameController gameController;
     private Integer idGame;
     private String username;
     private UI ui;
     private final LinkedBlockingQueue<ClientQueueObject> callsList;
-    private int token;
+    public Token token;
     private boolean firstConnectionDone = false;
 
     /**
@@ -39,13 +42,14 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         this.server = (VirtualServer) LocateRegistry.getRegistry(ipaddress, DV.RMI_PORT)
                 .lookup("VirtualServer");
         this.server.RMIserverWrite("New connection detected from ip: " + server.getClientIP());
-        this.server.generateToken(this);
+        this.token = new Token();
+        token.setTempToken(this.server.generateToken(this));
+        // token.setToken(641);
         this.username = DV.DEFAULT_USERNAME;
         this.controller = null;
         this.callsList = new LinkedBlockingQueue<>();
         timer = new Timer(true);
         new Thread(this::executor).start();
-
     }
 
     @Override
@@ -90,16 +94,17 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void setUsernameCall(String username) throws RemoteException {
-        if (controller == null) {
-            server.sendCommand(new ConnectObj(username, token));
-        }
-
+        server.sendCommand(new ConnectObj(username, this.token.getTempToken(), this.token.getToken()));
     }
 
     @Override
     public void setUsernameResponse(String username) {
         this.username = username;
+    }
 
+    @Override
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -120,15 +125,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     @Override
     public void setReady(boolean ready) throws RemoteException {
         gameController.sendCommand(new ReadyStatusObj(ready, username));
-
-        // this.ready = ready;
-        // if (ready) {
-        // try {
-        // gameController.checkReady();
-        // } catch (RemoteException | IllegalStateOperationException e) {
-        // e.printStackTrace();
-        // }
-        // }
     }
 
     @Override
@@ -206,6 +202,11 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
+    public void sendChatMessage(String fromUsername, String toUsername, String message) throws RemoteException {
+        gameController.sendCommand(new ChatMessage(fromUsername, toUsername, message));
+    }
+
+    @Override
     public void setController(IController controller) throws RemoteException {
         this.controller = controller;
         startHeartBeat();
@@ -221,16 +222,18 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         gameController.sendCommand(new QuitGameObj(username));
     }
 
-
     // Risorse per heartbeat
     // FIXME spostare in cima attributi e metodi per heartbeat
-    private Timer timer;
+    private final Timer timer;
 
     /**
-     * This method starts the process that "sends" the heart beat periodically to the server
-     * A heart beat is sent immediately on the first execution and every 2 seconds after it
+     * This method starts the process that "sends" the heart beat periodically to
+     * the server
+     * A heart beat is sent immediately on the first execution and every 2 seconds
+     * after it
      */
     public void startHeartBeat() {
+        long sendTime = (DV.testHB) ? DV.sendTimeTest : DV.sendTime;
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -240,32 +243,81 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
                     throw new RuntimeException(e);
                 }
             }
-        }, 0, 2000);
+        }, 0, sendTime);
     }
 
     /**
-     * This method sends to the controller the heart beat associated with the VirtualClient that is sending it
-     * @throws RemoteException
+     * This method sends to the controller the heart beat associated with the
+     * VirtualClient that is sending it
+     * 
+     * @throws RemoteException if an error occurs during the rmi communication
      */
     private void sendHeartBeat() throws RemoteException {
         controller.updateHeartBeat(this);
         // System.out.println("HeartBeat inviato");
     }
 
-
     // Metodi per token
 
     /**
      * This method sets the token of the client to the value received as a parameter
+     *
      * @param token is the value needed to be set as the client's token
      */
     @Override
     public void setRmiToken(int token) throws RemoteException {
-        this.token = token;
+        this.token.setToken(token);
+    }
+
+    @Override // save token??? // FIX
+    public void setToken(int token, boolean temporary) {
+        if (!temporary) {
+            this.token.setToken(token);
+            this.token.setTempToken(token);
+            if (this.token.rewriteTokenFile())
+                ui.show_GenericClientResponse("File precedente eliminato");
+            ui.show_GenericClientResponse("Token salvato correttamente nel percorso: ");
+            ui.show_GenericClientResponse(FileUtility.getCodexTokenFilePath().toString());
+        } else {
+            this.token.setTempToken(token);
+        }
     }
 
     @Override
-    public void setToken(int token) {
+    public void reconnect(boolean reconnect) throws RemoteException {
+        controller.sendCommand(new ReconnectObj(reconnect, username, token.getTempToken(), token.getToken()));
+    }
+
+    /**
+     * Method invoked by the ui when the user specify if it wants to play another
+     * match or not
+     *
+     * @param wantsToRematch is the boolean value associated to the response (true:
+     *                       wants to rematch, false otherwise)
+     * @throws RemoteException if an error occurred during the rmi connection
+     */
+    @Override
+    public void anotherMatchResponse(Boolean wantsToRematch) throws RemoteException {
+        gameController.sendCommand(new AnotherMatchResponseObj(username, wantsToRematch));
+    }
+
+    @Override
+    public boolean hasToken() {
+        if (token.doesTokenExists())
+            return true;
+        else
+            return false;
 
     }
+
+    @Override
+    public int readToken() throws NumberFormatException, NoTokenException {
+        return Integer.parseInt(token.getTokenLine());
+    }
+
+    @Override
+    public Token getToken() {
+        return this.token;
+    }
+
 }

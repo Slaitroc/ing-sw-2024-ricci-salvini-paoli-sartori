@@ -5,11 +5,12 @@ import java.util.Map;
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
 
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 public class DV {
 
-    public static final int GamePoints = 4;
+    public static final int GamePoints = 10;
 
     // JSON directories
     public static final String DIRJsonGoldCard = "/it/polimi/ingsw/gc31/CardsJson/GoldCard.json";
@@ -110,9 +111,29 @@ public class DV {
     public final static int TCP_PORT = 1200;
 
     // Token
-    public final static int defaultToken = 0000;
+    public final static int defaultToken = -1;
 
-    public final static boolean forceIP = true;
+    public final static boolean forceIP = false;
     public final static String forcedIP = "192.168.192.228";
+
+    public final static boolean testHB = false;
+    public final static long sendTimeTest = 8000;
+    public final static long sendTime = 2000;
+    public final static long clientHBUpdate = 8000;
+
+    public static String getDesktopPath(String userHome) {
+        String osName = System.getProperty("os.name").toLowerCase();
+        String desktopPath = "";
+
+        if (osName.contains("win")) {
+            desktopPath = Paths.get(userHome, "Desktop").toString();
+        } else if (osName.contains("mac")) {
+            desktopPath = Paths.get(userHome, "Desktop").toString();
+        } else if (osName.contains("nix") || osName.contains("nux")) {
+            desktopPath = Paths.get(userHome, "Desktop").toString();
+        }
+
+        return desktopPath;
+    }
 
 }

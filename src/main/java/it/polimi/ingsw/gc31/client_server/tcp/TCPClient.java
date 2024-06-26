@@ -1,20 +1,24 @@
 package it.polimi.ingsw.gc31.client_server.tcp;
 
 import java.awt.*;
-import java.io.*;
 import java.net.Socket;
-import java.rmi.RemoteException;
 import java.util.*;
+import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.Timer;
-import java.util.TimerTask;
 
+import it.polimi.ingsw.gc31.client_server.Token;
 import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.exceptions.NoTokenException;
 import it.polimi.ingsw.gc31.utility.DV;
+import it.polimi.ingsw.gc31.utility.FileUtility;
 import it.polimi.ingsw.gc31.view.UI;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class TCPClient implements ClientCommands {
     private final ObjectInputStream input;
@@ -23,22 +27,24 @@ public class TCPClient implements ClientCommands {
     private Integer idGame;
     private UI ui;
     private final Queue<ClientQueueObject> callsList;
-    private int token;
-    private Timer timer;
-    private boolean firstConnectionDone = false;
+    private Token token;
+    private final Timer timer;
 
     /**
      * This method is the constructor of the TCPClient.
      * The timer is set as a daemon by the specific constructor in order to not
      */
     @SuppressWarnings("resource")
-    public TCPClient(String ipaddress) throws IOException {
+    public TCPClient(final String ipaddress) throws IOException {
         this.username = DV.DEFAULT_USERNAME;
+        this.token = new Token();
+        this.token.setTempToken(-1);
         Socket serverSocket = new Socket(ipaddress, DV.TCP_PORT);
         this.input = new ObjectInputStream(serverSocket.getInputStream());
         this.output = new ObjectOutputStream(serverSocket.getOutputStream());
         this.callsList = new LinkedBlockingQueue<>();
         this.timer = new Timer(true);
+
         clientHandler_reader();
         executor();
     }
@@ -136,6 +142,11 @@ public class TCPClient implements ClientCommands {
         startHeartBeat();
     }
 
+    @Override
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     /**
      * This method returns the player's game idGame
      *
@@ -159,18 +170,13 @@ public class TCPClient implements ClientCommands {
     /**
      * This method is the first called by the client, it sends the client handler
      * the request to execute the "connect" method. If the server has already this
-     * username ane exception is launched
+     * username an exception is launched
      *
      * @param username is the username set by the client
      */
     @Override
     public void setUsernameCall(String username) {
-        if (firstConnectionDone)
-            tcp_sendCommand(new ConnectObj(username, token), DV.RECIPIENT_CONTROLLER);
-        else {
-            tcp_sendCommand(new ConnectObj(username), DV.RECIPIENT_CONTROLLER);
-            firstConnectionDone = true;
-        }
+        tcp_sendCommand(new ConnectObj(username, this.token.getTempToken(), this.token.getToken()), DV.RECIPIENT_CONTROLLER);
     }
 
     /**
@@ -206,14 +212,14 @@ public class TCPClient implements ClientCommands {
      * "ok" otherwise.
      * In this case the method reads every String sent by the client handler,
      * collect every
-     * String in "list" and then call the method of the ui.
+     * String in “list” and then call the method of the ui.
      *
-     * @throws IOException      is launched if an error is occurred in the readLine
+     * @throws RemoteException  is launched if an error is occurred in the readLine
      *                          method
      * @throws NoGamesException is launched if there are no created games
      */
     @Override
-    public void getGameList() throws IOException, NoGamesException {
+    public void getGameList() throws RemoteException, NoGamesException {
         tcp_sendCommand(new GetGameListObj(this.username), DV.RECIPIENT_CONTROLLER);
     }
 
@@ -233,7 +239,7 @@ public class TCPClient implements ClientCommands {
      * This method sends to the server a new DrawGoldObj object and the game
      * controller as a recipient
      * using the tcp_sendCommand method.
-     *
+     * <p>
      * index = 0 : drawing from the gold deck.
      * index = 1 : drawing the first gold card on the board.
      * index = 2 : drawing the second gold card on the board.
@@ -247,7 +253,7 @@ public class TCPClient implements ClientCommands {
      * This method sends to the server a new DrawResObj object and the game
      * controller as a recipient
      * using the tcp_sendCommand method.
-     *
+     * <p>
      * index = 0 : drawing from the resource deck.
      * index = 1 : drawing the first resource card on the board.
      * index = 2 : drawing the second resource card on the board.
@@ -261,7 +267,7 @@ public class TCPClient implements ClientCommands {
      * This method sends to the server a new ChooseSecretObjectiveObj object and the
      * game controller as a recipient
      * using the tcp_sendCommand method.
-     *
+     * <p>
      * index = 0 : choose first secret objective card.
      * index = 1 : choose second secret objective card.
      */
@@ -274,7 +280,7 @@ public class TCPClient implements ClientCommands {
      * This method sends to the server a new ChooseSecretObjectiveObj object and the
      * game controller as a recipient
      * using the tcp_sendCommand method.
-     *
+     * <p>
      * index = 0 : choose first secret objective card.
      * index = 1 : choose second secret objective card.
      */
@@ -341,6 +347,18 @@ public class TCPClient implements ClientCommands {
     }
 
     /**
+     * This method sends a private message to a specific player
+     *
+     * @param fromUsername Username of the current user, which is sending the message
+     * @param toUsername   Username of the player the current user is sending the message to
+     * @param message      Content of the message that is being sent
+     */
+    @Override
+    public void sendChatMessage(String fromUsername, String toUsername, String message) {
+        tcp_sendCommand(new ChatMessage(this.username, toUsername, message), DV.RECIPIENT_GAME_CONTROLLER);
+    }
+
+    /**
      * This method sends the object, which quit the specific client from the game
      * lobby, to the server
      */
@@ -357,15 +375,14 @@ public class TCPClient implements ClientCommands {
      * The first execution is done at the invocation of this method,
      * all the others execution are performed every 5 seconds
      */
-    // FIXME aggiungere metodo close che esegue "timer.cancel();" quando si vuole
-    // chiudere la connessione
     private void startHeartBeat() {
+        long sendTime = (DV.testHB) ? DV.sendTimeTest : DV.sendTime;
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 tcp_sendCommand(new HeartBeatObj(username), DV.RECIPIENT_HEARTBEAT);
                 // System.out.println("HeartBeat inviato");
             }
-        }, 0, 5000);
+        }, 0, sendTime);
     }
 
     // Metodi per token
@@ -376,7 +393,65 @@ public class TCPClient implements ClientCommands {
      * @param token is the value to be set as the token of the client
      */
     @Override
-    public void setToken(int token) {
-        this.token = token;
+    public void setToken(int token, boolean temporary) {
+        if (!temporary) {
+            this.token.setToken(token);
+            this.token.setTempToken(token);
+            if (this.token.rewriteTokenFile())
+                ui.show_GenericClientResponse("File precedente eliminato");
+            ui.show_GenericClientResponse("Token salvato correttamente nel percorso: ");
+            ui.show_GenericClientResponse(FileUtility.getCodexTokenFilePath().toString());
+        } else {
+            this.token.setTempToken(token);
+        }
+
     }
+
+    /**
+     * This method sends the ReconnectObj to the Controller
+     *
+     * @param reconnect is true if the player wants to reconnect, false otherwise
+     */
+    @Override
+    public void reconnect(boolean reconnect) {
+        tcp_sendCommand(new ReconnectObj(reconnect, username, token.getTempToken(), token.getToken()),
+                DV.RECIPIENT_CONTROLLER);
+    }
+
+    /**
+     * Method invoked by the ui with the response of the user regarding
+     * if the player wants to play another match with the same players
+     *
+     * @param wantsToRematch is the response of the player (true: wants to rematch,
+     *                       false otherwise)
+     */
+    @Override
+    public void anotherMatchResponse(Boolean wantsToRematch) {
+        tcp_sendCommand(new AnotherMatchResponseObj(username, wantsToRematch), DV.RECIPIENT_GAME_CONTROLLER);
+    }
+
+    @Override
+    public boolean hasToken() {
+        if (token.doesTokenExists()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int readToken() throws NumberFormatException, NoTokenException {
+        return Integer.parseInt(token.getTokenLine());
+    }
+
+    /**
+     * This method returns the Token of the client handler
+     *
+     * @return the Token of the client handler
+     */
+    @Override
+    public Token getToken() {
+        return this.token;
+    }
+
 }

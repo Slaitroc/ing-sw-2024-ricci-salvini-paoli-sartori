@@ -1,5 +1,8 @@
 package it.polimi.ingsw.gc31.model.enumeration;
 
+/**
+ * Represents the type of a card.
+ */
 public enum CardType {
     GOLD("GOLD"),
     RESOURCE("RESOURCE"),
@@ -7,6 +10,7 @@ public enum CardType {
     STARTER("STARTER");
 
     private final String stringName;
+
     CardType(String stringName) {
         this.stringName = stringName;
     }

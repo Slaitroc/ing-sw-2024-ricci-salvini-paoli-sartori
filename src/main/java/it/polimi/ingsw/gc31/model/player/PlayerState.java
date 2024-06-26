@@ -1,9 +1,6 @@
 package it.polimi.ingsw.gc31.model.player;
 
-import it.polimi.ingsw.gc31.exceptions.FullHandException;
-import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
-import it.polimi.ingsw.gc31.exceptions.InvalidCardDraw;
-import it.polimi.ingsw.gc31.exceptions.ObjectiveCardNotChosenException;
+import it.polimi.ingsw.gc31.exceptions.*;
 import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.deck.Deck;
@@ -21,8 +18,7 @@ public abstract class PlayerState {
      *
      * @param card   the objective card to add.
      * @param player the player to add the card to.
-     * @throws IllegalStateOperationException if the operation is not allowed in the
-     *                                        current state.
+     * @throws IllegalStateOperationException if the player is not in Start state
      */
     public abstract void chooseSecretObjective(ObjectiveCard card, Player player) throws IllegalStateOperationException;
 
@@ -31,8 +27,7 @@ public abstract class PlayerState {
      *
      * @param deck   the deck to draw from.
      * @param player the player to add the card to.
-     * @throws IllegalStateOperationException if the operation is not allowed in the
-     *                                        current state.
+     * @throws IllegalStateOperationException if the player is not in Placed or Start states
      * @throws FullHandException              if the player’s hand is full.
      * @throws InvalidCardDraw                if the card cannot be drawn.
      */
@@ -44,10 +39,9 @@ public abstract class PlayerState {
      *
      * @param point  the point to play the card at.
      * @param player the player to play the card.
-     * @throws IllegalStateOperationException if the operation is not allowed in the
-     *                                        current state.
+     * @throws IllegalStateOperationException if the player is not in NotPlaced state
      */
-    public abstract void play(Point point, Player player) throws IllegalStateOperationException;
+    public abstract void play(Point point, Player player) throws IllegalStateOperationException, IllegalPlaceCardException;
 
     /**
      * Plays the designated Player's starter card in his PlayArea.
@@ -60,7 +54,6 @@ public abstract class PlayerState {
             throws IllegalStateOperationException, ObjectiveCardNotChosenException;
 
     public abstract String stateInfo();
-    // Notice: Intellij gives me a warning if I copy the same code multiple times
 
     /**
      * Executes the addToHand operation.
@@ -83,7 +76,7 @@ public abstract class PlayerState {
                 player.hand.add(deck.getCard1());
             else if (index == 2)
                 player.hand.add(deck.getCard2());
-        } catch (NullPointerException e) {
+        } catch (NullPointerException | EmptyDeckException e) {
             System.out.println("There was a problem adding card in hand (is card null?)");
             e.getStackTrace();
         }

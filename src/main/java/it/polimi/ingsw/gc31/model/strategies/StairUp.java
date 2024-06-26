@@ -1,12 +1,11 @@
 package it.polimi.ingsw.gc31.model.strategies;
 
-import java.awt.*;
-import java.util.Map;
-
-import com.google.gson.JsonObject;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
+
+import java.awt.*;
+import java.util.Map;
 
 import static it.polimi.ingsw.gc31.utility.DV.getRgbColor;
 import static org.fusesource.jansi.Ansi.ansi;
@@ -23,7 +22,7 @@ public class StairUp extends Objective {
 
     /**
      * This method is the constructor of the class
-     * 
+     *
      * @param color is the color requested by the objective
      */
     public StairUp(CardColor color) {
@@ -38,7 +37,7 @@ public class StairUp extends Objective {
      * @return the number of points obtained by the player
      */
     public int isObjectiveDone(Map<Point, PlayableCard> placedCard, Point uselessPoint,
-            Map<Resources, Integer> achievedResources) {
+                               Map<Resources, Integer> achievedResources) {
         int maxX = findMaxX(placedCard), minX = findMinX(placedCard), maxY = findMaxY(placedCard),
                 minY = findMinY(placedCard);
         int count = 0;

@@ -7,12 +7,15 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.view.gui.ResolutionSizes;
 import it.polimi.ingsw.gc31.view.gui.SceneTag;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,6 +26,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.util.Duration;
 import javafx.util.Pair;
 
 import java.awt.*;
@@ -112,15 +116,15 @@ public class InGameController extends ViewController {
     public VBox player3Resources;
     @FXML
     public VBox player4Resources;
-    List<VBox> resourceWindows = new ArrayList<>();
 
-    //AFK GIF___________________________________________________________________________________________________________
+    //STATUS IMAGES_____________________________________________________________________________________________________
     @FXML
-    public ImageView afkP2;
+    public ImageView statusP2;
     @FXML
-    public ImageView afkP3;
+    public ImageView statusP3;
     @FXML
-    public ImageView afkP4;
+    public ImageView statusP4;
+    private final List<ImageView> statusPanes = new ArrayList<>();
 
     //Player Names Labels_______________________________________________________________________________________________
     @FXML
@@ -199,6 +203,24 @@ public class InGameController extends ViewController {
     public ImageView player4HandCard2;
     @FXML
     public ImageView player4HandCard3;
+    @FXML
+    public ImageView noirPion1;
+    @FXML
+    public ImageView noirPion2;
+    @FXML
+    public ImageView noirPion3;
+    @FXML
+    public ImageView noirPion4;
+    @FXML
+    public ImageView colorPion4;
+    @FXML
+    public ImageView colorPion3;
+    @FXML
+    public ImageView colorPion2;
+    @FXML
+    public ImageView colorPion1;
+
+    //Main cards ImageViews_____________________________________________________________________________________________
     //List of hand cards for each player
     private List<ImageView> handCards;
     @FXML
@@ -241,12 +263,23 @@ public class InGameController extends ViewController {
 
     @FXML
     public Button playStarterButton;
-
-    public VBox initialChoise;
+    @FXML
+    public VBox initialChoice;
 
     private final List<String> otherPlayers = new ArrayList<>();
 
     private ResolutionSizes size;
+
+    boolean shortcutDetected = false;
+    boolean firstPlayer = true;
+    boolean timerAlreadyStarted = false;
+    private int seconds = 0;
+    private int millis;
+    public Label pingText;
+    @FXML
+    public TextField infoText;
+    @FXML
+    private Timeline timeline;
 
 
     /* NOTE
@@ -278,7 +311,7 @@ public class InGameController extends ViewController {
     @Override
     public void setUp() {
 
-        size = ResolutionSizes.HD;
+        size = ResolutionSizes.HD; //needed to be set at the start or cards will not know what size to be initialized
         secretObjective.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_102.jpg"))));
         handCards = new ArrayList<>(Arrays.asList(
                 handCard1, handCard2, handCard3,
@@ -292,14 +325,20 @@ public class InGameController extends ViewController {
             setClipToImageView(handCard);
         }
 
-        controls.getItems().add("Flip Card:   \tRight Click");
-        controls.getItems().add("Draw Card:   \tLeft Click");
-        controls.getItems().add("Place Card:  \tHold Left Click");
+        controls.getItems().add("Flip Card:     \t\tRight Click");
+        controls.getItems().add("Draw Card:     \t\tLeft Click");
+        controls.getItems().add("Place Card:    \t\tHold Left Click");
+        controls.getItems().add("Autofill chat: \t\tTab in chat");
+        controls.getItems().add("Show Menu:     \tctrl + m / ctrl + s");
+        controls.getItems().add("Show Controls: \tctrl + c");
+        controls.getItems().add("Quit:          \t\tctrl + q");
+        controls.getItems().add("Fullscreen:    \t\tctrl + f");
 
         //Initializes the tabs titles and disable the not used ones
         List<Tab> tabs = new ArrayList<>(Arrays.asList(tab2, tab3, tab4));
         int k = 0;
         for (String player : app.getPlayerList().keySet()) {
+            System.out.println("player " + player);
             if (!player.equals(app.getUsername())) {
                 otherPlayers.add(player);
                 //System.out.println("Adding other player: " + player);
@@ -317,8 +356,7 @@ public class InGameController extends ViewController {
         //Also hides the resources of the players not in game
         gridDimensions.put(player1PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
         gridDimensions.put(player2PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
-        resourceWindows.add(player1Resources);
-        resourceWindows.add(player2Resources);
+        statusPanes.add(statusP2);
         player1Name.setText(app.getUsername());
         player2Name.setText(otherPlayers.getFirst());
         if (app.getNumberOfPlayers() == 2) {
@@ -327,13 +365,13 @@ public class InGameController extends ViewController {
         } else if (app.getNumberOfPlayers() == 3) {
             player4Resources.setVisible(false);
             player3Name.setText(otherPlayers.get(1));
-            resourceWindows.add(player3Resources);
+            statusPanes.add(statusP3);
             gridDimensions.put(player3PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
         } else if (app.getNumberOfPlayers() == 4) {
-            resourceWindows.add(player3Resources);
-            resourceWindows.add(player4Resources);
             player3Name.setText(otherPlayers.get(1));
-            player3Name.setText(otherPlayers.get(2));
+            player4Name.setText(otherPlayers.get(2));
+            statusPanes.add(statusP3);
+            statusPanes.add(statusP4);
             gridDimensions.put(player3PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
             gridDimensions.put(player4PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
         }
@@ -358,12 +396,19 @@ public class InGameController extends ViewController {
         resourceLabels.put(4, Arrays.asList(mushCount4, animalCount4, insectCount4, plantCount4, inkCount4, quillCount4, scrollCount4));
 
         //Set 3 listeners for drag detection on the hand cards
-        // (outer stackPane is momentarily fixed inside this method to avoid a resize bug, I'm warning you)
+        // (outer stackPane is momentarily fixed inside this method to avoid a resize bug, I am warning you)
         addHandCardDragListener(handCard1);
         addHandCardDragListener(handCard2);
         addHandCardDragListener(handCard3);
 
+        assignPion();
+        textField.addEventFilter(KeyEvent.KEY_PRESSED, this::handleChatKeyPressed);
+        motherPane.addEventFilter(KeyEvent.KEY_PRESSED, this::handleShortcuts);
         changeResolution();
+
+        Timeline ping = new Timeline(new KeyFrame(Duration.millis(1), event -> millis++));
+        ping.setCycleCount(Timeline.INDEFINITE);
+        ping.play();
     }
 
 
@@ -400,16 +445,20 @@ public class InGameController extends ViewController {
     }
 
     @Override
-    public void show_scorePlayer(LinkedHashMap<String, Integer> scores) {
-        for (Map.Entry<String, Integer> player : scores.entrySet()) {
+    public void show_scorePlayer(LinkedHashMap<String, Pair<Integer, Boolean>> scores) {
+        for (Map.Entry<String, Pair<Integer, Boolean>> player : scores.entrySet()) {
             if (player.getKey().equals(app.getUsername())) {
-                player1Points.setText(player.getValue().toString());
+                player1Points.setText(player.getValue().getKey().toString());
+                playingPlayer1Icon.setVisible(player.getValue().getValue());
             } else if (player.getKey().equals(otherPlayers.getFirst())) {
-                player2Points.setText(player.getValue().toString());
+                player2Points.setText(player.getValue().getKey().toString());
+                playingPlayer2Icon.setVisible(player.getValue().getValue());
             } else if (player.getKey().equals(otherPlayers.get(1))) {
-                player3Points.setText(player.getValue().toString());
+                player3Points.setText(player.getValue().getKey().toString());
+                playingPlayer3Icon.setVisible(player.getValue().getValue());
             } else if (player.getKey().equals(otherPlayers.get(2))) {
-                player4Points.setText(player.getValue().toString());
+                player4Points.setText(player.getValue().getKey().toString());
+                playingPlayer4Icon.setVisible(player.getValue().getValue());
             }
         }
     }
@@ -470,61 +519,135 @@ public class InGameController extends ViewController {
 
     @Override
     public void show_objectiveCard(String username, ObjectiveCard objectiveCard) {
-        if (username.equals(app.getUsername())) setCardImage(objectiveCard, secretObjective);
+        if (username.equals(app.getUsername())) {
+            playStarterButton.setVisible(true);
+            playStarterButton.setMouseTransparent(false);
+            secretObj1.setManaged(false);
+            secretObj1.setVisible(false);
+            secretObj2.setManaged(false);
+            secretObj2.setVisible(false);
+            infoText.setText("Choose side of your starter card");
+            setCardImage(objectiveCard, secretObjective);
+        }
     }
 
     @Override
     public void playerStateInfo(String username, String info) {
-        //System.out.println("Hello, I'm player " + app.getUsername() + " and I received the message that " + username + " is in state " + info);
+        //System.out.println("Hello, I am player " + app.getUsername() + " and I received the message that " + username + " is in state " + info);
         if (username.equals(app.getUsername())) {
-            playingPlayer1Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            //showInstructions(info);
+            infoText.setText(info);
+            //playingPlayer1Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            if (firstPlayer) {
+                noirPion1.setVisible(true);
+                firstPlayer = false;
+            }
         } else if (username.equals(otherPlayers.getFirst())) {
-            playingPlayer2Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            //playingPlayer2Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            if (firstPlayer) {
+                noirPion2.setVisible(true);
+                firstPlayer = false;
+            }
         } else if (username.equals(otherPlayers.get(1))) {
-            playingPlayer3Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            //playingPlayer3Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            if (firstPlayer) {
+                noirPion3.setVisible(true);
+                firstPlayer = false;
+            }
         } else if (username.equals(otherPlayers.get(2))) {
-            playingPlayer4Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            //playingPlayer4Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
+            if (firstPlayer) {
+                noirPion4.setVisible(true);
+                firstPlayer = false;
+            }
         }
     }
+
 
     @Override
     public void updateChat(String username, String message) {
         Text usernameText = new Text(username + ": ");
-        if (username.equals(app.getPlayerList().keySet().stream().toList().getFirst())) {
-            usernameText.setFill(javafx.scene.paint.Color.GREEN);
-        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(1))) {
-            usernameText.setFill(javafx.scene.paint.Color.VIOLET);
-        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(2))) {
-            usernameText.setFill(javafx.scene.paint.Color.RED);
-        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(3))) {
-            usernameText.setFill(javafx.scene.paint.Color.BLUE);
-        }
-        Text messageText = new Text(message + "\n");
-        messageText.setFill(Color.BLACK);
+        populateChat(username, message, usernameText);
+    }
 
-        chatField.getChildren().add(usernameText);
-        chatField.getChildren().add(messageText);
-        scrollPane.layout();
-        scrollPane.setVvalue(1.0);
-        if (!chatPopUp.isVisible()) {
-            chatButtonImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/AppIcons/iconMessagePending.png"))));
+    @Override
+    public void updateChat(String fromUsername, String toUsername, String message) {
+        Text usernameText;
+        String colorUsername;
+        //If my username is the toUsername, → fromUsername is trying to send me a message then I will print [From: X]: message
+        if (toUsername.equals(app.getUsername())) {
+            colorUsername = toUsername;
+            usernameText = new Text("[From: " + fromUsername + "]: ");
+        }
+        //If my username is the fromUsername, → I am trying to send me a message to toUsername then I will print [To: Y]: message
+        else if (fromUsername.equals(app.getUsername())) {
+            colorUsername = fromUsername;
+            usernameText = new Text("[To: " + toUsername + "]: ");
+        } else return;
+
+        populateChat(colorUsername, message, usernameText);
+    }
+
+    @Override
+    public void handleInGamePlayers(LinkedHashMap<String, Boolean> players) {
+        int i = 0;
+        for (String player : otherPlayers) {
+            if (players.containsKey(player)) statusPanes.get(i).setVisible(false);
+            else {
+                statusPanes.get(i).setVisible(true);
+                statusPanes.get(i).setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/Misc/quitPlayer.jpg"))));
+            }
+            i++;
         }
     }
 
     @Override
-    public void showWinner(String username){
-        if(username.equals(app.getUsername())) {
-            showHidePane(youWon);
+    public void showWinner(String username) {
+        if (username.equals(app.getUsername())) {
+            showPane(youWon);
             youWon.setMouseTransparent(true);
-        }
-        else {
+        } else {
             winnerLabel.setText(username + "won");
-            showHidePane(otherWinner);
+            showPane(otherWinner);
             otherWinner.setMouseTransparent(true);
         }
 
     }
 
+    @Override
+    public void showCountDown(Integer secondsLeft) {
+        if (!timerAlreadyStarted) {
+            timerAlreadyStarted = true;
+            timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+                seconds++;
+                infoText.setText("Game Paused: " + formatTime(secondsLeft - seconds));
+                if (secondsLeft == seconds) timeline.stop();
+            }));
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.play();
+        }
+    }
+
+    @Override
+    public void playerRejoined() {
+        timerAlreadyStarted = false;
+        seconds = 0;
+        initialChoice.setVisible(false);
+        initialChoice.setManaged(false);
+        initialChoice.setMouseTransparent(true);
+        player1PlayAreaGrid.setVisible(true);
+    }
+
+    @Override
+    public void showPing() {
+        pingText.setText("Ping: " + (millis - 2000) + "ms");
+        millis = 0;
+    }
+
+    @Override
+    public void setMessage(String message){
+        infoText.setText(message);
+    }
 
     //MOUSE COMMANDS:___________________________________________________________________________________________________
 
@@ -613,12 +736,22 @@ public class InGameController extends ViewController {
             } else {
                 client.chooseSecretObjective2();
             }
-            playStarterButton.setVisible(true);
-            playStarterButton.setMouseTransparent(false);
-            secretObj1.setManaged(false);
-            secretObj1.setVisible(false);
-            secretObj2.setManaged(false);
-            secretObj2.setVisible(false);
+        } catch (RemoteException e) {
+            show_ServerCrashWarning(e.toString());
+            e.getStackTrace();
+        }
+    }
+
+    /**
+     * Plays the starter card than hides the initial choice VBox and shows the player1PlayAreaGrid.
+     */
+    public void playStarter() {
+        try {
+            client.playStarter();
+            initialChoice.setVisible(false);
+            initialChoice.setManaged(false);
+            initialChoice.setMouseTransparent(true);
+            player1PlayAreaGrid.setVisible(true);
         } catch (RemoteException e) {
             show_ServerCrashWarning(e.toString());
             e.getStackTrace();
@@ -650,16 +783,54 @@ public class InGameController extends ViewController {
      * @param event The key event triggering the text send.
      */
     @FXML
-    private void handleEnterKeyPressed(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER && !textField.getText().isEmpty()) {
-            sendText(textField.getText());
-            textField.clear();
+    private void handleChatKeyPressed(KeyEvent event) {
+        System.out.println("handleEnterKeyPressed called with value: " + event.getCode());
+        sendMessage(event, textField);
+    }
+
+    private void handleShortcuts(KeyEvent event) {
+        if(event.getCode() == KeyCode.CONTROL) {
+            shortcutDetected = !shortcutDetected;
+            event.consume();
         }
+        else if(shortcutDetected && event.getCode() == KeyCode.C) {
+            showHideControls();
+            shortcutDetected = false;
+            event.consume();
+        }
+        else if(shortcutDetected && event.getCode() == KeyCode.M || event.getCode() == KeyCode.S) {
+            showHideMenu();
+            shortcutDetected = false;
+            event.consume();
+        }
+        else if(shortcutDetected && event.getCode() == KeyCode.R) {
+            changeResolution();
+            shortcutDetected = false;
+            event.consume();
+        }
+        else if(shortcutDetected && event.getCode() == KeyCode.Q) {
+            quit();
+            shortcutDetected = false;
+            event.consume();
+        }
+        else if(shortcutDetected && event.getCode() == KeyCode.F) {
+            app.setFullScreen();
+            shortcutDetected = false;
+            event.consume();
+        }
+
     }
 
     public void showHideMenu() {
-        showHidePane(menuPane);
-        showHidePane(settingsVBox);
+        if(controlsVBox.isVisible()){
+            hidePane(controlsVBox);
+            showPane(settingsVBox);
+        }
+        else {
+            showHidePane(menuPane);
+            showHidePane(settingsVBox);
+        }
+        hidePane(controlsVBox);
     }
 
     public void setFullScreen() {
@@ -667,8 +838,15 @@ public class InGameController extends ViewController {
     }
 
     public void showHideControls() {
-        showHidePane(settingsVBox);
-        showHidePane(controlsVBox);
+        if(menuPane.isVisible()){
+            showHidePane(settingsVBox);
+            showHidePane(controlsVBox);
+        }
+        else {
+            showPane(menuPane);
+            showPane(controlsVBox);
+        }
+
     }
 
     /**
@@ -701,17 +879,11 @@ public class InGameController extends ViewController {
     }
 
     /**
-     * Support method to change resolution to one single GridPane
+     * Handles the quitting process for a player, displaying a confirmation dialog and performing necessary actions if confirmed.
+     * Displays a confirmation alert to the player asking if they are sure they want to quit the game.
+     * If the player confirms, attempts to quit the game and navigates back to the main menu.
+     * Handles potential remote exceptions by showing a server crash warning.
      */
-    void changeGridResolution(GridPane grid, Map<Pair<Integer, Integer>, Cell> cells) {
-        for (int x = 0; x < grid.getColumnCount(); x++) {
-            for (int y = 0; y < grid.getRowCount(); y++) {
-                resizeCard(cells.get(new Pair<>(x, y)));
-                cells.get(new Pair<>(x, y)).setPaneResolution();
-            }
-        }
-    }
-
     public void quit() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Quitting game");
@@ -734,22 +906,6 @@ public class InGameController extends ViewController {
     }
 
     //PRIVATE METHODS:__________________________________________________________________________________________________
-
-    /**
-     * Plays the starter card than hides the initial choice VBox and shows the player1PlayAreaGrid.
-     */
-    public void playStarter() {
-        try {
-            client.playStarter();
-            initialChoise.setVisible(false);
-            initialChoise.setManaged(false);
-            initialChoise.setMouseTransparent(true);
-            player1PlayAreaGrid.setVisible(true);
-        } catch (RemoteException e) {
-            show_ServerCrashWarning(e.toString());
-            e.getStackTrace();
-        }
-    }
 
     /**
      * Sets the image of a card to the specified target ImageView.
@@ -810,22 +966,22 @@ public class InGameController extends ViewController {
         //System.out.println("UPDATE_GRID CALL");
         for (Map.Entry<Point, PlayableCard> placedCard : playArea.entrySet()) {
             if (placedCard.getKey().x < gridDimensions.get(grid).getFirst()) {
+                //System.out.println("Adding Column");
                 gridDimensions.get(grid).set(0, placedCard.getKey().x);
-                System.out.println("Adding Column");
                 addColumn(grid, cells, gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2);
             }
             if (placedCard.getKey().y < gridDimensions.get(grid).get(1)) {
-                System.out.println("Adding Row");
+                //System.out.println("Adding Row");
                 gridDimensions.get(grid).set(1, placedCard.getKey().y);
                 addRow(grid, cells, gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2);
             }
             if (placedCard.getKey().x > gridDimensions.get(grid).get(2)) {
-                System.out.println("Adding Column");
+                //System.out.println("Adding Column");
                 gridDimensions.get(grid).set(2, placedCard.getKey().x);
                 addColumn(grid, cells, gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2);
             }
             if (placedCard.getKey().y > gridDimensions.get(grid).get(3)) {
-                System.out.println("Adding Row");
+                //System.out.println("Adding Row");
                 gridDimensions.get(grid).set(3, placedCard.getKey().y);
                 addRow(grid, cells, gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2);
             }
@@ -845,7 +1001,6 @@ public class InGameController extends ViewController {
         //int debug = 0;
         for (int x = 0; x < grid.getColumnCount(); x++) {
             for (int y = 0; y < grid.getRowCount(); y++) {
-                //System.out.println("Hiding image [" + x + " " + y + "]");
                 //debug++;
                 cells.get(new Pair<>(x, y)).hideImage();
                 //System.out.println("Cell [" + x + ";" + y + "] set to invisible image");
@@ -858,11 +1013,18 @@ public class InGameController extends ViewController {
             newCoordinateX = placedCard.getKey().x - gridDimensions.get(grid).getFirst() + 1;
             newCoordinateY = gridDimensions.get(grid).get(3) - placedCard.getKey().y + 1;
             //System.out.println("Adding card that was on Point: " + placedCard.getKey() + " on cell [" + newCoordinateX + ";" + newCoordinateY + "]");
-            //System.out.println("Card Image Path: " + placedCard.getValue().getImage());
             cells.get(new Pair<>(newCoordinateX, newCoordinateY)).setCardImage(placedCard.getValue().getImage());
         }
     }
 
+    /**
+     * Updates the visual representation of a player's resources by setting the resource labels for the specified player.
+     * <li>Iterates through the map of achieved resources and updates the corresponding resource label based on the resource type.</li>
+     * <li>Sets the text of each resource label to reflect the current amount of the resource.</li>
+     *
+     * @param playerNumber      The number of the player whose resources are being updated.
+     * @param achievedResources A map containing the resources and their corresponding amounts that the player has achieved.
+     */
     private void updateResources(int playerNumber, Map<Resources, Integer> achievedResources) {
         for (Map.Entry<Resources, Integer> resource : achievedResources.entrySet()) {
             switch (resource.getKey()) {
@@ -898,6 +1060,14 @@ public class InGameController extends ViewController {
         }
     }
 
+    /**
+     * Updates the visual representation of a player's hand by setting the card images for the specified player
+     * <li>Iterates through the list of playable cards and updates the corresponding image in the player's hand.</li>
+     * <li>If the player's hand contains only two cards, it sets a placeholder image for the Third card slot.</li>
+     *
+     * @param playerNumber The number of the player whose hand is being updated.
+     * @param hand         A list of playable cards representing the player's current hand.
+     */
     private void updateHand(int playerNumber, List<PlayableCard> hand) {
         int i = 0;
         for (PlayableCard card : hand) {
@@ -911,25 +1081,24 @@ public class InGameController extends ViewController {
         }
     }
 
+    /**
+     * Support method to change resolution to one single GridPane
+     */
+    private void changeGridResolution(GridPane grid, Map<Pair<Integer, Integer>, Cell> cells) {
+        for (int x = 0; x < grid.getColumnCount(); x++) {
+            for (int y = 0; y < grid.getRowCount(); y++) {
+                resizeCard(cells.get(new Pair<>(x, y)));
+                cells.get(new Pair<>(x, y)).setPaneResolution();
+            }
+        }
+    }
+
+    //private method to hide the hand of other players
     private void hideHand(List<PlayableCard> hand) {
         for (PlayableCard playableCard : hand) {
             if (playableCard.getSide()) {
                 playableCard.changeSide();
             }
-        }
-    }
-
-    /**
-     * Sends a chat message.
-     *
-     * @param message The message to send.
-     */
-    private void sendText(String message) {
-        try {
-            client.sendChatMessage(client.getUsername(), message);
-        } catch (RemoteException e) {
-            show_ServerCrashWarning(e.toString());
-            e.getStackTrace();
         }
     }
 
@@ -977,30 +1146,127 @@ public class InGameController extends ViewController {
         });
     }
 
+    /**
+     * Resizes a card's image view to fit specified dimensions and sets a clipping region to ensure the image is displayed correctly.
+     * <li>Sets the fit height and width of the card image view based on predefined size values.</li>
+     * <li>Applies a clipping region to the card image view to ensure the image is properly displayed within the set dimensions.</li>
+     *
+     * @param card The ImageView representing the card to be resized.
+     */
     private void resizeCard(ImageView card) {
         //System.out.println("card.getFitWidth(): "+card.getFitWidth()+" \n card.getFitHeight(): " + card.getFitHeight());
         //System.out.println("card.getImage().getWidth(): "+card.getImage().getWidth()+" \n card.getImage().getHeight() " + card.getImage().getHeight())
-        card.setFitHeight(size.getHeight());
-        card.setFitWidth(size.getWidth());
+        card.setFitHeight(size.getCardsHeight());
+        card.setFitWidth(size.getCardWidth());
         setClipToImageView(card);
     }
 
+    /**
+     * Locks the size of the mother pane to its current dimensions, preventing it from being resized.
+     * Used to prevent a little visual bug during drag and drop.
+     */
     private void lockMotherPaneSize() {
         motherPane.setMinSize(motherPane.getWidth(), motherPane.getHeight());
         motherPane.setMaxSize(motherPane.getWidth(), motherPane.getHeight());
     }
 
+    /**
+     * Unlocks the size of the mother pane to its current dimensions, allowing it to be resizable.
+     * Used to prevent a little visual bug during drag and drop.
+     */
     private void setMotherPaneResizable() {
         motherPane.setMinSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
         motherPane.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
     }
 
+    /**
+     * Supportive method used to hide or show a Pane
+     *
+     * @param pane generic Pane to hid or show
+     */
     private void showHidePane(Pane pane) {
         pane.setManaged(!pane.isManaged());
         pane.setVisible(!pane.isVisible());
         pane.setMouseTransparent(!pane.isMouseTransparent());
     }
+    private void showPane(Pane pane) {
+        pane.setManaged(true);
+        pane.setVisible(true);
+        pane.setMouseTransparent(false);
+    }
+    private void hidePane(Pane pane) {
+        pane.setManaged(false);
+        pane.setVisible(false);
+        pane.setMouseTransparent(true);
+    }
 
+    /**
+     * Assigns a pion image to each player based on their name and updates the corresponding image view.
+     *
+     * <p>This method performs the following steps:</p>
+     * <ol>
+     *   <li>Creates a list of pion image paths.</li>
+     *   <li>Iterates through the list of players and assigns the corresponding pion image to each player's image view based on their name.</li>
+     * </ol>
+     */
+    private void assignPion() {
+        List<String> pionImages = new ArrayList<>();
+        pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_vert.png");
+        pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_jaune.png");
+        pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_rouge.png");
+        pionImages.add("/it/polimi/ingsw/gc31/Images/Board/CODEX_pion_bleu.png");
+        int i = 0;
+        for (String player : app.getPlayerList().keySet()) {
+            if (player.equals(player1Name.getText()))
+                colorPion1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+            else if (player.equals(player2Name.getText()))
+                colorPion2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+            else if (player.equals(player3Name.getText()))
+                colorPion3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+            else if (player.equals(player4Name.getText()))
+                colorPion4.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+
+            i++;
+        }
+    }
+
+    /**
+     * Populates the TextFlow, adding the prefix colored in a uniquely color and the message (suffix + \n)
+     * Then proceed to layout the new message among the others using the scrollPane
+     * Also shows the notification icon is the chat is closed at the moment
+     *
+     * @param username     The username of the player used to assign the color to the message prefix
+     * @param message      The message content to be added to the chat.
+     * @param usernameText The prefix of the message already modified
+     */
+    private void populateChat(String username, String message, Text usernameText) {
+        if (username.equals(app.getPlayerList().keySet().stream().toList().getFirst())) {
+            usernameText.setFill(Color.GREEN);
+        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(1))) {
+            usernameText.setFill(Color.VIOLET);
+        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(2))) {
+            usernameText.setFill(Color.RED);
+        } else if (username.equals(app.getPlayerList().keySet().stream().toList().get(3))) {
+            usernameText.setFill(Color.BLUE);
+        }
+        Text messageText = new Text(message + "\n");
+        messageText.setFill(Color.BLACK);
+
+        chatField.getChildren().add(usernameText);
+        chatField.getChildren().add(messageText);
+        scrollPane.layout();
+        scrollPane.setVvalue(1.0);
+        if (!chatPopUp.isVisible()) {
+            chatButtonImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/AppIcons/iconMessagePending.png"))));
+        }
+    }
+
+    private String formatTime(int seconds) {
+        int hrs = seconds / 3600;
+        int minutes = (seconds % 3600) / 60;
+        int secs = seconds % 60;
+        return String.format("%02d:%02d:%02d", hrs, minutes, secs);
+    }
 
     //INNER CLASSES:____________________________________________________________________________________________________
     /*
@@ -1042,9 +1308,9 @@ public class InGameController extends ViewController {
             this.setImage(cardImage);
             this.setPreserveRatio(true);
             this.setViewport(cardViewportSD);
-            this.setFitWidth(size.getWidth()); // set the card width
-            this.setFitHeight(size.getHeight()); // Set the card height
-            setClipToImageView(this);
+            this.setFitWidth(size.getCardWidth()); // set the card width
+            this.setFitHeight(size.getCardsHeight()); // Set the card height
+            setClipToImageView(this); // Round image boarder
 
             //If the cell belongs to player1, it is set to accept drag and drop events
             if (grid.equals(player1PlayAreaGrid)) {
@@ -1072,9 +1338,6 @@ public class InGameController extends ViewController {
                     event.consume();
                 });
             }
-
-
-            // Round image boarder
 
             grid.add(pane, x, y);
         }

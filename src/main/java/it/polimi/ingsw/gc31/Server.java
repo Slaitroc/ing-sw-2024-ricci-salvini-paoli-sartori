@@ -15,7 +15,7 @@ import it.polimi.ingsw.gc31.utility.DV;
 
 public class Server {
 
-    public static String findIP(){
+    public static String findIP() {
         Enumeration<NetworkInterface> networkInterfaces;
         try {
             networkInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -45,12 +45,11 @@ public class Server {
     }
 
     public static void main(String[] args) {
+        System.setProperty("java.rmi.server.hostname", "indirizzo ip del client");
         // pulisce il terminale
         System.out.print("\033[H\033[2J");
         System.out.flush();
         String ipAddress = findIP();
-
-       
 
         if (DV.forceIP) {
             try {

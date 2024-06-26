@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.model.player;
 
 import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
+import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
 import it.polimi.ingsw.gc31.model.Board;
@@ -82,18 +83,30 @@ public class PlayerStateTest {
 
         player1.setSelectedCard(2);
         verifyCard = player1.getSelectedCard();
-        player1.play(new Point(1, 1));
+        try {
+            player1.play(new Point(1, 1));
+        } catch (IllegalPlaceCardException e) {
+            fail("Exception should not have been thrown");
+        }
         assertInstanceOf(Placed.class, player1.inGameState);
         assertEquals(verifyCard, player1.getPlayArea().getPlacedCards().get(new Point(1, 1)));
 //        player1.drawResourceCard1();
         assertInstanceOf(Waiting.class, player1.inGameState);
 
 //        player1.drawResource();
-        player1.play(new Point(1, 1));
+        try {
+            player1.play(new Point(1, 1));
+        } catch (IllegalPlaceCardException e) {
+            fail("Exception should not have been thrown");
+        }
         player2.setInGameState(new NotPlaced());
 
         assertInstanceOf(NotPlaced.class, player2.inGameState);
-        player2.play(new Point(1, 1));
+        try {
+            player2.play(new Point(1, 1));
+        } catch (IllegalPlaceCardException e) {
+            fail("Exception should not have been thrown");
+        }
         assertInstanceOf(Placed.class, player2.inGameState);
 //        player2.drawResource();
         assertInstanceOf(Waiting.class, player2.inGameState);
@@ -103,7 +116,11 @@ public class PlayerStateTest {
         player3.setInGameState(new NotPlaced());
 
         assertInstanceOf(NotPlaced.class, player3.inGameState);
-        player3.play(new Point(1, 1));
+        try {
+            player3.play(new Point(1, 1));
+        } catch (IllegalPlaceCardException e) {
+            fail("Exception should not have been thrown");
+        }
         assertInstanceOf(Placed.class, player3.inGameState);
 //        player3.drawResource();
         assertInstanceOf(Waiting.class, player3.inGameState);
@@ -113,14 +130,22 @@ public class PlayerStateTest {
         assertInstanceOf(Waiting.class, player2.inGameState);
         assertInstanceOf(Waiting.class, player3.inGameState);
 
-        player1.play(new Point(1, 1));
+        try {
+            player1.play(new Point(1, 1));
+        } catch (IllegalPlaceCardException e) {
+            fail("Exception should not have been thrown");
+        }
         assertInstanceOf(Placed.class, player1.inGameState);
 //        player1.drawResourceCard1();
         assertInstanceOf(Waiting.class, player1.inGameState);
         player2.setInGameState(new NotPlaced());
 
         assertInstanceOf(NotPlaced.class, player2.inGameState);
-        player2.play(new Point(1, 1));
+        try {
+            player2.play(new Point(1, 1));
+        } catch (IllegalPlaceCardException e) {
+            fail("Exception should not have been thrown");
+        }
         assertInstanceOf(Placed.class, player2.inGameState);
 //        player2.drawResourceCard2();
         assertInstanceOf(Waiting.class, player2.inGameState);
@@ -129,7 +154,11 @@ public class PlayerStateTest {
         player3.setInGameState(new NotPlaced());
 
         assertInstanceOf(NotPlaced.class, player3.inGameState);
-        player3.play(new Point(1, 1));
+        try {
+            player3.play(new Point(1, 1));
+        } catch (IllegalPlaceCardException e) {
+            fail("Exception should not have been thrown");
+        }
         assertInstanceOf(Placed.class, player3.inGameState);
 //        player3.drawResource();
         assertInstanceOf(Waiting.class, player3.inGameState);

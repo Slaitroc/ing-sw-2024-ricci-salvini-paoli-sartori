@@ -24,6 +24,7 @@ public enum CardColor {
 
     /**
      * used to get the string representation of a Color object
+     *
      * @return stringName
      */
     @Override

@@ -9,10 +9,10 @@ import java.rmi.RemoteException;
 public interface IGameController extends Remote {
     /**
      * Use this for test purposes only
-     * 
-     * @deprecated
+     *
      * @return the GameModel
      * @throws RemoteException
+     * @deprecated
      */
     GameModel getModel() throws RemoteException;
 
@@ -21,6 +21,6 @@ public interface IGameController extends Remote {
     // public void setReadyStatus(boolean ready, String username) throws
     // RemoteException, IllegalStateOperationException;
 
-    public void sendCommand(ServerQueueObject obj) throws RemoteException;
+    void sendCommand(ServerQueueObject obj) throws RemoteException;
 
 }

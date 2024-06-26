@@ -28,8 +28,9 @@ public class CardBack {
 
     /**
      * Constructs a new back with the specified resources and image directory.
+     *
      * @param resources corners of the card
-     * @param dirImg path of the png image of the back side of the card
+     * @param dirImg    path of the png image of the back side of the card
      */
     public CardBack(List<Resources> resources, String dirImg) {
         this.resources = resources;

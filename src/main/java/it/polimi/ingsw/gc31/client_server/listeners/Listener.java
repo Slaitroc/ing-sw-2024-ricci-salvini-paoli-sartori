@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.listeners;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 
@@ -53,27 +54,25 @@ public abstract class Listener {
      * @param clientQueueObject The updated data to be sent to the client.
      */
     protected void sendUpdate(GameModel model, String username, VirtualClient client, ClientQueueObject clientQueueObject) {
-        new Thread(() -> {
-            try {
-                Boolean isConnected;
-                synchronized (model.getPlayerConnection()) {
-                    isConnected = model.getPlayerConnection().get(username);
-                }
-                if (isConnected) {
+        if (model.getPlayerConnection().get(username)) {
+            new Thread(() -> {
+                try {
                     client.sendCommand(clientQueueObject);
-                } else {
-                    System.out.println("Update not sent, client is already disconnected");
+                } catch (RemoteException e) {
+                    // FIXME lasciare disconnettere il giocatore all'heatbeat?
+//                    if (model.getPlayerConnection().get(username)) {
+//                        try {
+//                            model.disconnectPlayer(username);
+//                        } catch (LastPlayerRemainedException ex) {
+//                            // todo fare qualcosa?
+//                        }
+//                    } else {
+//                        ServerLog.gControllerWrite("Client is already disconnected, "+username, model.getIdGame());
+//                    }
                 }
-            } catch (RemoteException e) {
-
-                synchronized (model.getPlayerConnection()) {
-                    if (!model.getPlayerConnection().get(username)) {
-                        System.out.println("Client already disconnected");
-                    } else {
-                        model.disconnectPlayer(username);
-                    }
-                }
-            }
-        }).start();
+            }).start();
+        } else {
+            ServerLog.gControllerWrite("Update not sent, client is already disconnected, "+username, model.getIdGame());
+        }
     }
 }

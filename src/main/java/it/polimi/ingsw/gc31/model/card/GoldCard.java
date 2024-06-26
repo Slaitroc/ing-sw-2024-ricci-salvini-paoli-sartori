@@ -1,11 +1,6 @@
 package it.polimi.ingsw.gc31.model.card;
 
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
-import it.polimi.ingsw.gc31.model.enumeration.Resources;
-import it.polimi.ingsw.gc31.model.strategies.Objective;
-
-import java.util.Collections;
-import java.util.Map;
 
 /**
  * The GoldCard class represents a playable card with gold properties.

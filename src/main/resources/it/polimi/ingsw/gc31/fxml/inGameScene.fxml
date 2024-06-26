@@ -53,8 +53,8 @@
                                 </StackPane>
                             </ScrollPane>
 
-                            <!-- INITIAL CHOISE BOX-->
-                            <VBox fx:id="initialChoise" alignment="CENTER" spacing="20" VBox.vgrow="ALWAYS">
+                            <!-- INITIAL CHOICE BOX-->
+                            <VBox fx:id="initialChoice" alignment="CENTER" spacing="20" VBox.vgrow="ALWAYS">
                                 <ImageView fx:id="starterCard" fitHeight="100" fitWidth="149"
                                            onMouseClicked="#changeCardSide">
                                     <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
@@ -93,7 +93,7 @@
                                             prefHeight="460.0" prefWidth="250.0" styleClass="chat-scroll-pane">
                                     <TextFlow fx:id="chatField" prefHeight="200.0" prefWidth="207.0"/>
                                 </ScrollPane>
-                                <MFXTextField fx:id="textField" onKeyPressed="#handleEnterKeyPressed"
+                                <MFXTextField fx:id="textField" onKeyPressed="#handleChatKeyPressed"
                                               prefHeight="49.0" prefWidth="250.0" styleClass="lobby-chat-background"/>
                             </VBox>
                         </StackPane>
@@ -208,6 +208,10 @@
                                 </viewport>
                             </ImageView>
                         </HBox>
+                    </VBox>
+                    <VBox alignment="CENTER_LEFT" spacing="25.0" stylesheets="@../css/Buttons.css" accessibleText="false">
+                        <TextField fx:id="infoText" text="Choose your secret objective" styleClass="small-button, rounded-button"/>
+                        <Label fx:id="pingText" />
                     </VBox>
                 </HBox>
             </VBox>
@@ -344,6 +348,14 @@
                             <Label fx:id="player1Points" text="0"/>
                         </HBox>
                     </VBox>
+                    <ImageView fx:id="colorPion1" fitHeight="40" fitWidth="40"
+                               AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="0.0">
+                        <Image url="@../Images/Board/CODEX_pion_bleu.png"/>
+                    </ImageView>
+                    <ImageView fx:id="noirPion1" fitHeight="40" fitWidth="40" visible="false"
+                               AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="0.0">
+                        <Image url="@../Images/Board/CODEX_pion_noir.png"/>
+                    </ImageView>
                     <ImageView fx:id="playingPlayer1Icon" fitHeight="40" fitWidth="40" visible="false"
                                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                         <Image url="@../Images/AppIcons/loading-gif.gif"/>
@@ -474,6 +486,14 @@
                                 <Label fx:id="player2Points" text="0"/>
                             </HBox>
                         </VBox>
+                        <ImageView fx:id="colorPion2" fitHeight="40" fitWidth="40"
+                                   AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="0.0">
+                            <Image url="@../Images/Board/CODEX_pion_rouge.png"/>
+                        </ImageView>
+                        <ImageView fx:id="noirPion2" fitHeight="40" fitWidth="40" visible="false"
+                                   AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="0.0">
+                            <Image url="@../Images/Board/CODEX_pion_noir.png"/>
+                        </ImageView>
                         <ImageView fx:id="playingPlayer2Icon" fitHeight="40" fitWidth="40" visible="false"
                                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <Image url="@../Images/AppIcons/loading-gif.gif"/>
@@ -604,7 +624,7 @@
                         </ImageView>
                     </HBox>
                 </VBox>
-                <ImageView fx:id="afkP2" visible="false" opacity="0.5" preserveRatio="true" fitWidth="310">
+                <ImageView fx:id="statusP2" visible="false" opacity="0.5" fitWidth="310" fitHeight="200">
                     <Image url="@../Images/Misc/disconnectedPlayer.gif"/>
                 </ImageView>
             </StackPane>
@@ -635,6 +655,14 @@
                                 <Label fx:id="player3Points" text="0"/>
                             </HBox>
                         </VBox>
+                        <ImageView fx:id="colorPion3" fitHeight="40" fitWidth="40"
+                                   AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="0.0">
+                            <Image url="@../Images/Board/CODEX_pion_jaune.png"/>
+                        </ImageView>
+                        <ImageView  fx:id="noirPion3" fitHeight="40" fitWidth="40" visible="false"
+                                   AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="0.0">
+                            <Image url="@../Images/Board/CODEX_pion_noir.png"/>
+                        </ImageView>
                         <ImageView fx:id="playingPlayer3Icon" fitHeight="40" fitWidth="40" visible="false"
                                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <Image url="@../Images/AppIcons/loading-gif.gif"/>
@@ -765,7 +793,7 @@
                         </ImageView>
                     </HBox>
                 </VBox>
-                <ImageView fx:id="afkP3" visible="false" opacity="0.5" preserveRatio="true" fitWidth="310">
+                <ImageView fx:id="statusP3" visible="false" opacity="0.5" fitWidth="310" fitHeight="200">
                     <Image url="@../Images/Misc/disconnectedPlayer.gif"/>
                 </ImageView>
             </StackPane>
@@ -796,6 +824,14 @@
                                 <Label fx:id="player4Points" text="0"/>
                             </HBox>
                         </VBox>
+                        <ImageView fx:id="colorPion4" fitHeight="40" fitWidth="40"
+                                   AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="0.0">
+                            <Image url="@../Images/Board/CODEX_pion_vert.png"/>
+                        </ImageView>
+                        <ImageView fx:id="noirPion4" fitHeight="40" fitWidth="40" visible="false"
+                                   AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="0.0">
+                            <Image url="@../Images/Board/CODEX_pion_noir.png"/>
+                        </ImageView>
                         <ImageView fx:id="playingPlayer4Icon" fitHeight="40" fitWidth="40" visible="false"
                                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <Image url="@../Images/AppIcons/loading-gif.gif"/>
@@ -924,7 +960,7 @@
                         </ImageView>
                     </HBox>
                 </VBox>
-                <ImageView fx:id="afkP4" visible="false" opacity="0.5" preserveRatio="true" fitWidth="310">
+                <ImageView fx:id="statusP4" visible="false" opacity="0.5" fitWidth="310" fitHeight="200">
                     <Image url="@../Images/Misc/disconnectedPlayer.gif"/>
                 </ImageView>
             </StackPane>
@@ -938,7 +974,7 @@
         <StackPane.margin>
             <Insets left="50.0" right="50.0"/>
         </StackPane.margin>
-        <VBox id="resource-count-window" fx:id="settingsVBox"
+        <VBox id="resource-count-window" fx:id="settingsVBox"   
               alignment="CENTER" fillWidth="false" maxHeight="400.0" maxWidth="350.0" spacing="30.0"
               visible="false" managed="false" mouseTransparent="true">
             <Label text="SETTINGS" id="resource-box">
@@ -946,16 +982,16 @@
                     <Insets left="5.0" right="5.0"/>
                 </padding>
             </Label>
-            <Button onMouseClicked="#setFullScreen" text="Fullscreen" styleClass="really-small-button"
-                    prefHeight="30.0" prefWidth="100.0"/>
-            <Button onMouseClicked="#showHideControls" text="Controls" styleClass="really-small-button"
-                    prefHeight="30.0" prefWidth="100.0"/>
-            <Button onMouseClicked="#quit" text="Quit Game" styleClass="really-small-button"
-                    prefHeight="30.0" prefWidth="100.0"/>
-            <Button onMouseClicked="#changeResolution" text="Change Resolution" styleClass="really-small-button"
-                    prefHeight="30.0" prefWidth="100.0"/>
-            <Button onMouseClicked="#showHideMenu" text="Close Settings" styleClass="really-small-button"
-                    prefHeight="30.0" prefWidth="100.0"/>
+            <Button onMouseClicked="#setFullScreen" text="Fullscreen" styleClass="really-small-button, rounded-button"
+                    prefHeight="30.0" prefWidth="200.0"/>
+            <Button onMouseClicked="#showHideControls" text="Controls" styleClass="really-small-button,rounded-button"
+                    prefHeight="30.0" prefWidth="200.0"/>
+            <Button onMouseClicked="#quit" text="Quit Game" styleClass="really-small-button, rounded-button"
+                    prefHeight="30.0" prefWidth="200.0"/>
+            <Button onMouseClicked="#changeResolution" text="Change Resolution" styleClass="really-small-button, rounded-button"
+                    prefHeight="30.0" prefWidth="200.0"/>
+            <Button onMouseClicked="#showHideMenu" text="Close Settings" styleClass="really-small-button, rounded-button"
+                    prefHeight="30.0" prefWidth="200.0"/>
 
         </VBox>
         <VBox id="resource-count-window" fx:id="controlsVBox"
@@ -969,11 +1005,19 @@
     </StackPane>
     <StackPane fx:id="youWon" stylesheets="@../css/Panes.css" id="winningPane"
                visible="false" managed="false" mouseTransparent="true">
-            <Label text="YOU WIN" stylesheets="@../css/Labels.css" styleClass="winning-label"/>
+            <Label text="YOU WIN" stylesheets="@../css/Labels.css" styleClass="winning-label" translateY="-200">
+                <padding>
+                    <Insets left="10" right="10.0"/>
+                </padding>
+            </Label>
     </StackPane>
     <StackPane fx:id="otherWinner"
                visible="false" managed="false" mouseTransparent="true">
-        <Label fx:id="winnerLabel" stylesheets="@../css/Labels.css" styleClass="winning-label"/>
+        <Label fx:id="winnerLabel" stylesheets="@../css/Labels.css" styleClass="winning-label" translateY="-200">
+            <padding>
+                <Insets left="10" right="10.0"/>
+            </padding>
+        </Label>
     </StackPane>
 
 </StackPane>
