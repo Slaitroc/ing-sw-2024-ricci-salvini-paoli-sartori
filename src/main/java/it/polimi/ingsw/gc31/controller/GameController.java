@@ -3,7 +3,6 @@ package it.polimi.ingsw.gc31.controller;
 import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.*;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -16,7 +15,6 @@ import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
 import it.polimi.ingsw.gc31.client_server.listeners.ListenerType;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.*;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.CreateReMatch;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.EndGameOnePlayerLeftObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.QuitGameObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
@@ -47,8 +45,13 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * Object to lock when operating on the client list
      */
     protected final Object clientListLock = new Object();
-
+    /**
+     * Is the number of the player for the particular game
+     */
     private final int maxNumberPlayers;
+    /**
+     * Is a number that identifies a unique game
+     */
     private final int idGame;
 
     /**
@@ -62,7 +65,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      */
     protected final LinkedHashMap<String, Boolean> readyStatus;
 
-
+    /**
+     * A scheduler that is used to count how much time passes starting from the moment a player is the only one
+     * left connected to a match. If enough time passes the player wins the match.
+     */
     ScheduledExecutorService schedulerLastPlayerConnected;
 
     /**
@@ -84,17 +90,28 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         this.readyStatus = new LinkedHashMap<>();
         this.readyStatus.put(username, false);
         this.model = new GameModel(clientListLock, idGame);
-        // this.rematchAnswers = 0;
         new Thread(this::executor).start();
 
         notifyListPlayers();
     }
 
+    /**
+     * This public method is used to add the object received to the list (callsList) of object that needs to be executed
+     *
+     * @param obj               is the object received from the client to be executed
+     * @throws RemoteException  if an error occurs during the execution of a remote method
+     */
     @Override
     public void sendCommand(ServerQueueObject obj) throws RemoteException {
         addQueueObj(obj);
     }
 
+    /**
+     * This method is invoked by the sendCommand method. It synchronizes on the callsList and add the object received as a
+     * parameter in the callList
+     *
+     * @param obj is the object that needs to be added in the callList
+     */
     private void addQueueObj(ServerQueueObject obj) {
         synchronized (callsList) {
             callsList.add(obj);
@@ -102,6 +119,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         }
     }
 
+    /**
+     * A method executed only by a thread that has the only purpose to poll from the callList and execute the
+     * objects stored inside. If there aren't any object the thread wait for a new one to arrive.
+     */
     private void executor() {
         while (true) {
             ServerQueueObject action;
@@ -149,11 +170,17 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     // riconnettersi.
     // Se il giocatore si era disconnesso per un problema di rete nella lobby allora
     // entra come
+
+    /**
+     * This method is invoked by either the Controller or a ReJoinObj. In both cases a previously disconnected player
+     * return in the game it left. The countdown timer is cancelled, the client is added again in the clientList of the game,
+     * the gameController is given to the client and the reconnectPlayer method of the model is invoked
+     *
+     * @param username          is the username of the previously disconnected player
+     * @param newClient         is the new VirtualClient associated to the client after the reconnection
+     * @throws RemoteException  if an error occurs during the execution of a remote method
+     */
     public void reJoinGame(String username, VirtualClient newClient) throws RemoteException {
-        // TODO controllare se il client era presente nella lista? oppure viene fatto
-        // nel controller
-        // TODO cosa fare con readyStatus?
-        // the old client is replaced with the new one
         synchronized (clientListLock) {
             if (clientList.containsKey(username)) {
                 schedulerLastPlayerConnected.shutdownNow();
@@ -177,8 +204,8 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * started, the player will
      * quit the game with the possibility to rejoin the same match or another one
      *
-     * @param username of the player that quitted
-     * @throws RemoteException for generic problem with server connection
+     * @param username          of the player that quit
+     * @throws RemoteException  for generic problem with server connection
      */
     public void quitGame(String username) throws RemoteException {
         synchronized (clientListLock) {
@@ -214,13 +241,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     }
 
     /**
-     * <p>
      * Checks if two conditions are met:
-     * </p>
-     * <ul>
-     * <li>If all the player in the lobby are ready</li>
-     * <li>If the maximum number of the players for the game has been reached</li>
-     * </ul>
+     * If all the player in the lobby are ready
+     * If the maximum number of the players for the game has been reached
      * If both these conditions are true it starts the game for all players
      */
     public void checkReady() {
@@ -293,6 +316,14 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         model.getListeners().values().forEach(listener -> listener.notifyListener(ListenerType.PLAYER_SCORE, model));
     }
 
+    /**
+     * This method is invoked to choose the secret objective for the player. The method invokes the corresponding method of
+     * the model. If the game is not in the right state a IllegalStateOperationException and a specific Object is sent
+     * to the client. Also, the listener of the player score and objective card are notified
+     *
+     * @param username  is the username of the player that wants to choose a secret objective
+     * @param index     is the value used to identify which card to choose
+     */
     public void chooseSecretObjective(String username, Integer index) {
         try {
             model.chooseSecretObjective(username, index);
@@ -304,6 +335,14 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         model.getListeners().values().forEach(listener -> listener.notifyListener(ListenerType.OBJECTIVE_CARD, model));
     }
 
+    /**
+     * This method is invoked when a player wants to play a card. It invokes the method of the model, in case the
+     * state of the game is not the correct one the specific object is sent. The listeners for the play area, hand, player
+     * score and turn are notified.
+     *
+     * @param username  is the username of the client that wants to play a card
+     * @param point     is the pair of coordinates where the player wants to play the card
+     */
     public void play(String username, Point point) {
         try {
             model.play(username, point);
@@ -317,6 +356,13 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         model.getListeners().values().forEach(listener -> listener.notifyListener(ListenerType.TURN, model));
     }
 
+    /**
+     * This method is invoked when the player wants to play the starter card. It invokes the corresponding method of the model,
+     * if the state of the game is not correct a specific object is sent, another specific object is sent if the player have not
+     * yet chosen the objective card. The listener for the play area, player score and turn are notified
+     *
+     * @param username is the username of the client that wants to play the starter card
+     */
     public void playStarter(String username) {
         try {
             model.playStarter(username);
@@ -333,6 +379,14 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         model.getListeners().values().forEach(listener -> listener.notifyListener(ListenerType.TURN, model));
     }
 
+    /**
+     * This method is invoked when a player wants to select a card in its hand. It invokes the corresponding
+     * method of the model, if the state of the game is not the correct one a ShowInvalidActionObj is sent to the client and
+     * the same object is sent if the player wrote a non-coherent index for the card. The hand's listener is notified
+     *
+     * @param username  is the username of the client that wants to select a card in its hand
+     * @param index     is the value that specify which card in its hand needs to be selected
+     */
     public void selectCard(String username, int index) {
         try {
             model.setSelectCard(username, index);
@@ -344,6 +398,13 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         model.getListeners().values().forEach(listener -> listener.notifyListener(ListenerType.HAND, model));
     }
 
+    /**
+     * This method is invoked when a player wants to change the side of a card. It invokes the
+     * corresponding method of the model, if the state of the game is not the correct one a ShowInvalidActionObj is sent to
+     * the client. The hand listener is notified
+     *
+     * @param username is the username of the player that wants to change the side of a card
+     */
     public void changeSide(String username) {
         try {
             model.changeSide(username);
@@ -353,6 +414,13 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         model.getListeners().values().forEach(listener -> listener.notifyListener(ListenerType.HAND, model));
     }
 
+    /**
+     * This method is invoked when the player wants to change the side of the starter card. The corresponding method of
+     * the model is invoked, if the state of the game is not the correct one a ShowInvalidActionObj is sent to the client.
+     * The starter card listener is notified
+     *
+     * @param username is the username of the player that wants to change the siede of the starter card
+     */
     public void changeStarterSide(String username) {
         try {
             model.changStarterSide(username);
@@ -362,10 +430,20 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         model.getListeners().values().forEach(listener -> listener.notifyListener(ListenerType.STARTER_CARD, model));
     }
 
+    /**
+     * This method is invoked to send to the clients the updated info about the client and their ready status
+     */
     private void notifyListPlayers() {
         sendUpdateToClient(new ShowInGamePlayerObj(readyStatus));
     }
 
+    /**
+     * This method create a thread that, synchronizing on the clientListLock, sends to all the clients a clientQueueObj
+     * received as a parameter
+     *
+     * @param username              is the username of the client that is the receiver of the object
+     * @param clientQueueObject     is the object to be sent to the client
+     */
     private void sendUpdateToClient(String username, ClientQueueObject clientQueueObject) {
         new Thread(() -> {
             VirtualClient client;
@@ -396,6 +474,14 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         }
     }
 
+    /**
+     * This method is invoked when a player needs to be disconnected from the game. If the game is already started the
+     * corresponding method of the model is invoked, in this case if the player is the last one in the game the timer
+     * schedulerLastPlayerConnected is started (if the timer expires the player wins the match).
+     * If the game is not yet started a QuitGameObj is sent to the client
+     *
+     * @param username is the username of the client that is disconnected
+     */
     public void disconnectPlayer(String username) {
         if (model.isStarted()) {
             try {
@@ -440,186 +526,26 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         return model;
     }
 
+    /**
+     * @return the idGame
+     */
     protected synchronized int getIdGame() {
         return idGame;
     }
 
-    // // REMATCH RESOURCES
-    // /**
-    // * The map contains the boolean value representing if the specific player
-    // wants
-    // * to rematch
-    // */
-    // protected Map<String, Boolean> rematchPlayers;
-    // protected int rematchAnswers;
-    // protected Timer rematchTimer;
-    //
-    // /**
-    // * This method is invoked when the first response arrives from a player. A map
-    // * for the response (rematchPlayers) is created initializing
-    // * the values to null and a timer is created. If some responses have not been
-    // * received when the timer expire their value
-    // * is assumed to be false. A new game is created only when the GameController
-    // * receives all the responses (or the timer expires)
-    // */
-    // public void startRematchTimer() {
-    // GameController gc = this;
-    // rematchPlayers = new HashMap<>();
-    // for (String username : clientList.keySet()) {
-    // rematchPlayers.put(username, null);
-    // }
-    //
-    // rematchTimer = new Timer(true);
-    // rematchTimer.schedule(new TimerTask() {
-    // @Override
-    // public void run() {
-    // for (String username : rematchPlayers.keySet()) {
-    // if ((rematchPlayers.get(username)).equals(null))
-    // rematchPlayers.replace(username, false);
-    // }
-    //
-    // // create a bew match
-    // try {
-    // gc.startRematch();
-    // } catch (RemoteException e) {
-    // ServerLog.gControllerWrite("An error occurred creating a new " + idGame + "
-    // game [Rematch Error]",
-    // idGame);
-    // e.printStackTrace();
-    // }
-    // }
-    // }, 120000);
-    // }
-    //
-    // /**
-    // * This method is invoked on the execution of the AnotherMatchResponseObj.
-    // Based
-    // * on the response obtained the GameController knows
-    // * if the client wants to rematch or not.
-    // *
-    // * @param username is the username of the player giving its response
-    // * @param wantsToRematch is the string representing the answer
-    // */
-    // public void anotherMatch(String username, Boolean wantsToRematch) {
-    // System.out.println(username + " player " + wantsToRematch);
-    // // As soon as the first response is received the timer is created
-    // if (rematchAnswers == 0)
-    // startRematchTimer();
-    //
-    // // The boolean value in the rematchPlayers is updated and the number of
-    // // responses received is incremented
-    // rematchPlayers.replace(username, wantsToRematch);
-    // rematchAnswers++;
-    //
-    // // If all the players responses are received the timer is cancelled (useless)
-    // // and a new match is created
-    // if (rematchAnswers == rematchPlayers.size()) {
-    // rematchTimer.cancel();
-    //
-    // // Firstly the number of players that wants a rematch is counted, if it <2 a
-    // new
-    // // game can't be created and the
-    // // player is disconnected
-    // int count = 0;
-    // for (String user : rematchPlayers.keySet())
-    // if ((rematchPlayers.get(user)).equals(true))
-    // count++;
-    //
-    // // If the number of players that wants a rematch is >1 a new game is created
-    // if (count > 1) {
-    // try {
-    // this.startRematch();
-    // } catch (RemoteException e) {
-    // ServerLog.gControllerWrite("An error occurred creating a new " + idGame + "
-    // game [Rematch Error]",
-    // idGame);
-    // e.printStackTrace();
-    // }
-    //
-    // // If the number of players that wants a rematch is 1 or 0 a new game can't
-    // be
-    // // created
-    // // and all the players are disconnected. At this point the gameController is
-    // // refereeing
-    // // an empty game, so it's now useless and its reference is removed from the
-    // // controller
-    // } else {
-    // for (String user : rematchPlayers.keySet()) {
-    //
-    // try {
-    // Controller.getController().quitGame(user, clientList.get(user));
-    // clientList.remove(user);
-    // readyStatus.remove(user);
-    // Controller.getController().gameControlList.remove(this);
-    // } catch (RemoteException e) {
-    // ServerLog.gControllerWrite("The client " + user + "couldn't be disconnected
-    // from the game",
-    // idGame);
-    // }
-    // }
-    // }
-    // }
-    // }
-    //
-    // /**
-    // * The method is invoked by either the startRematchTimer or the anotherMatch
-    // * method. This method modified all the
-    // * values contained in the gameController accordingly to the remaining player
-    // in
-    // * the game. The maxNumberPlayer is
-    // * modified and all the players that doesn't want to rematch are removed from
-    // * all the maps
-    // */
-    // protected void startRematch() throws RemoteException {
-    //
-    //
-    //
-    // Map<String, VirtualClient> temp = new HashMap<>();
-    // for (String username : rematchPlayers.keySet()) {
-    // if (rematchPlayers.get(username)) {
-    // temp.put(username, clientList.get(username));
-    // }
-    // }
-    //
-    // Controller.getController().sendCommand(new CreateReMatch(temp));
-    // // The callsList is re-initialized at the start of the new game
-    //// synchronized (this.callsList) {
-    //// this.callsList.clear();
-    ////
-    //// // For every player:
-    //// // if the player wants to rematch the new game the playersInNewMatch is
-    //// // increased and the readyStatus is set to false
-    //// // otherwise the client doesn't want to rematch, so it is removed from the
-    // maps
-    //// // The final value of playersInNewMatch is the updated value of
-    //// // maxNumbersPlayers
-    //// int playersInNewMatch = 0;
-    //// for (String username : rematchPlayers.keySet()) {
-    //// if ((rematchPlayers.get(username)).equals(true)) {
-    //// playersInNewMatch++;
-    //// readyStatus.replace(username, false);
-    //// } else {
-    //// Controller.getController().quitGame(username, clientList.get(username));
-    //// readyStatus.remove(username);
-    //// clientList.remove(username);
-    //// }
-    //// }
-    //// this.maxNumberPlayers = playersInNewMatch;
-    //// this.rematchAnswers = 0;
-    ////
-    //// // In the end a new gameModel is created and notify is sent to all the
-    // players
-    //// this.model = new GameModel(clientListLock, idGame);
-    //// }
-    ////
-    //// notifyListPlayers();
-    // }
-
+    /**
+     * This method is invoked by the disconnectPlayer if a single client remains active in the game.
+     * This method creates two runnable. The first is used to check how many clients are connected to the game and
+     * the second one is used to end the game after a fixed time of time if none reconnected.
+     * So if in a game all the players disconnect except for one, after a fixed amount of time the only remaining player
+     * wins the match
+     *
+     * @param lastPlayerConnected is the username of the last connected player in the game
+     */
     public void timerLastPlayerConnected(String lastPlayerConnected) {
         int period = 5;
         int totalTime = 30;
         final int[] remainingTime = { totalTime };
-        // final GameModelState savedGameModelState = gameModelState;
 
         Runnable periodiTask = () -> {
             int numberConnected = 0;
@@ -635,15 +561,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
                 sendUpdateToClient(lastPlayerConnected, new TimerLastPlayerConnectedObj(remainingTime[0]));
                 remainingTime[0] -= period;
             }
-            // else {
-            // // FIXME funziona????????
-            // try {
-            // this.sendCommand(new RestartGameOnePlayerLeftObj(savedGameModelState));
-            // } catch (RemoteException ignored) {
-            // }
-            // ServerLog.gControllerWrite("Someone has reconnected", idGame);
-            // schedulerLastPlayerConnected.shutdownNow();
-            // }
         };
 
         Runnable finalTask = () -> {
