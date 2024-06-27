@@ -9,14 +9,38 @@ import java.util.LinkedHashMap;
 
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 
-public class PlayingState extends TuiState {
+public class PlayingState extends TUIstate {
 
+    /**
+     * Constructor for the PlayingState, calls the initialize method
+     * and set the stateName to "Playing State"
+     * 
+     * @param tui the TUI instance that will use this state
+     */
     public PlayingState(TUI tui) {
         this.tui = tui;
         stateName = "Playing State";
         initialize();
     }
 
+    /**
+     * User-executable commands for the PlayingState
+     * <ul>
+     * <li>help - Shows commands info</li>
+     * <li>quit - quit the game</li>
+     * <li>ref - refresh</li>
+     * <li>dg - draw gold</li>
+     * <li>dr - draw resource</li>
+     * <li>co - Choose secrete objective</li>
+     * <li>ps - Play starter</li>
+     * <li>p - Play</li>
+     * <li>s - Select card</li>
+     * <li>c - Change side</li>
+     * <li>cs - Change starter side</li>
+     * <li>mv - Move play area</li>
+     * <li>cp - Change play area</li>
+     * </ul>
+     */
     @Override
     protected void initialize() {
         commandsMap = new LinkedHashMap<>();
@@ -200,31 +224,45 @@ public class PlayingState extends TuiState {
 
     @Override
     protected void command_play() {
-        boolean valid = true;
+        String input;
         int inputX = 0;
         int inputY = 0;
-        do {
-            valid = true;
+        tui.printToCmdLineOut("Executing place command. Type 'e' to exit");
+        command: while (true) {
             tui.printToCmdLineOut(tui.tuiWrite("Type X coordinate: "));
-            try {
-                inputX = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                valid = false;
-                tui.printToCmdLineOut(tui.tuiWrite("Try again... "));
+            x: while (true) {
+                try {
+                    input = scanner.nextLine();
+                    if (input.equals("e")) {
+                        tui.printToCmdLineOut("No place request sent");
+                        break command;
+                    }
+                    inputX = Integer.parseInt(input.trim());
+                } catch (NumberFormatException e) {
+                    tui.printToCmdLineOut(tui.tuiWrite("Try again... "));
+                    continue x;
+                }
+                break x;
             }
-            tui.printToCmdLineOut(tui.tuiWrite("Type Y coordinate: "));
-            try {
-                inputY = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                valid = false;
-                tui.printToCmdLineOut(tui.tuiWrite("Try again... "));
+            y: while (true) {
+                try {
+                    input = scanner.nextLine();
+                    if (input.equals("e")) {
+                        tui.printToCmdLineOut("No place request sent");
+                        break command;
+                    }
+                    inputY = Integer.parseInt(input.trim());
+                } catch (NumberFormatException e) {
+                    tui.printToCmdLineOut(tui.tuiWrite("Try again... "));
+                    continue y;
+                }
+                break y;
             }
-        } while (!valid);
-
-        try {
-            tui.getClient().play(new Point(inputX, inputY));
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            try {
+                tui.getClient().play(new Point(inputX, inputY));
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
         stateNotify();
     }
@@ -285,6 +323,8 @@ public class PlayingState extends TuiState {
             tui.movePlayAreaUp();
         } else if (input.equals("d")) {
             tui.movePlayAreaDown();
+        } else {
+            tui.printToCmdLineOut("Wrong input");
         }
 
         stateNotify();
@@ -294,18 +334,21 @@ public class PlayingState extends TuiState {
     protected void command_changePlayArea() {
         tui.printToCmdLineOut(tui.tuiWrite("Which player do you want to see the playArea of?"));
 
-        String input = scanner.nextLine();
-        tui.printToCmdLineOut(tui.tuiWrite(input));
-
-        tui.changeActivePlayArea(input);
+        String input;
+        input = scanner.nextLine();
+        if (tui.getPlayAreaAllPlayers().containsKey(input)) {
+            tui.printToCmdLineOut(tui.tuiWrite(input));
+            tui.changeActivePlayArea(input);
+        } else {
+            tui.printToCmdLineOut(tui.tuiWrite(input));
+            tui.printToCmdLineOut("Wrong Username...");
+        }
         // stateNotify();
     }
 
-    @Override
-    protected void command_initial() {
-        // command_showCommandsInfo();
-    }
-
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void setUsername() {
     }
@@ -330,33 +373,37 @@ public class PlayingState extends TuiState {
         tui.forceRefreshTUI(true);
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void reconnect() {
     }
 
-    @Override
-    protected void reMatch() {
-        String input;
-        tui.printToCmdLineOut(tui.tuiWrite("Do you want to do another match? (y/n)"));
-        tui.moveCursorToCmdLine();
-        input = scanner.nextLine();
-        while (true) {
-            try {
-                if (input.trim().equals("y")) {
-                    tui.printToCmdLineOut(tui.tuiWrite("okokokoko"));
-                    tui.moveCursorToCmdLine();
-                    tui.getClient().anotherMatchResponse(true);
-                    break;
-                } else if (input.trim().equals("n")) {
-                    tui.getClient().anotherMatchResponse(false);
-                    break;
-                } else {
-                    tui.printToCmdLineOut("Wrong Input");
-                }
-            } catch (RemoteException e) {
-                e.getStackTrace();
-            }
-        }
-    }
+    // @Override
+    // protected void reMatch() {
+    // String input;
+    // tui.printToCmdLineOut(tui.tuiWrite("Do you want to do another match?
+    // (y/n)"));
+    // tui.moveCursorToCmdLine();
+    // input = scanner.nextLine();
+    // while (true) {
+    // try {
+    // if (input.trim().equals("y")) {
+    // tui.printToCmdLineOut(tui.tuiWrite("okokokoko"));
+    // tui.moveCursorToCmdLine();
+    // tui.getClient().anotherMatchResponse(true);
+    // break;
+    // } else if (input.trim().equals("n")) {
+    // tui.getClient().anotherMatchResponse(false);
+    // break;
+    // } else {
+    // tui.printToCmdLineOut("Wrong Input");
+    // }
+    // } catch (RemoteException e) {
+    // e.getStackTrace();
+    // }
+    // }
+    // }
 
 }

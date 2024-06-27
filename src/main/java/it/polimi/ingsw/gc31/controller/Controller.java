@@ -44,7 +44,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     protected final Set<String> nicknames;
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
     protected final Map<Integer, VirtualClient> newConnections;
-    protected final Map<Integer, Pair<String, Integer>> disconnected; // token - gameID
+    protected final Map<Integer, Pair<String, Integer>> disconnected; // token - <username,gameID>
 
     protected ConcurrentHashMap<VirtualClient, Long> clientsHeartBeat;
     private final ScheduledExecutorService scheduler;
@@ -69,14 +69,15 @@ public class Controller extends UnicastRemoteObject implements IController {
     }
 
     /**
-     * This method is invoked every time a client wants to set its username
-     * The method finds and sends the token associated with the VirtualClient that
-     * tries to set its username
-     *
-     * @param newConnection is the VirtualClient that is trying to set its username
+     * This method is called every time the controller needs to save a token on the
+     * client side.
+     * 
+     * @param newConnection is the VirtualClient that will receive the token
+     * @param token         is the token to be saved
+     * @param temporary     is true if the token to be set is temporary, false
+     *                      otherwise. If false overrides the previously saved token
      */
     public void sendToken(VirtualClient newConnection, int token, boolean temporary) {
-        // sendToken usato per mandare il token definitivo e non quello temporaneo
         try {
             newConnection.sendCommand(new SaveToken(token, temporary));
         } catch (RemoteException e) {
@@ -150,9 +151,31 @@ public class Controller extends UnicastRemoteObject implements IController {
 
     /**
      * Connects a client to the server.
+     * <ul>
+     * <li>If the token is -1, the client is connecting for the first time and a
+     * temporary token is generated and sent to the client. In this case the
+     * procedure {@link Controller#usernameValidation(String, VirtualClient)} is
+     * called to check the name and send the corresponding ClientObject to the
+     * client. If the usernameValidation return true the sent token is locally saved
+     * on the client side by correctly invoking the
+     * {@link Controller#sendToken(VirtualClient, int, boolean)} method.
+     * <li>If the token is not -1 ,and the client is contained in
+     * {@link Controller#disconnected}, the client is trying to reconnect and a
+     * {@link WantsReconnectObj} with the previous username is sent to the client.
+     * If the
+     * client is not contained in the disconnected map, the client is connecting for
+     * the first time and the procedure
+     * {@link Controller#usernameValidation(String, VirtualClient)} is called to
+     * check the name and send the corresponding ClientObject to the client. If the
+     * usernameValidation return true the sent token is locally saved
+     * overriding the previously saved token on the client side by correctly
+     * invoking the {@link Controller#sendToken(VirtualClient, int, boolean)}
+     * method.
      *
-     * @param client   the client to connect.
-     * @param username the username of the client.
+     * @param client    the VirtualClient to connect.
+     * @param username  the username of the client.
+     * @param tempToken the temporary token of the client.
+     * @param token     the token of the client.
      * @return false if wrong username, true if connection is successful
      * @throws RemoteException if general connection error occurs
      */
@@ -255,7 +278,9 @@ public class Controller extends UnicastRemoteObject implements IController {
         if (esito) {
             try {
                 synchronized (gameControlList.get(disconnected.get(token).getValue()).clientListLock) {
-                    client.sendCommand(new ReJoinedObj(true, gameControlList.get(disconnected.get(token).getValue()).clientList.keySet().stream().toList()));
+                    client.sendCommand(
+                            new ReJoinedObj(true, gameControlList.get(disconnected.get(token).getValue()).clientList
+                                    .keySet().stream().toList()));
                 } // mandare questo è importante perché la ui fa cose in //
                 gameControlList.get(disconnected.get(token).getValue()).reJoinGame(disconnected.get(token).getKey(),
                         newConnections.get(token));
@@ -273,7 +298,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                 e.printStackTrace();
             }
             newConnections.remove(token);
-                newConnections.put(tempToken, client);
+            newConnections.put(tempToken, client);
             disconnected.remove(token);
             // At this point the Controller tries to connect the client as if it was the
             // first connection of it

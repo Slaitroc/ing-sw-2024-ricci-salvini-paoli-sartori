@@ -1,18 +1,26 @@
 package it.polimi.ingsw.gc31.view.tui;
 
 import static it.polimi.ingsw.gc31.utility.OurScanner.scanner;
+import it.polimi.ingsw.gc31.client_server.interfaces.*;
+import it.polimi.ingsw.gc31.view.interfaces.*;
+import it.polimi.ingsw.gc31.controller.*;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
 
-import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
-import it.polimi.ingsw.gc31.exceptions.NoTokenException;
 import it.polimi.ingsw.gc31.utility.DV;
 
-public class InitState extends TuiState {
+public class InitState extends TUIstate {
 
+    /**
+     * Constructor for the InitState, calls the initialize method
+     * and set the stateName to "Init State"
+     *
+     * @param tui the TUI instance that will use this state
+     */
     protected InitState(TUI tui) {
         this.tui = tui;
         initialize();
@@ -20,6 +28,15 @@ public class InitState extends TuiState {
 
     }
 
+    /**
+     * User-executable commands for the InitState
+     * <ul>
+     * <li>help - Shows commands info</li>
+     * <li>create game - Create a new game</li>
+     * <li>show games - Shows all the active games</li>
+     * <li>join game - Join an existing game</li>
+     * </ul>
+     */
     @Override
     protected void initialize() {
         // command's map
@@ -40,6 +57,16 @@ public class InitState extends TuiState {
         commandsInfo.put("join game", "Join an existing game");
     }
 
+    /**
+     * Asks the user to type the number of players for the new game and sends the
+     * corresponding request to the {@link Controller}(socket) or
+     * {@link RmiServer}(rmi).
+     * Blocks the cmdLineReaderThread until the Controller or RmiServer responds
+     * with {@link ShowUpdate#show_gameCreated(int)}
+     * 
+     * @see ClientCommands#createGame(int)
+     * @see Controller#createGame(String, int)
+     */
     @Override
     protected void command_createGame() {
         tui.printToCmdLineOut(tui.tuiWrite("Type the number of players for the game:"));
@@ -51,6 +78,15 @@ public class InitState extends TuiState {
         }
     }
 
+    /**
+     * Sends the request to the {@link Controller} to show the list of available
+     * games.
+     * Blocks the cmdLineReaderThread until the Controller responds with
+     * {@link ShowUpdate#show_listGame(java.util.List)}
+     * 
+     * @see Controller#getGameList(String)
+     * @see ClientCommands#getGameList()
+     */
     @Override
     protected void command_showGames() {
         try {
@@ -62,6 +98,16 @@ public class InitState extends TuiState {
         }
     }
 
+    /**
+     * Sends the request to the {@link Controller} to join the game with the typed
+     * gameID.
+     * Blocks the cmdLineReaderThread until the Controller responds with
+     * {@link ShowUpdate#show_gameIsFull(int)} or
+     * {@link ShowUpdate#show_gameDoesNotExist()}
+     * 
+     * @see ClientCommands#joinGame(int)
+     * @see Controller#joinGame(String, int)
+     */
     @Override
     protected void command_joinGame() {
         tui.printToCmdLineOut(tui.tuiWrite("Type gameID:"));
@@ -73,68 +119,104 @@ public class InitState extends TuiState {
         }
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_ready() {
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_drawGold() {
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_drawResource() {
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_chooseSecreteObjective() {
 
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_playStarter() {
 
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_play() {
 
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_selectCard() {
 
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_changeSide() {
 
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_changeStarterSide() {
 
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_movePlayArea() {
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_changePlayArea() {
 
     }
 
-    @Override
-    protected void command_initial() {
-        tui.getClient().setUI(this.tui);
-        setUsername();
-    }
-
+    /**
+     * Asks the user to type the username and sends the corresponding request to the
+     * {@link Controller}(socket) or {@link RmiServer}(rmi).
+     * Blocks the cmdLineReaderThread until the Controller or RmiServer responds
+     * with {@link ShowUpdate#show_validUsername(String)} or
+     * or {@link ShowUpdate#show_wrongUsername(String)} or
+     * {@link ShowUpdate#show_wantReconnect(String)
+     * 
+     * 
+     * @see ClientCommands#setUsernameCall(String)
+     */
     @Override
     protected void setUsername() {
         String input;
-        ClientCommands client = tui.getClient();
-
         if (tui.getClient().getToken().getToken() != DV.defaultToken) {
             try {
                 tui.getClient().setUsernameCall(null);
@@ -155,10 +237,16 @@ public class InitState extends TuiState {
 
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_quitGame() {
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_refresh() {
     }
@@ -188,9 +276,9 @@ public class InitState extends TuiState {
         }
     }
 
-    @Override
-    protected void reMatch() {
+    // @Override
+    // protected void reMatch() {
 
-    }
+    // }
 
 }

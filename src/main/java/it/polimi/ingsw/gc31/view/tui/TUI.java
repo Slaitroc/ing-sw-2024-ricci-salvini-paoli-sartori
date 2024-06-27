@@ -131,6 +131,11 @@ public class TUI extends UI {
 
     private LinkedHashMap<Point, PlayableCard> placedCards = null;
     private Map<String, StringBuilder> playAreaAllPlayers = new HashMap<>();
+
+    public Map<String, StringBuilder> getPlayAreaAllPlayers() {
+        return playAreaAllPlayers;
+    }
+
     private String activePlayArea = "";
 
     // PRINT METHODS
@@ -1165,7 +1170,7 @@ public class TUI extends UI {
      * <p>
      * This variable is used to manage the available commands in the current state
      */
-    private TuiState state;
+    private TUIstate state;
 
     protected Object stateLock = new Object();
     protected Queue<Integer> stateLockQueue = new ArrayDeque<Integer>();
@@ -1266,7 +1271,7 @@ public class TUI extends UI {
      * If the command is "chat", it moves the cursor to the chat input area.
      */
     Thread cmdLineProcessThread = new Thread(() -> {
-        commandToProcess(TUIcommands.INITIAL, false);
+        commandToProcess(TUIcommands.SET_USERNAME, false);
         while (true) {
             String cmd = null;
             synchronized (cmdLineMessages) {
@@ -1297,8 +1302,6 @@ public class TUI extends UI {
         if (command.isEmpty()) {
             state.command_showCommandsInfo();
             state.stateNotify();
-        } else if (command.equals(TUIcommands.INITIAL.toString()) && state.stateName.equals("Init State")) {
-            state.command_initial();
         } else if (command.equals(TUIcommands.SET_USERNAME.toString()) && state.stateName.equals("Init State")) {
             state.setUsername();
         } else if (state.commandsMap.containsKey(command)) {
@@ -1307,10 +1310,12 @@ public class TUI extends UI {
             state.stateNotify();
         } else if (command.equals(TUIcommands.RECONNECT.toString()) && state.stateName.equals("Init State")) {
             state.reconnect();
-        } else if (command.equals(TUIcommands.ANOTHERMATCH.toString()) && state.stateName.equals("Playing State")) {
-            state.reMatch();
-        }
-        else {
+        } else if (command.equals(TUIcommands.REFRESH.toString()) && state.stateName.equals("Init State")) {
+            state.reconnect();
+            // } else if (command.equals(TUIcommands.ANOTHERMATCH.toString()) &&
+            // state.stateName.equals("Playing State")) {
+            // state.reMatch();
+        } else {
             state.commandsMap.get(TUIcommands.INVALID.toString()).run();
         }
     }
@@ -1403,8 +1408,23 @@ public class TUI extends UI {
     }
 
     /**
-     * This thread is used to read the input from the system input and add it to the
-     * <code>cmdLineMessages</code> queue.
+     * Thread responsible for reading user-executable {@link TUIcommands} typed by
+     * the user.
+     * <ul>
+     * <li>It starts the {@link TUI#cmdLineProcessThread}</li>
+     * </ul>
+     * 
+     * <p>
+     * Locks description:
+     * <ul>
+     * <li>{@link TUI#cmdLineAreaSelection} blocks the current thread if the TUI
+     * cursor is not in the cmdLineArea
+     * <li>{@link TUI#stateLock} and {@link TUI#stateLockQueue} blocks the current
+     * thread if {@link TUIstate#stateNotify()} has not been called. Two locks are
+     * used to ensure that the stateNotify() terminate its execution unblocking the
+     * cmdLineReader only when stateLockQueue in not empty; meaning it's waiting.
+     * </ul>
+     * 
      */
     Thread cmdLineReaderThread = new Thread(() -> {
         cmdLineProcessThread.start();
@@ -1987,7 +2007,7 @@ public class TUI extends UI {
     @Override
     public void show_wrongUsername(String username) {
         printToCmdLineOut(serverWrite("Username " + username + " already taken, try again"));
-        commandToProcess(TUIcommands.INITIAL, false);
+        commandToProcess(TUIcommands.SET_USERNAME, false);
 
     }
 
@@ -2189,7 +2209,6 @@ public class TUI extends UI {
         areasCache.put(TUIareas.PLAY_AREA_VIEW, playAreaAllPlayers.get(username));
         commandToProcess(TUIcommands.REFRESH, false);
     }
-
 
     /**
      * This method should ask the player if it wants

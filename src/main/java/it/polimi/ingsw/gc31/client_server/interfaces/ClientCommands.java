@@ -3,7 +3,9 @@ package it.polimi.ingsw.gc31.client_server.interfaces;
 import it.polimi.ingsw.gc31.client_server.Token;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.NoTokenException;
+import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.view.UI;
+import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 
 import java.awt.*;
 import java.io.IOException;
@@ -13,8 +15,22 @@ public interface ClientCommands {
 
     void setUI(UI ui);
 
+    /**
+     * Creates a new {@link ConnectObj} with {@link Token#getTempToken()} and
+     * {@link Token#getToken()} and sends it to the {@link Controller}(socket) or
+     * {@link RmiServer}(rmi) to connect to the server
+     * 
+     * @param username username chosen by the user
+     * @throws IOException
+     */
     void setUsernameCall(String username) throws IOException;
 
+    /**
+     * Sets the username of the current user
+     * 
+     * 
+     * @param username
+     */
     void setUsernameResponse(String username);
 
     void setUsername(String username);
@@ -59,7 +75,8 @@ public interface ClientCommands {
     /**
      * Plays the current selected card in hand on the current selected card side
      *
-     * @param point contains the coordinates where to place the card in the PlayArea map
+     * @param point contains the coordinates where to place the card in the PlayArea
+     *              map
      */
     void play(Point point) throws RemoteException;
 
@@ -99,8 +116,10 @@ public interface ClientCommands {
     /**
      * Send a private message to one specific player in your same game
      *
-     * @param fromUsername Username of the current user, which is sending the message
-     * @param toUsername   Username of the player the current user is sending the message to
+     * @param fromUsername Username of the current user, which is sending the
+     *                     message
+     * @param toUsername   Username of the player the current user is sending the
+     *                     message to
      * @param message      Content of the message that is being sent
      */
     void sendChatMessage(String fromUsername, String toUsername, String message) throws RemoteException;

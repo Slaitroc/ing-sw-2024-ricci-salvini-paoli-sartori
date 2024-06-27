@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.client_server.tcp;
 
 import java.awt.*;
 import java.net.Socket;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -176,7 +177,8 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void setUsernameCall(String username) {
-        tcp_sendCommand(new ConnectObj(username, this.token.getTempToken(), this.token.getToken()), DV.RECIPIENT_CONTROLLER);
+        tcp_sendCommand(new ConnectObj(username, this.token.getTempToken(), this.token.getToken()),
+                DV.RECIPIENT_CONTROLLER);
     }
 
     /**
@@ -349,8 +351,10 @@ public class TCPClient implements ClientCommands {
     /**
      * This method sends a private message to a specific player
      *
-     * @param fromUsername Username of the current user, which is sending the message
-     * @param toUsername   Username of the player the current user is sending the message to
+     * @param fromUsername Username of the current user, which is sending the
+     *                     message
+     * @param toUsername   Username of the player the current user is sending the
+     *                     message to
      * @param message      Content of the message that is being sent
      */
     @Override
