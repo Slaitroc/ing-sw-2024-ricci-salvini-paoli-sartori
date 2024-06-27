@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
 
 
@@ -40,7 +39,7 @@ public class UsernameController extends ViewController {
             try {
                 client.setUsernameCall(usernameField.getText());
                 client.setUsernameResponse(usernameField.getText());
-            } catch (IOException e) {
+            } catch (RemoteException e) {
                 show_ServerCrashWarning(e.toString());
                 e.getStackTrace();
             }

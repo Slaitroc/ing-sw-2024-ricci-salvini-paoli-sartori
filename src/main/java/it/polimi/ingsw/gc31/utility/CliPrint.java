@@ -2,6 +2,9 @@ package it.polimi.ingsw.gc31.utility;
 
 import org.fusesource.jansi.Ansi;
 
+/**
+ * Class used to color the text to printout for format and clarity reasons
+ */
 public class CliPrint {
 
     /**

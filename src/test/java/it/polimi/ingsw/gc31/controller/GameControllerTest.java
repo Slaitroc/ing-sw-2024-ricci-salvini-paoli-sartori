@@ -13,7 +13,6 @@ import org.mockito.Mockito;
 
 import java.rmi.RemoteException;
 import java.awt.*;
-import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,13 +44,13 @@ public class GameControllerTest {
         assertEquals(gameController1.getMaxNumberPlayers(), 4);
         assertEquals(gameController1.getCurrentNumberPlayers(), 1);
         //create a new client that tries to join the game and checks if it is added correctly
-        assertDoesNotThrow( () ->gameController1.joinGame("player2", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player2", mockClient));
         assertEquals(gameController1.getCurrentNumberPlayers(), 2);
 
         //checks if the controller adds correctly the player to the maximum number possible
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player3", mockClient));
         assertEquals(gameController1.getCurrentNumberPlayers(), 3);
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player4", mockClient));
         assertEquals(gameController1.getCurrentNumberPlayers(), 4);
 
         //the case in which the clients exceed the max number players for the game
@@ -65,13 +64,28 @@ public class GameControllerTest {
     @Test
     public void quitGameTest() {
         //Populate the lobby
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player2", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player3", mockClient));
+        assertEquals(3, gameController1.clientList.size());
+        assertEquals(3, gameController1.readyStatus.size());
+
         assertDoesNotThrow(() -> gameController1.quitGame("player3"), "The method does not throw any exceptions");
+        assertEquals(2, gameController1.clientList.size());
+        assertEquals(2, gameController1.readyStatus.size());
 
         //checks if the method can remove correctly a player that
         // asked to quit from client
         assertEquals(gameController1.getCurrentNumberPlayers(), 2, "The number of the player in the game is diminished by one");
+
+        //Check if the quitGame works properly also when the game is started
+        assertDoesNotThrow(() -> gameController2.joinGame("player20", mockClient));
+        assertDoesNotThrow(() -> gameController2.setReadyStatus(true, "player10"));
+        assertDoesNotThrow(() -> gameController2.setReadyStatus(true, "player20"));
+
+        assertDoesNotThrow(() -> gameController2.quitGame("player10"));
+
+        assertEquals(1, gameController2.clientList.size());
+        assertEquals(1, gameController2.readyStatus.size());
     }
 
     /**
@@ -80,8 +94,8 @@ public class GameControllerTest {
     @Test
     public void setReadyStatusTest() {
         //Populate the game
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player2", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player3", mockClient));
 
         //Check if the clients are added to the game with the value of the ready attribute equals to false
         assertEquals(gameController1.readyStatus.get("player1"), false);
@@ -89,23 +103,23 @@ public class GameControllerTest {
         assertEquals(gameController1.readyStatus.get("player3"), false);
 
         //Check if the setReadyStatus works properly
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player1"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player3"));
+        assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player1"));
+        assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player3"));
         assertEquals(gameController1.readyStatus.get("player1"), true);
         assertEquals(gameController1.readyStatus.get("player3"), true);
 
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(false, "player1"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(false, "player2"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(false, "player3"));
+        assertDoesNotThrow(() -> gameController1.setReadyStatus(false, "player1"));
+        assertDoesNotThrow(() -> gameController1.setReadyStatus(false, "player2"));
+        assertDoesNotThrow(() -> gameController1.setReadyStatus(false, "player3"));
         assertEquals(gameController1.readyStatus.get("player1"), false);
         assertEquals(gameController1.readyStatus.get("player2"), false);
         assertEquals(gameController1.readyStatus.get("player3"), false);
 
         //Check if the value of the ready attributes are still correct after multiple modifications
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player1"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player2"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player3"));
+        assertDoesNotThrow(() -> gameController1.joinGame("player4", mockClient));
+        assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player1"));
+        assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player2"));
+        assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player3"));
         assertEquals(gameController1.readyStatus.get("player1"), true);
         assertEquals(gameController1.readyStatus.get("player2"), true);
         assertEquals(gameController1.readyStatus.get("player3"), true);
@@ -119,9 +133,9 @@ public class GameControllerTest {
     @Test
     public void checkReadyTest() {
         //Populate the game
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player2", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player3", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player4", mockClient));
 
         //Set all the client status to true
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player1"));
@@ -138,9 +152,9 @@ public class GameControllerTest {
     @Test
     public void sendChatMessageTest() {
         //Populate the game
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player2", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player3", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player4", mockClient));
 
         //Check if the message is sent correctly
         assertDoesNotThrow(() -> gameController1.sendChatMessage(new NewChatMessage("player1", "Test")));
@@ -152,9 +166,9 @@ public class GameControllerTest {
     @Test
     public void selectCardTest() {
         //Populate the lobby
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player2", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player3", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player4", mockClient));
 
         //Set all the player status to true
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player1"));
@@ -164,30 +178,30 @@ public class GameControllerTest {
 
         //Checks if the correct flow of instruction is executed if the method is invoked properly
         gameController1.getModel().setGameState(new SetupGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.selectCard("player2", 1));
+        assertDoesNotThrow(() -> gameController1.selectCard("player2", 1));
         gameController1.getModel().setGameState(new ShowDownGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.selectCard("player1", 2));
+        assertDoesNotThrow(() -> gameController1.selectCard("player1", 2));
         gameController1.getModel().setGameState(new RunningGameModelSate(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.selectCard("player4", 0));
+        assertDoesNotThrow(() -> gameController1.selectCard("player4", 0));
         gameController1.getModel().setGameState(new LastTurnGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.selectCard("player1", 1));
+        assertDoesNotThrow(() -> gameController1.selectCard("player1", 1));
 
 
         //Checks if the WrongIndexSelectedCard exception is caught when necessary
         gameController1.getModel().setGameState(new SetupGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.selectCard("player2", 10));
+        assertDoesNotThrow(() -> gameController1.selectCard("player2", 10));
         gameController1.getModel().setGameState(new ShowDownGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.selectCard("player1", -3));
+        assertDoesNotThrow(() -> gameController1.selectCard("player1", -3));
         gameController1.getModel().setGameState(new RunningGameModelSate(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.selectCard("player4", 4));
+        assertDoesNotThrow(() -> gameController1.selectCard("player4", 4));
         gameController1.getModel().setGameState(new LastTurnGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.selectCard("player1", -1));
+        assertDoesNotThrow(() -> gameController1.selectCard("player1", -1));
 
         //Checks if the IllegalStateOperationException is caught when necessary
         gameController1.getModel().setGameState(new CreationGameModelState());
-        assertDoesNotThrow( () -> gameController1.selectCard("player1", 2));
+        assertDoesNotThrow(() -> gameController1.selectCard("player1", 2));
         gameController1.getModel().setGameState(new EndGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.selectCard("player3", 1));
+        assertDoesNotThrow(() -> gameController1.selectCard("player3", 1));
     }
 
     /**
@@ -196,9 +210,9 @@ public class GameControllerTest {
     @Test
     public void changeSideTest() {
         //Populate the lobby
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player2", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player3", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player4", mockClient));
 
         //Set all the player status to true
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player1"));
@@ -231,9 +245,9 @@ public class GameControllerTest {
     @Test
     public void drawGoldTest() {
         //Populate the lobby
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player2", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player3", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player4", mockClient));
 
         //Set all the player status to true
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player1"));
@@ -264,9 +278,9 @@ public class GameControllerTest {
     @Test
     public void drawResourceTest() {
         //Populate the lobby
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player2", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player3", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player4", mockClient));
 
         //Set all the player status to true
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player1"));
@@ -276,19 +290,19 @@ public class GameControllerTest {
 
         //Checks if the instructions are executed correctly if the method is invoked properly
         gameController1.getModel().setGameState(new ShowDownGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.drawResource("player1", 1));
+        assertDoesNotThrow(() -> gameController1.drawResource("player1", 1));
         gameController1.getModel().setGameState(new RunningGameModelSate(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.drawResource("player2", 2));
+        assertDoesNotThrow(() -> gameController1.drawResource("player2", 2));
         gameController1.getModel().setGameState(new LastTurnGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.drawResource("player3", 0));
+        assertDoesNotThrow(() -> gameController1.drawResource("player3", 0));
 
         //Checks if the IllegalStateOperationException branch is executed when needed
         gameController1.getModel().setGameState(new EndGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.drawResource("player1", 0));
+        assertDoesNotThrow(() -> gameController1.drawResource("player1", 0));
         gameController1.getModel().setGameState(new CreationGameModelState());
-        assertDoesNotThrow( () -> gameController1.drawResource("player4", 2));
+        assertDoesNotThrow(() -> gameController1.drawResource("player4", 2));
         gameController1.getModel().setGameState(new SetupGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.drawResource("player2", 1));
+        assertDoesNotThrow(() -> gameController1.drawResource("player2", 1));
     }
 
     /**
@@ -297,9 +311,9 @@ public class GameControllerTest {
     @Test
     public void chooseSecretObjectiveTest() {
         //Populate the lobby
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player2", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player3", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player4", mockClient));
 
         //Set all the player status to true
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player1"));
@@ -309,19 +323,19 @@ public class GameControllerTest {
 
         //Checks if the instructions are executed correctly if the method is invoked properly
         gameController1.getModel().setGameState(new SetupGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.chooseSecretObjective("player2", 1));
+        assertDoesNotThrow(() -> gameController1.chooseSecretObjective("player2", 1));
 
         //Checks if the IllegalStateOperationException branch is executed when needed
         gameController1.getModel().setGameState(new ShowDownGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.chooseSecretObjective("player1", 1));
+        assertDoesNotThrow(() -> gameController1.chooseSecretObjective("player1", 1));
         gameController1.getModel().setGameState(new RunningGameModelSate(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.chooseSecretObjective("player2", 1));
+        assertDoesNotThrow(() -> gameController1.chooseSecretObjective("player2", 1));
         gameController1.getModel().setGameState(new LastTurnGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.chooseSecretObjective("player3", 0));
+        assertDoesNotThrow(() -> gameController1.chooseSecretObjective("player3", 0));
         gameController1.getModel().setGameState(new EndGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.chooseSecretObjective("player1", 0));
+        assertDoesNotThrow(() -> gameController1.chooseSecretObjective("player1", 0));
         gameController1.getModel().setGameState(new CreationGameModelState());
-        assertDoesNotThrow( () -> gameController1.chooseSecretObjective("player4", 1));
+        assertDoesNotThrow(() -> gameController1.chooseSecretObjective("player4", 1));
     }
 
 
@@ -331,9 +345,9 @@ public class GameControllerTest {
     @Test
     public void playStarterTest() {
         //Populate the lobby
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player2", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player3", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player4", mockClient));
 
         //Set all the player status to true
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player1"));
@@ -364,9 +378,9 @@ public class GameControllerTest {
     @Test
     public void playTest() {
         //Populate the lobby
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player2", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player3", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player4", mockClient));
 
         //Set all the player status to true
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player1"));
@@ -376,19 +390,19 @@ public class GameControllerTest {
 
         //Checks if the instructions are executed correctly if the method is invoked properly
         gameController1.getModel().setGameState(new ShowDownGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.play("player1", new Point(1, 1)));
+        assertDoesNotThrow(() -> gameController1.play("player1", new Point(1, 1)));
         gameController1.getModel().setGameState(new RunningGameModelSate(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.play("player2", new Point(1, 1)));
+        assertDoesNotThrow(() -> gameController1.play("player2", new Point(1, 1)));
         gameController1.getModel().setGameState(new LastTurnGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.play("player3", new Point(1, 1)));
+        assertDoesNotThrow(() -> gameController1.play("player3", new Point(1, 1)));
 
         //Checks if the IllegalStateOperationException branch is executed when needed
         gameController1.getModel().setGameState(new EndGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.play("player1", new Point(-1, -1)));
+        assertDoesNotThrow(() -> gameController1.play("player1", new Point(-1, -1)));
         gameController1.getModel().setGameState(new CreationGameModelState());
-        assertDoesNotThrow( () -> gameController1.play("player4", new Point(-1, -1)));
+        assertDoesNotThrow(() -> gameController1.play("player4", new Point(-1, -1)));
         gameController1.getModel().setGameState(new SetupGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.play("player2", new Point(-1, -1)));
+        assertDoesNotThrow(() -> gameController1.play("player2", new Point(-1, -1)));
     }
 
     /**
@@ -397,9 +411,9 @@ public class GameControllerTest {
     @Test
     public void changeStarterSideTest() {
         //Populate the lobby
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player2", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player3", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player4", mockClient));
 
         //Set all the player status to true
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player1"));
@@ -409,180 +423,51 @@ public class GameControllerTest {
 
         //Checks if the instructions are executed correctly if the method is invoked properly
         gameController1.getModel().setGameState(new SetupGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.changeStarterSide("player2"));
+        assertDoesNotThrow(() -> gameController1.changeStarterSide("player2"));
 
         //Checks if the IllegalStateOperationException branch is executed when needed
         gameController1.getModel().setGameState(new ShowDownGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.changeStarterSide("player1"));
+        assertDoesNotThrow(() -> gameController1.changeStarterSide("player1"));
         gameController1.getModel().setGameState(new RunningGameModelSate(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.changeStarterSide("player2"));
+        assertDoesNotThrow(() -> gameController1.changeStarterSide("player2"));
         gameController1.getModel().setGameState(new LastTurnGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.changeStarterSide("player3"));
+        assertDoesNotThrow(() -> gameController1.changeStarterSide("player3"));
         gameController1.getModel().setGameState(new EndGameModelState(gameController1.getModel()));
-        assertDoesNotThrow( () -> gameController1.changeStarterSide("player1"));
+        assertDoesNotThrow(() -> gameController1.changeStarterSide("player1"));
         gameController1.getModel().setGameState(new CreationGameModelState());
-        assertDoesNotThrow( () -> gameController1.changeStarterSide("player4"));
+        assertDoesNotThrow(() -> gameController1.changeStarterSide("player4"));
     }
 
     /**
      * Tests the executor method
      */
     @Test
-    public void executorTest(){
+    public void executorTest() {
         //Send a new command to the list
-        assertDoesNotThrow( () -> gameController1.sendCommand(new HeartBeatObj("player1")));
+        assertDoesNotThrow(() -> gameController1.sendCommand(new HeartBeatObj("player1")));
 
         //Creates a new player that enters the lobby
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player2", mockClient));
 
         //Checks the execution of the method with a newly entered player that
         // sends a new object
-        assertDoesNotThrow( () -> gameController1.sendCommand(new QuitGameObj("player2")));
-        assertDoesNotThrow( () -> gameController1.sendCommand(new ChatMessage("player1", "Test")));
+        assertDoesNotThrow(() -> gameController1.sendCommand(new QuitGameObj("player2")));
+        assertDoesNotThrow(() -> gameController1.sendCommand(new ChatMessage("player1", "Test")));
     }
 
-    /**
-     * Tests the startRematchTimer
-     */
     @Test
-    public void startRematchTimerTest() {
-        //Create another client that join the game and all clients are ready to play
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+    public void reJoinGameTest() {
+        //Populate the lobby
+        assertDoesNotThrow(() -> gameController1.joinGame("player2", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player3", mockClient));
+        assertDoesNotThrow(() -> gameController1.joinGame("player4", mockClient));
+
+        //Set all the player status to true
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player1"));
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player2"));
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player3"));
-
-        //At first the rematchPlayers and rematchTimer are null and rematchAnswers is 0
-        assertNull(gameController1.rematchPlayers);
-        assertNull(gameController1.rematchTimer);
-        assertEquals(0, gameController1.rematchAnswers);
-
-        gameController1.startRematchTimer();
-
-        //After the invocation of the method the rematchPlayers map is created and populated
-        //with all null values for every player in the game, and is also created the Timer
-        assertEquals(4, gameController1.rematchPlayers.size());
-        assertNull(gameController1.rematchPlayers.get("player1"));
-        assertNull(gameController1.rematchPlayers.get("player2"));
-        assertNotNull(gameController1.rematchTimer);
-
-        gameController1.rematchPlayers.replace("player1", true);
-        gameController1.rematchPlayers.replace("player2", false);
-
-//        wait(65000);
-//
-//        assertTrue(gameController1.rematchPlayers.get("player1"));
-//        assertFalse(gameController1.rematchPlayers.get("player2"));
-//        assertFalse(gameController1.rematchPlayers.get("player3"));
-//        assertFalse(gameController1.rematchPlayers.get("player4"));
-    }
-
-    /**
-     * Tests the anotherMatch method
-     */
-    @Test
-    public void anotherMatchTest(){
-        //Create another client that join the game and all clients are ready to play
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
-
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player1"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player2"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player3"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player4"));
-
-        //At first there is not any player that sent the corresponding object
-        // (example: match still on)
-        assertEquals(0, gameController1.rematchAnswers);
-
-        //On the first invocation the rematchAnswers is incremented to 1 and the
-        //boolean value received replace the one contained in the rematchPlayers map
-        //This happens for every invocation of the method
-        gameController1.anotherMatch("player1", true);
-
-        assertTrue(gameController1.rematchPlayers.get("player1"));
-        assertEquals(1, gameController1.rematchAnswers);
-
-        gameController1.anotherMatch("player2", true);
-
-        assertTrue(gameController1.rematchPlayers.get("player2"));
-        assertEquals(2, gameController1.rematchAnswers);
-
-        gameController1.anotherMatch("player3", false);
-        assertEquals(3, gameController1.rematchAnswers);
-
-        //On the last invocation the startRematch is invoked and the new game is set so the
-        //rematchAnswers is initialized to the value 0
-        gameController1.anotherMatch("player4", false);
-
-        assertFalse(gameController1.rematchPlayers.get("player3"));
-        assertFalse(gameController1.rematchPlayers.get("player4"));
-        assertEquals(0, gameController1.rematchAnswers);
+        assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player4"));
 
 
-        //Tests the case where only or zero players remain for a new rematch
-        assertDoesNotThrow( () -> gameController2.joinGame("player20", mockClient));
-        assertDoesNotThrow( () -> gameController2.setReadyStatus(true, "player10"));
-        assertDoesNotThrow( () -> gameController2.setReadyStatus(true, "player20"));
-
-        //gameController2.getModel().setGameState(new EndGameModelState(gameController2.getModel()));
-        gameController2.anotherMatch("player10", true);
-
-        assertNotNull(gameController2.clientList.get("player10"));
-        assertNotNull(gameController2.clientList.get("player20"));
-        assertEquals(1, gameController2.rematchAnswers);
-        assertEquals(2, gameController2.rematchPlayers.size());
-        assertEquals(2, gameController2.clientList.size());
-
-        gameController2.anotherMatch("player20", false);
-
-        assertEquals(0, gameController2.clientList.size());
-        assertEquals(0, gameController2.readyStatus.size());
-    }
-
-    /**
-     * Tests the startRematch method
-     */
-    @Test
-    public void startRematchTest(){
-        //The method synchronizes to the callsList to be sure that no
-        //operation is executed during the initialization of the new game
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
-
-        //Create the game with the ready status set to true
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player1"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player2"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player3"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player4"));
-
-        gameController1.rematchPlayers = new HashMap<>();
-        gameController1.rematchPlayers.put("player1", true);
-        gameController1.rematchPlayers.put("player2", true);
-        gameController1.rematchPlayers.put("player3", false);
-        gameController1.rematchPlayers.put("player4", false);
-
-        assertDoesNotThrow( () -> gameController1.startRematch());
-
-        //The callsList is cleared, the rematchAnswers is initialized with the value 0
-        //the new value of maxNumberPlayers is now equals to the number of players which
-        //wants to rematch, the readyStatus associated to the remaining player should be
-        //set to false (as the start of the game), the clientList contains only
-        //the payer that wants to play again,
-        assertEquals(0, gameController1.callsList.size());
-        assertEquals(0, gameController1.rematchAnswers);
-        assertEquals(2, gameController1.getMaxNumberPlayers());
-        assertFalse(gameController1.readyStatus.get("player1"));
-        assertFalse(gameController1.readyStatus.get("player2"));
-        assertTrue(gameController1.clientList.containsKey("player1"));
-        assertTrue(gameController1.clientList.containsKey("player2"));
-        assertNull(gameController1.readyStatus.get("player3"));
-        assertNull(gameController1.readyStatus.get("player4"));
-        assertNull(gameController1.clientList.get("player3"));
-        assertNull(gameController1.clientList.get("player4"));
     }
 }

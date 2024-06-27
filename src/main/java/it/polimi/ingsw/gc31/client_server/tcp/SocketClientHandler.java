@@ -17,9 +17,9 @@ import java.rmi.RemoteException;
 
 /*
 ricevo
-deserializzo
+deserialize
 getto e check il recipient
-a seconda chiamo gamecontroller o controller sendobject
+a seconda chiamo gameController o controller sendObject
 eseguito da loro
  */
 
@@ -134,7 +134,7 @@ public class SocketClientHandler implements VirtualClient {
      * @param gameID is the value that needs to be set
      */
     @Override
-    public void setGameID(int gameID) {
+    public void setGameID(int gameID) throws RemoteException{
         this.idGame = gameID;
     }
 
@@ -144,7 +144,7 @@ public class SocketClientHandler implements VirtualClient {
      * @return the value of the ready attribute
      */
     @Override
-    public boolean isReady() {
+    public boolean isReady() throws RemoteException{
         return ready;
     }
 
@@ -155,7 +155,7 @@ public class SocketClientHandler implements VirtualClient {
      *                       to be set to the attribute
      */
     @Override
-    public void setGameController(IGameController gameController) {
+    public void setGameController(IGameController gameController) throws RemoteException{
         this.gameController = gameController;
     }
 
@@ -169,7 +169,7 @@ public class SocketClientHandler implements VirtualClient {
      * @param controller is the controller the client needs to get
      */
     @Override
-    public void setController(IController controller) {
+    public void setController(IController controller) throws RemoteException{
 
     }
 
@@ -182,7 +182,7 @@ public class SocketClientHandler implements VirtualClient {
      *              reconnections
      */
     @Override
-    public void setRmiToken(int token) {
+    public void setRmiToken(int token) throws RemoteException{
     }
 
 }
