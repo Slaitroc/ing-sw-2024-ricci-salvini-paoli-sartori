@@ -9,7 +9,7 @@ import it.polimi.ingsw.gc31.controller.GameController;
 public class QuitGameObj extends ServerQueueObject {
 
     private String username;
-    private int id;
+    // private int id; // TODO serve?
 
     public QuitGameObj(String username) {
         this.username = username;

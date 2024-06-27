@@ -269,10 +269,10 @@ public class GUI extends UI {
         System.out.println("show_quitFromGame called");
     }
 
-    @Override
-    public void show_anotherMatch() {
-        System.out.println("show_anotherMatch called");
-    }
+    // @Override
+    // public void show_anotherMatch() {
+    // System.out.println("show_anotherMatch called");
+    // }
 
     @Override
     public void show_timerLastPlayerConnected(Integer secondsLeft) {
@@ -285,12 +285,12 @@ public class GUI extends UI {
         Platform.runLater(() -> app.loadScene(SceneTag.USERNAME));
     }
 
-    @Override
-    public void show_requestAnotherMatch() {
+    // @Override
+    // public void show_requestAnotherMatch() {
 
-        client.getToken().setToken(DV.defaultToken);
-        Platform.runLater(() -> app.loadScene(SceneTag.USERNAME));
-    }
+    // client.getToken().setToken(DV.defaultToken);
+    // Platform.runLater(() -> app.loadScene(SceneTag.USERNAME));
+    // }
 
     @Override
     public void show_GenericClientResponse(String response) {

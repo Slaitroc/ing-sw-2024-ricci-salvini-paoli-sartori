@@ -5,8 +5,6 @@ import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
-
 public interface VirtualServer extends Remote {
     public void RMIserverWrite(String text) throws RemoteException;
 
@@ -18,5 +16,6 @@ public interface VirtualServer extends Remote {
 
     public int generateToken(VirtualClient client) throws RemoteException;
 
-    public boolean connect(VirtualClient client, String username, Integer tempToken, Integer token) throws RemoteException;
+    public boolean connect(VirtualClient client, String username, Integer tempToken, Integer token)
+            throws RemoteException;
 }

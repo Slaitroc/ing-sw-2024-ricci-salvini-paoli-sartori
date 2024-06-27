@@ -12,7 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TCPServer {
+    /**
+     * The serverSocket used to accept new connections
+     */
     final ServerSocket listenSocket;
+    /**
+     * A list of all the clientHandlers accepted by the server
+     */
     private final List<SocketClientHandler> handlers = new ArrayList<>();
 
     /**

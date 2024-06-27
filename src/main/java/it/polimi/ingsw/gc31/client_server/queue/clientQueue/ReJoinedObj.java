@@ -1,11 +1,10 @@
 package it.polimi.ingsw.gc31.client_server.queue.clientQueue;
 
-import java.io.Serializable;
 import java.util.List;
 
 import it.polimi.ingsw.gc31.view.UI;
 
-public class ReJoinedObj extends ClientQueueObject implements Serializable {
+public class ReJoinedObj extends ClientQueueObject {
     private boolean reconnect;
     List<String> players;
 

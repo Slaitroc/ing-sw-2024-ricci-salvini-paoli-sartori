@@ -1,10 +1,7 @@
 package it.polimi.ingsw.gc31.model.card;
 
-import it.polimi.ingsw.gc31.model.deck.Deck;
 import it.polimi.ingsw.gc31.model.enumeration.CardColor;
-import it.polimi.ingsw.gc31.model.enumeration.CardType;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
-import it.polimi.ingsw.gc31.model.player.Player;
 import it.polimi.ingsw.gc31.model.strategies.ResourceScore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PlayableCardTest {
     PlayableCard goldCard;
+
     @BeforeEach
     void setUp() {
         List<Resources> resourcesFront = new ArrayList<>();
@@ -49,13 +47,10 @@ class PlayableCardTest {
                         resourcesFront,
                         requirementsFront,
                         "provaDirFront",
-                        new ResourceScore(Resources.ANIMAL)
-                ),
+                        new ResourceScore(Resources.ANIMAL)),
                 new CardBack(
                         resourcesBack,
-                        "provaDirBack"
-                )
-        );
+                        "provaDirBack"));
     }
 
     @Test

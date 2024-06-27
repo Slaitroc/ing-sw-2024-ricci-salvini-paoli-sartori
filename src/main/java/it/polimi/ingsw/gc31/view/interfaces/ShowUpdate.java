@@ -21,8 +21,8 @@ public interface ShowUpdate {
      * Provide the client with the gold Deck cards
      *
      * @param firstCardDeck the first card in the deck
-     * @param card1 the second card in the deck
-     * @param card2 the third card in the deck
+     * @param card1         the second card in the deck
+     * @param card2         the third card in the deck
      */
     void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2);
 
@@ -30,8 +30,8 @@ public interface ShowUpdate {
      * Provide the client with the resource Deck cards
      *
      * @param firstCardDeck the first card in the deck
-     * @param card1 the second card in the deck
-     * @param card2 the third card in the deck
+     * @param card1         the second card in the deck
+     * @param card2         the third card in the deck
      */
     void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2);
 
@@ -46,7 +46,7 @@ public interface ShowUpdate {
     /**
      * Provide the starter card for a specific player.
      *
-     * @param username the username of the player
+     * @param username    the username of the player
      * @param starterCard the starter card to be displayed
      */
     void show_starterCard(String username, PlayableCard starterCard);
@@ -54,7 +54,7 @@ public interface ShowUpdate {
     /**
      * Provide the secret objective card for a specific player.
      *
-     * @param username the username of the player
+     * @param username      the username of the player
      * @param objectiveCard the objective card to be displayed
      */
     void show_objectiveCard(String username, ObjectiveCard objectiveCard);
@@ -62,7 +62,7 @@ public interface ShowUpdate {
     /**
      * Provide the choice of objective cards for a specific player.
      *
-     * @param username the username of the player
+     * @param username       the username of the player
      * @param objectiveCard1 the first objective card
      * @param objectiveCard2 the second objective card
      */
@@ -71,8 +71,8 @@ public interface ShowUpdate {
     /**
      * Provide the play area and achieved resources for a specific player.
      *
-     * @param username the username of the player
-     * @param playArea the play area map
+     * @param username          the username of the player
+     * @param playArea          the play area map
      * @param achievedResources the resources achieved by the player
      */
     void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea,
@@ -81,8 +81,8 @@ public interface ShowUpdate {
     /**
      * Provide the cards in hand for a specific player.
      *
-     * @param username the username of the player
-     * @param hand the list of cards in the player's hand
+     * @param username     the username of the player
+     * @param hand         the list of cards in the player's hand
      * @param selectedCard the index of the selected card
      */
     void show_handPlayer(String username, List<PlayableCard> hand, int selectedCard);
@@ -120,7 +120,7 @@ public interface ShowUpdate {
     /**
      * Notify that a player has joined a game.
      *
-     * @param id the game ID
+     * @param id                 the game ID
      * @param maxNumberOfPlayers the maximum number of players in the game
      */
     void show_joinedToGame(int id, int maxNumberOfPlayers);
@@ -143,7 +143,7 @@ public interface ShowUpdate {
      * Update the ready status of a player.
      *
      * @param username the username of the player
-     * @param status the ready status of the player
+     * @param status   the ready status of the player
      */
     void show_readyStatus(String username, boolean status);
 
@@ -151,7 +151,7 @@ public interface ShowUpdate {
      * Display a chat message.
      *
      * @param username the username of the player who sent the message
-     * @param message the chat message
+     * @param message  the chat message
      */
     void show_chatMessage(String username, String message);
 
@@ -159,8 +159,8 @@ public interface ShowUpdate {
      * Display a private chat message.
      *
      * @param fromUsername the username of the sender
-     * @param toUsername the username of the recipient
-     * @param message the private chat message
+     * @param toUsername   the username of the recipient
+     * @param message      the private chat message
      */
     void show_privateChatMessage(String fromUsername, String toUsername, String message);
 
@@ -192,52 +192,60 @@ public interface ShowUpdate {
     void show_invalidAction(String message);
 
     /**
-     * At the end of the match show the name of the winner and the scores of the in game players
-     * @param username String containing the name of the winner
+     * At the end of the match show the name of the winner and the scores of the in
+     * game players
+     *
+     * @param username     String containing the name of the winner
      * @param playersScore Map of Players names with their relatives score
      */
     void show_GameIsOver(String username, Map<String, Integer> playersScore);
 
     /**
-     * Method used to allow the client to save his temporary token on the first response with the server
+     * Method used to allow the client to save his temporary token on the first
+     * response with the server
      * or the game token, used to identify the game the player was disconnected from
      *
-     * @param token number of the token received
+     * @param token     number of the token received
      * @param temporary if the token received is temporary or not
      */
     void receiveToken(int token, boolean temporary);
 
     /**
-     * Show a response from the server to the client heartbeat. Could be used to show the ping
+     * Show a response from the server to the client heartbeat. Could be used to
+     * show the ping
      */
     void show_heartBeat();
 
     /**
-     * Response from the server to an already connected player doing a new connection
-     * Client is supposed to be asked if they want to reconnect or not upon receiving this method
+     * Response from the server to an already connected player doing a new
+     * connection
+     * Client is supposed to be asked if they want to reconnect or not upon
+     * receiving this method
+     *
      * @param username Old username retrieved from server
      */
     void show_wantReconnect(String username);
 
     /**
-     * Method called in response of client message that specify if he wants to reconnect or not
-     * If the result is true a list of players is sent among the result to initialize the GUI GAME scene
+     * Upon Client command of rejoin or not this method notify the client of the
+     * result of the operation
+     * providing the list of the players in game in case the result is true. if the
+     * result is false
+     * the client will be asked to log in again
      *
-     * @param result true if client wants to reconnect to server, false otherwise
+     * @param result  true if client wants to reconnect to server, false otherwise
      * @param players List of players username (Used in gui to load the Game Scene)
      */
     void show_rejoined(boolean result, List<String> players);
 
     /**
-     * Unimplemented method to ask players if they want to rejoin a new match after the current one is ended
-     */
-    void show_anotherMatch();
-
-    /**
-     * A countDown is shown if it is detected that only one player is left in the match
+     * A countDown is shown if it is detected that only one player is left in the
+     * match
      * If the countdown reach zero, the last player is the winner. Method is called
      * repeatedly showing how may seconds are left
-     * @param secondsLeft Integer representing the seconds left (on the server countdown)
+     *
+     * @param secondsLeft Integer representing the seconds left (on the server
+     *                    countdown)
      */
     void show_timerLastPlayerConnected(Integer secondsLeft);
 
@@ -247,8 +255,14 @@ public interface ShowUpdate {
      */
     void show_unableToReconnect();
 
-    /**
-     * Unimplemented method to show players responses to the new match request
-     */
-    void show_requestAnotherMatch();
+    // /**
+    // * Unimplemented method to show players responses to the new match request
+    // */
+    // void show_requestAnotherMatch();
+
+    // /**
+    // * Unimplemented method to ask players if they want to rejoin a new match
+    // after the current one is ended
+    // */
+    // void show_anotherMatch();
 }

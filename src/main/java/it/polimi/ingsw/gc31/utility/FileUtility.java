@@ -1,6 +1,5 @@
 package it.polimi.ingsw.gc31.utility;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,7 +38,7 @@ public class FileUtility {
         return Paths.get(getDesktopPath(), folderName, fileName);
     }
 
-    public static boolean exixts(Path path) {
+    public static boolean exists(Path path) {
         boolean exists = Files.exists(path);
         return exists;
     }

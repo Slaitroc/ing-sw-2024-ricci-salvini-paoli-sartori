@@ -30,12 +30,28 @@ eseguito da loro
  * server
  */
 public class SocketClientHandler implements VirtualClient {
+    /**
+     * Is the gameController associated to this handler by the Controller. Manages
+     * the games
+     */
     private IGameController gameController;
-    private Integer idGame; // viene settata ma ancora non utilizzata
-    // private String username;
+    @SuppressWarnings("unused")
+    private Integer idGame;
     private boolean ready = false;
+    /**
+     * Is the ObjectInputStream used to read all the objects the client sends to the
+     * handler
+     */
     private final ObjectInputStream input;
+    /**
+     * Is the ObjectOutputStream used to send all the objects to the client
+     */
     private final ObjectOutputStream output;
+    /**
+     * A value that is used to manages the first connections of the clients to the
+     * server. The client posses both the
+     * tempToken and the token (in the Token object)
+     */
     private int tempToken;
 
     /**
@@ -95,12 +111,15 @@ public class SocketClientHandler implements VirtualClient {
                             try {
                                 ConnectObj connectObj = (ConnectObj) obj;
                                 if (connectObj.getTempToken() == -1) {
-                                    Controller.getController().sendCommand(new ConnectObj(connectObj.getUsername(), tempToken, connectObj.getToken()));
-//                                    Controller.getController().connect(Controller.getController().getRightConnection(tempToken), connectObj.getUsername(), tempToken, connectObj.getToken());
+                                    Controller.getController().sendCommand(
+                                            new ConnectObj(connectObj.getUsername(), tempToken, connectObj.getToken()));
+                                    // Controller.getController().connect(Controller.getController().getRightConnection(tempToken),
+                                    // connectObj.getUsername(), tempToken, connectObj.getToken());
                                     sendCommand(new SaveToken(tempToken, true));
                                 } else {
                                     Controller.getController().sendCommand(connectObj);
-//                                    Controller.getController().connect(Controller.getController().getRightConnection(tempToken), connectObj.getUsername(), connectObj.getTempToken(), connectObj.getToken());
+                                    // Controller.getController().connect(Controller.getController().getRightConnection(tempToken),
+                                    // connectObj.getUsername(), connectObj.getTempToken(), connectObj.getToken());
                                 }
                                 continue;
                             } catch (ClassCastException e) {
@@ -134,7 +153,7 @@ public class SocketClientHandler implements VirtualClient {
      * @param gameID is the value that needs to be set
      */
     @Override
-    public void setGameID(int gameID) throws RemoteException{
+    public void setGameID(int gameID) throws RemoteException {
         this.idGame = gameID;
     }
 
@@ -144,7 +163,7 @@ public class SocketClientHandler implements VirtualClient {
      * @return the value of the ready attribute
      */
     @Override
-    public boolean isReady() throws RemoteException{
+    public boolean isReady() throws RemoteException {
         return ready;
     }
 
@@ -155,7 +174,7 @@ public class SocketClientHandler implements VirtualClient {
      *                       to be set to the attribute
      */
     @Override
-    public void setGameController(IGameController gameController) throws RemoteException{
+    public void setGameController(IGameController gameController) throws RemoteException {
         this.gameController = gameController;
     }
 
@@ -169,7 +188,7 @@ public class SocketClientHandler implements VirtualClient {
      * @param controller is the controller the client needs to get
      */
     @Override
-    public void setController(IController controller) throws RemoteException{
+    public void setController(IController controller) throws RemoteException {
 
     }
 
@@ -179,10 +198,10 @@ public class SocketClientHandler implements VirtualClient {
      * Inherited from the VirtualClient interface.
      *
      * @param token value to assign to the client specific token, used mainly for
-     *              reconnections
+     *              reconnection
      */
     @Override
-    public void setRmiToken(int token) throws RemoteException{
+    public void setRmiToken(int token) throws RemoteException {
     }
 
 }

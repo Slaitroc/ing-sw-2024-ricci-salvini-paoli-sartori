@@ -28,7 +28,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     private UI ui;
     private final LinkedBlockingQueue<ClientQueueObject> callsList;
     public Token token;
-    private boolean firstConnectionDone = false;
+    // private boolean firstConnectionDone = false;
 
     /**
      * Creates a client with a default name and calls inner procedures to:
@@ -264,7 +264,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
         this.token.setToken(token);
     }
 
-    @Override // save token??? // FIX
+    @Override //
     public void setToken(int token, boolean temporary) {
         if (!temporary) {
             this.token.setToken(token);

@@ -5,12 +5,12 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 
 import java.awt.*;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class PlayAreaAdapter
-        implements JsonSerializer<LinkedHashMap<Point, PlayableCard>>, JsonDeserializer<LinkedHashMap<Point, PlayableCard>> {
+        implements JsonSerializer<LinkedHashMap<Point, PlayableCard>>,
+        JsonDeserializer<LinkedHashMap<Point, PlayableCard>> {
     @Override
     public JsonElement serialize(LinkedHashMap<Point, PlayableCard> pointPlayableCardMap, Type type,
             JsonSerializationContext jsonSerializationContext) {

@@ -22,13 +22,34 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class TCPClient implements ClientCommands {
+    /**
+     * The ObjectInputStream associated with the specific client
+     */
     private final ObjectInputStream input;
+    /**
+     * The ObjectOutputStream associated with the specific client
+     */
     private final ObjectOutputStream output;
+    /**
+     * The username of the client
+     */
     private String username;
-    private Integer idGame;
+    private int idGame;
+    /**
+     * The user interface used to communicate with the client
+     */
     private UI ui;
+    /**
+     * The list containing all the object (sent by the server) the user needs to execute
+     */
     private final Queue<ClientQueueObject> callsList;
+    /**
+     * Is a specific object used to manage the connections and future re-connections of the client
+     */
     private Token token;
+    /**
+     * A timer used to send a heart beat to the server. Used to check the disconnection of a client by the server
+     */
     private final Timer timer;
 
     /**
@@ -134,16 +155,6 @@ public class TCPClient implements ClientCommands {
     @Override
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    /**
-     * This method returns the player's game idGame
-     *
-     * @return the idGame of the game
-     */
-    @Override
-    public int getGameID() {
-        return idGame;
     }
 
     /**
@@ -323,6 +334,11 @@ public class TCPClient implements ClientCommands {
         tcp_sendCommand(new FlipStarterCardObj(this.username), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
+    @Override
+    public int getGameID() throws RemoteException {
+        return idGame;
+    }
+
     /**
      * This method sends the object that sends a message in the chat
      *
@@ -420,24 +436,35 @@ public class TCPClient implements ClientCommands {
         tcp_sendCommand(new AnotherMatchResponseObj(username, wantsToRematch), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * Method that checks if the token of the client exists
+     *
+     * @return true if the token exists, false otherwise
+     */
     @Override
     public boolean hasToken() {
         return token.doesTokenExists();
     }
 
+    /**
+     * Method that read the value of the token in the specific file created by the program
+     *
+     * @return the value of the token in the file
+     * @throws NumberFormatException if the value red is not a number
+     * @throws NoTokenException if the token doesn't exists
+     */
     @Override
     public int readToken() throws NumberFormatException, NoTokenException {
         return Integer.parseInt(token.getTokenLine());
     }
 
     /**
-     * This method returns the Token of the client handler
+     * This method returns the entire Token object of the client
      *
-     * @return the Token of the client handler
+     * @return the Token of the client
      */
     @Override
     public Token getToken() {
         return this.token;
     }
-
 }
