@@ -10,7 +10,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
 
@@ -117,7 +116,7 @@ public class GameListController extends ViewController {
         try {
             app.getClient().getGameList();
         } catch (NoGamesException ignored) {
-        } catch (IOException e) {
+        } catch (RemoteException e) {
             show_ServerCrashWarning(e.toString());
             e.getStackTrace();
         }

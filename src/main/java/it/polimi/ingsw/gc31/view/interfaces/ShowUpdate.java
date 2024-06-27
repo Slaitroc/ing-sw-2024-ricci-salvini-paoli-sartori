@@ -191,20 +191,64 @@ public interface ShowUpdate {
      */
     void show_invalidAction(String message);
 
+    /**
+     * At the end of the match show the name of the winner and the scores of the in game players
+     * @param username String containing the name of the winner
+     * @param playersScore Map of Players names with their relatives score
+     */
     void show_GameIsOver(String username, Map<String, Integer> playersScore);
 
+    /**
+     * Method used to allow the client to save his temporary token on the first response with the server
+     * or the game token, used to identify the game the player was disconnected from
+     *
+     * @param token number of the token received
+     * @param temporary if the token received is temporary or not
+     */
     void receiveToken(int token, boolean temporary);
 
+    /**
+     * Show a response from the server to the client heartbeat. Could be used to show the ping
+     */
     void show_heartBeat();
 
+    /**
+     * Response from the server to an already connected player doing a new connection
+     * Client is supposed to be asked if they want to reconnect or not upon receiving this method
+     * @param username Old username retrieved from server
+     */
     void show_wantReconnect(String username);
 
+    /**
+     * Upon Client command of rejoin or not this method notify the client of the result of the operation
+     * providing the list of the players in game in case the result is true. if the result is false
+     * the client will be asked to log in again
+     *
+     * @param result true if client wants to reconnect to server, false otherwise
+     * @param players List of players username (Used in gui to load the Game Scene)
+     */
     void show_rejoined(boolean result, List<String> players);
+
+    /**
+     * Unimplemented method to ask players if they want to rejoin a new match after the current one is ended
+     */
     void show_anotherMatch();
 
+    /**
+     * A countDown is shown if it is detected that only one player is left in the match
+     * If the countdown reach zero, the last player is the winner. Method is called
+     * repeatedly showing how may seconds are left
+     * @param secondsLeft Integer representing the seconds left (on the server countdown)
+     */
     void show_timerLastPlayerConnected(Integer secondsLeft);
 
+    /**
+     *
+     */
     void show_unableToReconnect();
 
+    /**
+     * Unimplemented method to show players responses to the new match request
+     */
     void show_requestAnotherMatch();
 }

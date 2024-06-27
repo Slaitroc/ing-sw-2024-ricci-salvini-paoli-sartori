@@ -8,21 +8,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Adapter for deserializing a map of the type Map<Resources, Integer>.
+ * Adapter for deserializing a map of the type {@code Map<Resources, Integer>}.
  * It can be registered to a GsonBuilder when you have to deserialize a map of
- * the type Map<Resources, Integer>.
+ * the type {@code Map<Resources, Integer>}.
  * Use:
- * Gson gson = new GsonBuilder().registerTypeAdapter(new
+ * {@code Gson gson = new GsonBuilder().registerTypeAdapter(new
  * TypeToken<Map<Resources, Integer>>(){}.getType(), new
- * MapRequirementsAdapter()).create();
+ * MapRequirementsAdapter()).create();}
  */
 public class MapRequirementsAdapter implements JsonDeserializer<Map<Resources, Integer>>, JsonSerializer<Map<Resources, Integer>> {
 
     /**
+     * Deserialize the object and return a map of type {@code Map<Resources, Integer>}.
+     *
      * @param jsonElement                an object of type JsonElement containing the information to be extracted.
      * @param type                       class of the object to be deserialized.
      * @param jsonDeserializationContext context
-     * @return The deserialized object. It returns a map of the type Map<Resources, Integer>.
+     * @return The deserialized object. It returns a map of the type {@code Map<Resources, Integer>}.
      * @throws JsonParseException If an error occurs while parsing json
      */
     @Override

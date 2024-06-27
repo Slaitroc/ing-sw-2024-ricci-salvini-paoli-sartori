@@ -22,7 +22,7 @@ public class ListResourcesEnumAdapter implements JsonDeserializer<List<Resources
      * @param jsonElement                contains the information to be extracted
      * @param type                       class of the object to be deserialized
      * @param jsonDeserializationContext context
-     * @return it returns the deserialized object. It returns a list of the type {@link List}<{@link Resources}>
+     * @return it returns the deserialized object. It returns a list of the type {@code List<Resources>}
      * @throws JsonParseException If an error occurs while parsing json
      */
     @Override

@@ -7,7 +7,6 @@ import it.polimi.ingsw.gc31.client_server.queue.serverQueue.HeartBeatObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.QuitGameObj;
 import it.polimi.ingsw.gc31.model.gameModel.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.Mockito;
