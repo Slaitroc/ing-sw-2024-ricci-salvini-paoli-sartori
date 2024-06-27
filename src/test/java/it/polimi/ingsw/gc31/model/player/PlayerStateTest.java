@@ -4,12 +4,10 @@ import it.polimi.ingsw.gc31.exceptions.EmptyDeckException;
 import it.polimi.ingsw.gc31.exceptions.IllegalPlaceCardException;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
 import it.polimi.ingsw.gc31.exceptions.WrongIndexSelectedCard;
-import it.polimi.ingsw.gc31.model.Board;
 import it.polimi.ingsw.gc31.model.card.*;
 import it.polimi.ingsw.gc31.model.enumeration.PawnColor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 
@@ -21,48 +19,51 @@ public class PlayerStateTest {
 
     @BeforeAll
     public static void setUp() throws EmptyDeckException {
+        @SuppressWarnings("unused")
         Player player = new Player(PawnColor.BLUE, "Ssolvo", null);
 
-/*        Board board = new Board();
-        board.getDeckResource().refill();
-        board.getDeckGold().refill();
-        player1 = new Player(PawnColor.RED, "Alessandro", board);
-        player2 = new Player(PawnColor.BLUE, "Christian", board);
-        player3 = new Player(PawnColor.YELLOW, "Lorenzo", board);
-
-        for (int j = 0; j < 2; j++) {
-//            player2.drawResourceCard1(); // Error message supposed to be thrown here
-//            player1.drawResource();
-//            player2.drawResource();
-//            player3.drawResource();
-        }
-//        player1.drawGold();
-//        player1.drawGoldCard1(); // Error message supposed to be thrown here
-//        player1.drawResource(); // Error message supposed to be thrown here
-//        player2.drawGold();
-//        player3.drawGold();
-
-        player1.setStarterCard();
-        player2.setStarterCard();
-        player3.setStarterCard();
-
-        // TODO da riguardare
-        // player1.addObjectiveCard(board.getDeckObjective().draw());
-        // player2.addObjectiveCard(board.getDeckObjective().draw());
-        // player3.addObjectiveCard(board.getDeckObjective().draw());
-
-        player1.playStarter();
-        player2.playStarter();
-        player3.playStarter();
-
-        player2.setInGameState(new Waiting());
-        player3.setInGameState(new Waiting());
-        // System.out.println("Assertion6");
-        assertInstanceOf(NotPlaced.class, player1.inGameState);
-        assertInstanceOf(Waiting.class, player2.inGameState);
-        assertInstanceOf(Waiting.class, player3.inGameState);
-
-        // System.out.println("SetUp Completed");*/
+        /*
+         * Board board = new Board();
+         * board.getDeckResource().refill();
+         * board.getDeckGold().refill();
+         * player1 = new Player(PawnColor.RED, "Alessandro", board);
+         * player2 = new Player(PawnColor.BLUE, "Christian", board);
+         * player3 = new Player(PawnColor.YELLOW, "Lorenzo", board);
+         * 
+         * for (int j = 0; j < 2; j++) {
+         * // player2.drawResourceCard1(); // Error message supposed to be thrown here
+         * // player1.drawResource();
+         * // player2.drawResource();
+         * // player3.drawResource();
+         * }
+         * // player1.drawGold();
+         * // player1.drawGoldCard1(); // Error message supposed to be thrown here
+         * // player1.drawResource(); // Error message supposed to be thrown here
+         * // player2.drawGold();
+         * // player3.drawGold();
+         * 
+         * player1.setStarterCard();
+         * player2.setStarterCard();
+         * player3.setStarterCard();
+         * 
+         * // TODO da riguardare
+         * // player1.addObjectiveCard(board.getDeckObjective().draw());
+         * // player2.addObjectiveCard(board.getDeckObjective().draw());
+         * // player3.addObjectiveCard(board.getDeckObjective().draw());
+         * 
+         * player1.playStarter();
+         * player2.playStarter();
+         * player3.playStarter();
+         * 
+         * player2.setInGameState(new Waiting());
+         * player3.setInGameState(new Waiting());
+         * // System.out.println("Assertion6");
+         * assertInstanceOf(NotPlaced.class, player1.inGameState);
+         * assertInstanceOf(Waiting.class, player2.inGameState);
+         * assertInstanceOf(Waiting.class, player3.inGameState);
+         * 
+         * // System.out.println("SetUp Completed");
+         */
     }
 
     @Disabled
@@ -90,10 +91,10 @@ public class PlayerStateTest {
         }
         assertInstanceOf(Placed.class, player1.inGameState);
         assertEquals(verifyCard, player1.getPlayArea().getPlacedCards().get(new Point(1, 1)));
-//        player1.drawResourceCard1();
+        // player1.drawResourceCard1();
         assertInstanceOf(Waiting.class, player1.inGameState);
 
-//        player1.drawResource();
+        // player1.drawResource();
         try {
             player1.play(new Point(1, 1));
         } catch (IllegalPlaceCardException e) {
@@ -108,7 +109,7 @@ public class PlayerStateTest {
             fail("Exception should not have been thrown");
         }
         assertInstanceOf(Placed.class, player2.inGameState);
-//        player2.drawResource();
+        // player2.drawResource();
         assertInstanceOf(Waiting.class, player2.inGameState);
         assertNotEquals(player1.getPlayArea().getPlacedCards().get(new Point(1, 1)),
                 player2.getPlayArea().getPlacedCards().get(new Point(1, 1)));
@@ -122,7 +123,7 @@ public class PlayerStateTest {
             fail("Exception should not have been thrown");
         }
         assertInstanceOf(Placed.class, player3.inGameState);
-//        player3.drawResource();
+        // player3.drawResource();
         assertInstanceOf(Waiting.class, player3.inGameState);
 
         player1.setInGameState(new NotPlaced());
@@ -136,7 +137,7 @@ public class PlayerStateTest {
             fail("Exception should not have been thrown");
         }
         assertInstanceOf(Placed.class, player1.inGameState);
-//        player1.drawResourceCard1();
+        // player1.drawResourceCard1();
         assertInstanceOf(Waiting.class, player1.inGameState);
         player2.setInGameState(new NotPlaced());
 
@@ -147,7 +148,7 @@ public class PlayerStateTest {
             fail("Exception should not have been thrown");
         }
         assertInstanceOf(Placed.class, player2.inGameState);
-//        player2.drawResourceCard2();
+        // player2.drawResourceCard2();
         assertInstanceOf(Waiting.class, player2.inGameState);
         assertNotEquals(player1.getPlayArea().getPlacedCards().get(new Point(1, 1)),
                 player2.getPlayArea().getPlacedCards().get(new Point(1, 1)));
@@ -160,7 +161,7 @@ public class PlayerStateTest {
             fail("Exception should not have been thrown");
         }
         assertInstanceOf(Placed.class, player3.inGameState);
-//        player3.drawResource();
+        // player3.drawResource();
         assertInstanceOf(Waiting.class, player3.inGameState);
     }
     /*

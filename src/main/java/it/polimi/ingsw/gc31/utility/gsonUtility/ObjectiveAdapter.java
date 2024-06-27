@@ -11,9 +11,10 @@ import java.lang.reflect.Type;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.serializePrivateFields;
 
-public class ObjectiveAdapter implements JsonDeserializer<Objective>, JsonSerializer<Objective>{
+public class ObjectiveAdapter implements JsonDeserializer<Objective>, JsonSerializer<Objective> {
     @Override
-    public Objective deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public Objective deserialize(JsonElement jsonElement, Type type,
+            JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         Objective ob = null;
 
@@ -27,33 +28,26 @@ public class ObjectiveAdapter implements JsonDeserializer<Objective>, JsonSerial
                     ob = createInstance(clazz, jsonObject, jsonDeserializationContext);
                 }
 
-            } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
-                     IllegalAccessException e) {
+            } catch (ClassNotFoundException | InvocationTargetException | InstantiationException
+                    | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
         } else {
             String typeOb = jsonObjectiveType.getAsString();
             ob = switch (typeOb) {
                 case "COUNT" -> new Count(
-                        jsonDeserializationContext.deserialize(jsonObject.get("resources"), Resources.class)
-                );
+                        jsonDeserializationContext.deserialize(jsonObject.get("resources"), Resources.class));
                 case "COVERCORNERSCORE" -> new CoverCornerScore();
-                case "LSHAPE" -> new LShape(
-                );
-                case "LSHAPEREVERSE" -> new LShapeReverse(
-                );
+                case "LSHAPE" -> new LShape();
+                case "LSHAPEREVERSE" -> new LShapeReverse();
                 case "RESOURCESCORE" -> new ResourceScore(
-                        Resources.valueOf(jsonObject.get("resources").getAsString())
-                );
+                        Resources.valueOf(jsonObject.get("resources").getAsString()));
                 case "SEVEN" -> new Seven();
-                case "SEVENREVERSE" -> new SevenReverse(
-                );
+                case "SEVENREVERSE" -> new SevenReverse();
                 case "STAIRDOWN" -> new StairDown(
-                        CardColor.valueOf(jsonObject.get("color1").getAsString())
-                );
+                        CardColor.valueOf(jsonObject.get("color1").getAsString()));
                 case "STAIRUP" -> new StairUp(
-                        CardColor.valueOf(jsonObject.get("color1").getAsString())
-                );
+                        CardColor.valueOf(jsonObject.get("color1").getAsString()));
                 default -> ob;
             };
         }
@@ -75,15 +69,18 @@ public class ObjectiveAdapter implements JsonDeserializer<Objective>, JsonSerial
         }
     }
 
-    private <T extends Objective> T createInstance(Class<T> clazz, JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext) throws InvocationTargetException, InstantiationException, IllegalAccessException {
-        // Check the available constructors and try to find one that matches the data in the JSON
+    private <T extends Objective> T createInstance(Class<T> clazz, JsonObject jsonObject,
+            JsonDeserializationContext jsonDeserializationContext)
+            throws InvocationTargetException, InstantiationException, IllegalAccessException {
+        // Check the available constructors and try to find one that matches the data in
+        // the JSON
         for (Constructor<?> constructor : clazz.getConstructors()) {
-            // get the constructor parameteres
+            // get the constructor parameters
             Class<?>[] parameterType = constructor.getParameterTypes();
             Object[] parameters = new Object[parameterType.length];
             boolean foundMatch = true;
 
-            for (int i=0; i<parameterType.length; i++) {
+            for (int i = 0; i < parameterType.length; i++) {
                 String parameterName = parameterType[i].getSimpleName().toLowerCase();
 
                 // the name of the parameter of resource differs from its type
@@ -91,7 +88,8 @@ public class ObjectiveAdapter implements JsonDeserializer<Objective>, JsonSerial
                 if (parameterName.equals("resources")) {
                     parameters[i] = Resources.valueOf(jsonObject.get("resource").getAsString());
                 } else if (parameterName.equals("list")) {
-                    parameters[i] = jsonDeserializationContext.deserialize(jsonObject.get("resources"), Resources.class);
+                    parameters[i] = jsonDeserializationContext.deserialize(jsonObject.get("resources"),
+                            Resources.class);
                 } else if (parameterName.equals("cardcolor")) {
                     String cardColor = jsonObject.get("cardColor").getAsString();
                     parameters[i] = CardColor.valueOf(cardColor);
@@ -100,7 +98,8 @@ public class ObjectiveAdapter implements JsonDeserializer<Objective>, JsonSerial
                         foundMatch = false;
                         break;
                     }
-                    parameters[i] = jsonDeserializationContext.deserialize(jsonElement, parameterType[i]);
+                    parameters[i] = jsonDeserializationContext.deserialize(jsonElement, parameterType[i]); // FIX
+                                                                                                           // @salvoc02
                 }
             }
 
@@ -109,6 +108,6 @@ public class ObjectiveAdapter implements JsonDeserializer<Objective>, JsonSerial
                 return (T) constructor.newInstance(parameters);
             }
         }
-        throw  new RuntimeException("Not found a match for the constructor");
+        throw new RuntimeException("Not found a match for the constructor");
     }
 }

@@ -50,42 +50,6 @@ public class Controller extends UnicastRemoteObject implements IController {
     private final ScheduledExecutorService scheduler;
 
     /**
-     * This method generates a unique token (from 0 to 999) every time a new client
-     * connects with the server
-     * Every token value is associated with its client in the newConnections map
-     *
-     * @param newConnection is the VirtualClient that just connected to the server
-     * @return the token generated
-     */
-    public int generateToken(VirtualClient newConnection) {
-        int token;
-        token = (int) (Math.random() * 1000);
-        while (newConnections.containsKey(token)) {
-            token = (int) (Math.random() * 1000);
-        }
-        this.newConnections.put(token, newConnection);
-        ServerLog.controllerWrite("Generic token generated for the new connection: " + token);
-        return token;
-    }
-
-    /**
-     * This method is called every time the controller needs to save a token on the
-     * client side.
-     * 
-     * @param newConnection is the VirtualClient that will receive the token
-     * @param token         is the token to be saved
-     * @param temporary     is true if the token to be set is temporary, false
-     *                      otherwise. If false overrides the previously saved token
-     */
-    public void sendToken(VirtualClient newConnection, int token, boolean temporary) {
-        try {
-            newConnection.sendCommand(new SaveToken(token, temporary));
-        } catch (RemoteException e) {
-            ServerLog.controllerWrite("The token was not sent correctly");
-        }
-    }
-
-    /**
      * Private constructor for the Controller class.
      * It initializes the tempClients map and the nickname's set.
      *
@@ -147,6 +111,42 @@ public class Controller extends UnicastRemoteObject implements IController {
                 }
             }
         }).start();
+    }
+
+    /**
+     * This method generates a unique token (from 0 to 999) every time a new client
+     * connects with the server
+     * Every token value is associated with its client in the newConnections map
+     *
+     * @param newConnection is the VirtualClient that just connected to the server
+     * @return the token generated
+     */
+    public int generateToken(VirtualClient newConnection) {
+        int token;
+        token = (int) (Math.random() * 1000);
+        while (newConnections.containsKey(token)) {
+            token = (int) (Math.random() * 1000);
+        }
+        this.newConnections.put(token, newConnection);
+        ServerLog.controllerWrite("Generic token generated for the new connection: " + token);
+        return token;
+    }
+
+    /**
+     * This method is called every time the controller needs to save a token on the
+     * client side.
+     * 
+     * @param newConnection is the VirtualClient that will receive the token
+     * @param token         is the token to be saved
+     * @param temporary     is true if the token to be set is temporary, false
+     *                      otherwise. If false overrides the previously saved token
+     */
+    public void sendToken(VirtualClient newConnection, int token, boolean temporary) {
+        try {
+            newConnection.sendCommand(new SaveToken(token, temporary));
+        } catch (RemoteException e) {
+            ServerLog.controllerWrite("The token was not sent correctly");
+        }
     }
 
     /**
@@ -263,15 +263,19 @@ public class Controller extends UnicastRemoteObject implements IController {
     }
 
     /**
-     * Più un TODO ch una doc
-     * Viene invocato dall'oggetto Reconnect.java (serverQueue) dopo che il
-     * client ha specificato che vuole connettersi in risposta a
-     * WantsReconnectObj.java
-     * Deve innescare gli update dei listener e mandare la risposta al client
-     * (pseudocode sotto)
-     *
-     * @param token is the token of the client
-     * @param esito is true if the client wants to reconnect, false otherwise
+     * This method is called when a client wants to rejoin a game.
+     * If the clients wants to rejoin a {@link ReJoinedObj} with the previous
+     * username and a boolean value set to true is sent to the client (other
+     * parameters of the object are required for the GUI).
+     * If the client doesn't want to rejoin a {@link ReJoinedObj} with the previous
+     * username and a boolean value set to false is sent to the client (other
+     * parameters of the object are required for the GUI).
+     * 
+     * 
+     * @param tempToken is the temporary token of the client
+     * @param token     is the token of the client
+     * @param esito     is the boolean value that indicates if the client wants to
+     *                  rejoin the game
      */
     public void rejoin(int tempToken, int token, boolean esito) {
         VirtualClient client = newConnections.get(token);
@@ -281,10 +285,9 @@ public class Controller extends UnicastRemoteObject implements IController {
                     client.sendCommand(
                             new ReJoinedObj(true, gameControlList.get(disconnected.get(token).getValue()).clientList
                                     .keySet().stream().toList()));
-                } // mandare questo è importante perché la ui fa cose in //
+                }
                 gameControlList.get(disconnected.get(token).getValue()).reJoinGame(disconnected.get(token).getKey(),
                         newConnections.get(token));
-                // risposta a questo update
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

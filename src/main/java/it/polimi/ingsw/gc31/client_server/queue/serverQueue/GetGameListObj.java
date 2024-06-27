@@ -32,7 +32,6 @@ public class GetGameListObj extends ServerQueueObject {
 
     @Override
     public void execute(RmiServer server) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'execute'");
     }
 

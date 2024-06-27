@@ -13,7 +13,6 @@ import it.polimi.ingsw.gc31.utility.IPvalidator;
 import it.polimi.ingsw.gc31.view.gui.GUI;
 import it.polimi.ingsw.gc31.view.tui.TUI;
 import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.AnsiConsole;
 
 public class Client {
 
@@ -52,14 +51,14 @@ public class Client {
                 CliPrint.coloredPrintCyan("or type 'restart' to restart the procedure:");
                 System.out.println("\t1 -> RMI\n\t2 -> TCP");
 
-                String networkChoise = scanner.nextLine().toLowerCase();
+                String networkChoice = scanner.nextLine().toLowerCase();
 
                 client = null;
                 try {
-                    if (Integer.parseInt(networkChoise) == 1) {
+                    if (Integer.parseInt(networkChoice) == 1) {
                         CliPrint.coloredPrintBlue(Ansi.ansi().cursorUp(1).a("Connection type: RMI"));
                         client = new RmiClient(ipaddress);
-                    } else if (Integer.parseInt(networkChoise) == 2) {
+                    } else if (Integer.parseInt(networkChoice) == 2) {
                         CliPrint.coloredPrintBlue(Ansi.ansi().cursorUp(1).a("Connection type: TCP"));
                         client = new TCPClient(ipaddress);
                     } else {
@@ -67,7 +66,7 @@ public class Client {
                         validConnectionType = false;
                     }
                 } catch (NumberFormatException e) {
-                    if (networkChoise.equals("restart")) {
+                    if (networkChoice.equals("restart")) {
                         continue global;
                     } else {
                         CliPrint.coloredPrintRed("Invalid Input");
@@ -88,14 +87,14 @@ public class Client {
                 CliPrint.coloredPrintPurple("Chose UI:");
                 CliPrint.coloredPrintCyan("or type 'restart' to restart the procedure:");
                 System.out.println("\t1 -> TUI\n\t2 -> GUI:");
-                String uiChoise = scanner.nextLine();
+                String uiChoice = scanner.nextLine();
                 validTUI = true;
 
                 try {
-                    if (Integer.parseInt(uiChoise) == 1) {
+                    if (Integer.parseInt(uiChoice) == 1) {
                         chosenUI = 1;
                         break global;
-                    } else if (Integer.parseInt(uiChoise) == 2) {
+                    } else if (Integer.parseInt(uiChoice) == 2) {
                         chosenUI = 2;
                         break global;
                     } else {
@@ -103,7 +102,7 @@ public class Client {
                         validTUI = false;
                     }
                 } catch (NumberFormatException e) {
-                    if (uiChoise.equals("restart")) {
+                    if (uiChoice.equals("restart")) {
                         continue global;
                     } else {
                         CliPrint.coloredPrintRed("Invalid Input");

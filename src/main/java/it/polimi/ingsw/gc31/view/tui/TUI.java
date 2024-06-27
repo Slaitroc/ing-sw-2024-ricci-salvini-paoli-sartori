@@ -140,7 +140,7 @@ public class TUI extends UI {
 
     // PRINT METHODS
     Map<TUIareas, StringBuilder> areasCache = new HashMap<>();
-    protected Map<TUIcommands, Boolean> commandsCache = new HashMap<>();
+    protected Map<TUIstateCommands, Boolean> commandsCache = new HashMap<>();
 
     protected void forceRefreshTUI(boolean stateNotify) {
         System.out.print("\033[H\033[2J");
@@ -156,7 +156,7 @@ public class TUI extends UI {
             }
             try {
 
-                playViewUpdate.add(areasCache.get(TUIareas.PLAY_AREA_VIEW));
+                playViewUpdate.add(areasCache.get(TUIareas.PLAY_VIEW_AREA));
             } catch (NullPointerException ignored) {
 
             }
@@ -166,7 +166,7 @@ public class TUI extends UI {
         if (state.stateName.equals("Joined To Game State")) {
             // print_ChatBorders();
         }
-        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, stateNotify);
+        commandToProcess(TUIstateCommands.SHOW_COMMAND_INFO, stateNotify);
 
     }
 
@@ -1271,7 +1271,7 @@ public class TUI extends UI {
      * If the command is "chat", it moves the cursor to the chat input area.
      */
     Thread cmdLineProcessThread = new Thread(() -> {
-        commandToProcess(TUIcommands.SET_USERNAME, false);
+        commandToProcess(TUIstateCommands.SET_USERNAME, false);
         while (true) {
             String cmd = null;
             synchronized (cmdLineMessages) {
@@ -1302,21 +1302,21 @@ public class TUI extends UI {
         if (command.isEmpty()) {
             state.command_showCommandsInfo();
             state.stateNotify();
-        } else if (command.equals(TUIcommands.SET_USERNAME.toString()) && state.stateName.equals("Init State")) {
+        } else if (command.equals(TUIstateCommands.SET_USERNAME.toString()) && state.stateName.equals("Init State")) {
             state.setUsername();
         } else if (state.commandsMap.containsKey(command)) {
             state.commandsMap.get(command).run();
-        } else if (command.equals(TUIcommands.NOTIFY.toString())) {
+        } else if (command.equals(TUIstateCommands.NOTIFY.toString())) {
             state.stateNotify();
-        } else if (command.equals(TUIcommands.RECONNECT.toString()) && state.stateName.equals("Init State")) {
+        } else if (command.equals(TUIstateCommands.RECONNECT.toString()) && state.stateName.equals("Init State")) {
             state.reconnect();
-        } else if (command.equals(TUIcommands.REFRESH.toString()) && state.stateName.equals("Init State")) {
+        } else if (command.equals(TUIstateCommands.REFRESH.toString()) && state.stateName.equals("Init State")) {
             state.reconnect();
             // } else if (command.equals(TUIcommands.ANOTHERMATCH.toString()) &&
             // state.stateName.equals("Playing State")) {
             // state.reMatch();
         } else {
-            state.commandsMap.get(TUIcommands.INVALID.toString()).run();
+            state.commandsMap.get(TUIstateCommands.INVALID.toString()).run();
         }
     }
 
@@ -1327,14 +1327,14 @@ public class TUI extends UI {
      * @param cmd         The TUI command to process.
      * @param stateNotify A boolean indicating whether to notify the state or not.
      */
-    protected void commandToProcess(TUIcommands cmd, boolean stateNotify) {
+    protected void commandToProcess(TUIstateCommands cmd, boolean stateNotify) {
         synchronized (cmdLineMessages) {
             if (!stateNotify) {
                 cmdLineMessages.add(cmd.toString());
                 cmdLineMessages.notify();
             } else {
                 cmdLineMessages.add(cmd.toString());
-                cmdLineMessages.add(TUIcommands.NOTIFY.toString());
+                cmdLineMessages.add(TUIstateCommands.NOTIFY.toString());
                 cmdLineMessages.notify();
             }
         }
@@ -1408,7 +1408,8 @@ public class TUI extends UI {
     }
 
     /**
-     * Thread responsible for reading user-executable {@link TUIcommands} typed by
+     * Thread responsible for reading user-executable {@link TUIstateCommands} typed
+     * by
      * the user.
      * <ul>
      * <li>It starts the {@link TUI#cmdLineProcessThread}</li>
@@ -1484,8 +1485,8 @@ public class TUI extends UI {
                 } else {
                     synchronized (cmdLineMessages) {
                         cmdLineMessages.add(input.trim());
-                        if (input.trim().equals(TUIcommands.SHOW_COMMAND_INFO.toString())) {
-                            cmdLineMessages.add(TUIcommands.NOTIFY.toString());
+                        if (input.trim().equals(TUIstateCommands.SHOW_COMMAND_INFO.toString())) {
+                            cmdLineMessages.add(TUIstateCommands.NOTIFY.toString());
                         }
                         cmdLineMessages.notify();
                     }
@@ -1761,7 +1762,7 @@ public class TUI extends UI {
         for (String string : listGame) {
             printToCmdLineOut(string);
         }
-        commandToProcess(TUIcommands.NOTIFY, false);
+        commandToProcess(TUIstateCommands.NOTIFY, false);
 
     }
 
@@ -1799,7 +1800,7 @@ public class TUI extends UI {
                 playViewUpdate.add(res);
                 playViewUpdate.notify();
             }
-            areasCache.put(TUIareas.PLAY_AREA_VIEW, res);
+            areasCache.put(TUIareas.PLAY_VIEW_AREA, res);
         }
 
         // }
@@ -1832,7 +1833,7 @@ public class TUI extends UI {
     @Override
     public void update_ToPlayingState() {
         this.state = new PlayingState(this);
-        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, false);
+        commandToProcess(TUIstateCommands.SHOW_COMMAND_INFO, false);
         // qui lo state notify non serve perché lo chiama già il metodo triggerato
         // dall'oggetto risposta di ready
     }
@@ -1998,16 +1999,16 @@ public class TUI extends UI {
     public void show_validUsername(String username) {
         printToCmdLineOut(serverWrite("Username accepted"));
         printToCmdLineOut(tuiWrite("Your name is: " + username));
-        client.setUsernameResponse(username);
+        client.setUsername(username);
         this.activePlayArea = username;
-        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+        commandToProcess(TUIstateCommands.SHOW_COMMAND_INFO, true);
 
     }
 
     @Override
     public void show_wrongUsername(String username) {
         printToCmdLineOut(serverWrite("Username " + username + " already taken, try again"));
-        commandToProcess(TUIcommands.SET_USERNAME, false);
+        commandToProcess(TUIstateCommands.SET_USERNAME, false);
 
     }
 
@@ -2017,7 +2018,7 @@ public class TUI extends UI {
         chatBoardThread = chatBoardThreadBuilder();
         chatBoardThread.start();
         state = new JoinedToGameState(this);
-        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+        commandToProcess(TUIstateCommands.SHOW_COMMAND_INFO, true);
 
     }
 
@@ -2029,13 +2030,13 @@ public class TUI extends UI {
         chatMessages = new ArrayDeque<String>();
 
         // TODO: erase player info
-        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+        commandToProcess(TUIstateCommands.SHOW_COMMAND_INFO, true);
     }
 
     @Override
     public void show_gameIsFull(int id) {
         printToCmdLineOut(serverWrite(serverWrite("Game " + id + " is full")));
-        commandToProcess(TUIcommands.NOTIFY, false);
+        commandToProcess(TUIstateCommands.NOTIFY, false);
 
     }
 
@@ -2045,7 +2046,7 @@ public class TUI extends UI {
         chatBoardThread = chatBoardThreadBuilder();
         chatBoardThread.start();
         state = new JoinedToGameState(this);
-        commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+        commandToProcess(TUIstateCommands.SHOW_COMMAND_INFO, true);
 
     }
 
@@ -2065,14 +2066,14 @@ public class TUI extends UI {
     @Override
     public void show_gameDoesNotExist() {
         printToCmdLineOut(serverWrite("Game does not exist"));
-        commandToProcess(TUIcommands.NOTIFY, false);
+        commandToProcess(TUIstateCommands.NOTIFY, false);
 
     }
 
     @Override
     public void show_wrongGameSize() {
         printToCmdLineOut(serverWrite("Game size must be between 2 and 4"));
-        commandToProcess(TUIcommands.NOTIFY, false);
+        commandToProcess(TUIstateCommands.NOTIFY, false);
 
     }
 
@@ -2136,7 +2137,7 @@ public class TUI extends UI {
 
         int index = 1;
         for (String player : playersScore.keySet()) {
-            res.append(ansi().cursor( GAME_OVER_INITIAL_ROW + 1 + index, GAME_OVER_INITIAL_COLUMN + 1)
+            res.append(ansi().cursor(GAME_OVER_INITIAL_ROW + 1 + index, GAME_OVER_INITIAL_COLUMN + 1)
                     .a(player + ": " + playersScore.get(player)));
             index++;
         }
@@ -2162,7 +2163,7 @@ public class TUI extends UI {
     public void show_wantReconnect(String username) {
         getClient().setUsername(username);
         activePlayArea = username;
-        commandToProcess(TUIcommands.RECONNECT, false);
+        commandToProcess(TUIstateCommands.RECONNECT, false);
     }
 
     @Override
@@ -2171,10 +2172,10 @@ public class TUI extends UI {
             chatBoardThread = chatBoardThreadBuilder();
             chatBoardThread.start();
             state = new PlayingState(this);
-            commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
+            commandToProcess(TUIstateCommands.SHOW_COMMAND_INFO, true);
         } else {
             getClient().getToken().setToken(DV.defaultToken);
-            commandToProcess(TUIcommands.SET_USERNAME, false);
+            commandToProcess(TUIstateCommands.SET_USERNAME, false);
         }
     }
 
@@ -2182,21 +2183,21 @@ public class TUI extends UI {
     public void show_unableToReconnect() {
         printToCmdLineOut(serverWrite("U were not in a game!"));
         client.getToken().setToken(DV.defaultToken);
-        commandToProcess(TUIcommands.SET_USERNAME, false);
+        commandToProcess(TUIstateCommands.SET_USERNAME, false);
 
     }
 
-    @Override
-    public void show_requestAnotherMatch() {
-        printToCmdLineOut(tuiWrite("Do you want to play another match?"));
-        commandToProcess(TUIcommands.ANOTHERMATCH, false);
-    }
+    // @Override
+    // public void show_requestAnotherMatch() {
+    // printToCmdLineOut(tuiWrite("Do you want to play another match?"));
+    // commandToProcess(TUIstateCommands.ANOTHERMATCH, false);
+    // }
 
     @Override
     public void show_timerLastPlayerConnected(Integer secondsLeft) {
         StringBuilder res = new StringBuilder();
         res.append(clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
-        res.append(print_Borders("ifneoirngoirngiowrngiorwngroignroignrignr", greyText, PLAYAREA_INITIAL_ROW,
+        res.append(print_Borders("LAST PLAYER CONNECTED", greyText, PLAYAREA_INITIAL_ROW,
                 PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
         // res.append(print_Borders("", greyText, PLAYAREA_INITIAL_ROW + 1,
         // PLAYAREA_INITIAL_COLUMN + 1, PLAYAREA_END_ROW -1, PLAYAREA_END_COLUMN - 1));
@@ -2212,8 +2213,8 @@ public class TUI extends UI {
 
     public void changeActivePlayArea(String username) {
         activePlayArea = username;
-        areasCache.put(TUIareas.PLAY_AREA_VIEW, playAreaAllPlayers.get(username));
-        commandToProcess(TUIcommands.REFRESH, false);
+        areasCache.put(TUIareas.PLAY_VIEW_AREA, playAreaAllPlayers.get(username));
+        commandToProcess(TUIstateCommands.REFRESH, false);
     }
 
     /**

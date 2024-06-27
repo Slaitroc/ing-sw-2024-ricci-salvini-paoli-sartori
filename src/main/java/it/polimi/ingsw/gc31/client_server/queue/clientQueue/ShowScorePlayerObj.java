@@ -4,7 +4,6 @@ import it.polimi.ingsw.gc31.view.UI;
 import javafx.util.Pair;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class ShowScorePlayerObj extends ClientQueueObject {
     private final LinkedHashMap<String, Pair<Integer, Boolean>> scores;

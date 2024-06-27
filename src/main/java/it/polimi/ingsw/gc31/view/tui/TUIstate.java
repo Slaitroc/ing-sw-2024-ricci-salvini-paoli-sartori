@@ -93,10 +93,11 @@ public abstract class TUIstate {
      * <p>
      * Short sequence diagram verbose description:
      * <ul>
-     * <li>A user-executable {@link TUIcommands} is read by the cmdLineReaderThread
+     * <li>A user-executable {@link TUIstateCommands} is read by the
+     * cmdLineReaderThread
      * and sent
      * to cmdLineProcessThread by the
-     * {@link TUI#commandToProcess(TUIcommands, boolean)} method
+     * {@link TUI#commandToProcess(TUIstateCommands, boolean)} method
      * <li>{@link TUI#cmdLineProcessThread} executes the command running the
      * corresponding {@link TUIstate#commandsMap} {@link Runnable}
      * <li>Somewhere in the code a stateNotify() is called (more info in the next
@@ -114,7 +115,7 @@ public abstract class TUIstate {
      * stateNotify() can be called by:
      * <ul>
      * <li>a TUIcommands implementation
-     * <li>{@link TUI#commandToProcess(TUIcommands, boolean)} method with the
+     * <li>{@link TUI#commandToProcess(TUIstateCommands, boolean)} method with the
      * boolean parameter set to true; Required when the call to stateNotify() is not
      * present in the TUIcommand implementation but is still necessary to unlock the
      * cmdLineReaderThread. commandToProcess(TUIcommands, boolean) is also called by

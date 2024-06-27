@@ -101,7 +101,7 @@ class GameModelTest {
 
         utilitySkipSetupGame();
 
-        for (int i=0; i<3; i++) {
+        for (int i = 0; i < 3; i++) {
             assertEquals(i, model.getCurrIndexPlayer());
             model.setNextPlayingPlayer();
         }
@@ -153,7 +153,7 @@ class GameModelTest {
         }
         assertInstanceOf(LastTurnGameModelState.class, model.getGameState());
 
-        for (int i = 0; i<3; i++) {
+        for (int i = 0; i < 3; i++) {
             try {
                 model.endTurn();
             } catch (IllegalStateOperationException e) {
@@ -181,18 +181,19 @@ class GameModelTest {
 
         model2.setGameState(new RunningGameModelSate(model2));
         model2.setNextPlayingPlayer();
-        for (int i=0; i<4; i++) {
+        for (int i = 0; i < 4; i++) {
             player = model2.getCurrPlayer();
             player.setObjectiveCard(deck.draw());
             model2.setNextPlayingPlayer();
         }
         assertEquals(model2.getCurrIndexPlayer(), 0);
 
-        // if first (or non-last player reach 20 points the state must change to showdown
+        // if first (or non-last player reach 20 points the state must change to
+        // showdown
         player = model2.getCurrPlayer();
         player.setScore(20);
 
-        for (int i=0; i<3; i++) {
+        for (int i = 0; i < 3; i++) {
             try {
                 model2.endTurn();
                 assertInstanceOf(ShowDownGameModelState.class, model2.getGameState());
@@ -234,10 +235,10 @@ class GameModelTest {
         utilityInitGame();
         utilitySkipSetupGame();
 
-        for (int i=0; i<34; i++) {
+        for (int i = 0; i < 34; i++) {
             model.getBoard().getDeckGold().draw();
         }
-        for (int i=0; i<30; i++) {
+        for (int i = 0; i < 30; i++) {
             model.getBoard().getDeckResource().draw();
         }
         assertTrue(model.getBoard().getDeckGold().isEmpty());
@@ -252,21 +253,22 @@ class GameModelTest {
         assertInstanceOf(ShowDownGameModelState.class, model.getGameState());
 
     }
+
     @Test
     void endTurnBothDeckEmptyLastTurn() throws EmptyDeckException {
         utilityInitGame();
         utilitySkipSetupGame();
 
-        for (int i=0; i<34; i++) {
+        for (int i = 0; i < 34; i++) {
             model.getBoard().getDeckGold().draw();
         }
-        for (int i=0; i<30; i++) {
+        for (int i = 0; i < 30; i++) {
             model.getBoard().getDeckResource().draw();
         }
         assertTrue(model.getBoard().getDeckGold().isEmpty());
         assertTrue(model.getBoard().getDeckResource().isEmpty());
 
-        for (int i=0; i<3; i++) {
+        for (int i = 0; i < 3; i++) {
             model.setNextPlayingPlayer();
         }
         assertEquals(3, model.getCurrIndexPlayer());
@@ -472,15 +474,18 @@ class GameModelTest {
 
         model.setGameState(new LastTurnGameModelState(model));
         model.getCurrPlayer().setInGameState(new Placed());
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawGold(model.getCurrPlayer().getUsername(), 0));
+        assertThrowsExactly(IllegalStateOperationException.class,
+                () -> model.drawGold(model.getCurrPlayer().getUsername(), 0));
 
         model.setGameState(new EndGameModelState(model));
         model.getCurrPlayer().setInGameState(new Placed());
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawGold(model.getCurrPlayer().getUsername(), 0));
+        assertThrowsExactly(IllegalStateOperationException.class,
+                () -> model.drawGold(model.getCurrPlayer().getUsername(), 0));
 
         model.setGameState(new BlockedGameModelState(model, null));
         model.getCurrPlayer().setInGameState(new Placed());
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawGold(model.getCurrPlayer().getUsername(), 0));
+        assertThrowsExactly(IllegalStateOperationException.class,
+                () -> model.drawGold(model.getCurrPlayer().getUsername(), 0));
     }
 
     @Test
@@ -520,15 +525,18 @@ class GameModelTest {
 
         model.setGameState(new LastTurnGameModelState(model));
         model.getCurrPlayer().setInGameState(new Placed());
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawResource(model.getCurrPlayer().getUsername(), 0));
+        assertThrowsExactly(IllegalStateOperationException.class,
+                () -> model.drawResource(model.getCurrPlayer().getUsername(), 0));
 
         model.setGameState(new EndGameModelState(model));
         model.getCurrPlayer().setInGameState(new Placed());
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawResource(model.getCurrPlayer().getUsername(), 0));
+        assertThrowsExactly(IllegalStateOperationException.class,
+                () -> model.drawResource(model.getCurrPlayer().getUsername(), 0));
 
         model.setGameState(new BlockedGameModelState(model, null));
         model.getCurrPlayer().setInGameState(new Placed());
-        assertThrowsExactly(IllegalStateOperationException.class, () -> model.drawResource(model.getCurrPlayer().getUsername(), 0));
+        assertThrowsExactly(IllegalStateOperationException.class,
+                () -> model.drawResource(model.getCurrPlayer().getUsername(), 0));
     }
 
     @Test
@@ -757,7 +765,7 @@ class GameModelTest {
 
         assertTrue(model.getPlayerConnection().get("Players1"));
         assertNull(player.getObjectiveCard());
-        assertNull(player.getPlayArea().getPlacedCards().get(new Point(0,0)));
+        assertNull(player.getPlayArea().getPlacedCards().get(new Point(0, 0)));
         // if first player disconnect
         try {
             model.disconnectPlayer("Players1");
@@ -767,12 +775,12 @@ class GameModelTest {
 
         assertFalse(model.getPlayerConnection().get("Players1"));
         assertNotNull(player.getObjectiveCard());
-        assertNotNull(player.getPlayArea().getPlacedCards().get(new Point(0,0)));
+        assertNotNull(player.getPlayArea().getPlacedCards().get(new Point(0, 0)));
 
     }
 
     @Test
-    void executeDisconnectPlayerAfterSetupState(){
+    void executeDisconnectPlayerAfterSetupState() {
         for (String username : clients.keySet()) {
             assertDoesNotThrow(() -> model.disconnectPlayer(username));
         }
@@ -811,10 +819,10 @@ class GameModelTest {
 
     public static class FakeGameModel extends GameModel {
         public FakeGameModel() {
-            super(new Object(),0);
+            super(new Object(), 0);
         }
 
-        public void initGame(Map<String, VirtualClient> clients, Object lock){
+        public void initGame(Map<String, VirtualClient> clients, Object lock) {
             players = new HashMap<>();
             super.clients = new HashMap<>();
             for (String username : clients.keySet()) {
