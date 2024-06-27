@@ -1,9 +1,6 @@
 package it.polimi.ingsw.gc31.view.tui;
 
 import static it.polimi.ingsw.gc31.utility.OurScanner.scanner;
-import it.polimi.ingsw.gc31.client_server.interfaces.*;
-import it.polimi.ingsw.gc31.view.interfaces.*;
-import it.polimi.ingsw.gc31.controller.*;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -42,10 +39,11 @@ public class InitState extends TUIstate {
         // command's map
         commandsMap = new LinkedHashMap<>();
 
-        commandsMap.put(("help").toLowerCase(), this::command_showCommandsInfo);
-        commandsMap.put(("create game").toLowerCase(), this::command_createGame);
+        commandsMap.put(TUIstateCommands.SHOW_COMMAND_INFO.toString().toLowerCase(), this::command_showCommandsInfo);
+        commandsMap.put(TUIstateCommands.CREATE_GAME.toString().toLowerCase(), this::command_createGame);
         commandsMap.put("show games", this::command_showGames);
         commandsMap.put("join game", this::command_joinGame);
+        commandsMap.put("ref", this::command_refresh);
         commandsMap.put("invalid", this::command_invalidCommand);
 
         // info map
@@ -55,11 +53,14 @@ public class InitState extends TUIstate {
         commandsInfo.put("create game", "Create a new game");
         commandsInfo.put("show games", "Shows all the active games");
         commandsInfo.put("join game", "Join an existing game");
+        commandsInfo.put("ref", "refresh tui");
+
     }
 
     /**
      * Asks the user to type the number of players for the new game and sends the
-     * corresponding request to the {@link Controller}(socket) or
+     * corresponding request to the
+     * {@link it.polimi.ingsw.gc31.controller.Controller} (socket) or
      * {@link RmiServer}(rmi).
      * Blocks the cmdLineReaderThread until the Controller or RmiServer responds
      * with {@link ShowUpdate#show_gameCreated(int)}
@@ -79,7 +80,8 @@ public class InitState extends TUIstate {
     }
 
     /**
-     * Sends the request to the {@link Controller} to show the list of available
+     * Sends the request to the {@link it.polimi.ingsw.gc31.controller.Controller}
+     * to show the list of available
      * games.
      * Blocks the cmdLineReaderThread until the Controller responds with
      * {@link ShowUpdate#show_listGame(java.util.List)}
@@ -99,7 +101,8 @@ public class InitState extends TUIstate {
     }
 
     /**
-     * Sends the request to the {@link Controller} to join the game with the typed
+     * Sends the request to the {@link it.polimi.ingsw.gc31.controller.Controller}
+     * to join the game with the typed
      * gameID.
      * Blocks the cmdLineReaderThread until the Controller responds with
      * {@link ShowUpdate#show_gameIsFull(int)} or
@@ -205,7 +208,8 @@ public class InitState extends TUIstate {
 
     /**
      * Asks the user to type the username and sends the corresponding request to the
-     * {@link Controller}(socket) or {@link RmiServer}(rmi).
+     * {@link it.polimi.ingsw.gc31.controller.Controller}(socket) or
+     * {@link RmiServer}(rmi).
      * Blocks the cmdLineReaderThread until the Controller or RmiServer responds
      * with {@link ShowUpdate#show_validUsername(String)} or
      * or {@link ShowUpdate#show_wrongUsername(String)} or
@@ -249,6 +253,7 @@ public class InitState extends TUIstate {
      */
     @Override
     protected void command_refresh() {
+        tui.forceRefreshTUI(true);
     }
 
     @Override

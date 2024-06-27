@@ -1,7 +1,6 @@
 package it.polimi.ingsw.gc31.view.tui;
 
 import static it.polimi.ingsw.gc31.utility.DV.RGB_COLOR_CORNER;
-import static it.polimi.ingsw.gc31.utility.DV.RGB_COLOR_RED;
 import static it.polimi.ingsw.gc31.utility.DV.getRgbColor;
 import static org.fusesource.jansi.Ansi.Color.*;
 import static org.fusesource.jansi.Ansi.ansi;
@@ -26,10 +25,13 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
 import it.polimi.ingsw.gc31.view.UI;
 
+/**
+ * Text User Interface class that manages the text interface of the game
+ */
 @SuppressWarnings("FieldCanBeLocal")
 public class TUI extends UI {
 
-    // MODIFICABILI
+    // CHANGE THIS TO MODIFY THE TUI LAYOUT
     private final int CMD_LINE_INITIAL_ROW = 2;
     private final int CMD_LINE_INITIAL_COLUMN = 1;
     private final int CMD_LINE_LINES = 14;
@@ -102,7 +104,7 @@ public class TUI extends UI {
     private final int GAME_OVER_END_ROW = 39;
     private final int GAME_OVER_END_COLUMN = 67;
 
-    // CONSTANTS
+    // DO NOT CHANGE THOSE IF NOT STRICTLY NECESSARY
     private final int CMD_LINE_EFFECTIVE_WIDTH = CMD_LINE_WIDTH - 2;
     private final int CMD_LINE_INPUT_ROW = CMD_LINE_INITIAL_ROW + CMD_LINE_LINES;
     private final int CMD_LINE_INPUT_COLUMN = CMD_LINE_INITIAL_COLUMN + 1;
@@ -118,11 +120,13 @@ public class TUI extends UI {
     // shift of the StarterCard along the y-axis relative to the center
     private int OFFSET_Y_PLAYAREA = 0;
 
-    private final int[] RGB_COLOR_GOLD = { 181, 148, 16 };
-
+    /**
+     * List of players' usernames joined to the game the client is in
+     */
     private List<String> playersUsernames = new ArrayList<>();
 
     // COLORS
+    private final int[] RGB_COLOR_GOLD = { 181, 148, 16 };
     int[] greyText = null;
     // int[] greyText = new int[] { 192, 192, 192 };
     int[] goldText = new int[] { 233, 227, 38 };
@@ -186,8 +190,9 @@ public class TUI extends UI {
 
     }
 
+    // PRINT UTILITIES
     /**
-     * Clear the chat board
+     * Erase the chat board from the terminal
      */
     private void erase_ChatBoard() {
         for (int i = -2; i < CHAT_BOARD_LINES + 1; i++) {
@@ -195,6 +200,19 @@ public class TUI extends UI {
                     Ansi.ansi().cursor(CHAT_BOARD_INITIAL_ROW + 1 + i, CHAT_BOARD_INITIAL_COLUMN)
                             .a(" " + " ".repeat(CHAT_BOARD_EFFECTIVE_WIDTH) + " "));
         }
+    }
+
+    /**
+     * Erase every characters inside the playArea StringBuilders
+     */
+    public StringBuilder clearArea(int initialRow, int initialCol, int endRow, int endCol) {
+        StringBuilder res = new StringBuilder();
+        for (int i = -1; i <= endRow - initialRow; i++) {
+            for (int j = 0; j <= endCol - initialCol; j++) {
+                res.append(ansi().cursor(initialRow + i, initialCol + j).a(" "));
+            }
+        }
+        return res;
     }
 
     /**
@@ -239,6 +257,17 @@ public class TUI extends UI {
 
     }
 
+    /**
+     * Generic borders printer utility for TUIareas
+     * 
+     * @param titleArea     the title of the area
+     * @param color         the color of the title
+     * @param initialRow    the initial row of the area
+     * @param initialColumn the initial column of the area
+     * @param endRow        the end row of the area
+     * @param endColumn     the end column of the area
+     * @return
+     */
     private StringBuilder print_Borders(String titleArea, int[] color, int initialRow, int initialColumn, int endRow,
             int endColumn) {
         StringBuilder res = new StringBuilder();
@@ -325,7 +354,7 @@ public class TUI extends UI {
      */
     protected StringBuilder print_ObjectiveCard(ObjectiveCard card, int relative_x, int relative_y, int overFlowUp,
             int overFlowDown, int overFlowLeft, int overFlowRight) {
-        int[] cardColor = RGB_COLOR_RED;
+        // int[] cardColor = RGB_COLOR_RED;
         // if the card entirely exceeds the limits of the playArea it is not printed
         if (overFlowLeft - (relative_x + CARD_LENGTH - 1) < 0 && (overFlowRight - relative_x) > 0
                 && (overFlowDown - relative_y) > 0 && overFlowUp - (relative_y + CARD_HEIGHT - 1) < 0) {
@@ -832,6 +861,7 @@ public class TUI extends UI {
         return null;
     }
 
+    // TODO christian
     private StringBuilder print_PlaceHolder(Point point, int x, int y, int overFlowUp, int overFlowDown,
             int overFlowLeft, int overFlowRight) {
         int relative_x = x - (CARD_LENGTH - 1) / 2;
@@ -893,6 +923,20 @@ public class TUI extends UI {
         return res;
     }
 
+    /**
+     * Prints a generic deck of cards
+     * 
+     * @param title         the name used as label for the deck
+     * @param titleColor    the color of the title
+     * @param firstCardDeck the card on top of the deck
+     * @param card1         the second card of the deck
+     * @param card2         the third card of the deck
+     * @param initial_row   the row where the deck area starts
+     * @param initial_col   the column where the deck area starts
+     * @param end_row       the row where the deck area ends
+     * @param end_col       the column where the deck area ends
+     * @return
+     */
     private StringBuilder print_Deck(String title, int[] titleColor, PlayableCard firstCardDeck, PlayableCard card1,
             PlayableCard card2,
             int initial_row, int initial_col, int end_row, int end_col) {
@@ -932,7 +976,7 @@ public class TUI extends UI {
                             """).reset());
     }
 
-    // PRINT UTILITIES
+    // TODO christian
     private List<Point> createPlaceHolder(Map<Point, PlayableCard> cards) {
         List<Point> placeHolders = new ArrayList<>();
         Point upDx;
@@ -963,7 +1007,9 @@ public class TUI extends UI {
         return placeHolders;
     }
 
-    // TODO temporanei
+    /**
+     * This method is used to drag the play area to the right
+     */
     protected void movePlayAreaRight() {
         if (placedCards != null) {
             OFFSET_X_PLAYAREA += CARD_X_OFFSET * 2;
@@ -971,6 +1017,9 @@ public class TUI extends UI {
         }
     }
 
+    /**
+     * This method is used to drag the play area to the left
+     */
     protected void movePlayAreaLeft() {
         if (placedCards != null) {
             OFFSET_X_PLAYAREA -= CARD_X_OFFSET * 2;
@@ -978,6 +1027,9 @@ public class TUI extends UI {
         }
     }
 
+    /**
+     * This method is used to drag the play area down
+     */
     protected void movePlayAreaDown() {
         if (placedCards != null) {
             OFFSET_Y_PLAYAREA += CARD_Y_OFFSET * 2;
@@ -985,6 +1037,9 @@ public class TUI extends UI {
         }
     }
 
+    /**
+     * This method is used to drag the play area up
+     */
     protected void movePlayAreaUp() {
         if (placedCards != null) {
             OFFSET_Y_PLAYAREA -= CARD_Y_OFFSET * 2;
@@ -1013,8 +1068,7 @@ public class TUI extends UI {
     /**
      * This method is used to move the cursor to the command line input area.
      * <p>
-     * It also clears the command line input area and update the
-     * <code>terminalAreaSelection</code> variable.
+     * It also clears the command line input area.
      */
     protected void moveCursorToCmdLine() {
         AnsiConsole.out().print(
@@ -1025,8 +1079,9 @@ public class TUI extends UI {
     /**
      * This method is used to move the cursor to the command line input area.
      * <p>
-     * It also clears the command line input area and update the
-     * <code>terminalAreaSelection</code> variable.
+     * It also clears the command line input area and adds a prefix text to it
+     * 
+     * @param prefix the prefix to be printed before the cursor
      */
     protected void moveCursorToCmdLine(String prefix) {
         AnsiConsole.out().print(
@@ -1039,8 +1094,7 @@ public class TUI extends UI {
     /**
      * This method is used to move the cursor to the chat input area.
      * <p>
-     * It also clears the chat input area and update the
-     * <code>terminalAreaSelection</code> variable.
+     * It also clears the chat input area.
      */
     private void moveCursorToChatLine() {
         AnsiConsole.out().print(Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW, CHAT_BOARD_INPUT_COLUMN)
@@ -1049,23 +1103,26 @@ public class TUI extends UI {
                 .print(Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW, CHAT_BOARD_INPUT_COLUMN).a("> "));
     }
 
-    /**
-     * This method is used to move the cursor to the chat input area.
-     * <p>
-     * It also clears the chat input area and update the
-     * <code>terminalAreaSelection</code> variable.
-     *
-     * @param prefix the prefix to be printed before the cursor
-     */
-    private void moveCursorToChatLine(String prefix) {
-        AnsiConsole.out().print(Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW, CHAT_BOARD_INPUT_COLUMN)
-                .a(" ".repeat(CHAT_BOARD_WIDTH)));
-        AnsiConsole.out().print(Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW, CHAT_BOARD_INPUT_COLUMN).a(prefix + " "));
-    }
+    // /**
+    // * This method is used to move the cursor to the chat input area.
+    // * <p>
+    // * It also clears the chat input area and update the
+    // * <code>terminalAreaSelection</code> variable.
+    // *
+    // * @param prefix the prefix to be printed before the cursor
+    // */
+    // private void moveCursorToChatLine(String prefix) {
+    // AnsiConsole.out().print(Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW,
+    // CHAT_BOARD_INPUT_COLUMN)
+    // .a(" ".repeat(CHAT_BOARD_WIDTH)));
+    // AnsiConsole.out().print(Ansi.ansi().cursor(CHAT_BOARD_INPUT_ROW,
+    // CHAT_BOARD_INPUT_COLUMN).a(prefix + " "));
+    // }
 
     /**
-     * This method is used to reset the cursor to the right area after updating
-     * another area.
+     * This method is used to move the cursor to the right active area.
+     * Should be used after a TUIarea update to bring the cursor back to the
+     * selected one.
      */
     protected void resetCursor() {
         synchronized (cmdLineAreaSelection) {
@@ -1081,31 +1138,18 @@ public class TUI extends UI {
     }
 
     /**
-     * This method is used to add a message to the <code>commandLineOut</code>
+     * This method is used to add a message to the {@link #cmdLineOut}
      * thread's queue.
      * <p>
-     * State methods must use this method to print their messages.
+     * It also wakes up the {@link #cmdLineOut} thread to print the message.
+     * <p>
+     * This method must be used by any method that needs to print a message to the
+     * command line out.
      *
      * @param message
      * @param color
      */
     protected void printToCmdLineOut(String message, Ansi.Color color) {
-        synchronized (cmdLineOut) {
-            cmdLineOut.add(Ansi.ansi().fg(color).a(message).reset().toString());
-            cmdLineOut.notifyAll();
-        }
-    }
-
-    /**
-     * This method is used to add a message to the <code>commandLineOut</code>
-     * thread's queue.
-     * <p>
-     * State methods must use this method to print their messages.
-     *
-     * @param message
-     * @param color
-     */
-    protected void printToCmdLineOut(String message, Ansi.Color color, boolean wakeChat) {
         synchronized (cmdLineOut) {
             cmdLineOut.add(Ansi.ansi().fg(color).a(message).reset().toString());
             cmdLineOut.notifyAll();
@@ -1128,14 +1172,20 @@ public class TUI extends UI {
         resetCursor();
     }
 
-    // probabilmente non necessario al momento ma potrebbe essere utile in futuro
+    /**
+     * Prints a message to the command line input area. This can be useful to
+     * indicates
+     * which is the selected area (different from the commandLine).
+     * 
+     * @param message the message to be printed
+     */
     protected void printToCmdLineIn(String message) {
         moveCursorToCmdLine(message);
 
     }
 
     /**
-     * Format a String as it is printed from the TUI
+     * Formats a message as it is printed from the TUI
      *
      * @param text
      * @return the formatted String
@@ -1145,7 +1195,7 @@ public class TUI extends UI {
     }
 
     /**
-     * Format a String as it is printed from the TUI in green
+     * Formats a message as it is printed from the TUI in green
      *
      * @param text
      * @return the formatted String
@@ -1156,7 +1206,7 @@ public class TUI extends UI {
     }
 
     /**
-     * Format a String as it is printed from the TUI in purple
+     * Formats a message as it is printed from the TUI in purple
      *
      * @param text
      * @return the formatted String
@@ -1166,22 +1216,16 @@ public class TUI extends UI {
                 + DV.ANSI_RESET;
     }
 
+    /**
+     * Formats a message as it is printed from the Server/Controller
+     * 
+     * @param text
+     * @return
+     */
     protected String serverWrite(String text) {
         return DV.ANSI_PURPLE + DV.SERVER_TAG + DV.ANSI_RESET + text;
     }
 
-    /**
-     * Remove every characters inside the playArea
-     */
-    public StringBuilder clearArea(int initialRow, int initialCol, int endRow, int endCol) {
-        StringBuilder res = new StringBuilder();
-        for (int i = -1; i <= endRow - initialRow; i++) {
-            for (int j = 0; j <= endCol - initialCol; j++) {
-                res.append(ansi().cursor(initialRow + i, initialCol + j).a(" "));
-            }
-        }
-        return res;
-    }
     // THREADS
 
     /**
@@ -1313,7 +1357,19 @@ public class TUI extends UI {
      * This method searches for the command in the state's commands map and executes
      * it.
      * <p>
-     * If the command is not found, it prints "Command not recognized".
+     * <ul>
+     * <li>If the command is wrong, it execute
+     * {@link TUIstate#command_invalidCommand()}
+     * <li>If the command is empty, it execute
+     * {@link TUIstate#command_showCommandsInfo()} and
+     * {@link TUIstate#stateNotify()}
+     * <li>If the command is {@link TUIstateCommands#NOTIFY}, it execute
+     * {@link TUIstate#stateNotify()}
+     * <li>If the command is {@link TUIstateCommands#RECONNECT}, it execute
+     * {@link TUIstate#reconnect()}
+     * <li>If the command is {@link TUIstateCommands#REFRESH}, it execute
+     * {@link TUIstate#command_refresh()}
+     * <
      *
      * @param command
      */
@@ -1321,16 +1377,18 @@ public class TUI extends UI {
         if (command.isEmpty()) {
             state.command_showCommandsInfo();
             state.stateNotify();
-        } else if (command.equals(TUIstateCommands.SET_USERNAME.toString()) && state.stateName.equals("Init State")) {
-            state.setUsername();
         } else if (state.commandsMap.containsKey(command)) {
             state.commandsMap.get(command).run();
+        } else if (command.equals(TUIstateCommands.SET_USERNAME.toString()) && state.stateName.equals("Init State")) {
+            state.setUsername();
         } else if (command.equals(TUIstateCommands.NOTIFY.toString())) {
             state.stateNotify();
         } else if (command.equals(TUIstateCommands.RECONNECT.toString()) && state.stateName.equals("Init State")) {
             state.reconnect();
-        } else if (command.equals(TUIstateCommands.REFRESH.toString()) && state.stateName.equals("Init State")) {
-            state.reconnect();
+            // } else if (command.equals(TUIstateCommands.REFRESH.toString()) &&
+            // state.stateName.equals("Init State")) {
+            // state.command_refresh();
+            // state.stateNotify();
             // } else if (command.equals(TUIcommands.ANOTHERMATCH.toString()) &&
             // state.stateName.equals("Playing State")) {
             // state.reMatch();
@@ -1736,6 +1794,10 @@ public class TUI extends UI {
 
     // UTILITIES
 
+    /**
+     * Starts the TUI: prints the title of the game and then runs the threads the
+     * proper way.
+     */
     @Override
     public void runUI() {
         System.out.print("\033[H\033[2J");
@@ -1763,17 +1825,17 @@ public class TUI extends UI {
     // UPDATES FIELDS & METHODS
 
     /**
-     * JAVADOC da modificare (non prendetela seriamente)
+     * Shows the available games to the client
      * <p>
-     * Prints the game list: this method is triggered by the controller.
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowGamesObj}
+     * object
      * <p>
-     * <code>TUI.command_showGames()</code>->
-     * <p>
-     * <code>controller.getGameList(String username)</code> ->
-     * <p>
-     * <code>client.shoListGame(List gameList)</code> ->
-     * <p>
-     * <code>ui.showListGame(List gameList)</code>
+     * Unblock the tui sending the command {@link TUIstateCommands#NOTIFY} to che
+     * {@link #cmdLineProcessThread}
+     * 
+     * @param listGame the list of available games provided by the
+     *                 {@link it.polimi.ingsw.gc31.controller.Controller}
      */
     @Override
     public void show_listGame(List<String> listGame) {
@@ -1785,6 +1847,9 @@ public class TUI extends UI {
 
     }
 
+    /**
+     * 
+     */
     @Override
     public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea,
             Map<Resources, Integer> achievedResources) {
@@ -2047,9 +2112,10 @@ public class TUI extends UI {
         state = new InitState(this);
         chatBoardThread.interrupt();
         chatMessages = new ArrayDeque<String>();
+        commandToProcess(TUIstateCommands.SHOW_COMMAND_INFO, false);
+        commandToProcess(TUIstateCommands.REFRESH, false);
 
         // TODO: erase player info
-        commandToProcess(TUIstateCommands.SHOW_COMMAND_INFO, true);
     }
 
     @Override

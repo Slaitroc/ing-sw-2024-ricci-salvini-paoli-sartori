@@ -40,5 +40,7 @@ public enum Resources {
 
     public String getSymbol() {
         return symbol;
+        // TODO switchare x windows
     }
+
 }

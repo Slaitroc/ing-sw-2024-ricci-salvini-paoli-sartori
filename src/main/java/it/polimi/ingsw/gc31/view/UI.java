@@ -3,29 +3,22 @@ package it.polimi.ingsw.gc31.view;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
-//NOTE: i metodi che iniziano con ui (uiNomeMetodo()) sono le implementazioni delle classi che ereditano da UI
-//gli omonimi senza prefisso ui sono quelli da chiamare nei client
 public abstract class UI implements ShowUpdate {
     /**
      * The client interacting with the UI
      */
     protected ClientCommands client;
-    // /**
-    // * This variable's type could change during the development.
-    // * Its scope is to track the different section of an UI (Scenes for GUI
-    // * and
-    // * views for TUI)
-    // * Probably it'll become an array of boolean or a Map or IDK
-    // *
-    // * @Slaitroc
-    // */
-    // protected boolean inGame;
 
     /**
-     * Run a new scene/view.
+     * Run the UI.
      */
     public abstract void runUI();
 
+    /**
+     * Generic show method for the UI
+     * 
+     * @param response the response message to show
+     */
     public abstract void show_GenericClientResponse(String response);
 
 }
