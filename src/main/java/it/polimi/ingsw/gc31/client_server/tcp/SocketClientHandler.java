@@ -111,15 +111,10 @@ public class SocketClientHandler implements VirtualClient {
                             try {
                                 ConnectObj connectObj = (ConnectObj) obj;
                                 if (connectObj.getTempToken() == -1) {
-                                    Controller.getController().sendCommand(
-                                            new ConnectObj(connectObj.getUsername(), tempToken, connectObj.getToken()));
-                                    // Controller.getController().connect(Controller.getController().getRightConnection(tempToken),
-                                    // connectObj.getUsername(), tempToken, connectObj.getToken());
+                                    Controller.getController().connect(Controller.getController().getRightConnection(tempToken), connectObj.getUsername(), tempToken, connectObj.getToken());
                                     sendCommand(new SaveToken(tempToken, true));
                                 } else {
-                                    Controller.getController().sendCommand(connectObj);
-                                    // Controller.getController().connect(Controller.getController().getRightConnection(tempToken),
-                                    // connectObj.getUsername(), connectObj.getTempToken(), connectObj.getToken());
+                                    Controller.getController().connect(Controller.getController().getRightConnection(tempToken), connectObj.getUsername(), connectObj.getTempToken(), connectObj.getToken());
                                 }
                                 continue;
                             } catch (ClassCastException e) {

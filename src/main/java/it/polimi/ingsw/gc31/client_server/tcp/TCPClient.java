@@ -46,7 +46,7 @@ public class TCPClient implements ClientCommands {
     /**
      * Is a specific object used to manage the connections and future re-connections of the client
      */
-    private Token token;
+    private final Token token;
     /**
      * A timer used to send a heart beat to the server. Used to check the disconnection of a client by the server
      */
@@ -152,6 +152,12 @@ public class TCPClient implements ClientCommands {
         this.ui = ui;
     }
 
+    /**
+     * Sets the username of the current user. To be used both when a reconnection is not detected
+     * and when a reconnection is refused
+     *
+     * @param username: name to save the current client
+     */
     @Override
     public void setUsername(String username) {
         this.username = username;
@@ -238,7 +244,7 @@ public class TCPClient implements ClientCommands {
     /**
      * This method sends to the server a new DrawGoldObj object and the game
      * controller as a recipient
-     * using the tcp_sendCommand method.
+     * using the tcp_sendCommand method
      * <p>
      * index = 0 : drawing from the gold deck.
      * index = 1 : drawing the first gold card on the board.
@@ -335,8 +341,13 @@ public class TCPClient implements ClientCommands {
         tcp_sendCommand(new FlipStarterCardObj(this.username), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
+    /**
+     * This method returns the idGame
+     *
+     * @return the idGame
+     */
     @Override
-    public int getGameID() throws RemoteException {
+    public int getGameID() {
         return idGame;
     }
 
@@ -451,8 +462,8 @@ public class TCPClient implements ClientCommands {
      * Method that read the value of the token in the specific file created by the program
      *
      * @return the value of the token in the file
-     * @throws NumberFormatException if the value red is not a number
-     * @throws NoTokenException if the token doesn't exists
+     * @throws NumberFormatException    if the value red is not a number
+     * @throws NoTokenException         if the token doesn't exists
      */
     @Override
     public int readToken() throws NumberFormatException, NoTokenException {

@@ -183,7 +183,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * temporary token is generated and sent to the client. In this case the
      * procedure {@link Controller#usernameValidation(String, VirtualClient)} is
      * called to check the name and send the corresponding ClientObject to the
-     * client. If the usernameValidation return true the sent token is locally saved
+     * client. If the usernameValidation return true the token sent is locally saved
      * on the client side by correctly invoking the
      * {@link Controller#sendToken(VirtualClient, int, boolean)} method.
      * <li>If the token is not -1 ,and the client is contained in
@@ -194,7 +194,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * the first time and the procedure
      * {@link Controller#usernameValidation(String, VirtualClient)} is called to
      * check the name and send the corresponding ClientObject to the client. If the
-     * usernameValidation return true the sent token is locally saved
+     * usernameValidation return true the token sent is locally saved
      * overriding the previously saved token on the client side by correctly
      * invoking the {@link Controller#sendToken(VirtualClient, int, boolean)}
      * method.
@@ -291,7 +291,7 @@ public class Controller extends UnicastRemoteObject implements IController {
 
     /**
      * This method is called when a client wants to rejoin a game.
-     * If the clients wants to rejoin a {@link ReJoinedObj} with the previous
+     * If the clients want to rejoin a {@link ReJoinedObj} with the previous
      * username and a boolean value set to true is sent to the client (other
      * parameters of the object are required for the GUI).
      * If the client doesn't want to rejoin a {@link ReJoinedObj} with the previous
