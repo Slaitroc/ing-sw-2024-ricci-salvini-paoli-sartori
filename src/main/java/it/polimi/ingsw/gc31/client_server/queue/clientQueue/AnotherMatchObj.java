@@ -8,7 +8,6 @@ public class AnotherMatchObj extends ClientQueueObject {
     public AnotherMatchObj(String username) {
         this.username = username;
     }
-
     @Override
     public void execute(UI ui) {
         // ui.show_requestAnotherMatch();
