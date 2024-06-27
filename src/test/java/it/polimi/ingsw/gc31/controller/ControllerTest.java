@@ -1,7 +1,6 @@
 package it.polimi.ingsw.gc31.controller;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
-import it.polimi.ingsw.gc31.client_server.queue.serverQueue.HeartBeatObj;
 import javafx.util.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -373,7 +372,7 @@ class ControllerTest {
         VirtualClient mockClient1 = Mockito.mock(VirtualClient.class);
         controller.newConnections.put(100, mockClient1);
         controller.nicknames.add("username1");
-        assertDoesNotThrow( () -> controller.gameControlList.add(new GameController("usernmame1", mockClient1, 2, 0)));
+        assertDoesNotThrow( () -> controller.gameControlList.add(new GameController("username1", mockClient1, 2, 0)));
         controller.disconnected.put(100, new Pair<>("username1", 0));
 
         // If the token of the client was in the disconnected map the user can choose to
@@ -407,18 +406,6 @@ class ControllerTest {
         assertEquals(0, controller.disconnected.size());
         assertEquals(1, controller.nicknames.size());
         assertEquals(2, controller.clientsHeartBeat.size());
-
-//        VirtualClient mockClient3 = Mockito.mock(VirtualClient.class);
-//        VirtualClient mockClientReconnect2 = Mockito.mock(VirtualClient.class);
-//        controller.newConnections.put(300, mockClient3);
-//
-//        // If a clients tries to rejoin with the boolean parameter false
-//        // the method doesn't add the client to any map and send a
-//        // WrongUsernameObj
-//        assertDoesNotThrow(() -> controller.rejoin(50, 300, false));
-//        assertEquals(1, controller.nicknames.size());
-//        assertEquals(1, controller.tempClients.size());
-//        assertEquals(1, controller.clientsHeartBeat.size());
     }
 
     /**
