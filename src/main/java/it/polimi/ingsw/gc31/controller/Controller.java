@@ -366,10 +366,20 @@ public class Controller extends UnicastRemoteObject implements IController {
 
     /**
      * Allows a client to join an existing game.
+     * <p>
+     * If the game does not exist, a {@link GameDoesNotExistObj} is sent to the
+     * client.
+     * If the game is full, a {@link GameIsFullObj} is sent to the client.
+     * If the game is not full, a {@link JoinGameObj} is sent to the game
+     * controller.
+     * 
      *
      * @param username the username of the client joining the game.
      * @param idGame   the ID of the game to join.
      * @throws RemoteException if an RMI error occurs.
+     * 
+     * @see GameController#joinGame(String, VirtualClient)
+     * 
      */
     public void joinGame(String username, int idGame) throws RemoteException {
         VirtualClient client = tempClients.get(username);
@@ -389,7 +399,8 @@ public class Controller extends UnicastRemoteObject implements IController {
 
     /**
      * This method add the client (that just quit a game lobby) to the map
-     * tempClients
+     * tempClients.
+     * Then it sends a {@link QuitFromGameRObj} to the client that requested to quit
      *
      * @param username is the username of the player that just quit
      * @param client   is the client that requested to quit from a lobby
@@ -433,8 +444,6 @@ public class Controller extends UnicastRemoteObject implements IController {
             }
         }
         sendUpdateToClient(newConnections.get(token), new ShowGamesObj(res));
-
-        // sendUpdateToClient(tempClients.get(), new ShowGamesObj(res));
     }
 
     /**

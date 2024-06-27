@@ -186,6 +186,8 @@ public interface ShowUpdate {
      * Notify of an invalid action with a message.
      *
      * @param message the message describing the invalid action
+     * 
+     * 
      */
     void show_invalidAction(String message);
 

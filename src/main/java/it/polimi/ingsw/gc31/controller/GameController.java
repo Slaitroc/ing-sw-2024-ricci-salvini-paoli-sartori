@@ -151,9 +151,18 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
     /**
      * Allows a player to join the game.
+     * It adds the player to the clientList and sets the gameController to the
+     * client.
+     * It sends a {@link JoinedToGameObj} to the client.
+     * 
      *
      * @param username the username of the player.
      * @param client   the client of the player.
+     * 
+     * @throws RemoteException if an error occurs during the execution of a remote
+     *                         method
+     * 
+     * @see it.polimi.ingsw.gc31.view.UI#show_joinedToGame(int, int)
      */
     public void joinGame(String username, VirtualClient client) throws RemoteException {
         synchronized (clientListLock) {
@@ -466,7 +475,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * This method is invoked when the player wants to change the side of the
      * starter card. The corresponding method of
      * the model is invoked, if the state of the game is not the correct one a
-     * ShowInvalidActionObj is sent to the client.
+     * {@link ShowInvalidActionObj} is sent to the client.
      * The starter card listener is notified
      *
      * @param username is the username of the player that wants to change the siede
@@ -483,7 +492,8 @@ public class GameController extends UnicastRemoteObject implements IGameControll
 
     /**
      * This method is invoked to send to the clients the updated info about the
-     * client and their ready status
+     * client and their ready status.
+     * It sends a {@link ShowInGamePlayerObj} to the client.
      */
     private void notifyListPlayers() {
         sendUpdateToClient(new ShowInGamePlayerObj(readyStatus));
