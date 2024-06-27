@@ -448,7 +448,7 @@ public class GameModel {
     /**
      * Retrieves the map of players in the game.
      *
-     * @return a Map<String, Player> where the keys are the usernames of the players and the values are the Player objects.
+     * @return a {@code Map<String, Player>} where the keys are the usernames of the players and the values are the Player objects.
      */
     public Map<String, Player> getPlayers() {
         return players;

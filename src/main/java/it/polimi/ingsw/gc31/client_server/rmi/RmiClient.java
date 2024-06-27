@@ -98,11 +98,6 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     }
 
     @Override
-    public void setUsernameResponse(String username) {
-        this.username = username;
-    }
-
-    @Override
     public void setUsername(String username) {
         this.username = username;
     }

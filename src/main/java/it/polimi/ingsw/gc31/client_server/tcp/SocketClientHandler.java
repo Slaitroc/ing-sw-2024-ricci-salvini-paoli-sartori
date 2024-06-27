@@ -31,14 +31,16 @@ eseguito da loro
  */
 public class SocketClientHandler implements VirtualClient {
     /**
-     * Is the gameController associated to this handler by the Controller. Manages the games
+     * Is the gameController associated to this handler by the Controller. Manages
+     * the games
      */
     private IGameController gameController;
     @SuppressWarnings("unused")
     private Integer idGame;
     private boolean ready = false;
     /**
-     * Is the ObjectInputStream used to read all the objects the client sends to the handler
+     * Is the ObjectInputStream used to read all the objects the client sends to the
+     * handler
      */
     private final ObjectInputStream input;
     /**
@@ -46,7 +48,8 @@ public class SocketClientHandler implements VirtualClient {
      */
     private final ObjectOutputStream output;
     /**
-     * A value that is used to manages the first connections of the clients to the server. The client posses both the
+     * A value that is used to manages the first connections of the clients to the
+     * server. The client posses both the
      * tempToken and the token (in the Token object)
      */
     private int tempToken;

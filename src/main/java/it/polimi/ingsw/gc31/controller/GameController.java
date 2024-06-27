@@ -32,15 +32,36 @@ import java.util.Map;
  * It manages the gameModel and the game states.
  */
 public class GameController extends UnicastRemoteObject implements IGameController {
+
+    /**
+     * Reference to the Game model, containing the cards, the players and the playAreas
+     */
     protected GameModel model;
 
+    /**
+     * Map of Usernames linked to Virtual clients of the players in the current game
+     */
     protected final Map<String, VirtualClient> clientList;
+
+    /**
+     * Object to lock when operating on the client list
+     */
     protected final Object clientListLock = new Object();
 
-    private int maxNumberPlayers;
+    private final int maxNumberPlayers;
     private final int idGame;
+
+    /**
+     * List of ServerQueObject for synchronization of client commands
+     */
     protected final LinkedBlockingQueue<ServerQueueObject> callsList;
+
+    /**
+     * Map of Usernames of in game Players, linked to their ready status
+     * Used in Lobby to detect when all players are ready to play
+     */
     protected final LinkedHashMap<String, Boolean> readyStatus;
+
 
     ScheduledExecutorService schedulerLastPlayerConnected;
 

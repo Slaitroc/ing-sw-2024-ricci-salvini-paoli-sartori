@@ -42,7 +42,13 @@ public class UsernameController extends ViewController {
             warningLabel.setVisible(true);
             warningLabel.setText("Username cannot be empty!");
         } else {
-            client.setUsername(usernameField.getText());
+            try {
+                client.setUsernameCall(usernameField.getText());
+                client.setUsername(usernameField.getText());
+            } catch (RemoteException e) {
+                show_ServerCrashWarning(e.toString());
+                e.getStackTrace();
+            }
         }
     }
 

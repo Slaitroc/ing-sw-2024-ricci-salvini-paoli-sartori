@@ -194,7 +194,7 @@ public interface ShowUpdate {
     /**
      * At the end of the match show the name of the winner and the scores of the in
      * game players
-     * 
+     *
      * @param username     String containing the name of the winner
      * @param playersScore Map of Players names with their relatives score
      */
@@ -221,7 +221,7 @@ public interface ShowUpdate {
      * connection
      * Client is supposed to be asked if they want to reconnect or not upon
      * receiving this method
-     * 
+     *
      * @param username Old username retrieved from server
      */
     void show_wantReconnect(String username);
@@ -243,14 +243,15 @@ public interface ShowUpdate {
      * match
      * If the countdown reach zero, the last player is the winner. Method is called
      * repeatedly showing how may seconds are left
-     * 
+     *
      * @param secondsLeft Integer representing the seconds left (on the server
      *                    countdown)
      */
     void show_timerLastPlayerConnected(Integer secondsLeft);
 
     /**
-     *
+     * Method called if no previous game was detected.
+     * The client should proceed to log in for the first time
      */
     void show_unableToReconnect();
 

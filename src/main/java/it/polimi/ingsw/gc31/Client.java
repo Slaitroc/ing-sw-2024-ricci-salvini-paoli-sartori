@@ -10,6 +10,7 @@ import it.polimi.ingsw.gc31.client_server.rmi.RmiClient;
 import it.polimi.ingsw.gc31.client_server.tcp.TCPClient;
 import it.polimi.ingsw.gc31.utility.CliPrint;
 import it.polimi.ingsw.gc31.utility.IPvalidator;
+import it.polimi.ingsw.gc31.view.UI;
 import it.polimi.ingsw.gc31.view.gui.GUI;
 import it.polimi.ingsw.gc31.view.tui.TUI;
 import org.fusesource.jansi.Ansi;
@@ -23,6 +24,7 @@ public class Client {
         // clean the terminal
         String ipaddress;
         boolean result = true;
+        UI ui;
         global: while (true) {
             System.out.print("\033[H\033[2J");
             System.out.flush();
@@ -115,8 +117,11 @@ public class Client {
 
         if (chosenUI == 2)
             new GUI(client).runUI();
-        if (chosenUI == 1)
-            new TUI(client).runUI();
+        if (chosenUI == 1) {
+            ui = new TUI(client);
+            client.setUI(ui);
+            ui.runUI();
+        }
 
     }
 }

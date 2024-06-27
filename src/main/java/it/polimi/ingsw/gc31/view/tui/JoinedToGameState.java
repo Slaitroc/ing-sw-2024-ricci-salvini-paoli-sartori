@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
+import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 
 public class JoinedToGameState extends TUIstate {

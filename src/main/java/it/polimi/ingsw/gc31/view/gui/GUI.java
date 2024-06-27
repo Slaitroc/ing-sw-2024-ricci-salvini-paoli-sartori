@@ -282,7 +282,7 @@ public class GUI extends UI {
 
     @Override
     public void show_unableToReconnect() {
-
+        Platform.runLater(() -> app.loadScene(SceneTag.USERNAME));
     }
 
     // @Override
