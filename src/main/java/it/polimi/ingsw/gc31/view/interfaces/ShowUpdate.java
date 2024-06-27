@@ -220,9 +220,8 @@ public interface ShowUpdate {
     void show_wantReconnect(String username);
 
     /**
-     * Upon Client command of rejoin or not this method notify the client of the result of the operation
-     * providing the list of the players in game in case the result is true. if the result is false
-     * the client will be asked to log in again
+     * Method called in response of client message that specify if he wants to reconnect or not
+     * If the result is true a list of players is sent among the result to initialize the GUI GAME scene
      *
      * @param result true if client wants to reconnect to server, false otherwise
      * @param players List of players username (Used in gui to load the Game Scene)
@@ -243,7 +242,8 @@ public interface ShowUpdate {
     void show_timerLastPlayerConnected(Integer secondsLeft);
 
     /**
-     *
+     * Method called if no previous game was detected.
+     * The client should proceed to log in for the first time
      */
     void show_unableToReconnect();
 

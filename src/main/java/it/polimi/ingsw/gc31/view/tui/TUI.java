@@ -1998,7 +1998,7 @@ public class TUI extends UI {
     public void show_validUsername(String username) {
         printToCmdLineOut(serverWrite("Username accepted"));
         printToCmdLineOut(tuiWrite("Your name is: " + username));
-        client.setUsernameResponse(username);
+        client.setUsername(username);
         this.activePlayArea = username;
         commandToProcess(TUIcommands.SHOW_COMMAND_INFO, true);
 

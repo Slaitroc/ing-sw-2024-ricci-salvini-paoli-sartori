@@ -1,5 +1,8 @@
 package it.polimi.ingsw.gc31.view.gui;
 
+/**
+ * Enumeration for GUI Card Resolution sizes
+ */
 public enum ResolutionSizes {
     FHD("FHD"),
     HD("HD"),
@@ -12,6 +15,8 @@ public enum ResolutionSizes {
     }
 
     /**
+     * Width size for standard cards
+     *
      * @return Width size for standard cards
      */
     public Integer getCardWidth() {
@@ -21,6 +26,8 @@ public enum ResolutionSizes {
     }
 
     /**
+     * Width size for the PlayArea gridPane cell
+     *
      * @return Width size for the PlayArea gridPane cell (to apply to the StackPane)
      */
     public Integer getPaneWidth() {
@@ -30,6 +37,8 @@ public enum ResolutionSizes {
     }
 
     /**
+     * Height size for standard cards
+     *
      * @return Height size for standard cards
      */
     public Integer getCardsHeight() {
@@ -39,6 +48,8 @@ public enum ResolutionSizes {
     }
 
     /**
+     * Height size for the PlayArea gridPane cell
+     *
      * @return Height size for the PlayArea gridPane cell (to apply to the StackPane)
      */
     public Integer getPaneHeight() {

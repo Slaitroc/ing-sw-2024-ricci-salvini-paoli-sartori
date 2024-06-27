@@ -39,14 +39,41 @@ public class Controller extends UnicastRemoteObject implements IController {
         }
     }
 
+    /**
+     * List of Game Controllers
+     */
     protected final List<GameController> gameControlList;
+
+    /**
+     * Map of temporary connected clients that are not yet in a game or that quit from a game
+     */
     protected Map<String, VirtualClient> tempClients;
+
+    /**
+     * List of used nicknames, to block repeated usernames even in different games
+     */
     protected final Set<String> nicknames;
+
+    /**
+     * List of ServerQueObject for synchronization of client commands
+     */
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
+
+    /**
+     * Map with tokens linked to clients useful to recognize a client even without the username
+     */
     protected final Map<Integer, VirtualClient> newConnections;
+
+    /**
+     * Map of Tokens linked to clients and  that disconnected from a game
+     */
     protected final Map<Integer, Pair<String, Integer>> disconnected; // token - <username,gameID>
 
+    /**
+     * Map of Clients linked to the last time the heartbeat was received from that client
+     */
     protected ConcurrentHashMap<VirtualClient, Long> clientsHeartBeat;
+
     private final ScheduledExecutorService scheduler;
 
     /**

@@ -131,18 +131,6 @@ public class TCPClient implements ClientCommands {
         this.ui = ui;
     }
 
-    /**
-     * This method is invoked after the server send the result of the setUsername
-     * method
-     *
-     * @param username is the username set for the player server-side
-     */
-    @Override
-    public void setUsernameResponse(String username) {
-        this.username = username;
-        startHeartBeat();
-    }
-
     @Override
     public void setUsername(String username) {
         this.username = username;

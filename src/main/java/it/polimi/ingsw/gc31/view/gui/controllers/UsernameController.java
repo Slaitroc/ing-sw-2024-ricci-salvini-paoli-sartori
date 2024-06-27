@@ -38,7 +38,7 @@ public class UsernameController extends ViewController {
         } else {
             try {
                 client.setUsernameCall(usernameField.getText());
-                client.setUsernameResponse(usernameField.getText());
+                client.setUsername(usernameField.getText());
             } catch (RemoteException e) {
                 show_ServerCrashWarning(e.toString());
                 e.getStackTrace();

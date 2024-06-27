@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.client_server.interfaces;
 
 import it.polimi.ingsw.gc31.client_server.Token;
+import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.exceptions.NoTokenException;
 import it.polimi.ingsw.gc31.controller.Controller;
@@ -8,7 +9,6 @@ import it.polimi.ingsw.gc31.view.UI;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.*;
 
 import java.awt.*;
-import java.io.IOException;
 import java.rmi.RemoteException;
 
 public interface ClientCommands {
@@ -21,24 +21,40 @@ public interface ClientCommands {
      * {@link RmiServer}(rmi) to connect to the server
      * 
      * @param username username chosen by the user
-     * @throws IOException
+     * @throws RemoteException  if a generic connection error occurs
      */
-    void setUsernameCall(String username) throws IOException;
+    void setUsernameCall(String username) throws RemoteException;
 
     /**
      * Sets the username of the current user
-     * 
-     * 
-     * @param username
+     * To use both when a reconnection is not detected and when a reconnection is refused
+     *
+     * @param username: name to save the current client
      */
-    void setUsernameResponse(String username);
-
     void setUsername(String username);
 
+    /**
+     * Method used to create a game with specified number of players
+     *
+     * @param maxNumberPlayer Maximum number of player allowed in a game (from 2 to 4).
+     *                       It is also the minimum number of players needed to start the game
+     * @throws RemoteException  if a generic connection error occurs
+     */
     void createGame(int maxNumberPlayer) throws RemoteException;
 
+    /**
+     * Method used to attempt to join a specific game
+     *
+     * @param gameId Identifier of the game (Currently it is a progressive number starting from 0)
+     * @throws RemoteException  if a generic connection error occurs
+     */
     void joinGame(int gameId) throws RemoteException;
 
+    /**
+     * Method used to quit from the current game. Rejoin to the will not be allowed
+     *
+     * @throws RemoteException  if a generic connection error occurs
+     */
     void quitGame() throws RemoteException;
 
     /**
