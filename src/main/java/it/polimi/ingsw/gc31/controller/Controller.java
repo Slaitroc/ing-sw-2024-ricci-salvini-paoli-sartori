@@ -45,7 +45,8 @@ public class Controller extends UnicastRemoteObject implements IController {
     protected final List<GameController> gameControlList;
 
     /**
-     * Map of temporary connected clients that are not yet in a game or that quit from a game
+     * Map of temporary connected clients that are not yet in a game or that quit
+     * from a game
      */
     protected Map<String, VirtualClient> tempClients;
 
@@ -60,17 +61,19 @@ public class Controller extends UnicastRemoteObject implements IController {
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
 
     /**
-     * Map with tokens linked to clients useful to recognize a client even without the username
+     * Map with tokens linked to clients useful to recognize a client even without
+     * the username
      */
     protected final Map<Integer, VirtualClient> newConnections;
 
     /**
-     * Map of Tokens linked to clients and  that disconnected from a game
+     * Map of Tokens linked to clients and that disconnected from a game
      */
     protected final Map<Integer, Pair<String, Integer>> disconnected; // token - <username,gameID>
 
     /**
-     * Map of Clients linked to the last time the heartbeat was received from that client
+     * Map of Clients linked to the last time the heartbeat was received from that
+     * client
      */
     protected ConcurrentHashMap<VirtualClient, Long> clientsHeartBeat;
 
@@ -417,7 +420,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @throws RemoteException  if an RMI error occurs.
      * @throws NoGamesException if there are no current games.
      */
-    public void getGameList(String username) throws RemoteException, NoGamesException {
+    public void getGameList(int token) throws RemoteException, NoGamesException {
         List<String> res = new ArrayList<>();
         if (gameControlList.isEmpty()) {
             res.add("NO GAMES AVAILABLE");
@@ -429,7 +432,9 @@ public class Controller extends UnicastRemoteObject implements IController {
                                 + gameControlList.get(i).getMaxNumberPlayers());
             }
         }
-        sendUpdateToClient(tempClients.get(username), new ShowGamesObj(res));
+        sendUpdateToClient(newConnections.get(token), new ShowGamesObj(res));
+
+        // sendUpdateToClient(tempClients.get(), new ShowGamesObj(res));
     }
 
     /**

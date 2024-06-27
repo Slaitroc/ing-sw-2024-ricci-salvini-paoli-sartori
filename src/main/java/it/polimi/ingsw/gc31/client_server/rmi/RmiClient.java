@@ -114,7 +114,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
 
     @Override
     public void getGameList() throws RemoteException, NoGamesException {
-        controller.sendCommand(new GetGameListObj(username));
+        controller.sendCommand(new GetGameListObj(token.getToken()));
     }
 
     @Override

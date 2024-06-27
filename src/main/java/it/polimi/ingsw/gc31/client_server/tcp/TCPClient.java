@@ -40,15 +40,18 @@ public class TCPClient implements ClientCommands {
      */
     private UI ui;
     /**
-     * The list containing all the object (sent by the server) the user needs to execute
+     * The list containing all the object (sent by the server) the user needs to
+     * execute
      */
     private final Queue<ClientQueueObject> callsList;
     /**
-     * Is a specific object used to manage the connections and future re-connections of the client
+     * Is a specific object used to manage the connections and future re-connections
+     * of the client
      */
     private final Token token;
     /**
-     * A timer used to send a heart beat to the server. Used to check the disconnection of a client by the server
+     * A timer used to send a heart beat to the server. Used to check the
+     * disconnection of a client by the server
      */
     private final Timer timer;
 
@@ -153,7 +156,8 @@ public class TCPClient implements ClientCommands {
     }
 
     /**
-     * Sets the username of the current user. To be used both when a reconnection is not detected
+     * Sets the username of the current user. To be used both when a reconnection is
+     * not detected
      * and when a reconnection is refused
      *
      * @param username: name to save the current client
@@ -205,7 +209,7 @@ public class TCPClient implements ClientCommands {
      * @param gameId is the gameId of the particular game the player wants to join
      */
     @Override
-    public void joinGame(int gameId) throws RemoteException{
+    public void joinGame(int gameId) throws RemoteException {
         tcp_sendCommand(new JoinGameObj(this.username, gameId), DV.RECIPIENT_CONTROLLER);
     }
 
@@ -226,7 +230,7 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void getGameList() throws NoGamesException {
-        tcp_sendCommand(new GetGameListObj(this.username), DV.RECIPIENT_CONTROLLER);
+        tcp_sendCommand(new GetGameListObj(this.token.getToken()), DV.RECIPIENT_CONTROLLER);
     }
 
     /**
@@ -251,7 +255,7 @@ public class TCPClient implements ClientCommands {
      * index = 2 : drawing the second gold card on the board.
      */
     @Override
-    public void drawGold(int index) throws RemoteException{
+    public void drawGold(int index) throws RemoteException {
         tcp_sendCommand(new DrawGoldObj(this.username, index), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
@@ -299,7 +303,7 @@ public class TCPClient implements ClientCommands {
      * This method sends the object that plays the starter card
      */
     @Override
-    public void playStarter() throws RemoteException{
+    public void playStarter() throws RemoteException {
         tcp_sendCommand(new PlayStarterObj(this.username), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
@@ -309,7 +313,7 @@ public class TCPClient implements ClientCommands {
      * @param point is the point where the player wants to play the card
      */
     @Override
-    public void play(Point point) throws RemoteException{
+    public void play(Point point) throws RemoteException {
         tcp_sendCommand(new PlayObj(this.username, point.x, point.y), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
@@ -329,7 +333,7 @@ public class TCPClient implements ClientCommands {
      * This method sends the object that flips the card selected for the player
      */
     @Override
-    public void changeSide() throws RemoteException{
+    public void changeSide() throws RemoteException {
         tcp_sendCommand(new FlipCardObj(this.username), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
@@ -337,7 +341,7 @@ public class TCPClient implements ClientCommands {
      * This method sends the object that flips the starter card
      */
     @Override
-    public void changeStarterSide() throws RemoteException{
+    public void changeStarterSide() throws RemoteException {
         tcp_sendCommand(new FlipStarterCardObj(this.username), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
@@ -381,7 +385,7 @@ public class TCPClient implements ClientCommands {
      * lobby, to the server
      */
     @Override
-    public void quitGame() throws RemoteException{
+    public void quitGame() throws RemoteException {
         tcp_sendCommand(new QuitGameObj(this.username), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
@@ -431,7 +435,7 @@ public class TCPClient implements ClientCommands {
      * @param reconnect is true if the player wants to reconnect, false otherwise
      */
     @Override
-    public void reconnect(boolean reconnect) throws RemoteException{
+    public void reconnect(boolean reconnect) throws RemoteException {
         tcp_sendCommand(new ReconnectObj(reconnect, username, token.getTempToken(), token.getToken()),
                 DV.RECIPIENT_CONTROLLER);
     }
@@ -459,11 +463,12 @@ public class TCPClient implements ClientCommands {
     }
 
     /**
-     * Method that read the value of the token in the specific file created by the program
+     * Method that read the value of the token in the specific file created by the
+     * program
      *
      * @return the value of the token in the file
-     * @throws NumberFormatException    if the value red is not a number
-     * @throws NoTokenException         if the token doesn't exists
+     * @throws NumberFormatException if the value red is not a number
+     * @throws NoTokenException      if the token doesn't exists
      */
     @Override
     public int readToken() throws NumberFormatException, NoTokenException {

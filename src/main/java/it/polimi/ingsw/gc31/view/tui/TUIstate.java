@@ -189,6 +189,8 @@ public abstract class TUIstate {
      * 
      * 
      * @see InitState#command_showGames()
+     * @see JoinedToGameState#command_showGames()
+     * @see PlayingState#command_showGames()
      * @see ClientCommands#getGameList()
      */
     protected abstract void command_showGames();

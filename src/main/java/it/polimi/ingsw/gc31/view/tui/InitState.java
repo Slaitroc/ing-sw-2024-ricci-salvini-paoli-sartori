@@ -38,22 +38,21 @@ public class InitState extends TUIstate {
     protected void initialize() {
         // command's map
         commandsMap = new LinkedHashMap<>();
-
         commandsMap.put(TUIstateCommands.SHOW_COMMAND_INFO.toString().toLowerCase(), this::command_showCommandsInfo);
         commandsMap.put(TUIstateCommands.CREATE_GAME.toString().toLowerCase(), this::command_createGame);
-        commandsMap.put("show games", this::command_showGames);
-        commandsMap.put("join game", this::command_joinGame);
-        commandsMap.put("ref", this::command_refresh);
-        commandsMap.put("invalid", this::command_invalidCommand);
+        commandsMap.put(TUIstateCommands.SHOW_GAMES.toString().toLowerCase(), this::command_showGames);
+        commandsMap.put(TUIstateCommands.JOIN_GAME.toString().toLowerCase(), this::command_joinGame);
+        commandsMap.put(TUIstateCommands.REFRESH.toString().toLowerCase(), this::command_refresh);
+        commandsMap.put(TUIstateCommands.INVALID.toString().toLowerCase(), this::command_invalidCommand);
 
         // info map
         commandsInfo = new LinkedHashMap<>();
 
-        commandsInfo.put("help", "Shows commands info");
-        commandsInfo.put("create game", "Create a new game");
-        commandsInfo.put("show games", "Shows all the active games");
-        commandsInfo.put("join game", "Join an existing game");
-        commandsInfo.put("ref", "refresh tui");
+        commandsInfo.put(TUIstateCommands.SHOW_COMMAND_INFO.toString().toLowerCase(), "Shows commands info");
+        commandsInfo.put(TUIstateCommands.CREATE_GAME.toString().toLowerCase(), "Create a new game");
+        commandsInfo.put(TUIstateCommands.SHOW_GAMES.toString().toLowerCase(), "Shows all the active games");
+        commandsInfo.put(TUIstateCommands.JOIN_GAME.toString().toLowerCase(), "Join an existing game");
+        commandsInfo.put(TUIstateCommands.REFRESH.toString().toLowerCase(), "refresh tui");
 
     }
 
