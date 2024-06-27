@@ -2,8 +2,8 @@ package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
+import it.polimi.ingsw.gc31.client_server.listeners.ListenerType;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
-import it.polimi.ingsw.gc31.client_server.queue.clientQueue.AnotherMatchObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsOverObj;
 import it.polimi.ingsw.gc31.exceptions.IllegalStateOperationException;
@@ -18,18 +18,20 @@ public class EndGameModelState implements GameModelState {
         ServerLog.gControllerWrite("Game changed to END GAME", model.getIdGame());
 
         for (String username : model.getListeners().keySet()) {
-            model.getListeners().get(username).removeGoldDeckListener();
-            model.getListeners().get(username).removeResourcedDeckListener();
+            model.getListeners().get(username).removeListener(ListenerType.GOLD_DECK);
+            model.getListeners().get(username).removeListener(ListenerType.RESOURCE_DECK);
         }
     }
 
     @Override
-    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock) throws IllegalStateOperationException {
+    public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock)
+            throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
     @Override
-    public void chooseSecretObjective(GameModel model, String username, Integer index) throws IllegalStateOperationException {
+    public void chooseSecretObjective(GameModel model, String username, Integer index)
+            throws IllegalStateOperationException {
         throw new IllegalStateOperationException();
     }
 
@@ -74,7 +76,7 @@ public class EndGameModelState implements GameModelState {
     }
 
     @Override
-    public void endGame(GameModel model, String lastPlayerConnected){
+    public void endGame(GameModel model, String lastPlayerConnected) {
         if (lastPlayerConnected == null) {
             for (Player player : model.getPlayers().values()) {
                 player.calculateObjectiveCard();
@@ -94,18 +96,16 @@ public class EndGameModelState implements GameModelState {
 
             synchronized (model.clientListLock) {
                 for (String username : model.clients.keySet()) {
-                    ServerLog.controllerWrite("sto mandando a "+username);
-                    ClientQueueObject clientQueueObject1 = new GameIsOverObj(usernameWinner, model.getBoard().getPlayersScore());
-                    //ClientQueueObject clientQueueObject2 = new AnotherMatchObj(username);
+                    ServerLog.controllerWrite("sto mandando a " + username);
+                    ClientQueueObject clientQueueObject1 = new GameIsOverObj(usernameWinner,
+                            model.getBoard().getPlayersScore());
                     new Thread(
                             () -> {
                                 try {
                                     model.clients.get(username).sendCommand(clientQueueObject1);
-                                    //model.clients.get(username).sendCommand(clientQueueObject2);
                                 } catch (RemoteException ignored) {
                                 }
-                            }
-                    ).start();
+                            }).start();
                 }
             }
         } else {
@@ -113,11 +113,11 @@ public class EndGameModelState implements GameModelState {
                 new Thread(
                         () -> {
                             try {
-                                model.clients.get(lastPlayerConnected).sendCommand(new GameIsOverObj(lastPlayerConnected, model.getBoard().getPlayersScore()));
+                                model.clients.get(lastPlayerConnected).sendCommand(
+                                        new GameIsOverObj(lastPlayerConnected, model.getBoard().getPlayersScore()));
                             } catch (RemoteException ignored) {
                             }
-                        }
-                ).start();
+                        }).start();
             }
         }
     }

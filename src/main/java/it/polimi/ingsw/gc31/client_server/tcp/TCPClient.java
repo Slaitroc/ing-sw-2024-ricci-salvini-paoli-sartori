@@ -188,7 +188,8 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void setUsernameCall(String username) {
-        tcp_sendCommand(new ConnectObj(username, this.token.getTempToken(), this.token.getToken()), DV.RECIPIENT_CONTROLLER);
+        tcp_sendCommand(new ConnectObj(username, this.token.getTempToken(), this.token.getToken()),
+                DV.RECIPIENT_CONTROLLER);
     }
 
     /**
@@ -226,12 +227,10 @@ public class TCPClient implements ClientCommands {
      * collect every
      * String in “list” and then call the method of the ui.
      *
-     * @throws RemoteException  is launched if an error is occurred in the readLine
-     *                          method
      * @throws NoGamesException is launched if there are no created games
      */
     @Override
-    public void getGameList() throws RemoteException, NoGamesException {
+    public void getGameList() throws NoGamesException {
         tcp_sendCommand(new GetGameListObj(this.username), DV.RECIPIENT_CONTROLLER);
     }
 
@@ -366,8 +365,10 @@ public class TCPClient implements ClientCommands {
     /**
      * This method sends a private message to a specific player
      *
-     * @param fromUsername Username of the current user, which is sending the message
-     * @param toUsername   Username of the player the current user is sending the message to
+     * @param fromUsername Username of the current user, which is sending the
+     *                     message
+     * @param toUsername   Username of the player the current user is sending the
+     *                     message to
      * @param message      Content of the message that is being sent
      */
     @Override

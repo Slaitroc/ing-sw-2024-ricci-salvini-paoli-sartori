@@ -5,165 +5,104 @@ import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class handles the listeners for the game.
+ * Listeners are used to retrieve updates from the game model and send them to clients.
+ * The listeners are organized based on different listener types.
+ * Use the methods provided to enable/disable listeners, add/remove listeners, and notify listeners.
+ */
 public class GameListenerHandler{
-    private final Map<String, Listener> listeners = new HashMap<>();
+    /**
+     * Map that stores the different types of listeners used in the GameListenerHandler class.
+     * The map is organized based on the ListenerType enum as the key and the corresponding Listener object as the value.
+     */
+    private final Map<ListenerType, Listener> listeners = new HashMap<>();
+
+    /**
+     * The username of the player whose changes the gameHandler notifies
+     */
     private final String username;
+
+    /**
+     * Lock object that is used to synchronize with the clientList map to avoid concurrency problems
+     */
     private final Object lock;
+
+    /**
+     * This class represents a boolean variable that indicates whether a listener is enabled or disabled.
+     * A listener is enabled when it is able to send updates, and disabled when it is not.
+     * The default value is true, which means the listener is initially enabled.
+     */
     private Boolean enabled = true;
 
-    // TODO usare un enumeratore per i tipi di listener invece che mille metodi
-
+    /**
+     * This class handles the listeners for the game.
+     * Listeners are used to retrieve updates from the game model and send them to clients.
+     * The listeners are organized based on different listener types.
+     * Use the methods provided to enable/disable listeners, add/remove listeners, and notify listeners.
+     */
     public GameListenerHandler(String username, Object lock) {
         this.username = username;
         this.lock = lock;
     }
 
-    public void notifyAllListeners(GameModel model) {
-        if (enabled) {
-        synchronized (lock) {
-            for (Listener listener : listeners.values()) {
-                listener.update(model, username);
-            }
-        }
-        }
-    }
-
+    /**
+     * Sets the enabled status to true.
+     */
     public void setEnabled() {
         enabled = true;
     }
 
+    /**
+     * Disables the listener so that it does not receive updates.
+     */
     public void setDisabled() {
         enabled = false;
     }
 
-    private void notifyListener(String type, GameModel model){
+    /**
+     * Notifies all the listeners with the given GameModel object only if enabled is set true.
+     *
+     * @param model The GameModel object containing the updates to be sent to the listeners.
+     */
+    public void notifyAllListeners(GameModel model) {
         if (enabled) {
-            synchronized (lock) {
-                if (listeners.containsKey(type)) {
-                    listeners.get(type).update(model, username);
-                }
-            }
+        synchronized (lock) {
+            listeners.values().forEach(listener -> listener.update(model, username));
+        }
         }
     }
 
-    public void addPlayAreaListener(Listener listener){
-        listeners.put("playArea", listener);
+    /**
+     * Adds a listener of the specified type to the listeners map.
+     *
+     * @param type the type of the listener to add
+     * @param listener the listener to add
+     */
+    public void addListener(ListenerType type, Listener listener){
+        listeners.put(type, listener);
     }
 
-    public void addHandListener(Listener listener){
-        listeners.put("hand", listener);
+    /**
+     * Removes a listener of the specified type from the listeners map.
+     *
+     * @param type the type of the listener to remove
+     */
+    public void removeListener(ListenerType type){
+        listeners.remove(type);
     }
 
-    public void addChooseObjectiveListener(Listener listener){
-        listeners.put("chooseObjective", listener);
+    /**
+     * Notifies the listener of the specified type with the given GameModel object only if enabled is set true.
+     *
+     * @param type  The type of listener to notify.
+     * @param model The GameModel object containing the updates to be sent to the listener.
+     */
+    public void notifyListener(ListenerType type, GameModel model){
+        if (enabled) {
+            synchronized (lock) {
+                listeners.get(type).update(model, username);
+            }
+        }
     }
-
-    public void addStarterCardListener(Listener listener){
-        listeners.put("starterCard", listener);
-    }
-
-    public void addTurnListener(Listener listener){
-        listeners.put("turn", listener);
-    }
-
-    public void addObjectiveCardListener(Listener listener){
-        listeners.put("objectiveCard", listener);
-    }
-
-    public void addGoldDeckListener(Listener listener){
-        listeners.put("goldDeck", listener);
-    }
-
-    public void addResourcedDeckListener(Listener listener){
-        listeners.put("resourcedDeck", listener);
-    }
-
-    public void addCommonObjectiveCardListener(Listener listener){
-        listeners.put("commonObjectiveCard", listener);
-    }
-
-    public void addPlayerScoreListener(Listener listener){
-        listeners.put("playerScore", listener);
-    }
-
-    public void removePlayAreaListener(){
-        listeners.remove("playArea");
-    }
-
-    public void removeHandListener(){
-        listeners.remove("hand");
-    }
-
-    public void removeChooseObjectiveListener(){
-        listeners.remove("chooseObjective");
-    }
-
-    public void removeStarterCardListener(){
-        listeners.remove("starterCard");
-    }
-
-    public void removeTurnListener(){
-        listeners.remove("turn");
-    }
-
-    public void removeObjectiveCardListener(){
-        listeners.remove("objectiveCard");
-    }
-
-    public void removeGoldDeckListener(){
-        listeners.remove("goldDeck");
-    }
-
-    public void removeResourcedDeckListener(){
-        listeners.remove("resourcedDeck");
-    }
-
-    public void removeCommonObjectiveCardListener(){
-        listeners.remove("commonObjectiveCard");
-    }
-
-    public void removePlayerScoreListener() {
-        listeners.remove("playerScore");
-    }
-
-    public void notifyPlayAreaListener(GameModel model){
-        notifyListener("playArea", model);
-    }
-
-    public void notifyHandListener(GameModel model){
-        notifyListener("hand", model);
-    }
-
-    public void notifyChooseObjectiveListener(GameModel model){
-        notifyListener("chooseObjective", model);
-    }
-
-    public void notifyStarterCardListener(GameModel model){
-        notifyListener("starterCard", model);
-    }
-
-    public void notifyTurnListener(GameModel model){
-        notifyListener("turn", model);
-    }
-
-    public void notifyObjectiveCardListener(GameModel model){
-        notifyListener("objectiveCard", model);
-    }
-
-    public void notifyGoldDeckListener(GameModel model){
-        notifyListener("goldDeck", model);
-    }
-
-    public void notifyResourcedDeckListener(GameModel model){
-        notifyListener("resourcedDeck", model);
-    }
-
-    public void notifyCommonObjectiveCardListener(GameModel model){
-        notifyListener("commonObjectiveCard", model);
-    }
-
-    public void notifyPlayerScoreListener(GameModel model){
-        notifyListener("playerScore", model);
-    }
-
 }

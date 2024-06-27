@@ -7,7 +7,6 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 import it.polimi.ingsw.gc31.model.player.Player;
 
-import java.rmi.RemoteException;
 import java.util.Map;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
@@ -20,6 +19,10 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
  */
 public class PlayerHandListener extends Listener {
 
+    /**
+     * This class represents a listener that handles updates for a player's hand.
+     * It retrieves the updated hand of a player from the game model and sends it to all clients.
+     */
     public PlayerHandListener(Map<String, VirtualClient> clients) {
         super(clients);
     }

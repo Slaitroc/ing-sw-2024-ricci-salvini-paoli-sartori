@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class DV {
 
-    public static final int GamePoints = 10;
+    public static final int GamePoints = 1;
 
     // JSON directories
     public static final String DIRJsonGoldCard = "/it/polimi/ingsw/gc31/CardsJson/GoldCard.json";

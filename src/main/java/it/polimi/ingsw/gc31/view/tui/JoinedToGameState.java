@@ -7,10 +7,16 @@ import java.util.LinkedHashMap;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 
-public class JoinedToGameState extends TuiState {
+public class JoinedToGameState extends TUIstate {
 
     private boolean ready = false;
 
+    /**
+     * Constructor for the JoinedToGameState, calls the initialize method
+     * and set the stateName to "Joined To Game State"
+     * 
+     * @param tui the TUI instance that will use this state
+     */
     public JoinedToGameState(TUI tui) {
         this.tui = tui;
         initialize();
@@ -18,6 +24,15 @@ public class JoinedToGameState extends TuiState {
 
     }
 
+    /**
+     * User-executable commands for the JoinedToGameState
+     * <ul>
+     * <li>help - Shows commands info</li>
+     * <li>ready - your ready to play</li>
+     * <li>quit - quit the game</li>
+     * <li>ref - refresh</li>
+     * </ul>
+     */
     @Override
     protected void initialize() {
 
@@ -40,6 +55,9 @@ public class JoinedToGameState extends TuiState {
 
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_createGame() {
     }
@@ -55,10 +73,19 @@ public class JoinedToGameState extends TuiState {
         }
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_joinGame() {
     }
 
+    /**
+     * Sends the request to the {@link Controller} to quit the game.
+     * 
+     * @see ClientCommands#quitGame()
+     * 
+     */
     @Override
     protected void command_quitGame() {
         try {
@@ -68,6 +95,14 @@ public class JoinedToGameState extends TuiState {
         }
     }
 
+    /**
+     * Sends the request to the {@link Controller} to set the client as ready to
+     * play.
+     * 
+     * It calls {@link TUIstate#stateNotify()} to unblock the cmdLineReaderThread.
+     * 
+     * @see ClientCommands#setReady(boolean)
+     */
     @Override
     protected void command_ready() {
         ClientCommands client = tui.getClient();
@@ -87,60 +122,88 @@ public class JoinedToGameState extends TuiState {
         stateNotify();
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_drawGold() {
 
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_drawResource() {
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_chooseSecreteObjective() {
 
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_playStarter() {
 
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_play() {
 
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_selectCard() {
 
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_changeSide() {
 
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_changeStarterSide() {
 
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_movePlayArea() {
 
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_changePlayArea() {
 
     }
 
-    @Override
-    protected void command_initial() {
-        command_showCommandsInfo();
-    }
-
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void setUsername() {
     }
@@ -150,13 +213,16 @@ public class JoinedToGameState extends TuiState {
         tui.forceRefreshTUI(true);
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void reconnect() {
     }
 
-    @Override
-    protected void reMatch() {
+    // @Override
+    // protected void reMatch() {
 
-    }
+    // }
 
 }

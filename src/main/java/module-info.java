@@ -1,12 +1,12 @@
 module it.polimi.ingsw.gc31 {
     requires transitive javafx.graphics;
+    requires transitive javafx.controls;
     requires transitive java.desktop;
+    requires transitive MaterialFX;
     requires transitive com.google.gson;
-    requires javafx.controls;
     requires javafx.fxml;
     requires org.controlsfx.controls;
     requires java.rmi;
-    requires MaterialFX;
     requires org.fusesource.jansi;
     requires jdk.compiler;
     requires org.jline;

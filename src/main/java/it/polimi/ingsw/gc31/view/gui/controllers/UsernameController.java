@@ -7,9 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
-
 
 public class UsernameController extends ViewController {
 
@@ -19,14 +17,21 @@ public class UsernameController extends ViewController {
     private Label warningLabel;
 
     /**
-     * Handles the user login process by setting the username and communicating with the server.
+     * Handles the user login process by setting the username and communicating with
+     * the server.
      *
-     * <p>This method performs the following actions:</p>
+     * <p>
+     * This method performs the following actions:
+     * </p>
      * <ul>
-     *   <li>Sets the application's username using the text from {@code usernameField}.</li>
-     *   <li>Checks if the username is empty and displays a warning message if it is.</li>
-     *   <li>If the username is not empty, attempts to set the username on the server using the client.</li>
-     *   <li>If an {@link RemoteException} occurs, displays a server crash warning.</li>
+     * <li>Sets the application's username using the text from
+     * {@code usernameField}.</li>
+     * <li>Checks if the username is empty and displays a warning message if it
+     * is.</li>
+     * <li>If the username is not empty, attempts to set the username on the server
+     * using the client.</li>
+     * <li>If an {@link RemoteException} occurs, displays a server crash
+     * warning.</li>
      * </ul>
      */
     @FXML
@@ -37,13 +42,7 @@ public class UsernameController extends ViewController {
             warningLabel.setVisible(true);
             warningLabel.setText("Username cannot be empty!");
         } else {
-            try {
-                client.setUsernameCall(usernameField.getText());
-                client.setUsernameResponse(usernameField.getText());
-            } catch (IOException e) {
-                show_ServerCrashWarning(e.toString());
-                e.getStackTrace();
-            }
+            client.setUsername(usernameField.getText());
         }
     }
 
@@ -69,7 +68,8 @@ public class UsernameController extends ViewController {
     }
 
     /**
-     * Allow the enter functionality linking the Enter key event to the login function
+     * Allow the enter functionality linking the Enter key event to the login
+     * function
      *
      * @param event the keyboard event
      */

@@ -25,6 +25,7 @@ public class Player {
     private final List<ObjectiveCard> objectiveCardToChoose;
     private final String username;
     private final PlayArea playArea;
+    @SuppressWarnings("unused")
     private final PawnColor pawnColor;
     protected final List<PlayableCard> hand;
     protected PlayerState inGameState;
@@ -59,9 +60,10 @@ public class Player {
      *
      * @param deck the deck to draw from.
      */
-    private void addToHand(Deck<PlayableCard> deck, Deck<PlayableCard> subsistuteDeck, int index) throws IllegalStateOperationException {
+    private void addToHand(Deck<PlayableCard> deck, Deck<PlayableCard> substituteDeck, int index)
+            throws IllegalStateOperationException {
         try {
-            inGameState.addToHand(deck, subsistuteDeck, this, index);
+            inGameState.addToHand(deck, substituteDeck, this, index);
         } catch (FullHandException e) {
             System.out.println("Player " + username + "'s hand is full");
         } catch (InvalidCardDraw e) {
@@ -79,7 +81,8 @@ public class Player {
      */
 
     public boolean drawGold(int index) throws EmptyDeckException, IllegalStateOperationException {
-        if (index < 0 || index > 2) return false;
+        if (index < 0 || index > 2)
+            return false;
         else if (board.getDeckGold().hasBeenReplaced() && index == 0)
             throw new EmptyDeckException();
 
@@ -94,7 +97,8 @@ public class Player {
      * @throws EmptyDeckException if the deck is empty.
      */
     public boolean drawResource(int index) throws EmptyDeckException, IllegalStateOperationException {
-        if (index < 0 || index > 2) return false;
+        if (index < 0 || index > 2)
+            return false;
         else if (board.getDeckResource().hasBeenReplaced() && index == 0)
             throw new EmptyDeckException();
 
@@ -143,7 +147,8 @@ public class Player {
     }
 
     public void calculateObjectiveCard() {
-        score += objectiveCard.getObjective().isObjectiveDone(playArea.getPlacedCards(), null, playArea.getAchievedResources());
+        score += objectiveCard.getObjective().isObjectiveDone(playArea.getPlacedCards(), null,
+                playArea.getAchievedResources());
     }
 
     /**

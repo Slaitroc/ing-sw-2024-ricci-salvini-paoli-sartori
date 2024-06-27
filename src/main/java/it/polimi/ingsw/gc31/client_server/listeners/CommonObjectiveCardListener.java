@@ -17,6 +17,9 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
  */
 public class CommonObjectiveCardListener extends Listener{
 
+    /**
+     * This class represents a listener that handles updates for the common objective cards of the game model.
+     */
     public CommonObjectiveCardListener(Map<String, VirtualClient> clients) {
         super(clients);
     }

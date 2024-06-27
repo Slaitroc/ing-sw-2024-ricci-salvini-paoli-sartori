@@ -149,7 +149,6 @@ public interface GameModelState {
      */
     void endGame(GameModel model, String lastPlayerConnected) throws IllegalStateOperationException;
 
-    // TODO forse non necessario
     /**
      * Executes the disconnection of a player.
      * If the disconnected player is not the current turn player, it does nothing.

@@ -34,10 +34,8 @@ public class SocketClientHandler implements VirtualClient {
      * Is the gameController associated to this handler by the Controller. Manages the games
      */
     private IGameController gameController;
-    private Integer idGame; // viene settata ma ancora non utilizzata
-    /**
-     *
-     */
+    @SuppressWarnings("unused")
+    private Integer idGame;
     private boolean ready = false;
     /**
      * Is the ObjectInputStream used to read all the objects the client sends to the handler
@@ -147,7 +145,7 @@ public class SocketClientHandler implements VirtualClient {
      * @param gameID is the value that needs to be set
      */
     @Override
-    public void setGameID(int gameID) throws RemoteException{
+    public void setGameID(int gameID) throws RemoteException {
         this.idGame = gameID;
     }
 
@@ -157,7 +155,7 @@ public class SocketClientHandler implements VirtualClient {
      * @return the value of the ready attribute
      */
     @Override
-    public boolean isReady() throws RemoteException{
+    public boolean isReady() throws RemoteException {
         return ready;
     }
 
@@ -168,7 +166,7 @@ public class SocketClientHandler implements VirtualClient {
      *                       to be set to the attribute
      */
     @Override
-    public void setGameController(IGameController gameController) throws RemoteException{
+    public void setGameController(IGameController gameController) throws RemoteException {
         this.gameController = gameController;
     }
 
@@ -182,7 +180,7 @@ public class SocketClientHandler implements VirtualClient {
      * @param controller is the controller the client needs to get
      */
     @Override
-    public void setController(IController controller) throws RemoteException{
+    public void setController(IController controller) throws RemoteException {
 
     }
 
@@ -192,10 +190,10 @@ public class SocketClientHandler implements VirtualClient {
      * Inherited from the VirtualClient interface.
      *
      * @param token value to assign to the client specific token, used mainly for
-     *              reconnections
+     *              reconnection
      */
     @Override
-    public void setRmiToken(int token) throws RemoteException{
+    public void setRmiToken(int token) throws RemoteException {
     }
 
 }

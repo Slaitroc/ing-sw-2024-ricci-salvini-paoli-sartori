@@ -7,11 +7,19 @@ import it.polimi.ingsw.gc31.controller.GameController;
 
 import java.util.Map;
 
-public class CreateReMatch extends ServerQueueObject{
-    private final Map<String, VirtualClient> players;
+/**
+ * Unimplemented Feature
+ */
+public class CreateReMatch extends ServerQueueObject {
+    // private final Map<String, VirtualClient> players;
 
+    /**
+     * Unimplemented Feature
+     * 
+     * @param players
+     */
     public CreateReMatch(Map<String, VirtualClient> players) {
-        this.players = players;
+        // this.players = players;
     }
 
     @Override
@@ -21,7 +29,7 @@ public class CreateReMatch extends ServerQueueObject{
 
     @Override
     public void execute(Controller controller) {
-//        controller.createReMatch(players);
+        // controller.createReMatch(players);
     }
 
     @Override

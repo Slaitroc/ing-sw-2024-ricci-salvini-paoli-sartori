@@ -6,7 +6,6 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowScorePlayerObj;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 import javafx.util.Pair;
 
-import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -18,6 +17,10 @@ import java.util.Map;
  */
 public class PlayerScoreListener extends Listener {
 
+    /**
+     * This class represents a listener for player scores in a game model.
+     * It sends the score of all players to a specific client.
+     */
     public PlayerScoreListener(Map<String, VirtualClient> clients) {
         super(clients);
     }
