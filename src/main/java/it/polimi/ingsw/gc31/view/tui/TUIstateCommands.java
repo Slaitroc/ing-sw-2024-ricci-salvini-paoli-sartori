@@ -76,6 +76,12 @@ public enum TUIstateCommands {
     DRAW_GOLD("dg"),
     /**
      * Defines the tag for the
+     * {@link it.polimi.ingsw.gc31.view.tui.TUIstate#command_changePlayArea()}
+     * command
+     */
+    CHANGE_PLAY_AREA("cp"),
+    /**
+     * Defines the tag for the
      * {@link it.polimi.ingsw.gc31.view.tui.TUIstate#command_drawResource()} command
      * command}
      */

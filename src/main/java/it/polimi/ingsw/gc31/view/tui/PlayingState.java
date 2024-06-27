@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
 
+import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
+import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
 public class PlayingState extends TUIstate {
 
@@ -44,41 +46,65 @@ public class PlayingState extends TUIstate {
     @Override
     protected void initialize() {
         commandsMap = new LinkedHashMap<>();
-        commandsMap.put(("help").toLowerCase(), this::command_showCommandsInfo);
-        commandsMap.put("quit", this::command_quitGame);
-        commandsMap.put("ref", this::command_refresh);
-        commandsMap.put("dg", this::command_drawGold);
-        commandsMap.put("dr", this::command_drawResource);
-        commandsMap.put("co", this::command_chooseSecreteObjective);
-        commandsMap.put("ps", this::command_playStarter);
-        commandsMap.put("p", this::command_play);
-        commandsMap.put("s", this::command_selectCard);
-        commandsMap.put("c", this::command_changeSide);
-        commandsMap.put("cs", this::command_changeStarterSide);
-        commandsMap.put("mv", this::command_movePlayArea);
-        commandsMap.put("cp", this::command_changePlayArea);
-        commandsMap.put("invalid", this::command_invalidCommand);
+        commandsMap.put(TUIstateCommands.SHOW_GAMES.toString().toLowerCase(), this::command_showGames);
+        commandsMap.put(TUIstateCommands.SHOW_COMMAND_INFO.toString().toLowerCase(), this::command_showCommandsInfo);
+        commandsMap.put(TUIstateCommands.QUIT_GAME.toString().toLowerCase(), this::command_quitGame);
+        commandsMap.put(TUIstateCommands.REFRESH.toString().toLowerCase(), this::command_refresh);
+        commandsMap.put(TUIstateCommands.DRAW_GOLD.toString().toLowerCase(), this::command_drawGold);
+        commandsMap.put(TUIstateCommands.DRAW_RESOURCES.toString().toLowerCase(), this::command_drawResource);
+        commandsMap.put(TUIstateCommands.CHOOSE_SECRET_OBJ.toString().toLowerCase(),
+                this::command_chooseSecreteObjective);
+        commandsMap.put(TUIstateCommands.PLAY_STARTER.toString().toLowerCase(), this::command_playStarter);
+        commandsMap.put(TUIstateCommands.PLAY.toString().toLowerCase(), this::command_play);
+        commandsMap.put(TUIstateCommands.SELECT_CARD.toString().toLowerCase(), this::command_selectCard);
+        commandsMap.put(TUIstateCommands.CHANGE_SIDE.toString().toLowerCase(), this::command_changeSide);
+        commandsMap.put(TUIstateCommands.CHANGE_STARTER_SIDE.toString().toLowerCase(), this::command_changeStarterSide);
+        commandsMap.put(TUIstateCommands.MOVE_PLAY_AREA.toString().toLowerCase(), this::command_movePlayArea);
+        commandsMap.put(TUIstateCommands.CHANGE_PLAY_AREA.toString().toLowerCase(), this::command_changePlayArea);
+        commandsMap.put(TUIstateCommands.INVALID.toString().toLowerCase(), this::command_invalidCommand);
 
         commandsInfo = new LinkedHashMap<>();
-        commandsInfo.put("help", "Shows commands info");
-        commandsInfo.put("quit", "quit the game");
-        commandsInfo.put("ref", "refresh tui");
-        commandsInfo.put("dg -> draw gold", "Draw a gold card");
-        commandsInfo.put("dr -> draw resource", "Draw a resource card");
-        commandsInfo.put("co ->", "Choose secrete objective");
-        commandsInfo.put("ps ->", "Play starter card");
-        commandsInfo.put("p ->", "Play a card in the play area");
-        commandsInfo.put("s ->", "Select a card from hand");
-        commandsInfo.put("c ->", "Change side select card");
-        commandsInfo.put("cs ->", "Change side starter card");
-        commandsInfo.put("cp ->", "Change play area");
-        commandsInfo.put("mv -> ", "Move play area");
+        commandsInfo.put(TUIstateCommands.SHOW_COMMAND_INFO.toString().toLowerCase(), "Shows commands info");
+        commandsInfo.put(TUIstateCommands.QUIT_GAME.toString().toLowerCase(), "quit the game");
+        commandsInfo.put(TUIstateCommands.REFRESH.toString().toLowerCase(), "refresh tui");
+        commandsInfo.put(TUIstateCommands.DRAW_GOLD.toString().toLowerCase() + " -------------->", " Draw a gold card");
+        commandsInfo.put(TUIstateCommands.DRAW_RESOURCES.toString().toLowerCase() + " -------------->",
+                " Draw a resource card");
+        commandsInfo.put(TUIstateCommands.CHOOSE_SECRET_OBJ.toString().toLowerCase() + " -------------->",
+                " Choose secrete objective");
+        commandsInfo.put(TUIstateCommands.PLAY_STARTER.toString().toLowerCase() + " -------------->",
+                " Play starter card");
+        commandsInfo.put(TUIstateCommands.PLAY.toString().toLowerCase() + "  -------------->",
+                " Play a card in the play area");
+        commandsInfo.put(TUIstateCommands.SELECT_CARD.toString().toLowerCase() + "  -------------->",
+                " Select a card from hand");
+        commandsInfo.put(TUIstateCommands.CHANGE_SIDE.toString().toLowerCase() + "  -------------->",
+                " Change side select card");
+        commandsInfo.put(TUIstateCommands.CHANGE_STARTER_SIDE.toString().toLowerCase() + " -------------->",
+                " Change side starter card");
+        commandsInfo.put(TUIstateCommands.CHANGE_PLAY_AREA.toString().toLowerCase() + " -------------->",
+                " Change play area");
+        commandsInfo.put(TUIstateCommands.MOVE_PLAY_AREA.toString().toLowerCase() + " -------------->",
+                " Move play area");
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_createGame() {
     }
 
+    /**
+     * Sends the request to the {@link it.polimi.ingsw.gc31.controller.Controller}
+     * to show the list of available
+     * games.
+     * Blocks the cmdLineReaderThread until the Controller responds with
+     * {@link ShowUpdate#show_listGame(java.util.List)}
+     * 
+     * @see Controller#getGameList(String)
+     * @see ClientCommands#getGameList()
+     */
     @Override
     protected void command_showGames() {
         try {
@@ -88,18 +114,42 @@ public class PlayingState extends TUIstate {
         } catch (NoGamesException e) {
             e.printStackTrace();
         }
-        stateNotify();
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_joinGame() {
-
     }
 
+    /**
+     * Unimplemented method in this TUIstate
+     */
     @Override
     protected void command_ready() {
     }
 
+    /**
+     * Sends the request to the {@link it.polimi.ingsw.gc31.controller.Controller}
+     * to draw a gold card.
+     * <p>
+     * Asks the user which card he wants to draw:
+     * <ul>
+     * <li>0 -> from top of the deck</li>
+     * <li>1 -> card 1</li>
+     * <li>2 -> card 2</li>
+     * <li>-1 -> quit command</li>
+     * </ul>
+     * <p>
+     * It calls {@link TUIstate#stateNotify()} to unblock the cmdLineReaderThread.
+     * 
+     * @see ClientCommands#drawGold(int)
+     * @see it.polimi.ingsw.gc31.controller.GameController#drawGold(int)
+     * 
+     * 
+     * 
+     */
     @Override
     protected void command_drawGold() {
         tui.printToCmdLineOut("Which card do you want to draw?");

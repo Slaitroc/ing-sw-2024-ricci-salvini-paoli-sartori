@@ -40,19 +40,20 @@ public class JoinedToGameState extends TUIstate {
         // command's map
         commandsMap = new LinkedHashMap<>();
 
-        commandsMap.put(("help").toLowerCase(), this::command_showCommandsInfo);
-        commandsMap.put("ready", this::command_ready);
-        commandsMap.put("quit", this::command_quitGame);
-        commandsMap.put("invalid", this::command_invalidCommand);
-        commandsMap.put("ref", this::command_refresh);
+        commandsMap.put(TUIstateCommands.SHOW_GAMES.toString().toLowerCase(), this::command_showGames);
+        commandsMap.put(TUIstateCommands.SHOW_COMMAND_INFO.toString().toLowerCase(), this::command_showCommandsInfo);
+        commandsMap.put(TUIstateCommands.READY.toString().toLowerCase(), this::command_ready);
+        commandsMap.put(TUIstateCommands.QUIT_GAME.toString().toLowerCase(), this::command_quitGame);
+        commandsMap.put(TUIstateCommands.INVALID.toString().toLowerCase(), this::command_invalidCommand);
+        commandsMap.put(TUIstateCommands.REFRESH.toString().toLowerCase(), this::command_refresh);
 
         // info map
         commandsInfo = new LinkedHashMap<>();
 
-        commandsInfo.put("help", "Shows commands info");
-        commandsInfo.put("ready", "your ready to play");
-        commandsInfo.put("quit", "quit the game");
-        commandsInfo.put("ref", "refresh tui");
+        commandsInfo.put(TUIstateCommands.SHOW_COMMAND_INFO.toString().toLowerCase(), "Shows commands info");
+        commandsInfo.put(TUIstateCommands.READY.toString().toLowerCase(), "your ready to play");
+        commandsInfo.put(TUIstateCommands.QUIT_GAME.toString().toLowerCase(), "quit the game");
+        commandsInfo.put(TUIstateCommands.REFRESH.toString().toLowerCase(), "refresh tui");
 
     }
 
@@ -72,6 +73,7 @@ public class JoinedToGameState extends TUIstate {
         } catch (NoGamesException e) {
             e.printStackTrace();
         }
+        // stateNotify();
     }
 
     /**

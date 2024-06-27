@@ -127,10 +127,8 @@ public interface ShowUpdate {
 
     /**
      * Notify that a player has quit the game.
-     *
-     * @param username the username of the player who quit
      */
-    void show_quitFromGame(String username);
+    void show_quitFromGame();
 
     /**
      * Notify that a game you tried to enter is full.
@@ -188,6 +186,8 @@ public interface ShowUpdate {
      * Notify of an invalid action with a message.
      *
      * @param message the message describing the invalid action
+     * 
+     * 
      */
     void show_invalidAction(String message);
 

@@ -4,17 +4,46 @@ import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.view.UI;
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
+/**
+ * ShowGoldDeckObj is a class that extends ClientQueueObject
+ * It is sent to the client to notify the gold deck.
+ */
 public class ShowGoldDeckObj extends ClientQueueObject {
+
+    /**
+     * The card on top of the deck.
+     */
     private final String firstCardDeck;
+
+    /**
+     * The first gold card flipped on the board.
+     */
     private final String card1;
+
+    /**
+     * The second gold card flipped on the board.
+     */
     private final String card2;
 
+    /**
+     * Notify the gold deck.
+     *
+     * @param firstCardDeck the card on the top of the deck.
+     * @param card1 the first gold card flipped on the board.
+     * @param card2 the second gold card flipped on the board.
+     */
     public ShowGoldDeckObj(String firstCardDeck, String card1, String card2) {
         this.firstCardDeck = firstCardDeck;
         this.card1 = card1;
         this.card2 = card2;
     }
 
+    /**
+     * Executes the method call of the given UI object.
+     * Call the corresponding method on the UI to show the gold deck.
+     *
+     * @param ui the UI object to execute the method call on
+     */
     @Override
     public void execute(UI ui) {
         ui.show_goldDeck(

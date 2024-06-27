@@ -2107,7 +2107,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_quitFromGame(String username) {
+    public void show_quitFromGame() {
         // FIXME da problemi
         state = new InitState(this);
         chatBoardThread.interrupt();

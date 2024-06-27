@@ -45,7 +45,8 @@ public class Controller extends UnicastRemoteObject implements IController {
     protected final List<GameController> gameControlList;
 
     /**
-     * Map of temporary connected clients that are not yet in a game or that quit from a game
+     * Map of temporary connected clients that are not yet in a game or that quit
+     * from a game
      */
     protected Map<String, VirtualClient> tempClients;
 
@@ -60,17 +61,19 @@ public class Controller extends UnicastRemoteObject implements IController {
     private final LinkedBlockingQueue<ServerQueueObject> callsList;
 
     /**
-     * Map with tokens linked to clients useful to recognize a client even without the username
+     * Map with tokens linked to clients useful to recognize a client even without
+     * the username
      */
     protected final Map<Integer, VirtualClient> newConnections;
 
     /**
-     * Map of Tokens linked to clients and  that disconnected from a game
+     * Map of Tokens linked to clients and that disconnected from a game
      */
     protected final Map<Integer, Pair<String, Integer>> disconnected; // token - <username,gameID>
 
     /**
-     * Map of Clients linked to the last time the heartbeat was received from that client
+     * Map of Clients linked to the last time the heartbeat was received from that
+     * client
      */
     protected ConcurrentHashMap<VirtualClient, Long> clientsHeartBeat;
 
@@ -183,7 +186,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * temporary token is generated and sent to the client. In this case the
      * procedure {@link Controller#usernameValidation(String, VirtualClient)} is
      * called to check the name and send the corresponding ClientObject to the
-     * client. If the usernameValidation return true the sent token is locally saved
+     * client. If the usernameValidation return true the token sent is locally saved
      * on the client side by correctly invoking the
      * {@link Controller#sendToken(VirtualClient, int, boolean)} method.
      * <li>If the token is not -1 ,and the client is contained in
@@ -194,7 +197,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * the first time and the procedure
      * {@link Controller#usernameValidation(String, VirtualClient)} is called to
      * check the name and send the corresponding ClientObject to the client. If the
-     * usernameValidation return true the sent token is locally saved
+     * usernameValidation return true the token sent is locally saved
      * overriding the previously saved token on the client side by correctly
      * invoking the {@link Controller#sendToken(VirtualClient, int, boolean)}
      * method.
@@ -291,7 +294,7 @@ public class Controller extends UnicastRemoteObject implements IController {
 
     /**
      * This method is called when a client wants to rejoin a game.
-     * If the clients wants to rejoin a {@link ReJoinedObj} with the previous
+     * If the clients want to rejoin a {@link ReJoinedObj} with the previous
      * username and a boolean value set to true is sent to the client (other
      * parameters of the object are required for the GUI).
      * If the client doesn't want to rejoin a {@link ReJoinedObj} with the previous
@@ -363,10 +366,20 @@ public class Controller extends UnicastRemoteObject implements IController {
 
     /**
      * Allows a client to join an existing game.
+     * <p>
+     * If the game does not exist, a {@link GameDoesNotExistObj} is sent to the
+     * client.
+     * If the game is full, a {@link GameIsFullObj} is sent to the client.
+     * If the game is not full, a {@link JoinGameObj} is sent to the game
+     * controller.
+     * 
      *
      * @param username the username of the client joining the game.
      * @param idGame   the ID of the game to join.
      * @throws RemoteException if an RMI error occurs.
+     * 
+     * @see GameController#joinGame(String, VirtualClient)
+     * 
      */
     public void joinGame(String username, int idGame) throws RemoteException {
         VirtualClient client = tempClients.get(username);
@@ -386,7 +399,8 @@ public class Controller extends UnicastRemoteObject implements IController {
 
     /**
      * This method add the client (that just quit a game lobby) to the map
-     * tempClients
+     * tempClients.
+     * Then it sends a {@link QuitFromGameRObj} to the client that requested to quit
      *
      * @param username is the username of the player that just quit
      * @param client   is the client that requested to quit from a lobby
@@ -396,7 +410,7 @@ public class Controller extends UnicastRemoteObject implements IController {
         tempClients.put(username, client);
         // se il gioco era costituito da una sola persona va eliminato il gameController
         // corrispondente
-        sendUpdateToClient(client, new QuitFromGameRObj(username));
+        sendUpdateToClient(client, new QuitFromGameRObj());
     }
 
     // GETTERS
@@ -417,7 +431,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @throws RemoteException  if an RMI error occurs.
      * @throws NoGamesException if there are no current games.
      */
-    public void getGameList(String username) throws RemoteException, NoGamesException {
+    public void getGameList(int token) throws RemoteException, NoGamesException {
         List<String> res = new ArrayList<>();
         if (gameControlList.isEmpty()) {
             res.add("NO GAMES AVAILABLE");
@@ -429,7 +443,7 @@ public class Controller extends UnicastRemoteObject implements IController {
                                 + gameControlList.get(i).getMaxNumberPlayers());
             }
         }
-        sendUpdateToClient(tempClients.get(username), new ShowGamesObj(res));
+        sendUpdateToClient(newConnections.get(token), new ShowGamesObj(res));
     }
 
     /**

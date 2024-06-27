@@ -265,7 +265,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_quitFromGame(String username) {
+    public void show_quitFromGame() {
         System.out.println("show_quitFromGame called");
     }
 
