@@ -416,14 +416,22 @@ public class InGameController extends ViewController {
 
     @Override
     public void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
-        setCardImage(firstCardDeck, deckGold);
+        if(firstCardDeck != null){
+            setCardImage(firstCardDeck, deckGold);
+        }else {
+            deckGold.setImage(new Image("/src/main/resources/it/polimi/ingsw/gc31/Images/CardsImages/deckEmpty.jpg"));
+        }
         setCardImage(card1, deckGoldCard1);
         setCardImage(card2, deckGoldCard2);
     }
 
     @Override
     public void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
-        setCardImage(firstCardDeck, deckResource);
+        if(firstCardDeck != null){
+            setCardImage(firstCardDeck, deckResource);
+        }else {
+            deckResource.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/deckEmpty.jpg"))));
+        }
         setCardImage(card1, deckResourceCard1);
         setCardImage(card2, deckResourceCard2);
     }
