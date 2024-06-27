@@ -5,7 +5,6 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowPlayerTurnObj;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 
-import java.rmi.RemoteException;
 import java.util.Map;
 
 /**
@@ -15,6 +14,11 @@ import java.util.Map;
  * @author sslvo
  */
 public class PlayerTurnListener extends Listener{
+
+    /**
+     * This class represents a listener that handles updates for the turn of a specific player.
+     * It sends the state in game of a player.
+     */
     public PlayerTurnListener(Map<String, VirtualClient> clients) {
         super(clients);
     }

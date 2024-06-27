@@ -2,6 +2,7 @@ package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.listeners.GameListenerHandler;
+import it.polimi.ingsw.gc31.client_server.listeners.ListenerType;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.AnotherMatchObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
@@ -18,8 +19,8 @@ public class EndGameModelState implements GameModelState {
         ServerLog.gControllerWrite("Game changed to END GAME", model.getIdGame());
 
         for (String username : model.getListeners().keySet()) {
-            model.getListeners().get(username).removeGoldDeckListener();
-            model.getListeners().get(username).removeResourcedDeckListener();
+            model.getListeners().get(username).removeListener(ListenerType.GOLD_DECK);
+            model.getListeners().get(username).removeListener(ListenerType.RESOURCE_DECK);
         }
     }
 
@@ -96,12 +97,10 @@ public class EndGameModelState implements GameModelState {
                 for (String username : model.clients.keySet()) {
                     ServerLog.controllerWrite("sto mandando a "+username);
                     ClientQueueObject clientQueueObject1 = new GameIsOverObj(usernameWinner, model.getBoard().getPlayersScore());
-                    //ClientQueueObject clientQueueObject2 = new AnotherMatchObj(username);
                     new Thread(
                             () -> {
                                 try {
                                     model.clients.get(username).sendCommand(clientQueueObject1);
-                                    //model.clients.get(username).sendCommand(clientQueueObject2);
                                 } catch (RemoteException ignored) {
                                 }
                             }

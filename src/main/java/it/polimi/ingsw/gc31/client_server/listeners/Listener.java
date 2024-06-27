@@ -45,7 +45,6 @@ public abstract class Listener {
     /**
      * Sends an update to the specified virtual client.
      * The update is sent asynchronously using a thread because it does not have to block the game in case the client is disconnected.
-     * If the timeout expires and a remote exception is thrown, the disconnectPlayer method is called to notify the model of the player's disconnection.
      * If the thread notices, before sending the update, that the player has already been declared disconnected, the update is not sent.
      *
      * @param model The game model of the player
@@ -58,17 +57,7 @@ public abstract class Listener {
             new Thread(() -> {
                 try {
                     client.sendCommand(clientQueueObject);
-                } catch (RemoteException e) {
-                    // FIXME lasciare disconnettere il giocatore all'heatbeat?
-//                    if (model.getPlayerConnection().get(username)) {
-//                        try {
-//                            model.disconnectPlayer(username);
-//                        } catch (LastPlayerRemainedException ex) {
-//                            // todo fare qualcosa?
-//                        }
-//                    } else {
-//                        ServerLog.gControllerWrite("Client is already disconnected, "+username, model.getIdGame());
-//                    }
+                } catch (RemoteException ignored) {
                 }
             }).start();
         } else {

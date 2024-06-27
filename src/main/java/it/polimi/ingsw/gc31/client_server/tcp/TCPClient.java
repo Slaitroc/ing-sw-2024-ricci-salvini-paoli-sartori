@@ -216,12 +216,10 @@ public class TCPClient implements ClientCommands {
      * collect every
      * String in “list” and then call the method of the ui.
      *
-     * @throws RemoteException  is launched if an error is occurred in the readLine
-     *                          method
      * @throws NoGamesException is launched if there are no created games
      */
     @Override
-    public void getGameList() throws RemoteException, NoGamesException {
+    public void getGameList() throws NoGamesException {
         tcp_sendCommand(new GetGameListObj(this.username), DV.RECIPIENT_CONTROLLER);
     }
 

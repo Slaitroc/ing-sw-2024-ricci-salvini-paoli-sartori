@@ -1,6 +1,7 @@
 package it.polimi.ingsw.gc31.model.gameModel;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.listeners.ListenerType;
 import it.polimi.ingsw.gc31.client_server.listeners.PlayerScoreListener;
 import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.exceptions.*;
@@ -15,7 +16,7 @@ public class RunningGameModelSate implements GameModelState {
         ServerLog.gControllerWrite("Game changed to RUNNING", model.getIdGame());
 
         synchronized (model.clientListLock) {
-            model.getListeners().values().forEach(listener -> listener.addPlayerScoreListener(new PlayerScoreListener(model.clients)));
+            model.getListeners().values().forEach(listener -> listener.addListener(ListenerType.PLAYER_SCORE, new PlayerScoreListener(model.clients)));
         }
     }
 

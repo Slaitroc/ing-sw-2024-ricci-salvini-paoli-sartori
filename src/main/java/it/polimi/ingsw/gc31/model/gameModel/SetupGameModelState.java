@@ -19,15 +19,16 @@ public class SetupGameModelState implements GameModelState {
         synchronized (model.clientListLock) {
             for (String username : model.getListeners().keySet()) {
                 GameListenerHandler gameListener = model.getListeners().get(username);
-                gameListener.addChooseObjectiveListener(new PlayerChooseObjectiveCardListener(model.clients));
-                gameListener.addCommonObjectiveCardListener(new CommonObjectiveCardListener(model.clients));
-                gameListener.addGoldDeckListener(new GoldDeckListener(model.clients));
-                gameListener.addResourcedDeckListener(new ResourceDeckListener(model.clients));
-                gameListener.addStarterCardListener(new PlayerStarterCardListener(model.clients));
-                gameListener.addHandListener(new PlayerHandListener(model.clients));
-                gameListener.addObjectiveCardListener(new PlayerObjectiveCardListener(model.clients));
-                gameListener.addPlayAreaListener(new PlayAreaListener(model.clients));
-                gameListener.addTurnListener(new PlayerTurnListener(model.clients));
+                gameListener.addListener(ListenerType.CHOOSE_OBJECTIVE, new PlayerChooseObjectiveCardListener(model.clients));
+                gameListener.addListener(ListenerType.COMMON_OBJECTIVE, new CommonObjectiveCardListener(model.clients));
+                gameListener.addListener(ListenerType.GOLD_DECK, new GoldDeckListener(model.clients));
+                gameListener.addListener(ListenerType.RESOURCE_DECK, new ResourceDeckListener(model.clients));
+                gameListener.addListener(ListenerType.STARTER_CARD, new PlayerStarterCardListener(model.clients));
+                gameListener.addListener(ListenerType.HAND, new PlayerHandListener(model.clients));
+                gameListener.addListener(ListenerType.OBJECTIVE_CARD, new PlayerObjectiveCardListener(model.clients));
+                gameListener.addListener(ListenerType.PLAYAREA, new PlayAreaListener(model.clients));
+                gameListener.addListener(ListenerType.TURN,  new PlayerTurnListener(model.clients));
+                gameListener.addListener(ListenerType.PLAYER_SCORE,  new PlayerTurnListener(model.clients));
             }
         }
     }

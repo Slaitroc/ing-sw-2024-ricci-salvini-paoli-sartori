@@ -97,9 +97,9 @@ public class TUI extends UI {
     private final int ACHIEVED_RESOURCES_END_ROW = ACHIEVED_RESOURCES_INITIAL_ROW + 9;
     private final int ACHIEVED_RESOURCES_END_COLUMN = 146;
 
-    private final int GAME_OVER_INITIAL_ROW = 14;
+    private final int GAME_OVER_INITIAL_ROW = 18;
     private final int GAME_OVER_INITIAL_COLUMN = 1;
-    private final int GAME_OVER_END_ROW = 34;
+    private final int GAME_OVER_END_ROW = 39;
     private final int GAME_OVER_END_COLUMN = 67;
 
     // CONSTANTS
@@ -2122,7 +2122,6 @@ public class TUI extends UI {
 
     @Override
     public void show_GameIsOver(String username, Map<String, Integer> playersScore) {
-        // TODO aggiungere punteggio giocatori
         StringBuilder res = new StringBuilder();
         res.append(clearArea(GAME_OVER_INITIAL_ROW, GAME_OVER_INITIAL_COLUMN, GAME_OVER_END_ROW,
                 GAME_OVER_END_COLUMN));
@@ -2130,9 +2129,16 @@ public class TUI extends UI {
                 GAME_OVER_END_ROW, GAME_OVER_END_COLUMN));
 
         if (client.getUsername().equals(username)) {
-            res.append(ansi().cursor(GOLD_DECK_INITIAL_ROW + 1, GAME_OVER_INITIAL_COLUMN + 1).a("You are the winner"));
+            res.append(ansi().cursor(GAME_OVER_INITIAL_ROW + 1, GAME_OVER_INITIAL_COLUMN + 1).a("You are the winner"));
         } else {
-            res.append(ansi().cursor(GOLD_DECK_INITIAL_ROW + 1, GAME_OVER_INITIAL_COLUMN + 1).a("You lost!"));
+            res.append(ansi().cursor(GAME_OVER_INITIAL_ROW + 1, GAME_OVER_INITIAL_COLUMN + 1).a("You lost!"));
+        }
+
+        int index = 1;
+        for (String player : playersScore.keySet()) {
+            res.append(ansi().cursor( GAME_OVER_INITIAL_ROW + 1 + index, GAME_OVER_INITIAL_COLUMN + 1)
+                    .a(player + ": " + playersScore.get(player)));
+            index++;
         }
 
         synchronized (playViewUpdate) {

@@ -6,7 +6,6 @@ import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowGoldDeckObj;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 
-import java.rmi.RemoteException;
 import java.util.Map;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
@@ -16,6 +15,9 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
  */
 public class GoldDeckListener extends Listener {
 
+    /**
+     * This class is a listener that handles updates related to the Gold Deck in the game model.
+     */
     public GoldDeckListener(Map<String, VirtualClient> clients) {
         super(clients);
     }

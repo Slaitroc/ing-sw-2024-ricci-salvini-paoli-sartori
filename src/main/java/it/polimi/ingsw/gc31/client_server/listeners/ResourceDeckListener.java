@@ -2,12 +2,10 @@ package it.polimi.ingsw.gc31.client_server.listeners;
 
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
-import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowGoldDeckObj;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowResourceDeckObj;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 
-import java.rmi.RemoteException;
 import java.util.Map;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
@@ -19,6 +17,11 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
  * @author sslvo
  */
 public class ResourceDeckListener extends Listener {
+
+    /**
+     * This class represents a listener that updates the clients with the resource deck information.
+     * It sends the resource deck.
+     */
     public ResourceDeckListener(Map<String, VirtualClient> clients) {
         super(clients);
     }
