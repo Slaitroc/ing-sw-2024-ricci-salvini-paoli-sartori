@@ -7,7 +7,6 @@ import it.polimi.ingsw.gc31.model.card.ObjectiveCard;
 import it.polimi.ingsw.gc31.model.gameModel.GameModel;
 import it.polimi.ingsw.gc31.model.player.Player;
 
-import java.rmi.RemoteException;
 import java.util.Map;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
@@ -19,6 +18,11 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
  * @author sslvo
  */
 public class PlayerObjectiveCardListener extends Listener {
+
+    /**
+     * This class represents a listener that handles updates related to a specific player's objective card.
+     * It sends the objective card the player had choose.
+     */
     public PlayerObjectiveCardListener(Map<String, VirtualClient> clients) {
         super(clients);
     }

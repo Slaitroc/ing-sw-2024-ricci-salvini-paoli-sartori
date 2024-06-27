@@ -9,7 +9,6 @@ import it.polimi.ingsw.gc31.model.player.Player;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTranslater;
 
-import java.rmi.RemoteException;
 import java.util.Map;
 
 /**
@@ -20,6 +19,10 @@ import java.util.Map;
  */
 public class PlayerStarterCardListener extends Listener {
 
+    /**
+     * This class is a listener that handles updates for the starter card of a specific player.
+     * It sends the starter card of a player.
+     */
     public PlayerStarterCardListener(Map<String, VirtualClient> clients) {
         super(clients);
     }

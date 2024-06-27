@@ -21,6 +21,11 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
  * @author sslvo
  */
 public class PlayAreaListener extends Listener {
+
+        /**
+         * The PlayAreaListener class is a subclass of Listener that handles updates for the play area of a player.
+         * It retrieves the updated play area data from the game model and sends it to all clients.
+         */
         public PlayAreaListener(Map<String, VirtualClient> clients) {
                 super(clients);
         }
@@ -41,7 +46,6 @@ public class PlayAreaListener extends Listener {
                                 gsonTranslater.toJson(player.getPlayArea().getPlacedCards(), new TypeToken<LinkedHashMap<Point, PlayableCard>>(){}.getType()),
                                 gsonTranslater.toJson(player.getPlayArea().getAchievedResources())
                         );
-
 
                         for (Map.Entry<String, VirtualClient> clients: clients.entrySet()) {
                                 sendUpdate(model, clients.getKey(), clients.getValue(), clientQueueObject);
