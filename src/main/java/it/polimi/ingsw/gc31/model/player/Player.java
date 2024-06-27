@@ -142,22 +142,28 @@ public class Player {
         }
     }
 
+    public void addPoints(int points){
+        board.updateScore(username, score + points);
+        this.score += points;
+    }
+
     public List<ObjectiveCard> getChooseSecretObjective() {
         return objectiveCardToChoose;
     }
 
-    public void calculateObjectiveCard() {
-        score += objectiveCard.getObjective().isObjectiveDone(playArea.getPlacedCards(), null,
+    public int calculateObjectiveCard() {
+        return objectiveCard.getObjective().isObjectiveDone(playArea.getPlacedCards(), null,
                 playArea.getAchievedResources());
     }
 
     /**
-     * Method to calculate the COMMON objective card of the game
+     * Method to calculate the COMMON objective card of the game and
+     * add it directly to the player score
      *
      * @param obj: Objective Card to calculate
      */
-    public void calculateObjectiveCard(ObjectiveCard obj) {
-        score += obj.getObjective().isObjectiveDone(playArea.getPlacedCards(), null, playArea.getAchievedResources());
+    public int calculateObjectiveCard(ObjectiveCard obj) {
+        return obj.getObjective().isObjectiveDone(playArea.getPlacedCards(), null, playArea.getAchievedResources());
     }
 
     // GETTERS

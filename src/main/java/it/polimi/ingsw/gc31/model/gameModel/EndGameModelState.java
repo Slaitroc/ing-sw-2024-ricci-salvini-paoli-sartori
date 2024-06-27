@@ -14,6 +14,7 @@ import java.rmi.RemoteException;
 import java.util.Map;
 
 public class EndGameModelState implements GameModelState {
+
     public EndGameModelState(GameModel model) {
         ServerLog.gControllerWrite("Game changed to END GAME", model.getIdGame());
 
@@ -79,16 +80,24 @@ public class EndGameModelState implements GameModelState {
     public void endGame(GameModel model, String lastPlayerConnected) {
         if (lastPlayerConnected == null) {
             for (Player player : model.getPlayers().values()) {
-                player.calculateObjectiveCard();
-                player.calculateObjectiveCard(model.commonObjectives.get(0));
-                player.calculateObjectiveCard(model.commonObjectives.get(1));
+                player.addPoints(player.calculateObjectiveCard());
+                player.addPoints(player.calculateObjectiveCard(model.commonObjectives.get(0)));
+                player.addPoints(player.calculateObjectiveCard(model.commonObjectives.get(1)));
             }
             String usernameWinner = null;
             int maxPoint = 0;
+            int maxObjectivePoints = 0;
             for (Player player : model.getPlayers().values()) {
-                if (player.getScore() >= maxPoint) {
+                if (player.getScore() > maxPoint) {
                     maxPoint = player.getScore();
                     usernameWinner = player.getUsername();
+                    maxObjectivePoints = player.calculateObjectiveCard() + player.calculateObjectiveCard(model.commonObjectives.get(0)) + player.calculateObjectiveCard(model.commonObjectives.get(1));
+                } else if (player.getScore() == maxPoint) {
+                    if (player.calculateObjectiveCard() + player.calculateObjectiveCard(model.commonObjectives.get(0)) + player.calculateObjectiveCard(model.commonObjectives.get(1)) > maxObjectivePoints) {
+                        maxPoint = player.getScore();
+                        usernameWinner = player.getUsername();
+                        maxObjectivePoints = player.calculateObjectiveCard() + player.calculateObjectiveCard(model.commonObjectives.get(0)) + player.calculateObjectiveCard(model.commonObjectives.get(1));
+                    }
                 }
             }
 

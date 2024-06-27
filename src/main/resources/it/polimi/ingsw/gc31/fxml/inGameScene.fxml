@@ -55,6 +55,7 @@
 
                             <!-- INITIAL CHOICE BOX-->
                             <VBox fx:id="initialChoice" alignment="CENTER" spacing="20" VBox.vgrow="ALWAYS">
+                                <Label />
                                 <ImageView fx:id="starterCard" fitHeight="100" fitWidth="149"
                                            onMouseClicked="#changeCardSide">
                                     <Image url="@../Images/CardsImages/GoldBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_41.jpg"/>
@@ -209,14 +210,12 @@
                             </ImageView>
                         </HBox>
                     </VBox>
-                    <VBox alignment="CENTER_LEFT" spacing="25.0" stylesheets="@../css/Buttons.css" accessibleText="false">
+                    <VBox alignment="CENTER_LEFT" spacing="25.0" stylesheets="@../css/Buttons.css" accessibleText="false" mouseTransparent="true" HBox.hgrow="ALWAYS">
                         <TextField fx:id="infoText" text="Choose your secret objective" styleClass="small-button, rounded-button"/>
                         <Label fx:id="pingText" />
                     </VBox>
                 </HBox>
             </VBox>
-
-
         </StackPane>
 
         <!--ALL DECKS and DRAWABLE CARDS-->

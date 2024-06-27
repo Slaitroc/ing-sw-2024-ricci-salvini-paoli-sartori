@@ -39,8 +39,7 @@ public class InGameController extends ViewController {
     @FXML
     public StackPane motherPane;
 
-    // Resources Count
-    // Labels____________________________________________________________________________________________
+    //Resources Count Labels____________________________________________________________________________________________
     @FXML
     public Label mushCount1;
     @FXML
@@ -105,11 +104,10 @@ public class InGameController extends ViewController {
     public Label player3Points;
     @FXML
     public Label player4Points;
-    // Map of resources labels for each player
+    //Map of resources labels for each player
     private final Map<Integer, List<Label>> resourceLabels = new HashMap<>();
 
-    // Resources
-    // VBoxes__________________________________________________________________________________________________
+    //Resources VBoxes__________________________________________________________________________________________________
     @FXML
     public VBox player1Resources;
     @FXML
@@ -119,8 +117,7 @@ public class InGameController extends ViewController {
     @FXML
     public VBox player4Resources;
 
-    // STATUS
-    // IMAGES_____________________________________________________________________________________________________
+    //STATUS IMAGES_____________________________________________________________________________________________________
     @FXML
     public ImageView statusP2;
     @FXML
@@ -129,8 +126,7 @@ public class InGameController extends ViewController {
     public ImageView statusP4;
     private final List<ImageView> statusPanes = new ArrayList<>();
 
-    // Player Names
-    // Labels_______________________________________________________________________________________________
+    //Player Names Labels_______________________________________________________________________________________________
     @FXML
     public Label player4Name;
     @FXML
@@ -140,8 +136,7 @@ public class InGameController extends ViewController {
     @FXML
     public Label player1Name;
 
-    // Player turn
-    // Icons_________________________________________________________________________________________________
+    //Player turn Icons_________________________________________________________________________________________________
     @FXML
     public ImageView playingPlayer1Icon;
     @FXML
@@ -151,7 +146,7 @@ public class InGameController extends ViewController {
     @FXML
     public ImageView playingPlayer4Icon;
 
-    // GridPanes_________________________________________________________________________________________________________
+    //GridPanes_________________________________________________________________________________________________________
     @FXML
     public GridPane player1PlayAreaGrid;
     @FXML
@@ -161,8 +156,7 @@ public class InGameController extends ViewController {
     @FXML
     public GridPane player4PlayAreaGrid;
 
-    // Chat
-    // Elements_____________________________________________________________________________________________________
+    //Chat Elements_____________________________________________________________________________________________________
     @FXML
     public MFXTextField textField;
     @FXML
@@ -174,8 +168,7 @@ public class InGameController extends ViewController {
     @FXML
     public ImageView chatButtonImage;
 
-    // Settings
-    // Elements_________________________________________________________________________________________________
+    //Settings Elements_________________________________________________________________________________________________
     @FXML
     public StackPane menuPane;
     @FXML
@@ -185,8 +178,7 @@ public class InGameController extends ViewController {
     @FXML
     public ListView<String> controls;
 
-    // ImageViews
-    // Cards__________________________________________________________________________________________________
+    //ImageViews Cards__________________________________________________________________________________________________
     @FXML
     public ImageView handCard1;
     @FXML
@@ -227,10 +219,12 @@ public class InGameController extends ViewController {
     public ImageView colorPion2;
     @FXML
     public ImageView colorPion1;
+    private Image other1SecretObjectiveImage;
+    private Image other2SecretObjectiveImage;
+    private Image other3SecretObjectiveImage;
 
-    // Main cards
-    // ImageViews_____________________________________________________________________________________________
-    // List of hand cards for each player
+    //Main cards ImageViews_____________________________________________________________________________________________
+    //List of hand cards for each player
     private List<ImageView> handCards;
     @FXML
     public ImageView deckGold;
@@ -257,8 +251,7 @@ public class InGameController extends ViewController {
     @FXML
     public ImageView secretObj2;
 
-    // Tabs to Hide or
-    // Rename____________________________________________________________________________________________
+    //Tabs to Hide or Rename____________________________________________________________________________________________
     @FXML
     public Tab tab2;
     @FXML
@@ -266,8 +259,7 @@ public class InGameController extends ViewController {
     @FXML
     public Tab tab4;
 
-    // EndGame
-    // Panes_____________________________________________________________________________________________________
+    //EndGame Panes_____________________________________________________________________________________________________
     public StackPane youWon;
     public StackPane otherWinner;
     public Label winnerLabel;
@@ -281,21 +273,22 @@ public class InGameController extends ViewController {
 
     private ResolutionSizes size;
 
-    boolean shortcutDetected = false;
-    boolean firstPlayer = true;
-    boolean timerAlreadyStarted = false;
+    //temporary fix to scores been updated in weird places
+    private final List<Integer> tmpScores = new ArrayList<>(Arrays.asList(0, 0, 0, 0));
+    private boolean shortcutDetected = false;
+    private boolean firstPlayer = true;
+    private boolean timerAlreadyStarted = false;
     private int seconds = 0;
-    private int millis;
+    private boolean ping = true;
+    @FXML
     public Label pingText;
     @FXML
     public TextField infoText;
-    @FXML
     private Timeline timeline;
 
-    /*
-     * NOTE
-     * The four integers represent the minimum and maximum x and y coordinates of
-     * the playAreaGrid
+
+    /* NOTE
+     * The four integers represent the minimum and maximum x and y coordinates of the playAreaGrid
      * gridDimensions.get(grid).get(0) = minX
      * gridDimensions.get(grid).get(1) = minY
      * gridDimensions.get(grid).get(2) = maxX
@@ -305,17 +298,14 @@ public class InGameController extends ViewController {
 
     /*
      * NOTE
-     * We need a map of cells for each gridPane, otherwise all the cells will be
-     * overwritten with
-     * those of the last gridPane used. For code clarity, it is used a list of maps,
-     * one fore each player.
-     */
+     * We need a map of cells for each gridPane, otherwise all the cells will be overwritten with
+     * those of the last gridPane used. For code clarity, it is used a list of maps, one fore each player.
+     * */
     private final Map<Pair<Integer, Integer>, Cell> cells1 = new HashMap<>();
     private final Map<Pair<Integer, Integer>, Cell> cells2 = new HashMap<>();
     private final Map<Pair<Integer, Integer>, Cell> cells3 = new HashMap<>();
     private final Map<Pair<Integer, Integer>, Cell> cells4 = new HashMap<>();
-    private final List<Map<Pair<Integer, Integer>, Cell>> cellList = new ArrayList<>(
-            Arrays.asList(cells1, cells2, cells3, cells4));
+    private final List<Map<Pair<Integer, Integer>, Cell>> cellList = new ArrayList<>(Arrays.asList(cells1, cells2, cells3, cells4));
 
     Rectangle2D cardViewportSD = new Rectangle2D(69, 79, 894, 600);
 
@@ -326,15 +316,14 @@ public class InGameController extends ViewController {
     @Override
     public void setUp() {
 
-        size = ResolutionSizes.HD; // needed to be set at the start or cards will not know what size to be
-                                   // initialized
-        secretObjective.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(
-                "/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_102.jpg"))));
+        size = ResolutionSizes.HD; //needed to be set at the start or cards will not know what size to be initialized
+        secretObjective.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/ObjectiveBack/1709658535735-b4f02509-be6b-4cd6-acbe-7a6b989ab079_102.jpg"))));
         handCards = new ArrayList<>(Arrays.asList(
                 handCard1, handCard2, handCard3,
                 player2HandCard1, player2HandCard2, player2HandCard3,
                 player3HandCard1, player3HandCard2, player3HandCard3,
-                player4HandCard1, player4HandCard2, player4HandCard3));
+                player4HandCard1, player4HandCard2, player4HandCard3
+        ));
 
         // Set the clip of the ImageViews to a rectangle with rounded corners
         for (ImageView handCard : handCards) {
@@ -350,27 +339,26 @@ public class InGameController extends ViewController {
         controls.getItems().add("Quit:          \t\tctrl + q");
         controls.getItems().add("Fullscreen:    \t\tctrl + f");
 
-        // Initializes the tabs titles and disable the not used ones
+        //Initializes the tabs titles and disable the not used ones
         List<Tab> tabs = new ArrayList<>(Arrays.asList(tab2, tab3, tab4));
         int k = 0;
         for (String player : app.getPlayerList().keySet()) {
             System.out.println("player " + player);
             if (!player.equals(app.getUsername())) {
                 otherPlayers.add(player);
-                // System.out.println("Adding other player: " + player);
+                //System.out.println("Adding other player: " + player);
                 tabs.get(k).setText(player);
                 k++;
             }
         }
         for (; k <= 2; k++) {
-            // System.out.println("Disabling tab " + k);
+            //System.out.println("Disabling tab " + k);
             tabs.get(k).setDisable(true);
             tabs.get(k).setText("Locked");
         }
 
-        // Initializes the gridDimensions maps for all the playAreaGrids that need to be
-        // initialized to minX=0, minY=0, maxX=0, maxY=0
-        // Also hides the resources of the players not in game
+        //Initializes the gridDimensions maps for all the playAreaGrids that need to be initialized to minX=0, minY=0, maxX=0, maxY=0
+        //Also hides the resources of the players not in game
         gridDimensions.put(player1PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
         gridDimensions.put(player2PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
         statusPanes.add(statusP2);
@@ -393,7 +381,7 @@ public class InGameController extends ViewController {
             gridDimensions.put(player4PlayAreaGrid, new ArrayList<>(Arrays.asList(0, 0, 0, 0)));
         }
 
-        // Initializes the first 3 columns and rows for all the playAreaGrids
+        //Initializes the first 3 columns and rows for all the playAreaGrids
         k = 0;
         for (GridPane grid : gridDimensions.keySet()) {
             for (int i = 0; i < 3; i++) {
@@ -406,19 +394,14 @@ public class InGameController extends ViewController {
         }
         player1PlayAreaGrid.setVisible(false);
 
-        // Initializes the resourceLabels map
-        resourceLabels.put(1, Arrays.asList(mushCount1, animalCount1, insectCount1, plantCount1, inkCount1, quillCount1,
-                scrollCount1));
-        resourceLabels.put(2, Arrays.asList(mushCount2, animalCount2, insectCount2, plantCount2, inkCount2, quillCount2,
-                scrollCount2));
-        resourceLabels.put(3, Arrays.asList(mushCount3, animalCount3, insectCount3, plantCount3, inkCount3, quillCount3,
-                scrollCount3));
-        resourceLabels.put(4, Arrays.asList(mushCount4, animalCount4, insectCount4, plantCount4, inkCount4, quillCount4,
-                scrollCount4));
+        //Initializes the resourceLabels map
+        resourceLabels.put(1, Arrays.asList(mushCount1, animalCount1, insectCount1, plantCount1, inkCount1, quillCount1, scrollCount1));
+        resourceLabels.put(2, Arrays.asList(mushCount2, animalCount2, insectCount2, plantCount2, inkCount2, quillCount2, scrollCount2));
+        resourceLabels.put(3, Arrays.asList(mushCount3, animalCount3, insectCount3, plantCount3, inkCount3, quillCount3, scrollCount3));
+        resourceLabels.put(4, Arrays.asList(mushCount4, animalCount4, insectCount4, plantCount4, inkCount4, quillCount4, scrollCount4));
 
-        // Set 3 listeners for drag detection on the hand cards
-        // (outer stackPane is momentarily fixed inside this method to avoid a resize
-        // bug, I am warning you)
+        //Set 3 listeners for drag detection on the hand cards
+        // (outer stackPane is momentarily fixed inside this method to avoid a resize bug, I am warning you)
         addHandCardDragListener(handCard1);
         addHandCardDragListener(handCard2);
         addHandCardDragListener(handCard3);
@@ -427,14 +410,9 @@ public class InGameController extends ViewController {
         textField.addEventFilter(KeyEvent.KEY_PRESSED, this::handleChatKeyPressed);
         motherPane.addEventFilter(KeyEvent.KEY_PRESSED, this::handleShortcuts);
         changeResolution();
-
-        Timeline ping = new Timeline(new KeyFrame(Duration.millis(1), event -> millis++));
-        ping.setCycleCount(Timeline.INDEFINITE);
-        ping.play();
     }
 
-    // FROM
-    // show_Update:_________________________________________________________________________________________________
+    //FROM show_Update:_________________________________________________________________________________________________
 
     @Override
     public void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
@@ -470,15 +448,20 @@ public class InGameController extends ViewController {
     public void show_scorePlayer(LinkedHashMap<String, Pair<Integer, Boolean>> scores) {
         for (Map.Entry<String, Pair<Integer, Boolean>> player : scores.entrySet()) {
             if (player.getKey().equals(app.getUsername())) {
+                tmpScores.set(0, Integer.parseInt(player1Points.getText()));
                 player1Points.setText(player.getValue().getKey().toString());
+                //setVisible with the boolean coming from scores
                 playingPlayer1Icon.setVisible(player.getValue().getValue());
             } else if (player.getKey().equals(otherPlayers.getFirst())) {
+                tmpScores.set(1, Integer.parseInt(player2Points.getText()));
                 player2Points.setText(player.getValue().getKey().toString());
                 playingPlayer2Icon.setVisible(player.getValue().getValue());
             } else if (player.getKey().equals(otherPlayers.get(1))) {
+                tmpScores.set(2, Integer.parseInt(player3Points.getText()));
                 player3Points.setText(player.getValue().getKey().toString());
                 playingPlayer3Icon.setVisible(player.getValue().getValue());
             } else if (player.getKey().equals(otherPlayers.get(2))) {
+                tmpScores.set(3, Integer.parseInt(player4Points.getText()));
                 player4Points.setText(player.getValue().getKey().toString());
                 playingPlayer4Icon.setVisible(player.getValue().getValue());
             }
@@ -493,32 +476,31 @@ public class InGameController extends ViewController {
     }
 
     @Override
-    public void show_playArea(String username, Map<Point, PlayableCard> playArea,
-            Map<Resources, Integer> achievedResources) {
-        // System.out.println("Currently otherPlayers are: " + otherPlayers);
+    public void show_playArea(String username, Map<Point, PlayableCard> playArea, Map<Resources, Integer> achievedResources) {
+        //System.out.println("Currently otherPlayers are: " + otherPlayers);
         if (username.equals(app.getUsername())) {
-            // System.out.println("Updating playArea for player1")
-            // System.out.println("My gridPane is: " + player1PlayAreaGrid);
+            //System.out.println("Updating playArea for player1")
+            //System.out.println("My gridPane is: " + player1PlayAreaGrid);
             updateGrid(player1PlayAreaGrid, cells1, playArea);
             updateResources(1, achievedResources);
         }
         if (username.equals(otherPlayers.getFirst())) {
-            // System.out.println("Updating playArea for player2")
-            // System.out.println("My gridPane is: " + player2PlayAreaGrid);
+            //System.out.println("Updating playArea for player2")
+            //System.out.println("My gridPane is: " + player2PlayAreaGrid);
             updateGrid(player2PlayAreaGrid, cells2, playArea);
             updateResources(2, achievedResources);
         }
         if (app.getNumberOfPlayers() >= 3) {
             if (username.equals(otherPlayers.get(1))) {
-                // System.out.println("Updating playArea for player3")
-                // System.out.println("My gridPane is: " + player3PlayAreaGrid);
+                //System.out.println("Updating playArea for player3")
+                //System.out.println("My gridPane is: " + player3PlayAreaGrid);
                 updateGrid(player3PlayAreaGrid, cells3, playArea);
                 updateResources(3, achievedResources);
             }
             if (app.getNumberOfPlayers() == 4) {
                 if (username.equals(otherPlayers.get(2))) {
-                    // System.out.println("Updating playArea for player4")
-                    // System.out.println("My gridPane is: " + player4PlayAreaGrid);
+                    //System.out.println("Updating playArea for player4")
+                    //System.out.println("My gridPane is: " + player4PlayAreaGrid);
                     updateGrid(player4PlayAreaGrid, cells4, playArea);
                     updateResources(4, achievedResources);
                 }
@@ -527,8 +509,7 @@ public class InGameController extends ViewController {
     }
 
     @Override
-    public void show_chooseObjectiveCard(String username, ObjectiveCard secretObjectiveCard1,
-            ObjectiveCard secretObjectiveCard2) {
+    public void show_chooseObjectiveCard(String username, ObjectiveCard secretObjectiveCard1, ObjectiveCard secretObjectiveCard2) {
         if (username.equals(app.getUsername())) {
             setCardImage(secretObjectiveCard1, secretObj1);
             setCardImage(secretObjectiveCard2, secretObj2);
@@ -550,41 +531,44 @@ public class InGameController extends ViewController {
             secretObj1.setVisible(false);
             secretObj2.setManaged(false);
             secretObj2.setVisible(false);
-            infoText.setText("Choose side of your starter card");
+            infoText.setText("Choose starter card side");
             setCardImage(objectiveCard, secretObjective);
         }
+        else if (username.equals(otherPlayers.getFirst()))
+            other1SecretObjectiveImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(objectiveCard.getImage())));
+        else if (username.equals(otherPlayers.get(1)))
+            other2SecretObjectiveImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(objectiveCard.getImage())));
+        else if (username.equals(otherPlayers.get(2)))
+            other3SecretObjectiveImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(objectiveCard.getImage())));
+
     }
 
     @Override
     public void playerStateInfo(String username, String info) {
-        // System.out.println("Hello, I am player " + app.getUsername() + " and I
-        // received the message that " + username + " is in state " + info);
+        //System.out.println("Hello, I am player " + app.getUsername() + " and I received the message that " + username + " is in state " + info);
         if (username.equals(app.getUsername())) {
-            // showInstructions(info);
+            if (timeline != null){
+                timeline.stop();
+                seconds = 0;
+            }
             infoText.setText(info);
-            // playingPlayer1Icon.setVisible(info.equals("notplaced") ||
-            // info.equals("placed"));
             if (firstPlayer) {
                 noirPion1.setVisible(true);
                 firstPlayer = false;
             }
         } else if (username.equals(otherPlayers.getFirst())) {
-            // playingPlayer2Icon.setVisible(info.equals("notplaced") ||
-            // info.equals("placed"));
             if (firstPlayer) {
                 noirPion2.setVisible(true);
                 firstPlayer = false;
             }
         } else if (username.equals(otherPlayers.get(1))) {
-            // playingPlayer3Icon.setVisible(info.equals("notplaced") ||
-            // info.equals("placed"));
+            //playingPlayer3Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
             if (firstPlayer) {
                 noirPion3.setVisible(true);
                 firstPlayer = false;
             }
         } else if (username.equals(otherPlayers.get(2))) {
-            // playingPlayer4Icon.setVisible(info.equals("notplaced") ||
-            // info.equals("placed"));
+            //playingPlayer4Icon.setVisible(info.equals("notplaced") || info.equals("placed"));
             if (firstPlayer) {
                 noirPion4.setVisible(true);
                 firstPlayer = false;
@@ -602,19 +586,16 @@ public class InGameController extends ViewController {
     public void updateChat(String fromUsername, String toUsername, String message) {
         Text usernameText;
         String colorUsername;
-        // If my username is the toUsername, → fromUsername is trying to send me a
-        // message then I will print [From: X]: message
+        //If my username is the toUsername, → fromUsername is trying to send me a message then I will print [From: X]: message
         if (toUsername.equals(app.getUsername())) {
             colorUsername = toUsername;
             usernameText = new Text("[From: " + fromUsername + "]: ");
         }
-        // If my username is the fromUsername, → I am trying to send me a message to
-        // toUsername then I will print [To: Y]: message
+        //If my username is the fromUsername, → I am trying to send me a message to toUsername then I will print [To: Y]: message
         else if (fromUsername.equals(app.getUsername())) {
             colorUsername = fromUsername;
             usernameText = new Text("[To: " + toUsername + "]: ");
-        } else
-            return;
+        } else return;
 
         populateChat(colorUsername, message, usernameText);
     }
@@ -623,19 +604,17 @@ public class InGameController extends ViewController {
     public void handleInGamePlayers(LinkedHashMap<String, Boolean> players) {
         int i = 0;
         for (String player : otherPlayers) {
-            if (players.containsKey(player))
-                statusPanes.get(i).setVisible(false);
+            if (players.containsKey(player)) statusPanes.get(i).setVisible(false);
             else {
                 statusPanes.get(i).setVisible(true);
-                statusPanes.get(i).setImage(new Image(Objects.requireNonNull(
-                        getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/Misc/quitPlayer.jpg"))));
+                statusPanes.get(i).setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/Misc/quitPlayer.jpg"))));
             }
             i++;
         }
     }
 
     @Override
-    public void showWinner(String username) {
+    public void showWinner(String username, Map<String, Integer> playersScore) {
         if (username.equals(app.getUsername())) {
             showPane(youWon);
             youWon.setMouseTransparent(true);
@@ -644,7 +623,23 @@ public class InGameController extends ViewController {
             showPane(otherWinner);
             otherWinner.setMouseTransparent(true);
         }
-
+        for (Map.Entry<String, Integer> player : playersScore.entrySet()) {
+            if (player.getKey().equals(app.getUsername())) {
+                player1Points.setText(tmpScores.getFirst() + " + " + (player.getValue() - tmpScores.getFirst()) + " = " + player.getValue());
+            }
+            else if (player.getKey().equals(otherPlayers.getFirst())){
+                player2Points.setText(tmpScores.get(1) + " + " + (player.getValue() - tmpScores.get(1)) + " = " + player.getValue());
+            }
+            else if (player.getKey().equals(otherPlayers.get(1))){
+                player3Points.setText(tmpScores.get(2) + " + " + (player.getValue() - tmpScores.get(2)) + " = " + player.getValue());
+            }
+            else if (player.getKey().equals(otherPlayers.get(2))){
+                player4Points.setText(tmpScores.get(3) + " + " + (player.getValue() - tmpScores.get(3)) + " = " + player.getValue());
+            }
+        }
+        handCards.get(5).setImage(other1SecretObjectiveImage);
+        handCards.get(8).setImage(other2SecretObjectiveImage);
+        handCards.get(11).setImage(other3SecretObjectiveImage);
     }
 
     @Override
@@ -654,8 +649,10 @@ public class InGameController extends ViewController {
             timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
                 seconds++;
                 infoText.setText("Game Paused: " + formatTime(secondsLeft - seconds));
-                if (secondsLeft == seconds)
+                if (secondsLeft == seconds) {
                     timeline.stop();
+                    seconds = 0;
+                }
             }));
             timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.play();
@@ -674,8 +671,13 @@ public class InGameController extends ViewController {
 
     @Override
     public void showPing() {
-        pingText.setText("Ping: " + (millis - 2000) + "ms");
-        millis = 0;
+        if(ping){
+            pingText.setText("❤");
+            ping=false;
+        } else {
+            pingText.setText("💓");
+            ping=true;
+        }
     }
 
     @Override
@@ -683,35 +685,33 @@ public class InGameController extends ViewController {
         infoText.setText(message);
     }
 
-    // MOUSE
-    // COMMANDS:___________________________________________________________________________________________________
+    //MOUSE COMMANDS:___________________________________________________________________________________________________
 
     /**
-     * Handles changing the side of a card when a secondary mouse button click is
-     * detected.
+     * Handles changing the side of a card when a secondary mouse button click is detected.
      *
      * @param mouseEvent The mouse event triggering the side change.
      */
     public void changeCardSide(MouseEvent mouseEvent) {
         if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-            // System.out.println("changeSide called");
+            //System.out.println("changeSide called");
             ImageView card = (ImageView) mouseEvent.getSource();
 
             try {
                 if (card == handCard1) {
-                    // System.out.println("Called on Card1");
+                    //System.out.println("Called on Card1");
                     client.selectCard(0);
                     client.changeSide();
                 } else if (card == handCard2) {
-                    // System.out.println("Called on Card2");
+                    //System.out.println("Called on Card2");
                     client.selectCard(1);
                     client.changeSide();
                 } else if (card == handCard3) {
-                    // System.out.println("Called on Card3");
+                    //System.out.println("Called on Card3");
                     client.selectCard(2);
                     client.changeSide();
                 } else if (card == starterCard) {
-                    // System.out.println("Called on Starter Card");
+                    //System.out.println("Called on Starter Card");
                     client.changeStarterSide();
                 }
             } catch (RemoteException e) {
@@ -727,28 +727,28 @@ public class InGameController extends ViewController {
      * @param mouseEvent The mouse event triggering the card draw.
      */
     public void drawCard(MouseEvent mouseEvent) {
-        // System.out.println("drawCard called");
+        //System.out.println("drawCard called");
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-            // System.out.println("Primary Button Down");
+            //System.out.println("Primary Button Down");
             ImageView card = (ImageView) mouseEvent.getSource();
             try {
                 if (card == deckResource) {
-                    // System.out.println("Called on deckResource");
+                    //System.out.println("Called on deckResource");
                     client.drawResource(0);
                 } else if (card == deckResourceCard1) {
-                    // System.out.println("Called on deckResourceCard1");
+                    //System.out.println("Called on deckResourceCard1");
                     client.drawResource(1);
                 } else if (card == deckResourceCard2) {
-                    // System.out.println("Called on deckResourceCard2");
+                    //System.out.println("Called on deckResourceCard2");
                     client.drawResource(2);
                 } else if (card == deckGold) {
-                    // System.out.println("Called on deckGold");
+                    //System.out.println("Called on deckGold");
                     client.drawGold(0);
                 } else if (card == deckGoldCard1) {
-                    // System.out.println("Called on deckGoldCard1");
+                    //System.out.println("Called on deckGoldCard1");
                     client.drawGold(1);
                 } else if (card == deckGoldCard2) {
-                    // System.out.println("Called on deckGoldCard2");
+                    //System.out.println("Called on deckGoldCard2");
                     client.drawGold(2);
                 }
             } catch (RemoteException e) {
@@ -779,8 +779,7 @@ public class InGameController extends ViewController {
     }
 
     /**
-     * Plays the starter card than hides the initial choice VBox and shows the
-     * player1PlayAreaGrid.
+     * Plays the starter card than hides the initial choice VBox and shows the player1PlayAreaGrid.
      */
     public void playStarter() {
         try {
@@ -796,22 +795,20 @@ public class InGameController extends ViewController {
     }
 
     /**
-     * Toggles the visibility of the chat popup VBox by setting it to visible or
-     * invisible.
+     * Toggles the visibility of the chat popup VBox by setting it to visible or invisible.
      * Also resets the chat button image if there are unread messages.
      */
     public void showHideChat() {
-        // System.out.println("ChatPopUp is visible: " + chatPopUp.isVisible());
+        //System.out.println("ChatPopUp is visible: " + chatPopUp.isVisible());
         if (chatPopUp.isVisible()) {
-            // System.out.println("Trying to hide chat");
+            //System.out.println("Trying to hide chat");
             chatPopUp.setVisible(false);
             chatPopUp.setMouseTransparent(true);
         } else {
-            // System.out.println("Trying to show chat");
+            //System.out.println("Trying to show chat");
             chatPopUp.setVisible(true);
             chatPopUp.setMouseTransparent(false);
-            chatButtonImage.setImage(new Image(Objects.requireNonNull(
-                    getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/AppIcons/iconMessage.png"))));
+            chatButtonImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/AppIcons/iconMessage.png"))));
             chatField.requestFocus();
         }
     }
@@ -885,10 +882,8 @@ public class InGameController extends ViewController {
      * Change resolution to all imageViews on screen
      */
     public void changeResolution() {
-        if (size == ResolutionSizes.HD)
-            size = ResolutionSizes.SD;
-        else
-            size = ResolutionSizes.HD;
+        if (size == ResolutionSizes.HD) size = ResolutionSizes.SD;
+        else size = ResolutionSizes.HD;
 
         resizeCard(handCard1);
         resizeCard(handCard2);
@@ -907,20 +902,15 @@ public class InGameController extends ViewController {
         resizeCard(secretObjective);
         changeGridResolution(player1PlayAreaGrid, cells1);
         changeGridResolution(player2PlayAreaGrid, cells2);
-        if (app.getNumberOfPlayers() >= 3)
-            changeGridResolution(player3PlayAreaGrid, cells3);
-        if (app.getNumberOfPlayers() == 4)
-            changeGridResolution(player4PlayAreaGrid, cells4);
+        if (app.getNumberOfPlayers() >= 3) changeGridResolution(player3PlayAreaGrid, cells3);
+        if (app.getNumberOfPlayers() == 4) changeGridResolution(player4PlayAreaGrid, cells4);
 
     }
 
     /**
-     * Handles the quitting process for a player, displaying a confirmation dialog
-     * and performing necessary actions if confirmed.
-     * Displays a confirmation alert to the player asking if they are sure they want
-     * to quit the game.
-     * If the player confirms, attempts to quit the game and navigates back to the
-     * main menu.
+     * Handles the quitting process for a player, displaying a confirmation dialog and performing necessary actions if confirmed.
+     * Displays a confirmation alert to the player asking if they are sure they want to quit the game.
+     * If the player confirms, attempts to quit the game and navigates back to the main menu.
      * Handles potential remote exceptions by showing a server crash warning.
      */
     public void quit() {
@@ -944,8 +934,7 @@ public class InGameController extends ViewController {
         }
     }
 
-    // PRIVATE
-    // METHODS:__________________________________________________________________________________________________
+    //PRIVATE METHODS:__________________________________________________________________________________________________
 
     /**
      * Sets the image of a card to the specified target ImageView.
@@ -960,203 +949,164 @@ public class InGameController extends ViewController {
     }
 
     /**
-     * Adds a column to the specified GridPane at the specified x-coordinate and
-     * fills it with cells.
+     * Adds a column to the specified GridPane at the specified x-coordinate and fills it with cells.
      * Notice that it need to specify what cells map to use.
      *
      * @param grid The GridPane to which the column is to be added.
      * @param x    The x-coordinate of the new column.
      */
     private void addColumn(GridPane grid, Map<Pair<Integer, Integer>, Cell> cells, int x) {
-        // System.out.println("Adding column " + x + " to grid " + grid);
+        //System.out.println("Adding column " + x + " to grid " + grid);
         for (int y = 0; y < grid.getRowCount(); y++) {
             if (cells.get(new Pair<>(x, y)) == null) {
                 Cell cell = new Cell(grid, x, y);
                 cells.put(new Pair<>(x, y), cell);
-                // System.out.println("Adding cell on [" + x + ";" + y + "] because of
-                // addColumn(" + x + ")");
+                //System.out.println("Adding cell on [" + x + ";" + y + "] because of addColumn(" + x + ")");
             }
         }
     }
 
     /**
-     * Adds a row to the specified GridPane at the specified y-coordinate and fills
-     * it with cells.
+     * Adds a row to the specified GridPane at the specified y-coordinate and fills it with cells.
      * Notice that it need to specify what cells map to use.
      *
      * @param grid The GridPane to which the row is to be added.
      * @param y    The y-coordinate of the new row.
      */
     private void addRow(GridPane grid, Map<Pair<Integer, Integer>, Cell> cells, int y) {
-        // System.out.println("Adding row " + y + " to grid " + grid);
+        //System.out.println("Adding row " + y + " to grid " + grid);
         for (int x = 0; x < grid.getColumnCount(); x++) {
             if (cells.get(new Pair<>(x, y)) == null) {
                 Cell cell = new Cell(grid, x, y);
                 cells.put(new Pair<>(x, y), cell);
-                // System.out.println("Adding cell on [" + x + ";" + y + "] because of addRow("
-                // + y + ")");
+                //System.out.println("Adding cell on [" + x + ";" + y + "] because of addRow(" + y + ")");
             }
         }
     }
 
     /**
-     * Start with checking if the specified grid had to be resized, then set all the
-     * cells of the relative grid
-     * to the invisible image and finally set the image of the cards in the playArea
-     * to the cells in the grid.
+     * Start with checking if the specified grid had to be resized, then set all the cells of the relative grid
+     * to the invisible image and finally set the image of the cards in the playArea to the cells in the grid.
      *
      * @param grid     The GridPane to be updated.
      * @param playArea The map representing the play area.
      */
     private void updateGrid(GridPane grid, Map<Pair<Integer, Integer>, Cell> cells, Map<Point, PlayableCard> playArea) {
-        // System.out.println("UPDATE_GRID CALL");
+        //System.out.println("UPDATE_GRID CALL");
         for (Map.Entry<Point, PlayableCard> placedCard : playArea.entrySet()) {
             if (placedCard.getKey().x < gridDimensions.get(grid).getFirst()) {
-                // System.out.println("Adding Column");
+                //System.out.println("Adding Column");
                 gridDimensions.get(grid).set(0, placedCard.getKey().x);
                 addColumn(grid, cells, gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2);
             }
             if (placedCard.getKey().y < gridDimensions.get(grid).get(1)) {
-                // System.out.println("Adding Row");
+                //System.out.println("Adding Row");
                 gridDimensions.get(grid).set(1, placedCard.getKey().y);
                 addRow(grid, cells, gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2);
             }
             if (placedCard.getKey().x > gridDimensions.get(grid).get(2)) {
-                // System.out.println("Adding Column");
+                //System.out.println("Adding Column");
                 gridDimensions.get(grid).set(2, placedCard.getKey().x);
                 addColumn(grid, cells, gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2);
             }
             if (placedCard.getKey().y > gridDimensions.get(grid).get(3)) {
-                // System.out.println("Adding Row");
+                //System.out.println("Adding Row");
                 gridDimensions.get(grid).set(3, placedCard.getKey().y);
                 addRow(grid, cells, gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2);
             }
         }
 
-        /*
-         * System.out.println("Initial Grid Columns: " + grid.getColumnCount());
-         * System.out.println("Initial Grid Rows: " + grid.getRowCount())
-         * 
-         * System.out.println("gridDimensions.get(grid).get(2): " +
-         * gridDimensions.get(grid).get(2));
-         * System.out.println("gridDimensions.get(grid).get(3): " +
-         * gridDimensions.get(grid).get(3));
-         * System.out.println("gridDimensions.get(grid).getFirst(): " +
-         * gridDimensions.get(grid).getFirst());
-         * System.out.println("gridDimensions.get(grid).get(1): " +
-         * gridDimensions.get(grid).get(1));
-         * 
-         * System.out.
-         * println("(gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2): "
-         * + (gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() +
-         * 2));
-         * System.out.
-         * println("(gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2): "
-         * + (gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2));
-         */
+/*        System.out.println("Initial Grid Columns: " + grid.getColumnCount());
+        System.out.println("Initial Grid Rows: " + grid.getRowCount())
 
-        // int debug = 0;
+        System.out.println("gridDimensions.get(grid).get(2): " + gridDimensions.get(grid).get(2));
+        System.out.println("gridDimensions.get(grid).get(3): " + gridDimensions.get(grid).get(3));
+        System.out.println("gridDimensions.get(grid).getFirst(): " + gridDimensions.get(grid).getFirst());
+        System.out.println("gridDimensions.get(grid).get(1): " + gridDimensions.get(grid).get(1));
+
+        System.out.println("(gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2): " + (gridDimensions.get(grid).get(2) - gridDimensions.get(grid).getFirst() + 2));
+        System.out.println("(gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2): " + (gridDimensions.get(grid).get(3) - gridDimensions.get(grid).get(1) + 2));*/
+
+        //int debug = 0;
         for (int x = 0; x < grid.getColumnCount(); x++) {
             for (int y = 0; y < grid.getRowCount(); y++) {
-                // debug++;
+                //debug++;
                 cells.get(new Pair<>(x, y)).hideImage();
-                // System.out.println("Cell [" + x + ";" + y + "] set to invisible image");
+                //System.out.println("Cell [" + x + ";" + y + "] set to invisible image");
             }
         }
-        // System.out.println("UPDATED GRID with " + debug + " iterations");
+        //System.out.println("UPDATED GRID with " + debug + " iterations");
         int newCoordinateX;
         int newCoordinateY;
         for (Map.Entry<Point, PlayableCard> placedCard : playArea.entrySet()) {
             newCoordinateX = placedCard.getKey().x - gridDimensions.get(grid).getFirst() + 1;
             newCoordinateY = gridDimensions.get(grid).get(3) - placedCard.getKey().y + 1;
-            // System.out.println("Adding card that was on Point: " + placedCard.getKey() +
-            // " on cell [" + newCoordinateX + ";" + newCoordinateY + "]");
+            //System.out.println("Adding card that was on Point: " + placedCard.getKey() + " on cell [" + newCoordinateX + ";" + newCoordinateY + "]");
             cells.get(new Pair<>(newCoordinateX, newCoordinateY)).setCardImage(placedCard.getValue().getImage());
         }
     }
 
     /**
-     * Updates the visual representation of a player's resources by setting the
-     * resource labels for the specified player.
-     * <li>Iterates through the map of achieved resources and updates the
-     * corresponding resource label based on the resource type.</li>
-     * <li>Sets the text of each resource label to reflect the current amount of the
-     * resource.</li>
+     * Updates the visual representation of a player's resources by setting the resource labels for the specified player.
+     * <li>Iterates through the map of achieved resources and updates the corresponding resource label based on the resource type.</li>
+     * <li>Sets the text of each resource label to reflect the current amount of the resource.</li>
      *
-     * @param playerNumber      The number of the player whose resources are being
-     *                          updated.
-     * @param achievedResources A map containing the resources and their
-     *                          corresponding amounts that the player has achieved.
+     * @param playerNumber      The number of the player whose resources are being updated.
+     * @param achievedResources A map containing the resources and their corresponding amounts that the player has achieved.
      */
     private void updateResources(int playerNumber, Map<Resources, Integer> achievedResources) {
         for (Map.Entry<Resources, Integer> resource : achievedResources.entrySet()) {
             switch (resource.getKey()) {
                 case Resources.MUSHROOM:
-                    // System.out.println("Updating MUSHROOM for player " + playerNumber + " to " +
-                    // resource.getValue());
+                    //System.out.println("Updating MUSHROOM for player " + playerNumber + " to " + resource.getValue());
                     resourceLabels.get(playerNumber).getFirst().setText(String.valueOf(resource.getValue()));
                     break;
                 case Resources.ANIMAL:
-                    // System.out.println("Updating ANIMAL for player " + playerNumber + " to " +
-                    // resource.getValue());
+                    //System.out.println("Updating ANIMAL for player " + playerNumber + " to " + resource.getValue());
                     resourceLabels.get(playerNumber).get(1).setText(String.valueOf(resource.getValue()));
                     break;
                 case Resources.INSECT:
-                    // System.out.println("Updating INSECT for player " + playerNumber + " to " +
-                    // resource.getValue());
+                    //System.out.println("Updating INSECT for player " + playerNumber + " to " + resource.getValue());
                     resourceLabels.get(playerNumber).get(2).setText(String.valueOf(resource.getValue()));
                     break;
                 case Resources.PLANT:
-                    // System.out.println("Updating PLANT for player " + playerNumber + " to " +
-                    // resource.getValue());
+                    //System.out.println("Updating PLANT for player " + playerNumber + " to " + resource.getValue());
                     resourceLabels.get(playerNumber).get(3).setText(String.valueOf(resource.getValue()));
                     break;
                 case Resources.INK:
-                    // System.out.println("Updating INK for player " + playerNumber + " to " +
-                    // resource.getValue());
+                    //System.out.println("Updating INK for player " + playerNumber + " to " + resource.getValue());
                     resourceLabels.get(playerNumber).get(4).setText(String.valueOf(resource.getValue()));
                     break;
                 case Resources.FEATHER:
-                    // System.out.println("Updating FEATHER for player " + playerNumber + " to " +
-                    // resource.getValue());
+                    //System.out.println("Updating FEATHER for player " + playerNumber + " to " + resource.getValue());
                     resourceLabels.get(playerNumber).get(5).setText(String.valueOf(resource.getValue()));
                     break;
                 case Resources.SCROLL:
-                    // System.out.println("Updating SCROLL for player " + playerNumber + " to " +
-                    // resource.getValue());
+                    //System.out.println("Updating SCROLL for player " + playerNumber + " to " + resource.getValue());
                     resourceLabels.get(playerNumber).get(6).setText(String.valueOf(resource.getValue()));
-                    break;
-                default:
                     break;
             }
         }
     }
 
     /**
-     * Updates the visual representation of a player's hand by setting the card
-     * images for the specified player
-     * <li>Iterates through the list of playable cards and updates the corresponding
-     * image in the player's hand.</li>
-     * <li>If the player's hand contains only two cards, it sets a placeholder image
-     * for the Third card slot.</li>
+     * Updates the visual representation of a player's hand by setting the card images for the specified player
+     * <li>Iterates through the list of playable cards and updates the corresponding image in the player's hand.</li>
+     * <li>If the player's hand contains only two cards, it sets a placeholder image for the Third card slot.</li>
      *
      * @param playerNumber The number of the player whose hand is being updated.
-     * @param hand         A list of playable cards representing the player's
-     *                     current hand.
+     * @param hand         A list of playable cards representing the player's current hand.
      */
     private void updateHand(int playerNumber, List<PlayableCard> hand) {
         int i = 0;
         for (PlayableCard card : hand) {
-            // System.out.println("Updating hand card " + i + " for player " + playerNumber
-            // + " resulting in: " + (i + (playerNumber * 3)));
+            //System.out.println("Updating hand card " + i + " for player " + playerNumber + " resulting in: " + (i + (playerNumber * 3)));
             setCardImage(card, handCards.get(i + (playerNumber * 3)));
             i++;
         }
         if (hand.size() == 2) {
-            // System.out.println("Hiding card " + 2 + " for player " + playerNumber + "
-            // resulting in: " + (2 + (playerNumber * 3)));
-            handCards.get(2 + (playerNumber) * 3).setImage(new Image(Objects.requireNonNull(
-                    getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/CardPlaceHolder1.png"))));
+            //System.out.println("Hiding card " + 2 + " for player " + playerNumber + " resulting in: " + (2 + (playerNumber * 3)));
+            handCards.get(2 + (playerNumber) * 3).setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/CardPlaceHolder1.png"))));
         }
     }
 
@@ -1172,7 +1122,7 @@ public class InGameController extends ViewController {
         }
     }
 
-    // private method to hide the hand of other players
+    //private method to hide the hand of other players
     private void hideHand(List<PlayableCard> hand) {
         for (PlayableCard playableCard : hand) {
             if (playableCard.getSide()) {
@@ -1188,7 +1138,8 @@ public class InGameController extends ViewController {
      */
     private void setClipToImageView(ImageView target) {
         Rectangle clip = new Rectangle(
-                target.getFitWidth(), target.getFitHeight());
+                target.getFitWidth(), target.getFitHeight()
+        );
         clip.setArcWidth(15);
         clip.setArcHeight(15);
         target.setClip(clip);
@@ -1196,11 +1147,9 @@ public class InGameController extends ViewController {
 
     /**
      * Adds a drag listener to the specified (ImageView) handCard.
-     * When a drag is detected, the motherPane is locked to the current size and the
-     * card is dragged.
+     * When a drag is detected, the motherPane is locked to the current size and the card is dragged.
      * Then a snapshot of the card is taken and added to the dragBoard.
-     * This is done because of a bug that resize the outer pane when a snapshot is
-     * taken.
+     * This is done because of a bug that resize the outer pane when a snapshot is taken.
      * The motherPane is then set to resizable again.
      *
      * @param card The ImageView to which the drag listener is to be added.
@@ -1215,12 +1164,9 @@ public class InGameController extends ViewController {
             db.setContent(content);
             setMotherPaneResizable();
             try {
-                if (card.equals(handCard1))
-                    client.selectCard(0);
-                else if (card.equals(handCard2))
-                    client.selectCard(1);
-                else if (card.equals(handCard3))
-                    client.selectCard(2);
+                if (card.equals(handCard1)) client.selectCard(0);
+                else if (card.equals(handCard2)) client.selectCard(1);
+                else if (card.equals(handCard3)) client.selectCard(2);
             } catch (RemoteException e) {
                 show_ServerCrashWarning(e.toString());
                 e.getStackTrace();
@@ -1230,29 +1176,22 @@ public class InGameController extends ViewController {
     }
 
     /**
-     * Resizes a card's image view to fit specified dimensions and sets a clipping
-     * region to ensure the image is displayed correctly.
-     * <li>Sets the fit height and width of the card image view based on predefined
-     * size values.</li>
-     * <li>Applies a clipping region to the card image view to ensure the image is
-     * properly displayed within the set dimensions.</li>
+     * Resizes a card's image view to fit specified dimensions and sets a clipping region to ensure the image is displayed correctly.
+     * <li>Sets the fit height and width of the card image view based on predefined size values.</li>
+     * <li>Applies a clipping region to the card image view to ensure the image is properly displayed within the set dimensions.</li>
      *
      * @param card The ImageView representing the card to be resized.
      */
     private void resizeCard(ImageView card) {
-        // System.out.println("card.getFitWidth(): "+card.getFitWidth()+" \n
-        // card.getFitHeight(): " + card.getFitHeight());
-        // System.out.println("card.getImage().getWidth():
-        // "+card.getImage().getWidth()+" \n card.getImage().getHeight() " +
-        // card.getImage().getHeight())
+        //System.out.println("card.getFitWidth(): "+card.getFitWidth()+" \n card.getFitHeight(): " + card.getFitHeight());
+        //System.out.println("card.getImage().getWidth(): "+card.getImage().getWidth()+" \n card.getImage().getHeight() " + card.getImage().getHeight())
         card.setFitHeight(size.getCardsHeight());
         card.setFitWidth(size.getCardWidth());
         setClipToImageView(card);
     }
 
     /**
-     * Locks the size of the mother pane to its current dimensions, preventing it
-     * from being resized.
+     * Locks the size of the mother pane to its current dimensions, preventing it from being resized.
      * Used to prevent a little visual bug during drag and drop.
      */
     private void lockMotherPaneSize() {
@@ -1261,8 +1200,7 @@ public class InGameController extends ViewController {
     }
 
     /**
-     * Unlocks the size of the mother pane to its current dimensions, allowing it to
-     * be resizable.
+     * Unlocks the size of the mother pane to its current dimensions, allowing it to be resizable.
      * Used to prevent a little visual bug during drag and drop.
      */
     private void setMotherPaneResizable() {
@@ -1294,16 +1232,12 @@ public class InGameController extends ViewController {
     }
 
     /**
-     * Assigns a pion image to each player based on their name and updates the
-     * corresponding image view.
+     * Assigns a pion image to each player based on their name and updates the corresponding image view.
      *
-     * <p>
-     * This method performs the following steps:
-     * </p>
+     * <p>This method performs the following steps:</p>
      * <ol>
-     * <li>Creates a list of pion image paths.</li>
-     * <li>Iterates through the list of players and assigns the corresponding pion
-     * image to each player's image view based on their name.</li>
+     *   <li>Creates a list of pion image paths.</li>
+     *   <li>Iterates through the list of players and assigns the corresponding pion image to each player's image view based on their name.</li>
      * </ol>
      */
     private void assignPion() {
@@ -1315,30 +1249,24 @@ public class InGameController extends ViewController {
         int i = 0;
         for (String player : app.getPlayerList().keySet()) {
             if (player.equals(player1Name.getText()))
-                colorPion1
-                        .setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+                colorPion1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
             else if (player.equals(player2Name.getText()))
-                colorPion2
-                        .setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+                colorPion2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
             else if (player.equals(player3Name.getText()))
-                colorPion3
-                        .setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+                colorPion3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
             else if (player.equals(player4Name.getText()))
-                colorPion4
-                        .setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
+                colorPion4.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(pionImages.get(i)))));
 
             i++;
         }
     }
 
     /**
-     * Populates the TextFlow, adding the prefix colored in a uniquely color and the
-     * message (suffix + \n)
+     * Populates the TextFlow, adding the prefix colored in a uniquely color and the message (suffix + \n)
      * Then proceed to layout the new message among the others using the scrollPane
      * Also shows the notification icon is the chat is closed at the moment
      *
-     * @param username     The username of the player used to assign the color to
-     *                     the message prefix
+     * @param username     The username of the player used to assign the color to the message prefix
      * @param message      The message content to be added to the chat.
      * @param usernameText The prefix of the message already modified
      */
@@ -1360,8 +1288,7 @@ public class InGameController extends ViewController {
         scrollPane.layout();
         scrollPane.setVvalue(1.0);
         if (!chatPopUp.isVisible()) {
-            chatButtonImage.setImage(new Image(Objects.requireNonNull(
-                    getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/AppIcons/iconMessagePending.png"))));
+            chatButtonImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/AppIcons/iconMessagePending.png"))));
         }
     }
 
@@ -1372,12 +1299,10 @@ public class InGameController extends ViewController {
         return String.format("%02d:%02d:%02d", hrs, minutes, secs);
     }
 
-    // INNER
-    // CLASSES:____________________________________________________________________________________________________
+    //INNER CLASSES:____________________________________________________________________________________________________
     /*
      * Cell class that extends ImageView and represents a cell in the playAreaGrid.
-     * It has a positionX and positionY that represent the x and y coordinates of
-     * the cell in the grid.
+     * It has a positionX and positionY that represent the x and y coordinates of the cell in the grid.
      * It has a cardImage that represents the image of the card in the cell.
      * If the cell is empty, the image is set to an ALMOST invisible image.
      * Using a 100% transparent image does not trigger his function (TO VERIFY)
@@ -1399,11 +1324,9 @@ public class InGameController extends ViewController {
         public Cell(GridPane grid, int x, int y) {
             positionX = x;
             positionY = y;
-            // Border border = new Border(new BorderStroke(javafx.scene.paint.Color.BLACK,
-            // BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
+            //Border border = new Border(new BorderStroke(javafx.scene.paint.Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
-            // Create a New StackPane of the dimensions of the cell (Smaller than the card
-            // image)
+            //Create a New StackPane of the dimensions of the cell (Smaller than the card image)
             pane = new StackPane();
             pane.setMaxHeight(size.getPaneHeight());
             pane.setMaxWidth(size.getPaneWidth());
@@ -1411,10 +1334,8 @@ public class InGameController extends ViewController {
             pane.setMinWidth(size.getPaneWidth());
             pane.getChildren().add(this);
 
-            // Insert invisible image to the stackPane (Set the image dimensions bigger than
-            // the stackPane, set his viewPort, and his clip (for round corners))
-            cardImage = new Image(Objects.requireNonNull(
-                    getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/CardPlaceHolder1.png")));
+            //Insert invisible image to the stackPane (Set the image dimensions bigger than the stackPane, set his viewPort, and his clip (for round corners))
+            cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/CardPlaceHolder1.png")));
             this.setImage(cardImage);
             this.setPreserveRatio(true);
             this.setViewport(cardViewportSD);
@@ -1422,7 +1343,7 @@ public class InGameController extends ViewController {
             this.setFitHeight(size.getCardsHeight()); // Set the card height
             setClipToImageView(this); // Round image boarder
 
-            // If the cell belongs to player1, it is set to accept drag and drop events
+            //If the cell belongs to player1, it is set to accept drag and drop events
             if (grid.equals(player1PlayAreaGrid)) {
                 setOnDragOver(event -> {
                     if (event.getGestureSource() != this && event.getDragboard().hasImage()) {
@@ -1432,15 +1353,11 @@ public class InGameController extends ViewController {
                 });
 
                 setOnDragDropped(event -> {
-                    // System.out.println("Mouse Drag Dropped on cell " + positionX + " " +
-                    // positionY)
-                    // System.out.println("Playing card in " + (positionX +
-                    // gridDimensions.get(grid).getFirst() - 1) + " " +
-                    // (gridDimensions.get(grid).get(3) - positionY + 1));
+                    //System.out.println("Mouse Drag Dropped on cell " + positionX + " " + positionY)
+                    //System.out.println("Playing card in " + (positionX + gridDimensions.get(grid).getFirst() - 1) + " " + (gridDimensions.get(grid).get(3) - positionY + 1));
                     if (event.getDragboard().hasImage()) {
                         try {
-                            client.play(new Point(positionX + gridDimensions.get(grid).getFirst() - 1,
-                                    gridDimensions.get(grid).get(3) - positionY + 1));
+                            client.play(new Point(positionX + gridDimensions.get(grid).getFirst() - 1, gridDimensions.get(grid).get(3) - positionY + 1));
                         } catch (RemoteException e) {
                             show_ServerCrashWarning(e.toString());
                             e.getStackTrace();
@@ -1471,9 +1388,9 @@ public class InGameController extends ViewController {
 
         public void hideImage() {
             pane.toBack();
-            this.cardImage = new Image(Objects.requireNonNull(
-                    getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/CardPlaceHolder1.png")));
+            this.cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/gc31/Images/CardsImages/CardPlaceHolder1.png")));
             this.setImage(cardImage);
         }
     }
 }
+

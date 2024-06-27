@@ -155,6 +155,7 @@ public class TCPClient implements ClientCommands {
     @Override
     public void setUsername(String username) {
         this.username = username;
+        startHeartBeat();
     }
 
     /**

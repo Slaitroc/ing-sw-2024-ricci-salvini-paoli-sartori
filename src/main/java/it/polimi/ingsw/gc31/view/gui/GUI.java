@@ -109,7 +109,7 @@ public class GUI extends UI {
     @Override
     public void show_GameIsOver(String username, Map<String, Integer> playersScore) {
         System.out.println("show_GameIsOver called");
-        Platform.runLater(() -> app.getCurrentController().showWinner(username));
+        Platform.runLater(() -> app.getCurrentController().showWinner(username, playersScore));
     }
 
     @Override

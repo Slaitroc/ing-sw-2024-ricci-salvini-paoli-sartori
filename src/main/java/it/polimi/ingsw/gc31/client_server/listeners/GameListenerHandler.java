@@ -101,7 +101,9 @@ public class GameListenerHandler{
     public void notifyListener(ListenerType type, GameModel model){
         if (enabled) {
             synchronized (lock) {
-                listeners.get(type).update(model, username);
+                if(listeners.containsKey(type)){
+                    listeners.get(type).update(model, username);
+                }
             }
         }
     }

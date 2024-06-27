@@ -156,7 +156,9 @@ public class GameController extends UnicastRemoteObject implements IGameControll
         // the old client is replaced with the new one
         synchronized (clientListLock) {
             if (clientList.containsKey(username)) {
-                schedulerLastPlayerConnected.shutdownNow();
+                if(schedulerLastPlayerConnected != null){
+                    schedulerLastPlayerConnected.shutdownNow();
+                }
                 clientList.put(username, newClient);
                 // model.setGameState();
                 model.getListeners().values().forEach(GameListenerHandler::setEnabled);
@@ -237,6 +239,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
                     model.initGame(clientList, clientListLock);
                 }
                 ServerLog.gControllerWrite("The game has started", idGame);
+                model.notifyAllGameListeners();
                 model.notifyAllGameListeners();
             } catch (IllegalStateOperationException e) {
                 // throw new RuntimeException(e);

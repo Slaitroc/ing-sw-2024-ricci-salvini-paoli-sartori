@@ -209,7 +209,7 @@ public abstract class ViewController {
      *
      * @param username The username of the player who won the game.
      */
-    public void showWinner(String username) {
+    public void showWinner(String username, Map<String, Integer> playersScore) {
     }
 
     /**
