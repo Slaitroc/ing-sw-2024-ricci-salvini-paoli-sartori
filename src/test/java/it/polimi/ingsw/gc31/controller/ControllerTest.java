@@ -136,7 +136,7 @@ class ControllerTest {
         controller.tempClients.put("username1", mockClient1);
 
         // Checks the instructions executed if the gameControlList is empty
-        assertDoesNotThrow(() -> controller.getGameList("username1"));
+        assertDoesNotThrow(() -> controller.getGameList(13));
 
         // Checks the instructions executed if the gameControlList is not empty
         VirtualClient mockClient2 = Mockito.mock(VirtualClient.class);
@@ -144,7 +144,7 @@ class ControllerTest {
         controller.tempClients.put("username2", mockClient2);
 
         assertDoesNotThrow(() -> controller.createGame("username2", 2));
-        assertDoesNotThrow(() -> controller.getGameList("username1"));
+        assertDoesNotThrow(() -> controller.getGameList(13));
     }
 
     /**
