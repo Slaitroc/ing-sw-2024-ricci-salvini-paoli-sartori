@@ -187,7 +187,7 @@ public class PlayingState extends TUIstate {
                     if (inputInt == 1) {
                         try {
                             tui.getClient().chooseSecretObjective1();
-                            tui.commandsCache.put(TUIstateCommands.CHOOSE_SECRET_OBJ, true);
+                            // tui.commandsCache.put(TUIstateCommands.CHOOSE_SECRET_OBJ, true);
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
@@ -195,7 +195,7 @@ public class PlayingState extends TUIstate {
                     } else if (inputInt == 2) {
                         try {
                             tui.getClient().chooseSecretObjective2();
-                            tui.commandsCache.put(TUIstateCommands.CHOOSE_SECRET_OBJ, true);
+                            // tui.commandsCache.put(TUIstateCommands.CHOOSE_SECRET_OBJ, true);
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
@@ -218,7 +218,7 @@ public class PlayingState extends TUIstate {
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
-        tui.commandsCache.put(TUIstateCommands.PLAY_STARTER, true);
+        // tui.commandsCache.put(TUIstateCommands.PLAY_STARTER, true);
         stateNotify();
     }
 

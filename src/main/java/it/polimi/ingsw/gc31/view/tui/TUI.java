@@ -136,12 +136,28 @@ public class TUI extends UI {
         return playAreaAllPlayers;
     }
 
+    /**
+     * String that contains username of the owner of the playArea to be printed
+     */
     private String activePlayArea = "";
 
     // PRINT METHODS
+    /**
+     * Map that associates a {@link TUIareas} with a {@link StringBuilder}
+     * containing the last
+     * received representation of that area
+     */
     Map<TUIareas, StringBuilder> areasCache = new HashMap<>();
-    protected Map<TUIstateCommands, Boolean> commandsCache = new HashMap<>();
+    // /**
+    // * If a command is set to true in this map the
+    // * {@link TUI#forceRefreshTUI(boolean)} will skip the corresponding area
+    // */
+    // protected Map<TUIstateCommands, Boolean> commandsCache = new HashMap<>();
 
+    /**
+     * Reprint the TUIareas based on the current state of the game and the
+     * TUIareas contained in the areasCache map
+     */
     protected void forceRefreshTUI(boolean stateNotify) {
         System.out.print("\033[H\033[2J");
         System.out.flush();
@@ -170,6 +186,9 @@ public class TUI extends UI {
 
     }
 
+    /**
+     * Clear the chat board
+     */
     private void erase_ChatBoard() {
         for (int i = -2; i < CHAT_BOARD_LINES + 1; i++) {
             AnsiConsole.out().print(
