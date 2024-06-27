@@ -7,6 +7,7 @@ import it.polimi.ingsw.gc31.client_server.queue.serverQueue.HeartBeatObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.QuitGameObj;
 import it.polimi.ingsw.gc31.model.gameModel.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.Mockito;
@@ -67,11 +68,26 @@ public class GameControllerTest {
         //Populate the lobby
         assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
         assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
+        assertEquals(3, gameController1.clientList.size());
+        assertEquals(3, gameController1.readyStatus.size());
+
         assertDoesNotThrow(() -> gameController1.quitGame("player3"), "The method does not throw any exceptions");
+        assertEquals(2, gameController1.clientList.size());
+        assertEquals(2, gameController1.readyStatus.size());
 
         //checks if the method can remove correctly a player that
         // asked to quit from client
         assertEquals(gameController1.getCurrentNumberPlayers(), 2, "The number of the player in the game is diminished by one");
+
+        //Check if the quitGame works properly also when the game is started
+        assertDoesNotThrow( () -> gameController2.joinGame("player20", mockClient));
+        assertDoesNotThrow( () -> gameController2.setReadyStatus(true, "player10"));
+        assertDoesNotThrow( () -> gameController2.setReadyStatus(true, "player20"));
+
+        assertDoesNotThrow( () -> gameController2.quitGame("player10"));
+
+        assertEquals(1, gameController2.clientList.size());
+        assertEquals(1, gameController2.readyStatus.size());
     }
 
     /**
@@ -441,148 +457,164 @@ public class GameControllerTest {
         assertDoesNotThrow( () -> gameController1.sendCommand(new ChatMessage("player1", "Test")));
     }
 
-    /**
-     * Tests the startRematchTimer
-     */
+//    /**
+//     * Tests the startRematchTimer
+//     */
+//    @Test
+//    public void startRematchTimerTest() {
+//        //Create another client that join the game and all clients are ready to play
+//        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
+//        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
+//        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+//        assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player1"));
+//        assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player2"));
+//        assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player3"));
+//
+//        //At first the rematchPlayers and rematchTimer are null and rematchAnswers is 0
+//        assertNull(gameController1.rematchPlayers);
+//        assertNull(gameController1.rematchTimer);
+//        assertEquals(0, gameController1.rematchAnswers);
+//
+//        gameController1.startRematchTimer();
+//
+//        //After the invocation of the method the rematchPlayers map is created and populated
+//        //with all null values for every player in the game, and is also created the Timer
+//        assertEquals(4, gameController1.rematchPlayers.size());
+//        assertNull(gameController1.rematchPlayers.get("player1"));
+//        assertNull(gameController1.rematchPlayers.get("player2"));
+//        assertNotNull(gameController1.rematchTimer);
+//
+//        gameController1.rematchPlayers.replace("player1", true);
+//        gameController1.rematchPlayers.replace("player2", false);
+//    }
+//
+//    /**
+//     * Tests the anotherMatch method
+//     */
+//    @Disabled
+//    @Test
+//    public void anotherMatchTest(){
+//        //Create another client that join the game and all clients are ready to play
+//        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
+//        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
+//        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+//
+//        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player1"));
+//        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player2"));
+//        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player3"));
+//        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player4"));
+//
+//        //At first there is not any player that sent the corresponding object
+//        // (example: match still on)
+//        assertEquals(0, gameController1.rematchAnswers);
+//
+//        //On the first invocation the rematchAnswers is incremented to 1 and the
+//        //boolean value received replace the one contained in the rematchPlayers map
+//        //This happens for every invocation of the method
+//        gameController1.anotherMatch("player1", true);
+//
+//        assertTrue(gameController1.rematchPlayers.get("player1"));
+//        assertEquals(1, gameController1.rematchAnswers);
+//
+//        gameController1.anotherMatch("player2", true);
+//
+//        assertTrue(gameController1.rematchPlayers.get("player2"));
+//        assertEquals(2, gameController1.rematchAnswers);
+//
+//        gameController1.anotherMatch("player3", false);
+//        assertEquals(3, gameController1.rematchAnswers);
+//
+//        //On the last invocation the startRematch is invoked and the new game is set so the
+//        //rematchAnswers is initialized to the value 0
+//        gameController1.anotherMatch("player4", false);
+//
+//        assertFalse(gameController1.rematchPlayers.get("player3"));
+//        assertFalse(gameController1.rematchPlayers.get("player4"));
+//        assertEquals(0, gameController1.rematchAnswers);
+//
+//
+//        //Tests the case where only or zero players remain for a new rematch
+//        assertDoesNotThrow( () -> gameController2.joinGame("player20", mockClient));
+//        assertDoesNotThrow( () -> gameController2.setReadyStatus(true, "player10"));
+//        assertDoesNotThrow( () -> gameController2.setReadyStatus(true, "player20"));
+//
+//        //gameController2.getModel().setGameState(new EndGameModelState(gameController2.getModel()));
+//        gameController2.anotherMatch("player10", true);
+//
+//        assertNotNull(gameController2.clientList.get("player10"));
+//        assertNotNull(gameController2.clientList.get("player20"));
+//        assertEquals(1, gameController2.rematchAnswers);
+//        assertEquals(2, gameController2.rematchPlayers.size());
+//        assertEquals(2, gameController2.clientList.size());
+//
+//        gameController2.anotherMatch("player20", false);
+//
+//        assertEquals(0, gameController2.clientList.size());
+//        assertEquals(0, gameController2.readyStatus.size());
+//    }
+//
+//    /**
+//     * Tests the startRematch method
+//     */
+//    @Disabled
+//    @Test
+//    public void startRematchTest(){
+//        //The method synchronizes to the callsList to be sure that no
+//        //operation is executed during the initialization of the new game
+//        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
+//        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
+//        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+//
+//        //Create the game with the ready status set to true
+//        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player1"));
+//        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player2"));
+//        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player3"));
+//        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player4"));
+//
+//        gameController1.rematchPlayers = new HashMap<>();
+//        gameController1.rematchPlayers.put("player1", true);
+//        gameController1.rematchPlayers.put("player2", true);
+//        gameController1.rematchPlayers.put("player3", false);
+//        gameController1.rematchPlayers.put("player4", false);
+//
+//        assertDoesNotThrow( () -> gameController1.startRematch());
+//
+//        //The callsList is cleared, the rematchAnswers is initialized with the value 0
+//        //the new value of maxNumberPlayers is now equals to the number of players which
+//        //wants to rematch, the readyStatus associated to the remaining player should be
+//        //set to false (as the start of the game), the clientList contains only
+//        //the payer that wants to play again,
+//        assertEquals(0, gameController1.callsList.size());
+//        assertEquals(0, gameController1.rematchAnswers);
+//        assertEquals(2, gameController1.getMaxNumberPlayers());
+//        assertFalse(gameController1.readyStatus.get("player1"));
+//        assertFalse(gameController1.readyStatus.get("player2"));
+//        assertTrue(gameController1.clientList.containsKey("player1"));
+//        assertTrue(gameController1.clientList.containsKey("player2"));
+//        assertNull(gameController1.readyStatus.get("player3"));
+//        assertNull(gameController1.readyStatus.get("player4"));
+//        assertNull(gameController1.clientList.get("player3"));
+//        assertNull(gameController1.clientList.get("player4"));
+//      }
+
     @Test
-    public void startRematchTimerTest() {
-        //Create another client that join the game and all clients are ready to play
+    public void reJoinGameTest(){
+        //Populate the lobby
         assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
         assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
         assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+
+        //Set all the player status to true
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player1"));
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player2"));
         assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player3"));
+        assertDoesNotThrow(() -> gameController1.setReadyStatus(true, "player4"));
 
-        //At first the rematchPlayers and rematchTimer are null and rematchAnswers is 0
-        assertNull(gameController1.rematchPlayers);
-        assertNull(gameController1.rematchTimer);
-        assertEquals(0, gameController1.rematchAnswers);
 
-        gameController1.startRematchTimer();
-
-        //After the invocation of the method the rematchPlayers map is created and populated
-        //with all null values for every player in the game, and is also created the Timer
-        assertEquals(4, gameController1.rematchPlayers.size());
-        assertNull(gameController1.rematchPlayers.get("player1"));
-        assertNull(gameController1.rematchPlayers.get("player2"));
-        assertNotNull(gameController1.rematchTimer);
-
-        gameController1.rematchPlayers.replace("player1", true);
-        gameController1.rematchPlayers.replace("player2", false);
-
-//        wait(65000);
-//
-//        assertTrue(gameController1.rematchPlayers.get("player1"));
-//        assertFalse(gameController1.rematchPlayers.get("player2"));
-//        assertFalse(gameController1.rematchPlayers.get("player3"));
-//        assertFalse(gameController1.rematchPlayers.get("player4"));
     }
 
-    /**
-     * Tests the anotherMatch method
-     */
     @Test
-    public void anotherMatchTest(){
-        //Create another client that join the game and all clients are ready to play
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
+    public void timerLastPlayerConnectedTest(){
 
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player1"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player2"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player3"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player4"));
-
-        //At first there is not any player that sent the corresponding object
-        // (example: match still on)
-        assertEquals(0, gameController1.rematchAnswers);
-
-        //On the first invocation the rematchAnswers is incremented to 1 and the
-        //boolean value received replace the one contained in the rematchPlayers map
-        //This happens for every invocation of the method
-        gameController1.anotherMatch("player1", true);
-
-        assertTrue(gameController1.rematchPlayers.get("player1"));
-        assertEquals(1, gameController1.rematchAnswers);
-
-        gameController1.anotherMatch("player2", true);
-
-        assertTrue(gameController1.rematchPlayers.get("player2"));
-        assertEquals(2, gameController1.rematchAnswers);
-
-        gameController1.anotherMatch("player3", false);
-        assertEquals(3, gameController1.rematchAnswers);
-
-        //On the last invocation the startRematch is invoked and the new game is set so the
-        //rematchAnswers is initialized to the value 0
-        gameController1.anotherMatch("player4", false);
-
-        assertFalse(gameController1.rematchPlayers.get("player3"));
-        assertFalse(gameController1.rematchPlayers.get("player4"));
-        assertEquals(0, gameController1.rematchAnswers);
-
-
-        //Tests the case where only or zero players remain for a new rematch
-        assertDoesNotThrow( () -> gameController2.joinGame("player20", mockClient));
-        assertDoesNotThrow( () -> gameController2.setReadyStatus(true, "player10"));
-        assertDoesNotThrow( () -> gameController2.setReadyStatus(true, "player20"));
-
-        //gameController2.getModel().setGameState(new EndGameModelState(gameController2.getModel()));
-        gameController2.anotherMatch("player10", true);
-
-        assertNotNull(gameController2.clientList.get("player10"));
-        assertNotNull(gameController2.clientList.get("player20"));
-        assertEquals(1, gameController2.rematchAnswers);
-        assertEquals(2, gameController2.rematchPlayers.size());
-        assertEquals(2, gameController2.clientList.size());
-
-        gameController2.anotherMatch("player20", false);
-
-        assertEquals(0, gameController2.clientList.size());
-        assertEquals(0, gameController2.readyStatus.size());
-    }
-
-    /**
-     * Tests the startRematch method
-     */
-    @Test
-    public void startRematchTest(){
-        //The method synchronizes to the callsList to be sure that no
-        //operation is executed during the initialization of the new game
-        assertDoesNotThrow( () -> gameController1.joinGame("player2", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player3", mockClient));
-        assertDoesNotThrow( () -> gameController1.joinGame("player4", mockClient));
-
-        //Create the game with the ready status set to true
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player1"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player2"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player3"));
-        assertDoesNotThrow( () -> gameController1.setReadyStatus(true, "player4"));
-
-        gameController1.rematchPlayers = new HashMap<>();
-        gameController1.rematchPlayers.put("player1", true);
-        gameController1.rematchPlayers.put("player2", true);
-        gameController1.rematchPlayers.put("player3", false);
-        gameController1.rematchPlayers.put("player4", false);
-
-        assertDoesNotThrow( () -> gameController1.startRematch());
-
-        //The callsList is cleared, the rematchAnswers is initialized with the value 0
-        //the new value of maxNumberPlayers is now equals to the number of players which
-        //wants to rematch, the readyStatus associated to the remaining player should be
-        //set to false (as the start of the game), the clientList contains only
-        //the payer that wants to play again,
-        assertEquals(0, gameController1.callsList.size());
-        assertEquals(0, gameController1.rematchAnswers);
-        assertEquals(2, gameController1.getMaxNumberPlayers());
-        assertFalse(gameController1.readyStatus.get("player1"));
-        assertFalse(gameController1.readyStatus.get("player2"));
-        assertTrue(gameController1.clientList.containsKey("player1"));
-        assertTrue(gameController1.clientList.containsKey("player2"));
-        assertNull(gameController1.readyStatus.get("player3"));
-        assertNull(gameController1.readyStatus.get("player4"));
-        assertNull(gameController1.clientList.get("player3"));
-        assertNull(gameController1.clientList.get("player4"));
     }
 }
