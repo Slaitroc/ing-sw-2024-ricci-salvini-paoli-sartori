@@ -103,7 +103,7 @@ From here, type in the following commands:
   java -jar GC31-1.0-SNAPSHOT-server.jar
   ```
 
-### For Developers Using IntelliJ
+### Using IntelliJ
 
 1.  In IntelliJ, navigate to `maven -> GC31 -> Lifecycle -> Clean`
 2.  Then, go to `maven -> GC31 -> Lifecycle -> Package`
