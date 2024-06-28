@@ -524,9 +524,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
                 client = clientList.get(username);
             }
             try {
-                client.sendCommand(clientQueueObject);
+                if (client != null) {
+                    client.sendCommand(clientQueueObject);
+                }
             } catch (RemoteException ignored) {
-
             }
         }).start();
     }
