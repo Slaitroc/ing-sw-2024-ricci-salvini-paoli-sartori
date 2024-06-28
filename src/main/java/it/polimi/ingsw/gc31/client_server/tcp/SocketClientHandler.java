@@ -4,7 +4,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
-import it.polimi.ingsw.gc31.client_server.queue.clientQueue.SaveToken;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.SaveTokenObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
@@ -111,10 +111,14 @@ public class SocketClientHandler implements VirtualClient {
                             try {
                                 ConnectObj connectObj = (ConnectObj) obj;
                                 if (connectObj.getTempToken() == -1) {
-                                    Controller.getController().connect(Controller.getController().getRightConnection(tempToken), connectObj.getUsername(), tempToken, connectObj.getToken());
-                                    sendCommand(new SaveToken(tempToken, true));
+                                    Controller.getController().connect(
+                                            Controller.getController().getRightConnection(tempToken),
+                                            connectObj.getUsername(), tempToken, connectObj.getToken());
+                                    sendCommand(new SaveTokenObj(tempToken, true));
                                 } else {
-                                    Controller.getController().connect(Controller.getController().getRightConnection(tempToken), connectObj.getUsername(), connectObj.getTempToken(), connectObj.getToken());
+                                    Controller.getController().connect(
+                                            Controller.getController().getRightConnection(tempToken),
+                                            connectObj.getUsername(), connectObj.getTempToken(), connectObj.getToken());
                                 }
                                 continue;
                             } catch (ClassCastException e) {

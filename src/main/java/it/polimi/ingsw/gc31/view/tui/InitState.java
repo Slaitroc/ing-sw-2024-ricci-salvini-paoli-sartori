@@ -70,11 +70,17 @@ public class InitState extends TUIstate {
     @Override
     protected void command_createGame() {
         tui.printToCmdLineOut(tui.tuiWrite("Type the number of players for the game:"));
-        int input = Integer.parseInt(scanner.nextLine());
+        int input;
         try {
-            tui.getClient().createGame(input);
-        } catch (IOException e) {
-            e.printStackTrace();
+            input = Integer.parseInt(scanner.nextLine());
+            try {
+                tui.getClient().createGame(input);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (NumberFormatException e) {
+            tui.printToCmdLineOut(tui.tuiWrite("Invalid input...retry create command "));
+            stateNotify();
         }
     }
 
@@ -113,11 +119,17 @@ public class InitState extends TUIstate {
     @Override
     protected void command_joinGame() {
         tui.printToCmdLineOut(tui.tuiWrite("Type gameID:"));
-        int input = Integer.parseInt(scanner.nextLine());
+        int input;
         try {
-            tui.getClient().joinGame(input);
-        } catch (RemoteException e) {
-            e.printStackTrace();
+            input = Integer.parseInt(scanner.nextLine());
+            try {
+                tui.getClient().joinGame(input);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        } catch (NumberFormatException e) {
+            tui.printToCmdLineOut(tui.tuiWrite("Invalid input...retry join command "));
+            stateNotify();
         }
     }
 

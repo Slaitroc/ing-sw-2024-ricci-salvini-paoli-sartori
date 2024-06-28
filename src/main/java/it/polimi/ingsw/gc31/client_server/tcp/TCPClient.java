@@ -363,7 +363,7 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void sendChatMessage(String username, String message) {
-        tcp_sendCommand(new ChatMessage(this.username, message), DV.RECIPIENT_GAME_CONTROLLER);
+        tcp_sendCommand(new ChatMessageObj(this.username, message), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
     /**
@@ -377,7 +377,7 @@ public class TCPClient implements ClientCommands {
      */
     @Override
     public void sendChatMessage(String fromUsername, String toUsername, String message) {
-        tcp_sendCommand(new ChatMessage(this.username, toUsername, message), DV.RECIPIENT_GAME_CONTROLLER);
+        tcp_sendCommand(new ChatMessageObj(this.username, toUsername, message), DV.RECIPIENT_GAME_CONTROLLER);
     }
 
     /**

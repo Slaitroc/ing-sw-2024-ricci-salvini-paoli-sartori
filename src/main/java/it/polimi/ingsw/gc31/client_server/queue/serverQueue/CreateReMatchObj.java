@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Unimplemented Feature
  */
-public class CreateReMatch extends ServerQueueObject {
+public class CreateReMatchObj extends ServerQueueObject {
     // private final Map<String, VirtualClient> players;
 
     /**
@@ -18,7 +18,7 @@ public class CreateReMatch extends ServerQueueObject {
      * 
      * @param players
      */
-    public CreateReMatch(Map<String, VirtualClient> players) {
+    public CreateReMatchObj(Map<String, VirtualClient> players) {
         // this.players = players;
     }
 

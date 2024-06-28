@@ -6,12 +6,12 @@ import it.polimi.ingsw.gc31.view.UI;
 
 /**
  * SaveToken is a class that extends ClientQueueObject
- * It is sent to the client to save the token the Server generated for the connection.
- * The token is temporary if it is the token of first connection, before the username is set.
- *
- * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
+ * It is sent to the client to save the token the Server generated for the
+ * connection.
+ * The token is temporary if it is the token of first connection, before the
+ * username is set.
  */
-public class SaveToken extends ClientQueueObject implements Serializable {
+public class SaveTokenObj extends ClientQueueObject implements Serializable {
 
     /**
      * The token to be saved.
@@ -25,17 +25,19 @@ public class SaveToken extends ClientQueueObject implements Serializable {
 
     /**
      * Save in the client the token the Server generated for the connection.
-     * @param token token to be saved.
+     * 
+     * @param token     token to be saved.
      * @param temporary if the token is temporary or not.
      */
-    public SaveToken(int token, boolean temporary) {
+    public SaveTokenObj(int token, boolean temporary) {
         this.token = token;
         this.temporary = temporary;
     }
 
     /**
      * Executes the method call of the given UI object.
-     * Call the corresponding method on the UI o save the token the Server generated for the connection.
+     * Call the corresponding method on the UI o save the token the Server generated
+     * for the connection.
      *
      * @param ui the UI object to execute the method call on
      */

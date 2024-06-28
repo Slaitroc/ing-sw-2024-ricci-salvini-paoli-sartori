@@ -173,7 +173,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      */
     public void sendToken(VirtualClient newConnection, int token, boolean temporary) {
         try {
-            newConnection.sendCommand(new SaveToken(token, temporary));
+            newConnection.sendCommand(new SaveTokenObj(token, temporary));
         } catch (RemoteException e) {
             ServerLog.controllerWrite("The token was not sent correctly");
         }

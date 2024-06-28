@@ -228,7 +228,7 @@ class ControllerTest {
      */
     @Test
     void connectTest() {
-        //NOTE: xx -> tempToken, xxx -> token
+        // NOTE: xx -> tempToken, xxx -> token
         // Checks if the case where a player disconnected tries to reconnect.
         // mockClient1 is the old client while mockClient2 is the new client
         VirtualClient mockClient1 = Mockito.mock(VirtualClient.class);
@@ -300,11 +300,13 @@ class ControllerTest {
         // adding the client
         // to any map
         controller.newConnections.put(10, mockClient1);
-        assertDoesNotThrow( () -> controller.connect(mockClient1, "username1", 10, -1));
+        assertDoesNotThrow(() -> controller.connect(mockClient1, "username1", 10, -1));
 
-        //Create 2 new clients. The first is the original client that connects for the first time
-        //so all the map are updated with the new connection.
-        //Then the user disconnect and on reconnection chooses a username already taken (by mockClient1)
+        // Create 2 new clients. The first is the original client that connects for the
+        // first time
+        // so all the map are updated with the new connection.
+        // Then the user disconnect and on reconnection chooses a username already taken
+        // (by mockClient1)
         VirtualClient mockClient3 = Mockito.mock(VirtualClient.class);
         VirtualClient mockClientReconnect3 = Mockito.mock(VirtualClient.class);
         controller.newConnections.put(300, mockClient3);
@@ -329,9 +331,11 @@ class ControllerTest {
         controller.nicknames.clear();
         controller.disconnected.clear();
 
-        //If the client disconnected during a game, reconnects but doesn't want to enter
-        //the same game the last else branch is executed. This time is executed the case where the
-        //username is a valid one
+        // If the client disconnected during a game, reconnects but doesn't want to
+        // enter
+        // the same game the last else branch is executed. This time is executed the
+        // case where the
+        // username is a valid one
         VirtualClient mockClient4 = Mockito.mock(VirtualClient.class);
         VirtualClient mockClientReconnect4 = Mockito.mock(VirtualClient.class);
         controller.newConnections.put(400, mockClient4);
@@ -356,11 +360,11 @@ class ControllerTest {
         controller.nicknames.clear();
         controller.disconnected.clear();
 
-        //Check the cases where the username sent is null
+        // Check the cases where the username sent is null
         VirtualClient mockClient5 = Mockito.mock(VirtualClient.class);
         controller.newConnections.put(50, mockClient5);
 
-        assertFalse( assertDoesNotThrow( () -> controller.connect(mockClient5, null, 50, -1)));
+        assertFalse(assertDoesNotThrow(() -> controller.connect(mockClient5, null, 50, -1)));
     }
 
     /**
@@ -368,36 +372,39 @@ class ControllerTest {
      */
     @Test
     void rejoinTest() {
-        // Create a client and connect it to the server, then create a game with that client
+        // Create a client and connect it to the server, then create a game with that
+        // client
         VirtualClient mockClient1 = Mockito.mock(VirtualClient.class);
         controller.newConnections.put(100, mockClient1);
         controller.tempClients.put("username1", mockClient1);
         controller.nicknames.add("username1");
         controller.clientsHeartBeat.put(mockClient1, (long) 0);
-        assertDoesNotThrow( () -> controller.createGame("username1", 2));
-        //assertDoesNotThrow( () -> controller.gameControlList.add(new GameController("username1", mockClient1, 2, 0)));
-        //controller.disconnected.put(100, new Pair<>("username1", 0));
+        assertDoesNotThrow(() -> controller.createGame("username1", 2));
+        // assertDoesNotThrow( () -> controller.gameControlList.add(new
+        // GameController("username1", mockClient1, 2, 0)));
+        // controller.disconnected.put(100, new Pair<>("username1", 0));
 
-        //Create a second client that will enter the game and then disconnect
+        // Create a second client that will enter the game and then disconnect
         VirtualClient mockClientDisconnect = Mockito.mock(VirtualClient.class);
         controller.newConnections.put(150, mockClientDisconnect);
         controller.tempClients.put("usernameDisconnect", mockClientDisconnect);
         controller.nicknames.add("usernameDisconnect");
         controller.clientsHeartBeat.put(mockClientDisconnect, (long) 0);
-        assertDoesNotThrow( () -> controller.joinGame("usernameDisconnect", 0));
+        assertDoesNotThrow(() -> controller.joinGame("usernameDisconnect", 0));
 
-        //Start the game
-        assertDoesNotThrow( () -> controller.gameControlList.get(0).setReadyStatus(true, "username1"));
-        assertDoesNotThrow( () -> controller.gameControlList.get(0).setReadyStatus(true, "usernameDisconnect"));
+        // Start the game
+        assertDoesNotThrow(() -> controller.gameControlList.get(0).setReadyStatus(true, "username1"));
+        assertDoesNotThrow(() -> controller.gameControlList.get(0).setReadyStatus(true, "usernameDisconnect"));
 
-        //Disconnect the mockClientDisconnect
+        // Disconnect the mockClientDisconnect
         controller.gameControlList.get(0).disconnectPlayer("usernameDisconnect");
         controller.disconnect("usernameDisconnect", 0, 150);
 
-        //Create the new client representing the new VirtualClient for mockClientDisconnect
+        // Create the new client representing the new VirtualClient for
+        // mockClientDisconnect
         VirtualClient mockClientRejoin = Mockito.mock(VirtualClient.class);
         controller.newConnections.put(666, mockClientRejoin);
-        assertDoesNotThrow( () -> controller.connect(mockClientRejoin, "usernameRejoin", 666, 150));
+        assertDoesNotThrow(() -> controller.connect(mockClientRejoin, "usernameRejoin", 666, 150));
 
         // If the token of the client was in the disconnected map the user can choose to
         // rejoin or not
@@ -405,8 +412,9 @@ class ControllerTest {
         // and if the branch should be executed
         assertDoesNotThrow(() -> controller.rejoin(666, 150, true));
 
-        //The VirtualClient associated with the username of the previously disconnected client (the username
-        //doesn't change after reconnection) is updated with the new one
+        // The VirtualClient associated with the username of the previously disconnected
+        // client (the username
+        // doesn't change after reconnection) is updated with the new one
         assertEquals(mockClientRejoin, controller.gameControlList.get(0).clientList.get("usernameDisconnect"));
 
         controller.newConnections.clear();
@@ -414,7 +422,8 @@ class ControllerTest {
         controller.nicknames.clear();
         controller.clientsHeartBeat.clear();
 
-        //Create a new client with token = 200 that was previously connected and its new client
+        // Create a new client with token = 200 that was previously connected and its
+        // new client
         VirtualClient mockClient2 = Mockito.mock(VirtualClient.class);
         VirtualClient mockClientReconnect1 = Mockito.mock(VirtualClient.class);
         controller.newConnections.put(200, mockClient2);
@@ -422,7 +431,7 @@ class ControllerTest {
         controller.clientsHeartBeat.put(mockClient2, (long) 0);
         controller.newConnections.put(50, mockClientReconnect1);
         controller.disconnected.put(200, new Pair<>("username2", 0));
-        assertDoesNotThrow( () -> controller.connect(mockClientReconnect1, "username2", 50, 200));
+        assertDoesNotThrow(() -> controller.connect(mockClientReconnect1, "username2", 50, 200));
 
         // If the method rejoin is invoked with the boolean parameter false the else
         // branch is executed

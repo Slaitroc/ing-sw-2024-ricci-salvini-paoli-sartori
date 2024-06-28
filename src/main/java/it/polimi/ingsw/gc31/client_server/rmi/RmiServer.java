@@ -116,7 +116,7 @@ public class RmiServer implements VirtualServer {
     @Override
     public boolean connect(VirtualClient client, String username, Integer tempoToken, Integer token)
             throws RemoteException {
-        if (Controller.getController().connect(client, username, tempoToken, token )) {
+        if (Controller.getController().connect(client, username, tempoToken, token)) {
             return true;
         } else {
             return false;
