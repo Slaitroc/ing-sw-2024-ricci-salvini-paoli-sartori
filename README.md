@@ -69,9 +69,10 @@
 <p>Repeat from step 1 each time the code is modified.</p>
 
 <h2>Fixing Issues or Downloading Java SE 21</h2>
-<p>To run the application properly, you need to install <a href="https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html">Java SE Development Kit 21.0.2</a>.</p>
-<p>Once installed, add the following Environment Variables in Windows (search for "env" in the search bar, press enter, and click on "Environment Variables"):</p>
-
+<p>To run the application properly, you need to JDK21 installed: <a href="https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html">Java SE Development Kit 21.0.2</a>.</p>
+<p>To run the GUI JavaFX is also required: <a href="https://gluonhq.com/products/javafx">JavaFX - Gluon</a>.</p>
+<p>Once JDK21 is installed, add the following Environment Variables in Windows (search for "env" in the search bar, press enter, and click on "Environment Variables"):</p>
+    
 <h3>User Environment Variables</h3>
 <ul>
     <li><code>JAVA_HOME = C:\Program Files\Java\jdk-21</code></li>
