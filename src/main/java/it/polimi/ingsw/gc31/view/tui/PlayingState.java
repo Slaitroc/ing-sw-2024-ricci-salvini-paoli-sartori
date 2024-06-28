@@ -524,8 +524,8 @@ public class PlayingState extends TUIstate {
         } else {
             tui.printToCmdLineOut(tui.tuiWrite(input));
             tui.printToCmdLineOut("Wrong Username...");
+            stateNotify();
         }
-        // stateNotify();
     }
 
     /**
