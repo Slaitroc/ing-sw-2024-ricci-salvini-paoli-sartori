@@ -11,6 +11,10 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Is the {@link TCPServer} used to accept the {@link TCPClient} users. At the arrivals of a new connection the {@link TCPServer}
+ * creates a new {@link SocketClientHandler} that is bound with the {@link TCPClient} just connected.
+ */
 public class TCPServer {
     /**
      * The serverSocket used to accept new connections

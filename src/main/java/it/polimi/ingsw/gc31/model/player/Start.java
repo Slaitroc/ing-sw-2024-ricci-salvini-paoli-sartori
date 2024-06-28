@@ -10,6 +10,10 @@ import it.polimi.ingsw.gc31.model.deck.Deck;
 
 import java.awt.*;
 
+/**
+ * Represents the status of ready of a user. Defines which actions are executable at that moment for the user. Extends the
+ * {@link PlayerState} class. The only non-executable method is the {@link Start#play(Point, Player)} method.
+ */
 public class Start extends PlayerState {
     private boolean objectiveChosen = false;
 

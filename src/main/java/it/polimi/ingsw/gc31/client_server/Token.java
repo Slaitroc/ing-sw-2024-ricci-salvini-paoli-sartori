@@ -12,6 +12,10 @@ import it.polimi.ingsw.gc31.exceptions.NoFileCreatedException;
 import it.polimi.ingsw.gc31.exceptions.NoTokenException;
 import it.polimi.ingsw.gc31.utility.FileUtility;
 
+/**
+ * Represents a pair of int value {@link Token#token} and {@link Token#tempToken}, both used during the connection and
+ * reconnection processes.
+ */
 public class Token {
     /**
      * Value used to determine a specific client in the server database
