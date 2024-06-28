@@ -294,6 +294,7 @@ public class PlayingState extends TUIstate {
                 }
                 break x;
             }
+            tui.printToCmdLineOut(tui.tuiWrite("Type Y coordinate: "));
             y: while (true) {
                 try {
                     input = scanner.nextLine();
@@ -313,6 +314,7 @@ public class PlayingState extends TUIstate {
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
+            break command;
         }
         stateNotify();
     }

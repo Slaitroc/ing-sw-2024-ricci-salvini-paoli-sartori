@@ -20,6 +20,7 @@ import javafx.util.Pair;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
+import it.polimi.ingsw.gc31.Client;
 import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.model.card.PlayableCard;
 import it.polimi.ingsw.gc31.model.enumeration.Resources;
@@ -145,6 +146,20 @@ public class TUI extends UI {
      */
     private String activePlayArea = "";
 
+    /**
+     * Changes the active playArea to the one specified by the username.
+     * Update the areasCache with the playArea of the new activePlayArea and send
+     * a {@link TUIstateCommands#REFRESH} command to the
+     * {@link #cmdLineProcessTHREAD}
+     * 
+     * @param username
+     */
+    public void changeActivePlayArea(String username) {
+        activePlayArea = username;
+        areasCache.put(TUIareas.PLAY_VIEW_AREA, playAreaAllPlayers.get(username));
+        commandToProcess(TUIstateCommands.REFRESH, false);
+    }
+
     // PRINT METHODS
     /**
      * Map that associates a {@link TUIareas} with a {@link StringBuilder}
@@ -170,17 +185,17 @@ public class TUI extends UI {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        synchronized (playViewUpdate) {
+        synchronized (playViewUpdateLOCK) {
             for (Map.Entry<TUIareas, StringBuilder> area : areasCache.entrySet()) {
-                playViewUpdate.add(area.getValue());
+                playViewUpdateLOCK.add(area.getValue());
             }
             try {
 
-                playViewUpdate.add(areasCache.get(TUIareas.PLAY_VIEW_AREA));
+                playViewUpdateLOCK.add(areasCache.get(TUIareas.PLAY_VIEW_AREA));
             } catch (NullPointerException ignored) {
 
             }
-            playViewUpdate.notify();
+            playViewUpdateLOCK.notify();
         }
         moveCursorToCmdLine();
         if (state.stateName.equals("Joined To Game State")) {
@@ -1064,6 +1079,13 @@ public class TUI extends UI {
         return this.client;
     }
 
+    /**
+     * Creates a new TUI object and initializes it with the given client and the
+     * {@link InitState}
+     * 
+     * 
+     * @param client
+     */
     public TUI(ClientCommands client) {
         AnsiConsole.systemInstall();
 
@@ -1133,23 +1155,23 @@ public class TUI extends UI {
      * selected one.
      */
     protected void resetCursor() {
-        synchronized (cmdLineAreaSelection) {
-            if (!cmdLineAreaSelection.isEmpty()) {
+        synchronized (cmdLineAreaSelectionLOCK) {
+            if (!cmdLineAreaSelectionLOCK.isEmpty()) {
                 moveCursorToCmdLine();
             }
         }
-        synchronized (chatAreaSelection) {
-            if (!chatAreaSelection.isEmpty()) {
+        synchronized (chatAreaSelectionLOCK) {
+            if (!chatAreaSelectionLOCK.isEmpty()) {
                 moveCursorToChatLine();
             }
         }
     }
 
     /**
-     * This method is used to add a message to the {@link #cmdLineOut}
+     * This method is used to add a message to the {@link #cmdLineOutLOCK}
      * thread's queue.
      * <p>
-     * It also wakes up the {@link #cmdLineOut} thread to print the message.
+     * It also wakes up the {@link #cmdLineOutLOCK} thread to print the message.
      * <p>
      * This method must be used by any method that needs to print a message to the
      * command line out.
@@ -1158,9 +1180,9 @@ public class TUI extends UI {
      * @param color
      */
     protected void printToCmdLineOut(String message, Ansi.Color color) {
-        synchronized (cmdLineOut) {
-            cmdLineOut.add(Ansi.ansi().fg(color).a(message).reset().toString());
-            cmdLineOut.notifyAll();
+        synchronized (cmdLineOutLOCK) {
+            cmdLineOutLOCK.add(Ansi.ansi().fg(color).a(message).reset().toString());
+            cmdLineOutLOCK.notifyAll();
         }
     }
 
@@ -1173,9 +1195,9 @@ public class TUI extends UI {
      * @param message
      */
     protected void printToCmdLineOut(String message) {
-        synchronized (cmdLineOut) {
-            cmdLineOut.add(Ansi.ansi().a(message).reset().toString());
-            cmdLineOut.notifyAll();
+        synchronized (cmdLineOutLOCK) {
+            cmdLineOutLOCK.add(Ansi.ansi().a(message).reset().toString());
+            cmdLineOutLOCK.notifyAll();
         }
         resetCursor();
     }
@@ -1243,117 +1265,226 @@ public class TUI extends UI {
      */
     private TUIstate state;
 
-    protected Object stateLock = new Object();
-    protected Queue<Integer> stateLockQueue = new ArrayDeque<Integer>();
+    /**
+     * Object used to synchronize the state commands execute by the
+     * {@link #cmdLineProcessTHREAD} and the {@link #cmdLineReaderTHREAD}.
+     * Together with the {@link #stateLockQueueLOCK} are used to manage issues
+     * arising
+     * from improper calls to a blocking input
+     * acquisition of a {@link Scanner} object.
+     * input.
+     * <p>
+     * This lock ensures that only one thread can perform a blocking input operation
+     * on the {@link Scanner} at a time,
+     * preventing potential conflicts and ensuring that the input is handled safely
+     * and correctly.
+     */
+    protected Object stateLOCK = new Object();
+    /**
+     * Object used to synchronize the state commands execute by the
+     * {@link #cmdLineProcessTHREAD} and the {@link #cmdLineReaderTHREAD}.
+     * Together with the {@link #stateLOCK} are used to manage issues arising
+     * from improper calls to a blocking input
+     * acquisition of a {@link Scanner} object.
+     * input.
+     * <p>
+     * This lock ensures that only one thread can perform a blocking input operation
+     * on the {@link Scanner} at a time,
+     * preventing potential conflicts and ensuring that the input is handled safely
+     * and correctly.
+     */
+    protected Queue<Integer> stateLockQueueLOCK = new ArrayDeque<Integer>();
 
+    /**
+     * This method is used to add a new element to the {@link #stateLockQueueLOCK}
+     * and
+     * wakes up the {@link #cmdLineProcessTHREAD}.
+     * <p>
+     * Synchronized on the {@link #stateLockQueueLOCK} object.
+     */
     protected void addToStateLockQueue() {
-        synchronized (stateLockQueue) {
-            stateLockQueue.add(0);
-            stateLockQueue.notify();
+        synchronized (stateLockQueueLOCK) {
+            stateLockQueueLOCK.add(0);
+            stateLockQueueLOCK.notify();
         }
     }
 
+    /**
+     * If the {@link #stateLockQueueLOCK} is not empty, this method is used to
+     * remove
+     * the first element of the queue.
+     * <p>
+     * Synchronized on the {@link #stateLockQueueLOCK} object.
+     * 
+     */
     protected void removeFromStateLockQueue() {
-        synchronized (stateLockQueue) {
-            if (stateLockQueue.isEmpty())
+        synchronized (stateLockQueueLOCK) {
+            if (stateLockQueueLOCK.isEmpty())
                 return;
-            stateLockQueue.poll();
+            stateLockQueueLOCK.poll();
         }
     }
 
-    private volatile Queue<Integer> cmdLineAreaSelection = new ArrayDeque<Integer>();
+    /**
+     * This variable is used to manage the TUI active area selection. Each TUI area
+     * has its own
+     * Scanner object to read the input. If this queue is not empty, the
+     * selected area is the command line input area.
+     */
+    private volatile Queue<Integer> cmdLineAreaSelectionLOCK = new ArrayDeque<Integer>();
 
+    /**
+     * This method is used to add a new element to the
+     * {@link #cmdLineAreaSelectionLOCK}
+     * and wakes up the {@link #cmdLineReaderTHREAD}.
+     * <p>
+     * Synchronized on the {@link #cmdLineAreaSelectionLOCK} object.
+     * 
+     */
     private void addToCmdLineAreaSelection() {
-        synchronized (cmdLineAreaSelection) {
-            cmdLineAreaSelection.add(0);
-            cmdLineAreaSelection.notify();
+        synchronized (cmdLineAreaSelectionLOCK) {
+            cmdLineAreaSelectionLOCK.add(0);
+            cmdLineAreaSelectionLOCK.notify();
         }
     }
 
+    /**
+     * If the {@link #cmdLineAreaSelectionLOCK} is not empty, this method is used to
+     * remove the first element of the queue.
+     * <p>
+     * Synchronized on the {@link #cmdLineAreaSelectionLOCK} object.
+     */
     private void removeFromCmdLineAreaSelection() {
-        synchronized (cmdLineAreaSelection) {
-            if (cmdLineAreaSelection.isEmpty())
+        synchronized (cmdLineAreaSelectionLOCK) {
+            if (cmdLineAreaSelectionLOCK.isEmpty())
                 return;
-            cmdLineAreaSelection.poll();
+            cmdLineAreaSelectionLOCK.poll();
         }
     }
 
-    private volatile Queue<Integer> chatAreaSelection = new ArrayDeque<Integer>();
+    /**
+     * This variable is used to manage the chat active area selection. Each TUI area
+     * has its own
+     * Scanner object to read the input. If this queue is not empty, the
+     * selected area is the chat input area.
+     */
+    private volatile Queue<Integer> chatAreaSelectionLOCK = new ArrayDeque<Integer>();
 
+    /**
+     * This method is used to add a new element to the
+     * {@link #chatAreaSelectionLOCK}
+     * and
+     * wakes up the {@link #chatReaderTHREAD}.
+     * <p>
+     * Synchronized on the {@link #chatAreaSelectionLOCK} object.
+     */
     private void addToChatAreaSelection() {
-        synchronized (chatAreaSelection) {
-            chatAreaSelection.add(0);
-            chatAreaSelection.notify();
+        synchronized (chatAreaSelectionLOCK) {
+            chatAreaSelectionLOCK.add(0);
+            chatAreaSelectionLOCK.notify();
         }
     }
 
+    /**
+     * If the {@link #chatAreaSelectionLOCK} is not empty, this method is used to
+     * remove
+     * the first element of the queue.
+     * <p>
+     * Synchronized on the {@link #chatAreaSelectionLOCK} object.
+     */
     private void removeFromChatAreaSelection() {
-        synchronized (chatAreaSelection) {
-            if (chatAreaSelection.isEmpty())
+        synchronized (chatAreaSelectionLOCK) {
+            if (chatAreaSelectionLOCK.isEmpty())
                 return;
-            chatAreaSelection.poll();
+            chatAreaSelectionLOCK.poll();
         }
     }
 
     /**
      * This variable is used to manage the chat board avoiding to update it every
-     * time
+     * time. Each time a chat needs to be updated, a notify on this lock is called.
      */
-    private Object chatNeedsUpdate = new Object();
+    private Object chatNeedsUpdateLOCK = new Object();
 
+    /**
+     * This variable is used to inform the {@link #cmdLineReaderTHREAD} that the
+     * previously active area was the chat input area. In that case the thread do
+     * not wait a command to call {@link #stateNotify()} to get the input again
+     * because no command that needs input is executing at the moment.
+     */
     private volatile boolean comingFromChat = false;
 
     /**
-     * This variable is used to manage the chat messages. The ChatReader thread adds
-     * new client's messages to this queue.
+     * This variable is used to manage the chat messages. The server object
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.NewChatMessage},
+     * depending on the
+     * way the {@link it.polimi.ingsw.gc31.controller.GameController} constructs it,
+     * calls the TUI method
+     * {@link #show_chatMessage(String, String)} that adds a
+     * formatted String (username: message), or
+     * {@link #show_privateChatMessage(String, String, String)} that adds only for
+     * the specified client's tui a
+     * formatted String ("[From " username"]": message) to this queue.
+     * 
      * <p>
-     * Right now this is the simplest implementation that comes to my mind, but it
-     * would be better to use a specific class for the chat messages.
+     * The {@link #chatBoardThread} access this queue to print the messages.
      */
     private Queue<String> chatMessages = new ArrayDeque<String>();
     /**
      * This variable is used to manage the command line output messages.
      * <p>
-     * Instead of printing the messages directly to the system output, each state
-     * must add its messages to this queue.
+     * Instead of printing the messages directly to the system output, each message
+     * to be printed by the tui
+     * must be added to this queue.
      * <p>
-     * The <code>commandLineOut</code> thread
+     * The {@link #cmdLineOutTHREAD} thread
      * will print
      * them to the right position of the console.
      */
-    private final Queue<String> cmdLineOut = new ArrayDeque<String>();
+    private final Queue<String> cmdLineOutLOCK = new ArrayDeque<String>();
     /**
      * This variable is used to manage the command line input messages.
      * <p>
-     * The <code>commandLineReader</code> thread reads the input from the system
+     * The {@link #cmdLineReaderTHREAD} reads the input from the system
      * input and adds
      * it to this queue.
      * <p>
-     * The <code>commandLineProcess</code> thread reads the messages from this
+     * The {@link #cmdLineProcessTHREAD} reads the messages from this
      * queue and processes them.
      */
-    protected final Queue<String> cmdLineMessages = new ArrayDeque<String>();
-    private final Queue<StringBuilder> playViewUpdate = new ArrayDeque<StringBuilder>();
+    protected final Queue<String> cmdLineMessagesLOCK = new ArrayDeque<String>();
+    /**
+     * This queue is used to manage the play area update.
+     * <p>
+     * The {@link #playViewUpdateTHREAD} take the play view updates to print from
+     * this queue.
+     */
+    private final Queue<StringBuilder> playViewUpdateLOCK = new ArrayDeque<StringBuilder>();
 
     /**
      * This thread is used to process the commands in the
-     * <code>cmdLineMessages</code> queue.
+     * {@link #cmdLineMessagesLOCK} queue. This threads waits on the
+     * {@link #cmdLineMessagesLOCK} queue if contains no elements.
+     * Each new elements added to the queue wakes up the thread.
+     * 
      * <p>
-     * If the command is "chat", it moves the cursor to the chat input area.
+     * The commands are processed by the {@link #execute_command(String)} method.
+     * <p>
+     * The thread is started by the {@link #cmdLineReaderTHREAD}.
      */
-    Thread cmdLineProcessThread = new Thread(() -> {
+    Thread cmdLineProcessTHREAD = new Thread(() -> {
         commandToProcess(TUIstateCommands.SET_USERNAME, false);
         while (true) {
             String cmd = null;
-            synchronized (cmdLineMessages) {
-                while (cmdLineMessages.isEmpty()) {
+            synchronized (cmdLineMessagesLOCK) {
+                while (cmdLineMessagesLOCK.isEmpty()) {
                     try {
-                        cmdLineMessages.wait();
+                        cmdLineMessagesLOCK.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-                cmd = cmdLineMessages.poll();
+                cmd = cmdLineMessagesLOCK.poll();
                 if (cmd != null) {
                     execute_command(cmd);
                 }
@@ -1365,6 +1496,7 @@ public class TUI extends UI {
      * This method searches for the command in the state's commands map and executes
      * it.
      * <p>
+     * Corner cases:
      * <ul>
      * <li>If the command is wrong, it execute
      * {@link TUIstate#command_invalidCommand()}
@@ -1375,10 +1507,8 @@ public class TUI extends UI {
      * {@link TUIstate#stateNotify()}
      * <li>If the command is {@link TUIstateCommands#RECONNECT}, it execute
      * {@link TUIstate#reconnect()}
-     * <li>If the command is {@link TUIstateCommands#REFRESH}, it execute
-     * {@link TUIstate#command_refresh()}
-     * <
-     *
+     * </ul>
+     * 
      * @param command
      */
     private void execute_command(String command) {
@@ -1407,37 +1537,76 @@ public class TUI extends UI {
 
     /**
      * Sends the corresponding TUIcommand to be executed to the ProcessThread and
-     * notify the commands queue.
+     * notify the commands queue. It sends the commands by adding them to the
+     * {@link #cmdLineMessagesLOCK} queue.
      *
      * @param cmd         The TUI command to process.
-     * @param stateNotify A boolean indicating whether to notify the state or not.
+     * @param stateNotify A boolean indicating whether to call
+     *                    {@link TUIstate#stateNotify()} or not.
      */
     protected void commandToProcess(TUIstateCommands cmd, boolean stateNotify) {
-        synchronized (cmdLineMessages) {
+        synchronized (cmdLineMessagesLOCK) {
             if (!stateNotify) {
-                cmdLineMessages.add(cmd.toString());
-                cmdLineMessages.notify();
+                cmdLineMessagesLOCK.add(cmd.toString());
+                cmdLineMessagesLOCK.notify();
             } else {
-                cmdLineMessages.add(cmd.toString());
-                cmdLineMessages.add(TUIstateCommands.NOTIFY.toString());
-                cmdLineMessages.notify();
+                cmdLineMessagesLOCK.add(cmd.toString());
+                cmdLineMessagesLOCK.add(TUIstateCommands.NOTIFY.toString());
+                cmdLineMessagesLOCK.notify();
             }
         }
     }
 
+    /**
+     * Indicates if the {@link #statusBarTHREAD} has already printed the chat
+     * notification
+     */
     private volatile boolean chatNotification = false;
+    /**
+     * Indicates if there is a new chat message
+     */
     private volatile boolean newChatMessage = false;
+    /**
+     * Indicates if the heart beat is still being received
+     */
     private volatile boolean heartBeatReceived = false;
+    /**
+     * Indicates if the {@link #statusBarTHREAD} has already printed the heart beat
+     */
     private volatile boolean HBprinted = false;
 
-    private final Object statusBar = new Object();
-    Thread statusBarThread = new Thread(() -> {
+    /**
+     * This object is used to synchronize the status bar thread and the main thread.
+     * 
+     */
+    private final Object statusBarLOCK = new Object();
+    /**
+     * This thread is used to print the heart beat status and the chat notification.
+     * <p>
+     * When it starts, it prints the heart beat disconnected status and waits for
+     * the
+     * {@link #statusBarLOCK} object.
+     * <p>
+     * If the heart beat is not received, it prints the heart beat disconnected.
+     * The heart beat is received by the {@link #show_heartBeat()} method that sets
+     * the {@link #heartBeatReceived} boolean to true.
+     * {@link #show_heartBeat()} also prints the status only if the heart beat is
+     * not already printed checking the {@link #HBprinted} boolean.
+     * <p>
+     * The same happens for the chat notification. The chat notification is received
+     * by the {@link #show_chatMessage(String, String)} or
+     * {@link #show_privateChatMessage(String, String, String)} methods that sets
+     * the {@link #newChatMessage} boolean to true. The chat notification is printed
+     * only if the {@link #chatNotification} is false.
+     * 
+     */
+    Thread statusBarTHREAD = new Thread(() -> {
         StringBuilder heart = new StringBuilder();
         heart.append(Ansi.ansi().cursor(1, 17).a("💔"));
         while (true) {
-            synchronized (statusBar) {
+            synchronized (statusBarLOCK) {
                 try {
-                    statusBar.wait();
+                    statusBarLOCK.wait();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -1452,7 +1621,7 @@ public class TUI extends UI {
                 if (!heartBeatReceived) {
                     heart = new StringBuilder();
                     heart.append(Ansi.ansi().cursor(1, 17).a("💔"));
-                    synchronized (statusBar) {
+                    synchronized (statusBarLOCK) {
                         System.out.println(heart);
                     }
                     HBprinted = false;
@@ -1463,15 +1632,19 @@ public class TUI extends UI {
         }
 
     });
-    Thread timerThread = new Thread(() -> {
+
+    /**
+     * This thread is used to update the status bar every {@link DV#clientHBUpdate}
+     */
+    Thread timerTHREAD = new Thread(() -> {
         Timer timer = new Timer();
         TimerTask updateStatusBar = new TimerTask() {
             @Override
             public void run() {
                 if (!HBprinted) {
                     heartBeatReceived = false;
-                    synchronized (statusBar) {
-                        statusBar.notify();
+                    synchronized (statusBarLOCK) {
+                        statusBarLOCK.notify();
                     }
                 }
             }
@@ -1479,6 +1652,14 @@ public class TUI extends UI {
         timer.scheduleAtFixedRate(updateStatusBar, 0, DV.clientHBUpdate);
     });
 
+    /**
+     * This method is called each time the server receives the heart beat from the
+     * client.
+     * <p>
+     * If the heart beat is not received and not already printed, it prints the
+     * heart beat received status and updates the {@link #HBprinted} boolean.
+     * Then it updates the {@link #heartBeatReceived} boolean to true.
+     */
     @Override
     public void show_heartBeat() {
 
@@ -1497,33 +1678,42 @@ public class TUI extends UI {
      * by
      * the user.
      * <ul>
-     * <li>It starts the {@link TUI#cmdLineProcessThread}</li>
+     * <li>It starts the {@link TUI#cmdLineProcessTHREAD}</li>
      * </ul>
+     * 
+     * Sends the input to the {@link TUI#cmdLineProcessTHREAD} and waits for the
+     * command to be executed to get the input again.
      * 
      * <p>
      * Locks description:
      * <ul>
-     * <li>{@link TUI#cmdLineAreaSelection} blocks the current thread if the TUI
+     * <li>{@link TUI#cmdLineAreaSelectionLOCK} blocks the current thread if the TUI
      * cursor is not in the cmdLineArea
-     * <li>{@link TUI#stateLock} and {@link TUI#stateLockQueue} blocks the current
+     * <li>{@link TUI#stateLOCK} and {@link TUI#stateLockQueueLOCK} blocks the
+     * current
      * thread if {@link TUIstate#stateNotify()} has not been called. Two locks are
      * used to ensure that the stateNotify() terminate its execution unblocking the
-     * cmdLineReader only when stateLockQueue in not empty; meaning it's waiting.
+     * cmdLineReader only when stateLockQueue in not empty meaning it's waiting.
      * </ul>
      * 
+     * This Thread also catches the "chat" input to switch to the chat input area.
+     * Switching to the chat input area it erase the chat notification and updates
+     * the booleans {@link TUI#chatNotification} and {@link TUI#newChatMessage} to
+     * false.
+     * 
      */
-    Thread cmdLineReaderThread = new Thread(() -> {
-        cmdLineProcessThread.start();
+    Thread cmdLineReaderTHREAD = new Thread(() -> {
+        cmdLineProcessTHREAD.start();
         ;
         Scanner cmdScanner = new Scanner(System.in);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             cmdScanner.close();
         }));
         while (true) {
-            synchronized (cmdLineAreaSelection) {
-                if (cmdLineAreaSelection.isEmpty()) {
+            synchronized (cmdLineAreaSelectionLOCK) {
+                if (cmdLineAreaSelectionLOCK.isEmpty()) {
                     try {
-                        cmdLineAreaSelection.wait();
+                        cmdLineAreaSelectionLOCK.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -1532,10 +1722,10 @@ public class TUI extends UI {
             if (comingFromChat == false) {
                 // if a command is running it waits for the command to be finished
                 // This is necessary to let each command get its input
-                synchronized (stateLock) {
+                synchronized (stateLOCK) {
                     addToStateLockQueue();
                     try {
-                        stateLock.wait();
+                        stateLOCK.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -1564,16 +1754,16 @@ public class TUI extends UI {
                     removeFromCmdLineAreaSelection();
                     comingFromChat = true;
                     addToChatAreaSelection();
-                    synchronized (chatNeedsUpdate) {
-                        chatNeedsUpdate.notify();
+                    synchronized (chatNeedsUpdateLOCK) {
+                        chatNeedsUpdateLOCK.notify();
                     }
                 } else {
-                    synchronized (cmdLineMessages) {
-                        cmdLineMessages.add(input.trim());
+                    synchronized (cmdLineMessagesLOCK) {
+                        cmdLineMessagesLOCK.add(input.trim());
                         if (input.trim().equals(TUIstateCommands.SHOW_COMMAND_INFO.toString())) {
-                            cmdLineMessages.add(TUIstateCommands.NOTIFY.toString());
+                            cmdLineMessagesLOCK.add(TUIstateCommands.NOTIFY.toString());
                         }
-                        cmdLineMessages.notify();
+                        cmdLineMessagesLOCK.notify();
                     }
                 }
             }
@@ -1584,15 +1774,15 @@ public class TUI extends UI {
      * This thread is used to print the command line output messages the right way
      * and in the right position.
      */
-    Thread cmdLineOutThread = new Thread(() -> {
+    Thread cmdLineOutTHREAD = new Thread(() -> {
         while (true) {
-            synchronized (cmdLineOut) {
-                if (cmdLineOut.isEmpty()) {
+            synchronized (cmdLineOutLOCK) {
+                if (cmdLineOutLOCK.isEmpty()) {
                     try {
                         print_CmdLineBorders();
-                        cmdLineAreaSelection.add(0);
-                        cmdLineReaderThread.start();
-                        cmdLineOut.wait();
+                        cmdLineAreaSelectionLOCK.add(0);
+                        cmdLineReaderTHREAD.start();
+                        cmdLineOutLOCK.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -1612,38 +1802,46 @@ public class TUI extends UI {
      * It also manages the queue of the messages.
      */
     private void updateCmdLineOut() {
-        synchronized (cmdLineOut) {
+        synchronized (cmdLineOutLOCK) {
             // printa i messaggi
-            for (int i = 0; i < cmdLineOut.size() && i < CMD_LINE_OUT_LINES; i++) {
+            for (int i = 0; i < cmdLineOutLOCK.size() && i < CMD_LINE_OUT_LINES; i++) {
                 AnsiConsole.out().print(Ansi.ansi().cursor(CMD_LINE_INPUT_ROW - 1 - i, CMD_LINE_INPUT_COLUMN)
                         .a(" ".repeat(CMD_LINE_EFFECTIVE_WIDTH)));
                 AnsiConsole.out().print(Ansi.ansi().cursor(CMD_LINE_INPUT_ROW - 1 - i, CMD_LINE_INPUT_COLUMN + 1)
-                        .a(cmdLineOut.toArray()[cmdLineOut.size() - 1 - i]));
+                        .a(cmdLineOutLOCK.toArray()[cmdLineOutLOCK.size() - 1 - i]));
             }
             // rimuove i messaggi più vecchi
-            if (cmdLineOut.size() > CMD_LINE_OUT_LINES - 1) {
-                int i = cmdLineOut.size() - CMD_LINE_OUT_LINES - 1;
+            if (cmdLineOutLOCK.size() > CMD_LINE_OUT_LINES - 1) {
+                int i = cmdLineOutLOCK.size() - CMD_LINE_OUT_LINES - 1;
                 for (int j = 0; j < i; j++) {
-                    cmdLineOut.poll();
+                    cmdLineOutLOCK.poll();
                 }
             }
             resetCursor();
             try {
-                cmdLineOut.wait();
+                cmdLineOutLOCK.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    /**
+     * The {@link #chatBoardThread} is not active in all the states. When
+     * interrupted the Thread variable is set to null.
+     * <p>
+     * This method is used to rebuild the chat board thread to start it again.
+     * 
+     * @return
+     */
     private Thread chatBoardThreadBuilder() {
         return new Thread(() -> {
             // print_ChatBorders();
             moveCursorToCmdLine();
             while (!Thread.currentThread().isInterrupted()) {
-                synchronized (chatNeedsUpdate) {
+                synchronized (chatNeedsUpdateLOCK) {
                     try {
-                        chatNeedsUpdate.wait();
+                        chatNeedsUpdateLOCK.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -1659,6 +1857,8 @@ public class TUI extends UI {
     /**
      * This thread is used to print the chat board messages the right way and in the
      * right position.
+     * It synchronizes on the {@link #chatNeedsUpdateLOCK} object to wait for the
+     * chat messages to be updated.
      */
     Thread chatBoardThread = chatBoardThreadBuilder();
 
@@ -1682,29 +1882,65 @@ public class TUI extends UI {
 
     }
 
+    /**
+     * Update the {@link #chatMessages} queue and notify the
+     * {@link #chatBoardThread} to print the messages.
+     * The notify is done through the {@link #chatNeedsUpdateLOCK} object.
+     * <p>
+     * It also notifies the {@link #statusBarTHREAD} to print the chat notification
+     * if needed.
+     * <p>
+     * This method is invoked by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.NewChatMessage}
+     * 
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
+     * 
+     * @param username the username of the client that sent the message
+     * @param message  the message sent
+     * 
+     */
     @Override
     public void show_chatMessage(String username, String message) {
-        synchronized (chatNeedsUpdate) {
+        synchronized (chatNeedsUpdateLOCK) {
             chatMessages.add(username + ": " + message);
 
         }
-        if (chatAreaSelection.isEmpty()) {
+        if (chatAreaSelectionLOCK.isEmpty()) {
             newChatMessage = true;
             if (!chatNotification) {
-                synchronized (statusBar) {
-                    statusBar.notify();
+                synchronized (statusBarLOCK) {
+                    statusBarLOCK.notify();
                 }
             }
         } else {
-            synchronized (chatNeedsUpdate) {
-                chatNeedsUpdate.notifyAll();
+            synchronized (chatNeedsUpdateLOCK) {
+                chatNeedsUpdateLOCK.notifyAll();
             }
         }
     }
 
+    /**
+     * Update the {@link #chatMessages} queue with a private message only if the
+     * message is for the client or from the client.
+     * Notify the {@link #chatBoardThread} to print the messages.
+     * The notify is done through the {@link #chatNeedsUpdateLOCK} object.
+     * <p>
+     * It also notifies the {@link #statusBarTHREAD} to print the chat notification
+     * if needed.
+     * <p>
+     * This method is invoked by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.NewChatMessage}
+     * 
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
+     * 
+     * @param username the username of the client that sent the message
+     * @param message  the message sent
+     */
     @Override
     public void show_privateChatMessage(String fromUsername, String toUsername, String message) {
-        synchronized (chatNeedsUpdate) {
+        synchronized (chatNeedsUpdateLOCK) {
             if (fromUsername.equals(client.getUsername()))
                 chatMessages.add("[To: " + toUsername + "] : " + message);
             else if (toUsername.equals(client.getUsername()))
@@ -1712,34 +1948,44 @@ public class TUI extends UI {
             else
                 return;
         }
-        if (chatAreaSelection.isEmpty()) {
+        if (chatAreaSelectionLOCK.isEmpty()) {
             newChatMessage = true;
             if (!chatNotification) {
-                synchronized (statusBar) {
-                    statusBar.notify();
+                synchronized (statusBarLOCK) {
+                    statusBarLOCK.notify();
                 }
             }
         } else {
-            synchronized (chatNeedsUpdate) {
-                chatNeedsUpdate.notifyAll();
+            synchronized (chatNeedsUpdateLOCK) {
+                chatNeedsUpdateLOCK.notifyAll();
             }
         }
     }
 
     /**
-     * This thread is used to read the input from the system input and add it to the
-     * <code>chatMessages</code> queue.
+     * This thread handle the chat input.
+     * <p>
+     * It waits on the {@link #chatAreaSelectionLOCK} queue if it is empty.
+     * Each new element added to the queue wakes up the thread.
+     * Based on the input, it calls the corresponding client method to construct the
+     * correct
+     * {@link it.polimi.ingsw.gc31.client_server.queue.serverQueue.ChatMessageObj}.
+     * 
+     * @see it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands#sendChatMessage(String,
+     *      String)
+     * @see it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands#sendChatMessage(String,
+     *      String, String)
      */
-    Thread chatReaderThread = new Thread(() -> {
+    Thread chatReaderTHREAD = new Thread(() -> {
         Scanner chatScanner = new Scanner(System.in);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             chatScanner.close();
         }));
         while (!Thread.currentThread().isInterrupted()) {
-            synchronized (chatAreaSelection) {
-                if (chatAreaSelection.isEmpty()) {
+            synchronized (chatAreaSelectionLOCK) {
+                if (chatAreaSelectionLOCK.isEmpty()) {
                     try {
-                        chatAreaSelection.wait();
+                        chatAreaSelectionLOCK.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -1781,30 +2027,43 @@ public class TUI extends UI {
         }
     });
 
-    Thread playViewThread = new Thread(() -> {
+    /**
+     * This thread is used to print the play view updates as soon as they are
+     * available.
+     * <p>
+     * It waits on the {@link #playViewUpdateLOCK} queue if it is empty.
+     * Each new element added to the queue wakes up the thread.
+     * <p>
+     */
+    Thread playViewTHREAD = new Thread(() -> {
         while (true) {
-            synchronized (playViewUpdate) {
-                while (playViewUpdate.isEmpty()) {
+            synchronized (playViewUpdateLOCK) {
+                while (playViewUpdateLOCK.isEmpty()) {
                     try {
-                        playViewUpdate.wait();
+                        playViewUpdateLOCK.wait();
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                 }
-                System.out.println(playViewUpdate.poll());
+                System.out.println(playViewUpdateLOCK.poll());
                 resetCursor();
             }
         }
 
     });
 
-    // THREADS UTILITIES
-
     // UTILITIES
 
     /**
-     * Starts the TUI: prints the title of the game and then runs the threads the
-     * proper way.
+     * Starts the TUI: prints the title of the game and then runs in this order the
+     * following threads:
+     * <ul>
+     * <li>{@link #chatReaderTHREAD}
+     * <li>{@link #playViewTHREAD}
+     * <li>{@link #statusBarTHREAD}
+     * <li>{@link #timerTHREAD}
+     * <li>{@link #cmdLineOutTHREAD}
+     * 
      */
     @Override
     public void runUI() {
@@ -1822,11 +2081,11 @@ public class TUI extends UI {
         System.out.flush();
 
         // chatBoardThread.start();
-        chatReaderThread.start();
-        playViewThread.start();
-        statusBarThread.start();
-        timerThread.start();
-        cmdLineOutThread.start();
+        chatReaderTHREAD.start();
+        playViewTHREAD.start();
+        statusBarTHREAD.start();
+        timerTHREAD.start();
+        cmdLineOutTHREAD.start();
 
     }
 
@@ -1840,7 +2099,7 @@ public class TUI extends UI {
      * object
      * <p>
      * Unblock the tui sending the command {@link TUIstateCommands#NOTIFY} to che
-     * {@link #cmdLineProcessThread}
+     * {@link #cmdLineProcessTHREAD}
      * 
      * @param listGame the list of available games provided by the
      *                 {@link it.polimi.ingsw.gc31.controller.Controller}
@@ -1856,12 +2115,28 @@ public class TUI extends UI {
     }
 
     /**
+     * Receives the play areas and the achieved resources of all the players,
+     * selects the correct ones checking the {@link #activePlayArea} and creates the
+     * corresponding {@link StringBuilder}.
+     * Then sends the {@link StringBuilder} to the {@link #playViewTHREAD} adding
+     * it to the {@link #playViewUpdateLOCK} queue. It calls notify on the
+     * {@link #playViewUpdateLOCK} queue to print the new play view updates.
+     * Also updates the corresponding {@link #areasCache} with the new play area.
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowPlayAreaObj}
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
+     * 
+     * @param username          the username of the player
+     * @param playArea          all the play areas of the players
+     * @param achievedResources the achieved resources of each player
      * 
      */
     @Override
     public void show_playArea(String username, LinkedHashMap<Point, PlayableCard> playArea,
             Map<Resources, Integer> achievedResources) {
-        // if (client.getUsername().equals(username)) {
         StringBuilder res = new StringBuilder();
         res.append(clearArea(PLAYAREA_INITIAL_ROW, PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW, PLAYAREA_END_COLUMN));
         res.append(print_Borders("Play Area: " + username, greyText, PLAYAREA_INITIAL_ROW,
@@ -1888,9 +2163,9 @@ public class TUI extends UI {
         playAreaAllPlayers.put(username, res);
 
         if (activePlayArea.equals(username)) {
-            synchronized (playViewUpdate) {
-                playViewUpdate.add(res);
-                playViewUpdate.notify();
+            synchronized (playViewUpdateLOCK) {
+                playViewUpdateLOCK.add(res);
+                playViewUpdateLOCK.notify();
             }
             areasCache.put(TUIareas.PLAY_VIEW_AREA, res);
         }
@@ -1898,6 +2173,23 @@ public class TUI extends UI {
         // }
     }
 
+    /**
+     * Receives the score of all the players, constructs the corresponding
+     * {@link StringBuilder}
+     * and sends it to the {@link #playViewTHREAD} adding it to the
+     * {@link #playViewUpdateLOCK} queue.
+     * Calls notify on the {@link #playViewUpdateLOCK} queue to print the new play
+     * view updates.
+     * updates the corresponding {@link #areasCache} with the new score.
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowScorePlayerObj}
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
+     * 
+     * 
+     */
     @Override
     public void show_scorePlayer(LinkedHashMap<String, Pair<Integer, Boolean>> scores) {
         StringBuilder res = new StringBuilder();
@@ -1914,47 +2206,126 @@ public class TUI extends UI {
             index++;
         }
 
-        synchronized (playViewUpdate) {
-            playViewUpdate.add(res);
-            playViewUpdate.notify();
+        synchronized (playViewUpdateLOCK) {
+            playViewUpdateLOCK.add(res);
+            playViewUpdateLOCK.notify();
         }
         areasCache.put(TUIareas.PLAYERS_INFO, res);
 
     }
 
+    /**
+     * Updates the TUIstate {@link #state} to the {@link PlayingState} and sends the
+     * command {@link TUIstateCommands#SHOW_COMMAND_INFO} to the
+     * {@link #cmdLineProcessTHREAD} to show the available commands.
+     *
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.StartGameObj}
+     * sent by the {@link it.polimi.ingsw.gc31.controller.GameController#ready()}.
+     * <p>
+     * The flow that triggers this method starts from the
+     * {@link JoinedToGameState#command_ready()} that calls the
+     * {@link TUIstate#stateNotify()} so the TUI is already unblocked.
+     */
     @Override
     public void update_ToPlayingState() {
         this.state = new PlayingState(this);
         commandToProcess(TUIstateCommands.SHOW_COMMAND_INFO, false);
-        // qui lo state notify non serve perché lo chiama già il metodo triggerato
-        // dall'oggetto risposta di ready
+        // Here, state notify is not needed because it is already called by the
+        // TUIcommands that triggers this update
+
     }
 
+    /**
+     * Receives the first card of the gold decks and the two gold cards that are
+     * shown to the
+     * players, constructs the corresponding {@link StringBuilder} and sends it to
+     * the {@link #playViewTHREAD} adding it to the {@link #playViewUpdateLOCK}
+     * queue.
+     * Calls notify on the {@link #playViewUpdateLOCK} queue to print the new play
+     * view updates.
+     * updates the corresponding {@link #areasCache} with the new decks.
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowGoldDeckObj}
+     * 
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
+     * 
+     * @param firstCardDeck the first card of the gold deck
+     * @param card1         the first gold card shown to the players
+     * @param card2         the second gold card shown to the players
+     */
     @Override
     public void show_goldDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
         StringBuilder res = print_Deck("Gold Deck", greyText, firstCardDeck, card1, card2,
                 GOLD_DECK_INITIAL_ROW,
                 GOLD_DECK_INITIAL_COLUMN, GOLD_DECK_END_ROW, GOLD_DECK_END_COLUMN);
-        synchronized (playViewUpdate) {
-            playViewUpdate.add(res);
-            playViewUpdate.notify();
+        synchronized (playViewUpdateLOCK) {
+            playViewUpdateLOCK.add(res);
+            playViewUpdateLOCK.notify();
         }
         areasCache.put(TUIareas.GOLD_DECK, res);
 
     }
 
+    /**
+     * Receives the first card of the resource decks and the two resource cards that
+     * are shown to the
+     * players, constructs the corresponding {@link StringBuilder} and sends it to
+     * the {@link #playViewTHREAD} adding it to the {@link #playViewUpdateLOCK}
+     * queue.
+     * Calls notify on the {@link #playViewUpdateLOCK} queue to print the new play
+     * view updates.
+     * updates the corresponding {@link #areasCache} with the new decks.
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowResourceDeckObj}
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
+     * 
+     * @param firstCardDeck the first card of the resource deck
+     * @param card1         the first resource card shown to the players
+     * @param card2         the second resource card shown to the players
+     */
     @Override
     public void show_resourceDeck(PlayableCard firstCardDeck, PlayableCard card1, PlayableCard card2) {
         StringBuilder res = print_Deck("Resource Deck", greyText, firstCardDeck, card1, card2,
                 RESOURCE_DECK_INITIAL_ROW,
                 RESOURCE_DECK_INITIAL_COLUMN, RESOURCE_DECK_END_ROW, RESOURCE_DECK_END_COLUMN);
-        synchronized (playViewUpdate) {
-            playViewUpdate.add(res);
-            playViewUpdate.notify();
+        synchronized (playViewUpdateLOCK) {
+            playViewUpdateLOCK.add(res);
+            playViewUpdateLOCK.notify();
         }
         areasCache.put(TUIareas.RES_DECK, res);
     }
 
+    /**
+     * Receives the username of the player, its hand and the index of the selected
+     * card.
+     * If the username is the same as the client's username:
+     * constructs the corresponding {@link StringBuilder} and sends it to the
+     * {@link #playViewTHREAD} adding it to the {@link #playViewUpdateLOCK} queue;
+     * calls notify on the {@link #playViewUpdateLOCK} queue to print the new play
+     * view
+     * updates;
+     * updates the corresponding {@link #areasCache} with the new hand.
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowHandPlayerObj}
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
+     * 
+     * @param username     the username of the player
+     * @param hand         the hand of the player
+     * @param selectedCard the index of the selected card
+     * 
+     * 
+     */
     @Override
     public void show_handPlayer(String username, List<PlayableCard> hand, int selectedCard) {
         if (client.getUsername().equals(username)) {
@@ -1984,15 +2355,35 @@ public class TUI extends UI {
                 }
                 index++;
             }
-            synchronized (playViewUpdate) {
-                playViewUpdate.add(res);
-                playViewUpdate.notify();
+            synchronized (playViewUpdateLOCK) {
+                playViewUpdateLOCK.add(res);
+                playViewUpdateLOCK.notify();
             }
             areasCache.put(TUIareas.HAND, res);
 
         }
     }
 
+    /**
+     * Receives the username of the player and the objective card.
+     * If the username is the same as the client's username:
+     * constructs the corresponding {@link StringBuilder} and sends it to the
+     * {@link #playViewTHREAD} adding it to the {@link #playViewUpdateLOCK} queue;
+     * calls notify on the {@link #playViewUpdateLOCK} queue to print the new play
+     * view
+     * updates;
+     * updates the corresponding {@link #areasCache} with the new personal objective
+     * card.
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowSecretObjectiveCardObj}
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
+     * 
+     * @param username      the username of the player
+     * @param objectiveCard the objective card
+     */
     @Override
     public void show_objectiveCard(String username, ObjectiveCard objectiveCard) {
         if (client.getUsername().equals(username)) {
@@ -2002,14 +2393,35 @@ public class TUI extends UI {
             res.append(ansi().cursor(OBJECTIVE_INITIAL_ROW, OBJECTIVE_INITIAL_COLUMN + 1).a("Your Objective Card"));
             res.append(print_ObjectiveCard(objectiveCard, OBJECTIVE_INITIAL_COLUMN + 1, OBJECTIVE_INITIAL_ROW + 1,
                     OBJECTIVE_INITIAL_ROW, OBJECTIVE_END_ROW, OBJECTIVE_INITIAL_COLUMN, OBJECTIVE_END_COLUMN));
-            synchronized (playViewUpdate) {
-                playViewUpdate.add(res);
-                playViewUpdate.notify();
+            synchronized (playViewUpdateLOCK) {
+                playViewUpdateLOCK.add(res);
+                playViewUpdateLOCK.notify();
             }
             areasCache.put(TUIareas.OBJ, res);
         }
     }
 
+    /**
+     * Receives the username of the player and the two personal objective card
+     * alternatives.
+     * If the username is the same as the client's username: t constructs the
+     * corresponding {@link StringBuilder}
+     * and sends it to the {@link #playViewTHREAD} adding it to the
+     * {@link #playViewUpdateLOCK} queue;
+     * calls notify on the {@link #playViewUpdateLOCK} queue to print the new play
+     * view updates;
+     * updates the corresponding {@link #areasCache} with the new personal objective
+     * card
+     * alternatives.
+     * 
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
+     * 
+     * @param username       the username of the player
+     * @param objectiveCard1 the first objective card
+     * @param objectiveCard2 the second objective card
+     */
     @Override
     public void show_chooseObjectiveCard(String username, ObjectiveCard objectiveCard1, ObjectiveCard objectiveCard2) {
         if (client.getUsername().equals(username)) {
@@ -2033,9 +2445,9 @@ public class TUI extends UI {
                     ansi().cursor(CHOOSE_OBJECTIVE_INITIAL_ROW + 2 + CARD_HEIGHT * 2,
                             CHOOSE_OBJECTIVE_INITIAL_COLUMN + 2)
                             .a("Objective Card 2"));
-            synchronized (playViewUpdate) {
-                playViewUpdate.add(res);
-                playViewUpdate.notify();
+            synchronized (playViewUpdateLOCK) {
+                playViewUpdateLOCK.add(res);
+                playViewUpdateLOCK.notify();
             }
             // FIXME problema per quando iniziano i turni della partita, l'area cache di
             // choose objective card non deve venire ristampata
@@ -2043,6 +2455,25 @@ public class TUI extends UI {
         }
     }
 
+    /**
+     * Receives the two common objective cards.
+     * Constructs the corresponding {@link StringBuilder}; sends it to the
+     * {@link #playViewTHREAD} adding it to the {@link #playViewUpdateLOCK} queue;
+     * calls notify on the {@link #playViewUpdateLOCK} queue to print the new play
+     * view updates; updates the corresponding {@link #areasCache} with the new
+     * common objective
+     * cards.
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowCommonObjectiveCardObj}
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
+     * 
+     * @param card1 the first common objective card
+     * @param card2 the second common objective card
+     * 
+     */
     @Override
     public void show_commonObjectiveCard(ObjectiveCard card1, ObjectiveCard card2) {
         StringBuilder res = new StringBuilder();
@@ -2060,13 +2491,33 @@ public class TUI extends UI {
                     COMMON_OBJECTIVE_INITIAL_ROW + 1, COMMON_OBJECTIVE_INITIAL_ROW, COMMON_OBJECTIVE_END_ROW,
                     COMMON_OBJECTIVE_INITIAL_COLUMN, COMMON_OBJECTIVE_END_COLUMN));
         }
-        synchronized (playViewUpdate) {
-            playViewUpdate.add(res);
-            playViewUpdate.notify();
+        synchronized (playViewUpdateLOCK) {
+            playViewUpdateLOCK.add(res);
+            playViewUpdateLOCK.notify();
         }
         areasCache.put(TUIareas.COMMON_OBJ, res);
     }
 
+    /**
+     * Receives the username of the player and the starter card.
+     * If the username is the same as the client's username:
+     * constructs the corresponding {@link StringBuilder} and sends it to the
+     * {@link #playViewTHREAD} adding it to the {@link #playViewUpdateLOCK} queue;
+     * calls notify on the {@link #playViewUpdateLOCK} queue to print the new play
+     * view
+     * updates;
+     * updates the corresponding {@link #areasCache} with the new starter card.
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowStarterCardObj}
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
+     * 
+     * @param username    the username of the player
+     * @param starterCard the starter card
+     * 
+     */
     @Override
     public void show_starterCard(String username, PlayableCard starterCard) {
         if (client.getUsername().equals(username)) {
@@ -2078,15 +2529,29 @@ public class TUI extends UI {
                     STARTER_CARD_INITIAL_ROW + 1, STARTER_CARD_INITIAL_ROW, STARTER_CARD_END_ROW,
                     STARTER_CARD_INITIAL_COLUMN, STARTER_CARD_END_COLUMN));
 
-            synchronized (playViewUpdate) {
-                playViewUpdate.add(res);
-                playViewUpdate.notify();
+            synchronized (playViewUpdateLOCK) {
+                playViewUpdateLOCK.add(res);
+                playViewUpdateLOCK.notify();
             }
             areasCache.put(TUIareas.STARTER, res);
 
         }
     }
 
+    /**
+     * Receives the accepter username of the player, prints the response message to
+     * the command line out and set the
+     * client's {@link Client#username} with the accepted username.
+     * It also sets the {@link #activePlayArea} with the accepted username.
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.ValidUsernameObj}
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.Controller}
+     * 
+     * @param username the accepted username
+     */
     @Override
     public void show_validUsername(String username) {
         printToCmdLineOut(serverWrite("Username accepted"));
@@ -2097,6 +2562,21 @@ public class TUI extends UI {
 
     }
 
+    /**
+     * Receives the username of the player, prints the response message to the
+     * command line out.
+     * Recall the {@link TUIstate#setUsername()} to let the client insert a new
+     * name.
+     * 
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongUsernameObj}
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.Controller}
+     * 
+     * @param username the wrong username
+     */
     @Override
     public void show_wrongUsername(String username) {
         printToCmdLineOut(serverWrite("Username " + username + " already taken, try again"));
@@ -2104,6 +2584,23 @@ public class TUI extends UI {
 
     }
 
+    /**
+     * Prints the game the client joined to and its id to the command line out.
+     * Starts the {@link #chatBoardThread}.
+     * Updates the {@link #state} to the {@link JoinedToGameState}.
+     * Sends the command {@link TUIstateCommands#SHOW_COMMAND_INFO} to the
+     * {@link #cmdLineProcessTHREAD} to show the available commands.
+     * 
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.JoinedToGameObj}
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.Controller}
+     * 
+     * @param id                 the id of the game the client joined to
+     * @param maxNumberOfPlayers the maximum number of players of the game
+     */
     @Override
     public void show_joinedToGame(int id, int maxNumberOfPlayers) {
         printToCmdLineOut(serverWrite("Joined to game: " + id));
@@ -2114,18 +2611,47 @@ public class TUI extends UI {
 
     }
 
+    /**
+     * Change the {@link #state} to the {@link InitState}.
+     * Interrupts the {@link #chatBoardThread}.
+     * Clears the {@link #chatMessages} queue.
+     * Sends the command {@link TUIstateCommands#SHOW_COMMAND_INFO} to the
+     * {@link #cmdLineProcessTHREAD} to show the available commands.
+     * Clears the {@link #areasCache}.
+     * Sends the command {@link TUIstateCommands#REFRESH} to the
+     * {@link #cmdLineProcessTHREAD} to refresh the TUI.
+     * Prints the quit message to the command line out.
+     * 
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.QuitFromGameObj}
+     */
     @Override
     public void show_quitFromGame() {
-        // FIXME da problemi
         state = new InitState(this);
         chatBoardThread.interrupt();
         chatMessages = new ArrayDeque<String>();
         commandToProcess(TUIstateCommands.SHOW_COMMAND_INFO, false);
+        areasCache.clear(); // TODO da testare
         commandToProcess(TUIstateCommands.REFRESH, false);
-
-        // TODO: erase player info
+        printToCmdLineOut(serverWrite("You quit the game"));
     }
 
+    /**
+     * Prints the message to the command line out.
+     * Sends the command {@link TUIstateCommands#NOTIFY} to the
+     * {@link #cmdLineProcessTHREAD} to unblock the TUI.
+     * 
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsFullObj}
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.Controller}
+     * 
+     * @param id the id of the game that is full
+     * 
+     */
     @Override
     public void show_gameIsFull(int id) {
         printToCmdLineOut(serverWrite(serverWrite("Game " + id + " is full")));
@@ -2133,6 +2659,23 @@ public class TUI extends UI {
 
     }
 
+    /**
+     * Prints the message to the command line out.
+     * Starts the {@link #chatBoardThread}.
+     * Updates the {@link #state} to the {@link JoinedToGameState}.
+     * Sends the command {@link TUIstateCommands#SHOW_COMMAND_INFO} to the
+     * {@link #cmdLineProcessTHREAD} to show the available commands.
+     * 
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameCreatedObj}
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.Controller}
+     * 
+     * @param gameID the id of the game created
+     *
+     */
     @Override
     public void show_gameCreated(int gameID) {
         printToCmdLineOut(serverWrite("New game created with ID: " + gameID));
@@ -2143,26 +2686,36 @@ public class TUI extends UI {
 
     }
 
+    /**
+     * Unimplemented method for the TUI
+     */
     @Override
     public void show_readyStatus(String username, boolean status) {
-        // if (client.getUsername().equals(username)) {
-        // if (status) {
-        // printToCmdLineOut(serverWrite("You are ready"));
-        // } else {
-        // printToCmdLineOut(serverWrite("You are not ready"));
-        // }
-        // }
-        // state.stateNotify();
-        // FIXME
     }
 
+    /**
+     * Prints the message to the command line out.
+     * Sends the command {@link TUIstateCommands#NOTIFY} to the
+     * {@link #cmdLineProcessTHREAD} to unblock the TUI.
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameDoesNotExistObj}
+     * 
+     */
     @Override
     public void show_gameDoesNotExist() {
         printToCmdLineOut(serverWrite("Game does not exist"));
         commandToProcess(TUIstateCommands.NOTIFY, false);
-
     }
 
+    /**
+     * Prints the message to the command line out.
+     * Sends the command {@link TUIstateCommands#NOTIFY} to the
+     * {@link #cmdLineProcessTHREAD} to unblock the TUI.
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameAlreadyExistsObj}
+     */
     @Override
     public void show_wrongGameSize() {
         printToCmdLineOut(serverWrite("Game size must be between 2 and 4"));
@@ -2170,6 +2723,28 @@ public class TUI extends UI {
 
     }
 
+    /**
+     * Receives the username of the player and the player info about is
+     * {@link it.polimi.ingsw.gc31.model.player.PlayerState}
+     * If the username is the same as the client's username:
+     * constructs the corresponding {@link StringBuilder} and sends it to the
+     * {@link #playViewTHREAD} adding it to the {@link #playViewUpdateLOCK} queue;
+     * calls notify on the {@link #playViewUpdateLOCK} queue to print the new play
+     * view
+     * updates;
+     * updates the corresponding {@link #areasCache} with the new player state.
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowPlayerTurnObj}
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
+     * 
+     * @param username the username of the player
+     * @param info     the player info about the
+     *                 {@link it.polimi.ingsw.gc31.model.player.PlayerState}
+     * 
+     */
     @Override
     public void show_playerTurn(String username, String info) {
         if (client.getUsername().equals(username)) {
@@ -2177,14 +2752,32 @@ public class TUI extends UI {
             res.append(ansi().cursor(PLAYAREA_END_ROW + 1, PLAYAREA_INITIAL_COLUMN + 1)
                     .a(" ".repeat(PLAYAREA_END_COLUMN - PLAYAREA_INITIAL_COLUMN)));
             res.append(ansi().cursor(PLAYAREA_END_ROW + 1, PLAYAREA_INITIAL_COLUMN + 1).a(info));
-            synchronized (playViewUpdate) {
-                playViewUpdate.add(res);
-                playViewUpdate.notify();
+            synchronized (playViewUpdateLOCK) {
+                playViewUpdateLOCK.add(res);
+                playViewUpdateLOCK.notify();
             }
             areasCache.put(TUIareas.PLAYER_STATE, res);
         }
     }
 
+    /**
+     * Receives a map with the players and their status.
+     * Constructs the corresponding {@link StringBuilder} and sends it to the
+     * {@link #playViewTHREAD} adding it to the {@link #playViewUpdateLOCK} queue.
+     * Calls notify on the {@link #playViewUpdateLOCK} queue to print the new play
+     * view
+     * updates.
+     * Updates the corresponding {@link #areasCache} with the new players info.
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowInGamePlayerObj}
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
+     * 
+     * @param players a map with the players and their status
+     *
+     */
     @Override
     public void show_inGamePlayers(LinkedHashMap<String, Boolean> players) {
         playersUsernames = players.keySet().stream().toList();
@@ -2200,20 +2793,55 @@ public class TUI extends UI {
             index++;
         }
 
-        synchronized (playViewUpdate) {
-            playViewUpdate.add(res);
-            playViewUpdate.notify();
+        synchronized (playViewUpdateLOCK) {
+            playViewUpdateLOCK.add(res);
+            playViewUpdateLOCK.notify();
         }
 
         areasCache.put(TUIareas.PLAYERS_INFO, res);
 
     }
 
+    /**
+     * Receives the message to print to the command line out.
+     * The message provide a short description of the invalid action performed.
+     * 
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.InvalidActionObj}
+     * 
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
+     * 
+     * @param message the message to print to the command line out
+     * 
+     */
     @Override
     public void show_invalidAction(String message) {
         printToCmdLineOut(serverWrite(message));
     }
 
+    /**
+     * Receives the username of the player and a map with the players and their
+     * score.
+     * Constructs the corresponding {@link StringBuilder} and sends it to the
+     * {@link #playViewTHREAD} adding it to the {@link #playViewUpdateLOCK} queue.
+     * Calls notify on the {@link #playViewUpdateLOCK} queue to print the new play
+     * view
+     * updates.
+     * 
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameIsOverObj}
+     * 
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
+     * 
+     * @param username     the username of the player
+     * @param playersScore a map with the players and their score
+     */
     @Override
     public void show_GameIsOver(String username, Map<String, Integer> playersScore) {
         StringBuilder res = new StringBuilder();
@@ -2235,23 +2863,62 @@ public class TUI extends UI {
             index++;
         }
 
-        synchronized (playViewUpdate) {
-            playViewUpdate.add(res);
-            playViewUpdate.notify();
+        synchronized (playViewUpdateLOCK) {
+            playViewUpdateLOCK.add(res);
+            playViewUpdateLOCK.notify();
         }
     }
 
+    /**
+     * Receives the token to set to the client and a boolean to indicates if the
+     * token is temporary or must be saved.
+     * Calls the {@link Client#setToken(int, boolean)} to set the token.
+     * 
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.SendTokenObj}
+     * 
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.Controller}
+     * 
+     * @param token     the token to set to the client
+     * @param temporary a boolean to indicates if the token is temporary or must be
+     *                  saved
+     * 
+     * 
+     */
     @Override
     public void receiveToken(int token, boolean temporary) {
         client.setToken(token, temporary);
     }
 
+    /**
+     * Receives the message to print to the command line out.
+     */
     @Override
     public void show_GenericClientResponse(String response) {
         printToCmdLineOut(tuiWrite(response));
 
     }
 
+    /**
+     * Receives the username of the player.
+     * Set the client username with the received username.
+     * Updates the {@link #activePlayArea} with the received username.
+     * Sends the {@link TUIstateCommands#RECONNECT} command to the
+     * {@link #cmdLineProcessTHREAD}.
+     * 
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.WantReconnectObj}
+     * 
+     * <p>
+     * The parameter is provided by the
+     * {@link it.polimi.ingsw.gc31.controller.Controller}
+     * 
+     * @param username the username of the player
+     */
     @Override
     public void show_wantReconnect(String username) {
         getClient().setUsername(username);
@@ -2259,6 +2926,29 @@ public class TUI extends UI {
         commandToProcess(TUIstateCommands.RECONNECT, false);
     }
 
+    /**
+     * Receives the result of the rejoin request and a list with the players in the
+     * game.
+     * If the result is true, starts the {@link #chatBoardThread}.
+     * Updates the {@link #state} to the {@link PlayingState}.
+     * Sends the {@link TUIstateCommands#SHOW_COMMAND_INFO} command to the
+     * {@link #cmdLineProcessTHREAD} to show the available commands.
+     * If the result is false, sets the client token with the default token and
+     * sends the {@link TUIstateCommands#SET_USERNAME} command to the
+     * {@link #cmdLineProcessTHREAD} to allow the client to insert a new username.
+     * 
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.RejoinObj}
+     * 
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.Controller}
+     * 
+     * @param result  the result of the rejoin request
+     * @param players a list with the players in the game
+     * 
+     */
     @Override
     public void show_rejoined(boolean result, List<String> players) {
         if (result) {
@@ -2272,6 +2962,20 @@ public class TUI extends UI {
         }
     }
 
+    /**
+     * Prints the message to the command line out.
+     * Sets the client token with the default token.
+     * Sends the {@link TUIstateCommands#SET_USERNAME} command to the
+     * {@link #cmdLineProcessTHREAD} to allow the client to insert a new username.
+     * This method is called when the client has a token saved locally that do not
+     * correspond to a disconnected user on the server side.
+     * 
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongUsernameObj}
+     * constructed with a null username.
+     * 
+     */
     @Override
     public void show_unableToReconnect() {
         printToCmdLineOut(serverWrite("U were not in a game!"));
@@ -2286,6 +2990,24 @@ public class TUI extends UI {
     // commandToProcess(TUIstateCommands.ANOTHERMATCH, false);
     // }
 
+    /**
+     * Receives the seconds left to the start of the game.
+     * Constructs the corresponding {@link StringBuilder} and sends it to the
+     * {@link #playViewTHREAD} adding it to the {@link #playViewUpdateLOCK} queue.
+     * Calls notify on the {@link #playViewUpdateLOCK} queue to print the new play
+     * view
+     * updates.
+     * 
+     * <p>
+     * This method is called by the
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.TimerLastPlayerConnectedObj}
+     * 
+     * <p>
+     * All the parameters are provided by the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
+     * 
+     * @param secondsLeft the seconds left to the start of the game
+     */
     @Override
     public void show_timerLastPlayerConnected(Integer secondsLeft) {
         StringBuilder res = new StringBuilder();
@@ -2298,24 +3020,15 @@ public class TUI extends UI {
                 (PLAYAREA_END_ROW + PLAYAREA_INITIAL_ROW) / 2,
                 (PLAYAREA_END_COLUMN + PLAYAREA_INITIAL_COLUMN) / 2)
                 .a(secondsLeft));
-        synchronized (playViewUpdate) {
-            playViewUpdate.add(res);
-            playViewUpdate.notify();
+        synchronized (playViewUpdateLOCK) {
+            playViewUpdateLOCK.add(res);
+            playViewUpdateLOCK.notify();
         }
     }
 
-    public void changeActivePlayArea(String username) {
-        activePlayArea = username;
-        areasCache.put(TUIareas.PLAY_VIEW_AREA, playAreaAllPlayers.get(username));
-        commandToProcess(TUIstateCommands.REFRESH, false);
-    }
-
-    /**
-     * This method should ask the player if it wants
-     * to play another match with the same players after the current
-     * match is finished
-     */
-    // FIXME implementare metodo. Ho fallito miseramente
-    public void show_anotherMatch() {
-    }
+    // /**
+    // * Unimplemented new feature
+    // */
+    // public void show_anotherMatch() {
+    // }
 }

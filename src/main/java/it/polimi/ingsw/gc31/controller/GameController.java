@@ -251,7 +251,10 @@ public class GameController extends UnicastRemoteObject implements IGameControll
     }
 
     /**
-     * Change the status from ready to not ready and vice versa
+     * Updates the ready status of the player in the lobby (reverse the current),
+     * notifies the UI of the change sending a {@link ShowReadyStatusObj}.
+     * Then calls the {@link #checkReady()} method to check if all the players are
+     * ready to start the game.
      *
      * @param ready    boolean value. If True, player is ready to start the game
      * @param username Player in match that called this method
@@ -267,7 +270,12 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * Checks if two conditions are met:
      * If all the player in the lobby are ready
      * If the maximum number of the players for the game has been reached
-     * If both these conditions are true it starts the game for all players
+     * If both these conditions are true:
+     * <ul>
+     * <li>it sends a {@link StartGameObj} to all the clients
+     * <li>it starts the game for all players
+     * <li>it notifies all the listeners of the game calling
+     * {@link GameModel#notifyAllGameListeners()}
      */
     public void checkReady() {
         int counter = 0;
@@ -286,7 +294,6 @@ public class GameController extends UnicastRemoteObject implements IGameControll
                 model.notifyAllGameListeners();
                 model.notifyAllGameListeners();
             } catch (IllegalStateOperationException e) {
-                // throw new RuntimeException(e);
             }
         }
     }
@@ -494,6 +501,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
      * This method is invoked to send to the clients the updated info about the
      * client and their ready status.
      * It sends a {@link ShowInGamePlayerObj} to the client.
+     * 
      */
     private void notifyListPlayers() {
         sendUpdateToClient(new ShowInGamePlayerObj(readyStatus));

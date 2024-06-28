@@ -74,7 +74,7 @@ public abstract class TUIstate {
     protected abstract void command_refresh();
 
     /**
-     * Every time the {@link TUI#cmdLineReaderThread} is about to read the new input
+     * Every time the {@link TUI#cmdLineReaderTHREAD} is about to read the new input
      * it
      * waits this method to be called to procede and read the new characters.
      * This allow the TUIcommands to read their own input without concurrency
@@ -98,15 +98,15 @@ public abstract class TUIstate {
      * and sent
      * to cmdLineProcessThread by the
      * {@link TUI#commandToProcess(TUIstateCommands, boolean)} method
-     * <li>{@link TUI#cmdLineProcessThread} executes the command running the
+     * <li>{@link TUI#cmdLineProcessTHREAD} executes the command running the
      * corresponding {@link TUIstate#commandsMap} {@link Runnable}
      * <li>Somewhere in the code a stateNotify() is called (more info in the next
      * lines); thanks to
-     * {@link TUI#stateLockQueue} the method waits the cmdLineReaderThread to be
+     * {@link TUI#stateLockQueueLOCK} the method waits the cmdLineReaderThread to be
      * about to
      * read the input.
      * <li>cmdLineReaderThread notifies on stateLockQueue that it's about to take
-     * the input and waits on {@link TUI#stateLock}.
+     * the input and waits on {@link TUI#stateLOCK}.
      * <li>after being notified on stateLockQueue stateNotify() notifies the
      * cmdLineReaderThread on stateLock and unblock it
      * </ul>
@@ -124,18 +124,18 @@ public abstract class TUIstate {
      * </ul>
      */
     protected void stateNotify() {
-        synchronized (tui.stateLockQueue) {
-            if (tui.stateLockQueue.isEmpty()) {
+        synchronized (tui.stateLockQueueLOCK) {
+            if (tui.stateLockQueueLOCK.isEmpty()) {
                 try {
-                    tui.stateLockQueue.wait();
+                    tui.stateLockQueueLOCK.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
         tui.removeFromStateLockQueue();
-        synchronized (tui.stateLock) {
-            tui.stateLock.notify();
+        synchronized (tui.stateLOCK) {
+            tui.stateLOCK.notify();
         }
     }
 

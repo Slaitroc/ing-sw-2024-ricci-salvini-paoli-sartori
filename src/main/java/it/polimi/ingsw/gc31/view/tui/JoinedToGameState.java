@@ -73,7 +73,6 @@ public class JoinedToGameState extends TUIstate {
         } catch (NoGamesException e) {
             e.printStackTrace();
         }
-        // stateNotify();
     }
 
     /**
