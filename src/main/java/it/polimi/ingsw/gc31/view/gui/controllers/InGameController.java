@@ -343,7 +343,7 @@ public class InGameController extends ViewController {
         List<Tab> tabs = new ArrayList<>(Arrays.asList(tab2, tab3, tab4));
         int k = 0;
         for (String player : app.getPlayerList().keySet()) {
-            System.out.println("player " + player);
+            //System.out.println("player " + player);
             if (!player.equals(app.getUsername())) {
                 otherPlayers.add(player);
                 //System.out.println("Adding other player: " + player);
@@ -828,7 +828,7 @@ public class InGameController extends ViewController {
      */
     @FXML
     private void handleChatKeyPressed(KeyEvent event) {
-        System.out.println("handleEnterKeyPressed called with value: " + event.getCode());
+        //System.out.println("handleEnterKeyPressed called with value: " + event.getCode());
         sendMessage(event, textField);
     }
 

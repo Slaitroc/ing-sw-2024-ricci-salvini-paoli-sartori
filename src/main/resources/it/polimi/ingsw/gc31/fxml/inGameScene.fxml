@@ -92,10 +92,14 @@
                                 </padding>
                                 <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true"
                                             prefHeight="460.0" prefWidth="250.0" styleClass="chat-scroll-pane">
-                                    <TextFlow fx:id="chatField" prefHeight="200.0" prefWidth="207.0"/>
+                                    <padding>
+                                        <Insets bottom="10" left="5" right="5" top="10"/>
+                                    </padding>
+                                    <TextFlow fx:id="chatField" prefHeight="200.0" prefWidth="207.0" styleClass="lobby-chat-background"/>
                                 </ScrollPane>
                                 <MFXTextField fx:id="textField" onKeyPressed="#handleChatKeyPressed"
-                                              prefHeight="49.0" prefWidth="250.0" styleClass="lobby-chat-background"/>
+                                              prefHeight="49.0" prefWidth="250.0" styleClass="mfx-simple-small-text-field"
+                                              stylesheets="@../css/SimpleTextField.css"/>
                             </VBox>
                         </StackPane>
                     </Tab>
