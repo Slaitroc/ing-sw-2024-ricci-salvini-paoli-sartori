@@ -6,16 +6,17 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface VirtualServer extends Remote {
-    public void RMIserverWrite(String text) throws RemoteException;
+    void RMIserverWrite(String text) throws RemoteException;
 
-    public void sendCommand(ServerQueueObject obj) throws RemoteException;
+    void sendCommand(ServerQueueObject obj) throws RemoteException;
 
-    public void setVirtualClient(VirtualClient client) throws RemoteException;
+    String getClientIP() throws RemoteException;
 
-    public String getClientIP() throws RemoteException;
+    int generateToken(VirtualClient client) throws RemoteException;
 
-    public int generateToken(VirtualClient client) throws RemoteException;
-
-    public boolean connect(VirtualClient client, String username, Integer tempToken, Integer token)
+    boolean connect(VirtualClient client, String username, Integer tempToken, Integer token)
             throws RemoteException;
+
+    // TODO
+//    public void setVirtualClient(VirtualClient client) throws RemoteException;
 }

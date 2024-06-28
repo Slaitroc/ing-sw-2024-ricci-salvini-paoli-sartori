@@ -152,9 +152,8 @@ public interface ClientCommands {
      * If the player is in a match the method will notify the current game ID
      *
      * @return Current game ID
-     * @throws RemoteException if a generic connection error occurs
      */
-    int getGameID() throws RemoteException;
+    int getGameID();
 
     /**
      * Used to obtain current Client username
@@ -184,21 +183,14 @@ public interface ClientCommands {
      */
     void sendChatMessage(String fromUsername, String toUsername, String message) throws RemoteException;
 
-    // TODO
     void setToken(int token, boolean temporary);
 
-    // TODO
-    boolean hasToken();
-
-    // TODO
     Token getToken();
 
-    // TODO
-    int readToken() throws NumberFormatException, NoTokenException;
-
-    // TODO
     void reconnect(boolean reconnect) throws RemoteException;
 
-    // TODO
-    void anotherMatchResponse(Boolean wantsToRematch) throws RemoteException;
+//     TODO
+//     boolean hasToken();
+//    int readToken() throws NumberFormatException, NoTokenException;
+//    void anotherMatchResponse(Boolean wantsToRematch) throws RemoteException;
 }

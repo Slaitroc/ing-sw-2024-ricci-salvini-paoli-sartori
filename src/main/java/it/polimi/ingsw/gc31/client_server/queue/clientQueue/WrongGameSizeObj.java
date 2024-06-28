@@ -5,6 +5,8 @@ import it.polimi.ingsw.gc31.view.UI;
 /**
  * WrongGameSizeObj is a class that extends ClientQueueObject
  * It is sent to the client to notify that the number of player he sent to create the game is not valid.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class WrongGameSizeObj extends ClientQueueObject {
 

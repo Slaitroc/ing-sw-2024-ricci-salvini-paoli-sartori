@@ -22,6 +22,8 @@ public class ShowGoldDeckObj extends ClientQueueObject {
 
     /**
      * The second gold card flipped on the board.
+     *
+     * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
      */
     private final String card2;
 

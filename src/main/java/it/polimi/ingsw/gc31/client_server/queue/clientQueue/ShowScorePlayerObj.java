@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 /**
  * ShowScorePlayerObj is a class that extends ClientQueueObject
  * It is sent to the client to notify the score of all players in the game.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class ShowScorePlayerObj extends ClientQueueObject {
 

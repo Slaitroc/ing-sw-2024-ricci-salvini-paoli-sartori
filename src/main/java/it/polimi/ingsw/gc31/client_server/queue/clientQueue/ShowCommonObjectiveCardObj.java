@@ -7,6 +7,8 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
 /**
  * ShowCommonObjectiveCardObj is a class that extends ClientQueueObject
  * It is sent to the client to notify the objective card common to all the players.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class ShowCommonObjectiveCardObj extends ClientQueueObject {
 

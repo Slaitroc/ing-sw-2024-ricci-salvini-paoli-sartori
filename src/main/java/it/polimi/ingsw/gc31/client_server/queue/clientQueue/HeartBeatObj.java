@@ -5,6 +5,8 @@ import it.polimi.ingsw.gc31.view.UI;
 /**
  * JoinedToGameObj is a class that extends ClientQueueObject
  * It is sent to the client to notify that the heartbeat has been received correctly and thus the connection is stable.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class HeartBeatObj extends ClientQueueObject {
 

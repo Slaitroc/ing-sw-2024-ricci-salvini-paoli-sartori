@@ -7,6 +7,8 @@ import it.polimi.ingsw.gc31.view.UI;
 /**
  * ReJoinedObj is a class that extends ClientQueueObject
  * It is sent to the client to notify the result of the rejoin to the game which the player asked to reconnect to has been successful
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class ReJoinedObj extends ClientQueueObject {
 

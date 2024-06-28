@@ -10,6 +10,8 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
 /**
  * ShowHandPlayerObj is a class that extends ClientQueueObject
  * It is sent to the client to notify play area of a player who is playing the game.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class ShowHandPlayerObj extends ClientQueueObject {
 

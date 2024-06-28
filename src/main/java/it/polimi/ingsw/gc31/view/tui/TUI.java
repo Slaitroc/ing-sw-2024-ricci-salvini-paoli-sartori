@@ -547,7 +547,8 @@ public class TUI extends UI {
                                 overFlowRight - relative_x - (CARD_LENGTH - CARD_CORNER_LENGTH));
                         res.append(ansi().cursor(relative_y, relative_x)
                                 .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine)
-                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
+                                .fgRgb(borderColor[0], borderColor[1], borderColor[2])
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine).reset()
                                 .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine));
                     } else if (relative_x + CARD_CORNER_LENGTH >= overFlowRight) {
                         preLine = preLine.substring(0, overFlowRight - relative_x);
@@ -557,7 +558,8 @@ public class TUI extends UI {
                         centerLine = centerLine.substring(0, overFlowRight - relative_x - CARD_CORNER_LENGTH);
                         res.append(ansi().cursor(relative_y, relative_x)
                                 .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine)
-                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine));
+                                .fgRgb(borderColor[0], borderColor[1], borderColor[2])
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine).reset());
                     }
 
                 }
@@ -568,7 +570,8 @@ public class TUI extends UI {
                         preLine = preLine.substring(overFlowLeft - relative_x + 1, CARD_CORNER_LENGTH);
                         res.append(ansi().cursor(relative_y, overFlowLeft + 1)
                                 .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine)
-                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
+                                .fgRgb(borderColor[0], borderColor[1], borderColor[2])
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine).reset()
                                 .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine));
                     } else if ((relative_x + CARD_LENGTH - CARD_CORNER_LENGTH) - overFlowLeft - 1 < 0) {
                         postLine = postLine.substring(
@@ -579,15 +582,16 @@ public class TUI extends UI {
                         centerLine = centerLine.substring(overFlowLeft - relative_x + 1 - CARD_CORNER_LENGTH,
                                 CARD_LENGTH - 2 * CARD_CORNER_LENGTH);
                         res.append(ansi().cursor(relative_y, overFlowLeft + 1)
-                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
+                                .fgRgb(borderColor[0], borderColor[1], borderColor[2])
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine).reset()
                                 .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine));
                     }
 
                 } else {
                     res.append(ansi().cursor(relative_y, relative_x)
-                            .fgRgb(borderColor[0], borderColor[1], borderColor[2])
                             .bgRgb(cornerUpSxColor[0], cornerUpSxColor[1], cornerUpSxColor[2]).a(preLine)
-                            .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
+                            .fgRgb(borderColor[0], borderColor[1], borderColor[2])
+                            .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine).reset()
                             .bgRgb(cornerUpDxColor[0], cornerUpDxColor[1], cornerUpDxColor[2]).a(postLine)
                             .reset());
                 }
@@ -803,7 +807,8 @@ public class TUI extends UI {
                                 overFlowRight - relative_x - (CARD_LENGTH - CARD_CORNER_LENGTH));
                         res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
                                 .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine)
-                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
+                                .fgRgb(borderColor[0], borderColor[1], borderColor[2])
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine).reset()
                                 .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(postLine));
                     } else if (relative_x + CARD_CORNER_LENGTH >= overFlowRight) {
                         preLine = preLine.substring(0, overFlowRight - relative_x);
@@ -813,14 +818,16 @@ public class TUI extends UI {
                         centerLine = centerLine.substring(0, overFlowRight - relative_x - CARD_CORNER_LENGTH);
                         res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
                                 .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine)
-                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine));
+                                .fgRgb(borderColor[0], borderColor[1], borderColor[2])
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine).reset());
                     }
                 } else if (overFlowLeft - relative_x >= 0) {
                     if (CARD_CORNER_LENGTH - (overFlowLeft - relative_x) - 1 > 0) {
                         preLine = preLine.substring(overFlowLeft - relative_x + 1, CARD_CORNER_LENGTH);
                         res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, overFlowLeft + 1)
                                 .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine)
-                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
+                                .fgRgb(borderColor[0], borderColor[1], borderColor[2])
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine).reset()
                                 .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine));
                     } else if ((relative_x + CARD_LENGTH - CARD_CORNER_LENGTH) - overFlowLeft - 1 < 0) {
                         postLine = postLine.substring(
@@ -831,14 +838,15 @@ public class TUI extends UI {
                         centerLine = centerLine.substring(overFlowLeft - relative_x + 1 - CARD_CORNER_LENGTH,
                                 CARD_LENGTH - 2 * CARD_CORNER_LENGTH);
                         res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, overFlowLeft + 1)
-                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
+                                .fgRgb(borderColor[0], borderColor[1], borderColor[2])
+                                .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine).reset()
                                 .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine));
                     }
                 } else {
                     res.append(ansi().cursor(relative_y + CARD_HEIGHT - 1, relative_x)
-                            .fgRgb(borderColor[0], borderColor[1], borderColor[2])
                             .bgRgb(cornerDownSxColor[0], cornerDownSxColor[1], cornerDownSxColor[2]).a(preLine)
-                            .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine)
+                            .fgRgb(borderColor[0], borderColor[1], borderColor[2])
+                            .bgRgb(cardColor[0], cardColor[1], cardColor[2]).a(centerLine).reset()
                             .bgRgb(cornerDownDxColor[0], cornerDownDxColor[1], cornerDownDxColor[2]).a(postLine)
                             .reset());
                 }

@@ -5,6 +5,8 @@ import it.polimi.ingsw.gc31.view.UI;
 /**
  * GameCreateObj is a class that extends ClientQueueObject
  * Is sent to the client when a is created when a game is created. When executed, it notifies the UI that a game has been created with a specific ID.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class GameCreatedObj extends ClientQueueObject {
     /**

@@ -5,6 +5,8 @@ import it.polimi.ingsw.gc31.view.UI;
 /**
  * NewChatMessage is a class that extends ClientQueueObject
  * It is sent to the client to notify a new message in the chat.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class NewChatMessage extends ClientQueueObject {
 

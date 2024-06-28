@@ -25,11 +25,10 @@ public class ReconnectObj extends ServerQueueObject {
      * This is the constructor of the class.
      *
      * @param esito     indicates if the client wants to reconnect or not.
-     * @param username  is the username of the player that wants to reconnect.
      * @param tempToken is the value of the tempToken.
      * @param token     is the value of the token.
      */
-    public ReconnectObj(boolean esito, String username,int tempToken, int token) {
+    public ReconnectObj(boolean esito,int tempToken, int token) {
         this.esito = esito;
         this.token = token;
         this.tempToken = tempToken;

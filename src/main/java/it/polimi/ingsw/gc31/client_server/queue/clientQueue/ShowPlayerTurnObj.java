@@ -5,6 +5,8 @@ import it.polimi.ingsw.gc31.view.UI;
 /**
  * ShowPlayerTurnObj is a class that extends ClientQueueObject.
  * It is sent to the client to notify that info about the turn of the player.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class ShowPlayerTurnObj extends ClientQueueObject{
 

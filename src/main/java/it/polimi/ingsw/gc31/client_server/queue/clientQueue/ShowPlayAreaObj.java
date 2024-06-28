@@ -14,6 +14,8 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
 /**
  * ShowPlayAreaObj is a class that extends ClientQueueObject
  * It is sent to the client to notify the play area.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class ShowPlayAreaObj extends ClientQueueObject {
 

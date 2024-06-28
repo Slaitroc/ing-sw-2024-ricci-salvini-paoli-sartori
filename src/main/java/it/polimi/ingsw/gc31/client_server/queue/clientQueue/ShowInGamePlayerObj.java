@@ -8,6 +8,8 @@ import java.util.LinkedHashMap;
  * ShowInGamePlayerObj is a class that extends ClientQueueObject
  * It is sent to the client when the players are in the lobby to notify the list of the player
  * if they are ready or not.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class ShowInGamePlayerObj extends ClientQueueObject {
 

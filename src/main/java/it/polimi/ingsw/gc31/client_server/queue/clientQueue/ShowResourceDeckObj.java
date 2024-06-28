@@ -7,6 +7,8 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
 /**
  * ShowResourceDeckObj is a class that extends ClientQueueObject.
  * It is sent to the client to notify the resource deck.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class ShowResourceDeckObj extends ClientQueueObject {
 

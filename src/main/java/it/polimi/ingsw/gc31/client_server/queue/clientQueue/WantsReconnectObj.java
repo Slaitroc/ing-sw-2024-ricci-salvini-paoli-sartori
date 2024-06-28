@@ -6,6 +6,8 @@ import it.polimi.ingsw.gc31.view.UI;
  * WantsReconnectObj is a class that extends ClientQueueObject
  * It is sent to the client to notify that the player can reconnect to a game and
  * the player has to choose to join or not.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class WantsReconnectObj extends ClientQueueObject {
 

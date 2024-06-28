@@ -7,6 +7,8 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
 /**
  * ShowStarterCardObj is a class that extends ClientQueueObject
  * It is sent to the client to notify the starter card the player have to place to start the game.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class ShowStarterCardObj extends ClientQueueObject {
 

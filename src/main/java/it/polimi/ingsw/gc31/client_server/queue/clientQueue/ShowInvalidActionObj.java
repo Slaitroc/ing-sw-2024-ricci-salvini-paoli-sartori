@@ -5,6 +5,8 @@ import it.polimi.ingsw.gc31.view.UI;
 /**
  * ShowInvalidActionObj is a class that extends ClientQueueObject
  * It is sent to the client to notify an invalid action of the player.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class ShowInvalidActionObj extends ClientQueueObject{
 

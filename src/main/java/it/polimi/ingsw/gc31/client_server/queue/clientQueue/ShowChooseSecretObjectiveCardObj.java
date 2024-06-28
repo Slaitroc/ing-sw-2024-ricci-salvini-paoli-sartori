@@ -7,6 +7,8 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.gsonTransl
 /**
  * ShowChooseSecretObjectiveCardObj is a class that extends ClientQueueObject
  * It is sent to the client to notify the two secret objective cards the player can choose.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class ShowChooseSecretObjectiveCardObj extends ClientQueueObject {
 

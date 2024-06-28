@@ -892,12 +892,6 @@ class GameModelTest {
         public void setGameController(IGameController gameController) throws RemoteException {
 
         }
-
-        @Override
-        public void setRmiToken(int token) throws RemoteException {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'setRmiToken'");
-        }
     }
 
     private void utilityInitGame() {

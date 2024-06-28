@@ -435,44 +435,9 @@ public class TCPClient implements ClientCommands {
      * @param reconnect is true if the player wants to reconnect, false otherwise
      */
     @Override
-    public void reconnect(boolean reconnect) throws RemoteException {
-        tcp_sendCommand(new ReconnectObj(reconnect, username, token.getTempToken(), token.getToken()),
+    public void reconnect(boolean reconnect) throws RemoteException{
+        tcp_sendCommand(new ReconnectObj(reconnect, token.getTempToken(), token.getToken()),
                 DV.RECIPIENT_CONTROLLER);
-    }
-
-    /**
-     * Method invoked by the ui with the response of the user regarding
-     * if the player wants to play another match with the same players
-     *
-     * @param wantsToRematch is the response of the player (true: wants to rematch,
-     *                       false otherwise)
-     */
-    @Override
-    public void anotherMatchResponse(Boolean wantsToRematch) {
-        tcp_sendCommand(new AnotherMatchResponseObj(username, wantsToRematch), DV.RECIPIENT_GAME_CONTROLLER);
-    }
-
-    /**
-     * Method that checks if the token of the client exists
-     *
-     * @return true if the token exists, false otherwise
-     */
-    @Override
-    public boolean hasToken() {
-        return token.doesTokenExists();
-    }
-
-    /**
-     * Method that read the value of the token in the specific file created by the
-     * program
-     *
-     * @return the value of the token in the file
-     * @throws NumberFormatException if the value red is not a number
-     * @throws NoTokenException      if the token doesn't exists
-     */
-    @Override
-    public int readToken() throws NumberFormatException, NoTokenException {
-        return Integer.parseInt(token.getTokenLine());
     }
 
     /**
@@ -484,4 +449,40 @@ public class TCPClient implements ClientCommands {
     public Token getToken() {
         return this.token;
     }
+
+    // TODO
+//    /**
+//     //     * Method invoked by the ui with the response of the user regarding
+//     //     * if the player wants to play another match with the same players
+//     //     *
+//     //     * @param wantsToRematch is the response of the player (true: wants to rematch,
+//     //     *                       false otherwise)
+//     //     */
+//    @Override
+//    public void anotherMatchResponse(Boolean wantsToRematch) {
+//        tcp_sendCommand(new AnotherMatchResponseObj(username, wantsToRematch), DV.RECIPIENT_GAME_CONTROLLER);
+//    }
+//
+//    /**
+//     * Method that checks if the token of the client exists
+//     *
+//     * @return true if the token exists, false otherwise
+//     */
+//    @Override
+//    public boolean hasToken() {
+//        return token.doesTokenExists();
+//    }
+//
+//    /**
+//     * Method that read the value of the token in the specific file created by the
+//     * program
+//     *
+//     * @return the value of the token in the file
+//     * @throws NumberFormatException if the value red is not a number
+//     * @throws NoTokenException      if the token doesn't exists
+//     */
+//    @Override
+//    public int readToken() throws NumberFormatException, NoTokenException {
+//        return Integer.parseInt(token.getTokenLine());
+//    }
 }

@@ -5,6 +5,8 @@ import it.polimi.ingsw.gc31.view.UI;
 /**
  * StartGameObj is a class that extends ClientQueueObject
  * It is sent to the client to notify that the game is started.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class StartGameObj extends ClientQueueObject {
 

@@ -5,6 +5,8 @@ import it.polimi.ingsw.gc31.view.UI;
 /**
  * GameDoesNotExistObj is a class that extends ClientQueueObject
  * It is sent to the client to notify that the game the client wants to join doesn't exist.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class GameDoesNotExistObj extends ClientQueueObject {
 

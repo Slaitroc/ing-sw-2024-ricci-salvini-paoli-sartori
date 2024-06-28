@@ -7,6 +7,8 @@ import java.util.Map;
 /**
  * GameIsOverObj is a class that extends ClientQueueObject
  * It is sent to the client to notify that the game he was playing is over.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class GameIsOverObj extends ClientQueueObject{
 

@@ -5,6 +5,8 @@ import it.polimi.ingsw.gc31.view.UI;
 /**
  * ValidUsernameObj is a class that extends ClientQueueObject
  * It is sent to the client to notify that the username he chose is valid.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class ValidUsernameObj extends ClientQueueObject {
 

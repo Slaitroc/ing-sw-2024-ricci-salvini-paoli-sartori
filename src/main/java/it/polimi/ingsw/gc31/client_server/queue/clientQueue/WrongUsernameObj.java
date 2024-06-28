@@ -5,6 +5,8 @@ import it.polimi.ingsw.gc31.view.UI;
 /**
  * WrongUsernameObj is a class that extends ClientQueueObject
  * It is sent to the client to notify that the username he chose is not valid.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class WrongUsernameObj extends ClientQueueObject {
 

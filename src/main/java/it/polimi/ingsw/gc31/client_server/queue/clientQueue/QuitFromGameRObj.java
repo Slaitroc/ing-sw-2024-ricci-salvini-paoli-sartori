@@ -5,6 +5,8 @@ import it.polimi.ingsw.gc31.view.UI;
 /**
  * QuitFromGameRObj is a class that extends ClientQueueObject
  * It is sent to the client to notify that the quit from the game the player was playing has been successful.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class QuitFromGameRObj extends ClientQueueObject {
 

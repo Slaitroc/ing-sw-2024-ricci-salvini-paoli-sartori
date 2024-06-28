@@ -6,6 +6,8 @@ import it.polimi.ingsw.gc31.view.UI;
  * TimerLastPlayerConnectedObj is a class that extends ClientQueueObject
  * It is sent to the client to notify that the player is playing is the last remained in the game.
  * A timer has started and the game ends automatically.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class TimerLastPlayerConnectedObj extends ClientQueueObject{
 

@@ -5,6 +5,8 @@ import it.polimi.ingsw.gc31.view.UI;
 /**
  * ShowReadyStatusObj is a class that extends ClientQueueObject.
  * It is sent to the client to notify the status of a player in the lobby.
+ *
+ * @see it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject
  */
 public class ShowReadyStatusObj extends ClientQueueObject {
 
