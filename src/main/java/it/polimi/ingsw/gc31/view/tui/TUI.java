@@ -1773,6 +1773,10 @@ public class TUI extends UI {
     /**
      * This thread is used to print the command line output messages the right way
      * and in the right position.
+     * It starts the {@link #cmdLineReaderTHREAD} to get the input.
+     * It synchronizes on the {@link #cmdLineOutLOCK} object to wait for the
+     * messages
+     * to be updated.
      */
     Thread cmdLineOutTHREAD = new Thread(() -> {
         while (true) {

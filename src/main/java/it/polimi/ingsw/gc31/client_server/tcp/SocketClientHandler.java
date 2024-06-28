@@ -4,7 +4,7 @@ import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
-import it.polimi.ingsw.gc31.client_server.queue.clientQueue.SendTokenObj;
+import it.polimi.ingsw.gc31.client_server.queue.clientQueue.SaveTokenObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ServerQueueObject;
 import it.polimi.ingsw.gc31.controller.Controller;
@@ -114,7 +114,7 @@ public class SocketClientHandler implements VirtualClient {
                                     Controller.getController().connect(
                                             Controller.getController().getRightConnection(tempToken),
                                             connectObj.getUsername(), tempToken, connectObj.getToken());
-                                    sendCommand(new SendTokenObj(tempToken, true));
+                                    sendCommand(new SaveTokenObj(tempToken, true));
                                 } else {
                                     Controller.getController().connect(
                                             Controller.getController().getRightConnection(tempToken),
