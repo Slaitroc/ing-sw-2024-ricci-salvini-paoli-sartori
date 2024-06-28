@@ -7,10 +7,13 @@ import it.polimi.ingsw.gc31.model.player.Player;
 import java.awt.*;
 import java.util.Map;
 
-/*
- * @throws IllegalStateOperationException if model is in CreationGameModelState, SetupGameModelState, RunningGameModelState, LastTurnGameModelState, ShowDownGameModelState or EndGameModelState
+/**
+ * The GameModelState interface represents the different states of a game model. It provides methods for initializing the game, playing turns, drawing cards, and detecting the end
+ *  of the game.
  */
 public interface GameModelState {
+    /*
+     */
 
     /**
      * Initializes the game by setting up players, drawing initial cards, and updating the game state.

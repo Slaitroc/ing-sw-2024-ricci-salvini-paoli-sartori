@@ -8,6 +8,9 @@ import it.polimi.ingsw.gc31.model.deck.Deck;
 
 import java.awt.*;
 
+/**
+ * This class represents the Placed state of a player.
+ */
 public class Placed extends PlayerState {
 
     @Override
@@ -20,7 +23,6 @@ public class Placed extends PlayerState {
             throws FullHandException, NullPointerException {
         executeAddToHand(deck, substituteDeck, player, index);
         player.setInGameState(new Waiting());
-        //System.out.println("PLAYER: " + player.getUsername() + " HAS JUST DRAWN A CARD, IS NOW WAITING.");
     }
 
     @Override

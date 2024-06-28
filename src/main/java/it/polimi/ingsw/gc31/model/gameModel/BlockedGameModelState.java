@@ -9,6 +9,9 @@ import it.polimi.ingsw.gc31.model.player.Player;
 import java.awt.*;
 import java.util.Map;
 
+/**
+ * Represents the state of a game when it is blocked.
+ */
 public class BlockedGameModelState implements GameModelState{
     private final GameModelState savedGameState;
     public BlockedGameModelState(GameModel model, GameModelState savedGameState) {

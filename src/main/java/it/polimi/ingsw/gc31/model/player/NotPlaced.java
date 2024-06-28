@@ -8,6 +8,10 @@ import it.polimi.ingsw.gc31.model.deck.Deck;
 
 import java.awt.*;
 
+/**
+ * This class represents the NotPlaced state of a Player.
+ * In this state, the player has not yet placed a card on the play area.
+ */
 public class NotPlaced extends PlayerState {
 
     @Override
@@ -23,13 +27,9 @@ public class NotPlaced extends PlayerState {
     @Override
     public void play(Point point, Player player) throws IllegalPlaceCardException {
         PlayableCard card = player.getSelectedCard();
-        // TODO togliere commenti
         player.score += player.getPlayArea().place(card, point);
         player.hand.remove(card);
         player.setInGameState(new Placed());
-//        } catch (IllegalPlaceCardException e) {
-//            System.out.println(e.getMessage());
-//        }
     }
 
     @Override

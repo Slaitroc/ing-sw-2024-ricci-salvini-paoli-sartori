@@ -3,6 +3,9 @@ package it.polimi.ingsw.gc31.utility;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * IPvalidator class provides the functionality to check if an IP address is valid.
+ */
 public class IPvalidator {
 
     /**

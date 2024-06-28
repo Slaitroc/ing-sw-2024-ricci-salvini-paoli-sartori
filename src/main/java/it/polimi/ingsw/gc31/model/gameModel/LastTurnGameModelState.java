@@ -11,6 +11,9 @@ import it.polimi.ingsw.gc31.model.player.Player;
 import java.awt.*;
 import java.util.Map;
 
+/**
+ * The LastTurnGameModelState class represents the game state when it is in the last turn.
+ */
 public class LastTurnGameModelState implements GameModelState {
     public LastTurnGameModelState(GameModel model) {
         ServerLog.gControllerWrite("Game changed to LAST TURN", model.getIdGame());

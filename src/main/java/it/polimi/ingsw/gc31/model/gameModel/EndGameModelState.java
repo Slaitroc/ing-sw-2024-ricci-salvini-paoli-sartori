@@ -13,6 +13,10 @@ import java.awt.*;
 import java.rmi.RemoteException;
 import java.util.Map;
 
+/**
+ * The EndGameModelState class represents the state of the game when it has ended.
+ * It implements the GameModelState interface.
+ */
 public class EndGameModelState implements GameModelState {
 
     public EndGameModelState(GameModel model) {
