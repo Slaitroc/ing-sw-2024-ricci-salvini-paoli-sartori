@@ -29,12 +29,13 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class GameModel {
     /**
-     * It is the game board, where the decks are kept and where the players' scores are kept track of
+     * It is the game board, where the decks are kept and where the players' scores
+     * are kept track of
      */
     private final Board board;
 
     /**
-     *  Is used to assign the color of the pieces to the players
+     * Is used to assign the color of the pieces to the players
      */
     private int pawnSelector;
 
@@ -46,20 +47,24 @@ public class GameModel {
     protected Map<String, Player> players;
 
     /**
-     * A protected variable that represents the mapping of client identities to their corresponding virtual clients.
+     * A protected variable that represents the mapping of client identities to
+     * their corresponding virtual clients.
      * <p>
-     * The clients mapping is implemented as a Java HashMap, where the client identity is used as the key
+     * The clients mapping is implemented as a Java HashMap, where the client
+     * identity is used as the key
      * and the VirtualClient object is used as the value.
      */
     protected Map<String, VirtualClient> clients;
 
     /**
-     * Lock object that is used to synchronize with the clientList map to avoid concurrency problems
+     * Lock object that is used to synchronize with the clientList map to avoid
+     * concurrency problems
      */
     protected final Object clientListLock;
 
     /**
-     * List of common objectives. At the end of the game these objectives assign the corresponding score to the players who achieved them
+     * List of common objectives. At the end of the game these objectives assign the
+     * corresponding score to the players who achieved them
      */
     protected List<ObjectiveCard> commonObjectives;
 
@@ -71,10 +76,12 @@ public class GameModel {
     /**
      * It is a map that associates player names with their connection status.
      * The connection status is represented by a Boolean value, where true indicates
-     * that the player is currently connected, and false indicates that the player is
+     * that the player is currently connected, and false indicates that the player
+     * is
      * currently disconnected.
      * <p>
-     * It is initialized as ConcurrentMap to allow access and modification without concurrency issues
+     * It is initialized as ConcurrentMap to allow access and modification without
+     * concurrency issues
      * <p>
      * If a player is disconnected then his boolean value is set to false
      */
@@ -91,8 +98,9 @@ public class GameModel {
     protected GameModelState gameState;
 
     /**
-     * Contains the listeners of the players in the game and each gameListenerHandler takes care of updates about a player.
-     * */
+     * Contains the listeners of the players in the game and each
+     * gameListenerHandler takes care of updates about a player.
+     */
     private final Map<String, GameListenerHandler> listeners;
 
     /**
@@ -104,7 +112,6 @@ public class GameModel {
      * The idGame variable represents the identification number of a game.
      */
     private final int idGame;
-
 
     /**
      * Constructor for the GameModel class.
@@ -126,8 +133,10 @@ public class GameModel {
     /**
      * Initializes the game.
      *
-     * @param clients a LinkedHashMap containing the virtual clients mapped with their usernames
-     * @throws IllegalStateOperationException if the game is not in the right state to be initialized
+     * @param clients a LinkedHashMap containing the virtual clients mapped with
+     *                their usernames
+     * @throws IllegalStateOperationException if the game is not in the right state
+     *                                        to be initialized
      */
     public void initGame(Map<String, VirtualClient> clients, Object lock) throws IllegalStateOperationException {
         this.clients = clients;
@@ -138,7 +147,8 @@ public class GameModel {
     /**
      * Ends the game.
      *
-     * @throws IllegalStateOperationException if the game is not in the right state to be ended
+     * @throws IllegalStateOperationException if the game is not in the right state
+     *                                        to be ended
      */
     public void endGame(String lastPlayerConnected) throws IllegalStateOperationException {
         gameState.endGame(this, lastPlayerConnected);
@@ -213,7 +223,8 @@ public class GameModel {
      *
      * @param username The username of the player
      * @param index    The index of the secret objective card to be chosen
-     * @throws IllegalStateOperationException if the game is not in the right state to choose a secret objective
+     * @throws IllegalStateOperationException if the game is not in the right state
+     *                                        to choose a secret objective
      */
     public void chooseSecretObjective(String username, Integer index) throws IllegalStateOperationException {
         gameState.chooseSecretObjective(this, username, index);
@@ -288,7 +299,8 @@ public class GameModel {
      * Changes the side of the selected card for the player with the given username.
      *
      * @param username the username of the player
-     * @throws IllegalStateOperationException if the game is not in the right state to change the side
+     * @throws IllegalStateOperationException if the game is not in the right state
+     *                                        to change the side
      */
     public void changeSide(String username) throws IllegalStateOperationException {
         gameState.changeSide(this, username);
@@ -298,7 +310,8 @@ public class GameModel {
      * Changes the starter side for the player with the given username.
      *
      * @param username the username of the player
-     * @throws IllegalStateOperationException if the game is not in the right state to change the starter side
+     * @throws IllegalStateOperationException if the game is not in the right state
+     *                                        to change the starter side
      */
     public void changStarterSide(String username) throws IllegalStateOperationException {
         gameState.changeStarterSide(this, username);
@@ -324,7 +337,8 @@ public class GameModel {
 
     /**
      * Executes the reconnection of a player by setting their connection status to
-     * true in the playerConnection map. Also logs the reconnection information in the server log.
+     * true in the playerConnection map. Also logs the reconnection information in
+     * the server log.
      *
      * @param username The username of the player to reconnect.
      */
@@ -337,7 +351,8 @@ public class GameModel {
     /**
      * Executes the disconnection of a player by setting their connection status to
      * false in the playerConnection map.
-     * If the disconnected player is the current turn player, it draw a default card if necessary and set the next
+     * If the disconnected player is the current turn player, it draw a default card
+     * if necessary and set the next
      * playing player.
      * If the game is in the setup state (turnPlayer == null), it makes default
      * decisions for the secret objective card and for the placement of the starter
@@ -346,8 +361,10 @@ public class GameModel {
      *
      *
      * @param username The username of the player who disconnected
-     * @throws LastPlayerRemainedException if the player is the last one in the game, set the status of the game to {@link BlockedGameModelState}
-     * and throws the exception.
+     * @throws LastPlayerRemainedException if the player is the last one in the
+     *                                     game, set the status of the game to
+     *                                     {@link BlockedGameModelState}
+     *                                     and throws the exception.
      */
     protected synchronized void executeDisconnectPlayer(String username) throws LastPlayerRemainedException {
         playerConnection.put(username, false);
@@ -355,7 +372,7 @@ public class GameModel {
         int numberConnected = 0;
         String lastConnected = null;
         synchronized (playerConnection) {
-            for (String user: playerConnection.keySet()) {
+            for (String user : playerConnection.keySet()) {
                 if (playerConnection.get(user)) {
                     numberConnected++;
                     lastConnected = user;
@@ -372,16 +389,19 @@ public class GameModel {
             }
             ServerLog.gControllerWrite("Default chooses for " + username, idGame);
         } else {
-            if (numberConnected == 1 && getCurrPlayer().getUsername().equals(username)) {
+            if (getCurrPlayer().getUsername().equals(username)) {
                 if (getPlayers().get(username).infoState().equals("placed") && !board.getDeckGold().hasBeenReplaced()) {
                     try {
                         drawGold(username, 0);
                     } catch (IllegalStateOperationException | EmptyDeckException ignored) {
+                        ignored.printStackTrace();
                     }
-                } else if (getPlayers().get(username).infoState().equals("placed") && !board.getDeckResource().hasBeenReplaced()) {
+                } else if (getPlayers().get(username).infoState().equals("placed")
+                        && !board.getDeckResource().hasBeenReplaced()) {
                     try {
                         drawResource(username, 0);
                     } catch (IllegalStateOperationException | EmptyDeckException ignored) {
+                        ignored.printStackTrace();
                     }
                 }
             }
@@ -394,7 +414,7 @@ public class GameModel {
         }
         ServerLog.gControllerWrite("Player " + username + " has disconnected", idGame);
         if (numberConnected == 1) {
-            ServerLog.gControllerWrite("Player "+lastConnected+" is the last player connected left", idGame);
+            ServerLog.gControllerWrite("Player " + lastConnected + " is the last player connected left", idGame);
             setGameState(new BlockedGameModelState(this, gameState));
             throw new LastPlayerRemainedException(lastConnected);
         }
@@ -412,7 +432,8 @@ public class GameModel {
     /**
      * Returns a map representing the connection status of each player.
      *
-     * @return a map where the keys are the usernames of the players and the values are booleans indicating their connection status.
+     * @return a map where the keys are the usernames of the players and the values
+     *         are booleans indicating their connection status.
      */
     public Map<String, Boolean> getPlayerConnection() {
         return playerConnection;
@@ -448,7 +469,8 @@ public class GameModel {
     /**
      * Retrieves the map of players in the game.
      *
-     * @return a {@code Map<String, Player>} where the keys are the usernames of the players and the values are the Player objects.
+     * @return a {@code Map<String, Player>} where the keys are the usernames of the
+     *         players and the values are the Player objects.
      */
     public Map<String, Player> getPlayers() {
         return players;
@@ -498,14 +520,16 @@ public class GameModel {
     /**
      * Returns a map containing the listeners registered for the game.
      *
-     * @return a map where the keys are the names of the listeners and the values are the corresponding {@link GameListenerHandler} objects.
+     * @return a map where the keys are the names of the listeners and the values
+     *         are the corresponding {@link GameListenerHandler} objects.
      */
     public Map<String, GameListenerHandler> getListeners() {
         return this.listeners;
     }
 
     /**
-     * Retrieves the current State of the game*/
+     * Retrieves the current State of the game
+     */
     GameModelState getGameState() {
         return gameState;
     }
