@@ -7,6 +7,10 @@ import java.nio.file.Paths;
 
 import it.polimi.ingsw.gc31.exceptions.NoFileCreatedException;
 
+/**
+ * Utility class to manage files and directories
+ * 
+ */
 public class FileUtility {
 
     public static final String folderName = "CodexNaturalis";
