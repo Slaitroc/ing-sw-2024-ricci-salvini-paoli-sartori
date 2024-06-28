@@ -1,0 +1,1 @@
+tagSearchIndex = [{"l":"Constant Field Values","h":"","u":"constant-values.html"},{"l":"index","h":"it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands.selectCard(int)","u":"it.polimi.ingsw.gc31/it/polimi/ingsw/gc31/client_server/interfaces/ClientCommands.html#index"},{"l":"Serialized Form","h":"","u":"serialized-form.html"}];updateSearchResults();
