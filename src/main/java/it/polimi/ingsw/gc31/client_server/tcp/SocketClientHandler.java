@@ -190,4 +190,17 @@ public class SocketClientHandler implements VirtualClient {
     public void setController(IController controller) throws RemoteException {
 
     }
+
+    /**
+     * Method used at the start of the rmi connections but useless in the TCP
+     * implementation.
+     * Inherited from the VirtualClient interface.
+     *
+     * @param token value to assign to the client specific token, used mainly for
+     *              reconnection
+     */
+//    @Override
+//    public void setRmiToken(int token) throws RemoteException {
+//    }
+
 }
