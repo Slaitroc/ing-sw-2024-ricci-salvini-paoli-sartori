@@ -134,7 +134,7 @@ public class TUI extends UI {
     int[] blueText = new int[] { 51, 153, 255 };
     int[] violetText = new int[] { 153, 153, 255 };
 
-    private LinkedHashMap<Point, PlayableCard> placedCards = null;
+    // private LinkedHashMap<Point, PlayableCard> placedCards = null;
     private Map<String, StringBuilder> playAreaAllPlayers = new HashMap<>();
 
     public Map<String, StringBuilder> getPlayAreaAllPlayers() {
@@ -201,6 +201,11 @@ public class TUI extends UI {
         if (state.stateName.equals("Joined To Game State")) {
             // print_ChatBorders();
         }
+        StringBuilder heart = new StringBuilder();
+        heart.append(Ansi.ansi().cursor(1, 17).a("💔"));
+        System.out.println(heart);
+        HBprinted = false;
+
         commandToProcess(TUIstateCommands.SHOW_COMMAND_INFO, stateNotify);
 
     }
@@ -1482,6 +1487,7 @@ public class TUI extends UI {
                         cmdLineMessagesLOCK.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+                        break;
                     }
                 }
                 cmd = cmdLineMessagesLOCK.poll();
@@ -1716,6 +1722,7 @@ public class TUI extends UI {
                         cmdLineAreaSelectionLOCK.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+                        break;
                     }
                 }
             }
@@ -1728,6 +1735,7 @@ public class TUI extends UI {
                         stateLOCK.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+                        break;
                     }
                 }
             }
@@ -1789,6 +1797,7 @@ public class TUI extends UI {
                         cmdLineOutLOCK.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+                        break;
                     }
                 } else {
                     print_CmdLineBorders();
@@ -1848,6 +1857,7 @@ public class TUI extends UI {
                         chatNeedsUpdateLOCK.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+                        break;
                     }
                 }
                 print_ChatBorders();
@@ -1992,6 +2002,7 @@ public class TUI extends UI {
                         chatAreaSelectionLOCK.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+                        break;
                     }
                 }
             }
@@ -2013,6 +2024,7 @@ public class TUI extends UI {
                                     client.sendChatMessage(getClient().getUsername(), username, message);
                             } catch (RemoteException e) {
                                 e.printStackTrace();
+                                break;
                             }
                             privateMessage = true;
                             break;
@@ -2023,6 +2035,7 @@ public class TUI extends UI {
                             client.sendChatMessage(getClient().getUsername(), input.trim());
                         } catch (RemoteException e) {
                             e.printStackTrace();
+                            break;
                         }
                     }
                 }

@@ -483,9 +483,7 @@ public class PlayingState extends TUIstate {
         tui.printToCmdLineOut(tui.tuiWrite("u -> up"));
         tui.printToCmdLineOut(tui.tuiWrite("d -> down"));
         String input = scanner.nextLine();
-
-        tui.printToCmdLineOut(tui.tuiWrite(input));
-
+        // tui.printToCmdLineOut(tui.tuiWrite(input));
         if (input.equals("r")) {
             tui.movePlayAreaRight();
         } else if (input.equals("l")) {
@@ -497,7 +495,6 @@ public class PlayingState extends TUIstate {
         } else {
             tui.printToCmdLineOut("Wrong input");
         }
-
         stateNotify();
     }
 
