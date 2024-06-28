@@ -118,6 +118,7 @@ public class GUIApplication extends Application {
     }
 
     public void setFullScreen() {
+        primaryStage.centerOnScreen();
         primaryStage.setFullScreen(!primaryStage.isFullScreen());
     }
 

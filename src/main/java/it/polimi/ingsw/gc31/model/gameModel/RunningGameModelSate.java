@@ -70,7 +70,7 @@ public class RunningGameModelSate implements GameModelState {
     }
 
     @Override
-    public void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException {
+    public void detectEndGame(GameModel model, Boolean bothEmptyDeck) {
         if ((model.getCurrPlayer().getScore() >= DV.GamePoints || bothEmptyDeck) && model.getCurrIndexPlayer() == model.getPlayers().size() - 1) {
             model.setGameState(new LastTurnGameModelState(model));
         } else if (model.getCurrPlayer().getScore() >= DV.GamePoints || bothEmptyDeck) {

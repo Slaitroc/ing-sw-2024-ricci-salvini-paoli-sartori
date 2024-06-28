@@ -93,7 +93,7 @@ public class SetupGameModelState implements GameModelState {
     }
 
     @Override
-    public void detectEndGame(GameModel model, Boolean bothEmptyDeck) throws IllegalStateOperationException {
+    public void detectEndGame(GameModel model, Boolean bothEmptyDeck) {
 
     }
 
