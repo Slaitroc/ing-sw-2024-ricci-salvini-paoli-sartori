@@ -9,6 +9,9 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
+/**
+ * Checks for existing tokens and asks for reconnection or load login scene
+ */
 public class StartController extends ViewController {
 
     @FXML

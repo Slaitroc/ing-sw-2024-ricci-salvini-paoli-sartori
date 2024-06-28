@@ -19,6 +19,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * General Controller used to call methods directly from the server and
+ * memorize necessary information for all scenes
+ */
 public abstract class ViewController {
 
     protected GUIApplication app;

@@ -17,6 +17,9 @@ import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Manage the player possible controls when he is in a lobby
+ */
 public class LobbyController extends ViewController {
 
     @FXML

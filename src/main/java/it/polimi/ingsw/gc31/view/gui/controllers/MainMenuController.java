@@ -18,7 +18,10 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
 
-
+/**
+ * Allow user to call for the most general methods to interface
+ * the user with the server
+ */
 public class MainMenuController extends ViewController {
 
     boolean step1 = true;

@@ -34,6 +34,10 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.*;
 
+/**
+ * Contains all the game view logic and provide the player with all the
+ * controls necessary to play the game
+ */
 public class InGameController extends ViewController {
 
     @FXML

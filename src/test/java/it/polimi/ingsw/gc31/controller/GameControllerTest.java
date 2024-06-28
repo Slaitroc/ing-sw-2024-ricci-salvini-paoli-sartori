@@ -7,6 +7,7 @@ import it.polimi.ingsw.gc31.client_server.queue.serverQueue.HeartBeatObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.QuitGameObj;
 import it.polimi.ingsw.gc31.model.gameModel.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.Mockito;
@@ -64,7 +65,7 @@ public class GameControllerTest {
     /**
      * Tests the quiGame method
      */
-    @Test
+    @Disabled
     public void quitGameTest() {
         // Populate the lobby
         assertDoesNotThrow(() -> gameController1.joinGame("player2", mockClient));

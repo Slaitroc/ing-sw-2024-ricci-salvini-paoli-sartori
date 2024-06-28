@@ -9,6 +9,10 @@ import javafx.scene.input.KeyEvent;
 
 import java.rmi.RemoteException;
 
+/**
+ * Scene to manage the new client log in, checks for existing users with same name
+ * Loads MainMenu
+ */
 public class UsernameController extends ViewController {
 
     @FXML

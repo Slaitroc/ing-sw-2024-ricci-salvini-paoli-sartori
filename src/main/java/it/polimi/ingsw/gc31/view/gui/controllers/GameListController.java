@@ -13,6 +13,10 @@ import javafx.util.Callback;
 import java.rmi.RemoteException;
 import java.util.LinkedHashMap;
 
+/**
+ * Scene used to show the list of existing games after
+ * the response of the server to the user command getListGames
+ */
 public class GameListController extends ViewController {
 
     @FXML

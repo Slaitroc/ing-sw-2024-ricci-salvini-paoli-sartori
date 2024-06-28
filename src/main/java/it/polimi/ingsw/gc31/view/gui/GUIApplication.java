@@ -17,6 +17,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Runnable application of the GUI.
+ * Contains methods to manage the window sizes and scene load
+ * Memorize essential variables for view purposes
+ */
 public class GUIApplication extends Application {
 
     public static Stage primaryStage;

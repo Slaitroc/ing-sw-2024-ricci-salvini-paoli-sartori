@@ -14,6 +14,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class extends UI that implement showUpdate.
+ * Used to receive calls from the server and forward them
+ * to the GUIApplication to be executed
+ *
+ * @see GUIApplication
+ */
 public class GUI extends UI {
 
     GUIApplication app;

@@ -4,6 +4,9 @@ import it.polimi.ingsw.gc31.view.gui.SceneTag;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 
+/**
+ * Controller used to manage the rule book browsing
+ */
 public class RuleBookController extends ViewController {
 
     @FXML
