@@ -10,6 +10,11 @@ import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.utility.DV;
 
+/**
+ * Initial state of the TUI. The client remains in this state until it creates
+ * or
+ * joins a game.
+ */
 public class InitState extends TUIstate {
 
     /**

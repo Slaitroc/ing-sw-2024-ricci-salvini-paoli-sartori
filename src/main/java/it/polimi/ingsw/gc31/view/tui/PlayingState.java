@@ -134,7 +134,8 @@ public class PlayingState extends TUIstate {
     }
 
     /**
-     * Sends the request to the {@link it.polimi.ingsw.gc31.controller.Controller}
+     * Sends the request to the
+     * {@link it.polimi.ingsw.gc31.controller.GameController}
      * to draw a gold card.
      * <p>
      * Asks the user which card he wants to draw:
@@ -187,6 +188,24 @@ public class PlayingState extends TUIstate {
         stateNotify();
     }
 
+    /**
+     * Sends the request to the
+     * {@link it.polimi.ingsw.gc31.controller.GameController} to
+     * draw a resource card.
+     * <p>
+     * Asks the user which card he wants to draw:
+     * <ul>
+     * <li>0 -> from top of the deck</li>
+     * <li>1 -> card 1</li>
+     * <li>2 -> card 2</li>
+     * <li>-1 -> quit command</li>
+     * </ul>
+     * <p>
+     * It calls {@link TUIstate#stateNotify()} to unblock the cmdLineReaderThread.
+     * 
+     * @see ClientCommands#drawResource(int)
+     * @see it.polimi.ingsw.gc31.controller.GameController#drawResource(int)
+     */
     @Override
     protected void command_drawResource() {
         tui.printToCmdLineOut("Which card do you want to draw?");
@@ -219,6 +238,25 @@ public class PlayingState extends TUIstate {
         stateNotify();
     }
 
+    /**
+     * Sends the request to the
+     * {@link it.polimi.ingsw.gc31.controller.GameController} to
+     * choose a secret objective.
+     * <p>
+     * Asks the user which card he wants to choose:
+     * <ul>
+     * <li>1 -> Secret Objective 1</li>
+     * <li>2 -> Secret Objective 2</li>
+     * <li>-1 -> quit command</li>
+     * </ul>
+     * <p>
+     * It calls {@link TUIstate#stateNotify()} to unblock the cmdLineReaderThread.
+     * 
+     * @see ClientCommands#chooseSecretObjective1()
+     * @see ClientCommands#chooseSecretObjective2()
+     * @see it.polimi.ingsw.gc31.controller.GameController#chooseSecretObjective1()
+     * 
+     */
     @Override
     protected void command_chooseSecreteObjective() {
         tui.printToCmdLineOut("Which card do you want to choose?");
@@ -264,6 +302,17 @@ public class PlayingState extends TUIstate {
         stateNotify();
     }
 
+    /**
+     * Sends the request to the
+     * {@link it.polimi.ingsw.gc31.controller.GameController} to
+     * play the starter card.
+     * <p>
+     * It calls {@link TUIstate#stateNotify()} to unblock the cmdLineReaderThread.
+     * 
+     * @see ClientCommands#playStarter()
+     * @see it.polimi.ingsw.gc31.controller.GameController#playStarter()
+     * 
+     */
     @Override
     protected void command_playStarter() {
         try {
@@ -275,6 +324,20 @@ public class PlayingState extends TUIstate {
         stateNotify();
     }
 
+    /**
+     *
+     * Sends the request to the
+     * {@link it.polimi.ingsw.gc31.controller.GameController} to
+     * play a card.
+     * <p>
+     * Asks the user to type the X and Y coordinates where to place the card:
+     * <p>
+     * It calls {@link TUIstate#stateNotify()} to unblock the cmdLineReaderThread.
+     * 
+     * @see ClientCommands#play(Point)
+     * @see it.polimi.ingsw.gc31.controller.GameController#play(String, Point)
+     * 
+     */
     @Override
     protected void command_play() {
         String input;
@@ -322,6 +385,20 @@ public class PlayingState extends TUIstate {
         stateNotify();
     }
 
+    /**
+     * Sends the request to the
+     * {@link it.polimi.ingsw.gc31.controller.GameController} to
+     * select a card.
+     * <p>
+     * Asks the user to type the index of the card he wants to select.
+     * <p>
+     * 
+     * It calls {@link TUIstate#stateNotify()} to unblock the cmdLineReaderThread.
+     * 
+     * @see ClientCommands#selectCard(int)
+     * @see it.polimi.ingsw.gc31.controller.GameController#selectCard(String, int)
+     * 
+     */
     @Override
     protected void command_selectCard() {
         tui.printToCmdLineOut(tui.tuiWrite("Type the index of the card:"));
@@ -335,10 +412,19 @@ public class PlayingState extends TUIstate {
         } catch (NumberFormatException e) {
             tui.printToCmdLineOut("Wrong input");
         }
-
         stateNotify();
     }
 
+    /**
+     * Sends the request to the
+     * {@link it.polimi.ingsw.gc31.controller.GameController} to
+     * change the side of the selected card.
+     * <p>
+     * It calls {@link TUIstate#stateNotify()} to unblock the cmdLineReaderThread.
+     * 
+     * @see ClientCommands#changeSide()
+     * @see it.polimi.ingsw.gc31.controller.GameController#changeSide(String)
+     */
     @Override
     protected void command_changeSide() {
         try {
@@ -349,6 +435,17 @@ public class PlayingState extends TUIstate {
         stateNotify();
     }
 
+    /**
+     * Sends the request to the
+     * {@link it.polimi.ingsw.gc31.controller.GameController} to
+     * change the side of the starter card.
+     * <p>
+     * It calls {@link TUIstate#stateNotify()} to unblock the cmdLineReaderThread.
+     * 
+     * @see ClientCommands#changeStarterSide()
+     * @see it.polimi.ingsw.gc31.controller.GameController#changeStarterSide(String)
+     * 
+     */
     @Override
     protected void command_changeStarterSide() {
         try {
@@ -359,6 +456,25 @@ public class PlayingState extends TUIstate {
         stateNotify();
     }
 
+    /**
+     * Calls the TUI methods that move the play area in the specified direction.
+     * <p>
+     * Asks the user in which direction he wants to move the play area:
+     * <ul>
+     * <li>r -> right</li>
+     * <li>l -> left</li>
+     * <li>u -> up</li>
+     * <li>d -> down</li>
+     * </ul>
+     * <p>
+     * It calls {@link TUIstate#stateNotify()} to unblock the cmdLineReaderThread.
+     * 
+     * @see TUI#movePlayAreaRight()
+     * @see TUI#movePlayAreaLeft()
+     * @see TUI#movePlayAreaUp()
+     * @see TUI#movePlayAreaDown()
+     * 
+     */
     @Override
     protected void command_movePlayArea() {
         tui.printToCmdLineOut(tui.tuiWrite("In which direction do you want to move?:"));
@@ -385,6 +501,17 @@ public class PlayingState extends TUIstate {
         stateNotify();
     }
 
+    /**
+     * Calls the TUI method that changes the active play area.
+     * <p>
+     * Asks the user which player's play area he wants to see.
+     * <p>
+     * The {@link TUIstate#stateNotify()} call to unblock the cmdLineReaderThread is
+     * not needed cause the calls flow terminate in the
+     * {@link PlayingState#command_refresh()} method that calls
+     * {@link TUIstate#stateNotify()}.
+     * 
+     */
     @Override
     protected void command_changePlayArea() {
         tui.printToCmdLineOut(tui.tuiWrite("Which player do you want to see the playArea of?"));
@@ -414,6 +541,13 @@ public class PlayingState extends TUIstate {
         stateNotify();
     }
 
+    /**
+     * Sends the request to the
+     * {@link it.polimi.ingsw.gc31.controller.GameController} to quit the game.
+     * 
+     * @see ClientCommands#quitGame()
+     * 
+     */
     @Override
     protected void command_quitGame() {
         try {
@@ -423,6 +557,13 @@ public class PlayingState extends TUIstate {
         }
     }
 
+    /**
+     * Calls the TUI method that refreshes the TUI.
+     * That method will call {@link TUIstate#stateNotify()} to unblock the
+     * cmdLineReaderThread.
+     * 
+     * @see TUI#forceRefreshTUI(boolean)
+     */
     @Override
     protected void command_refresh() {
         tui.forceRefreshTUI(true);

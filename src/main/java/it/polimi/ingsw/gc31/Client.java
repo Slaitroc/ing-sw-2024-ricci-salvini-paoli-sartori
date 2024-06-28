@@ -15,6 +15,9 @@ import it.polimi.ingsw.gc31.view.gui.GUI;
 import it.polimi.ingsw.gc31.view.tui.TUI;
 import org.fusesource.jansi.Ansi;
 
+/**
+ * Main class of the client side
+ */
 public class Client {
 
     public static void main(String[] args) throws NotBoundException, RemoteException {
