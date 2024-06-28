@@ -420,7 +420,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
     /**
      * Method of the {@link ClientCommands} that sends an object to the
      * {@link it.polimi.ingsw.gc31.controller.GameController} of the type
-     * {@link ChatMessage} that
+     * {@link ChatMessageObj} that
      * write a message in the chat of the game.
      *
      * @param username the username of the user sending the message
@@ -429,13 +429,13 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
      */
     @Override
     public void sendChatMessage(String username, String message) throws RemoteException {
-        gameController.sendCommand(new ChatMessage(username, message));
+        gameController.sendCommand(new ChatMessageObj(username, message));
     }
 
     /**
      * Method of the {@link ClientCommands} that sends an object to the
      * {@link it.polimi.ingsw.gc31.controller.GameController} of the type
-     * {@link ChatMessage} that
+     * {@link ChatMessageObj} that
      * write a private message in the chat of the game.
      *
      * @param fromUsername the username of the user sending the message
@@ -445,7 +445,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Cli
      */
     @Override
     public void sendChatMessage(String fromUsername, String toUsername, String message) throws RemoteException {
-        gameController.sendCommand(new ChatMessage(fromUsername, toUsername, message));
+        gameController.sendCommand(new ChatMessageObj(fromUsername, toUsername, message));
     }
 
     /**
