@@ -86,6 +86,19 @@
 </body>
 </html>
 
+# How to Generate Code Coverage <img src="https://i.ibb.co/4PYzV7D/cov.png" align="right" alt="logo" width="130" height="139" style="border: none; float: right;">
+
+To generate the Code Coverage for your project, follow these steps:
+
+<li>Open CMD and navigate to the project directory:
+    <pre><code>cd C:/[dir]/ing-sw-2024-ricci-salvini-paoli-sartori</code></pre>
+    </li>
+    <li>From here, run the following commands:
+        <pre><code>mvn clean verify</code></pre>
+    </li>
+The Code Coverage report will be generated in the following location:
+<pre><code>cd C:/[dir]/ing-sw-2024-ricci-salvini-paoli-sartori/target/site/</code></pre>
+
 # Game Screenshots
 ### TUI
 ![CodexNaturalis](./src/main/resources/it/polimi/ingsw/gc31/Images/Presentation/tuiExample1.png)
@@ -98,4 +111,3 @@
 
 ## Other Features
 * Full screen mode responsive
-* TUI spacca i culi
