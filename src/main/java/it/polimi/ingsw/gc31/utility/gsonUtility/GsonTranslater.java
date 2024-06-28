@@ -16,6 +16,9 @@ import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * The GsonTranslater class is responsible for translating Java objects into JSON string representation using Gson library.
+ */
 public class GsonTranslater {
     public static Gson gsonTranslater = new GsonBuilder()
             .registerTypeAdapter(PlayableCard.class, new PlayableCardAdapter())
@@ -36,8 +39,8 @@ public class GsonTranslater {
             .registerTypeAdapter(SevenReverse.class, new ObjectiveAdapter())
             .registerTypeAdapter(StairDown.class, new ObjectiveAdapter())
             .registerTypeAdapter(StairUp.class, new ObjectiveAdapter())
-            .registerTypeAdapter(ServerQueueObject.class, new ServerQueueObjAdapter())
-            .registerTypeAdapter(DrawResObj.class, new ServerQueueObjAdapter())
+//            .registerTypeAdapter(ServerQueueObject.class, new ServerQueueObjAdapter())
+//            .registerTypeAdapter(DrawResObj.class, new ServerQueueObjAdapter())
             .registerTypeAdapter(new TypeToken<Map<Resources, Integer>>() {
             }.getType(), new MapRequirementsAdapter())
             .registerTypeAdapter(new TypeToken<LinkedHashMap<Point, PlayableCard>>() {

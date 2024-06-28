@@ -7,6 +7,9 @@ import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.serializeP
 
 import java.lang.reflect.Type;
 
+/**
+ * This class is an adapter for serializing and deserializing {@link ObjectiveCard} objects to and from JSON using Gson library.
+ */
 public class ObjectiveCardAdapter implements JsonSerializer<ObjectiveCard>, JsonDeserializer<ObjectiveCard> {
     @Override
     public ObjectiveCard deserialize(JsonElement jsonElement, Type type,

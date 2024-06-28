@@ -8,6 +8,9 @@ import it.polimi.ingsw.gc31.view.gui.SceneTag;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
+/**
+ * This class contains all the constants used in the project
+ */
 public class DV {
 
     public static final int GamePoints = 1;
