@@ -1,5 +1,8 @@
 package it.polimi.ingsw.gc31.view.tui;
 
+/**
+ * Enumeration of the different areas of the TUI
+ */
 public enum TUIareas {
     /**
      * The chat area of the TUI

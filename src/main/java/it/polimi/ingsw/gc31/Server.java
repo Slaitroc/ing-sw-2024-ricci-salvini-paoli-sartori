@@ -13,6 +13,9 @@ import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
 import it.polimi.ingsw.gc31.client_server.tcp.TCPServer;
 import it.polimi.ingsw.gc31.utility.DV;
 
+/**
+ * Main class of the server side
+ */
 public class Server {
 
     /**

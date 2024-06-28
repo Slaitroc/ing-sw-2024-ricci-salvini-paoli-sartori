@@ -1,5 +1,8 @@
 package it.polimi.ingsw.gc31.view.tui;
 
+/**
+ * Enumeration of the different commands that can be executed in the TUI
+ */
 public enum TUIstateCommands {
     /**
      * Defines the tag for the

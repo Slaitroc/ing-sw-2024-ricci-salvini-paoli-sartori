@@ -5,6 +5,12 @@ import java.util.regex.Pattern;
 
 public class IPvalidator {
 
+    /**
+     * Check if the ip is valid
+     * 
+     * @param ip the ip to check
+     * @return true if the ip is valid, false otherwise
+     */
     public static boolean isValid(String ip) {
         if (ip == null || ip.isEmpty())
             return true;
