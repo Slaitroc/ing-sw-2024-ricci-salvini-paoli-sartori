@@ -68,21 +68,13 @@
 </ol>
 <p>Repeat from step 1 each time the code is modified.</p>
 
-<h2>Fixing Issues or Downloading Java SE 21</h2>
-<p>To run the application properly, you need to JDK21 installed: <a href="https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html">Java SE Development Kit 21.0.2</a>.</p>
-<p>To run the GUI JavaFX is also required: <a href="https://gluonhq.com/products/javafx">JavaFX - Gluon</a>.</p>
-<p>Once JDK21 is installed, add the following Environment Variables in Windows (search for "env" in the search bar, press enter, and click on "Environment Variables"):</p>
-    
-<h3>User Environment Variables</h3>
-<ul>
-    <li><code>JAVA_HOME = C:\Program Files\Java\jdk-21</code></li>
-    <li><code>JDK_HOME = C:\Program Files\Java\jdk-21</code></li>
-</ul>
+<h2>Requirements</h2>
+To run the application it is required to have correctly installed:
 
-<h3>System Environment Variables</h3>
-<ul>
-    <li><code>CLASSPATH = C:\Program Files\Java\jdk-21\lib</code></li>
-</ul>
+<p> 1. JDK21: <a href="https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html">Java SE Development Kit 21.0.2</a>.</p>
+<p> 2. JavaFX: <a href="https://gluonhq.com/products/javafx">JavaFX - Gluon</a>.</p>
+<p> 3. Maven: <a href="https://maven.apache.org/download.cgi">Apache Maven 3.9.8</a>.</p>
+
 </div>
 </body>
 </html>
