@@ -67,10 +67,10 @@ public class InitState extends TUIstate {
      * {@link it.polimi.ingsw.gc31.controller.Controller} (socket) or
      * {@link RmiServer}(rmi).
      * Blocks the cmdLineReaderThread until the Controller or RmiServer responds
-     * with {@link ShowUpdate#show_gameCreated(int)}
+     * with {@link it.polimi.ingsw.gc31.view.interfaces.ShowUpdate#show_gameCreated(int)}
      * 
-     * @see ClientCommands#createGame(int)
-     * @see Controller#createGame(String, int)
+     * @see it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands#createGame(int)
+     * @see it.polimi.ingsw.gc31.controller.Controller#createGame(String, int)
      */
     @Override
     protected void command_createGame() {
@@ -94,10 +94,10 @@ public class InitState extends TUIstate {
      * to show the list of available
      * games.
      * Blocks the cmdLineReaderThread until the Controller responds with
-     * {@link ShowUpdate#show_listGame(java.util.List)}
+     * {@link it.polimi.ingsw.gc31.view.interfaces.ShowUpdate#show_listGame(java.util.List)}
      * 
-     * @see Controller#getGameList(String)
-     * @see ClientCommands#getGameList()
+     * @see it.polimi.ingsw.gc31.controller.Controller#getGameList(int)
+     * @see it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands#getGameList()
      */
     @Override
     protected void command_showGames() {
@@ -115,11 +115,11 @@ public class InitState extends TUIstate {
      * to join the game with the typed
      * gameID.
      * Blocks the cmdLineReaderThread until the Controller responds with
-     * {@link ShowUpdate#show_gameIsFull(int)} or
-     * {@link ShowUpdate#show_gameDoesNotExist()}
+     * {@link it.polimi.ingsw.gc31.view.interfaces.ShowUpdate#show_gameIsFull(int)} or
+     * {@link it.polimi.ingsw.gc31.view.interfaces.ShowUpdate#show_gameDoesNotExist()}
      * 
-     * @see ClientCommands#joinGame(int)
-     * @see Controller#joinGame(String, int)
+     * @see it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands#joinGame(int)
+     * @see it.polimi.ingsw.gc31.controller.Controller#joinGame(String, int)
      */
     @Override
     protected void command_joinGame() {
@@ -227,9 +227,9 @@ public class InitState extends TUIstate {
      * {@link it.polimi.ingsw.gc31.controller.Controller}(socket) or
      * {@link RmiServer}(rmi).
      * Blocks the cmdLineReaderThread until the Controller or RmiServer responds
-     * with {@link ShowUpdate#show_validUsername(String)} or
-     * or {@link ShowUpdate#show_wrongUsername(String)} or
-     * {@link ShowUpdate#show_wantReconnect(String)
+     * with {@link it.polimi.ingsw.gc31.view.interfaces.ShowUpdate#show_validUsername(String)} or
+     * or {@link it.polimi.ingsw.gc31.view.interfaces.ShowUpdate#show_wrongUsername(String)} or
+     * {@link it.polimi.ingsw.gc31.view.interfaces.ShowUpdate#show_wantReconnect(String)
      * 
      * 
      * @see ClientCommands#setUsernameCall(String)

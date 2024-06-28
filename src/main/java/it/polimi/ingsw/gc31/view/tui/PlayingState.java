@@ -105,7 +105,7 @@ public class PlayingState extends TUIstate {
      * Blocks the cmdLineReaderThread until the Controller responds with
      * {@link ShowUpdate#show_listGame(java.util.List)}
      * 
-     * @see Controller#getGameList(String)
+     * @see it.polimi.ingsw.gc31.controller.Controller#getGameList(int) 
      * @see ClientCommands#getGameList()
      */
     @Override
@@ -149,7 +149,7 @@ public class PlayingState extends TUIstate {
      * It calls {@link TUIstate#stateNotify()} to unblock the cmdLineReaderThread.
      * 
      * @see ClientCommands#drawGold(int)
-     * @see it.polimi.ingsw.gc31.controller.GameController#drawGold(int)
+     * @see it.polimi.ingsw.gc31.controller.GameController#drawGold(String, int)
      * 
      * 
      * 
@@ -204,7 +204,7 @@ public class PlayingState extends TUIstate {
      * It calls {@link TUIstate#stateNotify()} to unblock the cmdLineReaderThread.
      * 
      * @see ClientCommands#drawResource(int)
-     * @see it.polimi.ingsw.gc31.controller.GameController#drawResource(int)
+     * @see it.polimi.ingsw.gc31.controller.GameController#drawResource(String, int)
      */
     @Override
     protected void command_drawResource() {
@@ -254,7 +254,7 @@ public class PlayingState extends TUIstate {
      * 
      * @see ClientCommands#chooseSecretObjective1()
      * @see ClientCommands#chooseSecretObjective2()
-     * @see it.polimi.ingsw.gc31.controller.GameController#chooseSecretObjective1()
+     * @see it.polimi.ingsw.gc31.controller.GameController#chooseSecretObjective(String, Integer)
      * 
      */
     @Override
@@ -310,7 +310,7 @@ public class PlayingState extends TUIstate {
      * It calls {@link TUIstate#stateNotify()} to unblock the cmdLineReaderThread.
      * 
      * @see ClientCommands#playStarter()
-     * @see it.polimi.ingsw.gc31.controller.GameController#playStarter()
+     * @see it.polimi.ingsw.gc31.controller.GameController#playStarter(String)
      * 
      */
     @Override

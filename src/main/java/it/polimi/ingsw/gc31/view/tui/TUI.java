@@ -1414,7 +1414,7 @@ public class TUI extends UI {
     /**
      * This variable is used to inform the {@link #cmdLineReaderTHREAD} that the
      * previously active area was the chat input area. In that case the thread do
-     * not wait a command to call {@link #stateNotify()} to get the input again
+     * not wait a command to call {@link TUIstate#stateNotify()} to get the input again
      * because no command that needs input is executing at the moment.
      */
     private volatile boolean comingFromChat = false;
@@ -1461,7 +1461,7 @@ public class TUI extends UI {
     /**
      * This queue is used to manage the play area update.
      * <p>
-     * The {@link #playViewUpdateTHREAD} take the play view updates to print from
+     * The {@link #playViewTHREAD} take the play view updates to print from
      * this queue.
      */
     private final Queue<StringBuilder> playViewUpdateLOCK = new ArrayDeque<StringBuilder>();
@@ -1949,7 +1949,8 @@ public class TUI extends UI {
      * All the parameters are provided by the
      * {@link it.polimi.ingsw.gc31.controller.GameController}
      * 
-     * @param username the username of the client that sent the message
+     * @param fromUsername the username of the client that sent the message
+     * @param toUsername the username of the client the message is sent to
      * @param message  the message sent
      */
     @Override
@@ -2242,7 +2243,7 @@ public class TUI extends UI {
      * <p>
      * This method is called by the
      * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.StartGameObj}
-     * sent by the {@link it.polimi.ingsw.gc31.controller.GameController#ready()}.
+     * sent by the {@link it.polimi.ingsw.gc31.controller.GameController#checkReady()}.
      * <p>
      * The flow that triggers this method starts from the
      * {@link JoinedToGameState#command_ready()} that calls the
@@ -2561,7 +2562,7 @@ public class TUI extends UI {
     /**
      * Receives the accepter username of the player, prints the response message to
      * the command line out and set the
-     * client's {@link Client#username} with the accepted username.
+     * client's username with the accepted username.
      * It also sets the {@link #activePlayArea} with the accepted username.
      * <p>
      * This method is called by the
@@ -2644,7 +2645,7 @@ public class TUI extends UI {
      * 
      * <p>
      * This method is called by the
-     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.QuitFromGameObj}
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.QuitFromGameRObj}
      */
     @Override
     public void show_quitFromGame() {
@@ -2734,7 +2735,7 @@ public class TUI extends UI {
      * {@link #cmdLineProcessTHREAD} to unblock the TUI.
      * <p>
      * This method is called by the
-     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.GameAlreadyExistsObj}
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.WrongGameSizeObj}
      */
     @Override
     public void show_wrongGameSize() {
@@ -2828,7 +2829,7 @@ public class TUI extends UI {
      * 
      * <p>
      * This method is called by the
-     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.InvalidActionObj}
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.ShowInvalidActionObj}
      * 
      * <p>
      * All the parameters are provided by the
@@ -2892,11 +2893,11 @@ public class TUI extends UI {
     /**
      * Receives the token to set to the client and a boolean to indicates if the
      * token is temporary or must be saved.
-     * Calls the {@link Client#setToken(int, boolean)} to set the token.
+     * Calls the {@link ClientCommands#setToken(int, boolean)} e} to set the token.
      * 
      * <p>
      * This method is called by the
-     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.SendTokenObj}
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.SaveTokenObj}
      * 
      * <p>
      * All the parameters are provided by the
@@ -2931,7 +2932,7 @@ public class TUI extends UI {
      * 
      * <p>
      * This method is called by the
-     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.WantReconnectObj}
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.WantsReconnectObj}
      * 
      * <p>
      * The parameter is provided by the
@@ -2959,7 +2960,7 @@ public class TUI extends UI {
      * 
      * <p>
      * This method is called by the
-     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.RejoinObj}
+     * {@link it.polimi.ingsw.gc31.client_server.queue.clientQueue.ReJoinedObj}
      * 
      * <p>
      * All the parameters are provided by the

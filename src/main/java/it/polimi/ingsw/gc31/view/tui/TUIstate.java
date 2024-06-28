@@ -167,7 +167,7 @@ public abstract class TUIstate {
      * Reconnects the client to the server.
      * 
      * @see InitState#reconnect()
-     * @see ClientCommands#reconnect()
+     * @see ClientCommands#reconnect(boolean)
      */
     protected abstract void reconnect();
 

@@ -427,7 +427,7 @@ public class Controller extends UnicastRemoteObject implements IController {
     /**
      * Returns a list of the current games.
      *
-     * @param username username of player to whom sent the message
+     * @param token token of player to whom sent the object
      * @throws RemoteException  if an RMI error occurs.
      * @throws NoGamesException if there are no current games.
      */
