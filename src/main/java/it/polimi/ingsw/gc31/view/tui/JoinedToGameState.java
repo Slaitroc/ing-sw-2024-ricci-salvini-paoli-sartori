@@ -8,6 +8,11 @@ import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.controller.Controller;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 
+/**
+ * TUIstate that represents the state of the TUI when the client is joined to a
+ * game which is not started yet.
+ * 
+ */
 public class JoinedToGameState extends TUIstate {
 
     private boolean ready = false;

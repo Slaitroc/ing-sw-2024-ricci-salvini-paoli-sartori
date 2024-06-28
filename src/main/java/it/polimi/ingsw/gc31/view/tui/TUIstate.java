@@ -6,6 +6,9 @@ import it.polimi.ingsw.gc31.client_server.interfaces.*;
 import it.polimi.ingsw.gc31.controller.*;
 import it.polimi.ingsw.gc31.client_server.rmi.*;
 
+/**
+ * Abstract class that represents the state of the TUI.
+ */
 public abstract class TUIstate {
     /**
      * The name of the current concrete TUIState.

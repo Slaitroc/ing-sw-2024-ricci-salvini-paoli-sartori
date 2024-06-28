@@ -11,6 +11,9 @@ import it.polimi.ingsw.gc31.client_server.interfaces.ClientCommands;
 import it.polimi.ingsw.gc31.exceptions.NoGamesException;
 import it.polimi.ingsw.gc31.view.interfaces.ShowUpdate;
 
+/**
+ * TUIstate in which the player can play the running game.
+ */
 public class PlayingState extends TUIstate {
 
     /**
