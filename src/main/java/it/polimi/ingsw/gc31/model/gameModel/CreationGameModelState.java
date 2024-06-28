@@ -11,6 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+//FIXME
+/**
+ * This class represents the state of the game when the game is being created
+ * and the players are choosing their secret objectives
+ */
 public class CreationGameModelState implements GameModelState {
     @Override
     public Map<String, Player> initGame(GameModel model, Map<String, VirtualClient> clients, Object lock)
@@ -110,8 +115,9 @@ public class CreationGameModelState implements GameModelState {
 
     @Override
     public void disconnectPlayer(GameModel model, String username) {
-//        if disconnectPlayer is called in this state it means that the game has not yet started,
-//        so there is no need to remove the player from the gameModel
+        // if disconnectPlayer is called in this state it means that the game has not
+        // yet started,
+        // so there is no need to remove the player from the gameModel
     }
 
     @Override
