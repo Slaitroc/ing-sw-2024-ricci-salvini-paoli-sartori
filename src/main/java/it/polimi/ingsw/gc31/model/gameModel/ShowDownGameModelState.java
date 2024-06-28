@@ -8,6 +8,10 @@ import it.polimi.ingsw.gc31.model.player.Player;
 import java.awt.*;
 import java.util.Map;
 
+/**
+ * Indicates the final moments of a game. Implements the {@link GameModelState} interface. Defines which
+ * actions are executable. The methods are implemented by the {@link GameModel} class.
+ */
 public class ShowDownGameModelState implements GameModelState {
     public ShowDownGameModelState(GameModel model) {
         ServerLog.gControllerWrite("Game changed to SHOWDOWN", model.getIdGame());

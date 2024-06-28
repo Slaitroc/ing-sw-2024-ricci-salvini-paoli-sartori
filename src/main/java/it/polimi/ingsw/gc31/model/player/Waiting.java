@@ -7,6 +7,12 @@ import it.polimi.ingsw.gc31.model.deck.Deck;
 
 import java.awt.*;
 
+/**
+ * This class represents the waiting status of the player in the match. Extend the {@link PlayerState} class. Defines which
+ * actions are executable by the player. The only method available is the {@link Waiting#stateInfo()}.
+ *
+ * @see Player#infoState()
+ */
 public class Waiting extends PlayerState {
 
     @Override

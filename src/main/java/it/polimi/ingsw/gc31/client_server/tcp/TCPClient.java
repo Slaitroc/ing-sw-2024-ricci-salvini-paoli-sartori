@@ -20,6 +20,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+/**
+ * Is the {@link it.polimi.ingsw.gc31.Client} that uses the TCP paradigm to communicate with a {@link it.polimi.ingsw.gc31.Server},
+ * the connection is handled by a {@link TCPServer}. After the bind with the server a specific {@link SocketClientHandler} is
+ * created and associated with this {@link TCPClient}.
+ */
 public class TCPClient implements ClientCommands {
     /**
      * The ObjectInputStream associated with the specific client

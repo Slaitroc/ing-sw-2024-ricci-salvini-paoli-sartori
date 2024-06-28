@@ -10,6 +10,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Defines which methods are used to update the information to the {@link it.polimi.ingsw.gc31.Client}. All
+ * the methods are implemented either by a {@link it.polimi.ingsw.gc31.view.gui.GUI} or a {@link it.polimi.ingsw.gc31.view.tui.TUI}.
+ *
+ * @see it.polimi.ingsw.gc31.view.UI
+ */
 public interface ShowUpdate {
 
     /**

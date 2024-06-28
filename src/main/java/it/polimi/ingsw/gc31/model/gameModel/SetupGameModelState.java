@@ -12,6 +12,10 @@ import it.polimi.ingsw.gc31.model.player.Player;
 import java.awt.*;
 import java.util.Map;
 
+/**
+ * Identifies the initial setup part of the match. Implements the {@link GameModelState} interface. Defines
+ * which actions are executable during the setup of the match.
+ */
 public class SetupGameModelState implements GameModelState {
     public SetupGameModelState(GameModel model) {
         ServerLog.gControllerWrite("Game changed to SETUP", model.getIdGame());

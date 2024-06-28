@@ -11,6 +11,11 @@ import it.polimi.ingsw.gc31.utility.DV;
 import java.awt.*;
 import java.util.Map;
 
+/**
+ * Identifies the running time of the match. Defines which actions are executable by the players of the match. Implements
+ * the {@link GameModelState} interface. If a method is not supported in that state a {@link IllegalStateOperationException} is
+ * launched.
+ */
 public class RunningGameModelSate implements GameModelState {
     public RunningGameModelSate(GameModel model) {
         ServerLog.gControllerWrite("Game changed to RUNNING", model.getIdGame());
