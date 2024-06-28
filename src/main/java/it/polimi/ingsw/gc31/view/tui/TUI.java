@@ -1036,7 +1036,7 @@ public class TUI extends UI {
     protected void movePlayAreaRight() {
         if (placedCards != null) {
             OFFSET_X_PLAYAREA += CARD_X_OFFSET * 2;
-            show_playArea(client.getUsername(), placedCards, null);
+            show_playArea(activePlayArea, placedCards, null);
         }
     }
 
@@ -1046,7 +1046,7 @@ public class TUI extends UI {
     protected void movePlayAreaLeft() {
         if (placedCards != null) {
             OFFSET_X_PLAYAREA -= CARD_X_OFFSET * 2;
-            show_playArea(client.getUsername(), placedCards, null);
+            show_playArea(activePlayArea, placedCards, null);
         }
     }
 
@@ -1056,7 +1056,7 @@ public class TUI extends UI {
     protected void movePlayAreaDown() {
         if (placedCards != null) {
             OFFSET_Y_PLAYAREA += CARD_Y_OFFSET * 2;
-            show_playArea(client.getUsername(), placedCards, null);
+            show_playArea(activePlayArea, placedCards, null);
         }
     }
 
@@ -1066,7 +1066,7 @@ public class TUI extends UI {
     protected void movePlayAreaUp() {
         if (placedCards != null) {
             OFFSET_Y_PLAYAREA -= CARD_Y_OFFSET * 2;
-            show_playArea(client.getUsername(), placedCards, null);
+            show_playArea(activePlayArea, placedCards, null);
         }
     }
 
