@@ -11,6 +11,10 @@ import java.lang.reflect.Type;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.serializePrivateFields;
 
+/**
+ * The ObjectiveAdapter class implements the JsonDeserializer and JsonSerializer interfaces
+ * to deserialize and serialize {@link Objective} objects.
+ */
 public class ObjectiveAdapter implements JsonDeserializer<Objective>, JsonSerializer<Objective> {
     @Override
     public Objective deserialize(JsonElement jsonElement, Type type,

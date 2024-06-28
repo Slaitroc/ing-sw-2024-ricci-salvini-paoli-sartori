@@ -15,9 +15,6 @@ import java.util.Map;
 
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.serializePrivateFields;
 
-// TODO implementare exception, dirImg non può essere nulla, resources non può essere nulla
-// TODO riguardare eccezione
-
 /**
  * Adapter for deserializing the class {@link CardFront}.
  * It can be registered to a GsonBuilder when you have to deserialize an object

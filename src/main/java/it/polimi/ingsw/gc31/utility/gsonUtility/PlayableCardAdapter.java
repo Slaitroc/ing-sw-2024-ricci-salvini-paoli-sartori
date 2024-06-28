@@ -11,6 +11,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import static it.polimi.ingsw.gc31.utility.gsonUtility.GsonTranslater.serializePrivateFields;
 
+/**
+ * This class is an adapter that implements the JsonSerializer and JsonDeserializer interfaces for the PlayableCard class.
+ * It provides methods to convert PlayableCard objects to JSON format and vice versa.
+ */
 public class PlayableCardAdapter implements JsonSerializer<PlayableCard>, JsonDeserializer<PlayableCard> {
     @Override
     public JsonElement serialize(PlayableCard playableCard, Type type, JsonSerializationContext jsonSerializationContext) {

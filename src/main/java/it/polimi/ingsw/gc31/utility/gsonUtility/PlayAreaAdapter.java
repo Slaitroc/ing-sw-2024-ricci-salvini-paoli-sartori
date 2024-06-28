@@ -8,6 +8,10 @@ import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * The PlayAreaAdapter class implements the JsonSerializer and JsonDeserializer interfaces
+ * to serialize and deserialize a LinkedHashMap<Point, PlayableCard> object to and from JSON.
+ */
 public class PlayAreaAdapter
         implements JsonSerializer<LinkedHashMap<Point, PlayableCard>>,
         JsonDeserializer<LinkedHashMap<Point, PlayableCard>> {
