@@ -218,6 +218,7 @@ public class GameController extends UnicastRemoteObject implements IGameControll
                 ServerLog.gControllerWrite("C'è stato qualche problema con la rejoin di " + username, idGame);
             }
         }
+        notifyListPlayers();
         model.notifyAllGameListeners();
     }
 
