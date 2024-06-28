@@ -2166,7 +2166,7 @@ public class TUI extends UI {
 
         playAreaAllPlayers.put(username, res);
 
-        if (activePlayArea.equals(client.getUsername())) {
+        if (activePlayArea.equals(username)) {
             synchronized (playViewUpdateLOCK) {
                 playViewUpdateLOCK.add(res);
                 playViewUpdateLOCK.notify();
