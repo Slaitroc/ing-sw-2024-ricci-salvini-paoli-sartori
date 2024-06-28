@@ -1036,7 +1036,7 @@ public class TUI extends UI {
     protected void movePlayAreaRight() {
         if (placedCards != null) {
             OFFSET_X_PLAYAREA += CARD_X_OFFSET * 2;
-            show_playArea(activePlayArea, placedCards, null);
+            show_playArea(activePlayArea, placedCardsLocal.get(activePlayArea), null);
         }
     }
 
@@ -1046,7 +1046,7 @@ public class TUI extends UI {
     protected void movePlayAreaLeft() {
         if (placedCards != null) {
             OFFSET_X_PLAYAREA -= CARD_X_OFFSET * 2;
-            show_playArea(activePlayArea, placedCards, null);
+            show_playArea(activePlayArea, placedCardsLocal.get(activePlayArea), null);
         }
     }
 
@@ -1056,7 +1056,7 @@ public class TUI extends UI {
     protected void movePlayAreaDown() {
         if (placedCards != null) {
             OFFSET_Y_PLAYAREA += CARD_Y_OFFSET * 2;
-            show_playArea(activePlayArea, placedCards, null);
+            show_playArea(activePlayArea, placedCardsLocal.get(activePlayArea), null);
         }
     }
 
@@ -1066,7 +1066,7 @@ public class TUI extends UI {
     protected void movePlayAreaUp() {
         if (placedCards != null) {
             OFFSET_Y_PLAYAREA -= CARD_Y_OFFSET * 2;
-            show_playArea(activePlayArea, placedCards, null);
+            show_playArea(activePlayArea, placedCardsLocal.get(activePlayArea), null);
         }
     }
 
@@ -2118,6 +2118,8 @@ public class TUI extends UI {
 
     }
 
+    Map<String, LinkedHashMap<Point, PlayableCard>> placedCardsLocal = new HashMap<>();
+
     /**
      * Receives the play areas and the achieved resources of all the players,
      * selects the correct ones checking the {@link #activePlayArea} and creates the
@@ -2147,7 +2149,8 @@ public class TUI extends UI {
                 PLAYAREA_INITIAL_COLUMN, PLAYAREA_END_ROW,
                 PLAYAREA_END_COLUMN));
         res.append(print_PlacedCards(playArea));
-        placedCards = playArea;
+        // placedCards = playArea;
+        placedCardsLocal.put(username, playArea);
 
         if (achievedResources != null) {
             res.append(clearArea(ACHIEVED_RESOURCES_INITIAL_ROW, ACHIEVED_RESOURCES_INITIAL_COLUMN,
@@ -2167,11 +2170,11 @@ public class TUI extends UI {
         playAreaAllPlayers.put(username, res);
 
         if (activePlayArea.equals(username)) {
+            areasCache.put(TUIareas.PLAY_VIEW_AREA, res);
             synchronized (playViewUpdateLOCK) {
                 playViewUpdateLOCK.add(res);
                 playViewUpdateLOCK.notify();
             }
-            areasCache.put(TUIareas.PLAY_VIEW_AREA, res);
         }
 
         // }
