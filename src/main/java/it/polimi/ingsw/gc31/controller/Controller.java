@@ -151,7 +151,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @param newConnection is the VirtualClient that just connected to the server
      * @return the token generated
      */
-    public int generateToken(VirtualClient newConnection) {
+    public synchronized int generateToken(VirtualClient newConnection) {
         int token;
         token = (int) (Math.random() * 1000);
         while (newConnections.containsKey(token)) {
@@ -171,7 +171,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @param temporary     is true if the token to be set is temporary, false
      *                      otherwise. If false overrides the previously saved token
      */
-    public void sendToken(VirtualClient newConnection, int token, boolean temporary) {
+    public synchronized void sendToken(VirtualClient newConnection, int token, boolean temporary) {
         try {
             newConnection.sendCommand(new SaveTokenObj(token, temporary));
         } catch (RemoteException e) {
@@ -210,10 +210,10 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @throws RemoteException if general connection error occurs
      */
     // FIXME forse non serve client come parametro
-    public boolean connect(VirtualClient client, String username, Integer tempToken, Integer token)
+    public synchronized boolean connect(VirtualClient client, String username, Integer tempToken, Integer token)
             throws RemoteException {
         if (token == -1) {
-            // se l'username è valido genero il nuovo token e lo mando
+            // se l'username è valido synchronized genero il nuovo token e lo mando
             ServerLog.controllerWrite("First connection of " + username + " with temporary token " + tempToken);
             VirtualClient newConnectionClient = newConnections.get(tempToken);
             if (usernameValidation(username, newConnectionClient)) {
@@ -261,7 +261,7 @@ public class Controller extends UnicastRemoteObject implements IController {
         }
     }
 
-    private boolean usernameValidation(String username, VirtualClient client) {
+    private synchronized boolean usernameValidation(String username, VirtualClient client) {
         if (username == null) {
             try {
                 client.sendCommand(new WrongUsernameObj(null));
@@ -307,7 +307,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @param esito     is the boolean value that indicates if the client wants to
      *                  rejoin the game
      */
-    public void rejoin(int tempToken, int token, boolean esito) {
+    public synchronized void rejoin(int tempToken, int token, boolean esito) {
         VirtualClient client = newConnections.get(token);
         if (esito) {
             try {
@@ -345,7 +345,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @param maxNumPlayer the maximum number of players for the game.
      * @throws RemoteException if an RMI error occurs.
      */
-    public void createGame(String username, int maxNumPlayer) throws RemoteException {
+    public synchronized void createGame(String username, int maxNumPlayer) throws RemoteException {
         VirtualClient client = tempClients.get(username);
         if (maxNumPlayer < 2 || maxNumPlayer > 4) {
             sendUpdateToClient(client, new WrongGameSizeObj());
@@ -381,7 +381,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @see GameController#joinGame(String, VirtualClient)
      * 
      */
-    public void joinGame(String username, int idGame) throws RemoteException {
+    public synchronized void joinGame(String username, int idGame) throws RemoteException {
         VirtualClient client = tempClients.get(username);
         if (idGame >= gameControlList.size() || idGame < 0) {
             sendUpdateToClient(client, new GameDoesNotExistObj());
@@ -406,7 +406,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @param client   is the client that requested to quit from a lobby
      * @throws RemoteException if an error occurs in the rmi connection
      */
-    public void quitGame(String username, VirtualClient client) throws RemoteException {
+    public synchronized void quitGame(String username, VirtualClient client) throws RemoteException {
         tempClients.put(username, client);
         // se il gioco era costituito da una sola persona va eliminato il gameController
         // corrispondente
@@ -431,7 +431,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @throws RemoteException  if an RMI error occurs.
      * @throws NoGamesException if there are no current games.
      */
-    public void getGameList(int token) throws RemoteException, NoGamesException {
+    public synchronized void getGameList(int token) throws RemoteException, NoGamesException {
         List<String> res = new ArrayList<>();
         if (gameControlList.isEmpty()) {
             res.add("NO GAMES AVAILABLE");
@@ -456,7 +456,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @return the VirtualClient that has the given token
      */
     @Override
-    public VirtualClient getRightConnection(int token) {
+    public synchronized VirtualClient getRightConnection(int token) {
         return newConnections.get(token);
     }
 
@@ -479,7 +479,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * remove the client from the list,
      * also closes the connection towards the client.
      */
-    protected void checkHeartBeats() {
+    protected synchronized void checkHeartBeats() {
         long now = System.currentTimeMillis();
 
         // Checks for every active client if the last heart beat was received at most 10
@@ -546,7 +546,7 @@ public class Controller extends UnicastRemoteObject implements IController {
      * @throws RemoteException if an error occurs in the rmi connection
      */
     @Override
-    public void updateHeartBeat(VirtualClient client) throws RemoteException {
+    public synchronized void updateHeartBeat(VirtualClient client) throws RemoteException {
         if (!clientsHeartBeat.containsKey(client)) {
             ServerLog.controllerWrite("HeartBeat received is not bound to any client");
         } else {
@@ -555,7 +555,7 @@ public class Controller extends UnicastRemoteObject implements IController {
         }
     }
 
-    public void disconnect(String username, int idGame, int token) {
+    public synchronized void disconnect(String username, int idGame, int token) {
         disconnected.put(token, new Pair<>(username, idGame));
         ServerLog.controllerWrite("Client disconnected due to timeout");
     }

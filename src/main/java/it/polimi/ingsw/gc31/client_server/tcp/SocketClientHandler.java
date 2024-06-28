@@ -3,6 +3,7 @@ package it.polimi.ingsw.gc31.client_server.tcp;
 import it.polimi.ingsw.gc31.client_server.interfaces.IController;
 import it.polimi.ingsw.gc31.client_server.interfaces.IGameController;
 import it.polimi.ingsw.gc31.client_server.interfaces.VirtualClient;
+import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.ClientQueueObject;
 import it.polimi.ingsw.gc31.client_server.queue.clientQueue.SaveTokenObj;
 import it.polimi.ingsw.gc31.client_server.queue.serverQueue.ConnectObj;
@@ -141,7 +142,7 @@ public class SocketClientHandler implements VirtualClient {
                 // If the object red is null the client disconnected
             } catch (IOException | ClassNotFoundException e) {
                 // e.printStackTrace();
-                System.out.println("A TCP client disconnected");
+                ServerLog.tcpWrite("A TCP client disconnected");
             }
         }).start();
     }
@@ -199,8 +200,8 @@ public class SocketClientHandler implements VirtualClient {
      * @param token value to assign to the client specific token, used mainly for
      *              reconnection
      */
-//    @Override
-//    public void setRmiToken(int token) throws RemoteException {
-//    }
+    // @Override
+    // public void setRmiToken(int token) throws RemoteException {
+    // }
 
 }

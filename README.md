@@ -1,6 +1,9 @@
 # Ingegneria del Software 2024
+
 ![CodexNaturalis](./src/main/resources/it/polimi/ingsw/gc31/Images/Misc/Codex-Copertina.jpg)
-## Software Engineering Project - PoliMi 
+
+## Software Engineering Project - PoliMi
+
 <div align="center">
     <h5> Official deadline: 28/06/2024</h1>
     <h5>A distribuited version of the game CodexNaturalis made by</h5>
@@ -12,16 +15,16 @@
 
 ## Features <img src="https://i.ibb.co/RzyJZXm/imp.png" align="right" alt="logo" width="130" height = "139" style = "border: none; float: right;">
 
-| Feature | Implemented  |
-| ---------------- | ---- | 
-| Simplified Rules |✔️   |
-| Complete Rules   |✔️   | 
-| Socket and RMI   |✔️   | 
-| TUI + GUI        |✔️   | 
-| Multiple Games   |✔️   | 
-| Resilience to clients disconnections   | ✔️   | 
-| Server disconnections   | ❌   | 
-| Chat   | ✔️   | 
+| Feature                              | Implemented |
+| ------------------------------------ | ----------- |
+| Simplified Rules                     | ✔️          |
+| Complete Rules                       | ✔️          |
+| Socket and RMI                       | ✔️          |
+| TUI + GUI                            | ✔️          |
+| Multiple Games                       | ✔️          |
+| Resilience to clients disconnections | ✔️          |
+| Server disconnections                | ❌          |
+| Chat                                 | ✔️          |
 
 [Requirements PDF](./documents/requirements.pdf)
 
@@ -29,78 +32,145 @@
 🔵
 [RuleBook IT PDF](./documents/CODEX_Rulebook_IT.pdf)
 
+# How To Use <img src="https://i.ibb.co/QHmskqv/run.png" align="right" alt="logo" width="130" height = "139" style = "border: none; float: right;">
 
-# How To Use <img src="https://i.ibb.co/QHmskqv/run.png" align="right" alt="logo" width="130" height = "139" style = "border: none; float: right;">   
+### Requirements
 
+---
 
-<body>
-<div class="container">
-    <p>The application requires an installation of Java 21. It has been tested on Linux and Windows Operating Systems only.</p>
-<h2>Steps to Create and Run the Application</h2>
-
-<h3>1. Building the Application .jar File</h3>
-<p>To create the application .jar file relative to your OS, execute the following command in the project root:</p>
-<pre><code>mvn clean install</code></pre>
-<p>The compiled jar will be found in the <code>ing-sw-2024-ricci-salvini-paoli-sartori/target</code> folder.</p>
-
-<h3>2. Running the Application</h3>
-<p>To run the jar file, open the Command Prompt (CMD) and navigate to the directory containing the jar files:</p>
-<pre><code>cd C:/[dir]/[folder with the jar files]</code></pre>
-<p>From here, type in the following commands:</p>
-<ul>
-    <li><code>java -jar GC31-1.0-SNAPSHOT-client.jar</code> (to run the client)</li>
-    <li><code>java -jar GC31-1.0-SNAPSHOT-server.jar</code> (to run the server)</li>
-</ul>
-
-<h3>For Developers Using IntelliJ</h3>
-<ol>
-    <li>In IntelliJ, navigate to <code>maven -> GC31 -> Lifecycle -> Clean</code></li>
-    <li>Then, go to <code>maven -> GC31 -> Lifecycle -> Package</code></li>
-    <li>Open CMD and navigate to the project directory:
-        <pre><code>cd C:/[dir]/ing-sw-2024-ricci-salvini-paoli-sartori/target</code></pre>
-    </li>
-    <li>From here, run the following commands:
-        <ul>
-            <li><code>java -jar softeng-gc04-1.0-SNAPSHOT-client.jar</code> (to run the client)</li>
-            <li><code>java -jar softeng-gc04-1.0-SNAPSHOT-server.jar</code> (to run the server)</li>
-        </ul>
-    </li>
-</ol>
-<p>Repeat from step 1 each time the code is modified.</p>
-
-<h2>Requirements</h2>
 To run the application it is required to have correctly installed:
 
-<p> 1. JDK21: <a href="https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html">Java SE Development Kit 21.0.2</a>.</p>
-<p> 2. JavaFX: <a href="https://gluonhq.com/products/javafx">JavaFX - Gluon</a>.</p>
-<p> 3. Maven: <a href="https://maven.apache.org/download.cgi">Apache Maven 3.9.8</a>.</p>
+- JDK21: [Java SE Development Kit 21.0.2](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html).
 
-</div>
-</body>
-</html>
+- JavaFX: [JavaFX - Gluon](https://gluonhq.com/products/javafx).
+
+- Maven: [Apache Maven 3.9.8](https://maven.apache.org/download.cgi).
+
+### 1\. Building the Application .jar File
+
+- Navigate to the project directory.
+
+  On Windows:
+
+  ```powershell
+  cd C:\<path-to-repo>\ing-sw-2024-ricci-salvini-paoli-sartori\
+  ```
+
+  On Unix:
+
+  ```bash
+  cd <path-to-repo>/ing-sw-2024-ricci-salvini-paoli-sartori/
+  ```
+
+- To create the application .jar file relative to your OS, execute the following command in the project root.
+
+  ```
+  mvn clean install
+  ```
+
+- The compiled jar will be found in the
+  `ing-sw-2024-ricci-salvini-paoli-sartori/target`
+  folder.
+
+### 2\. Running the Application
+
+- To run the jar file, navigate to the directory containing the jar files.
+
+  On Windows:
+
+  ```powershell
+  cd C:\<path-to-repo>\ing-sw-2024-ricci-salvini-paoli-sartori\target
+  ```
+
+  On Unix:
+
+  ```bash
+  cd <path-to-repo>/ing-sw-2024-ricci-salvini-paoli-sartori/target
+  ```
+
+From here, type in the following commands:
+
+- Server:
+  ```
+  java -jar GC31-1.0-SNAPSHOT-server.jar
+  ```
+  to force the server ip:
+  ```
+  java -jar GC31-1.0-SNAPSHOT-server.jar <yourIP>
+  ```
+- Client
+  ```
+  java -jar GC31-1.0-SNAPSHOT-server.jar
+  ```
+
+### For Developers Using IntelliJ
+
+1.  In IntelliJ, navigate to `maven -> GC31 -> Lifecycle -> Clean`
+2.  Then, go to `maven -> GC31 -> Lifecycle -> Package`
+3.  Open Powershell and navigate to the project directory:
+
+    On Windows:
+
+    ```powershell
+    cd C:\<path-to-repo>\ing-sw-2024-ricci-salvini-paoli-sartori\target
+    ```
+
+4.  From here, run the following commands:
+    - `java -jar softeng-gc04-1.0-SNAPSHOT-client.jar` (to run the client)
+    - `java -jar softeng-gc04-1.0-SNAPSHOT-server.jar` (to run the server)
+
+Repeat from step 1 each time the code is modified.
 
 # How to Generate Code Coverage <img src="https://i.ibb.co/4PYzV7D/cov.png" align="right" alt="logo" width="130" height="139" style="border: none; float: right;">
 
-To generate the Code Coverage for your project, follow these steps:
+To generate the Code Coverage with JaCoCo for your project, follow these steps:
 
-<li>Open CMD and navigate to the project directory:
-    <pre><code>cd C:/[dir]/ing-sw-2024-ricci-salvini-paoli-sartori</code></pre>
-    </li>
-    <li>From here, run the following commands:
-        <pre><code>mvn clean verify</code></pre>
-    </li>
-The Code Coverage report will be generated in the following location:
-<pre><code>cd C:/[dir]/ing-sw-2024-ricci-salvini-paoli-sartori/target/site/</code></pre>
+- Open CMD and navigate to the project directory:
+
+  On Windows:
+
+  ```powershell
+  cd C:\<path-to-repo>\ing-sw-2024-ricci-salvini-paoli-sartori
+  ```
+
+  On Unix:
+
+  ```bash
+  cd /<path-to-repo>/ing-sw-2024-ricci-salvini-paoli-sartori
+  ```
+
+- From here, run the following commands:
+
+  ```
+  mvn clean verify
+  ```
+
+  The JaCoCo Code Coverage report will be generated in `/<path-to-repo>/ing-sw-2024-ricci-salvini-paoli-sartori/target/site/`
 
 # Game Screenshots
+
 ### TUI
+
 ![CodexNaturalis](./src/main/resources/it/polimi/ingsw/gc31/Images/Presentation/tuiExample1.png)
 ![CodexNaturalis](./src/main/resources/it/polimi/ingsw/gc31/Images/Presentation/tuiExample2.png)
 ![CodexNaturalis](./src/main/resources/it/polimi/ingsw/gc31/Images/Presentation/tuiExample3.png)
+
 ### GUI
+
 ![CodexNaturalis](./src/main/resources/it/polimi/ingsw/gc31/Images/Presentation/guiExample1.png)
 ![CodexNaturalis](./src/main/resources/it/polimi/ingsw/gc31/Images/Presentation/guiExample2.png)
 ![CodexNaturalis](./src/main/resources/it/polimi/ingsw/gc31/Images/Presentation/guiExample3.png)
 
 ## Other Features
-* Full screen mode responsive
+
+- Full screen mode responsive
+
+## Credits
+
+This software uses the following open source packages:
+
+- [OpenJfx](https://openjfx.io/)
+- [MaterialFX](https://github.com/palexdev/MaterialFX)
+- [JUnit](https://junit.org/junit5/)
+- [Gson](https://github.com/google/gson)
+- [Jansi](https://fusesource.github.io/jansi/)
