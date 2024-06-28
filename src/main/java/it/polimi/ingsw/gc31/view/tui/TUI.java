@@ -1034,7 +1034,7 @@ public class TUI extends UI {
      * This method is used to drag the play area to the right
      */
     protected void movePlayAreaRight() {
-        if (placedCards != null) {
+        if (placedCardsLocal.get(activePlayArea) != null) {
             OFFSET_X_PLAYAREA += CARD_X_OFFSET * 2;
             show_playArea(activePlayArea, placedCardsLocal.get(activePlayArea), null);
         }
@@ -1044,7 +1044,7 @@ public class TUI extends UI {
      * This method is used to drag the play area to the left
      */
     protected void movePlayAreaLeft() {
-        if (placedCards != null) {
+        if (placedCardsLocal.get(activePlayArea) != null) {
             OFFSET_X_PLAYAREA -= CARD_X_OFFSET * 2;
             show_playArea(activePlayArea, placedCardsLocal.get(activePlayArea), null);
         }
@@ -1054,7 +1054,7 @@ public class TUI extends UI {
      * This method is used to drag the play area down
      */
     protected void movePlayAreaDown() {
-        if (placedCards != null) {
+        if (placedCardsLocal.get(activePlayArea) != null) {
             OFFSET_Y_PLAYAREA += CARD_Y_OFFSET * 2;
             show_playArea(activePlayArea, placedCardsLocal.get(activePlayArea), null);
         }
@@ -1064,7 +1064,7 @@ public class TUI extends UI {
      * This method is used to drag the play area up
      */
     protected void movePlayAreaUp() {
-        if (placedCards != null) {
+        if (placedCardsLocal.get(activePlayArea) != null) {
             OFFSET_Y_PLAYAREA -= CARD_Y_OFFSET * 2;
             show_playArea(activePlayArea, placedCardsLocal.get(activePlayArea), null);
         }
