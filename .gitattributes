@@ -1,0 +1,3 @@
+# Escludi i file HTML generati dalla documentazione Javadoc dal conteggio dei linguaggi
+documents/JavaDoc/*.html linguist-documentation
+documents/JavaDoc/**/*.html linguist-documentation
