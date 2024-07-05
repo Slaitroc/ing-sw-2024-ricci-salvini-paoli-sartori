@@ -8,7 +8,6 @@ import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.util.Enumeration;
 
-import it.polimi.ingsw.gc31.client_server.log.ServerLog;
 import it.polimi.ingsw.gc31.client_server.rmi.RmiServer;
 import it.polimi.ingsw.gc31.client_server.tcp.TCPServer;
 import it.polimi.ingsw.gc31.utility.DV;
@@ -69,7 +68,6 @@ public class Server {
                 try {
                     new RmiServer(DV.forcedIP);
                 } catch (RemoteException e) {
-                    ServerLog.rmiWrite("Remote exception line 62 Server.java");
                     e.printStackTrace();
                 }
             } else if (ipAddress != null) {
@@ -86,7 +84,6 @@ public class Server {
                 try {
                     new RmiServer(ipAddress);
                 } catch (RemoteException e) {
-                    ServerLog.rmiWrite("Remote exception line 62 Server.java");
                     e.printStackTrace();
                 }
             }
@@ -105,7 +102,6 @@ public class Server {
                 try {
                     new RmiServer(args[0]);
                 } catch (RemoteException e) {
-                    ServerLog.rmiWrite("Remote exception line 62 Server.java");
                     e.printStackTrace();
                 }
             } else {
