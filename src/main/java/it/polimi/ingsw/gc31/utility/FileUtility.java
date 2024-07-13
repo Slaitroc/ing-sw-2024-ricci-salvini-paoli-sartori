@@ -32,10 +32,20 @@ public class FileUtility {
 
         if (osName.contains("win")) {
             desktopPath = Paths.get(userHome, "Desktop").toString();
+
         } else if (osName.contains("mac")) {
             desktopPath = Paths.get(userHome, "Desktop").toString();
         } else if (osName.contains("nix") || osName.contains("nux")) {
             desktopPath = Paths.get(userHome, "Desktop").toString();
+        }
+
+        Path path = Paths.get(desktopPath);
+        if (!Files.exists(path)) {
+            try {
+                Files.createDirectories(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return desktopPath;
