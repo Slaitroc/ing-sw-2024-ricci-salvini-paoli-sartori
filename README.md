@@ -13,6 +13,24 @@
     <h5><a href="https://github.com/AleSarto">Sartori Alessanro</a></h5>
 </div>
 
+# Table of Contents
+
+- [Features](#Features)
+- [How To Use](#How-To-Use)
+  - [Docker Requirements](#Docker-Requirements)
+    - [1. Pull the Image](#1-Pull-the-Image)
+    - [2. Run the Container](#2-Run-the-Container)
+    - [3. Run the Application](#3-Run-the-Application)
+  - [Git Repo Requirements](#Git-Repo-Requirements)
+    - [1. Building the Application .jar File](#1-Building-the-Application-jar-File)
+    - [2. Running the Application](#2-Running-the-Application)
+  - [Using IntelliJ](#Using-IntelliJ)
+- [How to Generate Code Coverage](#How-to-Generate-Code-Coverage)
+- [Game Screenshots](#Game-Screenshots)
+  - [TUI](#TUI)
+  - [GUI](#GUI)
+- [Credits](#Credits)
+
 ## Features <img src="https://i.ibb.co/RzyJZXm/imp.png" align="right" alt="logo" width="130" height = "139" style = "border: none; float: right;">
 
 | Feature                              | Implemented |
@@ -34,7 +52,55 @@
 
 # How To Use <img src="https://i.ibb.co/QHmskqv/run.png" align="right" alt="logo" width="130" height = "139" style = "border: none; float: right;">
 
-### Requirements
+### Docker Requirements <img src="./src/main/resources/it/polimi/ingsw/gc31/Images/Misc/docker-brands-solid.svg" alt="Docker" width="20" height="20">
+
+To run the jar app without the project files and with all the needed dependencies, we create a docker image already configured.
+The following steps shouldS work in Ubuntu or WLS2.
+
+You need you need [Docker](https://www.docker.com/get-started) installed on your machine.
+
+#### 1\. Pull the Image
+
+- Open a terminal and run:
+
+  ```bash
+  docker pull slaitrocka/codex-test:v1.0
+  ```
+
+#### 2\. Run the Container
+
+- Allow the container to access the display by running:
+
+  ```bash
+  xhost +local:docker
+  ```
+
+- run the container using the image and passing the <code>$DISPALY</code> environment variable:
+  ```bash
+  docker run -it --rm --name codex-naturalis-test -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix  slaitrocka/codex-test:v1.0 /bin/bash
+  ```
+
+#### 3\. Run the Application
+
+- Inside the container run:
+
+  ```bash
+  gnome-terminal &
+  ```
+
+  to open a terminal window with all the special characters correctly configured for the tui version of the game.
+
+- In gnome-terminal you can run the server or the client with the following commands:
+
+  ```bash
+  java -jar /app/jarFiles/GC31-1.0-SNAPSHOT-server.jar
+  ```
+
+  ```bash
+  java -jar /app/jarFiles/GC31-1.0-SNAPSHOT-client.jar
+  ```
+
+### Git Repo Requirements
 
 ---
 
