@@ -57,7 +57,7 @@
 To run the jar app without the project files and with all the needed dependencies, we create a docker image already configured.
 The following steps should work in Ubuntu or WLS2.
 
-You need you need [Docker](https://www.docker.com/get-started) installed on your machine.
+You need [Docker](https://www.docker.com/get-started) installed on your machine.
 
 #### 1\. Pull the Image
 
