@@ -15,9 +15,9 @@
 
 # Table of Contents
 
-- [Features](#Features)
-- [How To Use](#How-To-Use)
-  - [Docker Requirements](#Docker-Requirements)
+- [Features](#features)
+- [How To Use](#how-to-use)
+  - [Docker Requirements](#docker-requirements)
     - [1. Pull the Image](#1-Pull-the-Image)
     - [2. Run the Container](#2-Run-the-Container)
     - [3. Run the Application](#3-Run-the-Application)
