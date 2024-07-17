@@ -55,7 +55,7 @@
 ### Docker Requirements <img src="./src/main/resources/it/polimi/ingsw/gc31/Images/Misc/docker-brands-solid.svg" alt="Docker" width="20" height="20">
 
 To run the jar app without the project files and with all the needed dependencies, we create a docker image already configured.
-The following steps shouldS work in Ubuntu or WLS2.
+The following steps should work in Ubuntu or WLS2.
 
 You need you need [Docker](https://www.docker.com/get-started) installed on your machine.
 
