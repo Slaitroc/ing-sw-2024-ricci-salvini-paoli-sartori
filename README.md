@@ -6,6 +6,7 @@
 
 <div align="center">
     <h5> Official deadline: 28/06/2024</h1>
+    <h5> Grade: 30L/30</h1>
     <h5>A distribuited version of the game CodexNaturalis made by</h5>
     <h5><a href="https://github.com/Slaitroc">Ricci Lorenzo</a></h5>
     <h5><a href="https://github.com/salvoc02">Salvini Christian</a></h5>
